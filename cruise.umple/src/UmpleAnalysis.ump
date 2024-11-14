@@ -3,34 +3,35 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 */
 namespace cruise.umple.analysis;
 
 
 external Analyzer{}
-
-class GuardAnalyzer
-{
-  isA Analyzer;
-  depend cruise.umple.parser.analysis.Analyzer;
-  depend cruise.umple.parser.Token;
-  depend cruise.umple.compiler.*;
-  depend java.util.*;
-  ConstraintTree rawLine = new ConstraintTree();
-  lazy UmpleClassifier uClassifier;
-  lazy Transition t;
-  
-  void analyze(Token token)
+mixset StateMachine {
+  class GuardAnalyzer
   {
-    Guard constraint = new Guard();
-    constraint.addElementAll(rawLine.getRoot());
-    constraint.setPosition(token.getPosition());
-    constraint.setEndPosition(token.getEndPosition());
+    isA Analyzer;
+    depend cruise.umple.parser.analysis.Analyzer;
+    depend cruise.umple.parser.Token;
+    depend cruise.umple.compiler.*;
+    depend java.util.*;
+    ConstraintTree rawLine = new ConstraintTree();
+    lazy UmpleClassifier uClassifier;
+    lazy Transition t;
+    
+    void analyze(Token token)
+    {
+      Guard constraint = new Guard();
+      constraint.addElementAll(rawLine.getRoot());
+      constraint.setPosition(token.getPosition());
+      constraint.setEndPosition(token.getEndPosition());
 
-    t.setGuard(constraint);
-    rawLine = new ConstraintTree();
+      t.setGuard(constraint);
+      rawLine = new ConstraintTree();
+    }
   }
 }
 
@@ -58,10 +59,13 @@ class PreconditionAnalyzer
     {
       ((UmpleClass)(uClassifier)).addPreCond((Precondition)rawLine);
     }
+    mixset Trait {
     else if (uClassifier instanceof UmpleTrait)
     {
       ((UmpleTrait)(uClassifier)).addPreCond((Precondition)rawLine);  
+    }  
     }
+
     rawLine = new ConstraintTree();
   }
 }
@@ -89,9 +93,11 @@ class PostconditionAnalyzer
     {
       ((UmpleClass)(uClassifier)).addPostCond((Postcondition)rawLine);
     } 
-    else if (uClassifier instanceof UmpleTrait)
-    {
-      ((UmpleTrait)(uClassifier)).addPostCond((Postcondition)rawLine);  
+    mixset Trait {
+      else if (uClassifier instanceof UmpleTrait)
+      {
+        ((UmpleTrait)(uClassifier)).addPostCond((Postcondition)rawLine);  
+      }
     }
     rawLine = new ConstraintTree();
   }
@@ -131,9 +137,11 @@ class InvariantAnalyzer
     {
       ((UmpleClass)uClassifier).addConstraintTree(rawLine);
     } 
-    else if (uClassifier instanceof UmpleTrait)
-    {
-      ((UmpleTrait)uClassifier).addConstraintTree(rawLine);  
+    mixset Trait {
+      else if (uClassifier instanceof UmpleTrait)
+      {
+        ((UmpleTrait)uClassifier).addConstraintTree(rawLine);  
+      }
     }
     rawLine = new ConstraintTree();
   }
@@ -379,7 +387,7 @@ class BoolLiteralAnalyzer
     rawLine.addElement(new ConstraintLiteral(token.getValue("literal")));
   }
 }
-
+mixset StateMachine {
 class StatemachineExprAnalyzer
 {
   isA Analyzer;
@@ -395,6 +403,7 @@ class StatemachineExprAnalyzer
   {
     cv = rawLine.createNew();
   }
+}
 }
 
 class AssociationExprAnalyzer
@@ -711,7 +720,7 @@ class ConstraintNameAnalyzer
     personalRawLine.addElement(cv);
   }
 }
-
+mixset StateMachine {
 class StatemachineExprStateNameAnalyzer
 {
   isA Analyzer;
@@ -727,7 +736,7 @@ class StatemachineExprStateNameAnalyzer
   {
     rawLine = cv.createNew();
   }
-
+  mixset StateMachine {
   public void analyze(Token token)
   {
     StateMachine stateMachine = null;
@@ -755,6 +764,8 @@ class StatemachineExprStateNameAnalyzer
       //TODO: add error
     }
   }
+}
+}
 }
 
 class ConstraintNameNameAnalyzer
@@ -795,9 +806,11 @@ class ConstraintNameNameAnalyzer
             uClass = previouslyFoundAttribute.getAttribute().getUmpleClass();
             if(uClass==null)
             {
+              mixset Trait {
               uClass = previouslyFoundAttribute.getAttribute().getUmpleTrait();
               UmpleModel model = ((UmpleTrait)uClass).getSourceModel();
               uClass = model.getUmpleClass(previouslyFoundAttribute.getAttribute().getType());
+              }
             }
             else
             {
@@ -811,9 +824,11 @@ class ConstraintNameNameAnalyzer
             uClass = previouslyFoundAssociation.getAssociation().getUmpleClass();
             if(uClass==null)
             {
+              mixset Trait {
               uClass = previouslyFoundAssociation.getAssociation().getUmpleTrait();
               UmpleModel model = ((UmpleTrait)uClass).getSourceModel();
               uClass = model.getUmpleClass(previouslyFoundAssociation.getAssociation().getType());
+              }
             }
             else
             {
@@ -833,14 +848,16 @@ class ConstraintNameNameAnalyzer
 
   private static ConstraintVariable generateConstraintName(UmpleClassifier uClassifier, String value, Boolean hasParameter)
   {
-    Attribute attribute;
+    Attribute attribute = null;
     if (uClassifier instanceof UmpleClass)
     {
       attribute = ((UmpleClass)(uClassifier)).getAttribute(value);
     }
     else
     {
-      attribute = ((UmpleTrait)(uClassifier)).getAttribute(value);
+      mixset Trait {
+        attribute = ((UmpleTrait)(uClassifier)).getAttribute(value);
+      }
     }
     if(attribute!=null)
     {
@@ -850,14 +867,16 @@ class ConstraintNameNameAnalyzer
     }
     else
     {
-      AssociationVariable association;
+      AssociationVariable association = null;
       if (uClassifier instanceof UmpleClass)
       {
         association = ((UmpleClass)(uClassifier)).getAssociationVariable(value);
       }
       else
       {
-        association = ((UmpleTrait)(uClassifier)).getAssociationVariable(value);
+        mixset Trait {
+          association = ((UmpleTrait)(uClassifier)).getAssociationVariable(value);
+        }
       }
       if(association!=null)
       {
@@ -866,32 +885,39 @@ class ConstraintNameNameAnalyzer
       }
       else
       {
+        mixset StateMachine {
         StateMachine stateMachine = null;
         if(uClassifier instanceof UmpleClass)
         {
           stateMachine = ((UmpleClass)uClassifier).getStateMachine(value);
         }
-        else if(uClassifier instanceof UmpleTrait)
-        {
-          stateMachine = ((UmpleTrait)uClassifier).getStateMachine(value);
         }
+        mixset Trait {
+          mixset StateMachine {
+            else if(uClassifier instanceof UmpleTrait)
+            {
+              stateMachine = ((UmpleTrait)uClassifier).getStateMachine(value);
+            }
+          }
+        }
+        mixset StateMachine {
         if(stateMachine!=null)
         {
           ConstraintStateMachine name = new ConstraintStateMachine(stateMachine);
           return name;
+        }
         } 
-        else
-        {
-        	Port port = null;
-        	if (uClassifier instanceof UmpleClass)
-        	{
-        		port = ((UmpleClass)(uClassifier)).getPort(value);
-        	}
-        	if(port!=null)
-        	{
-        		ConstraintPort name = new ConstraintPort(port);
-        		return name;
-        	} 
+        mixset Structure {
+            Port port = null;
+            if (uClassifier instanceof UmpleClass)
+            {
+              port = ((UmpleClass)(uClassifier)).getPort(value);
+            }
+            if(port!=null)
+            {
+              ConstraintPort name = new ConstraintPort(port);
+              return name;
+            }
         }
         
       }
@@ -904,6 +930,7 @@ class ConstraintNameNameAnalyzer
         return generateConstraintName(uClass,value,hasParameter);
       }
     }
+    mixset Trait {
     else if(uClassifier instanceof UmpleTrait)
     {
       for(UmpleTrait uTrait:((UmpleTrait)uClassifier).getExtendsTraits())
@@ -914,7 +941,9 @@ class ConstraintNameNameAnalyzer
           return var;
         }
       }
+    }      
     }
+
     return new ConstraintUnassignedName(value);
   }
 }

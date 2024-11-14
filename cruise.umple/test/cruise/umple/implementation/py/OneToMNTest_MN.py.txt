@@ -1,0 +1,68 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 9 "../OneToMNTest.ump"
+import os
+
+class Pupil():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Pupil Attributes
+    #Pupil Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self, aNumber, aMentor):
+        self._mentor = None
+        self._number = None
+        self._number = aNumber
+        didAddMentor = self.setMentor(aMentor)
+        if not didAddMentor :
+            raise RuntimeError ("Unable to create pupil due to mentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setNumber(self, aNumber):
+        wasSet = False
+        self._number = aNumber
+        wasSet = True
+        return wasSet
+
+    def getNumber(self):
+        return self._number
+
+    # Code from template association_GetOne 
+    def getMentor(self):
+        return self._mentor
+
+    # Code from template association_SetOneToAtMostN 
+    def setMentor(self, aMentor):
+        from Mentor import Mentor
+        wasSet = False
+        #Must provide mentor to pupil
+        if aMentor is None :
+            return wasSet
+        #mentor already at maximum (7)
+        if aMentor.numberOfPupils() >= Mentor.maximumNumberOfPupils() :
+            return wasSet
+        existingMentor = self._mentor
+        self._mentor = aMentor
+        if not (existingMentor is None) and not existingMentor == aMentor :
+            didRemove = existingMentor.removePupil(self)
+            if not didRemove :
+                self._mentor = existingMentor
+                return wasSet
+        self._mentor.addPupil(self)
+        wasSet = True
+        return wasSet
+
+    def delete(self):
+        placeholderMentor = self._mentor
+        self._mentor = None
+        if not (placeholderMentor is None) :
+            placeholderMentor.removePupil(self)
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
+

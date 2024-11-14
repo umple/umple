@@ -1,0 +1,16 @@
+// this example generates traces using the
+// File tracer
+
+tracer File;
+
+@SuppressWarnings("deprecation")
+class Student
+{
+  Integer id;
+  trace id;
+}
+
+// The suppressWarnings annotation allows this example
+// to keep working as of Java 19 as per Umple issue £2018
+//$?[End_of_model]$?
+// @@@skipphpcompile - Skipped due to issue 698

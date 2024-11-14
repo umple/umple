@@ -2,7 +2,7 @@ generate Java "../src-gen-umple";
 
 namespace cruise.umple.mutation;
 
-use Mutant.ump;
+use mutant.ump;
 use MutationMetamodel.ump;
 use MutationSuite_code.ump;
 use MutationConsoleMain.ump;

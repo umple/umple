@@ -1,0 +1,25 @@
+#!/bin/csh -fb
+if ! $?UMPLEROOT then
+  setenv UMPLEROOT ~/umple
+endif
+echo Starting background docker for code execution in $UMPLEROOT/UmpleCodeExecution
+cd $UMPLEROOT/UmpleCodeExecution
+if (`uname -n` == 'cruise') then
+  echo About to run code execution setup
+  echo On cruise server so running setup with sudo
+  sudo ./setup.sh bg
+else
+  echo About to run code execution setup on local machine
+  ./setup.sh bg
+endif
+
+echo Starting background docker for umple collaboration in $UMPLEROOT/UmpleCollabServer
+cd $UMPLEROOT/UmpleCollabServer
+if (`uname -n` == 'cruise') then
+  echo About to run collab server setup
+  echo On cruise server so running setup with sudo
+  sudo ./setup.sh bg
+else
+  echo About to run collab server setup on local machine
+  ./setup.sh bg
+endif

@@ -37,7 +37,7 @@ DiagramEdit.doTextUpdate = function()
   if(update.codeChange) {
     Page.hideGeneratedCode();
   }
-  
+
   Action.ajax(Action.updateUmpleTextCallback,update.actionCode);
 }
 
@@ -47,6 +47,7 @@ DiagramEdit.doTextUpdate = function()
 
 DiagramEdit.addClass = function(position)
 {
+  Action.setjustUpdatetoSaveLater(false);
   DiagramEdit.removeNewClass();
   var umpleClass = UmpleSystem.createClass(position);
   var umpleJson = Json.toString(umpleClass);
@@ -64,6 +65,7 @@ DiagramEdit.addClass = function(position)
 // line drawn in the diagram using "add association" drawing tool
 DiagramEdit.addAssociation = function(line)
 {
+  Action.setjustUpdatetoSaveLater(false);
   // the line shown when selecting participating classes
   // is a dummy - erase it and create association 
   DiagramEdit.removeNewAssociation();
@@ -79,7 +81,6 @@ DiagramEdit.addAssociation = function(line)
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.showModelLoading();
   Page.showLayoutLoading();
-  
   DiagramEdit.updateUmpleText({
     actionCode: format("action=addAssociation&actionCode={0}",umpleJson),
     codeChange: true
@@ -88,6 +89,7 @@ DiagramEdit.addAssociation = function(line)
 
 DiagramEdit.addTransition = function(line)
 {
+  Action.setjustUpdatetoSaveLater(false);
     // the line shown when selecting participating states
   // is a dummy - erase it and create transition
   DiagramEdit.removeNewTransition();
@@ -100,7 +102,6 @@ DiagramEdit.addTransition = function(line)
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.showModelLoading();
   Page.showLayoutLoading();
-  
   DiagramEdit.updateUmpleText({
     actionCode: format("action=addTransition&actionCode={0}",umpleJson),
     codeChange: true
@@ -109,6 +110,7 @@ DiagramEdit.addTransition = function(line)
 
 DiagramEdit.addGeneralization = function(umpleGeneralization)
 {
+  Action.setjustUpdatetoSaveLater(false);
   DiagramEdit.removeNewGeneralization();
   UmpleSystem.createGeneralization(umpleGeneralization.childId, umpleGeneralization.parentId);
   var umpleJson = Json.toString(umpleGeneralization);
@@ -116,7 +118,6 @@ DiagramEdit.addGeneralization = function(umpleGeneralization)
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.showModelLoading();
   Page.showLayoutLoading();
-  
   DiagramEdit.updateUmpleText({
     actionCode: format("action=addGeneralization&actionCode={0}",umpleJson),
     codeChange: true
@@ -131,7 +132,6 @@ DiagramEdit.addGeneralization = function(umpleGeneralization)
  */
 DiagramEdit.createAssociationPartOne = function(event)
 {
-    Page.setFeedbackMessage("Part 1 association");
 
     // get the position of the click and compute the first end's position
   var mousePosition = new UmplePosition(event.pageX,event.pageY,0,0);
@@ -228,6 +228,7 @@ DiagramEdit.createGeneralizationPartTwo = function(event)
 
 DiagramEdit.classMoved = function(targetClass)
 {
+  Action.setjustUpdatetoSaveLater(false);
   var umpleClassMoved = UmpleSystem.find(targetClass.id);
   var classObj = jQuery("#" + umpleClassMoved.id);
  
@@ -253,6 +254,7 @@ DiagramEdit.classMoved = function(targetClass)
 // This function is no longer being called as its caller has been commented out
 DiagramEdit.classResized = function(event, ui)
 {
+  Action.setjustUpdatetoSaveLater(false);
   var classDiv = event.target;
   var id = classDiv.id;
   var umpleClass = UmpleSystem.find(id);
@@ -290,6 +292,7 @@ DiagramEdit.classResized = function(event, ui)
 
 DiagramEdit.associationMoved = function(dragDivSelector, addToQueue)
 {
+  Action.setjustUpdatetoSaveLater(false);
   if (DiagramEdit.newAssociation != null) DiagramEdit.removeNewAssociation();
   if (addToQueue == undefined) addToQueue = false;
   
@@ -380,6 +383,7 @@ DiagramEdit.reflexiveAssociationMoving = function(dragSelector)
 
 DiagramEdit.classNameChanged = function(diagramId,oldName,newName)
 {
+  Action.setjustUpdatetoSaveLater(false);
   if(newName.length=0 || !newName.match(/^[_a-zA-Z0-9]+$/))
   {
 
@@ -410,6 +414,7 @@ DiagramEdit.classNameChanged = function(diagramId,oldName,newName)
 
 DiagramEdit.attributeNameChanged = function(diagramId,index,oldName,newAttribute)
 {
+  Action.setjustUpdatetoSaveLater(false);
   if(!Action.validateAttributeName(newAttribute))
   {
     Action.updateUmpleDiagram();
@@ -435,6 +440,7 @@ DiagramEdit.attributeNameChanged = function(diagramId,index,oldName,newAttribute
 
 DiagramEdit.attributeNew = function(diagramId,attributeInput)
 {
+  Action.setjustUpdatetoSaveLater(false);
   if(!Action.validateAttributeName(attributeInput))
   {
     Action.updateUmpleDiagram();
@@ -467,6 +473,7 @@ DiagramEdit.attributeNew = function(diagramId,attributeInput)
 
 DiagramEdit.classDeleted = function(diagramId)
 {
+  Action.setjustUpdatetoSaveLater(false);
   var addToQueue = true;
   var umpleClass = UmpleSystem.find(diagramId);
   var associationsAffected = [];
@@ -512,6 +519,7 @@ DiagramEdit.classDeleted = function(diagramId)
 
 DiagramEdit.methodNew = function(diagramId, methodInput)
 {
+  Action.setjustUpdatetoSaveLater(false);
   if(!Action.validateMethodName(methodInput))
   {
     Action.updateUmpleDiagram();
@@ -540,6 +548,7 @@ DiagramEdit.methodNew = function(diagramId, methodInput)
 
 DiagramEdit.methodChanged = function(diagramId,index,oldName,newMethod)
 {
+  Action.setjustUpdatetoSaveLater(false);
   if(!Action.validateMethodName(newMethod))
   {
     Action.updateUmpleDiagram();
@@ -563,6 +572,7 @@ DiagramEdit.methodChanged = function(diagramId,index,oldName,newMethod)
 
 DiagramEdit.methodDelete = function(diagramId,index)
 {
+  Action.setjustUpdatetoSaveLater(false);
   var umpleClass = UmpleSystem.find(diagramId);
   umpleClass.removeMethod(index);
   // Reset height and width to sensible values
@@ -594,6 +604,7 @@ DiagramEdit.methodDelete = function(diagramId,index)
 
 DiagramEdit.attributeDelete = function(diagramId,index)
 {
+  Action.setjustUpdatetoSaveLater(false);
   var umpleClass = UmpleSystem.find(diagramId);
   umpleClass.removeAttribute(index);
   // Reset height and width to sensible values
@@ -624,6 +635,7 @@ DiagramEdit.attributeDelete = function(diagramId,index)
 
 DiagramEdit.associationDeleted = function(diagramId, addToQueue)
 {
+  Action.setjustUpdatetoSaveLater(false);
   if (addToQueue == undefined) addToQueue = false;
   var removed = UmpleSystem.removeAssociation(diagramId);
   var json = Json.toString(removed);
@@ -640,25 +652,24 @@ DiagramEdit.associationDeleted = function(diagramId, addToQueue)
 
 DiagramEdit.transitionDeleted = function(diagramId, addToQueue)
 {
-    Page.setFeedbackMessage("transition Deleted action diagram");
+  Action.setjustUpdatetoSaveLater(false);
+  if (addToQueue == undefined) addToQueue = false;
+  var removed = UmpleSystem.removeTransition(diagramId);
+  var json = Json.toString(removed);
 
-    if (addToQueue == undefined) addToQueue = false;
-    console.log("add transition in umple_action_diagram\n")
-    var removed = UmpleSystem.removeTransition(diagramId);
-    var json = Json.toString(removed);
+  if (!Page.repeatToolItem) Page.unselectAllToggleTools();
 
-    if (!Page.repeatToolItem) Page.unselectAllToggleTools();
-
-    Page.showModelLoading();
-    Page.showLayoutLoading();
-    DiagramEdit.updateUmpleText({
-        actionCode: format("action=removeTransition&actionCode={0}",json),
-        codeChange: true
-    });
+  Page.showModelLoading();
+  Page.showLayoutLoading();
+  DiagramEdit.updateUmpleText({
+      actionCode: format("action=removeTransition&actionCode={0}",json),
+      codeChange: true
+  });
 }
 
 DiagramEdit.generalizationDeleted = function(diagramId, addToQueue)
 {
+  Action.setjustUpdatetoSaveLater(false);
   if (addToQueue == undefined) addToQueue = false;
   var removed = UmpleSystem.removeGeneralization(diagramId)
   var json = Json.toString(removed);
@@ -704,7 +715,6 @@ DiagramEdit.removeNewAssociation = function()
 
 DiagramEdit.removeNewTransition = function()
 {
-    Page.setFeedbackMessage("removeNewTransition");
     if (DiagramEdit.newTransition != null)
   {
     var lineSelector = "#"+DiagramEdit.newTransition.getElementId();

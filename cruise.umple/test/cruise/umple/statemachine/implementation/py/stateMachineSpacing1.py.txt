@@ -1,0 +1,54 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+
+from enum import Enum, auto
+
+class Garage():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Garage State Machines
+    class GarageDoor(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Closed = auto()
+        Opening = auto()
+
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self):
+        self._garageDoor = None
+        self.setGarageDoor(Garage.GarageDoor.Closed)
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def getGarageDoorFullName(self):
+        answer = self._garageDoor.__str__()
+        return answer
+
+    def getGarageDoor(self):
+        return self._garageDoor
+
+    def pressButton(self):
+        wasEventProcessed = False
+        aGarageDoor = self._garageDoor
+        if aGarageDoor == Garage.GarageDoor.Closed :
+
+            turnLightOn()
+            self.setGarageDoor(Garage.GarageDoor.Opening)
+            wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
+        return wasEventProcessed
+
+    def setGarageDoor(self, aGarageDoor):
+        self._garageDoor = aGarageDoor
+
+    def delete(self):
+        pass
+

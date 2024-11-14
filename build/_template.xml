@@ -74,7 +74,6 @@
 
   <umple-jar name="umplificator" />
   <umple-jar name="validator" />
-  <umple-jar name="vml" />
   <umple-jar name="stats" />
   <umple-jar name="docs" />
   <umple-jar name="sync" />
@@ -122,7 +121,7 @@
         <isreachable property="access.maven" 
                      host="https://repo1.maven.org" />
         <isreachable property="access.umple" 
-                     host="https://cruise.eecs.uottawa.ca/index.shtml" />
+                     host="https://cruise.umple.org/index.shtml" />
         <isreachable property="access.github" 
                      host="https://github.com" />
       </parallel>
@@ -232,13 +231,20 @@
       <batchtest fork="yes" todir="${test.output.path}">
          <fileset dir="${project.path}/test">
           <include name="**/${junit}.java"/>
+          <include name="**/AssociationSortedWithNameSpace.java"/>
           <exclude name="**/AllTests.java"/>
+          <exclude name="**/vml/**"/>
         </fileset>
       </batchtest>
       <classpath refid="project.classpath"/>
       <classpath refid="core.ivy.classpath"/>
       <classpath refid="test.ivy.classpath"/>
     </junit>
+    <delete>
+    	<fileset dir="cruise.umple/test/cruise/umple/statemachine/implementation">
+        <include name="Agent.php"/>
+      </fileset>
+    </delete>  
 
     <junitreport todir="${test.output.path}">
       <fileset dir="${test.output.path}">

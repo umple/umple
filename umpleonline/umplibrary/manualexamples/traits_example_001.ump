@@ -1,0 +1,19 @@
+/*
+	Example 2: showing a trait designed for
+	comparison regarding if two objects are equal
+	or not.
+	
+	To see different diagram views in UmpleOnline:
+	  Use control-g for auto-layout
+	    (if not already showing)
+	  Use control-r to switch between trait view and
+	     plain classes resulting from applying traits
+	  Use control-m to show/hide methods
+*/
+trait TEquality{
+  Boolean isEqual(Object object);
+  Boolean isNotEqual(Object object){ 
+    return isEqual(object) ? true : false;
+  }
+} 
+// @@@skipcompile Java code not compilable no class

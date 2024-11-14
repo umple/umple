@@ -30,7 +30,7 @@ class Student
     $didAddMentors = $this->setMentors($allMentors);
     if (!$didAddMentors)
     {
-      throw new Exception("Unable to create Student, must not have duplicate mentors. See http://manual.umple.org?RE001ViolationofImmutability.html");
+      throw new Exception("Unable to create Student, must not have duplicate mentors. See https://manual.umple.org?RE001ViolationofImmutability.html");
     }
   }
 

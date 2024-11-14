@@ -1,0 +1,14 @@
+// This example will record any addition to
+// assoc link 'supervisor'
+
+class Student {
+  Integer id;
+}
+
+@SuppressWarnings("deprecation")
+class Professor {
+  1 -- * Student supervisor;
+  
+  trace add supervisor;
+}
+// @@@skipphpcompile See issue 596 (PHP tracing causes issues)

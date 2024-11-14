@@ -1,0 +1,30 @@
+import os
+from enum import Enum, auto
+
+class X2():
+    class Fruit(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Apple = auto()
+        Orange = auto()
+
+    def __init__(self, aT):
+        self._t = aT
+
+    def setT(self, aT):
+        wasSet = False
+        self._t = aT
+        wasSet = True
+        return wasSet
+
+    def getT(self):
+        return self._t
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "]" + os.linesep + "  " + "t" + "=" + (self.getT() != ((str(self.getT()).replaceAll("  ", "    ")) if not self.getT().equals(self) else "this") if None else "null")
+

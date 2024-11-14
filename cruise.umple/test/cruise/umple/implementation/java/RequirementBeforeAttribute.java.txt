@@ -1,0 +1,73 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.31.1.5860.78bb27cc6 modeling language!*/
+
+
+
+public class Example
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Example Attributes
+  private String a;
+  private String b;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Example(String aA, String aB)
+  {
+    a = aA;
+    b = aB;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setA(String aA)
+  {
+    boolean wasSet = false;
+    a = aA;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setB(String aB)
+  {
+    boolean wasSet = false;
+    b = aB;
+    wasSet = true;
+    return wasSet;
+  }
+
+  /**
+   * R01: this is a requirement for an attribute
+   */
+  public String getA()
+  {
+    return a;
+  }
+
+  /**
+   * R01: this is a requirement for an attribute
+   */
+  public String getB()
+  {
+    return b;
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "a" + ":" + getA()+ "," +
+            "b" + ":" + getB()+ "]";
+  }
+}

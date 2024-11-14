@@ -9,6 +9,7 @@ namespace cruise.umple.compiler;
 class UmpleInternalParser
 {
   final String AUTO_GENERATED_METHOD = "fAutoAPI";
+   List<ReqImplementation> ReqImpEnum= new ArrayList<ReqImplementation>();
   /*
    * Issue 1008 - Analyze enumerations defined at the top-level of an Umple Model
    */
@@ -21,6 +22,10 @@ class UmpleInternalParser
      if (t.is("enumerationDefinition"))
      {
        analyzeEnumeration(t);
+     }
+     if (t.is("reqImplementation"))
+     {  
+       ReqImpEnum = analyzeEnumImplReq(t);
      }
    }
    
@@ -40,7 +45,11 @@ class UmpleInternalParser
        if (subToken.is("enumValue")) {
          umpleEnum.addEnumValue(subToken.getValue());
        }
-     }     
+     }  
+    for (ReqImplementation ri : ReqImpEnum )
+    { 
+      umpleEnum.addReqImplementation(ri);
+    }   
      model.addEnum(umpleEnum);
   }
    
@@ -97,7 +106,8 @@ class UmpleInternalParser
           return;
         }
       }
-      
+
+      mixset Trait {      
       // Check that the enumeration doesn't conflict with any traits
       for (UmpleTrait uT : model.getUmpleTraits()) {
         if (uEnum.hasSameName(uT.getName())) {
@@ -109,6 +119,7 @@ class UmpleInternalParser
                                                             "" + uT.getPosition(0).getLineNumber()));
           return;
         }
+      }
       }
       
       for (UmpleClass uClass : model.getUmpleClasses()) {
@@ -163,6 +174,7 @@ class UmpleInternalParser
         }
       }
       
+      mixset StateMachine {
       // Check if the enumeration conflicts with any state machines, and if the enumeration is used as
       // event parameters
       for (StateMachine sm : uClass.getStateMachines()) {
@@ -192,7 +204,7 @@ class UmpleInternalParser
           }
         }
       }
-      
+      }
      // Check if the enumeration is used in any of the class's associations
      String className = uClass.getName();
      for (Association a : uClass.getAssociations()) {
@@ -224,7 +236,7 @@ class UmpleInternalParser
         }
       }
     }
-       
+    mixset StateMachine {   
      // Check if the class's state machines conflict with the enumeration, and if any of its state 
      // machine's events use the enumeration in their parameters
      for (StateMachine sm : uClass.getStateMachines()) {
@@ -259,7 +271,7 @@ class UmpleInternalParser
        }
       }
      }
-     
+    }
      if (classUsesEnum) {
        for (Association a : uClass.getAssociations()) {
          validateEnumerationInAssociation(uEnum, a, className);

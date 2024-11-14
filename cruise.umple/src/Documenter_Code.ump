@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 Code for generating documentation such as the Umple user manual
 */
@@ -101,8 +101,8 @@ class Documenter
     // NEW
     StringBuilder combinedHtmlOutput = new StringBuilder();
     combinedHtmlOutput.append(
-        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
-        "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
+        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
+        "<html xmlns=\"https://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
         "<head>" + "\n" +
         "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
         "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" + "\n" +        
@@ -114,7 +114,7 @@ class Documenter
         "  <style> .regCentered {text-align: center; font-size: 110%  }</style>\n" +  
         "  <meta name='viewport' content='width=device-width, initial-scale=1'>\n  " +
         "</head>\n<body>\n" +
-        "<div class='largeCentered'>Umple Combined User Manual<br><a href='http://www.umple.org'>http://www.umple.org</a></div><div class='regCentered'>This version is one large page and is intended to allow searching through the entire manual, or easy printing to pdf for offline reading. For most purposes you will want to work with the individual manual pages at <a href='http://manual.umple.org'>http://manual.umple.org</a> </div>"
+        "<div class='largeCentered'>Umple Combined User Manual<br><a href='https://www.umple.org'>https://www.umple.org</a></div><div class='regCentered'>This version is one large page and is intended to allow searching through the entire manual, or easy printing to pdf for offline reading. For most purposes you will want to work with the individual manual pages at <a href='https://manual.umple.org'>https://manual.umple.org</a>. A published 526-page <a href='https://doi.org/10393/42044'>pdf version of the Umple User Manual</a> is also available for download. </div>&nbsp;<br/>"
         );
 
     Hashtable<String,String> referenceLookup = createReferenceLookup();
@@ -141,21 +141,27 @@ class Documenter
         }
         
         prevNextOutput="&nbsp; &nbsp;";
+        Content theContent=null;
 
         // Add file link to previous page if there is one
         if(ci>0) {
-          prevNextOutput +="<a href=\"" + group.getContent(ci-1).getTitleFilename() + "\">[Previous]</a>&nbsp &nbsp;";
+          theContent=group.getContent(ci-1);
+          prevNextOutput+=genPrevNext("Previous",theContent);
         }
         else if(gi > 0&&getParser().getGroup(gi-1).numberOfContents()>=1) {
-          prevNextOutput +="<a href=\"" + getParser().getGroup(gi-1).getContent(getParser().getGroup(gi-1).numberOfContents()-1).getTitleFilename() + "\">[Previous]</a>&nbsp &nbsp;";
+          theContent=getParser().getGroup(gi-1)
+            .getContent(getParser().getGroup(gi-1).numberOfContents()-1);
+          prevNextOutput+=genPrevNext("Previous",theContent);
         }
 
         // Add file link to next page if there is one
         if(ci<(numContents -1)) {
-          prevNextOutput +="<a href=\"" + group.getContent(ci+1).getTitleFilename() + "\">[Next]</a>&nbsp; &nbsp;";
+          theContent=group.getContent(ci+1);
+          prevNextOutput+=genPrevNext("Next",theContent);
         }
         else if(gi<(numGroups -1)&&getParser().getGroup(gi+1).numberOfContents()>0) {
-          prevNextOutput +="<a href=\"" + getParser().getGroup(gi+1).getContent(0).getTitleFilename() + "\">[Next]</a>&nbsp &nbsp;";
+          theContent=getParser().getGroup(gi+1).getContent(0);
+          prevNextOutput+=genPrevNext("Next",theContent);
         }
         String htmlOutput = toHtml(content, navigationOutput, sectionsToHide, prevNextOutput, content.getFilename());
 
@@ -186,6 +192,19 @@ class Documenter
     addMessage("Created "+totPages+" manual pages, in "+numGroups+" groups, including "+filename);
     return true;
   }
+  
+  public String genPrevNext(String direction, Content theContent) {
+    String tooltip="title=\""+theContent.getTitle();
+    if(theContent.getTooltip()==null) {
+      tooltip+="\" ";
+    }
+    else {
+      tooltip+="\n\n"+theContent.getTooltip()+"\" "; 
+    }
+  
+    return("<a "+tooltip+"href=\"" + theContent.getTitleFilename() + "\">["+direction+"]</a>&nbsp &nbsp;");
+  }
+
   
   public String toHtml(String title)
   {
@@ -384,7 +403,7 @@ class Documenter
     htmlOutput = htmlOutput.replace("@@EXAMPLE@@", exampleOutput);
     htmlOutput = htmlOutput.replace("@@UMPLE_GRAMMAR@@", 
       "<span class=\"notranslate\" translate=\"no\">" +
-      grammarparser.toGrammar()) + "</spsn>";
+      grammarparser.toGrammar()) + "</span>";
     return htmlOutput;
   }
   
@@ -400,6 +419,12 @@ class Documenter
         .replace("@@NAVIGATION_HEADER_NAME@@",group.getName())
         .replace("@@NAVIGATION_HEADER_ID@@",group.getGroupIdName())
         .replace("@@NAVIGATION_HEADER_ID@@",group.getGroupIdName());
+      if(group.getTooltip() == null || group.getTooltip().equals("")) {
+        nextGroupHeader = nextGroupHeader.replace("@@TOOLTIP@@ ","");
+      }
+      else {
+        nextGroupHeader = nextGroupHeader.replace("@@TOOLTIP@@ ","title=\""+group.getTooltip()+"\"");
+      }
       navigationOutput += nextGroupHeader;
 
       for (Content content : group.getContents())
@@ -411,6 +436,13 @@ class Documenter
           nextGroupItem = Template.NavigationItemTemplate;
         }
         nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_NAME@@",content.getTitle());
+        if(content.getTooltip() != null) {
+          nextGroupItem = nextGroupItem.replace("@@TOOLTIP@@",Template.tooltipTemplate().replace("@@TOOLTIP@@",content.getTooltip()));
+        }
+        else {
+          nextGroupItem = nextGroupItem.replace("@@TOOLTIP@@ ","");
+        }
+        
         if(content != contentToNotHighlight) {
           nextGroupItem = nextGroupItem.replace("@@NAVIGATION_ITEM_FILENAME@@",content.getTitleFilename());
         }
@@ -454,6 +486,7 @@ class Group
 class ContentParser
 {
   depend java.nio.file.Paths;
+  depend java.nio.file.Path;
   depend java.nio.file.Files;
   depend java.io.IOException;
   
@@ -462,7 +495,7 @@ class ContentParser
   private int init()
   {
     addRule("groupOrder : ( [**group] ; )*");
-    addRule("content : [*title] [*group] [=noreferences]? @@description [**description] (@@videoURL [**videoURL])? (@@syntax [**syntax])? [[example]]* @@Filename [*filename]");
+    addRule("content : [*title] [*group] [=noreferences]? (@@tooltip [**tooltip])?  @@description [**description] (@@videoURL [**videoURL])? (@@syntax [**syntax])? [[example]]* @@Filename [*filename]");
     addRule("example- : @@example ( @@caption [**caption] @@endcaption )? [**example] @@endexample");
     init += 1;
     return init;
@@ -490,6 +523,10 @@ class ContentParser
       {
         Group g = getGroup(t.getValue("group"));
         Content content = new Content(t.getValue("title"), t.getValue("description"), t.getValue("syntax"), t.getValue("filename"));
+
+        if(t.getValue("tooltip") != null) {
+          content.setTooltip(t.getValue("tooltip"));
+        }
         
         if(t.getValue("videoURL") != null) {
           content.setVideoURL(t.getValue("videoURL"));
@@ -514,8 +551,15 @@ class ContentParser
                 String exampleName = exampleTextWithArguments;
                 if (spaceLocation != -1) exampleName=exampleTextWithArguments.substring(
                   0,spaceLocation);
-                exampleText = new String(Files.readAllBytes(Paths
-                  .get("umpleonline/ump/"+exampleName) ));
+                Path thePath = Paths.get("umpleonline/umplibrary/"+exampleName);
+                if(Files.exists(thePath)) {
+                  exampleText = new String(Files.readAllBytes(thePath));
+                }
+                else {
+                  // Fall back to the old location of the manual examples
+                  thePath = Paths.get("umpleonline/ump/"+exampleName);                
+                  exampleText = new String(Files.readAllBytes(thePath));
+                }
                 exampleText = exampleText.replaceAll("<", "&lt;");
                 exampleText = exampleText.replaceAll(">", "&gt;");
                 exampleURL="?example="+exampleTextWithArguments;
@@ -549,7 +593,14 @@ class ContentParser
         {
           if (!groupToken.isStatic())
           {
-            addGroup(new Group(groupToken.getValue()));
+            String [] groupInfo=groupToken.getValue().split("%");
+            Group newGroup = new Group(groupInfo[0]);
+            String newTooltip="";
+            if(groupInfo.length==2) {
+              newTooltip=groupInfo[1];
+            }
+            newGroup.setTooltip(newTooltip);
+            addGroup(newGroup);
           }
         }
       }
@@ -563,13 +614,13 @@ class Template
   
   private static String navigationHeaderTemplate()
   {
-    return "        <div class=\"level1\"><a href=\"javascript:showHide('@@NAVIGATION_HEADER_ID@@');\">@@NAVIGATION_HEADER_NAME@@</a></div>" + "\n" +
+    return "        <div class=\"level1\"><a @@TOOLTIP@@ href=\"javascript:showHide('@@NAVIGATION_HEADER_ID@@');\">@@NAVIGATION_HEADER_NAME@@</a></div>" + "\n" +
            "        <div id=\"@@NAVIGATION_HEADER_ID@@\">";
   }
   
   private static String navigationItemTemplate()
   {
-    return "          <div class=\"level2\"><a href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
+    return "          <div class=\"level2\"><a @@TOOLTIP@@ href=\"@@NAVIGATION_ITEM_FILENAME@@\" >@@NAVIGATION_ITEM_NAME@@</a></div>" + "\n";
   }
  
   private static String navigationItemTemplateNoAnchor()
@@ -587,7 +638,7 @@ class Template
       "      </pre>" + "\n" +
       "</span>" +
       "<p class=\"description\">" +
-      "<a target=\"uol\" href=\"http://cruise.eecs.uottawa.ca/umpleonline@@EXAMPLE_CODE_URL@@\">" +
+      "<a target=\"uol\" href=\"https://cruise.umple.org/umpleonline@@EXAMPLE_CODE_URL@@\">" +
         "Load the above code into UmpleOnline</a></p>" + "\n" +
       "&nbsp; <br/>" + "\n";
     return template;
@@ -604,6 +655,14 @@ class Template
     return template;
   }
   
+  static String tooltipTemplate()
+  {
+    String template = "" +
+      "title=\"@@TOOLTIP@@\"";
+    return template;
+  }  
+  
+  
   private static String videoURLTemplate()
   {
     String template = "" +
@@ -619,11 +678,12 @@ class Template
   private static String htmlTemplate()
   {
     String template = "" + 
-        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
-        "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
+        "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">" + "\n" +
+        "<html xmlns=\"https://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">" + "\n" +
         "<head>" + "\n" +
         "  <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />" + "\n" +
         "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />" + "\n" +
+        "  <meta name=\"description\" content=\"Umple User Manual page for @@TITLE@@\"/>" + "\n" +
         "  <link rel=\"stylesheet\" type=\"text/css\" href=\"files/layout.css\" />" + "\n" +
         "  <script type=\"text/javascript\" src=\"files/script.js\"></script>" + "\n" +
         "  <title>Umple User Manual: @@TITLE@@</title>" + "\n" +
@@ -648,24 +708,17 @@ class Template
         "  <table class=\"body\" >" + "\n" +
         "  <tbody>" + "\n" +
         "  <tr>" + "\n" +
-        "    <td class=\"menu\">" + "\n" +
-        "      <div class=\"title\"><a href=\"http://cruise.site.uottawa.ca/umple\">" +
+        "    <td class=\"menu\" style=\"width: 170px; min-width: 170px\">" + "\n" +
+        "      <div class=\"title\"><a href=\"https://cruise.umple.org/umple\">" +
         "<img height=\"25\" src=\"files/indicator_blocks.gif\" alt=\"Umple Logo\" />&nbsp;" +
         "Umple </a></div>" + "\n" +
         
-// Code from Google for translation
-
-"<div id=\"google_translate_element\"></div><script type=\"text/javascript\">" +
-"function googleTranslateElementInit() {" +
-"  new google.translate.TranslateElement({pageLanguage: 'en', layout:" +
-"google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');" +
-"}" +
-"</script><script type=\"text/javascript\"" +
-"src=\"//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit\"></script>" +
-
+// Code from Google to inject translation - script is at end
+"<div id=\"google_translate_element\" style=\"min-height: 24px\"></div>" +
+// End of code from Google
         "@@NAVIGATION@@" + "\n" +
         "<div class=\"level1\"><a href=\"UmpleUserManualCombined.html\">Combined Version</a></div>\n" +  
-        "<div class=\"level1\"><a href=\"https://github.com/umple/umple/tree/master/build/reference/@@SRCFILENAME@@\">Edit on Github</a></div>\n" +                
+        "<div class=\"level1\"><a title=\"Click here to open an editor in Github on the original source for this manual page.\nYou can submit a pull request after making your changes\" href=\"https://github.com/umple/umple/tree/master/build/reference/@@SRCFILENAME@@\">Edit on Github</a></div>\n" +                
         "<div class=\"level1\">@@PREVNEXT@@</div>\n" +
         "    </td>" + "\n" +
         "" + "\n" +
@@ -673,9 +726,29 @@ class Template
         "" + "\n" +
         "      <td class=\"content\">" + "\n" +
         "" + "\n" +
+        
+        "<span style=\"float: right\">"+
+        "  <a title=\"The Umple website and UmpleOnline are hosted using facilities provided by the Digital Research Alliance of Canada to Canadian university faculty members.\" href=\"https://alliancecan.ca/en\" target=\"alliancecantab\"><img height=\"16px\" style=\"vertical-align:top\" src=\"files/DRAC_logo.jpeg\" alt=\"Digital Research Alliance of Canada logo\" /></a>&nbsp;"+
+        "  <a title=\"We acknowledge the support of the Natural Sciences and Engineering Research Council of Canada (NSERC) grant number 752498 for ongoing support of research into Umple. /Nous remercions le Conseil de recherches en sciences naturelles et en génie du Canada (CRSNG) de son soutien.\" href=\"https://www.nserc-crsng.gc.ca/ase-oro/Details-Detailles_eng.asp?id=752498\" target=\"NSERCtab\"><img height=\"18px\" style=\"vertical-align:top\" src=\"files/NSERC_BLACK.png\" alt=\"NSERC logo\" /></a>&nbsp;"+        
+        "  <a title=\"Umple is led by Timothy Lethbridge, professor in Electrical Engineering and Computer Science, Faculty of Engineering at the University of Ottawa. Much of the development has been by graduate and undergraduate students at uOttawa.\" href=\"https://www.uottawa.ca/faculty-engineering/school-electrical-engineering-computer-science\" target=\"uottawatab\"><img height=\"20px\" src=\"files/uottawa_ver_black.png\" alt=\"University of Ottawa logo / Université d'Ottawa\" /></a>"+
+        "</span>"+
+        
         "      <h2><i>User Manual @@PREVNEXT@@</i></h2>"  + "\n" +
         
-// Code from Google for custom search
+// Code from Google to inject custom search -- scripts are at end
+"<div style=\"min-height: 61px\"><gcse:search></gcse:search></div>" + "\n" +
+// End code from Google
+        Template.HtmlCoreTemplate +
+        "      </td>" + "\n" +
+        "    </tr>" + "\n" +
+        "  </tbody></table>" + 
+        Template.HtmlHighlighterTemplate +
+        "<script language=\"javascript\">" + "\n" +
+        "@@SECTIONSTOHIDE@@" + "\n" +        
+        "</script>" + "\n" +
+
+// The following are at the end in case they fail to load
+// Script from Google for search
 
 "<script>" + "\n" +
 "  (function() {" + "\n" +
@@ -688,33 +761,19 @@ class Template
 "    s.parentNode.insertBefore(gcse, s);" + "\n" +
 "  })();" + "\n" +
 "</script>" + "\n" +
-"<gcse:search></gcse:search>" + "\n" +
 
-/*
-"<div style=\"border:1px solid black\" id=\"cse\" style=\"width: 100%;\">Loading</div>" + "\n" +
-"<script src=\"http://www.google.com/jsapi\" type=\"text/javascript\"></script>" + "\n" +
-"<script type=\"text/javascript\"> " + "\n" +
-"  google.load('search', '1', {language : 'en', style : google.loader.themes.V2_DEFAULT});" + "\n" +
-"  google.setOnLoadCallback(function() {" + "\n" +
-"    var customSearchOptions = {};  var customSearchControl = new google.search.CustomSearchControl(" + "\n" +
-"      '014719661006816508785:azyvserhylq', customSearchOptions);" + "\n" +
-"    customSearchControl.setResultSetSize(google.search.Search.FILTERED_CSE_RESULTSET);" + "\n" +
-"    var options = new google.search.DrawOptions();" + "\n" +
-"    options.setAutoComplete(true);" + "\n" +
-"    customSearchControl.draw('cse', options);" + "\n" +
-"  }, true);" + "\n" +
-"</script>" + "\n" +
-*/
-        
-/// End code from Google
-        Template.HtmlCoreTemplate +
-        "      </td>" + "\n" +
-        "    </tr>" + "\n" +
-        "  </tbody></table>" + 
-        Template.HtmlHighlighterTemplate +
-        "<script language=\"javascript\">" + "\n" +
-        "@@SECTIONSTOHIDE@@" + "\n" +        
-        "</script>" + "\n" +
+// Script from Google for translation
+"<script type=\"text/javascript\">" +"\n" +
+"function googleTranslateElementInit() {" +"\n" +
+"  new google.translate.TranslateElement({pageLanguage: 'en', layout:" +
+"google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');" +"\n" +
+"}" +
+"</script>"+"\n" +
+"<script type=\"text/javascript\"" +"\n" +
+"src=\"//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit\"></script>" +"\n" +
+
+// End of Google scripts
+
         "</body>" + "\n" +
         "</html>";
     return template; 

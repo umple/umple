@@ -1,19 +1,24 @@
 body { 
   background-color:White; overflow: auto; overflow-y: scroll; margin-left: 10px;
-  margin-top: 10px; margin-right: 9px; margin-bottom: 10px;
+  margin-top: 10px; margin-right: 9px; margin-bottom: 10px; font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 p, ol, ul, div, h1, h2, h3, h4, b { 
-  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 10pt; color: #000000; 
+   font-size: 10pt; color: #000000; 
 }
-p.pagedescription { margin-left:5px; margin-top: 0px;}
+
+.ui-tooltip {
+  background-color: #dadada;;
+}
+
+p.pagedescription { margin-left:5px; margin-top: 10px;}
 
 /* UNIVERSAL LAYOUT STYLES */ 
 .inRow { float: left; }
 .row { clear: both; overflow: auto; }
 
 /* HEADER */
-.logo { margin-top: 0px; }
-.pretext { line-height: 1.5em; }
+.logo { margin-top: 10px; }
+.pretext { line-height: normal;}
 
 /* MAIN APPLICATION CONTAINER */
 #mainApplication { overflow: hidden; }
@@ -21,7 +26,8 @@ p.pagedescription { margin-left:5px; margin-top: 0px;}
 #paletteColumn { 
   box-sizing: border-box; -moz-box-sizing: border-box; border: 1px solid gray; 
   background-color: GhostWhite; padding: 1px 1px 1px 1px; -moz-border-radius: 4px; 
-  -webkit-border-radius: 4px; border-radius: 4px; 
+  -webkit-border-radius: 4px; border-radius: 4px; font-family: Verdana, Arial, Helvetica, sans-serif;
+  letter-spacing: 1px;
 }
 .ui-resizable-s { bottom: 0px; }
 
@@ -31,7 +37,7 @@ textArea {
   -webkit-border-radius: 4px; width:100%; height:100%; margin:0px; 
 }
 textArea.umpleModelEditor { resize:none; }
-textArea.umpleLayoutEditor {overflow-y: scroll; resize: none; border: 1px solid gray; }
+textArea.umpleLayoutEditor {overflow-y: scroll; /* resize: none; */ border: 1px solid gray; }
 .CodeMirror-scroll { 
   box-sizing:border-box; -moz-box-sizing:border-box; -moz-border-radius: 4px; 
   -webkit-border-radius: 4px; border-radius: 4px;
@@ -68,7 +74,7 @@ div.syncNeededMessage{ color: Gray; margin-left: 5px;}
 .largeScreenEditorNoMargin { margin-right: 0px; }
 
 /* Tweaks for the size and positioning of the resizing handle of the canvas */
-.ui-resizable-w { width: 15px; left:- -10px; } 
+.ui-resizable-w { width: 15px; left: -10px; } 
 
 /* GENERATED CODE AREA */
 #generatedCodeRow { 
@@ -87,7 +93,7 @@ div.paletteWrapper {
   background-color: GhostWhite; padding:  1px 1px 1px 1px; -moz-border-radius: 4px; 
   -webkit-border-radius: 4px; 
 }
-div.palette { height: 100%; width: 175px; font-family: Verdana; font-size: 9.5pt; }
+div.palette { height: 100%; width: 175px; font-size: 9.5pt; }
 div.palette img { cursor:pointer; margin-left: 8px; padding:2px; vertical-align:middle;}
 
 div.palette ul { 
@@ -96,18 +102,40 @@ div.palette ul {
 }
 div.palette ul.first { margin-top:-10px; border-top: solid black 1px; }
 div.palette ul.second { margin-top:20px; border-top: solid black 1px; }
+
 div.palette h3 { 
-  letter-spacing: -1px; font-family: Verdana; line-height: 13px; font-size: 10.5pt;
+  line-height: 13px; font-size: 11pt !important; font-weight:900; letter-spacing: -1px; border-color:gray;
 }
+/*Overriding default jQuery UI*/
+#paletteColumn h3.ui-accordion-header>a:link {
+  color: #3383bb !important;
+}
+
+#paletteColumn h3.ui-accordion-header:hover>a:link {
+   color:#70b2e1 !important;
+}
+
+#paletteColumn .ui-state-active .ui-icon, 
+#paletteColumn .ui-button:active .ui-icon{
+  background-image: url("jquery/images/ui-icons_3383bb_256x240.png") !important;
+}
+#paletteColumn .ui-state-default .ui-icon{
+  background-image: url("jquery/images/ui-icons_3383bb_256x240.png") !important;
+}
+#paletteColumn .ui-state-hover .ui-icon{
+  background-image: url("jquery/images/ui-icons_70b2e1_256x240.png") !important;
+}
+/* ======================== */
+
 div.palette li { 
-  z-index: 1; font-family: Verdana; margin:0; list-style-type: none; border: GhostWhite solid 1px; 
+  z-index: 1; margin:0; list-style-type: none; border: GhostWhite solid 1px; 
   font-size: 9pt; 
 }
-div.palette li.disabled { z-index: 2; background-color: GhostWhite; color: Silver;}
-div.palette li.disabled  img{ z-index: 1; cursor: not-allowed; opacity: 0.25;}
+div.palette li.disabled { z-index: 2; background-color: GhostWhite;}
+div.palette li.disabled img{ z-index: 1; cursor: not-allowed; opacity: 0.25;}
 div.palette li.subtitle { 
   text-shadow: 1px 1px 4px White; font-weight: bold; text-transform: uppercase; letter-spacing: 0px;
-  color: Black; margin: 0px 5px 8px 5px; font-family: Verdana; text-align: center; 
+  color: Black; margin: 0px 5px 8px 5px; text-align: center; 
   font-size:10pt; border-bottom: Silver double;
 }
 div.palette li.selected { 
@@ -121,21 +149,28 @@ div.palette li.highlight {
 div.palette .bookmarkableUrl { padding: 2px 14px 2px 14px; }
 .bookmarkableUrl { padding: 0px 0px 0px 8px; }
 
+.bookmarkableUrl span a{
+  padding-top:auto;
+  padding-bottom: auto;
+}
+
 /* Override jQueryUI style to remove gradient and extra image loading */
-#paletteColumn .ui-state-active { background: #999; } 
-#paletteColumn h3.ui-state-active>a:link { color: #3383bb; } /* Overrides a:link rule in accordion header */
-#paletteColumn .ui-state-default { background: #eee; } 
+#paletteColumn .ui-state-default { background: #eee; }
 #paletteColumn .ui-widget-content { background: #c9c9c9; }
+
 
 /* BUTTONS */
 #paletteColumn div.jQuery-palette-button { 
-  font-family: Verdana; letter-spacing: 0.1px;
-  width: 132px; height: 25px; margin: auto; padding:0; 
-  background: #eee;
+  letter-spacing: 0.1px;
+  width: 132px; height: 25px; margin: auto; padding:0px;
+  line-height: 25px;
+  color: #3383bb;
+  font-weight: bold;
+  font-size: 10pt;
 }
 
 #paletteColumn div.jQuery-palette-button.ui-state-hover { 
-  background: #f8f8f8; /* Overrides jQueryUI hover styles to remove image */
+  /*background: #f8f8f8; /* Overrides jQueryUI hover styles to remove image */
 }
 
 #buttonStructureLink {
@@ -152,7 +187,7 @@ a.button:active { color:black; text-decoration:none; }
 .buttonExtend:hover { cursor: pointer; }
 
 /* DISABLING DIVS ON THE SCREEN */
-.disabled { text-decoration: line-through; color: #d6d6d6; pointer-events: none; }
+.disabled { opacity: 0.3; color: #d6d6d6; pointer-events: none; }
 .disabled a { text-decoration: none; color: #d6d6d6;}
 
 /* SELECT and CUSTOM SIZE INPUTS */
@@ -164,7 +199,7 @@ input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
 
 /* UMPLE CLASSES, ASSOCIATIONS and GENERALIZATIONS */
 div.umpleClass {
-  padding:0; margin:0; z-index: 2; cursor:move; position: absolute; font-family: arial, serif; 
+  padding:0; margin:0; z-index: 2; cursor:move; position: absolute; font-family: verdana, arial, sans-serif; 
   background-color: White;
 }
 div.umpleClass img { vertical-align:middle; margin:0 0 1px 0; }
@@ -415,7 +450,6 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
   height: 26px;
   overflow: hidden;
   font-size: 12px;
-  font-family: verdana;
   position: relative;
 }
 .tabrow li {
@@ -501,3 +535,87 @@ div.umpleGeneralization { cursor: pointer; background-color: black; }
 .tabname br {
   display: none
 }
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  opacity: 0;
+  width: 120px;
+  background-color: #dadada;
+  color: #333;
+  font-weight: normal;
+  text-align: center;
+  padding: 5px 0;
+  border: 2px solid #aaaaaa;
+  padding: 5px; box-shadow: 0px 0px 5px grey;
+  border-radius: 6px;
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+.tooltiptext a{
+  text-decoration: none;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.5s;
+  top: 20px;
+  left: 10px;
+}
+
+.executionHeader {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+/* codemirror 6 */
+.cm-editor {
+  /* margin-top: 5px ; */
+  border: 1px solid black ;
+  border-radius: 4px ;
+}
+.cm-gutters {
+  width: 29 px !important;
+}
+
+/* make codemirro 6 scrollable */
+.cm-scroller {
+  padding: 1px;
+  overflow: auto !important;
+}
+.cm-editor {
+  min-height: 100% !important;
+  max-height: 100% !important;
+}
+
+/* div[role=tooltip] {
+  display: none !important;
+} */
+
+
+/* Removing CM5 */
+div#topTextEditor {
+  display: none !important;
+}
+
+/* codemirror 6 editor */
+div#newEditor {
+  position: relative;
+  /* height: 90%; */
+}
+
+/* DEBUG */
+/* makes layout editor resizable vertically */
+textarea#umpleLayoutEditorText {
+  resize: vertical;
+}
+/* 
+.cm-content, .cm-gutter { 
+  min-height: 750px; 
+} */

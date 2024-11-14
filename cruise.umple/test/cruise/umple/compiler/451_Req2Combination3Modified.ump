@@ -1,0 +1,15 @@
+// Combination of 2 requirements and implementations
+// Should not produce 401 warning
+implementsReq A;
+implementsReq B;
+class X {
+  a;
+  b;
+}
+req A text {
+  This is the second requirement.
+} 
+req B { 
+ This is the first requirement.
+}
+

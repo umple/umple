@@ -1,0 +1,34 @@
+//A garage door can be modeled
+//using unspecified events for
+//error states
+
+class GarageDoor {
+  status {
+    functionning {
+      unspecified -> error;
+      
+      closed {
+        pressButton -> opening;
+      }
+      open {
+        pressButton -> closing;
+      }
+      closing {
+        finishedClosing -> closed;
+      }
+      opening {
+        finishedOpening -> open;
+      }
+    }
+    
+    error {
+      entry / {
+        /* attempt to solve the issue */
+      }
+      ready -> functionning;
+    }
+  }
+}
+//$?[End_of_model]$?
+// @@@skippythoncompile - Contains Java Code
+// @@@skipcppcompile

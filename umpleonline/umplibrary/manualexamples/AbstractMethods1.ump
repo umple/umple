@@ -1,0 +1,36 @@
+//The class Person contains abstract 
+//methods, which are inherited and 
+//implemented by its subclass Student
+
+//Person is abstract, but Student is a
+//concrete class as it has no methods
+//that are unimplemented.
+class Person {
+  abstract void method1();
+  abstract void method2();
+  void method3() Java {
+    /* Implementation */
+  }
+
+  void method3() Python {
+    ''' Implementation '''
+  }
+}
+
+class Student {
+  isA Person;
+  
+  void method1() Java {
+    /* Implementation */
+  }
+  void method2() Java {
+    /* Implementation */
+  }
+
+ void method1() Python {
+    ''' Implementation '''
+  }
+  void method2() Python {
+    ''' Implementation '''
+  }
+}

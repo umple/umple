@@ -1,0 +1,42 @@
+#~/bin/csh -fb
+# Builds the umpleonline docker image from a local umple directory which you should be in when starting the command
+# If you want to rebuild the base first do
+#  docker build -t "umple/umpleonline-base:local" -f umpleonline/Dockerfile-base .
+#  the tag it and push it unless just testing
+#     docker tag xxxxx umple/umpleonline-base:latest
+#     docker push umple/umpleonline-base:latest
+#  if just testing, then temporarily change umpleonline/DockerFile to use the :local tag
+set thedir=$cwd
+set thebranch=docker-`git rev-parse --abbrev-ref HEAD`
+set backedvisits=`cat umpleonline/countlog.txt`
+set backedcommands=`cat umpleonline/scripts/commandcount.txt`
+echo will build Umple docker image for system in $thedir
+echo make sure you have built umple and the manual and promoted umple first
+if (! -d umpleonline) then
+  echo This script is not being started in an umple root directory
+  exit -1
+endif
+echo 0 > umpleonline/countlog.txt
+echo 0 > umpleonline/scripts/commandcount.txt
+cd umpleonline
+# create a temporary copy of the manual and UmpleCodeExecution
+cp -pr ../dist/cruise.umple/reference manual
+cp -pr ../UmpleCodeExecution UmpleCodeExecution
+docker build -t "umple/umpleonline:recentbuild" --build-arg gitbranch=$thebranch ../umpleonline;
+rm -r manual
+rm -r UmpleCodeExecution
+cd ..
+echo $backedvisits > umpleonline/countlog.txt
+echo $backedcommands > umpleonline/scripts/commandcount.txt
+echo if the above completed successfully then run the image with the following
+echo first set up a directory in /tmp as per below for the files
+echo docker run --rm -ti --name umpleonline_local -p 8000:8000 -v /var/run/docker.sock:/var/run/docker.sock  -v /tmp/umpleonline-tmp81701:/var/www/ump docker.io/umple/umpleonline:recentbuild
+echo then open http://localhost:8000/umple.php
+echo
+echo When good do the following to push to docker hub
+echo docker images
+echo docker tag XXXXXXXXXXXX umple/umpleonline:latest
+echo docker push umple/umpleonline:latest
+echo docker tag XXXXXXXXXXXX umple/umpleonline:v1.XX.X
+echo docker push umple/umpleonline:v1.XX.X
+

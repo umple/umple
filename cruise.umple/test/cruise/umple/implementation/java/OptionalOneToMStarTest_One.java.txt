@@ -28,7 +28,7 @@ public class Mentor
     boolean didAddStudents = setStudents(allStudents);
     if (!didAddStudents)
     {
-      throw new RuntimeException("Unable to create Mentor, must have at least 5 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Mentor, must have at least 5 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 
@@ -136,7 +136,7 @@ public class Mentor
         Mentor existingMentor = aStudent.getMentor();
         if (!mentorToNewStudents.containsKey(existingMentor))
         {
-          mentorToNewStudents.put(existingMentor, new Integer(existingMentor.numberOfStudents()));
+          mentorToNewStudents.put(existingMentor, Integer.valueOf(existingMentor.numberOfStudents()));
         }
         Integer currentCount = mentorToNewStudents.get(existingMentor);
         int nextCount = currentCount - 1;
@@ -144,7 +144,7 @@ public class Mentor
         {
           return wasSet;
         }
-        mentorToNewStudents.put(existingMentor, new Integer(nextCount));
+        mentorToNewStudents.put(existingMentor, Integer.valueOf(nextCount));
       }
       checkNewStudents.add(aStudent);
     }

@@ -1,0 +1,24 @@
+/*
+  Example 1: showing how state machines are
+  defined and used in traits.
+
+  To see different diagram views in UmpleOnline:
+    Use control-g for auto-layout as a class diagram
+    Use control-r to switch between trait view and
+       plain classes resulting from applying traits
+    Use control-m to show/hide methods
+    Use control-s to show the resulting state diagram
+*/
+trait T1 {
+  sm1{
+  s0 {e1-> s1;}
+  s1 {e0-> s0;}
+}
+sm2{
+  s0 {e1-> s1;}
+  s1 {e0-> s0;}
+}
+}
+class C1 {
+  isA T1;
+}

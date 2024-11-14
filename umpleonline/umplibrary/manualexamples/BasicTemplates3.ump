@@ -1,0 +1,51 @@
+// Example of creating a lengthy output in Umple
+// from a template. Note this is plain text.
+// See the next page for html generation.
+// The company is, of course, fictitious.
+class RefLetterRequest {
+  // Attributes used to construct the instance
+  String fileno; String recipient; String applicant;
+  String sender; String senderTitle;
+  
+  // Letter template
+  letterTemplate <<!
+Subject: Reference request for <<=applicant>>, File #<<=fileno>>
+
+Dear <<=recipient>>,
+Our company, Umple Enterprises, is hiring talented software
+engineers.
+
+We have received an application from <<=applicant>> who named you
+as an individual who could provide a letter of reference. Would you
+please reply to this letter, answering the following questions:
+  * In what capacity do you know <<=applicant>>
+  * For how long have you known <<=applicant>>
+  * Describe the abilities of <<=applicant>> in software development
+  * What his or her strengths and weaknesses?
+  * Please provide your phone number and suitable times to call in
+    case we need to follow up 
+    
+Yours sincerely,
+<<=sender>>
+<<=senderTitle>>
+!>>
+
+  // Specification of the method to generate
+  emit letterTemplate()(letterTemplate);
+
+  // Main program to generate the letter
+  public static void main(String[] argv) {
+    if(argv.length < 5) {
+      System.err.println("You must specify arguments for fileno, recipient, applicant, sender, sendertitle");
+    }
+    // Output the entire result
+    else System.out.print(new RefLetterRequest(
+      argv[0], argv[1],argv[2], argv[3], argv[4]
+    ).letterTemplate()); 
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

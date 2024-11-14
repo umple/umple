@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
  
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
 */
 
@@ -31,7 +31,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "AirlineExample.ump");
 
@@ -45,7 +45,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "ElectionSystem.ump");
 
@@ -59,7 +59,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "BankingSystemA.ump");
 
@@ -73,7 +73,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "BankingSystemB.ump");
 
@@ -87,7 +87,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "WarehouseSystem.ump");
 
@@ -103,7 +103,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "ElevatorSystemA.ump");
 
@@ -119,7 +119,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "ElevatorSystemB.ump");
 
@@ -133,7 +133,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "2DShapes.ump");
 
@@ -147,7 +147,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "GenealogyA.ump");
 
@@ -161,7 +161,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "GenealogyB.ump");
 
@@ -175,7 +175,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "GenealogyC.ump");
 
@@ -189,7 +189,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "MailOrderSystemClientOrder.ump");
 
@@ -203,7 +203,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "InventoryManagement.ump");
 
@@ -217,7 +217,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "MailOrderSystem.ump");
 
@@ -231,7 +231,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "PoliceSystem.ump");
 
@@ -245,7 +245,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "UniversitySystem.ump");
 
@@ -259,7 +259,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "PoliticalEntities.ump");
 
@@ -273,7 +273,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "GeographicalInformationSystem.ump");
 
@@ -287,7 +287,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "ManufactoringPlantController.ump");
 
@@ -301,7 +301,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "Library.ump");
 
@@ -315,7 +315,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "Hotel.ump");
 
@@ -329,7 +329,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "Insurance.ump");
 
@@ -343,7 +343,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "TelephoneSystem.ump");
 
@@ -357,7 +357,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "AccessControl.ump");
 
@@ -373,7 +373,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "Accidents.ump");
 
@@ -389,7 +389,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "Accommodations.ump");
 
@@ -405,7 +405,7 @@ public class UmpleSystemExamplesTest
 
   {
 
-    String path = SampleFileWriter.rationalize("../umpleonline/ump");
+    String path = SampleFileWriter.rationalize("../umpleonline/umplibrary");
 
     run(path, "AfghanRainDesign.ump");
 

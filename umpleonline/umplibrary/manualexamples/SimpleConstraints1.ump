@@ -1,0 +1,35 @@
+// The following demonstrates two simple
+// constraints limiting the range of age
+// The test code demonstrates that this works
+// as expected.
+class Client {
+  const Integer MinAge =18;
+  Integer age;
+  [age >= MinAge]
+  [age <= 120]
+  
+  public static void main(String [ ] args) Java {
+    Client c = new Client(40);
+    for (int i: new int[]
+      {-1,10,17,18,19,50,119,120,122,1000}) 
+    {
+       System.out.println(
+         "Trying to initialize age to "+i);
+       System.out.println(c.setAge(i)
+         ? "  Success"
+         : "  FAILURE");
+    }
+  }
+
+  public static void main(String [ ] args) Python {
+    import Client
+    c = Client.Client(40)
+    for i in [-1, 10, 17, 18, 19, 50, 119, 120, 122, 1000]:
+      print("Trying to initialize age to", i)
+      print("  Success" if c.setAge(i) else "  FAILURE")
+  }  
+}
+//$?[End_of_model]$?
+// @@@skipphpcompile - Has java code
+// @@@skipcppcompile - Has java code
+// @@@skiprubycompile - Has java code

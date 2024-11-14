@@ -1,0 +1,5 @@
+#!/bin/bash
+JAR=/usr/local/lib/umple/umple.jar
+echo Compiling using $JAR
+java -jar $JAR "$@"
+exit $?

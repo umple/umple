@@ -1,0 +1,33 @@
+class X {
+  activesm {
+    topstate {
+      thread1 {
+        do {
+          System.out.println(
+            "Doing the activity - Normally "+
+            "this would last a long time");
+          Thread.sleep(1000);
+          System.out.println("Done thread 1");
+        }
+      }
+      ||
+      thread2 {
+        do {
+          System.out.println(
+            "Doing the other activity - Again "+
+            "this would last a long time");
+          Thread.sleep(3000);
+          System.out.println("Done thread 2");
+        }
+      }
+    }
+  }
+  public static void main(String[] argv) {
+    new X();
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

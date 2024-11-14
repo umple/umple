@@ -1,0 +1,11 @@
+
+class X
+{
+  a;
+  whenWasASet;
+  
+  after setA {
+     setWhenWasASet(getA() + System.currentTimeMillis());
+  }
+}
+// @@@skipcppcompile

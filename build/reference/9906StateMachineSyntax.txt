@@ -10,7 +10,25 @@ noreferences
 </p>
 
 <p>
-Since that sequence is not found in target languages, and since it is easy to make a mistake specifying states, substates, or events, this message is generated. If you encounter this message and indeed intended to specify a state machine, look carefully at the state machine code. Make sure the curly brackets match; make sure there are semicolons after transitions (unless the transitions have an action). If you are still stuck, comment out segments until you can narrow down the problem.
+Since that sequence is not found in target languages, and since it is easy to make a mistake specifying states, substates, guards, or events, this message is generated. If you encounter this message and indeed intended to specify a state machine, look carefully at the state machine code.</p>
+
+<p>The following are some common mistakes and things to check if you get this warning when writing a state machine
+<ul>
+
+<li>Make sure the curly brackets match for each state machine, state, substate and action block.
+
+<li>Make sure there are semicolons after transitions. In the example below, a semicolon is needed at the end of line 9 to declare the transition.
+
+<li>In guards, make sure the expression is a valid condition (Boolean expression). For example, in the example below, the v = 5 should be v == 5.
+
+<li>Make sure the order of items in transitions is valid. For example, in the example below the arrow should be after the guard, not before it.
+
+<li>Make sure an element of the syntax is not missing. For example, in the example below, after the entry keyword there should be a slash / prior to the block of code to execute on entering the state. All such <a href="StateMachineActionsandDoActivities.html">actions</a> (exit actions and transition actions) also use the slash symbol, since this is the notation inherited from UML.
+
+</ul>
+</p>
+
+<p>If you are still stuck when writing details of a state machine, comment out segments until you can narrow down the problem.
 </p>
 
 

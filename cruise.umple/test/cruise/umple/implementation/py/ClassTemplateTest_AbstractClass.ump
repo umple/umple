@@ -1,0 +1,7 @@
+generate Python;
+namespace example;
+
+class Student
+{
+	abstract;
+}

@@ -13,8 +13,46 @@ $tempModelId = $_REQUEST["model"];
 // The following creates a random numbered directory in ump
 // the result is ump/{dir}/model.ump
 date_default_timezone_set('UTC');
-$savedModelData = dataStore()->createData(date("ymd"));
-$tempModelData = dataStore()->openData($tempModelId);
+
+if (isset($_REQUEST["taskname"])) {
+  $taskExist = false;
+  $savedModelData = dataStore()->createData("task-" . $_REQUEST["taskname"] . "-" . date("ymd"));
+  foreach (new DirectoryIterator("ump/tasks") as $file) 
+  {
+    if ($file->isDot()) continue;
+
+    if ($file->isDir() && substr($file->getFilename(), 0, 8) == "taskroot") 
+    {
+      $taskName = explode("-", $file->getFilename())[1];
+      if ($taskName == strtolower($_REQUEST["taskname"]))
+      {
+        $tempModelId = $file->getFilename();
+        $taskExist = true;
+        break;
+      }
+    }
+  }
+
+  if ($taskExist)
+  {
+    $tempModelData = dataStore()->openData("tasks/" . $tempModelId);
+  }
+  else 
+  {
+    echo "Task with name '" . $_REQUEST["taskname"] . "' does not exist"; 
+    exit();
+  }
+} else {
+  $createDataArg=date("ymd"); // prefix new session directory with yyyymmdd
+  if (isset($_REQUEST["forkSoMakeTmpOnly"]))
+  {
+    // Although the default is to create a permanent URL
+    // when forking, we want to create a tmp one
+    $createDataArg="tmp";
+  }
+  $savedModelData = dataStore()->createData($createDataArg);
+  $tempModelData = dataStore()->openData($tempModelId);
+}
 
 $saveModelId = $savedModelData->getName();
 
@@ -47,7 +85,21 @@ if (!$tempModelData->hasData('model.ump.erroroutput'))
 $savedModelData->cloneFrom($tempModelData);
 
 // Empty anything else in directory and remove it
-$tempModelData->delete();
+// Exceptions are if we are copy a task
+// or we are forking a permanent URL
+if (!isset($_REQUEST["taskname"]) && !isset($_REQUEST["forkSoMakeTmpOnly"])) 
+{
+  $tempModelData->delete();
+}
 
-header("Location: umple.php?model={$saveModelId}");
-
+if (isset($_REQUEST["loadTaskWithURL"]))
+{
+  header("Location: umple.php?model={$saveModelId}");
+}
+else if (isset($_REQUEST["taskname"])) {  
+  //header("Location: umple.php?model={$saveModelId}");
+  echo "$saveModelId";
+} 
+else {
+  header("Location: umple.php?model={$saveModelId}");
+}

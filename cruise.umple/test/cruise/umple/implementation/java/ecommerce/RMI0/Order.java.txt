@@ -26,7 +26,7 @@ public class Order implements java.io.Serializable
   {
     if (!setProduct(aProduct))
     {
-      throw new RuntimeException("Unable to create Order due to aProduct. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Order due to aProduct. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

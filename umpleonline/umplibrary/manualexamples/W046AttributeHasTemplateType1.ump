@@ -1,0 +1,7 @@
+// This example generates the message
+
+class A {
+  depend java.util.List;
+  List<OtherClassA> otherClassGroup;
+}
+class OtherClassA {}

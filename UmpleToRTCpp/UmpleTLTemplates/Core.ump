@@ -3,7 +3,7 @@
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
+* https://www.eclipse.org/legal/epl-v10.html
 *
 * Contributors:
 *     Ahmed M.Orabi
@@ -557,6 +557,7 @@ class GenClass{
 	0..1 -- * GenMethod methods sorted {priority};
 	0..1 -- * GenField fields sorted {priority};
 	0..1 -- * GenComment comments sorted {priority};
+	0..1 -- * GenRequirement requirements sorted {priority};
 	0..1 genDependClass -- * GenDepend dependencies sorted {priority};
 	0..1 genClassInterface -- * GenInterface interfaces sorted {priority};
 	
@@ -657,8 +658,13 @@ class GenClass{
 		String root= Arrays.asList(splits).stream().map(string-> "namespace "+ string + " {").collect(Collectors.joining(" "));
 		
 		String enclosure= namespaceEnclosure();
-		return "#define "+ enclosure+ "_BEGIN"+ "   "+ root;
+		return namspaceCheck(enclosure, root);
 	}
+	
+	namspaceCheckT <<!#ifndef <<=enclosure>>_BEGIN
+	#define <<=enclosure>>_BEGIN   <<=root>>
+#endif!>>
+	emit namspaceCheck(String enclosure, String root)(namspaceCheckT);
 	
 	String callNamespaceEnd(){
 		String enclosure= namespaceEnclosure();
@@ -716,6 +722,13 @@ class GenClass{
 	depend java.util.stream.Collectors;
 	String emitComments(){
 		String results= getComments().stream().map(GenComment::getBody).collect(Collectors.joining(NL));
+		if(!results.isEmpty()){
+			results+= NL;
+		}
+		return results;
+	}
+	String emitRequirements(){
+		String results= getRequirements().stream().map(GenRequirement::getBody).collect(Collectors.joining(NL));
 		if(!results.isEmpty()){
 			results+= NL;
 		}
@@ -836,6 +849,11 @@ introCommentT <<!//------------------------
 //------------------------!>>
 emit introComment(String comment)(introCommentT);
 
+introRequirementT <<!//------------------------
+//<<=requirement.toUpperCase()>>
+//------------------------!>>
+emit introRequirement(String requirement)(introRequirementT);
+
 
 	after constructor{
 		GenGroup globalGroup = new GenGroup(GenClass.GLOBAL_GROUP);
@@ -924,6 +942,7 @@ class GenMethod{
 	//0..1 -- * GenStereotype stereotypes;
 	* -- * GenMethodParameter parameters;	//A parameter can be owned by multiple methods in order to allow for one update in all places
 	0..1 -- * GenComment comment sorted {priority};
+	0..1 -- * GenRequirement requirement sorted {priority};
 	* -- * GenField relatedFields;
 	
 	0..1 -- * GenBody body sorted {priority};
@@ -951,9 +970,10 @@ class GenMethod{
 	lazy Boolean isFriend;
 	
 	before getIsConstant{
-		if(normalize && !getGenClass().getIsRemote()){
-			return getGenClass().getGenPackage().isPrimitive(returnType);
-		}
+		//if(normalize && !getGenClass().getIsRemote()){
+		//	return getGenClass().getGenPackage().isPrimitive(returnType);
+		//}
+		
 	}
 	
 	before getIsPointer{
@@ -994,6 +1014,15 @@ class GenMethod{
 	
 	String commentString(){
 		String string= this.getComment().stream().map(GenComment::getBody).collect(Collectors.joining(NL));
+		if(string.isEmpty()){
+			return string;
+		}
+		
+		return string+ NL;
+	}
+
+	String requirementString(){
+		String string= this.getRequirement().stream().map(GenRequirement::getBody).collect(Collectors.joining(NL));
 		if(string.isEmpty()){
 			return string;
 		}
@@ -1097,13 +1126,13 @@ class GenMethod{
 	indentT <<!<<=content>>!>>
 	emit indent(String content)(indentT);
 	
-declarationT <<!<<=commentString()>><<#if(isInline){#>>inline <<#
+declarationT <<!<<=commentString()>><<=requirementString()>><<#if(isInline){#>>inline <<#
 	}#>><<#if(isFriend){#>>friend <<#}#>><<#if(isStatic)#>>static <<#if(_isVirtual){#>>virtual <<#}#>><<#if(returnType!= null && !returnType.isEmpty()){#>><<=getNormalizedReturnType()>> <<#}#>><<=name>>(<<=parameters()>>)<<#if(getIsConstant()){#>> const<<#
 	}if(_isPure){#>> = 0;<<#
 	}else if(isHeader){#>>{
 <<=_indent(2, new StringBuilder(), bodyString(new ArrayList<String>()))>>	
 }<<#}else{#>>;<<#}#>>!>>
-implementationT <<!<<=commentString()>><<#if(isInline){#>>inline <<#}#>><<#if(returnType!= null && !returnType.isEmpty()){#>><<=getNormalizedReturnType()>> <<#}#>><<#
+implementationT <<!<<=commentString()>><<=requirementString()>><<#if(isInline){#>>inline <<#}#>><<#if(returnType!= null && !returnType.isEmpty()){#>><<=getNormalizedReturnType()>> <<#}#>><<#
 	if(!Visibilities.GLOBAL.equals(getVisibility()) && owner!= null && !owner.isEmpty()){#>><<=owner>>::<<#}#>><<=name>>(<<=parameters()>>)<<#if(getIsConstant()){#>> const<<#}#>><<=getInitializerCall()>>{
 <<=_indent(2, new StringBuilder(), bodyString(new ArrayList<String>()))>>	
 }!>>
@@ -1314,6 +1343,10 @@ class GenComment{
 	isA AbstractGenBody;
 }
 
+class GenRequirement{
+	isA AbstractGenBody;
+}
+
 class UniqueGenBody{
 	isA GenBody;
 	id;
@@ -1422,11 +1455,12 @@ class GenStruct{
 	Integer priority= 0;
 	0..1 -- * GenField fields;
 	0..1 -- * GenComment comments sorted {priority};
+	0..1 -- * GenRequirement requirements sorted {priority};
 	
 	indentT <<!<<=content>>!>>
 	emit indent(String content)(indentT);
 	
-declarationT <<!<<#if(hasComments()){for(GenComment comment: getComments()){#>><<=comment.getBody()>><<=NL>><<#}}#>>struct <<=name>>{
+declarationT <<!<<#if(hasComments()){for(GenComment comment: getComments()){#>><<=comment.getBody()>><<=NL>><<#}}#>><<#if(hasRequirements()){for(GenRequirement requirement: getRequirements()){#>><<=requirement.getBody()>><<=NL>><<#}}#>>struct <<=name>>{
 <<#for(GenField field: getFields()){#>>
 <<=_indent(2, new StringBuilder(), field.declaration())>>
 <<#}#>>

@@ -1,6 +1,7 @@
 Umple Builtin Data Types
 Attributes
 noreferences
+@@tooltip Umple native data types including String, Integer, Double, Date and Time
 
 @@description
 <p>The following example illustrates the data types available

@@ -169,6 +169,14 @@ TabControl.extractNameFromCode = function(code)
  */
 TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
 {
+  if (Page.readOnly && name == 'afterTabControlInit')
+  {
+    return;
+  } else if (name == 'afterTabControlInit')
+  {
+    name = null;
+  }
+
   // Enforce maximum number of tabs
   if (Object.keys(TabControl.tabs).length == TabControl.maxTabs) return;
 
@@ -205,7 +213,7 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
   // Create the physical tab element
   var createBtn = jQuery("#createTabBtn");
   var tabTemplate = jQuery('<li id="tab' + newTabId + '" class="">' + 
-    '<a class="tabname" id="tabName' + newTabId + '" href="javascript:TabControl.selectTab(\'' + newTabId + '\');">' + tabName + '</a>' + 
+    '<a class="tabname" title="Double-click to rename tab" id="tabName' + newTabId + '" href="javascript:TabControl.selectTab(\'' + newTabId + '\');">' + tabName + '</a>' + 
       '<button class="tabbtn" onclick="javascript:TabControl.deleteTab(\'' + newTabId + '\');">&times;</button></li>');
   tabTemplate.insertBefore(createBtn);
 
@@ -294,13 +302,20 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
  */
 TabControl.saveTab = function(tabId, umpleCode)
 {
+  // console.log("Inside TabControl.saveTab() ...")
   var filename = TabControl.getTabFilename(TabControl.tabs[tabId].name);
+  var modelname = Page.getModel();
   localStorage[filename] = umpleCode;
+  if (String(Page.getFilename()).indexOf("tasks") !== -1)
+  {
+    filename = "tasks/" + filename;
+    modelname = "tasks/" + modelname;
+  }
   var umpleCodeWithoutAmpersand = umpleCode.replace(/&/g, "%26").replace(/\+/g, "%2B");
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
     TabControl.saveTabCallback(tabId),
-    format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, Page.getModel()));
+    format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, modelname));
 }
 
 TabControl.saveTabCallback = function(tabId)
@@ -320,6 +335,7 @@ TabControl.saveTabCallback = function(tabId)
  */
 TabControl.selectTab = function(tabId)
 { 
+  // console.log("Inside TabControl.selectTab() ...")
   if (TabControl.activeTab) {
     // Do nothing if already selected
     if (tabId == TabControl.activeTab.id) return;
@@ -343,6 +359,17 @@ TabControl.selectTab = function(tabId)
   // Reset caret position
   Action.setCaretPosition(0);
   Action.updateLineNumberDisplay();
+
+  // update the diagram -- this is a redundent call
+  
+  // console.warn('TabControl.selectTab() ...',Object.keys(TabControl.tabs).length);
+  if(Object.keys(TabControl.tabs).length > 1) {
+  // console.warn('TabControl.selectTab() ...',TabControl.activeTab.name);
+    setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+  }
+
+  // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+
 }
 
 /**
@@ -396,11 +423,15 @@ TabControl.loadAllTabsCallback = function(response)
  */
 TabControl.deleteTab = function(tabId)
 {
+  if (Page.readOnly)
+  {
+    return;
+  } 
   // Don't delete if we only have one tab
   if (Object.keys(TabControl.tabs).length > 1) {
     // Confirm deletion
     var tabName = TabControl.getTabNameDiv(tabId);
-    var result = confirm("Are you sure you want to remove " + tabName.text() + "?");
+    var result = confirm("Are you sure you want to remove the file " + tabName.text() + ".ump from the model? If you answer OK, the code will be deleted; this cannot be undone, so consider answering Cancel and saving it first.");
     if (!result) return;
 
     // If we're deleting the currently active tab, we need to navigate away
@@ -442,6 +473,10 @@ TabControl.deleteTab = function(tabId)
  */
 TabControl.renameTab = function(tabId, newName, updateUI)
 {
+  if (Page.readOnly)
+  {
+    return;
+  } 
   // If the new name already exists, return
   if (TabControl.reservedNames.hasOwnProperty(newName)) return;
 
@@ -596,6 +631,7 @@ TabControl.addCallbackToRequestQueue = function(callback)
  */
 TabControl.getCurrentHistory = function()
 {
+  // console.log("Inside TabControl.getCurrentHistory() ...")
   if (!TabControl.activeTab) return History.getInstance();
   return TabControl.tabs[TabControl.activeTab.id].history;
 }

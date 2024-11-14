@@ -1,0 +1,72 @@
+CPlusPlus
+Generators
+noreferences
+@@description
+<p>
+The C++ generator is in beta because it has a few bugs in certain aspects. When generating C++ on the command line use the Cpp as the generator name.</p>
+
+<p>C++ code can be embedded in Umple, and Umple is designed to generate C++ from its modeling features.</p>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Setting Up Your Environment for C++ on Linux, Windows, and MacOS</title>
+</head>
+<body>
+    <h1>Setting Up Your Environment for C++ on Linux, Windows, and MacOS</h1>
+    <p><strong>General Information</strong><br>
+    It is essential to ensure that your development tools are up-to-date and compatible with the latest standards. For CMake the recommended version is 3.12.xx or later. Please consult the <a href="https://cmake.org/cmake/help/latest/release/index.html">CMake Release Notes</a> for the most current version.</p>
+
+    <h2>Step 1: Install Prerequisites</h2>
+    <h3>All Platforms</h3>
+    <ul>
+        <li>Update Package Information: Ensure your system's package list is up-to-date by using the appropriate command for your operating system. This prepares your system for new software installations.</li>
+        <li>Install CMake:
+            <ul>
+                <li>Linux: Run <code>sudo apt install cmake -y</code> in your terminal.</li>
+                <li>Windows: Download it from the <a href="https://cmake.org/download/">CMake official site</a>. For command line installation refer to the same steps as in Linux. Or Install CMake through Visual Studio other IDEs like IntelliJ can also work.</li>
+                <li>MacOS: Use Homebrew to install CMake by running <code>brew install cmake</code>.</li>
+            </ul>
+        </li>
+        <li>Verify Installation: After installation verify the CMake version by typing <code>cmake --version</code> in your terminal for Windows Or <code>cmake -version</code> for Linux.</li>
+    </ul>
+
+    <h2>Step 2: Obtain and Prepare C++ Code</h2>
+    <h3>General Setup</h3>
+    <ul>
+        <li>Obtaining C++ Code: Depending on your development setup you might generate C++ code using different methods:
+            <ul>
+                <li>UmpleOnline: Generate C++ code via the web interface and download it as a ZIP file.</li>
+                <li>Command Line: Use Umple with the <code>-g RTCpp X.ump</code> option to generate C++ code. The file X.ump refer to your umple file</li>
+                <li>VS Umple Plugin(or other IDE): Generate C++ code directly within the VS environment.</li>
+            </ul>
+        </li>
+        <li>Preparing the Project: Extract or Access C++ Files: If you have a ZIP file (e.g. from UmpleOnline) extract it to a suitable directory. If you generated files directly on your system or through an IDE navigate to the directory containing your C++ files.</li>
+        <li>Set Up Build Directory: Navigate to your project's directory. Create and move into a new directory for the build process by executing:
+            <ul>
+                <li><code>mkdir build</code></li>
+                <li><code>cd build</code></li>
+            </ul>
+        </li>
+    </ul>
+
+    <h2>Step 3: Configure and Build Your Project</h2>
+    <h3>All Platforms</h3>
+    <ul>
+        <li>Configure the Project: From the build directory configure your project by running <code>cmake ..</code></li>
+        <li>Build the Project: Compile the project by executing <code>make</code> on Linux and MacOS or <code>cmake --build .</code> on Windows. The dot ‘.’ refers to the current directory which is the build directory.</li>
+    </ul>
+
+    <h2>Step 4: Run Your Executable</h2>
+    <ul>
+        <li>Execute the Program: If the build is successful run the generated executable. Replace <em>executable</em> with the actual name of your program:
+            <ul>
+                <li>Linux and MacOS: <code>./executable</code></li>
+                <li>Windows: <code>.\executable.exe</code></li>
+            </ul>
+            where <em>executable</em> is the name of the program you compiled.
+        </li>
+    </ul>
+</body>
+</html>

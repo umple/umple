@@ -1,0 +1,220 @@
+%This file redefines types from Java.Grm to match python syntax
+include "Java.Grm"
+
+
+
+%Num of char in a line before TXL splits it in two. 
+%Putting it super large so lines are not split when they are too long
+%Since in python you cant do that
+#pragma -width 1073741824
+
+comments 
+    '# 
+    '\
+end comments
+
+redefine boolean_operator
+    ...
+    |'and
+    | 'or
+end redefine
+
+redefine comparator
+    ...
+    |   'is
+    |   'in
+end redefine
+
+redefine nestable_value
+    ...
+    | 'self
+end redefine
+
+redefine statement
+    ...
+    |   'pass [NL]
+    |   [list nested_identifier+] [!] '=  [list value+] [NL]
+        %In python we import some modules inside functions to prevent cyclic imports
+    |   [import_statement]
+end redefine
+
+redefine stmt_return
+    ...
+    |   'return [opt value] [NL]
+end redefine
+
+
+redefine base_value
+    ...
+    |   'True
+    |   'False
+    |   'None
+    |   '[ [list value] ']
+    |   'not [value] 
+    |   [lambda_function]
+    |   '* [SPOFF] [nested_identifier] [SPON]
+end redefine
+
+define  lambda_function
+    'lambda [list id] ': [value]
+end define 
+
+redefine for_loop
+    ...
+    |'for [nestable_value] 'in 'range( [value] ', [value] ', [value] '): [NL] [IN] [repeat statement] [EX] [NL]
+end redefine
+
+redefine for_in_loop
+    ...
+    | 'for [id] 'in  [nested_identifier] [SPOFF] ': [SPON] [NL] [IN] [repeat statement] [EX] [NL]
+end redefine
+
+redefine while_loop
+    ...
+    | [opt value] [NL] 'while [value] ': [NL] [IN] [repeat statement] [EX] [NL]
+end redefine
+
+redefine if 
+    ... 
+    |   'if [value] ': [NL] [IN] [repeat statement] [EX] 
+end redefine
+
+redefine else_if
+    ...
+    |   'elif [value] ': [NL] [IN] [repeat statement] [EX] 
+end redefine
+
+redefine else
+    ...
+    |   'else:  [NL] [IN] [repeat statement] [EX] 
+end redefine
+
+redefine throw_statement
+    ...
+    |   'raise 'RuntimeError( [stringlit] ') [NL]
+end redefine
+
+
+redefine method_parameter
+    ...
+    | [id]
+end redefine
+
+redefine ternary
+    ...
+    |   'if [!] [value] 'else [value]
+end redefine
+
+redefine var_arg
+    ...
+    | '* [SPOFF] [id] [SPON]
+end redefine
+
+redefine concrete_method_declaration
+    ...
+    |   [repeat decorator] 'def  [id] [SPOFF]'( [SPON] [list method_parameter] [SPOFF] '): [SPON] [NL] [IN] [method_content] [NL] [EX] [NL]
+end redefine
+
+redefine abstract_method_declaration
+    ...
+    |   [SPOFF] '@abstractmethod [SPON] [NL] 'def  [id] [SPOFF]'( [SPON] [list method_parameter] [SPOFF] '): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
+end redefine
+
+
+redefine constructor
+    ...
+    | 'def '__init__ [SPOFF] '( [SPON] [list method_parameter] [SPOFF]'): [SPON] [NL] [IN] [repeat statement] [NL] [EX] [NL]
+end redefine
+
+redefine concrete_class_declaration
+    ... 
+    | [repeat import_statement] [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL] [opt run_main]
+end redefine
+
+redefine inner_class_declaration
+    ... 
+   | [NL] 'class [nested_identifier] [SPOFF] [opt inheritance_group] ': [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
+end redefine
+
+
+redefine new_call_inner
+    ... 
+    | [nested_identifier][SPOFF]'.[nested_identifier][SPON]
+end redefine
+
+
+%Bit of code that runs a classes main function when you run the file
+%This then emulates the java behavior
+define run_main
+    'if '__name__ '== '"__main__" ': [NL] [IN]
+        [id] '.main [SPOFF] '( [SPON] 'sys.argv ')
+end define
+
+define inheritance_group
+    '( [SPON] [list nested_identifier] [SPOFF] ')
+end define
+
+redefine interface_declaration
+    ... 
+    |  [import_statement] [repeat import_statement] [NL] 'class [nested_identifier] [SPOFF] '( [SPON] [list nested_identifier] [SPOFF] '): [SPON] [NL] [IN] [class_body_decl] [NL] [EX] [NL]
+end redefine
+
+redefine class_body_decl
+    ...
+    | 'pass
+    | [opt constructor] [repeat method_declaration]
+end redefine
+
+redefine import_statement
+    ...
+    |   'from [nested_identifier] 'import [list nested_identifier] [NL]
+    |   'import [id] [NL]
+end redefine 
+
+%Enums in python are just classes
+%The methods are redefined to emulate java behavior
+redefine enum_declaration
+    ...
+    | 'class [id] [SPOFF] '(Enum'): [SPON][NL] 
+        [IN] 'def '_generate_next_value_ [SPOFF] '( [SPON] 'name, 'start, 'count, 'last_values) [SPOFF] ': [SPON] [NL] 
+            [IN] 'return 'name [NL] 
+        [EX] 'def '__str__ [SPOFF] '(self): [SPON] [NL] 
+            [IN] 'return 'str [SPOFF] '(self. 'value) [SPON] [NL] 
+        [EX] [repeat enum_value_declaration] [NL]
+    [EX]
+end redefine
+
+%Auto() runs the _generate_next_value_ function to determine the value
+define enum_value_declaration
+    [id] '= 'auto [SPOFF] () [SPON] [NL]
+end define
+
+redefine try_catch 
+    ...
+    |   'try ': [NL] [IN]  [repeat statement]  [EX] 'except [opt method_parameter] ': [NL] [IN] [repeat statement] [EX] [opt finally]
+end redefine
+
+redefine finally
+    ...
+    |   'finally: [NL] [IN] [repeat statement] [EX]
+end redefine
+
+redefine member_variable_declaration
+    ...
+    |   [value] [NL]
+end redefine
+
+redefine thread_start
+        ...
+    |   'super().__init__() [NL] 'self.start()
+end redefine
+
+%added python comments
+redefine comment_NL
+    ...
+	| '# [comment] [NL]
+end redefine
+
+define endofline
+    [opt comment] [NL] 
+end define

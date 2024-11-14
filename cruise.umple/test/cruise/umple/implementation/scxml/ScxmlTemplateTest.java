@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
 
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
 State machine tests
 
@@ -44,6 +44,7 @@ public class ScxmlTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/scxml/classCodeNoStateMachine.scxml");
     SampleFileWriter.destroy(pathToInput + "/scxml/classCodeEmptyStateMachine.scxml");
     SampleFileWriter.destroy(pathToInput + "/scxml/autoTransition.scxml");
+    SampleFileWriter.destroy(pathToInput + "/scxml/transitionWithGuardAndVariable.scxml");
   }
 
   @Test
@@ -110,5 +111,11 @@ public class ScxmlTemplateTest extends TemplateTest
   public void autoTransition()
   {
     assertUmpleTemplateFor("scxml/autoTransition.ump","scxml/autoTransition.scxml.txt");
+  }
+  
+  @Test
+  public void transitionWithGuardAndVariable()
+  {
+    assertUmpleTemplateFor("scxml/transitionWithGuardAndVariable.ump","scxml/transitionWithGuardAndVariable.scxml.txt");
   }
 }

@@ -23,13 +23,16 @@
 
   <target name="help">
     <echo>Using this build script:
-  There are four entry targets for this build script:
-  testUmpleOnlineMain - runs the tests against the public umpleonline (http://cruise.eecs.uottawa.ca/umpleonline/)
-  testUmpleOnlineTest - runs the tests against the test umpleonline (http://cruise.eecs.uottawa.ca/umpleonline/test/)
-  testUmpleOnlineLocal - runs against the local server (http://cruise.local/)
+  There are several entry targets for this build script:
+  testUmpleOnlineMain - runs the tests against the public umpleonline (https://cruise.umple.org/umpleonline/)
+  testUmpleOnlineLocal - runs against the local server (https://cruise.local/)
 
-  You can specify a custom hostname with -Dhostname="yourserver" 
-  eg. ant testUmpleOnlineLocal -Dhostname=http://cruise2.local/
+  You can specify a custom hostName with -DhostName="yourserver" 
+  eg. ant testUmpleOnlineLocal -DhostName=https://cruise2.local/
+  
+  The testing environment can also be specified, that is, whether they are to run on a headless browser or not.
+  By default they are run on a headless browser but you can use a proper browser by setting the env property to no-headless. 
+  This can be achieved by -Denv="no-headless" 
 
   The default mode for this test suite is fail safe. It will run and report all failures.
   It can be run in fail-fast mode using -Dfailfast=true
@@ -59,17 +62,14 @@
   </target>
 
   <target name="testUmpleOnlineMain">
-    <property name="hostName" value="http://cruise.eecs.uottawa.ca/umpleonline/" />
-    <antcall target="doWebsiteTests" />
-  </target>
-
-  <target name="testUmpleOnlineTest">
-    <property name="hostName" value="http://cruise.eecs.uottawa.ca/umpleonline/test/" />
+    <property name="hostName" value="https://cruise.umple.org/test/umpleonline/" />
+    <property name="env" value=""/>
     <antcall target="doWebsiteTests" />
   </target>
 
   <target name="testUmpleOnlineLocal">
-    <property name="hostName" value="http://cruise.local/" />
+    <property name="hostName" value="https://cruise.local/" />
+    <property name="env" value=""/>
     <antcall target="doWebsiteTests" />
   </target>
 
@@ -77,6 +77,15 @@
 
   <target name="doWebsiteTests" depends="initTests">
     <echo>Testing ${hostName}umple.php</echo>
+    <if>
+    <equals arg1="${env}" arg2="no-headless"/>
+    <then>
+    <echo>Running the tests on a proper browser </echo>
+    </then>
+    <else>
+    <echo>Running the tests on a headless browser</echo>
+    </else>
+    </if>
 
     <antcallback target="runRspec" return="test.result" />
 
@@ -124,7 +133,8 @@
 
   <target name="initTests">
     <echo file="${project.path}/spec/temp_config.txt" level="debug">host_name ${hostName}
-      umpleonline_directory ${basedir}/umpleonline/</echo>
+      umpleonline_directory ${basedir}/umpleonline/
+      testing_env ${env}</echo>
   </target>
 
   <target name="checkSuccess">

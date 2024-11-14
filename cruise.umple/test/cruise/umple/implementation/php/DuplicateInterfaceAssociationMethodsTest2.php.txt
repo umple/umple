@@ -21,7 +21,7 @@ class First implements I
     $didAddSecond = $this->setSecond($aSecond);
     if (!$didAddSecond)
     {
-      throw new Exception("Unable to create first due to second. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new Exception("Unable to create first due to second. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

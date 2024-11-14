@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
  
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
 */
 
@@ -128,9 +128,9 @@ public class GeneratorHelperTest
     model.setTracer(new TracerDirective("string"));
     model.addUmpleClass(uClass1);
     model.addUmpleClass(uClass2);
-    Assert.assertEquals(true,GeneratorHelper.getWillGenerateString());
+    Assert.assertEquals(true,GeneratorHelper.getWillGenerateString(model));
     GeneratorHelper.prepareAllTracers(null, model, uClass1, lookups);
-    Assert.assertEquals(false,GeneratorHelper.getWillGenerateString());
+    Assert.assertEquals(false,GeneratorHelper.getWillGenerateString(model));
     GeneratorHelper.prepareAllTracers(null, model, uClass2, lookups);
     Assert.assertEquals(3,model.numberOfUmpleClasses());
     //UmpleClass c = model.getUmpleClass("StringTracer");

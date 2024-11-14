@@ -3,7 +3,7 @@
  Copyright: All contributers to the Umple Project
  
  This file is made available subject to the open source license found at:
- http://umple.org/license
+ https://umple.org/license
 
 */
 
@@ -128,7 +128,7 @@ public class MetricsCollectorTest
     String[] logs = collector.getLogs();
     
     Assert.assertEquals(1,logs.length);
-    Assert.assertEquals("Error 1510 on line 1 of file \'unknown.ump\':\nFile 'unknown.ump' referred to in use statement was not found\n: unknown.ump", logs[0]);
+    Assert.assertEquals("Warning 1510 on line 1 of file \'unknown.ump\':\nFile 'unknown.ump' referred to in use statement was not found\n: unknown.ump", logs[0]);
   }
   
 }

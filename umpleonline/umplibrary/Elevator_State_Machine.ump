@@ -1,0 +1,66 @@
+// UML State machine of an elevator moving among floors
+
+class Elevator {
+  
+  elevator_state_machine {
+    Idle {
+      upRequest -> PrepareUp;
+      downRequest -> PrepareDown;
+    }
+    PrepareUp {
+      DoorClosingMovingUp {
+        doorClosed -> / {goUp();} InMotion;
+      }
+      started -> Moving;
+    }
+    PrepareDown {
+      DoorClosingMovingDown {
+        doorClosed  -> / {goDown();} InMotion;
+      }
+      started -> Moving;
+    }
+
+    InMotion {
+      Moving {
+        approachingFloor [!floorRequested()] -> Moving;
+        approachedFloor  [floorRequested()] -> / {stop();} Stopping;
+      }
+      Stopping {
+        stopped -> / {openDoor();} DoorOpening;
+      } 
+    } 
+
+    OnFloor {    
+      DoorOpening {
+        doorOpened  -> AtFloor;
+      }
+      AtFloor {
+        after(timer) [!obstruction()] -> DoorClosing;
+        doorClosingRequest -> DoorClosing;
+      }
+      DoorClosing {
+        doorClosed -> CheckingNextDestination;
+        obstruction -> DoorOpening;
+        doorOpeningRequest -> DoorOpening;
+      }
+      CheckingNextDestination {
+        upRequest -> PrepareUp;
+        downRequest -> PrepareDown;
+        noRequest -> Idle;
+      }
+    } 
+  }
+  Integer timer = 100;
+  void goUp() Java {}
+  void goDown() Java {}
+  void stop() Java {}
+  void openDoor() Java {}  
+  Boolean floorRequested() Java {return false;}
+
+  void goUp() Python { ''' Implementation '''}
+  void goDown() Python { ''' Implementation '''}
+  void stop() Python { ''' Implementation '''}
+  void openDoor() Python { ''' Implementation '''}
+  Boolean floorRequested() Python {return False}
+}
+// @@@skipcppcompile

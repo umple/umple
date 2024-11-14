@@ -1,0 +1,6 @@
+// Attribute name with special characters (130)
+class X {
+  na$me;
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile

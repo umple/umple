@@ -28,7 +28,7 @@ class OneSymmetric
     $this->number = $aNumber;
     if ($aFriend == null || $aFriend->getFriend() != null)
     {
-      throw new Exception("Unable to create OneSymmetric due to aFriend. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new Exception("Unable to create OneSymmetric due to aFriend. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     $this->friend = $aFriend;
   }

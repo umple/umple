@@ -1,0 +1,17 @@
+Using Completion URLs
+UmpleOnline
+noreferences
+
+@@description
+
+<p> A completion URL is one of the data items that an task requestor can provide when <a href="SettingupTasks.html">setting up a task in UmpleOnline</a>.</p>
+
+<p?Participants will be taken to this URL when they submit the the task, and two arguments labelled task and url will be appended.</p>
+
+<p>So for example, if the completion URL is https://www.surveymonkey.ca/r/UmpleOnlineDefaultTaskTest, the task name is abc and the responder's submission URL is https://cruise.eecs.uottawa.ca/umpleonline/umple.php?model=task-abc-2008262stdov293 then upon completion the URL https://www.surveymonkey.ca/r/UmpleOnlineDefaultTaskTest?task=abc&url=https://cruise.eecs.uottawa.ca/umpleonline/umple.php?model=task-abc-2008262stdov293 would be submitted.</p>
+
+<p>The above example uses SurveyMonkey as a tool to gather data following submission. Within SurveyMonkey you can create a survey and give it 'custom variables' called 'task' and 'url'. When you save your survey data as individual responses in an Excel file, the task and URL information will appear as columns in the Excel file.</p>
+
+<p>SurveyMonkey is not the only tool that can be used for this purpose. Any tool that can be set up to accept task and url arguments would work. Even a tool that just accepted a URL argument would work.</p>
+
+

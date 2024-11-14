@@ -1,0 +1,30 @@
+@SuppressWarnings("deprecation")
+class Student
+{
+  name;
+  Integer id;
+
+  // trace code is injected in attribute setter
+  // with specified precondition
+  trace name where [name == "john"];
+
+  // trace code is injected in attribute setter
+  // with specified postcondition
+  trace id giving [id > 9000];
+
+  // this example traces attribute name whenever
+  // its value is changed for 5 times 
+  trace name for 5;
+}
+
+@SuppressWarnings("deprecation")
+class Professor {
+  name;
+  1 -- * Student supervisor;
+  
+  // trace code is injected in attribute setter
+  // with role name cardinality condition
+  trace name where [ supervisor cardinality > 10];
+}
+//$?[End_of_model]$?
+// @@@skipphpcompile - Skipped due to issue 698

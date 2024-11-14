@@ -1,0 +1,102 @@
+from X import X
+
+class Y():
+    def __init__(self):
+        self._xs = []
+
+    def getX(self, index):
+        aX = self._xs[index]
+        return aX
+
+    def getXs(self):
+        newXs = tuple(self._xs)
+        return newXs
+
+    def numberOfXs(self):
+        number = len(self._xs)
+        return number
+
+    def hasXs(self):
+        has = len(self._xs) > 0
+        return has
+
+    def indexOfX(self, aX):
+        index = self._xs.index(aX)
+        return index
+
+    @staticmethod
+    def minimumNumberOfXs():
+        return 0
+
+    def addX(self, aX):
+        wasAdded = False
+        if aX in self._xs :
+            return False
+
+        self._xs.append(aX)
+        if aX.indexOfY(self) != -1 :
+            wasAdded = True
+
+        else :
+            wasAdded = aX.addY(self)
+            if not wasAdded :
+                self._xs.remove(aX)
+
+        return wasAdded
+
+    def removeX(self, aX):
+        wasRemoved = False
+        if not self._xs.contains(aX) :
+            return wasRemoved
+
+        oldIndex = self._xs.index(aX)
+        self._xs.remove(oldIndex)
+        if aX.indexOfY(self) == -1 :
+            wasRemoved = True
+
+        else :
+            wasRemoved = aX.removeY(self)
+            if not wasRemoved :
+                self._xs.insert(oldIndex, aX)
+
+        return wasRemoved
+
+    def addXAt(self, aX, index):
+        wasAdded = False
+        if self.addX(aX) :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfXs() :
+                index = self.numberOfXs() - 1
+
+            self._xs.remove(aX)
+            self._xs.insert(index, aX)
+            wasAdded = True
+
+        return wasAdded
+
+    def addOrMoveXAt(self, aX, index):
+        wasAdded = False
+        if aX in self._xs :
+            if index < 0 :
+                index = 0
+
+            if index > self.numberOfXs() :
+                index = self.numberOfXs() - 1
+
+            self._xs.remove(aX)
+            self._xs.insert(index, aX)
+            wasAdded = True
+
+        else :
+            wasAdded = self.addXAt(aX, index)
+
+        return wasAdded
+
+    def delete(self):
+        copyOfXs = self._xs.copy()
+        self._xs.clear()
+        for aX in copyOfXs:
+            aX.removeY(self)
+

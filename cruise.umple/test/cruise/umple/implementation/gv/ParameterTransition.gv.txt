@@ -1,6 +1,5 @@
 digraph "ParameterTransition" {
   compound = true;
-  size="80,10"
 
   // Class: X
 
@@ -11,12 +10,12 @@ digraph "ParameterTransition" {
       penwidth=0.5;
         
     // Start states are shown as a black circle
-    node [shape = point, fillcolor="black", width=0.2 ];
+    node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
     start_X_stateMachine1 [ tooltip = "Class X, SM stateMachine1, State start" ];
     
         
     // Format for normal states
-    node [shape = rectangle, width=1,style=rounded];
+    node [ratio="auto" shape = rectangle, width=1,style=rounded];
     
       // State: s1a
 
@@ -26,12 +25,12 @@ digraph "ParameterTransition" {
    Thread.sleep(1000);
    e(6);
    Thread.sleep(1000);
-   ..."];
+   ...", URL="javascript:Action.stateClicked(\"X^*^stateMachine1^*^s1a\")"];
       // End State: s1a
 
       // State: s1b
 
-      X_stateMachine1_s1b [label = s1b, tooltip = "Class X, SM stateMachine1, State s1b"];
+      X_stateMachine1_s1b [label = s1b, tooltip = "Class X, SM stateMachine1, State s1b", URL="javascript:Action.stateClicked(\"X^*^stateMachine1^*^s1b\")"];
       // End State: s1b
     // End Top and Bottom Level StateMachine: stateMachine1
   }
@@ -43,37 +42,37 @@ digraph "ParameterTransition" {
       penwidth=0.5;
         
     // Start states are shown as a black circle
-    node [shape = point, fillcolor="black", width=0.2 ];
+    node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
     start_X_stateMachine2 [ tooltip = "Class X, SM stateMachine2, State start" ];
     
         
     // Format for normal states
-    node [shape = rectangle, width=1,style=rounded];
+    node [ratio="auto" shape = rectangle, width=1,style=rounded];
     
       // State: s2a
 
       X_stateMachine2_s2a [label = s2a, tooltip = "Class X, SM stateMachine2, State s2a&#13;Entry:
-   System.out.println(&quot;s2a&quot;);"];
+   System.out.println(&quot;s2a&quot;);", URL="javascript:Action.stateClicked(\"X^*^stateMachine2^*^s2a\")"];
       // End State: s2a
 
       // State: s2b
 
       X_stateMachine2_s2b [label = s2b, tooltip = "Class X, SM stateMachine2, State s2b&#13;Entry:
-   System.out.println(&quot;s2b&quot;);"];
+   System.out.println(&quot;s2b&quot;);", URL="javascript:Action.stateClicked(\"X^*^stateMachine2^*^s2b\")"];
       // End State: s2b
     // End Top and Bottom Level StateMachine: stateMachine2
   }
 
   // All transitions
-    start_X_stateMachine1 -> X_stateMachine1_s1a [  tooltip = "start to s1a" ] ;
-    X_stateMachine1_s1a -> X_stateMachine1_s1b [  tooltip = "From s1a to s1b automatically" ] ;
+    start_X_stateMachine1 -> X_stateMachine1_s1a [  tooltip = "start to s1a", URL="javascript:Action.transitionClicked(\"null\")" ] ;
+    X_stateMachine1_s1a -> X_stateMachine1_s1b [  tooltip = "From s1a to s1b automatically", URL="javascript:Action.transitionClicked(\"X*^*stateMachine1*^**^*s1a*^*s1b*^*\")" ] ;
   
-  start_X_stateMachine2 -> X_stateMachine2_s2a [  tooltip = "start to s2a" ] ;
+  start_X_stateMachine2 -> X_stateMachine2_s2a [  tooltip = "start to s2a", URL="javascript:Action.transitionClicked(\"null\")" ] ;
     X_stateMachine2_s2b -> X_stateMachine2_s2a [  label = "e(int a) / {...}", tooltip = "From s2b to s2a on e(int a)&#13;Transition Action:
-     System.out.println(&quot;e&quot;+a);" ] ;
+   System.out.println(&quot;e&quot;+a);", URL="javascript:Action.transitionClicked(\"X*^*stateMachine2*^*e(int a)*^*s2b*^*s2a*^*\")" ] ;
   
   X_stateMachine2_s2a -> X_stateMachine2_s2b [  label = "e(int a) [a > 6] / {...}", tooltip = "From s2a to s2b on e(int a)&#13;Guard:  [a > 6]&#13;Transition Action:
-     System.out.println(&quot;e&quot;+a);" ] ;
+   System.out.println(&quot;e&quot;+a);", URL="javascript:Action.transitionClicked(\"X*^*stateMachine2*^*e(int a)*^*s2a*^*s2b*^* [a > 6]\")" ] ;
   
 
 }

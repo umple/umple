@@ -1,0 +1,14 @@
+// this example generates traces using the Java
+// native logging API
+tracer JavaAPI;
+
+@SuppressWarnings("deprecation")
+class Student
+{
+  Integer id;
+  name;
+  // trace id with default logging level info
+  trace id;
+  // trace name to logging level severe
+  trace name logLevel severe;
+}

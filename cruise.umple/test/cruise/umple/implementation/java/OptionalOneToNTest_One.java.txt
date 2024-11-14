@@ -28,7 +28,7 @@ public class Mentor
     boolean didAddStudents = setStudents(allStudents);
     if (!didAddStudents)
     {
-      throw new RuntimeException("Unable to create Mentor, must have 3 students. See http://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Mentor, must have 3 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 

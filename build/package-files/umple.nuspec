@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Do not remove this test for UTF-8: if “Ω” doesn’t appear as greek uppercase omega letter enclosed in quotation marks, you should use an editor that supports UTF-8, not this one.-->
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>umple</id>
+    <version>1.31.1</version>
+    <packageSourceUrl>https://github.com/umple/umple/tree/master/build/package-files/chocolatey</packageSourceUrl>
+    <owners>Timothy Lethbridge</owners>
+    <!-- == SOFTWARE SPECIFIC SECTION == -->
+    <title>Umple</title>
+    <authors>Timothy Lethbridge</authors>
+    <projectUrl>https://cruise.umple.org/umple/</projectUrl>
+    <iconUrl>https://rawcdn.githack.com/umple/umple/8b28f0b56efa94df5f5233bde5e6c90030cca3d9/umplewww/files/umple_logoMedium.png</iconUrl>
+    <copyright>Copyright</copyright>
+    <licenseUrl>https://github.com/umple/umple/blob/master/LICENSE.md</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/umple/umple</projectSourceUrl>
+    <docsUrl>https://cruise.umple.org/umple/GettingStarted.html</docsUrl>
+    <mailingListUrl>http://list.umple.org</mailingListUrl>
+    <bugTrackerUrl>https://github.com/umple/umple/issues</bugTrackerUrl>
+    <tags>umple java editor state-machine modeling uml code-generation class-diagram</tags>
+    <summary>Umple is a modeling tool/programming language that enables Model-Oriented programming.</summary>
+    <description>
+      Umple is a model-oriented programming technology, allowing developers to embed modelling concepts (e.g. UML associations, state machines), patterns, generation templates, and other abstractions in traditional code, and vice versa. It generates high quality code for Java, C++ and PhP, as well as diagrams, metrics and many other artifacts. It can be embeded in the above languages as well as embed them.
+
+      Umple needs an up-to-date Java 11 JDK or higher. The compiler has been tested and is also known to work under Java versions up to Java 16.
+      The project homepage is located at http://umple.org/</description>
+    <releaseNotes>https://github.com/umple/umple/releases/tag/v1.31.1</releaseNotes>
+    <dependencies>
+      <dependency id="openjdk" version="11.0.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

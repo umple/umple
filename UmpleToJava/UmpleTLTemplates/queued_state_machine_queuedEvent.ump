@@ -66,7 +66,7 @@ class UmpleToJava {
           
                 if (!event.getArgs().equals(""))
                 {
-                  append(realSb,"\n    Vector v = new Vector({0});", event.getParams().size());
+                  append(realSb,"\n    Vector<Object> v = new Vector<Object>({0});", event.getParams().size());
                   for ( int i=0; i < event.getParams().size(); i++)
                   {
                     append(realSb,"\n    v.add({0}, {1});",i, event.getParam(i).getName());
@@ -160,7 +160,7 @@ class UmpleToJava {
                      if (!e.getArgs().equals(""))
                      {
                        evList.add(e.getName());
-                       append(realSb,"\n    Vector v = new Vector({0});", e.getParams().size());
+                       append(realSb,"\n    Vector<Object> v = new Vector<Object>({0});", e.getParams().size());
                        for ( int i=0; i < e.getParams().size(); i++)
                        {
                          append(realSb,"\n    v.add({0}, {1});",i, e.getParam(i).getName());

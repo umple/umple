@@ -1,0 +1,12 @@
+// Mixset with class outside mixset
+// This does not produce any warning and output gets generates in PlainRequirementsDoc
+implementsReq A;
+class X {
+a;
+}
+mixset B{
+}
+req A text {
+  This is the second requirement.
+} 
+use B;

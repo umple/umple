@@ -1,0 +1,10 @@
+req R01{
+    This is the first requirement statement
+}
+
+req R02{
+    This is the second requirement statement
+}
+
+implementsReq R01, R02;
+class Example {}

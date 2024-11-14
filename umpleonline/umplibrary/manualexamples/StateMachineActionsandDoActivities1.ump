@@ -1,0 +1,35 @@
+
+namespace example;
+
+class LightFixture
+{
+  bulb
+  {
+    On {
+      entry / { doEntry(); }
+      exit / { doExit(); }
+      push -> /{ doTransition(); } Off;
+      do { doThisContinuouslyWhileOn(); }
+    }
+    Off {}
+  }
+
+  void doEntry() {System.out.println("Entry");}
+  void doExit() {System.out.println("Exit");}
+  void doTransition() {
+    System.out.println("Transition");}
+  void doThisContinuouslyWhileOn() {
+    while (true) {
+      System.out.println("Still on");
+      try {
+        Thread.sleep(1000);
+      }
+      catch (InterruptedException e) {}
+    }
+  }
+}
+//$?[End_of_model]$?
+// @@@skipcppcompile - Contains Java Code
+// @@@skipphpcompile - Contains Java Code
+// @@@skiprubycompile - Contains Java Code
+// @@@skippythoncompile - Contains Java Code

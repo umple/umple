@@ -1,0 +1,77 @@
+// Example showing nested states.
+
+class Course {
+  code;
+  description;
+  1 -- * CourseSection;
+}
+
+class CourseSection
+{
+  // Example from Lethbridge and Laganiere: Object
+  // Oriented Software Engineering: Practical
+  // Software Development using UML and Java
+  // McGraw Hill, 2005
+  // https://www.site.uottawa.ca/school/research/lloseng/
+
+  sectionId;
+  Integer classSize = 0;
+  Integer minimumClassSize = 10;
+  Integer maximumClassSize = 100;
+  
+  // State machine controlling status
+  status
+  {
+    Planned {
+      openRegistration -> NotEnoughStudents;
+    }
+    Open {
+      cancel -> Cancelled;
+      NotEnoughStudents {
+        closeRegistration -> Cancelled;
+        register
+          [getClassSize() > getMinimumClassSize()]
+          -> EnoughStudents;
+      }
+      EnoughStudents {
+        closeRegistration -> Closed;
+        register
+          [getClassSize() > getMaximumClassSize()]
+          -> Closed;
+      }
+    }
+    Cancelled {}
+    Closed {}
+  }
+
+  boolean requestToRegister(Student aStudent)
+  {
+    register();
+    return setClassSize(getClassSize()+1);
+  }
+}
+
+class Student {
+  //Remainder of this class defined elsewhere
+}//$?[End_of_model]$?
+
+class Course
+{
+  position 50 30 109 45;
+  position.association Course__CourseSection 106,80 30,0;
+}
+
+class CourseSection
+{
+  position 40 149 201 111;
+}
+
+class Student
+{
+  position 260 65 109 45;
+}
+
+// @@@skipcppcompile - requestToRegister is specifically java code.
+// @@@skipphpcompile - requestToRegister is specifically java code.
+// @@@skiprubycompile - requestToRegister is specifically java code.
+// @@@skippythoncompile - requestToRegister is specifically java code.

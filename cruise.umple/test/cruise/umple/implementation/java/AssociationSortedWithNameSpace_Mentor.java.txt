@@ -3,8 +3,9 @@
 
 
 import java.util.*;
+import java.io.Serializable;
 
-public class Mentor
+public class Mentor implements java.io.Serializable
 {
 
   //------------------------
@@ -26,14 +27,7 @@ public class Mentor
   {
     name = aName;
     myStudentsPriority = 
-      new Comparator<Student>(){
-        @Override
-        public int compare(Student arg0, Student arg1)
-        {
-          return ((Integer)arg0.getId()).compareTo(
-                 ((Integer)arg1.getId()));
-        }
-      };
+      Comparator.comparing(Student::getId);
     myStudents = new ArrayList<Student>();
   }
 
@@ -66,7 +60,7 @@ public class Mentor
   {
     return myStudentsPriority;
   }
-
+  /* Code from template association_GetMany */
   public Student getMyStudent(int index)
   {
     Student aMyStudent = myStudents.get(index);
@@ -96,12 +90,12 @@ public class Mentor
     int index = myStudents.indexOf(aMyStudent);
     return index;
   }
-
+  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfMyStudents()
   {
     return 0;
   }
-
+  /* Code from template association_AddManyToManyMethod */
   public boolean addMyStudent(Student aMyStudent)
   {
     boolean wasAdded = false;
@@ -124,7 +118,7 @@ public class Mentor
     
     return wasAdded;
   }
-
+  /* Code from template association_RemoveMany */
   public boolean removeMyStudent(Student aMyStudent)
   {
     boolean wasRemoved = false;
@@ -151,6 +145,16 @@ public class Mentor
   }
 
 
+  /* Code from template association_sorted_serializable_readObject */ 
+  private void readObject(java.io.ObjectInputStream in)
+  throws Exception
+  {
+    in.defaultReadObject();
+
+    myStudentsPriority = 
+      Comparator.comparing(Student::getId);
+  }
+  
   public void delete()
   {
     ArrayList<Student> copyOfMyStudents = new ArrayList<Student>(myStudents);

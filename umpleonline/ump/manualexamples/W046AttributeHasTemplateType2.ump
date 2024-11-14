@@ -1,8 +1,0 @@
-// The following shows how to avoid
-// the message using a multivalued attribute
-class A {
-  OtherClass[] otherClassGroup;
-}
-class OtherClass {}
-//$?[End_of_model]$?
-// @@@skipphpcompile - Skipped due to issue 700

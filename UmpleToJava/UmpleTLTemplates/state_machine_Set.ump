@@ -28,6 +28,41 @@ class UmpleToJava {
     boolean hasThisExit = false;
     for(Action action : state.getActions())
     {
+      // Issue1602
+      String singularName = action.getActionCode();
+      String prefix = "";
+      if (singularName.startsWith("start") && singularName.endsWith("Handler();"))
+      {
+        prefix = "start";
+        singularName = singularName.substring(5);
+      } else if (singularName.startsWith("stop") && singularName.endsWith("Handler();"))
+      {
+        prefix = "stop";
+        singularName = singularName.substring(4);
+      }
+      if (prefix.length() >= 4)
+      {
+        singularName = singularName.substring(0, singularName.length()-10);      
+        singularName = singularName.substring(0, 1).toLowerCase() + singularName.substring(1);
+      
+        int numOfOccurance = 0;
+          for (StateMachine sm2 : uClass.getAllStateMachines())
+          {
+            for (Event e : sm2.getEvents())
+            {
+              if (e.getName().equals(singularName))
+              {
+                numOfOccurance++;
+                break;
+              }
+            }
+          }
+
+        if (numOfOccurance > 1)
+        {
+          action.setActionCode(prefix + StringFormatter.toPascalCase(sm.getFullName() + "_" + singularName) + "Handler();");
+        }
+      }
       if ("entry".equals(action.getActionType()))
       {
         TraceItem traceItem = state.getTraced("entry",uClass);

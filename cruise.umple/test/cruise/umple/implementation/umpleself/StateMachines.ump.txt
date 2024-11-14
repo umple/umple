@@ -18,7 +18,7 @@ class X2
 {
   Status {
     On {
-      e -> Off;
+    e -> Off;
     }
     Off {    }
   }
@@ -28,12 +28,12 @@ class X4
 {
   Status {
     On {
-      press -> Off;
+    press -> Off;
     }
     Off {
-      exit / { if (doActivityStatusOffThread != null) { doActivityStatusOffThread.interrupt(); } }
-      entry / { doActivityStatusOffThread = new DoActivityThread(this,"doActivityStatusOff"); }
-      do { keepDoing };
+    exit / { if (doActivityStatusOffThread != null) { doActivityStatusOffThread.interrupt(); } }
+    entry / { doActivityStatusOffThread = new DoActivityThread(this,"doActivityStatusOff"); }
+    do { keepDoing };
     }
   }
 }
@@ -42,7 +42,7 @@ class X5
 {
   Bulb {
     On {
-      push -> / { blabla } On;
+    push -> / { blabla } On;
     }
   }
 }
@@ -51,8 +51,8 @@ class X7
 {
   Bulb {
     On {
-      entry / { doOn }
-      exit / { "a"; }
+    entry / { doOn }
+    exit / { "a"; }
     }
   }
 
@@ -66,17 +66,17 @@ class X8
   Integer brightness = 0;
   Bulb {
     Off {
-      turnDimmer(Integer lightval) -> / { setBrightness(lightval) } Off;
-      flipSwitch -> Dimmed;
+    turnDimmer(Integer lightval) -> / { setBrightness(lightval) } Off;
+    flipSwitch -> Dimmed;
     }
     Dimmed {
-      [getDimmer()>99] entry -> On;
-      flipSwitch -> Off;
-      turnDimmer(Integer lightval) -> / { setBrightness(lightval) } Dimmed;
+    [getDimmer()>99] entry -> On;
+    flipSwitch -> Off;
+    turnDimmer(Integer lightval) -> / { setBrightness(lightval) } Dimmed;
     }
     On {
-      flipSwitch -> Off;
-      turnDimmer(Integer lightval) -> / { setBrightness(lightval) } Dimmed;
+    flipSwitch -> Off;
+    turnDimmer(Integer lightval) -> / { setBrightness(lightval) } Dimmed;
     }
   }
 }
@@ -86,7 +86,7 @@ class X9
   Integer brightness = 0;
   Bulb {
     On {
-      [getBrightness()<1] push -> Off;
+    [getBrightness()<1] push -> Off;
     }
     Off {    }
   }
@@ -97,7 +97,7 @@ class X10
   Integer brightness = 0;
   Bulb {
     On {
-      [getBrightness()<1] push -> Off;
+    [getBrightness()<1] push -> Off;
     }
     Off {    }
   }
@@ -107,12 +107,12 @@ class X11
 {
   Status {
     On {
-      press -> Off;
+    press -> Off;
     }
     Off {
-      exit / { if (doActivityStatusOffThread != null) { doActivityStatusOffThread.interrupt(); } }
-      entry / { doActivityStatusOffThread = new DoActivityThread(this,"doActivityStatusOff"); }
-      do { keepDoing; } -> On;
+    exit / { if (doActivityStatusOffThread != null) { doActivityStatusOffThread.interrupt(); } }
+    entry / { doActivityStatusOffThread = new DoActivityThread(this,"doActivityStatusOff"); }
+    do { keepDoing; } -> On;
     }
   }
 }
@@ -121,9 +121,9 @@ class X12
 {
   Bulb {
     On {
-      entry / { blahblah }
-      entry / { blahblah2 }
-      exit / { blahblahexit }
+    entry / { blahblah }
+    entry / { blahblah2 }
+    exit / { blahblahexit }
     }
   }
 }
@@ -132,18 +132,18 @@ class X14
 {
   Bulb {
     On {
-      flip -> Off;
+    flip -> Off;
     }
     Off {
-      flip -> On;
+    flip -> On;
     }
   }
   AnotherBulb {
     On {
-      flip -> Off;
+    flip -> Off;
     }
     Off {
-      flip -> On;
+    flip -> On;
     }
   }
 }
@@ -153,7 +153,7 @@ class X15
   Integer brightness = 0;
   Bulb {
     On {
-      [getBrightness()<1] push -> / { blabla } Off;
+    [getBrightness()<1] push -> / { blabla } Off;
     }
     Off {    }
   }
@@ -163,20 +163,17 @@ class X3
 {
   Status {
     On {
-      exit / { exitStatusOn(); }
-      entry / { if (statusOn == StatusOn.Null) { setStatusOn(StatusOn.Play); } }
-      off -> Off;
-      StatusOn {
+    exit / { exitStatusOn(); }
+    entry / { if (statusOn == StatusOn.Null) { setStatusOn(StatusOn.Play); } }
+    off -> Off;
         Play {
-          exit / { setStatusOn(StatusOn.Null); }
-          p -> Pause;
+        exit / { setStatusOn(StatusOn.Null); }
+        p -> Pause;
         }
         Pause {
-          exit / { setStatusOn(StatusOn.Null); }
-          p -> Play;
+        exit / { setStatusOn(StatusOn.Null); }
+        p -> Play;
         }
-        Null {        }
-      }
     }
     Off {    }
   }
@@ -186,10 +183,10 @@ class X16
 {
   Fixture {
     On {
-      push -> Off;
+    push -> Off;
     }
     Off {
-      push -> On;
+    push -> On;
     }
   }
 }
@@ -198,15 +195,12 @@ class X17
 {
   Status {
     S1 {
-      exit / { exitStatusS1(); }
-      entry / { if (statusS1 == StatusS1.Null) { setStatusS1(StatusS1.S1A); } }
-      e1 -> S1A;
-      StatusS1 {
+    exit / { exitStatusS1(); }
+    entry / { if (statusS1 == StatusS1.Null) { setStatusS1(StatusS1.S1A); } }
+    e1 -> S1A;
         S1A {
-          exit / { setStatusS1(StatusS1.Null); }
+        exit / { setStatusS1(StatusS1.Null); }
         }
-        Null {        }
-      }
     }
   }
 }
@@ -215,35 +209,30 @@ class X18
 {
   Status {
     Off {
-      turnOn -> On;
+    turnOn -> On;
     }
     On {
-      exit / { exitStatusOnMotorIdle(); }
-      exit / { exitStatusOnFanIdle(); }
-      entry / { if (statusOnMotorIdle == StatusOnMotorIdle.Null) { setStatusOnMotorIdle(StatusOnMotorIdle.MotorIdle); } }
-      entry / { if (statusOnFanIdle == StatusOnFanIdle.Null) { setStatusOnFanIdle(StatusOnFanIdle.FanIdle); } }
-      StatusOnMotorIdle {
+    exit / { exitStatusOnMotorIdle(); }
+    exit / { exitStatusOnFanIdle(); }
+    entry / { if (statusOnMotorIdle == StatusOnMotorIdle.Null) { setStatusOnMotorIdle(StatusOnMotorIdle.MotorIdle); } }
+    entry / { if (statusOnFanIdle == StatusOnFanIdle.Null) { setStatusOnFanIdle(StatusOnFanIdle.FanIdle); } }
         MotorIdle {
-          exit / { setStatusOnMotorIdle(StatusOnMotorIdle.Null); }
-          flip -> MotorRunning;
+        exit / { setStatusOnMotorIdle(StatusOnMotorIdle.Null); }
+        flip -> MotorRunning;
         }
         MotorRunning {
-          exit / { setStatusOnMotorIdle(StatusOnMotorIdle.Null); }
-          flip -> MotorIdle;
+        exit / { setStatusOnMotorIdle(StatusOnMotorIdle.Null); }
+        flip -> MotorIdle;
         }
-        Null {        }
-      }
-      StatusOnFanIdle {
+    ||
         FanIdle {
-          exit / { setStatusOnFanIdle(StatusOnFanIdle.Null); }
-          flop -> FanRunning;
+        exit / { setStatusOnFanIdle(StatusOnFanIdle.Null); }
+        flop -> FanRunning;
         }
         FanRunning {
-          exit / { setStatusOnFanIdle(StatusOnFanIdle.Null); }
-          flop -> FanIdle;
+        exit / { setStatusOnFanIdle(StatusOnFanIdle.Null); }
+        flop -> FanIdle;
         }
-        Null {        }
-      }
     }
   }
 }

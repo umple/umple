@@ -1,5 +1,0 @@
-class Vehicle {
-   0..1 v <@>- 2..4 Wheel w;
-}
-
-class Wheel {}

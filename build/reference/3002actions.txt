@@ -1,6 +1,7 @@
 State Machine Actions and Do Activities
 State Machines
 noreferences
+@@tooltip Actions are code that can be executed when taking a transition, or on entry or exit from a state, and which take negligible time
 
 @@description
 <p><b>Transition actions:</b>      
@@ -17,7 +18,7 @@ using the keywords entry or exit, followed by a slash, followed by code.
 <p>The actions described above should be programmed such that they take negligible time to execute; in other words they shouldn&apos;t contain significant loops..</p>
 
 <p><b>Do activities:</b>
-If a longer-running computation (activity) needs to be while in a state,
+If a longer-running computation (activity) needs to be done while in a state,
 encode this using the keyword do, followed by a block of code
 in curly brackets. In languages such as Java
 that support it, a thread will be started

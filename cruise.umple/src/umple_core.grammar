@@ -1,11 +1,11 @@
 // The master source of this first part of the Umple grammar is available at
 // [*https://github.com/umple/umple/blob/master/cruise.umple/src/umple_core.grammar *]
 // The html rendering is generated from the master and appears in the Umple User manual
-// at page [*http://grammar.umple.org*]
+// at page [*https://umple.org/grammar*]
 
 // Copyright: All contributors to the Umple Project
 // This file is made available subject to the open source license found at:
-// [*http://umple.org/license*]
+// [*https://umple.org/license*]
 
 // The core of umple is a "program". This is the grammar's 'start symbol'
 // Comments and lone semicolons are ignored
@@ -16,12 +16,12 @@ umpleProgram- : ( [[comment]] | [[directive]] | ; )*
 // Directives are the top-level items in an umple file. See manual page [*TypesofDirectives*]
 // A directive is either used to configure the system or else is
 // an actual entity of the system to be modelled or generated
-directive- : [[glossary]] | [[generate]] | [[distribute]] | [[generate_path]] | [[filter]] | [[useStatement]] | [[namespace]] | [[tracerDirective]] | [[entity]] | [[debug]] | [[strictness]] | [[toplevelExtracode]] | [[toplevelException]]
+directive- : [[checkForUnintendedBracket]] | [[glossary]] | [[generate]] | [[suboption]] | [[distribute]] | [[generate_path]] | [[filter]] | [[useStatement]] | [[namespace]] | [[requirement]] | [[reqImplementation]] | [[tracerDirective]] | [[entity]] | [[debug]] | [[strictness]] | [[toplevelExtracode]] | [[toplevelException]]
 
 // A glossary item is used to fine tune pluralization during code generation
 glossary : glossary { [[word]]* }
 word : [singular] : [plural] ;
-distribute :distributable [=distributeTech:RMI|WS]? [=distributePattern:0|1|2|3]? [=distributeVal:on|off|forced] ;
+distribute : distributable [=distributeTech:RMI|WS]? [=distributePattern:0|1|2|3]? [=distributeVal:on|off|forced] ;
 // A high level of strictness will cause warnings to be issued when base language code
 // is found, where it might not have been intended. Strictness can also be used
 // To either suppress certain messages, or to declare that they should be present.
@@ -32,12 +32,14 @@ strictnessDisableAuto : disable [**expression]
 
 // The generate clause can be used to generate multiple outputs
 // The --override is used to say that subsequent generate statements will be ignored
-generate : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|Umple|UmpleSelf|USE|Test|SimpleMetrics|Uigu2] ( [=suboptionIndicator:-s|--suboption] " [**suboption] " )* ;
+generate : generate [=language:Java|Nothing|Php|RTCpp|SimpleCpp|Ruby|Python|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|StateTables|EventSequence|Umple|UmpleSelf|USE|Test|SimpleMetrics|PlainRequirementsDoc|Uigu2|ExternalGrammar] ( [=suboptionIndicator:-s|--suboption] " [**suboption] " )* ;
  
-generate_path : generate [=language:Java|Php|RTCpp|SimpleCpp|Ruby|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvClassTraitDiagram|GvFeatureDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|UmpleSelf|USE|test] " [**output] " [=override:--override|--override-all]? ( [=suboptionIndicator:-s|--suboption]  " [**suboption] " )* ;
+generate_path : generate [=language:Java|Nothing|Php|RTCpp|SimpleCpp|Ruby|Python|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|StateTables|EventSequence|Umple|UmpleSelf|USE|Test|SimpleMetrics|PlainRequirementsDoc|Uigu2|ExternalGrammar] " [**output] " [=override:--override|--override-all]? ( [=suboptionIndicator:-s|--suboption]  " [**suboption] " )* ;
+
+suboption : suboption "[**value] " ;
 
 // Use statements allow incorporation of other Umple files. See [*UseStatements*]
-useStatement : use [use] ;
+useStatement : use [use] ( , [extraUse] )*
 
 toplevelExtracode : top [top] [[moreCode]]
 
@@ -52,6 +54,9 @@ entity- : [[mixsetIsFeature]] | [[requireStatement]] | [[mixsetDefinition]] | [[
 comment- : [[inlineComment]] | [[multilineComment]] | [[annotationComment]]
 inlineComment- : // [*inlineComment]
 multilineComment- : /* [**multilineComment] */
+
+requirement : req [reqIdentifier] [reqLanguage]? { [**reqContent] }
+reqImplementation : implementsReq [reqIdentifier] (, [reqIdentifier])* ;
 
 //Matches all forms of Java annotations including those with parentheses and values in quotes
 annotationComment- : [!annotationComment:@[a-zA-Z_][a-zA-Z0-9_-]*(\((("(\w|\s|-)*")|\w|\s|=|,|\.)*\))?]

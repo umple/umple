@@ -1,0 +1,19 @@
+class B():
+    def __init__(self, aX):
+        self._x = aX
+
+    def setX(self, aX):
+        wasSet = False
+        self._x = aX
+        wasSet = True
+        return wasSet
+
+    def getX(self):
+        return self._x
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "x" + ":" + self.getX() + "]"
+

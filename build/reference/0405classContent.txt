@@ -1,60 +1,98 @@
 Class Content
 Classes and Interfaces
 noreferences
+@@tooltip Comprehensive list of all the things that can be specified in an Umple class
 
 @@description
 <p>      
-A class can contain any of the following items. <a href="interfaceDefinition.html">Interfaces</a> are limited to those indicated.
+A class can contain any of the following items. <a href="interfaceDefinition.html">Interfaces</a> are limited to those indicated as <font color="red">[Allowed in interfaces]</font>. A <a href="Traits.html">trait</a> can contain most of the items, indicated as indicated as <font color="green">[Allowed in traits]</font>.
 </p>
 
 <ul>
 
-<li><b><a href="UmpleComments.html">Comments</a></b> describe the intent of your class (or interface), and any other elements in the class.</li>
+<li><b><a href="UmpleComments.html">Comments</a></b> describe the intent of your class (or interface), and any other elements in the class.<font color="red">[Allowed in interfaces]</font> <font color="green">[Allowed in traits]</font></li>
 
 <br />
 
-<li><b><a href="isAclause.html">isA directives</a></b> that specify a superclass to your class (i.e. a Supervisor could be descrbied as "isA Person") [Interfaces can have more than one]</li>
+<li><b><a href="isAclause.html">isA directives</a></b> that specify a superclass to your class (e.g. a Supervisor could be described as "isA Person"). A class can only have one isA clause referring to another class, but can have many referring to traits or interfaces. <font color="red">[More than one allowed in interfaces]</font> <font color="green">[More than one allowed in traits]</font></li>
 
 <br />
 
-<li><b><a href="SingletonPattern.html">A singleton directive</a></b> that limits the system to only one instance of this class (e.g. there may only be one Bank in a banking system)</li>
+<li>An <b>abstract;</b> keyword, specifying that the class is abstract (cannot be instantiated, must have at least one concrete subclass).</li>
 
 <br />
 
-<li><b><a href="ImmutablePattern.html">An immutable directive</a></b> that ensures that once constructed, an instance cannot be modified (under development).</li>
+<li><b><a href="Dependclause.html">Depend directives</a></b> that describe external dependencies that might be used by your class within methods <font color="red">[Allowed in interfaces]</font> <font color="green">[Allowed in traits]</font>.</li>
 
 <br />
 
-<li><b><a href="Dependclause.html">Depend directives</a></b> that describe external dependencies that might be used by your class within methods (Interfaces can contain these too).</li>
+<li><b><a href="AttributeDefinition.html">Attributes</a></b> describing simple data that can be found in any element of the class (i.e. name, dob, amount) <font color="green">[Allowed in traits]</font>. These can be preceded by the keyword <b>const</b> to declare constants.</li>
 
 <br />
 
-<li><b><a href="AttributeDefinition.html">Attributes</a></b> describing simple data that can be found in any element of the class (i.e. name, dob, amount)</li>
+<li><b><a href="InlineAssociations.html">Inline associations</a></b> that define links to instances of other classes (or to other instances of this class). <font color="green">[Allowed in traits]</font> (can also be <a href="IndependentlyDefinedAssociations.html">specified outside classes</a>) </li>
 
 <br />
 
-<li><b><a href="BasicStateMachines.html">State machine definitions</a></b> that describe declaratively attributes that change value in certain behaviour patterns in response to actions such as method calls.</li>
+<li><b><a href="MethodDefinition.html">Methods</a></b> that provide behaviour for the class. <font color="red">[Allowed in interfaces, but with no method body]</font> <font color="green">[Allowed in traits]</font> (state events are also methods, and <a href="State-DependentMethods.html">methods can also be specified in states</a>)</li>
 
 <br />
 
-<li><b><a href="InlineAssociations.html">Inline associations</a></b> that define links to instances of other classes (or to other instances of this class). </li>
+<li><b><a href="EnumerationDefinition.html">Enumerations</a></b> for use inside this class (can also be specified outside classes)</li>
 
 <br />
 
-<li><b><a href="KeysforEqualityandHashing.html">Key directives</a></b> indicating which attributes (or in future, associations) are going to be used to define when one element is equal to another.</li>
+<li><b><a href="BasicStateMachines.html">State machine definitions</a></b> that describe declaratively attributes that change value in certain behaviour patterns in response to actions such as method calls. <font color="green">[Allowed in traits]</font> </li>
 
 <br />
 
-<li><b>Class definitions nested inside this class</b> that define subclass of this class as an alternative to using the isA clause.</li>
+<li><b><a href="SingletonPattern.html">A singleton directive</a></b> that limits the system to only one instance of this class (e.g. there may only be one Bank in a banking system)<font color="green">[Allowed in traits]</font></li>
 
 <br />
 
-<li><b><a href="TracingBasics.html">Trace directives</a></b> to direct generation of traces from the code.</li>
+<li><b><a href="ImmutablePattern.html">An immutable directive</a></b> that ensures that once constructed, an instance cannot be modified (under development).<font color="green">[Allowed in traits]</font></li>
 
 <br />
 
-<li><b><a href="MethodDefinition.html">Methods</a></b> that provide behaviour for the class. (Interfaces can have declarations of methods only; no method bodies)</li>
+<li><b><a href="KeysforEqualityandHashing.html">Key directives</a></b> indicating which attributes (or in the future, associations) are going to be used to define when one element is equal to another.<font color="green">[Allowed in traits]</font></li>
 
 <br />
+
+
+<li><a href="BasicTemplates.html"><b>Generation templates</b> and <b>emit methods</b></a> for generating string output.</li>
+
+
+<br />
+
+<li><a href="SimpleConstraints.html"><b>Invariant constraints</b></a>. These are Boolean expressions that limit the values of attributes and other elements. <font color="green">[Allowed in traits]</font> (other types of constraints can be specified in methods)</li>
+
+<br />
+
+<li><b><a href="BasicMixsets.html">Mixset definitions</a></b> that are named blocks containing any of the other items that can appear in classes (i.e. those listed on this page). These allow for conditional compilation because the content of the mixset an either be active or not active. Mixsets are activated by use statements or command line arguments.<font color="green">[Allowed in traits]</font></li>
+
+<br />
+
+<li><b>Class definitions nested inside this class</b> that define subclass of this class as an alternative to using the isA clause. (these are not inner classes; those are defined as below)</li>
+
+<br />
+
+<li><b><a href="TracingBasics.html">Trace directives</a></b> to direct generation of traces from the code. <font color="green">[Allowed in traits]</font></li>
+
+<br />
+
+
+<li>An inner class, specified either by the keyword <b>inner</b> or <b>static</b>, followed by a class definition. These are only relevant to Java generation.</li>
+
+<br />
+
+<li>Several other items to be documented later including the ability to colour classes in diagrams, and to specify test cases.</li>
+
+<br />
+
 
 </ul>
+
+@@syntax
+[[classContent]] [[traitContent]]
+
+

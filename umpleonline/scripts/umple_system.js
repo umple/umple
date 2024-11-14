@@ -173,7 +173,6 @@ UmpleSystem.addClass = function(umpleClass)
 
 // remove the jquery resizable handle
 jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
-jQuery(".ui-icon").removeClass("ui-icon");
   //UmpleSystem.redrawGeneralizationsTo(umpleClass);
   return umpleClass;   
 }
@@ -330,7 +329,6 @@ UmpleSystem.updateClass = function(umpleClass)
   
   //remove the jquery resizable handle
   jQuery(".ui-icon-gripsmall-diagonal-se").removeClass("ui-icon-gripsmall-diagonal-se");
-  jQuery(".ui-icon").removeClass("ui-icon");
 }
 
 UmpleSystem.redrawAssociationsFor = function(umpleClass)
@@ -505,8 +503,9 @@ UmpleSystem.trimOverlappingAssociations = function(umpleClass)
 
       if(umpleAssociation.isReflexive()) 
         umpleAssociation.adjustReflexiveEndpoints();
-      else 
-        umpleAssociation.trimOverlap();
+      else
+        // this needs to fix for codemirror 6 in the future which cause error on refresh 
+        // umpleAssociation.trimOverlap();
 
       // if an offset position has changed, update the association
       if (!oldOffsetOne.equalsIgnoreSize(umpleAssociation.offsetOnePosition) ||
@@ -524,6 +523,10 @@ UmpleSystem.trimOverlappingAssociations = function(umpleClass)
         });
       }
     }
+  }
+
+  if (UmpleSystem.umpleAssociations.length == 0){
+    Action.setjustUpdatetoSaveLater(false);
   }
 
   Page.hideLoading()

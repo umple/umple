@@ -1,0 +1,14 @@
+class Operation {
+  const Boolean DEBUG=true;
+  query;
+  before constructor {
+    if (aQuery == null)
+    {
+      throw new RuntimeException("Please provide a valid query");
+    }
+  }
+  after constructor {
+    if (DEBUG) { System.out.println("Created " + query); }
+  }
+}
+// @@@skipcppcompile

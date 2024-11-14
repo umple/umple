@@ -115,7 +115,7 @@ public class Student
     cachedHashCode = 17;
     cachedHashCode = cachedHashCode * 23 + getIntId();
 
-    cachedHashCode = cachedHashCode * 23 + (new Double(getDoubleId())).hashCode();
+    cachedHashCode = cachedHashCode * 23 + (Double.valueOf(getDoubleId())).hashCode();
 
     cachedHashCode = cachedHashCode * 23 + (getBooleanId() ? 1 : 0);
 

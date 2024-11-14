@@ -1,0 +1,17 @@
+
+
+class Shape2D
+{
+	String center;
+}
+
+class Polygon
+{
+	isA Shape2D;
+}
+
+class SimplePolygon
+{
+	String orientation;
+	isA Polygon;
+}

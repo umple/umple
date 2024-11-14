@@ -1,6 +1,7 @@
 Multiline Comments
-Comments
+Comments and Requirements
 noreferences
+@@tooltip Comments specified with a slash and star  that can span several lines, and can be used to comment out blocks of code
 
 @@description
 Use multiline comments starting with slash-star and ending with star-slash to document your work. You should put a comment block, for example, at the beginning of each file.

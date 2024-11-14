@@ -1,0 +1,15 @@
+// This demonstrates that actions can be different
+// in different target languages
+class DemoSM
+{
+  Integer id;
+  sm {
+    s1 {
+      e1 / Java {id=5;} Php {$id=5;} -> s2;
+    }
+    s2 {
+    }
+  }
+}
+//$?[End_of_model]$?
+// @@@skippythoncompile - Contains Java Code

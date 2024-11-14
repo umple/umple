@@ -1,0 +1,116 @@
+suboption "reqSortID";
+
+req R1 {
+ Test of req 1
+}
+
+
+req R2 {
+ Another req
+}
+
+
+req R3 {
+ The third req
+}
+
+req R4 {
+ The Fourth req
+}
+
+req R5 {
+  This one is to test that two methods show as implementing R5
+}
+
+req R6 {
+  Req to test interface implementation
+}
+
+
+// First class A
+implementsReq R3;
+class A {
+  
+  implementsReq R2;
+  att1;
+  
+  
+  // an integer attribute
+  implementsReq R1;
+  Integer att2;
+}
+
+
+
+// A second class
+class B {
+  isA C;
+  isA Itest;
+
+  // An association
+  implementsReq R2;
+  * -> * A;
+  
+  // A test state machine
+  implementsReq R3;
+  sm {
+    s1 {
+      e -> s2;
+    }
+    s2 {
+    }
+  } 
+  
+  implementsReq R5;
+  String m2(String s) {
+    return(s);
+  }
+}
+
+
+// A trait that is part of B
+implementsReq R4;
+trait C {
+   implementsReq R4;
+   
+   implementsReq R5;
+   int m1() {
+     return 5;
+   }
+}
+
+
+// This class doesn't implement a valid req
+implementsReq R99;
+class X {
+}
+
+implementsReq R6;
+interface Itest {
+  String m2(String s);
+}
+
+class D{  
+    f;  
+}  
+implementsReq R6;  
+associationClass Ac{  
+    * D a1;  
+    * b2 E c1;  
+}  
+  
+  
+class E {  
+    d;  
+}  
+  
+implementsReq R6;
+enum Status { FullTime } 
+
+implementsReq R4;
+mixset specialVersion {  
+  class X {  
+    b;  
+  }  
+} 
+

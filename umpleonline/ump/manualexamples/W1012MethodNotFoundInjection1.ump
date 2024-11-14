@@ -1,9 +1,0 @@
-//getAttr does not exist in the class
-//which generates the warning
-class A {
-  before getAttr {
-    doSomething();
-  }
-  
-  doSomething(){/* Implementation */}
-}

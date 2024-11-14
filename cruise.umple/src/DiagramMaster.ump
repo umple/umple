@@ -3,10 +3,10 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 This file is used to generate the diagram found at
-http://umple.org/umple-compiler-classDiagram.shtml
+https://umple.org/umple-compiler-classDiagram.shtml
 
 To regenerate that diagram, compile this
 Then move DiagramMastercd.gv to ../../umplewww
@@ -99,14 +99,6 @@ class Action {displayColor "#BBDDFF";}
 class Activity {displayColor "#BBDDFF";}
 class Transition {displayColor "#BBDDFF";}
 class Guard {displayColor "#BBDDFF";}
-
-// Purple for VML stuff
-class VmlParser {displayColor "#EECCFF";}
-class VmlSystem {displayColor "#EECCFF";}
-class Concern {displayColor "#EECCFF";}
-class VariationPoint {displayColor "#EECCFF";}
-class Variant {displayColor "#EECCFF";}
-class CodeSnippet {displayColor "#EECCFF";}
 
 // Violet for diagram stuff
 class Documenter {displayColor "#FFCCEE";}

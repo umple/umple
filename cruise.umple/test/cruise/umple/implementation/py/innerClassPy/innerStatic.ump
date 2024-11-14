@@ -1,0 +1,17 @@
+generate Python;
+class OuterClass_1
+{
+  static int y=0;
+
+  static class InnerStaticClass 
+  {
+  
+  void increaseY() 
+    {
+      OuterClass_1.y +=1
+    }
+    
+  }
+}
+
+

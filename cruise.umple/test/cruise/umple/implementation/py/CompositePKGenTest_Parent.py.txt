@@ -1,0 +1,91 @@
+class Person():
+    def __init__(self, aName, aId, aAge):
+        self._cachedHashCode = -1
+        self._canSetId = True
+        self._canSetName = True
+        self._name = aName
+        self._id = aId
+        self._age = aAge
+
+    def setName(self, aName):
+        wasSet = False
+        if not self._canSetName :
+            return False
+
+        self._name = aName
+        wasSet = True
+        return wasSet
+
+    def setId(self, aId):
+        wasSet = False
+        if not self._canSetId :
+            return False
+
+        self._id = aId
+        wasSet = True
+        return wasSet
+
+    def setAge(self, aAge):
+        wasSet = False
+        self._age = aAge
+        wasSet = True
+        return wasSet
+
+    def getName(self):
+        return self._name
+
+    def getId(self):
+        return self._id
+
+    def getAge(self):
+        return self._age
+
+    def equals(self, obj):
+        if obj is None :
+            return False
+
+        if not self.getClass().equals(obj.getClass()) :
+            return False
+
+        compareTo = obj
+        if self.getId() is None and compareTo.getId() != None :
+            return False
+
+        elif self.getId() != None and not self.getId().equals(compareTo.getId()) :
+            return False
+
+        if self.getName() is None and compareTo.getName() != None :
+            return False
+
+        elif self.getName() != None and not self.getName().equals(compareTo.getName()) :
+            return False
+
+        return True
+
+    def hashCode(self):
+        if self._cachedHashCode != -1 :
+            return self._cachedHashCode
+
+        self._cachedHashCode = 17
+        if not(self.getId() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getId().hashCode()
+
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+
+        if not(self.getName() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getName().hashCode()
+
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+
+        self._canSetId = False
+        self._canSetName = False
+        return self._cachedHashCode
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "id" + ":" + self.getId() + "," + "name" + ":" + self.getName() + "," + "age" + ":" + self.getAge() + "]"
+

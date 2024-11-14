@@ -1,0 +1,25 @@
+// this example will trace all states of
+// State machine GarageDoor 
+
+@SuppressWarnings("deprecation")
+class GarageDoor
+{
+    // UML state machine digram for a Garage door,
+    // written in Umple
+    status { 	
+      	Open { buttonOrObstacle -> Closing;  }  	
+      	Closing {
+          buttonOrObstacle -> Opening;
+          reachBottom -> Closed;
+      	}
+      	Closed { buttonOrObstacle -> Opening; }
+      	Opening {
+          buttonOrObstacle -> HalfOpen;
+          reachTop -> Open;
+      	}
+      	HalfOpen { buttonOrObstacle -> Opening; }
+    }
+    // trace whole state machine
+    trace status;
+}
+// @@@skipphpcompile See issue 596 (PHP tracing causes issues)

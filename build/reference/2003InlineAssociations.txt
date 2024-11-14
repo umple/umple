@@ -1,6 +1,7 @@
 Inline Associations
 Associations
 noreferences
+@@tooltip An association specified within a class at one end or the other end
 
 @@description
 <p>An association represents a relationship between two classes.  Associations can be defined within a class, in a similar manner

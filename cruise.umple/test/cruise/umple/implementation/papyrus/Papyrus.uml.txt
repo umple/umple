@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<uml:Model xmi:version="2.1" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/2.1.0/UML" xmi:id="_Papyrus" name="Papyrus">
+<uml:Model xmi:version="2.1" xmlns:xmi="https://schema.omg.org/spec/XMI/2.1" xmlns:ecore="https://www.eclipse.org/emf/2002/Ecore" xmlns:uml="https://www.eclipse.org/uml2/2.1.0/UML" xmi:id="_Papyrus" name="Papyrus">
   <packageImport xmi:id="_packageImport.0">
     <importedPackage xmi:type="uml:Model" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#_0"/>
   </packageImport>
@@ -62,10 +62,29 @@
   <packagedElement xmi:type="uml:Class" xmi:id="_Cheque" name="Cheque">
     <generalization xmi:id="_Cheque-_generalization.0" general="_PaymentMethod"/>
   </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_Employee" name="Employee">
+  </packagedElement>
+  <packagedElement xmi:type="uml:Association" xmi:id="_Employee__Gender" name="Employee__Gender" memberEnd="_Employee__Gender-employees _Employee__Gender-gender" navigableOwnedEnd="_Employee__Gender-gender">
+    <ownedEnd xmi:id="_Employee__Gender-employees" name="employees" type="_Employee" association="_Employee__Gender">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Employee__Gender-employees-_upperValue" value="*"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Employee__Gender-employees-_lowerValue" value="0"/>
+    </ownedEnd>
+    <ownedEnd xmi:id="_Employee__Gender-gender" name="gender" type="_Gender" association="_Employee__Gender">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Employee__Gender-gender-_upperValue" value="1"/>
+      <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_Employee__Gender-gender-_lowerValue" value="1"/>
+    </ownedEnd>
+  </packagedElement>
+  <packagedElement xmi:type="uml:Class" xmi:id="_Gender" name="Gender">
+    <ownedAttribute xmi:id="_Gender-code" name="code" visibility="private">
+      <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Gender-code-_upperValue" value="1"/>
+      <lowerValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Gender-code-_lowerValue" value="1"/>
+    </ownedAttribute>
+  </packagedElement>
   <packagedElement xmi:type="uml:Interface" xmi:id="_ICart" name="ICart"/>
   <profileApplication xmi:id="_profileApplication.0">
-    <eAnnotations xmi:id="_eAnnotations.0" source="http://www.eclipse.org/uml2/2.0.0/UML">
-      <references xmi:type="ecore:EPackage" href="http://www.eclipse.org/uml2/schemas/Standard/1#/"/>
+    <eAnnotations xmi:id="_eAnnotations.0" source="https://www.eclipse.org/uml2/2.0.0/UML">
+      <references xmi:type="ecore:EPackage" href="https://www.eclipse.org/uml2/schemas/Standard/1#/"/>
     </eAnnotations>
     <appliedProfile href="pathmap://UML_PROFILES/Standard.profile.uml#_0"/>
   </profileApplication>

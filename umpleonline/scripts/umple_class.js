@@ -208,6 +208,7 @@ function UmpleClass()
     {
       classDiv = jQuery("<div></div>");
       classDiv.addClass("umpleClass");
+      classDiv.attr("tabindex", 2);
     }
     else
     {

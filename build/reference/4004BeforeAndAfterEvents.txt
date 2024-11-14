@@ -1,6 +1,7 @@
 Code Injection in Event Methods
 Aspect Orientation
 noreferences
+@@tooltip Add user-defined code into code generated from state machine event names
 
 @@description
 <p><a href="BasicStateMachines.html">State machine</a> event methods are generated automatically from a state machine.

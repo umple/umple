@@ -26,6 +26,7 @@ use state_machine_StateDependentMethods_All.ump;
 use state_machine_doActivity_All.ump;
 use state_machine_timedEvent_All.ump;
 use toString_declare.ump;
+use toJson_declare.ump;
 use trace.ump;
 use uncaught_exception.ump;
 use queued_method.ump;
@@ -41,6 +42,9 @@ class JavaClassGenerator {
     depend cruise.umple.util.*;
     depend java.util.*;
     depend cruise.umple.parser.Position;
+    depend java.util.regex.Matcher;
+    depend java.util.regex.Pattern;
+    depend java.lang.reflect.Constructor;
 
     isA ILang;
 
@@ -68,7 +72,6 @@ class JavaClassGenerator {
   JavaGenerator gen = new JavaGenerator();
   gen.setModel(model);
   GeneratorHelper.generator = gen;
-
   HashMap<String,String> codeInjectionMap = new HashMap<String,String>();
   for (CodeInjection inject : uClass.getCodeInjections())
   {
@@ -86,14 +89,15 @@ class JavaClassGenerator {
     }
     codeInjectionMap.put(key,newCodeToInject);
   }
-
   boolean isFirst = true;
 #>>
 
 <<=gen.translate("packageDefinition",uClass)>><<@ UmpleToJava.import_packages >>
 
 
-<<# if (uClass.numberOfComments() > 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } #>>
+<<# if (uClass.numberOfComments() > 0 && uClass.numberOfReqImplementations() > 0 && uClass.getReqImplementations() != null) {List<Comment> toComment = new ArrayList<Comment>(uClass.getComments()); toComment.addAll(Requirement.convertToComment(uClass.getReqImplementations(),model)); append(realSb, "\n{0}", Comment.format("Javadoc", toComment)); } #>>
+<<# if (uClass.numberOfComments() > 0 && uClass.numberOfReqImplementations() == 0) { append(realSb, "\n{0}", Comment.format("Javadoc",uClass.getComments())); } #>>
+<<# if (uClass.numberOfComments() == 0 && uClass.numberOfReqImplementations() > 0 && uClass.getReqImplementations() != null) { append(realSb, "\n{0}", Requirement.format("Javadoc",uClass.getReqImplementations(),model)); } #>>
 <<# for (Position p : uClass.getPositions()) { #>>
 // line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"Java") >>"
 <<# }
@@ -215,6 +219,7 @@ for (StateMachine smq : uClass.getStateMachines())
   getStateMachine2Code(realSb, model,uClass,gClass,gen,isFirst);
   getDeleteCode(realSb, model,uClass,gClass,gen,isFirst,false);
   getExtraMethodsCode(realSb, model,uClass,gClass,gen,isFirst);
+  getJsonGenerationCode(realSb,model,uClass,gClass,gen,isFirst);
   getQueuedMethodClass(realSb, model, uClass, gen);
   getInnerClasses(realSb, model,uClass,isFirst);
   getAllExtraCode(realSb, model,uClass,gClass,gen,isFirst);
@@ -233,39 +238,49 @@ for (StateMachine smq : uClass.getStateMachines())
   {
     #>><<@ UmpleToJava.enumerations_All >><<#
   }
+  mixset Mixset {
   public void handelMixsetInsideMethod(UmpleModel umodel, MixsetInMethod mixsetInMethod, MethodBody mBody)
   {
     Mixset mixset = umodel.getMixset(mixsetInMethod.getMixsetName());
     boolean mixsetIsUsed = false;
-    if(mixset != null) // the mixset has been used. 
-    {
-      if(mixset.getUseUmpleFile() != null)
-      {
-        mixsetIsUsed = true;
-        //first process children
-		    for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
-          handelMixsetInsideMethod(umodel, childMixsetInMethod, mBody);
-		    //Then ... 
-        String searchFor = "mixset\\s+"+mixsetInMethod.getMixsetName()+"\\s+\\{"; 
-        String code = mBody.getCodeblock().getCode();
-        code = code.replaceFirst(searchFor, ""); // remove def. of mixset + open curly bracket 
-
-        int indexOfMixsetClosingBracket= MethodBody.indexOfMixsetClosingBracket(" { "+code) - 3; // 3 is the added Chars at beginning 
-        String resCode = code.substring(0,indexOfMixsetClosingBracket-1) + " ";
-        if(indexOfMixsetClosingBracket < code.length()) 
-          resCode = resCode + code.substring(indexOfMixsetClosingBracket+1); 
-        mBody.getCodeblock().setCode(resCode);
-
-
+    try {
+       if(mixset != null) // the mixset has been used. 
+       {
+        if(mixset.getUseUmpleFile() != null)
+        {
+          mixsetIsUsed = true;
+          //first process children
+          for(MixsetInMethod childMixsetInMethod : mixsetInMethod.getChildMixsets())
+            handelMixsetInsideMethod(umodel, childMixsetInMethod, mBody);
+          //Then ...
+          String methodCode = mBody.getCodeblock().getCode();
+          Pattern labelPatternToMatch = Pattern.compile("mixset\\s+\\S+\\s+"+"\\"+"\u007B"); //==> /u007B means an open curly bracket
+          Matcher matcher = labelPatternToMatch.matcher(methodCode);
+          // below code, to delete mixset def. and its closing bracket.
+          if (matcher.find()) {
+            String mixsetDefPlusAfterCode = methodCode.substring(matcher.start());
+            int indexOfMixsetClosingBracket = matcher.start() + MethodBody.indexOfMixsetClosingBracket(mixsetDefPlusAfterCode) - 1 ;
+            String methodCodeRemovedMixset = methodCode.substring(0,indexOfMixsetClosingBracket) + " " ; // remove closing bracket 
+            if(indexOfMixsetClosingBracket + 1 < methodCode.length())
+            methodCodeRemovedMixset = methodCodeRemovedMixset + methodCode.substring(indexOfMixsetClosingBracket +1); 
+            methodCodeRemovedMixset = methodCodeRemovedMixset.substring(0,matcher.start()) + methodCodeRemovedMixset.substring(matcher.end()+1); // remove mixset def.
+            mBody.getCodeblock().setCode(methodCodeRemovedMixset);
+          }
+        }
       }
     }
-    else if(!mixsetIsUsed)
-	  {
-		 // delete body of unused mixsets  
-		 String mixsetInMethodCode = mixsetInMethod.getMixsetFragment();
-		 String code = mBody.getCodeblock().getCode().replace(mixsetInMethodCode, "");
-		 mBody.getCodeblock().setCode(code);
-	  } 
+    finally
+    {
+      if(!mixsetIsUsed)
+      {
+        // delete body of unused mixsets  
+        String mixsetInMethodCode = mixsetInMethod.getMixsetFragment();
+        String code = mBody.getCodeblock().getCode().replace(mixsetInMethodCode, "");
+        mBody.getCodeblock().setCode(code);
+      }
+    } 
+  }
+
   }
   // This method allows the injection of some code before/after a code label inside a method of an umple class. 
   private void applyCodeInjectionToLabeledMethod(UmpleClass uClass, Method aMethod, String aspectType) {
@@ -450,6 +465,7 @@ for (StateMachine smq : uClass.getStateMachines())
 <<@ UmpleToJava.constructor_Declare_All >>
   <<#return realSb.toString();
     } 
+
     private String getAttributeCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst, boolean isFake)
   { 
     String umpleSourceFile = "";
@@ -553,7 +569,18 @@ for (StateMachine smq : uClass.getStateMachines())
    if (uClass.getAttributes().size()>0 && !matchFound){ #>><<@ UmpleToJava.toString_declare >>
 <<# } #>>
   <<#return realSb.toString();
-    } 
+    }
+    
+    private String getJsonGenerationCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
+  {
+    if (model.modelHasSuboption("Java", "genJson")){
+    //The following code is generated by -s genJson suboption, the result would be json format.
+    #>>
+      <<@ UmpleToJava.toJson_declare >> <<@ UmpleToJava.toJson_helper>>
+      <<@ UmpleToJava.fromJson_declare >> <<@ UmpleToJava.fromJson_constructor >> <<@ UmpleToJava.fromJson_parser>> <<@ UmpleToJava.fromJson_parserHelper>> <<@ UmpleToJava.fromJson_parserList>> <<@ UmpleToJava.fromJson_parserClassName>>
+      <<#}#>>
+    <<#return realSb.toString();
+  } 
     private String getAllExtraCode(StringBuilder realSb, UmpleModel model,UmpleClass uClass, GeneratedClass gClass, JavaGenerator gen, boolean isFirst)
   {#>>
 <<# 

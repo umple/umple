@@ -1,0 +1,35 @@
+// UML state diagram representing a Messenger with a message
+
+namespace generatedCode;
+
+class Messenger {
+
+  message {
+    Composed {
+      cancel -> Discarded;
+      send -> Sent;
+    }
+    
+    Sent {
+      transmitViaGateway [externalContact]  -> InTransit;
+      transmit [internalContact] -> Delivered;
+      deleteMessage -> Deleted;
+    }
+    
+    InTransit {
+      reachRecipient -> Delivered;
+      deleteMessage -> Deleted;
+    }
+    
+    Delivered {
+      read -> Read;
+    }
+    Deleted { } 
+    Read { } 
+    Discarded { } 
+  }
+  Boolean internalContact = false;
+  Boolean externalContact = false;
+
+}
+  

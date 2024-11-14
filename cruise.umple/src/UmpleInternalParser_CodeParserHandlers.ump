@@ -3,7 +3,7 @@
 Copyright: All contributers to the Umple Project
 
 This file is made available subject to the open source license found at:
-http://umple.org/license
+https://umple.org/license
 
 Handlers for the RuleBasedParser.
 
@@ -79,13 +79,24 @@ class UseStatementParserAction{
  */
 class UmpleLinkedFileHandler{ 
   depend java.io.File;
+  depend java.util.Base64;
+  depend java.util.Base64.Decoder;
   depend cruise.umple.parser.analysis.LinkedFileHandler;
   
   isA LinkedFileHandler;
 
   public String onFileLink( String input, File[] linkedFiles ){
     for( File file : linkedFiles ){
-      input += "\nuse " + file.getPath() + ";";
+      String theFileName = file.getPath();
+      if(theFileName.startsWith("__UMPLE")) {
+        byte[] decodedBytes = Base64.getDecoder().decode(theFileName.substring(7));
+        // This is a direct Umple statement
+        input += "\n"+(new String(decodedBytes));
+      }
+      else {
+        // It is something that should be a use statement (file or mixset)
+        input += "\nuse " + file.getPath() + ";";
+      }
     }
     return input;
   }

@@ -1,0 +1,31 @@
+/*
+ * A Diagram represents a subset of the available model and is used
+ * to help isolate certain aspects of the system.
+ * It will be used by the code generation process to "strip" the model
+ * piror to generation so that all generators will support Diagrams
+ *
+ * Right now, no implementation, just setting up the model
+ */
+class Filter
+{
+  name;
+  Integer superCount = -1;
+  Integer subCount = 0;
+  mixset Association {
+    Integer associationCount = -1;
+  }
+  String[] values;
+  String[] filterValues;
+}
+
+class UmpleModel
+{
+  // Right now, a model can only have 1 diagram
+  1 -> * Filter;
+}
+
+class UmpleClass
+{
+  // Specifies whether or not in the filter
+  Boolean filteredin = false;
+}

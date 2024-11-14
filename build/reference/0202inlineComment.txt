@@ -1,6 +1,7 @@
 Inline Comments
-Comments
+Comments and Requirements
 noreferences
+@@tooltip Comments specified with two slashes, that end when the line ends
 
 @@description
 Use two slashes to place comments after any text on the line. The comment ends at the end of the line. This is the same syntax as in Java, C++ and several other languages.

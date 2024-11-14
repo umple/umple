@@ -3,7 +3,7 @@
 * All rights reserved. This program and the accompanying materials
 * are made available under the terms of the Eclipse Public License v1.0
 * which accompanies this distribution, and is available at
-* http://www.eclipse.org/legal/epl-v10.html
+* https://www.eclipse.org/legal/epl-v10.html
 *
 * Contributors:
 *     Ahmed M.Orabi
@@ -93,9 +93,13 @@ class GenAssociation{
 	Boolean removeNullifyInternally= {_removeNullifyInternally()}
 	
 	0..1 -- * GenComment comments sorted {priority};
+	0..1 -- * GenRequirement requirements sorted {priority};
 	depend java.util.stream.Collectors;
 	String emitComments(){
 		return this.getComments().stream().map(GenComment::getBody).collect(Collectors.joining(NL));
+	}
+	String emitRequirements(){
+		return this.getRequirements().stream().map(GenRequirement::getBody).collect(Collectors.joining(NL));
 	}
 	
 	lazy String value;
@@ -227,9 +231,9 @@ bindingNotificationManyT <<!<<#
 String name= source.getRoles();
 String instance= copyOfInstance(name);
 String type= source.getType();
-String getMethodName= getInstance(name, getOwner().getIsRemote());
+String GenMethodName= getInstance(name, getOwner().getIsRemote());
 
-#>>vector<<<=type>>*>* <<=instance>> = this-><<=getMethodName>>();
+#>>vector<<<=type>>*>* <<=instance>> = this-><<=GenMethodName>>();
 for (unsigned int index=0; index<<<=instance>>->size(); index++) {
 	<<=type>>* a<<=type>>= (*(<<=instance>>))[index];
 	a<<=type>>-><<=binding>>(<<=bindingParameters>>);
@@ -242,9 +246,9 @@ String name= source.getName();
 String type= source.getType();
 String role= source.getRole();
 String instance= variableInstance(role);
-String getMethodName= getInstance(name, getOwner().getIsRemote());
+String GenMethodName= getInstance(name, getOwner().getIsRemote());
 
-#>><<=type>>* <<=instance>>= this-><<=getMethodName>>();
+#>><<=type>>* <<=instance>>= this-><<=GenMethodName>>();
 <<=instance>>-><<=binding>>(<<=bindingParameters>>);
 !>>	emit bindingNotificationSingle()(bindingNotificationSingleT);
 
@@ -1154,12 +1158,13 @@ class GenAssociation{
 	
 	lazy Boolean checkUnique;
 	
-	String attributeAddCall(Integer numSpaces){
-		return attributeAddCall(numSpaces, null);
+	String attributeAddCall(Integer numSpaces, GenMethod method){
+		return attributeAddCall(numSpaces, null, method);
 	}
 	
-	String attributeAddCall(Integer numSpaces, String indexVariable){
-		return addCall(numSpaces, "this->"+ source.getName(), setterParamInstance(false), indexVariable);
+	String attributeAddCall(Integer numSpaces, String indexVariable, GenMethod method){
+		String newInstance = method.getParameter(0).getName(); //setterParamInstance(false);
+		return addCall(numSpaces, "this->"+ source.getName(), newInstance, indexVariable);
 	}
 	
 	attributeAddExistsT <<!<<#
@@ -1168,13 +1173,13 @@ class GenAssociation{
 	}
 	
 	String name= source.getName();
-	String newInstance = setterParamInstance(false);
+	String newInstance = method.getParameter(0).getName();
 	
 #>>if (IndexOf(this-><<=name>>->begin(), this-><<=name>>->end(), <<=newInstance>>)> -1) {
 	return wasAdded;
 }
 !>>
-	emit attributeAddExists()(attributeAddExistsT);
+	emit attributeAddExists(GenMethod method)(attributeAddExistsT);
 	
 	attributeAddMaximumCheckT <<!<<#
 	if(!getSource().getUseMaximum()){
@@ -1193,14 +1198,14 @@ class GenAssociation{
 	}
 	
 	attributeAddDirectlyT <<!<<#
-#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=attributeAddCall(0)>>
+#>><<=attributeAddExists(method)>><<=attributeAddMaximumCheck()>><<=attributeAddCall(0, method)>>
 wasAdded = true;!>>
-	emit attributeAddDirectly()(attributeAddDirectlyT);
+	emit attributeAddDirectly(GenMethod method)(attributeAddDirectlyT);
 	
 	attributeAddAndCheckT <<!<<#
 	String name= source.getName();
 	String type= source.getType();
-	String newInstance = setterParamInstance(false);
+	String newInstance = method.getParameter(0).getName();
 	String role= source.getRole();
 	String otherRole= target.getRole();
 	String otherIndexOfInstance= indexOfInstance(otherRole, getOwner().getIsRemote());
@@ -1208,7 +1213,7 @@ wasAdded = true;!>>
 	String addMethodName= addInstance(otherRole, getOwner().getIsRemote());
 	String removeCall= removeElement(4, "this->"+ name, "currentIndex", type);
 	
-#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=attributeAddCall(0)>>
+#>><<=attributeAddExists(method)>><<=attributeAddMaximumCheck()>><<=attributeAddCall(0, method)>>
 if (<<=newInstance>>-><<=otherIndexOfInstance>>(this)!= -1) {
 	wasAdded = true;
 }else{
@@ -1218,12 +1223,12 @@ if (<<=newInstance>>-><<=otherIndexOfInstance>>(this)!= -1) {
 <<=removeCall>>
 	}
 }!>>
-	emit attributeAddAndCheck()(attributeAddAndCheckT);
+	emit attributeAddAndCheck(GenMethod method)(attributeAddAndCheckT);
 	
 	attributeAddRemoveExistingOrThisT <<!<<#
 	String role= source.getRole();
 	String otherRole= target.getRole();
-	String newInstance = setterParamInstance(false);
+	String newInstance = method.getParameter(0).getName();
 	String otherType= target.getType();
 	String existingOtherVariableName= existingInstance(target.getRole());
 	String addMethodName= addInstance(role, getOwner().getIsRemote());
@@ -1232,20 +1237,20 @@ if (<<=newInstance>>-><<=otherIndexOfInstance>>(this)!= -1) {
 	String otherGetterMethodName= getInstance(otherRole, getOwner().getIsRemote());
 	String otherSetterMethodName= setInstance(target.isMany()?target.getRoles():otherRole, getOwner().getIsRemote());
 	
-#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
+#>><<=attributeAddExists(method)>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
 if (<<=existingOtherVariableName>> == NULL){
 	<<=newInstance>>-><<=otherSetterMethodName>>(this);
 }else if(this!= <<=existingOtherVariableName>>){
 	<<=existingOtherVariableName>>-><<=removeMethodName>>(<<=newInstance>>);
 	this-><<=addMethodName>>(<<=newInstance>>);
 }else{
-<<=attributeAddCall(2)>>
+<<=attributeAddCall(2, method)>>
 }
 wasAdded = true;!>>
-	emit attributeAddRemoveExistingOrThis()(attributeAddRemoveExistingOrThisT);
+	emit attributeAddRemoveExistingOrThis(GenMethod method)(attributeAddRemoveExistingOrThisT);
 	
 	attributeAddCheckNewOtherExistingT <<!<<#
-	String newInstance = setterParamInstance(false);
+	String newInstance = method.getParameter(0).getName();
 	String otherType= target.getType();
 	String otherRole= target.getRole();
 	String existingOtherVariableName= existingInstance(otherRole);
@@ -1253,19 +1258,19 @@ wasAdded = true;!>>
 	String otherSetterMethodName= setInstance(target.isMany()?target.getRoles():otherRole, getOwner().getIsRemote());
 	String isNewInstance= isNewInstance(otherRole);
 	
-#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
+#>><<=attributeAddExists(method)>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
 bool <<=isNewInstance>>= <<=existingOtherVariableName>> != NULL && this!=<<=existingOtherVariableName>>;
 if(<<=isNewInstance>>){
 	<<=newInstance>>-><<=otherSetterMethodName>>(this);
 }else{
-<<=attributeAddCall(2)>>
+<<=attributeAddCall(2, method)>>
 }
 wasAdded= true;!>>
-	emit attributeAddCheckNewOtherExisting()(attributeAddCheckNewOtherExistingT);
+	emit attributeAddCheckNewOtherExisting(GenMethod method)(attributeAddCheckNewOtherExistingT);
 	
 	
 	attributeAddRemoveExistingT <<!<<#
-	String newInstance = setterParamInstance(false);
+	String newInstance = method.getParameter(0).getName();
 	String otherType= target.getType();
 	String existingOtherVariableName= existingInstance(target.getRole());
 	String role= source.getRole();
@@ -1276,7 +1281,7 @@ wasAdded= true;!>>
 	String friendMethodName= friendMethodName();
 	String otherGetterMethodName= getInstance(target.getRole(), getOwner().getIsRemote());
 	
-#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
+#>><<=attributeAddExists(method)>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
 if (<<=existingOtherVariableName>> != NULL){
 	if(<<=existingOtherVariableName>>-><<=numberOfMethodName>>() <= <<=minimumNumberMethodName>>()){
           return wasAdded;
@@ -1284,14 +1289,14 @@ if (<<=existingOtherVariableName>> != NULL){
   		<<=existingOtherVariableName>>-><<=removeMethodName>>(<<=newInstance>>);
 	}
 }
-<<=attributeAddCall(0)>>
+<<=attributeAddCall(0, method)>>
 <<=friendMethodName>>(<<=newInstance>>,this);
 wasAdded = true;!>>
-	emit attributeAddRemoveExisting()(attributeAddRemoveExistingT);
+	emit attributeAddRemoveExisting(GenMethod method)(attributeAddRemoveExistingT);
 	
 	
 attributeAddSetIfNewT <<!<<#
-	String newInstance = setterParamInstance(false);
+	String newInstance = method.getParameter(0).getName();
 	String otherType= target.getType();
 	String existingOtherVariableName= existingInstance(target.getRole());
 	String otherGetterMethodName= getInstance(target.getRole(), getOwner().getIsRemote());
@@ -1302,7 +1307,7 @@ attributeAddSetIfNewT <<!<<#
 	String minimumNumberMethodName= minimumNumberOfInstance(roles, getOwner().getIsRemote());
 	String setterMethodName= setInstance(otherRole, getOwner().getIsRemote());
 	
-#>><<=attributeAddExists()>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
+#>><<=attributeAddExists(method)>><<=attributeAddMaximumCheck()>><<=otherType>>* <<=existingOtherVariableName>> = <<=newInstance>>-><<=otherGetterMethodName>>();
 bool <<=isNewInstance>>= <<=existingOtherVariableName>> != NULL && this!=<<=existingOtherVariableName>>;
 if(<<=isNewInstance>>){
 	if(<<=existingOtherVariableName>>-><<=numberOfMethodName>>() <= <<=minimumNumberMethodName>>()){
@@ -1310,10 +1315,10 @@ if(<<=isNewInstance>>){
 	}
 	<<=newInstance>>-><<=setterMethodName>>(this);
 }else{
-<<=attributeAddCall(2)>>
+<<=attributeAddCall(2, method)>>
 }
 wasAdded= true;!>>
-	emit attributeAddSetIfNew()(attributeAddSetIfNewT);
+	emit attributeAddSetIfNew(GenMethod method)(attributeAddSetIfNewT);
 	
 	attributeConstructAndAddT <<!<<#
 	String type = source.getType();
@@ -1323,18 +1328,18 @@ wasAdded= true;!>>
 	
 
 	indexOfElementT <<!<<#
-	String newInstance = setterParamInstance(false);
+	String newInstance = method.getParameter(0).getName(); //setterParamInstance(false);
 	String name= source.getName();
 #>>IndexOf(this-><<=name>>->begin(), this-><<=name>>->end(),<<=newInstance>>)!>>
-	emit indexOfElement()(indexOfElementT);
+	emit indexOfElement(GenMethod method)(indexOfElementT);
 	
 	addAtImplementationT <<!<<#
-	String newInstance = setterParamInstance(false);
+	String newInstance = method.getParameter(0).getName(); //setterParamInstance(false);
 	String roles= source.getRoles();
 	String role= source.getRole();
 	String numberOfMethodName= numberOfInstance(roles, getOwner().getIsRemote());
 	String addMethodName= addInstance(role, getOwner().getIsRemote());
-	String removeCall= removeElement(2, "this->"+ source.getName(), indexOfElement(), source.getType());
+	String removeCall= removeElement(2, "this->"+ source.getName(), indexOfElement(method), source.getType());
 	
 #>>if(<<=addMethodName>>(<<=newInstance>>)){
     int newIndex= index;
@@ -1352,13 +1357,13 @@ wasAdded= true;!>>
         newIndex = size; 
     }
 	
- <<=attributeAddCall(2, "newIndex")>>
+ <<=attributeAddCall(2, "newIndex", method)>>
     wasAdded = true;
 }!>>
-	emit addAtImplementation()(addAtImplementationT);
+	emit addAtImplementation(GenMethod method)(addAtImplementationT);
 
 	addOrMoveImplementationT <<!<<#
-	String newInstance = setterParamInstance(false);
+	String newInstance = method.getParameter(0).getName();
 	String name= source.getName();
 	String roles= source.getRoles();
 	String role= source.getRole();
@@ -1381,7 +1386,7 @@ wasAdded= true;!>>
 	wasAdded= this-><<=addAtMethod>>(<<=newInstance>>, index);
 }
 !>>
-	emit addOrMoveImplementation()(addOrMoveImplementationT);
+	emit addOrMoveImplementation(GenMethod method)(addOrMoveImplementationT);
 }
 
 //Helper methods for many relations

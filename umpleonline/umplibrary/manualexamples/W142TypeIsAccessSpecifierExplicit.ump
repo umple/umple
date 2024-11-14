@@ -1,0 +1,12 @@
+// Although not recommended, the programmer
+// can also bypass Umple and directly specify
+// both the visibility directive and the type.
+// Umple will not see that as an attribute
+// and will inject the line of code into the
+// output directly.
+class X {
+  public String x;
+}
+
+//$?[End_of_model]$?
+// @@@skipjavacompile @@@skipphpcompile @@@skippythoncompile because msg says likely error

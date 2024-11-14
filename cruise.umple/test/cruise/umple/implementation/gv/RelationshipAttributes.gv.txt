@@ -1,7 +1,6 @@
 digraph "RelationshipAttributes" {
-  size="80,10"
   rankdir="BT"
-  node [shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+  node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
 
   // Relationship w/ Attributes: Ticket
 
@@ -37,8 +36,8 @@ digraph "RelationshipAttributes" {
   "Seminar" -> "addressSeminar" [arrowhead="none"];
 
   // All associations
-  "Person" -> "Ticket" [dir="none", label="1", tooltip="Person->Ticket"];
+  "Person" -> "Ticket" [dir="none", label="1", tooltip="Person->Ticket" labeltooltip="Person->Ticket" headtooltip="Person->Ticket" tailtooltip="Person->Ticket" URL="javascript:Action.selectAssociation('Person,Ticket,1')" ];
 
-  "Seminar" -> "Ticket" [dir="none", label="*", tooltip="Seminar->Ticket"];
+  "Seminar" -> "Ticket" [dir="none", label="*", tooltip="Seminar->Ticket" labeltooltip="Seminar->Ticket" headtooltip="Seminar->Ticket" tailtooltip="Seminar->Ticket" URL="javascript:Action.selectAssociation('Seminar,Ticket,*')" ];
 
 }

@@ -1,0 +1,32 @@
+// The master of this part of the Umple grammar is available at
+// [*https://github.com/umple/umple/blob/master/cruise.umple/src/template/umple_template.grammar*]
+//@author Ahmed M.Orabi {@link ahmedvc@hotmail.com}
+//@author Mahmoud M.Orabi {@link mahmoud_3rabi@hotmail.com}
+
+// Template capabilities are a sublanguage of Umple.
+// See user manual page: [*BasicTemplates*]
+
+templateDefinition : template [name] { [[templateContent]]* }
+templateContent- : [[comment]] | [[emitMethod]] | [[templateAttributeDefinition]] | [[trace]] | [[position]] | [[displayColor]] | [[abstract]] | [[keyDefinition]] | [[softwarePattern]] | [[depend]] | [[symmetricReflexiveAssociation]] | [[attribute]] | [[templateAttribute]] | [[stateMachine]] | [[inlineAssociation]] | [[concreteMethodDeclaration]] | [[constantDeclaration]] | [[invariant]] | ; |[[exception]]   | [[extraCode]]
+
+
+templateAttributeDefinition : [[templateName]] [[templateAttribute]]
+templateName : ( [~classname] . )? [name] [[templateParameters]]?
+templateParameters : OPEN_ROUND_BRACKET [[templateParameter]] ( , [[templateParameter]] )* CLOSE_ROUND_BRACKET
+templateParameter- : [parameter] | " [**parameter] " 
+
+emitMethod : [=modifier:public|protected|private]? [=static]? [type]? [=emit] [[methodDeclarator]] [[templateList]]?;
+templateList- : OPEN_ROUND_BRACKET ( [[templateName]] ( , [[templateName]] )* )? CLOSE_ROUND_BRACKET
+
+templateAttribute# : <<! [[templateAttributeContent]]* !>>
+templateAttributeContent- : [[templateExpression]] | [[templateComment]] | [[templateCodeBlock]] | [[templateExactSpaces]] | [[templateInclude]] | [[templateText]] 
+templateText# : [**templateTextContent:<<(=|#|/[*]|$|@)]
+
+templateComment# : <</* [**templateCommentContent] */>>
+templateExpression# : <<= ( [[templateExpression]] | [**templateExpressionContent:<<(=|#|/[*]|$|@)] )+ >>
+templateCodeBlock# : <<# ( [[templateExpression]] | [**templateLanguageCode:<<(=|#|/[*]|$|@)] )* #>>
+templateExactSpaces# : <<$ [**templateExactSpacesContent] >>
+templateInclude# : <<@ [[templateName]] >>
+//templateOpen- : <<!
+//templateClose- : !>>
+

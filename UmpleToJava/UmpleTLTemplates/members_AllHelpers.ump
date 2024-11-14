@@ -16,8 +16,8 @@ class UmpleToJava {
   }
 
   for (Attribute av : uClass.getAttributes())
-  {
-    if (av.isImmutable() && av.isIsLazy())
+  { // Issue 2046 unique immutable
+    if (av.isImmutable() && (av.isIsLazy() || av.getIsUnique()))
     {
       if (isFirst)
       {
@@ -95,7 +95,7 @@ class UmpleToJava {
       {
         appendln(realSb, "");
       }
-      append(realSb, "  private{1} TimedEventHandler {0};", gen.translate("eventHandler",e),isTransient);
+      append(realSb, "  private{1} TimedEventHandler {0};", gen.translate("eventHandler",e,sm),isTransient);
     }
   }
 
