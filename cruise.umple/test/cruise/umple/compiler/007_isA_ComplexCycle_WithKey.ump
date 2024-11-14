@@ -1,6 +1,6 @@
 class Inherited2
 {
-  Integer id;
+  Integer ix;
   isA Loop;
 }
 

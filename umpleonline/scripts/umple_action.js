@@ -20,7 +20,7 @@ Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
 
-const debuggerFlag = false;
+const debuggerFlag = true;
 
 
 // Regulators of whether a save occurs on not
@@ -4599,6 +4599,39 @@ Action.setCaretPosition = function(line)
       Page.setFeedbackMessage("Debug Mode");
       return;
     }
+
+
+      if(line.substr(0,4)=="clws") 
+        {
+          if (line.substr(4,1)=="+") 
+          {
+            Page.setFeedbackMessage("Collaboration logging Enabled");
+            Collab.websocketLogging(0);
+          }
+          else if (line.substr(4,1)=="-")
+          {
+            Page.setFeedbackMessage("Collaboration logging disabled");
+            Collab.websocketLogging(-1);
+          }
+          else if (line.substr(4,2)=="tq") 
+            {
+              Page.setFeedbackMessage("Ten seconds to timeout the client");
+              Collab.clientSetTimeout(10);
+            }
+            else if (line.substr(4,2)=="tn")
+            {
+              Page.setFeedbackMessage("Turn the timeout back to normal");
+              Collab.clientSetTimeout(-1);
+            }
+            else if (line.substr(4,2)=="tx")
+            {
+                Page.setFeedbackMessage("Disabled the timeout");
+                Collab.clientSetTimeout(0);
+            }
+          return;    
+        } 
+
+
     if(line=="sp")
     { // creates Survey Pass; modifies conditions to allow for survey to be displayed:
       // includes setting RandomizedFrequency to 1, MinutesBeforePrompt to 5 secs, EditsBeforePrompt to 1;
@@ -4658,6 +4691,7 @@ Action.setCaretPosition = function(line)
       }
       return;
     }
+
     if(line.substr(0,2)=="bp") {  // Begin prompt - Also invoked by ctrl-b
       Action.promptAndExecuteTest();
       return;
