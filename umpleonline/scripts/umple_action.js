@@ -4817,20 +4817,20 @@ Action.setFilter = function(newFilter)
   Page.gvScale = false;
   Page.gvLayout = "";
   
-  filterWords=newFilter.split(' ');
-  for(String aFilterWord: filterWord) {
+  var filterWords=newFilter.split(' ');
+  for(var aFilterWord in filterWords) {
     if(aFilterWord == "gvortho") {Page.gvOrtho = true;}
     if(aFilterWord =="gvscale") {Page.gvScale = true;}
     if(aFilterWord.includes("gvlayout=")) {
       Page.gvLayout = aFilterWord;
       
-    // Glom together filter words to make a proper filter
-    // TODO
-    }      
+      // Glom together filter words to make a proper filter
+      // TODO
+    }
   }
    
   Page.setFeedbackMessage("TEMP Filter set to"+newFilter);
-  Action.redrawDiagram();
+  Action.redrawDiagram(); 
 }
 
 // Processes the filter hops (adds classes this many hops from the ones shown)
