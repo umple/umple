@@ -4812,8 +4812,25 @@ Action.promptAndExecuteTest = function() {
 // Processes the filter (limits the classes shown)
 Action.setFilter = function(newFilter)
 {
-  // DEBUG
-  Page.setFeedbackMessage("Filter set to"+newFilter);
+  // Reset first
+  Page.gvOrtho = false;
+  Page.gvScale = false;
+  Page.gvLayout = "";
+  
+  filterWords=newFilter.split(' ');
+  for(String aFilterWord: filterWord) {
+    if(aFilterWord == "gvortho") {Page.gvOrtho = true;}
+    if(aFilterWord =="gvscale") {Page.gvScale = true;}
+    if(aFilterWord.includes("gvlayout=")) {
+      Page.gvLayout = aFilterWord;
+      
+    // Glom together filter words to make a proper filter
+    // TODO
+    }      
+  }
+   
+  Page.setFeedbackMessage("TEMP Filter set to"+newFilter);
+  Action.redrawDiagram();
 }
 
 // Processes the filter hops (adds classes this many hops from the ones shown)
@@ -7164,6 +7181,9 @@ Action.getLanguage = function()
   if(Page.useGvClassDiagram) { 
     if(Page.showMethods) language=language+".showmethods";
     if(!Page.showAttributes) language=language+".hideattributes";
+    if(Page.gvLayout) language=language+"."+Page.gvLayout;
+    if(Page.gvOrtho) language=language+".gvortho";    
+    if(Page.gvScale) language=language+".gvscale";
   }
   // append any suboptions needed for GvFeatureDiagram
   if(Page.useGvFeatureDiagram) {

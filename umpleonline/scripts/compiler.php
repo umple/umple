@@ -145,8 +145,26 @@ else if (isset($_REQUEST["umpleCode"]))
   $langparts = explode('.',$fulllanguage);
   $language = $langparts[0];
   $suboptions = "";
+  $extradotargs = "";
   for($i=1; $i<count($langparts); $i++){
-    $suboptions = $suboptions . " -s " . $langparts[$i];
+    $potentialSuboption = $langparts[$i];
+    if(str_starts_with($potentialSuboption,"gvlayout=")) {
+      $algo = substr($potentialSuboption, 9);
+      switch ($algo) {
+        case 'neato': case 'fdp': case 'sfdp': case 'circo': case 'twopi':
+        case 'nop': case 'nop2':
+          $extradotargs = $extradotargs . " -K" . $algo . " ";
+      }
+    }
+    else if ($potentialSuboption == "gvortho") {
+      $extradotargs = $extradotargs . " -Gsplines=ortho ";
+    }
+    else if ($potentialSuboption == "gvscale") {
+      $extradotargs = $extradotargs . " -x -Goverlap=scale ";
+    }    
+    else {
+      $suboptions = $suboptions . " -s " . $potentialSuboption;
+    }
   }
   
   $languageStyle = isset($_REQUEST["languageStyle"])?
@@ -517,7 +535,7 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($classDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/classDiagram.svg");
-      $command = "dot -Tsvg " . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
+      $command = "dot -Tsvg " . $extradotargs . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
       exec($command);
             if (!file_exists($thedir . "/classDiagram.svg") && file_exists("doterr.svg"))
             {
@@ -538,7 +556,7 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($entityRelationshipDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/entityRelationshipDiagram.svg");
-      $command = "dot -Tsvg " . $thedir . "/modelerd.gv -o " . $thedir .  "/entityRelationshipDiagram.svg";
+      $command = "dot -Tsvg " . $extradotargs . $thedir . "/modelerd.gv -o " . $thedir .  "/entityRelationshipDiagram.svg";
       exec($command);
       if (!file_exists($thedir . "/entityRelationshipDiagram.svg") && file_exists("doterr.svg"))
       {
