@@ -4817,21 +4817,23 @@ Action.setFilter = function(newFilter)
   Page.gvScale = false;
   Page.gvLayout = "";
   
-  var filterWords=newFilter.split(' ');
-  for(var aFilterWord in filterWords) {
-    if(aFilterWord == "gvortho") {Page.gvOrtho = true;}
-    if(aFilterWord =="gvscale") {Page.gvScale = true;}
-    if(aFilterWord.includes("gvlayout=")) {
-      Page.gvLayout = aFilterWord;
+  const filterWordsInput=newFilter.split(" ");
+
+  filterWordsInput.forEach(function(foundFilterWord) {
+    if(foundFilterWord == "gvortho") {Page.gvOrtho = true;}
+    if(foundFilterWord =="gvscale") {Page.gvScale = true;}
+    if(foundFilterWord.includes("gvlayout=")) {
+      Page.gvLayout = foundFilterWord;
+    }
       
       // Glom together filter words to make a proper filter
       // TODO
-    }
-  }
-   
-  Page.setFeedbackMessage("TEMP Filter set to"+newFilter);
-  Action.redrawDiagram(); 
+    
+  });
+
+   Action.redrawDiagram();
 }
+
 
 // Processes the filter hops (adds classes this many hops from the ones shown)
 Action.setFilterHops = function(newHops)
