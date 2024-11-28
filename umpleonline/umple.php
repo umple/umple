@@ -739,6 +739,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExampleType" id = "smModels" value="smModels">State Machines</option>
                 <option name = "optionExampleType" id = "structureModels" value="structureModels">Composite Structure</option>
                 <option name = "optionExampleType" id = "featureModels" value="featureModels">Feature Diagram</option>
+                <option name = "optionExampleType" id = "extra1Models1" value="extra1Models1">Extra Class Diagrams 1</option>
               </select>
             </li>
             <li id="itemLoadExamples">
@@ -847,14 +848,21 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="PingPong.ump">Ping Pong</option>
               </select>
             </li>
-		  
-  	    <li id="itemLoadExamples4">
+
+            <li id="itemLoadExamples4">
               <select id="inputExample4" name="inputExample4" class="button" size="1" data-diagram-type="feature">
                 <option name = "optionExample4" id = "defaultExampleOption4" value="">Select Example</option>
                 <option name = "optionExample" value="BerkeleyDB_SPL.ump"> BerkeleyDB SPL </option>
                 <option name = "optionExample" value="HelloWorld_SPL.ump"> HelloWorld SPL </option>
                 <option name = "optionExample" value="BerkeleyDB_SP_featureDepend.ump"> Feature Dependencies of BerkeleyDB SPL </option>
 
+              </select>
+            </li>
+            
+            <li id="itemLoadExamples5">
+              <select id="inputExample5" name="inputExample5" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample5" id = "defaultExampleOption5" value="">Select Example</option>
+                <option name = "optionExample" value="ToBeGenerated.ump"> Generated Name </option>
               </select>
             </li>
           

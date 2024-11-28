@@ -927,29 +927,41 @@ Page.initExamples = function()
   jQuery("#inputExample4").change(Action.loadExample);
   jQuery("#defaultExampleOption4").attr("selected",true);
 
+  jQuery("#inputExample5").change(Action.loadExample);
+  jQuery("#defaultExampleOption5").attr("selected",true);
+
+
   if (Page.useStructureDiagram) {
     jQuery("#structureModels").prop("selected",true);
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples4").hide();      
+    jQuery("#itemLoadExamples5").hide();   
   }
   else if (Page.useGvStateDiagram) {
     jQuery("#smModels").prop("selected",true);
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples3").hide();
-    jQuery("#itemLoadExamples4").hide();  
+    jQuery("#itemLoadExamples4").hide();
+    jQuery("#itemLoadExamples5").hide();
   }
  else if (Page.useGvFeatureDiagram) {
     jQuery("#featureModels").prop("selected",true);
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples2").hide();
-    jQuery("#itemLoadExamples3").hide();    
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples5").hide();
   }
   else {
+    // TODO any examples loaded on initialization without a 
+    // URL argument will choose class diagrams
+    // Therefore for new example set 5, we will need to change this logic
+    // to determine which set to hide
     jQuery("#cdModels").prop("selected",true); 
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide(); 
-    jQuery("#itemLoadExamples4").hide();       
+    jQuery("#itemLoadExamples4").hide();
+    jQuery("#itemLoadExamples5").hide();
   }  
 }
 

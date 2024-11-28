@@ -4320,6 +4320,7 @@ Action.setExampleType = function setExampleType()
   jQuery("#itemLoadExamples2").hide();
   jQuery("#itemLoadExamples3").hide();
   jQuery("#itemLoadExamples4").hide();
+  jQuery("#itemLoadExamples5").hide();
      
   if(Page.getExampleType() == "cdModels") {
      jQuery("#itemLoadExamples").show();
@@ -4332,6 +4333,10 @@ Action.setExampleType = function setExampleType()
    else if(Page.getExampleType() == "featureModels") {
      jQuery("#itemLoadExamples4").show();
      jQuery("#defaultExampleOption4").prop("selected",true);
+   }
+   else if(Page.getExampleType() == "extra1Models1") {
+     jQuery("#itemLoadExamples5").show();
+     jQuery("#defaultExampleOption5").prop("selected",true);
    }
    else {
      jQuery("#itemLoadExamples3").show();
