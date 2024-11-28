@@ -1,0 +1,121 @@
+/************
+This file is an Umple translation of a model
+of ADELFE found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/ADELFE.ecore
+
+Date : 2006/07/13
+
+Domain : Multi-Agent
+
+Description : ADELFE (Atelier de Développement de Logiciels Fonctionnalité Emergente) is a methodology devoted to software engineering of adaptive multi-agent systems.
+
+Title: ADELFE Multi-Agent SE
+
+See : A Study of some Multi-Agent Meta-Models Authors: Carole Bernon, Massimo Cossentino, Marie-Pierre Gleizes, Paola Turci, Franco Zambonelli https://www.researchgate.net/publication/225134516_A_Study_of_Some_Multi-agent_Meta-models
+
+Authors : SIMON Eric(simon.eric3_NOSPAM <AT> gmail.com)
+
+************/
+
+
+suboption "gvseparator=9";
+
+class Classifier
+{
+}
+
+class Environnement
+{
+	isA Classifier;
+	0..1 environnement -- 1..* Element element;
+}
+
+class Element
+{
+	isA Classifier;
+	0..1 elementA -- 1..* CooperativeAgent action;
+	0..1 elementP -- 1..* CooperativeAgent perception;
+}
+
+class CooperativeAgent
+{
+	0..1 cooperativeAgentR -- 1..* Representation representation;
+	0..1 cooperativeAgentS -- 1..* Skill skill;
+	0..1 cooperativeAgentA -- * Aptitude aptitude;
+	0..1 cooperativeAgentCha -- * Characteristic characteristic;
+	0..1 cooperativeAgentCom -- * Communication communication;
+	0..1 -> 1..* CooperationRules observes;
+}
+
+class Representation
+{
+	0..1 -> 1..* Element element;
+}
+
+class Skill
+{
+}
+
+class Aptitude
+{
+	0..1 aptitude -- 1..* CooperativeAgent cooperativeAgentA;
+}
+
+class Characteristic
+{
+	0..1 characteristic -- 1..* CooperativeAgent cooperativeAgentCha;
+}
+
+class Communication
+{
+	0..1 communication -- 1..* CooperativeAgent cooperativeAgentCom;
+	0..1 -> * AIP aip;
+}
+
+class AIP
+{
+}
+
+class CooperationRules
+{
+	0..1 cooperationRules -- 1..* NCS detects;
+}
+
+class NCS
+{
+}
+
+class Incomprehension
+{
+	isA NCS;
+}
+
+class Ambiguity
+{
+	isA NCS;
+}
+
+class Incompetence
+{
+	isA NCS;
+}
+
+class Unproductiveness
+{
+	isA NCS;
+}
+
+class Concurrency
+{
+	isA NCS;
+}
+
+class Conflict
+{
+	isA NCS;
+}
+
+class Uselessness
+{
+	isA NCS;
+}
