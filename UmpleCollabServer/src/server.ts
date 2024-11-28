@@ -30,7 +30,7 @@ const server = http.createServer(app);
 const port:string = config.get('collab_server.port');
 const apiPath:string = config.get('collab_server.path');
 
-const serverDebugFlag = true; // set to true to enable debug messages
+const serverDebugFlag = false; // set to true to enable debug messages
 
 if(serverDebugFlag){
   console.log("=====================================");
@@ -137,8 +137,12 @@ io.on('connection', (socket: Socket) =>{
     socket.join(fileKey);
 
     io.in(fileKey).emit('userCountUpdate', users.size);
-    console.log("=====================================");
-    console.log(`User joined session: ${fileKey}, current count: ${users.size}`);
+
+    if(serverDebugFlag){
+      console.log("=====================================");
+      console.log(`User joined session: ${fileKey}, current count: ${users.size}`);
+    }
+
   });
   
   
@@ -217,11 +221,12 @@ if(serverDebugFlag){
       console.log(`docUpdates: ${docUpdates}`);
       console.log(`docUpdates.length: ${docUpdates.length}`);
       console.log("=====================================");
+      
+      // DEBUG
+      console.log(`document (10 chars): ${currentCollabDoc.doc.slice(0, 10)}`);
+      console.log("document updates: ", docUpdates.toString());
+      
     }
-
-    // DEBUG
-    console.log(`document (10 chars): ${currentCollabDoc.doc.slice(0, 10)}`);
-    console.log("document updates: ", docUpdates.toString());
 
     try {
       // DEBUG
@@ -313,7 +318,9 @@ if(serverDebugFlag){
 
       }
       else{
-        console.log(`${fileKey} - Document text present on server`)
+
+        console.log(`${fileKey} - Document text present on server`);
+      
       }
       socket.emit('getDocumentResponse', updates.length, doc.toString());
   })
@@ -324,8 +331,10 @@ if(serverDebugFlag){
       if (users.delete(socket.id)) {
         // Emit the updated user count to all clients in the session
         io.in(fileKey).emit('userCountUpdate', users.size);
+        if(serverDebugFlag){
         console.log("=====================================");
         console.log(`User disconnected from session: ${fileKey}, current count: ${users.size}`);
+        }
         break; // Exit after handling the first found session
       }
     }

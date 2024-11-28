@@ -1376,8 +1376,7 @@ Page.showLayoutLoading = function()
 
 Page.showCanvasLoading = function()
 {
-  if (debuggerFlag)   
-  console.log("Inside Page.showCanvasLoading() ...")
+  // console.log("Inside Page.showCanvasLoading() ...")
 
   var canvas = jQuery("#umpleCanvas");
   if(Page.canvasLoadingCount == 0)
