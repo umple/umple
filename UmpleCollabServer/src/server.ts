@@ -102,7 +102,6 @@ io.on('connection', (socket: Socket) =>{
     console.warn("Client connected!", "Socket ID: ", socket.id);
     console.warn("=====================================");
     console.warn('New connection from ' + socket.handshake.address + ' with socket id: ' + socket.id);
-    // console.warn('socket ip: ', socket.request.connection.remoteAddress);
   }
 
 
@@ -192,10 +191,7 @@ io.on('connection', (socket: Socket) =>{
     collabfilemap.set(fileKey, currentCollabDoc);
 
 if(serverDebugFlag){
-    // console.log("collabfilemap: ", collabfilemap);
      console.log("currentCollabDoc: ", currentCollabDoc);
-    // console.log("currentCollabDoc.updates: ", currentCollabDoc.updates);
-    // console.log("currentCollabDoc.pending: ", currentCollabDoc.pending);
   }
 
   })
@@ -372,8 +368,5 @@ function getOrCreate(fileKey: string): collabDoc {
 
 // start listening to calls to collaborate
 server.listen(port, () => {
-  console.log(`Collab server listening on port: ${port}`)
-  // DEBUG
-  // console.log(`Connect your client to path: ${apiPath}`)
-  // console.log(server.address())
+  console.log(`Collab server listening on port: ${port}`);
 });
