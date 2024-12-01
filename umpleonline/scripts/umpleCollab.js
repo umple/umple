@@ -111,7 +111,6 @@ updateConnectionStatus();
     const led = document.getElementById('led');
     
     const connectionTimeout = setTimeout(() => {
-      // console.error('Connection to Collaboration server timed out!', window.performance.now()-snapshot);
       if(debugFlag){
         console.error('Connection to Collaboration server timed out!');
         console.log("Collaboration server is disconnected/down !");
@@ -124,8 +123,6 @@ updateConnectionStatus();
       
     }, 10000); // 10 seconds timeout
 
-    // const snapshot= window.performance.now();
-    // console.log("timeout registered", snapshot);
     if(debugFlag)
     console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
   
@@ -134,7 +131,6 @@ updateConnectionStatus();
 
     socket.on('connect', () => {
       isConnected = true;
-      // console.log("connected", window.performance.now()-snapshot);
       clearTimeout(connectionTimeout);
       
       if(debugFlag)
@@ -162,11 +158,7 @@ updateConnectionStatus();
         document.getElementById('activeUsers').style.display = 'inherit'; // Hide active users display
         document.getElementById('activeUsersIcon').style.display = 'inherit'; // Hide active users label
         }
-        // if(cm6.EditorView.editable.of(false) == true)
-        //   console.log("Editor is not editable")
-        // Page.codeMirrorEditor6.dispatch({
-        //   effects: cm6.StateEffect.removeConfig.of(cm6.EditorView.editable.of(false))
-        // });
+   
       socket.emit('joinSession', filekey); // Notify server of joining the session
       
       Page.codeMirrorEditor6.dispatch({
@@ -178,10 +170,8 @@ updateConnectionStatus();
     document.getElementById('inputExampleType').disabled=false;
     document.getElementById('inputExample').disabled=false;
 
-    // Action.changeDiagramType({type:"editableClass"});
     if(count > 1 && inactivitychecker)
     startCheckingInactivity();
-    // resetInactivityTimer();
 
     })
     .on('connect_error', (error) => {
@@ -292,9 +282,6 @@ updateConnectionStatus();
     });
 
     socket.on('disconnect', function () {
-     // console.log('You are disconnected from server.');
-     // Page.setFeedbackMessage("Disconnected from Collab Server")
-    // Collab.disconnectFromServer();
     isConnected = false;
       
     });
@@ -302,14 +289,11 @@ updateConnectionStatus();
 
     const umpdir = Page.getModel();
     const filename = TabControl.activeTab != null ? TabControl.activeTab.name : "Untitled";
-    // const filename = "untitled";
 
     const inittext = Page.codeMirrorEditor6.state.doc.toString();
-    // const inittext = "Test Content";
 
     var filekey = umpdir+"_"+filename;
     // DEBUG
-    // console.log(umpdir, filename, inittext)
 
     const getDocumentResponse = await Collab.getDocument(socket, filekey, inittext)
     // const {version, doc} = getDocument(socket, filekey, inittext)
@@ -362,7 +346,7 @@ Collab.disconnectFromServer = function(text) {
   socket=sockett;
   isConnected = false;
   inactivitychecker = true;
-  // Notify the server about disconnection if necessary
+  // You can notify the server about disconnection if necessary
   // socket.emit('disconnectRequest');
 
   // Clean up the socket connection
@@ -374,7 +358,6 @@ Collab.disconnectFromServer = function(text) {
 
   // Update UI for disconnected state
   const led = document.getElementById('led');
-  // led.style.backgroundColor = 'gray'; // Indicate disconnected state
   document.getElementById('led').classList.add('LEDonDisconnect');
   document.getElementById('led').classList.remove('LEDon');
   document.getElementById('led').classList.remove('LEDonError');
@@ -410,13 +393,6 @@ Collab.disconnectFromServer = function(text) {
 
   }, 1000);
   }
-      // Page.setFeedbackMessage("Disconnected from Collab Server");
-      // // console.log("Disconnected from Collab Server")
-      // console.log("Disconnected from Collab Server",socket);
-
-    // Page.codeMirrorEditor6.dispatch({
-    //   effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
-    // });
 
   Page.codeMirrorEditor6.dispatch({
     effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
@@ -444,7 +420,7 @@ Collab.disconnectFromServer = function(text) {
 // console.log(TabControl.activeTab.name)
 // console.log(Page.codeMirrorEditor6.state.doc.toString())
 // Collab.connectCollabServer(Page.getModel(), TabControl.activeTab.name, Page.codeMirrorEditor6.state.doc.toString());
-  
+
 
 // emits getDocument event and waits for server to return version and document
 // once the promise is resolved, returns document version and document content
@@ -597,9 +573,6 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       }, 200);
 
       if (dc >= 500){
-        // Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
-        // setTimeout(Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later."),3000);
-        
         console.log("It looks like you're experiencing packet loss, which can cause lag or slow performance.");
         setTimeout(Page.setFeedbackMessage("It looks like you're experiencing packet loss, which can cause lag or slow performance."),3000);
         dc=0;
@@ -637,10 +610,6 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
           console.warn("client ID",updates[0].clientID);
         }
 
-        // console.log("updates: ", updates);
-        // console.log(updates[0].clientID);
-        // console.log(baseclientID);
-
         if(updates[0].clientID != baseclientID){ 
           document.getElementById('led').classList.add('LEDonReceive');
           setTimeout(() => {
@@ -666,8 +635,6 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
 
 
 function startCheckingInactivity() {
-// Inactive timer:
-// if(document.getElementById('disconnectButton')){
   resetInactivityTimer();
   inactivitychecker = false;
 
@@ -679,7 +646,6 @@ function sendInactivitywarning() {
   console.warn("Only " + diff + " seconds left to disconnect due to inactivity");
 
   Page.setFeedbackMessage("Only " + diff + " seconds left to disconnect due to inactivity");  
-  // Page.setFeedbackMessage("You will be disconnected from collaboration due to inactivity in 20 seconds. Please type something on the editor to continue collaborating."); 
 }
 
 
@@ -694,7 +660,6 @@ function userIsInactive() {
 
   if(inactivityTime == 600000){
     setTimeout(()=>{
-      // alert("You have disconnected from collaboration due to inactivity. Please click reconnect if you want to connect to your collaboration session again.");
       console.warn("Collaboration disconnected and model is read only after 10 minutes of inactivity. Click reconnect to continue."); 
       Page.setFeedbackMessage("Collaboration disconnected and model is read only after 10 minutes of inactivity. Click reconnect to continue.");
     } ,3000);
@@ -703,13 +668,11 @@ function userIsInactive() {
   else
   {
     setTimeout(()=>{
-      // alert("You have disconnected from collaboration due to inactivity. Please click reconnect if you want to connect to your collaboration session again.");
       console.warn("Collaboration disconnected and model is read only after " + inactivityTime/1000 + " seconds of inactivity. Click reconnect to continue.");
       Page.setFeedbackMessage("Collaboration disconnected and model is read only after " + inactivityTime/1000 + " seconds of inactivity. Click reconnect to continue.");
     } ,3000);
 
   }
-  // resetInactivityTimer(); // Reset the inactivity timer 
 
 }
 
@@ -803,14 +766,4 @@ Collab.websocketLogging = function(command){
     }
   }
  }
-
-
-//  if(command == 10){
-//   console.log("Ten seconds of collaboration logging started");
-//   debugFlag = true;
-//   setTimeout(() => {
-//     debugFlag = false;
-//     Page.setFeedbackMessage("Ten seconds of collaboration logging ended");
-//   }, 10000);
-// }
 
