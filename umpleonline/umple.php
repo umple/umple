@@ -335,7 +335,9 @@ $output = $dataHandle->readData('model.ump');
 <meta name="theme-color" content="#8f001a">
 </head>
 <body>
-<!-- 
+
+<!-- you can use this to show a modal if you need this in future
+
 <div id="modal-container" class="modal-container">
   <div class="modal">
 
@@ -440,8 +442,6 @@ $output = $dataHandle->readData('model.ump');
           <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="https://umple.org/donate" target="donatepage" title="Go to a University of Ottawa page that will enable you to donate to support Umple; even a few dollars will be much appreciated">Donate</a>&nbsp;
           
           </span>&nbsp;
-    <!-- </span>&nbsp; &nbsp; -->
-
              
     <span> &nbsp; For help: </span>
     <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="https://manual.umple.org";} ?>                
@@ -606,15 +606,8 @@ $output = $dataHandle->readData('model.ump');
     
                <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer('Disconnected from the server, the collaboration session has ended at the user\'s request.');"> Disconnect </a>
                &nbsp;
-               <!-- &nbsp; -->
-               
-              <!-- <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a> -->
-              <!-- <a class="button2" id="buttonCollabFork" style="display:none" href="javascript:Page.createBookmarkFork();"> Fork </a> -->
-
-
              <?php } else if (!isset($_REQUEST["task"])) { ?>
                <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
-                 <!-- <span id="led" class="led"> </span> -->
                </a>
                &nbsp;
              <?php } ?>
@@ -622,11 +615,6 @@ $output = $dataHandle->readData('model.ump');
              </span>
              
               <!-- collaboration LED -->
-         
-             <!-- <span id="led" class="led"> </span> -->
-
-
-
 
     <span style="font-size: 30%; white-space:nowrap; display:none;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
@@ -871,9 +859,7 @@ $output = $dataHandle->readData('model.ump');
 
               </select>
             </li>
-          
-            <!-- <li class="dropbox-add-chooser"></li> --> 
-          </ul>
+            </ul>
           <?php } ?>
       
           <ul id="mainDrawMenu" class="second toggle">
@@ -1121,35 +1107,10 @@ $output = $dataHandle->readData('model.ump');
   </script>
 
   <script>
-    // if (document.getElementById('collabReconnect')) {
-    // const open = document.getElementById('collabReconnect');
-    // const modalContainer = document.getElementById('modal-container');
-    // const close = document.getElementById('closeModal');
-
-    // open.addEventListener('click', () => {
-    //   modalContainer.classList.add('show');
-    // });
-
-    // close.addEventListener('click', () => {
-    //   modalContainer.classList.remove('show');
-    // });
-
-    // }
-
-
-
     function reconnect() {
       var currentaddress = document.location.href;
       window.location.href = currentaddress;
     }
-
-
-    // function reconnectToSpecificlocation() {
-    //   var collabURL = document.getElementById('collabSessionURL').value;
-    //   window.open(collabURL,'_blank');
-    //     }
-
-
   </script>
 
 <script>
