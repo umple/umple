@@ -2,7 +2,10 @@
 // This file is made available subject to the open source license found at:
 // http://umple.org/license
 
-// console.log("umpleCollab.js loaded ...");
+// Project: UmpleOnline
+// This file contains the code for the collaboration feature of UmpleOnline
+// It is responsible for connecting to the UmpleCollabServer, sending and receiving updates,
+// and handling inactivity
 
 Collab = new Object();
 let sockett= null;
@@ -12,29 +15,20 @@ let attempt = 0;
 let checktemp = false;
 let isConnected = false;
 let inactivityDisabled = false;
-// let inActivityIntervalID;
 
 // the main process of Idle timer
-// let inactivityTime = 300000; // 5 minutes 
-// let inactivityTime = 6000; // 6 seconds
 let inactivityTime = 600000; // 10 minutes
 let inactivitywarningTime = 540000; // 9 minutes
-let diff = (inactivityTime - inactivitywarningTime)/1000;
-let inactivityTimer;
+let diff = (inactivityTime - inactivitywarningTime)/1000; // 60 seconds
+let inactivityTimer; // Variable to store the timer
 let inactivitywarningTimer;
-let debugFlag = false;
-let achknowledgedTimer = 0;
-let count = 0;
+let debugFlag = false; 
+let achknowledgedTimer = 0; 
+let count = 0; 
 let inactivitychecker = true;
 
 
 function updateConnectionStatus() {
-  // if (navigator.onLine) {
-  //     console.log("You are online");
-  // } else {
-  //     console.log("You are offline");
-  //     this.Collab.disconnectFromServer();
-  // }
 
   if(!navigator.onLine){
     console.warn("You are not connected to the Internet. Please check your connection and try again.");
@@ -45,7 +39,6 @@ function updateConnectionStatus() {
 }
 
 // Listen for changes
-// window.addEventListener('online', updateConnectionStatus);
 window.addEventListener('offline', updateConnectionStatus);
 
 // this method is called in umple.php when it is verified that current URL is Bookmarked/Collaborative URL
@@ -120,7 +113,6 @@ updateConnectionStatus();
         console.log("Collaboration server is disconnected/down !");
       }
       Page.setFeedbackMessage("Cannot Collaborate right now, due to connection time out!");
-      // led.style.backgroundColor = 'red' ; 
       document.getElementById('led').classList.remove('LEDonError');
       document.getElementById('led').classList.remove('LEDonDisconnect');
 
@@ -204,9 +196,6 @@ updateConnectionStatus();
 
         attempt+=1;  
         if (attempt >= 3){
-        // console.log("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
-        // Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
-        
         attempt=0;
         Collab.disconnectFromServer("You have been disconnected from the server due to multiple failed attempts to update the document. Please try to reconnect to your collaboration session later.");
         document.getElementById('led').classList.remove('LEDonError');
@@ -221,7 +210,6 @@ updateConnectionStatus();
     // Set up listener for user count updates
     socket.on('userCountUpdate', function (count) {
       count = count;
-      // document.getElementById('userCountDisplay').innerText = `Users Online: ${count}`;
       if(debugFlag)
       console.warn("Users Online: ", count);
 
@@ -300,7 +288,6 @@ updateConnectionStatus();
     // DEBUG
 
     const getDocumentResponse = await Collab.getDocument(socket, filekey, inittext)
-    // const {version, doc} = getDocument(socket, filekey, inittext)
 
     // DEBUG
     if(debugFlag)
@@ -371,8 +358,6 @@ Collab.disconnectFromServer = function(text) {
   document.getElementById('led').classList.remove('LEDMoreThanTwo');
 
 
-  // const reconnectButton = document.getElementById('collabReconnect');
-  // reconnectButton.style.display = 'inherit'; // Show reconnect button
 
   const disconnectButton = document.getElementById('collabDisconnect');
   disconnectButton.style.display = 'none'; // Hide disconnect button
@@ -404,7 +389,6 @@ Collab.disconnectFromServer = function(text) {
 
   Page.readOnly = true;
   
-  // Action.redrawDiagram();
   UmpleSystem.redrawCanvas();
 
   
@@ -418,22 +402,13 @@ Collab.disconnectFromServer = function(text) {
 }
 
 
-
-// DEBUG
-// console.log(Page.getModel())
-// console.log(TabControl.activeTab.name)
-// console.log(Page.codeMirrorEditor6.state.doc.toString())
-// Collab.connectCollabServer(Page.getModel(), TabControl.activeTab.name, Page.codeMirrorEditor6.state.doc.toString());
-
-
 // emits getDocument event and waits for server to return version and document
 // once the promise is resolved, returns document version and document content
 Collab.getDocument = function(socket, filekey, inittext) {
   // DEBUG
   if(debugFlag)
   console.warn("Inside Collab.getDocument() ...");
-  // socket.emit('getDocument', filekey, inittext);
-  // return {version: 0, doc: "FROM getDocument"}
+
   return new Promise(function(resolve) {
       socket.emit('getDocument', filekey, inittext);
       
@@ -479,13 +454,10 @@ Collab.pushUpdates = async function(socket, filekey, version, fullUpdates) {
   return new Promise(function(resolve) {
     socket.emit('pushUpdates', filekey, version, JSON.stringify(updates));
     socket.once('pushUpdateResponse', function(status) {
-      // DEBUG
-      // console.log("status: ", status)
-      // ===================
+
       if (status.error) {
         return reject(new Error(status.error));
       }
-      // ===================
       resolve(status);
     });
 
@@ -524,7 +496,6 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
     console.log("Filekey: ", filekey);
     console.log("StartVersion: ", startVersion);
   }
-  // console.log("filekey inside PeerExtension! ", filekey)
   const plugin = cm6.ViewPlugin.fromClass(class {
     constructor(view) {
       this.view = view;
@@ -658,7 +629,6 @@ function userIsInactive() {
   if(debugFlag)
   console.log("User is inactive, disconnect sequence started...");
   
-  // stopActivityInterval();
 
   Collab.disconnectFromServer(); // Function to handle disconnection
 

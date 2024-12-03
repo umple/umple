@@ -48,14 +48,6 @@ if(serverDebugFlag){
 
 // The updates received so far (updates.length gives the current version)
 
-// ORIGINAL Variables related to single document collaboration
-//  these were defined in base code that was adapted by umple to enable multi-file collaboration
-// let updates: Update[] = []
-// The current document
-// let doc = Text.of(["Start document"])
-// let pending: ((value: any) => void)[] = []
-
-
 // CUSTOM TYPE to store updates, document, pending updates
 // updates: an array to store document updates corresponding to each filekey
 // document: to hold the current state of the document corresponding to each filekey
@@ -153,14 +145,10 @@ io.on('connection', (socket: Socket) =>{
   // when the client requests for them to be pulled
   // fileKey parameter should come from the client - umpdir_filename
   socket.on('pullUpdates', (fileKey: string, version: number) => {
-    // DEBUG
-    // console.log("inside pullUpdates with filekey: ", fileKey)
 
     if(serverDebugFlag){
       console.warn(`User:${socket.id} pullUpdates calls - fileKey: ${fileKey} update number: ${version}`);
     }
-
-    // console.log(`pullUpdates - fileKey: ${fileKey} update number: ${version}`)
     let currentCollabDoc: collabDoc = getOrCreate(fileKey);
     let updates: Update[] = currentCollabDoc.updates;
     let pending: ((value: any) => void)[] = currentCollabDoc.pending;
@@ -183,7 +171,6 @@ io.on('connection', (socket: Socket) =>{
         socket.emit('pullUpdateResponse', JSON.stringify(updates.slice(version))) });
 
       if(serverDebugFlag){
-        // console.warn(`pending.push called with updates (pullUpdateResponse): ${updates.slice(version)}`)
         console.log("=====================================");
         console.warn(`pending.push called with updates (pullUpdateResponse)`);
       }
@@ -208,9 +195,6 @@ if(serverDebugFlag){
     if(serverDebugFlag){
       console.warn(`User:${socket.id} pushUpdates called - fileKey: ${fileKey} update number: ${version} docUpdates: ${docUpdates}`);
     }
-
-    // DEBUG
-    //console.log(`pushUpdates - fileKey: ${fileKey} update number: ${version}`)
     let currentCollabDoc : collabDoc = getOrCreate(fileKey);
     let updates: Update[] = currentCollabDoc.updates;
     docUpdates = JSON.parse(docUpdates);
@@ -310,17 +294,13 @@ if(serverDebugFlag){
         currentCollabDoc.doc = doc
 
       if(serverDebugFlag){
-        
         console.log("=====================================");
         console.warn(`Document text not present on server, setting to: ${initText}`);
-
       }
 
       }
       else{
-
         console.log(`${fileKey} - Document text present on server`);
-      
       }
       socket.emit('getDocumentResponse', updates.length, doc.toString());
   })
@@ -355,9 +335,6 @@ function getOrCreate(fileKey: string): collabDoc {
     console.warn(`getOrCreate called with fileKey: ${fileKey}`);
   }
   
-  // DEBUG
-  // console.log("collabfilemap.size : ", collabfilemap.size)
-  // console.log('collabfilemap: ', collabfilemap)
   if(!collabfilemap.has(fileKey)){
     collabfilemap.set(fileKey, 
       {

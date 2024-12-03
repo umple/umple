@@ -257,17 +257,12 @@ Action.clicked = function(event)
   }
   else if (action == "Reindent") 
   { 
-    // var lines = Page.getRawUmpleCode().split("\n");
     var lines = Page.getRawUmpleCodeCM6().split("\n");
-
-    // var cursorPos = Page.codeMirrorEditor.getCursor(true);
     var cursorPos = Page.codeMirrorEditor6.state.selection.main.head;
     var cursorPosLine = Page.codeMirrorEditor6.state.doc.lineAt(cursorPos).number;
 
     if (debuggerFlag)
     console.log(cursorPosLine);
-
-    // var whiteSpace = lines[cursorPos.line].match(/^\s*/)[0].length;
     var whiteSpace = lines[cursorPosLine].match(/^\s*/)[0].length;
     var lengthToFirstCh = cursorPos.ch - whiteSpace;
     cursorPos.ch = lengthToFirstCh;
@@ -320,8 +315,7 @@ Action.clicked = function(event)
   else if (action == "SyncDiagram")
   {
     Action.processTyping("codeMirrorEditor", true);
-   //  Page.codeMirrorEditor.focus();
-   Page.codeMirrorEditor6.focus();
+    Page.codeMirrorEditor6.focus();
   }
   else if (action == "PhotoReady")
   {
@@ -412,9 +406,6 @@ Action.startOver = function()
   Page.setUmpleCode("");
   UmpleSystem.merge(null);
   window.location = "umple.php";
-  // Action.saveNewFile();
-  // location.
-  // location.reload();
 }
 
 Action.showRefreshUmpleOnlineCompletely = function()
@@ -472,8 +463,6 @@ Action.dropHandler = function(ev) {
 }
 
 Action.dragOverHandler = function(ev) {
-  //console.log('File(s) in drop zone');
-
   // Prevent default behavior (Prevent file from being opened)
   ev.preventDefault();
 }
@@ -504,7 +493,6 @@ Action.redoOrUndo = function(isUndo)
     rawReplacement = afterHistoryChange.substring(0,delimiterLoc);
   }
 
-  // var rawOriginal = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var rawOriginal = Page.getRawUmpleCodeCM6().replace(Page.modelDelimiter, "");
   
   var theDiff=Action.findDiff(rawOriginal, rawReplacement);
@@ -516,7 +504,6 @@ Action.redoOrUndo = function(isUndo)
   Action.setjustUpdatetoSaveLater(true);
   
   setTimeout(function () { // Delay so it doesn't get erased
-    // Page.setFeedbackMessage("Changed line "+theDiff[3]+" "+theDiff[1]);
     if(theDiff[1] == theDiff[2])
     {
       // change was in diagram so leave caret where it is
@@ -603,7 +590,6 @@ Action.loadTask = function(taskName, isBookmark)
   if (!isBookmark)
   {
     Ajax.sendRequest("bookmark.php", Action.loadTaskBookmark,format("taskname={0}&model={0}",taskName));
-    //Ajax.sendRequest("scripts/compiler.php",Action.loadTaskCallback,format("loadTask=1&filename={0}",taskName));
   } else {
     if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page. instruction can not be edited.
     {
@@ -638,8 +624,6 @@ Action.loadTaskCallback = function(response)
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
   var responseArray = response.responseText.split("task delimiter");
   Page.setUmpleCode(responseArray[0]);
-  //jQuery("#textareaShowInstrcutions").val(responseArray[1]);
-  //jQuery("#labelShowInstructions").text("Task Instructions: " + responseArray[2]);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(responseArray[0]);
@@ -658,7 +642,6 @@ Action.loadTaskExceptCodeCallback = function(response)
 {
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
-  //if (Object.keys(TabControl.tabs).length > 1) return;
 
   if (!justUpdatetoSaveLater){
     TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
@@ -691,15 +674,7 @@ Action.loadTaskExceptCodeCallback = function(response)
       this.style.height = 'auto';
       this.style.height = (this.scrollHeight) + 'px';
     });
-
-    //jQuery("#completionURL").css("width", responseArray[5].length + "ch");
   }
-  // jQuery('#instructions').each(function () {
-  //   this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
-  // }).on('input', function () {
-  //   this.style.height = 'auto';
-  //   this.style.height = (this.scrollHeight) + 'px';
-  // });
 
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
@@ -795,10 +770,6 @@ Action.copyToClp = function(txt){
 Action.openInstructionInNewTab = function()
 {
   jQuery("#buttonReshowInstructions").css("display", "inline");
-  // var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
-  // winPrint.document.write("<!DOCTYPE html><html><head><title>Instructions</title></head><body>" + jQuery("#instructionsHTML").html() + "</body></html>");
-  // winPrint.document.close();
-  // winPrint.focus();
   var tab = window.open('about:blank', '_blank');
   tab.document.write(jQuery("#instructionsHTML").html()); // where 'html' is a variable containing your HTML
   tab.document.close();
@@ -1089,10 +1060,6 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 
           if (debuggerFlag)
           console.log("Getting code from codemirror editor ...")
-
-          // Removing CM5
-          // let orig=Page.codeMirrorEditor.getValue();
-
           // get contents of codemirror 6 editor
           let orig = Page.codeMirrorEditor6.state.doc.toString();
 
@@ -1105,13 +1072,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           if (debuggerFlag)
           console.log("Setting updated code to codemirror editor ...")
 
-          // Removing CM5
-          // Page.codeMirrorEditor.setValue(orig);
-
           // update content of codemirror 6 editor with updated code/text
           Page.setCodeMirror6Text(orig);
 
-          // Action.processTyping("codeMirrorEditor")
           setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
           document.removeEventListener("mousedown", hider);
@@ -1121,8 +1084,6 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           
           prompt.remove();
           Action.removeContextMenu();
-          // Removing CM5
-          // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
           TabControl.getCurrentHistory().save(orig, "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
@@ -1142,15 +1103,12 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 
           if (debuggerFlag)
           console.log("Getting original code and adding substate ...")
-          // Removing CM5
-          // subtext=Page.codeMirrorEditor.getValue().replace(unsanitizedState,subtext);
+
           subtext=Page.codeMirrorEditor6.state.doc.toString().replace(unsanitizedState,subtext);
 
           if (debuggerFlag)
           console.log("Setting updated code with substate into codemirror editor ...")
 
-          // Removing CM5
-          // Page.codeMirrorEditor.setValue(subtext);
           Page.setCodeMirror6Text(subtext);
 
           setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
@@ -1162,8 +1120,6 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 
           prompt.remove();
           Action.removeContextMenu();
-          // Removing CM5
-          // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
           TabControl.getCurrentHistory().save(subtext, "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
@@ -1203,9 +1159,6 @@ Action.drawInputState = function(inputType,stateCode,stateName){
               if (debuggerFlag)
               console.log("New state created ...")
 
-              // Removing CM5
-              // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newState));
-
               if (debuggerFlag)
               console.log("Replacing original state with new state in the code ...")
 
@@ -1214,8 +1167,6 @@ Action.drawInputState = function(inputType,stateCode,stateName){
               setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
               //TODO - Saving/edit history doesn't seem to be working here.
-              // Removing CM5
-              // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
               TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
               let others=document.getElementsByClassName("node");
               for(let q=0;q<others.length;q++){
@@ -1250,14 +1201,13 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 //Deletes a target state within the specific SM and Class, as well any transitions to/from target state
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.deleteState = function(stateCode,className,smName,stateName){
+  // Debug
   // console.log("Inside Action.deleteState ...")
   let subStates=stateName.split(",");
 
   if (debuggerFlag)
   console.log("Getting code from codemirror editor ...")
 
-  // Removing CM5
-  // let orig=Page.codeMirrorEditor.getValue();
   let orig=Page.codeMirrorEditor6.state.doc.toString();
 
   if (debuggerFlag)
@@ -1275,14 +1225,10 @@ Action.deleteState = function(stateCode,className,smName,stateName){
   if (debuggerFlag)
   console.log("Setting updated code to codemirror editor ...");
 
-  // Removing CM5
-  // Page.codeMirrorEditor.setValue(orig);
   Page.setCodeMirror6Text(orig);
 
   setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
-  // Removing CM5
-  // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
   TabControl.getCurrentHistory().save(orig, "menuUpdate");
   Action.removeContextMenu();
 }
@@ -1290,6 +1236,7 @@ Action.deleteState = function(stateCode,className,smName,stateName){
 //Draws a div containing the editing options for state GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawStateMenu = function(){
+  // Debug
   // console.log("Inside drawStateMenu: ")
   if(!Action.diagramInSync){
     return;
@@ -1305,19 +1252,12 @@ Action.drawStateMenu = function(){
   var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
   elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
   elemText[2]=elemText[2].split(".");
-  // Removing CM5
-  // var orig=Page.codeMirrorEditor.getValue();
   var orig = Page.codeMirrorEditor6.state.doc.toString();
-  // Removing CM5
-  // var chosenStateIndices=Action.selectStateInClass(elemText[0],elemText[1],elemText[2][0]);
   var chosenStateIndices=Action.selectStateInClassCM6(elemText[0],elemText[1],elemText[2][0]);
   for(let i=1;i<elemText[2].length;i++){
-    // Removing CM5
-    // chosenStateIndices=Action.selectStateInState(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
     chosenStateIndices=Action.selectStateInStateCM6(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
   }
   var chosenState=orig.substr(chosenStateIndices.startIndex,chosenStateIndices.endIndex-chosenStateIndices.startIndex);
-  // console.log("chosenState: ", chosenState)
   if(typeof chosenState != 'string'){
     return;
   }
@@ -1363,6 +1303,7 @@ Action.drawStateMenu = function(){
   } else {
     menu.style.top = event.clientY+"px";
   }
+
   //Add an event listener to hide the menu when the user clicks outside of it
   document.addEventListener('mousedown', function hideMenu(e) {
     var prompt=document.getElementById("promptBox");
@@ -1396,11 +1337,9 @@ Action.displayTransitionMenu = function(event) {
   let identifierState = id[3].split(".");
   dest = id[4].split(".");
 
-  // var selection = Action.selectStateInClass(id[0], id[1], identifierState[0]);
   var selection = Action.selectStateInClassCM6(id[0], id[1], identifierState[0]);
 
   for (var i = 1; i < identifierState.length; i++) {
-      //selection = Action.selectStateInState(selection.startIndex, selection.endIndex, identifierState[i]);
       selection = Action.selectStateInStateCM6(selection.startIndex, selection.endIndex, identifierState[i]);
   }
 
@@ -1415,20 +1354,16 @@ Action.displayTransitionMenu = function(event) {
   searchTerm = searchTerm.replaceAll("&&", "&{1,2}");
   let pattern = new RegExp(searchTerm + ".*->", "s");
 
-  // let startIndex = Page.codeMirrorEditor.getValue().substr(selection.startIndex, selection.endIndex - selection.startIndex).search(pattern) + selection.startIndex;
      let startIndex = Page.codeMirrorEditor6.state.doc.toString().substr(selection.startIndex, selection.endIndex - selection.startIndex).search(pattern) + selection.startIndex;
   
-     // let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
      let cText = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex);
 
   let line = Action.findEOL(cText);
   if (!(line.split("->").length - 1 === 1) ) {
-      //alert("Please edit this complex transition in the textual code.");
       Page.setFeedbackMessage(" Please edit this complex transition in the textual code.");
       return;
   }
   let endIndex = startIndex + line.length;
-  // let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
    let code = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
 
@@ -1604,18 +1539,15 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
         // Create the modified transition string with the new destination
         let modifiedTransition = parts[0] + " -> " + parts[1].replace(dest,input.value.trim()) + ";";
         
-        // cm5
-        // let orig = Page.codeMirrorEditor.getValue();
         let orig = Page.codeMirrorEditor6.state.doc.toString();
         let before = orig.substring(0, startIndex);
     
-      // Get the part of the string after the substring you want to replace
-      let after = orig.substring(endIndex);
-      let updatedContent = before + modifiedTransition +after;
+        // Get the part of the string after the substring you want to replace
+        let after = orig.substring(endIndex);
+        let updatedContent = before + modifiedTransition +after;
         //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
 
         // Update the editor with the new content
-        //Page.codeMirrorEditor.setValue(updatedContent);
         Page.setCodeMirror6Text(updatedContent);
 
 
@@ -1636,42 +1568,22 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
 
 
 Action.deleteTransition = function(startIndex, endIndex) {
-  //let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
- let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
+  let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
 
- // let orig = Page.codeMirrorEditor.getValue();
- let orig = Page.codeMirrorEditor6.state.doc.toString();
+  let orig = Page.codeMirrorEditor6.state.doc.toString();
 
   orig = orig.replace(classCode, "");
-  // Update the editor with the new code
 
-  // Page.codeMirrorEditor.setValue(orig);
-     Page.setCodeMirror6Text(orig);
+  // Update the editor with the new code
+  Page.setCodeMirror6Text(orig);
 
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 };
 
-// cm5
-// Action.deleteTransition = function(startIndex, endIndex) {
-//   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-
-//   let orig = Page.codeMirrorEditor.getValue();
-
-//   orig = orig.replace(classCode, "");
-//   // Update the editor with the new code
-
-//   Page.codeMirrorEditor.setValue(orig);
-
-//   Action.removeContextMenu();
-//   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-// };
-
-
 Action.modifyTransitionGuard = function(startIndex,endIndex) {
 
   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
-  // let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
   let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
   
   const match =classCode.trim().match(pattern2);
@@ -1784,17 +1696,14 @@ Action.modifyTransitionGuard = function(startIndex,endIndex) {
 
 
     // Assuming classyCode is meant to represent the original content where the transition is to be found
-    //let orig = Page.codeMirrorEditor.getValue();
     let orig = Page.codeMirrorEditor6.state.doc.toString();
     let before = orig.substring(0, startIndex);
     
-      // Get the part of the string after the substring you want to replace
-      let after = orig.substring(endIndex);
-      let updatedContent = before + modifiedTransition +after;
-    //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+    // Get the part of the string after the substring you want to replace
+    let after = orig.substring(endIndex);
+    let updatedContent = before + modifiedTransition +after;
 
     // Update the editor with the new content
-    //Page.codeMirrorEditor.setValue(updatedContent);
     Page.setCodeMirror6Text(updatedContent);
 
     Action.removeContextMenu();
@@ -1816,7 +1725,6 @@ input.addEventListener("keydown", function(e) {
 
 Action.modifyTransitionAction = function(startIndex,endIndex) {
   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
-  // let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
   let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
 
   const match =classCode.trim().match(pattern2);
@@ -1915,17 +1823,14 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
 
 
       // Assuming classyCode is meant to represent the original content where the transition is to be found
-      //let orig = Page.codeMirrorEditor.getValue();
       let orig = Page.codeMirrorEditor6.state.doc.toString();
       let before = orig.substring(0, startIndex);
     
       // Get the part of the string after the substring you want to replace
       let after = orig.substring(endIndex);
       let updatedContent = before + modifiedTransition +after;
-      //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
 
       // Update the editor with the new content
-      // Page.codeMirrorEditor.setValue(updatedContent);
          Page.setCodeMirror6Text(updatedContent);
 
       Action.removeContextMenu();
@@ -1948,7 +1853,6 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
 
 
 Action.modifyTransitionEventName = function(startIndex, endIndex) {
-  //let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
   let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
   let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
 
@@ -2016,7 +1920,6 @@ Action.modifyTransitionEventName = function(startIndex, endIndex) {
       let modifiedTransition = classCode.replace(eventName, input.value.trim());
 
       // Assuming classyCode is meant to represent the original content where the transition is to be found
-      //let orig = Page.codeMirrorEditor.getValue();
       let orig = Page.codeMirrorEditor6.state.doc.toString();
       let before = orig.substring(0, startIndex);
     
@@ -2025,7 +1928,6 @@ Action.modifyTransitionEventName = function(startIndex, endIndex) {
       let updatedContent = before + modifiedTransition +after;
 
       // Update the editor with the new content
-      //Page.codeMirrorEditor.setValue(updatedContent);
       Page.setCodeMirror6Text(updatedContent);
 
       Action.removeContextMenu();
@@ -2053,57 +1955,27 @@ Action.removeContextMenu = function(){
   }
 }
 
-//codemirror5
-// //Called from Action.drawInput(), searches for existing displayColor definitions in the class code, replaces it if it exists,
-// //prepends a new displayColor statement to the start of the class if one doesn't exist.
-// //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
-// Action.setColor=function(classCode,className,color){
-//   let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
-//   if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
-//     let subtext="{  displayColor "+color+";\n"; 
-//     subtext=classyCode.substr(0,classyCode.indexOf("{"))+subtext+classyCode.substr(classyCode.indexOf("{")+1,classyCode.length-classyCode.indexOf("{")-1);
-//     Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
-//   } else { //otherwise, use regex to replace existing displayColor statement
-//     let subtext="displayColor "+color+";"; 
-//     let regex=new RegExp("displayColor\\s+.*;");
-//     subtext=classyCode.replace(regex,subtext);
-//     Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
-//     setTimeout(function(){
-//         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-//     }, 100);
-
-//   }
-// }
 
 //Called from Action.drawInput(), searches for existing displayColor definitions in the class code, replaces it if it exists,
 //prepends a new displayColor statement to the start of the class if one doesn't exist.
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.setColor=function(classCode,className,color){
-  // console.log("classCode: " + classCode);
-  // console.log("className: " + className);
-  //  console.log("color: " + color);
   let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
     let subtext="{  displayColor "+color+";\n"; 
     subtext=classyCode.substr(0,classyCode.indexOf("{"))+subtext+classyCode.substr(classyCode.indexOf("{")+1,classyCode.length-classyCode.indexOf("{")-1);
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(classyCode,subtext) } });
 
-  //  Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
   } else { //otherwise, use regex to replace existing displayColor statement
     let subtext="displayColor "+color+";"; 
     let regex=new RegExp("displayColor\\s+.*;");
     subtext=classyCode.replace(regex,subtext);
 
-    //Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(classyCode,subtext) } });
 
     setTimeout(function(){
         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
     }, 100);
-
-    // setTimeout(function(){
-    //     TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
-    // }, 100);
 
   }
 }
@@ -2203,7 +2075,6 @@ Action.drawInput = function(inputType,classCode,className){
           } else { //if users use dropdown and type attribute name in text box
             newClass=orig.substr(0,orig.length-1)+"  "+select.value+" "+input.value+";\n}";
           }
-          // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
           const textlength = Page.codeMirrorEditor6.state.doc.length
           const insertval = Page.codeMirrorEditor6.state.doc.toString().replace(orig,newClass)
 
@@ -2219,7 +2090,6 @@ Action.drawInput = function(inputType,classCode,className){
           prompt.remove();
           Action.removeContextMenu();
           TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-          // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
@@ -2235,14 +2105,12 @@ Action.drawInput = function(inputType,classCode,className){
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
-          // let orig=Page.codeMirrorEditor.getValue();
           let orig = Page.codeMirrorEditor6.state.doc.toString();
           let regex=new RegExp("(\\W+)("+className+")(\\W+)");
           let res;
           while((res=orig.match(regex))!=null){
             orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
           }
-          // Page.codeMirrorEditor.setValue(orig);
           Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
           document.removeEventListener("mousedown", hider);
           prompt.remove();
@@ -2260,7 +2128,6 @@ Action.drawInput = function(inputType,classCode,className){
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
           let subtext="\nclass "+input.value+"\n{\n  isA "+className+";\n}\n";
-         // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
           Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString() + subtext}});
           document.removeEventListener("mousedown", hider);
           TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
@@ -2321,7 +2188,6 @@ Action.drawInput = function(inputType,classCode,className){
 //associationClasses are: deleted
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.deleteClass = function(classCode, className){
-  // let orig=Page.codeMirrorEditor.getValue();
   let orig=Page.codeMirrorEditor6.state.doc.toString();
 
   orig=orig.replace(classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\""),"");
@@ -2358,7 +2224,6 @@ Action.deleteClass = function(classCode, className){
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
   }
   //set editor code, save new state, and remove the context menu
-  //Page.codeMirrorEditor.setValue(orig);
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
 
@@ -2388,7 +2253,6 @@ Action.addAssociationGv = function(classCode, className){
 
       Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(orig,newClass) } });
 
-      //Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
       TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
       let others=document.getElementsByClassName("node");
       for(let q=0;q<others.length;q++){
@@ -2414,7 +2278,6 @@ Action.displayMenu = function(event) {
   }
   //unstable - grabs class name
   elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
- // var orig=Page.codeMirrorEditor.getValue();
  var orig=Page.codeMirrorEditor6.state.doc.toString();
 
  var chosenClass=Action.splitStates(orig);
@@ -2490,208 +2353,6 @@ Action.displayMenu = function(event) {
   document.body.appendChild(menu);
 }
 
-// Action.displayAssociMenu = function(event, associationLink) {
-//   const regex = /Action\.selectAssociation\('([^']+)'\)/;
-
-//   // Use the regex to extract the content
-//   const associationDetails = associationLink.match(regex);
-
-
-//   // associationDetails array contains the extracted information
-//   let indices = Action.selectAssociation(associationDetails[1]);
-//  // console.log("indices: " + indices);
-
-//   var detailsArray = associationDetails[1].split(',');
-//  // console.log("detailsArray: " + detailsArray);
-
-//   if (detailsArray.length == 4) {
-//       var destination = detailsArray[1].trim();
-//       var className = detailsArray[0].trim();
-//       var endInfo = detailsArray[2].split(' ');
-//       var startInfo = detailsArray[3].split(' ');
-
-//   } else {
-//       var destination = detailsArray[1].trim();
-//       var endInfo = detailsArray[2].split(' ');
-//       var startInfo = detailsArray[2].split(' ');
-//       var className = detailsArray[0].trim();
-
-//   }
-  
-//   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
-//   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
-//   if (Page.codeMirrorOn) {
-//       scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-
-//       if (!scursor.findNext()) {
-//           return; // false
-//       }
-
-//       // Have found declaration of class. Now have to search for the next class or end
-//       var theStart = scursor.from();
-
-//       var theEnd = new Object();
-
-//       // theEnd.line = Page.codeMirrorEditor.lineCount();
-//       theEnd.line = Page.codeMirrorEditor6.state.doc.lines;
-//       // console.warn("theEnd.line: " + theEnd.line);
-//       theEnd.ch = 9999;
-
-//       scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
-
-//       while (scursor.findNext()) {
-//           var endObject = scursor.from();
-
-//           //This is checking if the class declaration found was in a single line comment.
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound && innerCursor.from().line == endObject.line) {
-//               //The class declaration found was actually in a single line comment, keep searching
-//               continue;
-//           }
-
-//           //Check if the found class declaration is in a multiline comment
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-//           //Search backwards for a /* or */
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound) {
-//               if (commentFound[0] === "/*") {
-//                   //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-
-//                   //Look for the exit marker
-//                   innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-//                   var commentFound = innerCursor.findNext();
-
-//                   if (commentFound) {
-//                       var commentEnd = innerCursor.from();
-//                       if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-//                           //The class declaration found is in a multiline comment, keep looking
-//                           continue;
-//                       }
-//                   }
-//               }
-//           }
-
-//           theEnd.line = endObject.line - 1;
-//           theEnd.ch = 999;
-//           break;
-//       }
-
-//       Page.codeMirrorEditor.setSelection(theStart, theEnd);
-//       var classCode = Page.codeMirrorEditor.getSelection(); //get the class code for where the association belong
-//       // console.warn("classCode: " + classCode);
-//       // var classcode2 = page.codeMirrorEditor6.sliceDoc(theStart, theEnd);
-//       //console.log("classcode2: " + classcode2);
-//       // console.log("classCode: " + classCode);
-
-//   }
-//   var jsInput = classCode.replaceAll("\n", "&#10").replaceAll("\"", "&#$quot");;
-//   let isEnd = 1; //0 as start 1 as end
-//   let startIndex = indices.startIndex;
-//   let endIndex = indices.endIndex;
-//   // Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
-//   Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor6.state.doc.toString() ), Action.indexToPos(endIndex, Page.codeMirrorEditor6.state.doc.toString()))
-  
-//   var selectedText = Page.codeMirrorEditor.getSelection();
-//   console.warn("selectedText: " + selectedText);  
-
-//   if (selectedText.includes(endInfo[0].trim()) == false) {
-//       isEnd = 3;//association class
-//   }
-//   var menu = document.createElement('customContextMenu');
-//   //special menu for association class
-//   var rowContent = isEnd === 3 ?
-//   ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" role name"] :
-//   ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" multiplicity" , "Alter "+destination+" role name", "Delete the association"];
-//   //var rowContent = ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" multiplicity" , "Alter "+destination+" role name", "Delete the association."];
-//   var rowFuncs = isEnd === 3 ?
-//         [
-//             "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
-//             "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
-//             "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 1 + "\")"
-//         ] :[
-
-        
-//       "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
-//       "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
-//       "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[0] + "\",\"" + isEnd + "\")",
-//       "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 1 + "\")",
-//       "Action.deleteAssociation(\"" + jsInput + "\",\"" + selectedText + "\")"
-
-//   ];
-
-//   menu.style.zIndex = "1000";
-//   menu.style.border = "1px solid #ccc";
-//   menu.style.backgroundColor = "#f8f8f8";
-//   menu.style.padding = "5px";
-//   menu.style.position = "fixed";
-//   //add rows
-//   for (var i = 0; i < rowContent.length; i++) {
-//       var row = document.createElement("div");
-//       row.style.padding = "5px";
-//       row.style.borderRadius = "3px";
-//       row.style.cursor = "pointer";
-//       row.style.transition = "background-color 0.3s";
-//       row.textContent = rowContent[i];
-//       row.setAttribute('onclick', "javascript:" + rowFuncs[i]);
-//       // Highlight row on hover
-//       row.addEventListener("mouseover", function() {
-//           this.style.backgroundColor = "#ddd";
-//       });
-//       row.addEventListener("mouseout", function() {
-//           this.style.backgroundColor = "transparent";
-//       });
-
-//       //add row to context menu
-//       menu.appendChild(row);
-
-//   }
-
-//   //set menu location at mouse, while ensuring it is on screen
-//   var menuRect = menu.getBoundingClientRect();
-//   if (event.clientX + menuRect.width > window.innerWidth) {
-//       menu.style.right = (window.innerWidth - event.clientX) + "px";
-//   } else {
-//       menu.style.left = event.clientX + "px";
-//   }
-//   if (event.clientY + menuRect.height > window.innerHeight) {
-//       menu.style.bottom = (window.innerHieght - event.clientY) + "px";
-//   } else {
-//       menu.style.top = event.clientY + "px";
-//   }
-//   // Add a listener to hide the menu when the user clicks outside of it
-//   document.addEventListener('keydown', function hideMenu(e) {
-//     var prompt = document.getElementById("promptBox");
-//       if (e.target != menu && !menu.contains(e.target)&&e.key === "Escape") {
-//           if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
-
-//               document.removeEventListener('keydown', hideMenu);
-//               Action.removeContextMenu();
-
-//           } else {
-//               document.removeEventListener('keydown', hideMenu);
-//               Action.removeContextMenu();
-//           }
-//       }
-//   });
-//   document.addEventListener('mousedown', function hideMenu(e) {
-//       var prompt = document.getElementById("promptBox");
-//       if (e.target != menu && !menu.contains(e.target)) {
-//           if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
-
-//               document.removeEventListener('mousedown', hideMenu);
-//               Action.removeContextMenu();
-
-//           } else {
-//               document.removeEventListener('mousedown', hideMenu);
-//               Action.removeContextMenu();
-//           }
-//       }
-//   });
-//   document.body.appendChild(menu);
-// };
-
-
 Action.displayAssociMenu = function(event, associationLink) {
   const regex = /Action\.selectAssociation\('([^']+)'\)/;
 
@@ -2701,10 +2362,8 @@ Action.displayAssociMenu = function(event, associationLink) {
 
   // associationDetails array contains the extracted information
   let indices = Action.selectAssociation(associationDetails[1]);
- // console.log("indices: " + indices);
 
   var detailsArray = associationDetails[1].split(',');
- // console.log("detailsArray: " + detailsArray);
 
   if (detailsArray.length == 4) {
       var destination = detailsArray[1].trim();
@@ -2717,80 +2376,18 @@ Action.displayAssociMenu = function(event, associationLink) {
       var endInfo = detailsArray[2].split(' ');
       var startInfo = detailsArray[2].split(' ');
       var className = detailsArray[0].trim();
-
   }
   
   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
   if (Page.codeMirrorOn) {
-      // scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-
-      // if (!scursor.findNext()) {
-      //     return; // false
-      // }
-
-      // // Have found declaration of class. Now have to search for the next class or end
-      // var theStart = scursor.from();
-
-      // var theEnd = new Object();
-
-      // // theEnd.line = Page.codeMirrorEditor.lineCount();
-      // theEnd.line = Page.codeMirrorEditor6.state.doc.lines;
-      // // console.warn("theEnd.line: " + theEnd.line);
-      // theEnd.ch = 9999;
-
-      // scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
-
-      // while (scursor.findNext()) {
-      //     var endObject = scursor.from();
-
-      //     //This is checking if the class declaration found was in a single line comment.
-      //     innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-      //     var commentFound = innerCursor.findPrevious();
-      //     if (commentFound && innerCursor.from().line == endObject.line) {
-      //         //The class declaration found was actually in a single line comment, keep searching
-      //         continue;
-      //     }
-
-      //     //Check if the found class declaration is in a multiline comment
-      //     innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-      //     //Search backwards for a /* or */
-      //     var commentFound = innerCursor.findPrevious();
-      //     if (commentFound) {
-      //         if (commentFound[0] === "/*") {
-      //             //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-
-      //             //Look for the exit marker
-      //             innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-      //             var commentFound = innerCursor.findNext();
-
-      //             if (commentFound) {
-      //                 var commentEnd = innerCursor.from();
-      //                 if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-      //                     //The class declaration found is in a multiline comment, keep looking
-      //                     continue;
-      //                 }
-      //             }
-      //         }
-      //     }
-
-      //     theEnd.line = endObject.line - 1;
-      //     theEnd.ch = 999;
-      //     break;
-      // }
-
-      // Page.codeMirrorEditor.setSelection(theStart, theEnd);
-      // var classCode = Page.codeMirrorEditor.getSelection(); //get the class code for where the association belong
+      //get the class code for where the association belong
       var selectionIndiciesCM6 = Action.selectItemCM6(searchCursor);
       var classCode = Page.codeMirrorEditor6.state.sliceDoc(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex) ;
-  //get the class code f
+      //get the class code f
       
       if (debuggerFlag)
       console.warn("classCode: " + classCode);
- 
-      // var classcode2 = page.codeMirrorEditor6.sliceDoc(theStart, theEnd);
-      //console.log("classcode2: " + classcode2);
-      // console.log("classCode: " + classCode);
 
   }
 
@@ -2799,12 +2396,6 @@ Action.displayAssociMenu = function(event, associationLink) {
   let isEnd = 1; //0 as start 1 as end
   let startIndex = indices.startIndex;
   let endIndex = indices.endIndex;
-  // Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
-  // Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor6.state.doc.toString() ), Action.indexToPos(endIndex, Page.codeMirrorEditor6.state.doc.toString()))
-  
-  // var selectedText = Page.codeMirrorEditor.getSelection();
-
-  // var selectedText = "miomio" ;
   var selectedText = Page.codeMirrorEditor6.state.sliceDoc(startIndex,endIndex) ;
 
   if (debuggerFlag)
@@ -3026,8 +2617,7 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
         // If it's the start multiplicity, simply replace the first occurrence
         updatedAssociationString = selectedText.replace(new RegExp(escapedOldMult), input.value.trim());
     }
-    // CM5 remove
-    //let orig=Page.codeMirrorEditor.getValue();
+
     let orig=Page.codeMirrorEditor6.state.doc.toString();;
     if((classyCode.includes(selectedText))==false){
       orig=orig.replace(selectedText,updatedAssociationString);
@@ -3038,21 +2628,18 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
      orig=orig.replace(classyCode,modifiedClassCode);
     }
     
-    //Page.codeMirrorEditor.setValue(orig);
     Page.setCodeMirror6Text(orig);
 
     // Apply updatedAssociationString to the Umple code as needed
     
      Action.removeContextMenu();
      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-     // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
      
      prompt.remove(); // Remove the prompt after processing
      Action.selectMatchingText(updatedAssociationString);
   }
   else {
     // If the format is invalid, display a message
-    //alert("Invalid multiplicity format. Please enter a valid format (e.g., '*', '1', '0..1', '1..*', or '2..5').");
     input.focus(); // Re-focus on the input to allow the user to correct it
     prompt.appendChild(inputErrorMsg);
       }
@@ -3173,11 +2760,9 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
           updatedAssociationString = updatedStartPart+" "+parts[1].trim()+" "+parts[2].trim()+";";
         }
         else{
-          //Page.setFeedbackMessage("To add a role name at this end there must be a role name at the other end first");
           input.focus();
           prompt.appendChild(inputErrorMsg);
           return;
-          //updatedAssociationString = updatedStartPart+" "+parts[1].trim()+";";
         }
       } else {
         endParts = selectedText.split(";");
@@ -3189,7 +2774,6 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
       updatedAssociationString = selectedText.replace(roleName, newRoleName);
     }
     
-    //let orig=Page.codeMirrorEditor.getValue();
     let orig=Page.codeMirrorEditor6.state.doc.toString();
 
     if((classyCode.includes(selectedText))==false){
@@ -3201,16 +2785,13 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
      orig=orig.replace(classyCode,modifiedClassCode);
     }
     
-    //Page.codeMirrorEditor.setValue(orig);
-    //Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
     Page.setCodeMirror6Text(orig);
 
     // Apply updatedAssociationString to the Umple code as needed
     Action.removeContextMenu();
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-    // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate"); 
-     prompt.remove(); // Remove the prompt after processing
-     Action.selectMatchingText(updatedAssociationString);
+    prompt.remove(); // Remove the prompt after processing
+    Action.selectMatchingText(updatedAssociationString);
   });
   input.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
@@ -3223,7 +2804,6 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
 
    
  Action.deleteAssociation = function(classCode, selectedText) {
-  // let orig = Page.codeMirrorEditor.getValue();
   let orig = Page.codeMirrorEditor6.state.doc.toString();
 
   let classyCode = classCode.replaceAll("&#10", "\n").replaceAll("&#$quot", "\"");
@@ -3236,12 +2816,9 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
       orig = orig.replace(classyCode, modifiedClassCode);
   }
 
-  // Page.codeMirrorEditor.setValue(orig);
-  //Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
   Page.setCodeMirror6Text(orig);
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-  // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
 }
 
 Action.displayAttributeMenu = function(event, attributeName, attributeType) {
@@ -3259,7 +2836,6 @@ Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   //unstable - grabs class name
   elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
   
-  // var orig=Page.codeMirrorEditor.getValue();
   var orig=Page.codeMirrorEditor6.state.doc.toString();
   var chosenClass=Action.splitStates(orig);
   for(let i=0;i<chosenClass.length;i++){
@@ -3408,16 +2984,13 @@ document.addEventListener("mousedown", hider);
     let globalAttrRegex = new RegExp("\\b" + attributeName + "\\b", "g");
     modifiedClassCode = modifiedClassCode.replace(globalAttrRegex, input.value.trim());
 
-    //let orig=Page.codeMirrorEditor.getValue();
     let orig = Page.codeMirrorEditor6.state.doc.toString();
 
     orig=orig.replace(classyCode,modifiedClassCode);
-    //Page.codeMirrorEditor.setValue(orig);
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
     Action.removeContextMenu();
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-    //TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString() , "menuUpdate");
     document.removeEventListener("mousedown", hider);
     prompt.remove(); // Remove the prompt after processing
     }
@@ -3483,12 +3056,10 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
           modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType,  selectedType+" "+attributeName);
         }
         
-        //let orig=Page.codeMirrorEditor.getValue();
         let orig=Page.codeMirrorEditor6.state.doc.toString();
         orig=orig.replace(classyCode,modifiedClassCode);
         // Update the editor with the new code
 
-        //Page.codeMirrorEditor.setValue(orig);
         Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
         Action.removeContextMenu();
@@ -3515,13 +3086,11 @@ Action.deleteAttribute = function(classCode, className, attributeName, attribute
   modifiedClassCode = modifiedClassCode.replace(attrRegexWithType, "");
   modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType, "");
   
-  //let orig=Page.codeMirrorEditor.getValue();
   let orig = Page.codeMirrorEditor6.state.doc.toString();
   
   orig = orig.replace(classyCode,modifiedClassCode);
   
   // Update the editor with the new code
-  // Page.codeMirrorEditor.setValue(orig);
   Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
   Action.removeContextMenu();
@@ -3533,7 +3102,6 @@ Action.deleteAttribute = function(classCode, className, attributeName, attribute
 
 Action.classSelected = function(obj)
 {
-  // console.log("Inside classSelected")
   var previouslySelected = Page.selectedClass;
   var newClassSelected = obj;
   
@@ -3609,8 +3177,6 @@ Action.unselectAll = function()
 Action.classClicked = function(event)
 {
   // DEBUG F
-  // console.log("Debug F1: Inside classClicked")
-  // console.log("Event: ", event)
   if (!Action.diagramInSync) return;
   Action.focusOn("umpleCanvas", true);
   Action.focusOn("umpleModelEditorText", false);
@@ -3677,8 +3243,6 @@ Action.classClicked = function(event)
 */
 Action.stateClicked = function(identifier)
 {
-    // console.log("Debug G1: Inside stateClicked")
-    // console.log("Identifier: ", identifier)
     if (!Action.diagramInSync) return;
     Action.focusOn("umpleCanvas", true);
     Action.focusOn("umpleModelEditorText", false);
@@ -3687,7 +3251,6 @@ Action.stateClicked = function(identifier)
     var identifierSM=idSplit[1]
     var identifierState=idSplit[2].replace("Entry:","").replace("Exit:","");
     identifierState=identifierState.replace("Exit:","");
-    // console.log("identifierState: ", identifierState)
     Action.unselectAll();
     Action.elementClicked = true;
     var selectionIndicies=null;
@@ -3698,19 +3261,12 @@ Action.stateClicked = function(identifier)
       console.log("stateClicked - nested state case")
       
       identifierState=identifierState.split('.');
-      // Removing CM5
-      // selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState[0]);
       selectionIndiciesCM6=Action.selectStateInClassCM6(identifierClass,identifierSM,identifierState[0]);
-      // console.log("selectionIndicies: ", selectionIndicies)
-      // console.log("identifierState.length: ", identifierState.length)
       for(let i=1;i<identifierState.length;i++){
 
         if (debuggerFlag)
         console.log("Iterating states within Identified state ...")
 
-        // console.log("selectionIndiciesCM6.startIndex: ", selectionIndiciesCM6.startIndex)
-        // Removing CM5
-        // selectionIndicies=Action.selectStateInState(selectionIndicies.startIndex,selectionIndicies.endIndex,identifierState[i]);
         selectionIndiciesCM6=Action.selectStateInStateCM6(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex,identifierState[i]);
       }
     } else { //base case
@@ -3718,17 +3274,13 @@ Action.stateClicked = function(identifier)
       if (debuggerFlag)
       console.log("stateClicked - else - base case")
 
-      // Removing CM5
-      // selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState);
-      // console.log("selectionIndicies: ", selectionIndicies)
       selectionIndiciesCM6 = Action.selectStateInClassCM6(identifierClass,identifierSM,identifierState);
 
       if (debuggerFlag)
       console.log("selectionIndiciesCM6: ", selectionIndiciesCM6)
 
     }
-    // Removing CM5
-    // Action.highlightByIndex(selectionIndicies.startIndex,selectionIndicies.endIndex);
+
     Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 
 
@@ -3778,8 +3330,6 @@ Action.associationClicked = function(event)
 */
 Action.transitionClicked = function(identifier)
 {
-  // console.log("Inside transitionClicked: ")
-  // console.log("identifier: ", identifier)
   if(!Action.diagramInSync) return;
   if(typeof identifier === "string" && identifier === null) return;
   Action.elementClicked = true;
@@ -3788,15 +3338,10 @@ Action.transitionClicked = function(identifier)
   let identifierState=id[3].split(".");
   
   dest=id[4];
-  //dest=id[4].split(".");
-  // Removing CM5
-  // var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
   var selection = Action.selectStateInClassCM6(id[0],id[1],identifierState[0]);
   dest=id[4].split(".");
 
   for (var i=1;i<identifierState.length;i++){
-    // Removing CM5
-    // selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
     selection=Action.selectStateInStateCM6(selection.startIndex,selection.endIndex,identifierState[i]);
   }
   let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
@@ -3811,37 +3356,18 @@ Action.transitionClicked = function(identifier)
   searchTerm=searchTerm.replaceAll("&&","&{1,2}");
   let pattern= new RegExp(searchTerm+".*->","s");
 
-  // Removing CM5
-  // let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
-  // let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let startIndex=Page.codeMirrorEditor6.state.doc.toString().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   let cText = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex);
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
-  // Removing CM5
-  // Action.highlightByIndex(startIndex,endIndex);
   Action.highlightByIndexCM6(startIndex,endIndex);
 
 // DEBUG THE FOLLOWING MAY NEED CHANGING FOR CM6  
   if(!(line.split("->").length - 1 === 1) ){
-    //alert("Please edit this complex transition in the textual code.");
     Page.setFeedbackMessage("Please edit this complex transition in the textual code.");
   }
   
- // Action.highlightByIndex(startIndex,endIndex);
   Action.highlightByIndexCM6(startIndex,endIndex);
-// DEBUG the following block commented out for unknown reason
-  /*
-  let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
-   const match =code.trim().match(pattern2);
- 
-   // Extracting captured groups based on the updated pattern
-   let eventName = match[1].trim();
-   let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
-   let action = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
-   let destinationState = match[10].trim();
-*/
 }
 Action.generalizationClicked = function(event)
 {
@@ -3946,7 +3472,6 @@ Action.associationSelected = function(obj)
 
 Action.transitionSelected = function(obj)
 {
-    // Page.setFeedbackMessage("transition selected");
     var isSelected = (obj == null) ? false : true;
     var updateObj = null;
 
@@ -4281,6 +3806,7 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
+  // DEBUG
   // console.log("Inside updateUmpleTextCallback: ")
   if (!justUpdatetoSaveLater && !justUpdatetoSaveLaterForTextCallback){
     TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
@@ -4289,10 +3815,6 @@ Action.updateUmpleTextCallback = function(response)
   Action.freshLoad = true;
   
   Page.setUmpleCode(response.responseText, Action.update.codeChange);
-  // DEBUG
-  // Page.setFeedbackMessage("update text callback -");
-  // Page.catFeedbackMessage(response.responseText);
-  // Page.catFeedbackMessage("-");
   
   Page.hideLoading();
 
@@ -4310,7 +3832,6 @@ Action.updateUmpleTextCallback = function(response)
   }
   
   //Uncomment for testing purposes only - to update the image after updating the text
-  //Action.updateUmpleDiagram();
 }
 
 Action.setExampleType = function setExampleType()
@@ -4358,15 +3879,12 @@ Action.loadExample = function loadExample()
   var diagramType="";
   if(Page.useGvStateDiagram) {
     diagramType="&diagramtype=state";
-    //jQuery("#genjava").prop("selected",true);
   }
  else if(Page.useGvFeatureDiagram) {
     diagramType="&diagramtype=GvFeature";
-    //jQuery("#genjava").prop("selected",true);
   }
   else if(Page.useStructureDiagram) {
     diagramType="&diagramtype=structure&generateDefault=cpp";
-    //jQuery("#gencpp").prop("selected",true);
   }
   else {
     //jQuery("#genjava").prop("selected",true);
@@ -4393,9 +3911,7 @@ Action.loadExample = function loadExample()
   
   Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+shortExampleName+" example</a>");
 
- // TODO - fix so history works nicely
- //   if(history.pushState) {history.pushState("", document.title, newURL);}
-           
+  // TODO - fix so history works nicely           
   jQuery("#inputExample").blur();
 }
 
@@ -4491,29 +4007,6 @@ Action.keyboardShortcut = function(event)
   }
 }
 
-// codemirror 5
-// Action.getCaretPosition = function() // TIM Returns the line number
-// {
-  // // var ctrl = document.getElementById('umpleModelEditorText');
-  // var ctrl = document.getElementById('newEditor');
-  
-  // var CaretPos = Action.getInputSelectionStart(ctrl);
-  
-  // var nlcount=1;
-  // // var theCode=Page.getRawUmpleCode();
-  // var theCode=Page.getRawUmpleCodeCM6();
-
-  // for(var ch=0; ch<(CaretPos); ch++)
-  // {
-  //    if(theCode.charAt(ch)=="\n") nlcount++;
-     
-  //    // The following for debugging
-  //    if (Page.getAdvancedMode() == 2 && ch < 15) { // debug
-  //      Page.catFeedbackMessage("<"+ch+" "+theCode.charAt(ch)+"="+theCode.charCodeAt(ch)+"> ");
-  //    }
-  // }
-  // return nlcount;
-// }
 
 Action.getCaretPosition = function() // TIM Returns the line number
 {
@@ -4708,19 +4201,12 @@ Action.setCaretPosition = function(line)
   }
   if(Page.codeMirrorOn) 
   {
-   //  Page.codeMirrorEditor.setSelection({line: line-1,ch: 0},{line: line-1,ch: 999999});
-  //  Page.codeMirrorEditor6.dispatch({  
-  //   selection: { anchor: 0, head: 0 }, 
-  // })  
-   //  Page.codeMirrorEditor.focus();
    Page.codeMirrorEditor6.focus();
     
     // DEBUG
-    // console.log("Inside Action.setCaretPosition() ... Line number: ", line)
     /* codemirror 6 line highlight by number*/
     if(line >= 1) {
       const docPosition = Page.codeMirrorEditor6.state.doc.line(line).from;
-      // Page.codeMirrorEditor6.dispatch({effects: cm6.addLineHighlight.of(docPosition)})
       Page.codeMirrorEditor6.dispatch({
         selection: { anchor: docPosition },
         scrollIntoView: true
@@ -4739,7 +4225,6 @@ Action.setCaretPosition = function(line)
   }
   else
   {
-    // var theCode=Page.getRawUmpleCode();
     var theCode=Page.getRawUmpleCodeCM6();
 
     for(var ch=0; ch<theCode.length; ch++)
@@ -4819,9 +4304,6 @@ Action.directAddClass = function(className) {
   Action.setjustUpdatetoSaveLater(false);
   Action.ajax(Action.directUpdateCommandCallback,format("action=addClass&actionCode={0}",umpleJson));
 
-  // After a pause to let the ajax return, then redraw the diagram.
-  // This could be put in a new callback
-  // setTimeout(function() {Action.redrawDiagram();},1000);
   return;
 }
 
@@ -4838,23 +4320,6 @@ Action.directAddAttribute = function(classname, attribute) {
   return;
 }
 
-
-// // Searches for the matching text in the code mirror editor
-// // Does not span lines
-// Action.selectMatchingText = function(text) 
-// {
-//   // Does nothing if CodeMirror is off
-//   if(Page.codeMirrorOn) {
-//     var scursor = Page.codeMirrorEditor.getSearchCursor(text);
-//     if(!scursor.findNext()) {
-//       return false;
-//     }
-//     Page.codeMirrorEditor.setSelection(scursor.from(),scursor.to());
-//     Page.codeMirrorEditor.focus();
-//     return true;
-//   }
-//   return false;
-// }
 
 Action.selectMatchingText = function(text) 
 {
@@ -4874,100 +4339,6 @@ Action.selectMatchingText = function(text)
   return false;
 }
 
-
-// // // Searches for the matching text in the code mirror 6
-// // // Does not span lines
-// // Action.selectMatchingText = function(text) 
-// // {
-// //   // Does nothing if CodeMirror is off
-// //   if(Page.codeMirrorOn) {
-// //     // var scursor = Page.codeMirrorEditor.getSearchCursor(text);
-// //      var scursor = Page.codeMirrorEditor6.getSearchCursor(text);
-// // if(scursor!=null) {
-// //   console.warn("scursor: ", scursor.startIndex, scursor.endIndex);
-// //   Action.highlightByIndexCM6(scursor.startIndex,scursor.endIndex);
-// //   Page.codeMirrorEditor6.focus();
-// //   return true;    }
-
-// //   }
-// //   return false;
-// // }
-
-// Removing CM5
-// Code behind highlighting of text
-// Action.selectItem = function(searchCursor, nextCursor)
-// {
-//   console.log("Debug F3: Inside selectItem")
-// 	if(Page.codeMirrorOn) {
-//     var scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-//     // console.log("scursor: ", scursor)
-//     // console.log("nextCursor: ", nextCursor)
-    
-//     if(!scursor.findNext()) {
-//       console.log("scursor.findNext() is NULL or EMPTY !")
-//       return; // false
-//     }
-
-//     // Have found declaration of class. Now have to search for the next class or end
-//     var start = scursor.from();
-
-//     var theEnd=new Object();
-
-//     theEnd.line = Page.codeMirrorEditor.lineCount();
-//     theEnd.ch = 9999;
-    
-//     scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor,scursor.to());
-    
-//     while(scursor.findNext())
-//     {
-//       var endObject = scursor.from();
-      
-//       //This is checking if the class declaration found was in a single line comment.
-//       innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-//       var commentFound = innerCursor.findPrevious();
-//       if(commentFound && innerCursor.from().line == endObject.line) 
-//       {
-//         //The class declaration found was actually in a single line comment, keep searching
-//         continue;
-//       }
-
-//       //Check if the found class declaration is in a multiline comment
-//       innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-//       //Search backwards for a /* or */
-//       var commentFound = innerCursor.findPrevious();
-//       if (commentFound) 
-//       {
-//         if(commentFound[0] === "/*") 
-//         {
-//           //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-          
-//           //Look for the exit marker
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-//           var commentFound = innerCursor.findNext();
-          
-//           if(commentFound) 
-//           {
-//             var commentEnd = innerCursor.from();
-//             if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch))
-//             {
-//               //The class declaration found is in a multiline comment, keep looking
-//               continue;
-//             }
-//           }
-//         }
-//       }
-      
-//       theEnd.line = endObject.line -1;
-//       theEnd.ch = 999;
-//       break;
-//     }
-//     // console.log("start of selection: ", start)
-//     // console.log("end of selection: ", theEnd)
-//     Page.codeMirrorEditor.setSelection(start,theEnd);
-//     return;    //true 
-//   }
-//   return;  // false - important do not return a value or it won't work in Firefox/Opera
-// }
 
 /*
   Called by Action.selectClass() or Action.selectMethod() or Action.selectState()
@@ -4990,7 +4361,6 @@ Action.selectItemCM6 = function(searchCursor){
     }
     let startIndex = 0;
     let endIndex = 0;
-    // console.log("currClass: ", currClass)
     try{
       startIndex=text.indexOf(currClass);
       endIndex=startIndex+currClass.length;
@@ -5000,12 +4370,6 @@ Action.selectItemCM6 = function(searchCursor){
 
     }
 
-
-
-    // let endIndex=startIndex+currClass.length +1;
-
-    // console.log("startIndex:", startIndex)
-    // console.log("endIndex:", endIndex)
     var outputObj={startIndex: startIndex,endIndex: endIndex};
     return outputObj;
   }
@@ -5015,370 +4379,12 @@ Action.selectItemCM6 = function(searchCursor){
 // Highlights the text of the method that is currently selected.
 Action.selectMethod = function(methodName, type, accessMod)
 {
-  // console.log("Inside selectMethod: ")
 	var scursor = new RegExp(accessMod+" "+type+" "+methodName+"(\\\s|[(])");
 	var ncursor = new RegExp("(public|protected|private|class) [A-Za-z]");
-
-  // Removing CM5
-  // Action.selectItem(scursor, ncursor);
 
   var selectionIndiciesCM6 = Action.selectItemCM6(scursor);
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex) ;
 }
-
-// CM5 Associated removed
-
-// Action.selectAssociation = function(associationDetails) {
-//   var detailsArray = associationDetails.split(',');
-//   var className = detailsArray[0];
-//   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
-//   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
-//   if (Page.codeMirrorOn) {
-//       scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-
-//       if (!scursor.findNext()) {
-//           return; // false
-//       }
-
-//       // Have found declaration of class. Now have to search for the next class or end
-//       var theStart = scursor.from();
-
-//       var theEnd = new Object();
-
-//       theEnd.line = Page.codeMirrorEditor.lineCount();
-//       theEnd.ch = 9999;
-
-//       scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
-
-//       while (scursor.findNext()) {
-//           var endObject = scursor.from();
-
-//           //This is checking if the class declaration found was in a single line comment.
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound && innerCursor.from().line == endObject.line) {
-//               //The class declaration found was actually in a single line comment, keep searching
-//               continue;
-//           }
-
-//           //Check if the found class declaration is in a multiline comment
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-//           //Search backwards for a /* or */
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound) {
-//               if (commentFound[0] === "/*") {
-//                   //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-
-//                   //Look for the exit marker
-//                   innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-//                   var commentFound = innerCursor.findNext();
-
-//                   if (commentFound) {
-//                       var commentEnd = innerCursor.from();
-//                       if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-//                           //The class declaration found is in a multiline comment, keep looking
-//                           continue;
-//                       }
-//                   }
-//               }
-//           }
-
-//           theEnd.line = endObject.line - 1;
-//           theEnd.ch = 999;
-//           break;
-//       }
-
-//       Page.codeMirrorEditor.setSelection(theStart, theEnd);
-//       //debug console.log("theStart: ", theStart);
-//       // console.log("theEnd: ", theEnd);
-//       var selectedText = Page.codeMirrorEditor.getSelection();//get the class code for where the association belong
-//   }
-//   var start, end;
-//   //for labelAssociation
-//   if (detailsArray.length > 3) {
-//       if (detailsArray[2].trim().includes(' ')) {
-//           // When there's a space, indicating the presence of a role name or additional details
-//           var array = detailsArray[2].split(' ');
-//           start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&"); // Assuming the start multiplicity is always in the 4th segment
-//           if (array.length == 2) {
-//               // When there's more than just the multiplicity and class name, indicating a role name is present
-//               end = array[0].trim() + ' ' + detailsArray[1].trim() + ' ' + array[1].trim();
-//           } else {
-//               end = array[0].trim() + ' ' + detailsArray[1].trim();
-//           }
-//       } else {
-//           // When there's no space, meaning no role name is present
-//           start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&");
-//           end = detailsArray[2].trim() + ' ' + detailsArray[1].trim();
-//       }
-
-
-//       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var patternString = startEscaped + "(?:\\s+sorted\\s+{.*?})?" + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped + "(?:\\s+sorted\\s+{.*?})?" + "\\s*;";
-
-//       var pattern = new RegExp(patternString, "g");
-//       var code = Page.codeMirrorEditor.getValue();
-//       //Finding matches using the constructed pattern
-//       var matches = selectedText.match(pattern);
-//       if (matches) {
-          
-//           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//           endIndex = startIndex + matches[0].length;
-//           Action.highlightByIndex(startIndex, endIndex);
-
-//           //debug : console.log("startIndex: ", startIndex);
-//           //debug : console.log("endIndex: ", endIndex);
-
-//           return { startIndex: startIndex, endIndex: endIndex };
-//       } else {
-//           if (endEscaped.startsWith("1")) { // this for simple writing association
-//               end = endEscaped.substring(2).trim();
-//               endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//               patternString = startEscaped + "\\s+" + endEscaped+ "\\s*;";
-//               pattern = new RegExp(patternString, "g");
-//               matches = selectedText.match(pattern);
-//               if (matches == null) {
-//                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
-//                   pattern = new RegExp(patternString, "g");
-//                   matches = selectedText.match(pattern);
-//               }
-              
-//               startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//               endIndex = startIndex + matches[0].length;
-//               Action.highlightByIndex(startIndex, endIndex);
-//               return { startIndex: startIndex, endIndex: endIndex };
-//           } else {
-//               if (startEscaped.trim().includes(' ')) {
-//                   var newstart = startEscaped.split(' ');
-//                   startEscaped = newstart[0].trim() + " " + className + " " + newstart[1].trim();
-//               } else {
-//                   startEscaped += " " + className;
-//               }
-              
-//               patternString = startEscaped + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped+ "\\s*;";
-//               pattern = new RegExp(patternString, "g");
-//               matches = code.match(pattern);
-//               if (matches == null) {
-//                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
-//                   pattern = new RegExp(patternString, "g");
-//                   matches = code.match(pattern);
-//               }
-              
-//               startIndex = code.indexOf(matches[0]);
-//               endIndex = startIndex + matches[0].length;
-//               Action.highlightByIndex(startIndex, endIndex);
-//               console.log("startIndex: ", startIndex);
-//               console.log("endIndex: ", endIndex);  
-//               return { startIndex: startIndex, endIndex: endIndex };
-
-//           }
-//       }
-
-//   } else { //for two label association
-
-//       var array = detailsArray[2].split(' ');
-//       start = array[0].trim();
-//       end = array[1].trim();
-
-//       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var patternString = startEscaped + ".*?" + endEscaped+ "\\s*;";
-//       var pattern = new RegExp(patternString, "g");
-//       var code = Page.codeMirrorEditor.getValue();
-//       //Finding matches using the constructed pattern
-//       var matches = selectedText.match(pattern);
-//       if (matches) {
-//           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//           endIndex = startIndex + matches[0].length;
-//           Action.highlightByIndex(startIndex, endIndex);
-//           return { startIndex: startIndex, endIndex: endIndex };
-//       }
-
-//   }
-// }
-
-
-// Action.selectAssociation = function(associationDetails) {
-//   var detailsArray = associationDetails.split(',');
-//   var className = detailsArray[0];
-//   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
-//   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
-//   if (Page.codeMirrorOn) {
-//       scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-
-//       if (!scursor.findNext()) {
-//           return; // false
-//       }
-
-//       // Have found declaration of class. Now have to search for the next class or end
-//       var theStart = scursor.from();
-
-//       var theEnd = new Object();
-
-//       theEnd.line = Page.codeMirrorEditor.lineCount();
-//       theEnd.ch = 9999;
-
-//       scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
-
-//       while (scursor.findNext()) {
-//           var endObject = scursor.from();
-
-//           //This is checking if the class declaration found was in a single line comment.
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound && innerCursor.from().line == endObject.line) {
-//               //The class declaration found was actually in a single line comment, keep searching
-//               continue;
-//           }
-
-//           //Check if the found class declaration is in a multiline comment
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-//           //Search backwards for a /* or */
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound) {
-//               if (commentFound[0] === "/*") {
-//                   //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-
-//                   //Look for the exit marker
-//                   innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-//                   var commentFound = innerCursor.findNext();
-
-//                   if (commentFound) {
-//                       var commentEnd = innerCursor.from();
-//                       if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-//                           //The class declaration found is in a multiline comment, keep looking
-//                           continue;
-//                       }
-//                   }
-//               }
-//           }
-
-//           theEnd.line = endObject.line - 1;
-//           theEnd.ch = 999;
-//           break;
-//       }
-
-//       Page.codeMirrorEditor.setSelection(theStart, theEnd);
-//       //debug console.log("theStart: ", theStart);
-//       // console.log("theEnd: ", theEnd);
-//       var selectedText = Page.codeMirrorEditor.getSelection();
-//       //get the class code for where the association belong
-//   }
-//   var start, end;
-//   //for labelAssociation
-//   if (detailsArray.length > 3) {
-//       if (detailsArray[2].trim().includes(' ')) {
-//           // When there's a space, indicating the presence of a role name or additional details
-//           var array = detailsArray[2].split(' ');
-//           start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&"); // Assuming the start multiplicity is always in the 4th segment
-//           if (array.length == 2) {
-//               // When there's more than just the multiplicity and class name, indicating a role name is present
-//               end = array[0].trim() + ' ' + detailsArray[1].trim() + ' ' + array[1].trim();
-//           } else {
-//               end = array[0].trim() + ' ' + detailsArray[1].trim();
-//           }
-//       } else {
-//           // When there's no space, meaning no role name is present
-//           start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&");
-//           end = detailsArray[2].trim() + ' ' + detailsArray[1].trim();
-//       }
-
-
-//       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var patternString = startEscaped + "(?:\\s+sorted\\s+{.*?})?" + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped + "(?:\\s+sorted\\s+{.*?})?" + "\\s*;";
-
-//       var pattern = new RegExp(patternString, "g");
-//       // var code = Page.codeMirrorEditor.getValue();
-//       var code = Page.codeMirrorEditor6.state.doc.toString();
-//       //Finding matches using the constructed pattern
-//       var matches = selectedText.match(pattern);
-//       if (matches) {
-          
-//           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//           endIndex = startIndex + matches[0].length;
-          
-//           Action.highlightByIndexCM6(startIndex, endIndex);
-
-//           //debug : console.log("startIndex: ", startIndex);
-//           //debug : console.log("endIndex: ", endIndex);
-
-//           return { startIndex: startIndex, endIndex: endIndex };
-//       } else {
-//           if (endEscaped.startsWith("1")) { // this for simple writing association
-//               end = endEscaped.substring(2).trim();
-//               endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//               patternString = startEscaped + "\\s+" + endEscaped+ "\\s*;";
-//               pattern = new RegExp(patternString, "g");
-//               matches = selectedText.match(pattern);
-//               if (matches == null) {
-//                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
-//                   pattern = new RegExp(patternString, "g");
-//                   matches = selectedText.match(pattern);
-//               }
-              
-//               startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//               endIndex = startIndex + matches[0].length;
-//               Action.highlightByIndexCM6(startIndex, endIndex);
-//               return { startIndex: startIndex, endIndex: endIndex };
-//           } else {
-//               if (startEscaped.trim().includes(' ')) {
-//                   var newstart = startEscaped.split(' ');
-//                   startEscaped = newstart[0].trim() + " " + className + " " + newstart[1].trim();
-//               } else {
-//                   startEscaped += " " + className;
-//               }
-              
-//               patternString = startEscaped + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped+ "\\s*;";
-//               console.log("patternString: ", patternString);
-
-//               pattern = new RegExp(patternString, "g");
-//               matches = code.match(pattern);
-//               console.warn("matches: ", matches);
-//               if (matches == null) {
-//                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
-//                   pattern = new RegExp(patternString, "g");
-//                   matches = code.match(pattern);
-//               }
-              
-//               startIndex = code.indexOf(matches[0]);
-//               endIndex = startIndex + matches[0].length;
-//               Action.highlightByIndexCM6(startIndex, endIndex);
-//               //console.log("startIndex: ", startIndex);
-//               //console.log("endIndex: ", endIndex);  
-//               return { startIndex: startIndex, endIndex: endIndex };
-
-//           }
-//       }
-
-//   } else { //for two label association
-
-//       var array = detailsArray[2].split(' ');
-//       start = array[0].trim();
-//       end = array[1].trim();
-
-//       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var patternString = startEscaped + ".*?" + endEscaped+ "\\s*;";
-//       var pattern = new RegExp(patternString, "g");
-//       // var code = Page.codeMirrorEditor.getValue();
-//       var code = Page.codeMirrorEditor6.state.doc.toString();
-//       //Finding matches using the constructed pattern
-//       var matches = selectedText.match(pattern);
-//       if (matches) {
-//           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//           endIndex = startIndex + matches[0].length;
-//           Action.highlightByIndexCM6(startIndex, endIndex);
-//           return { startIndex: startIndex, endIndex: endIndex };
-//       }
-
-//   }
-// }
-
-
-
-
 
 
 Action.selectAssociation = function(associationDetails) {
@@ -5387,90 +4393,9 @@ Action.selectAssociation = function(associationDetails) {
   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
   if (Page.codeMirrorOn) {
-  //     scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-  //     console.log("scursor: ", scursor)
-  //     scursor2 = new cm6.RegExpCursor(Page.codeMirrorEditor6.state.doc, searchCursor);
-  //     console.log("scursor2: ", scursor2);
-
-  //     if (!scursor.findNext()) {
-  //         return; // false
-  //     }
-
-  //     // Have found declaration of class. Now have to search for the next class or end
-  //     var theStart = scursor.from();
-  //     console.log("theStart: ", theStart);
-  //     var theStart2 = scursor.from();
-  //     console.log("theStart2: ", theStart2);
-
-
-  //     var theEnd = new Object();
-
-  //     //theEnd.line = Page.codeMirrorEditor.lineCount();
-  //     theEnd.line = Page.codeMirrorEditor6.state.doc.lines;
-  //     theEnd.ch = 9999;
-
-  //     // console.log("theEnd: ", scursor.to());
-  //     scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
-  //     // console.log("scursor: ", scursor)
-  //     scursor2 = new cm6.RegExpCursor(Page.codeMirrorEditor6.state.doc, nextCursor,{ from: scursor.to() });
-  //     console.log("scursor2: ", scursor2);  
-
-  //     while (scursor2.next()) {
-
-  //         var endObject2 = scursor2.value.from;
-  //         console.warn("endObject2: ", endObject2);
-
-  //         //This is checking if the class declaration found was in a single line comment.
-  //         // innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-  //         innerCursor2 = new cm6.RegExpCursor(Page.codeMirrorEditor6.state.doc, new RegExp("//"),{ from: endObject2 });
-  //         console.log("innerCursor2: ", innerCursor2);
-
-  //         // //var commentFound = innerCursor.findPrevious();
-  //         //  var commentFound2 = innerCursor2.findPrevious();
-  //         // console.log("commentFound2: ", commentFound2);
-
-  //         // if (commentFound && innerCursor.from().line == endObject.line) {
-  //         //     //The class declaration found was actually in a single line comment, keep searching
-  //         //     continue;
-  //         // }
-
-  //         // //Check if the found class declaration is in a multiline comment
-  //         // innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-  //         // //Search backwards for a /* or */
-  //         // var commentFound = innerCursor.findPrevious();
-  //         // if (commentFound) {
-  //         //     if (commentFound[0] === "/*") {
-  //         //         //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-
-  //         //         //Look for the exit marker
-  //         //         innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-  //         //         var commentFound = innerCursor.findNext();
-
-  //         //         if (commentFound) {
-  //         //             var commentEnd = innerCursor.from();
-  //         //             if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-  //         //                 //The class declaration found is in a multiline comment, keep looking
-  //         //                 continue;
-  //         //             }
-  //         //         }
-  //         //     }
-  //         // }
-
-  //         theEnd.line = endObject2.line - 1;
-  //         theEnd.ch = 999;
-  //         break;
-  //     }
-
-  //     // Page.codeMirrorEditor.setSelection(theStart, theEnd);
-  //     Action.highlightByIndexCM6(theStart2, theEnd) ;
-
-  //     // setSelection(theStart2, theEnd);
-  //     //debug console.log("theStart: ", theStart);
-  //     // console.log("theEnd: ", theEnd);
 
    var selectionIndiciesCM6 = Action.selectItemCM6(searchCursor);
-  var selectedText = Page.codeMirrorEditor6.state.sliceDoc(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex) ;//get the class code for where the association belong
-  //     //get the class code for where the association belong
+   var selectedText = Page.codeMirrorEditor6.state.sliceDoc(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex) ;//get the class code for where the association belong
   }
   
   var start, end;
@@ -5498,7 +4423,6 @@ Action.selectAssociation = function(associationDetails) {
       var patternString = startEscaped + "(?:\\s+sorted\\s+{.*?})?" + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped + "(?:\\s+sorted\\s+{.*?})?" + "\\s*;";
 
       var pattern = new RegExp(patternString, "g");
-      // var code = Page.codeMirrorEditor.getValue();
       var code = Page.codeMirrorEditor6.state.doc.toString();
       //Finding matches using the constructed pattern
       var matches = selectedText.match(pattern);
@@ -5507,11 +4431,7 @@ Action.selectAssociation = function(associationDetails) {
           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
           endIndex = startIndex + matches[0].length;
           
-          // Action.highlightByIndexCM6(1,5);
           Action.highlightByIndexCM6(startIndex, endIndex);
-
-          //debug : console.log("startIndex: ", startIndex);
-          //debug : console.log("endIndex: ", endIndex);
 
           return { startIndex: startIndex, endIndex: endIndex };
       } else {
@@ -5536,8 +4456,6 @@ Action.selectAssociation = function(associationDetails) {
               }
 
               Action.highlightByIndexCM6(startIndex, endIndex);
-              // Action.highlightByIndexCM6(840, 850);
-              //  console.warn(startIndex, endIndex);
               return { startIndex: startIndex, endIndex: endIndex };
           } else {
               if (startEscaped.trim().includes(' ')) {
@@ -5548,11 +4466,9 @@ Action.selectAssociation = function(associationDetails) {
               }
               
               patternString = startEscaped + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped+ "\\s*;";
-              // console.log("patternString: ", patternString);
 
               pattern = new RegExp(patternString, "g");
               matches = code.match(pattern);
-              // console.warn("matches: ", matches);
               if (matches == null) {
                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
                   pattern = new RegExp(patternString, "g");
@@ -5567,12 +4483,7 @@ Action.selectAssociation = function(associationDetails) {
               } catch (error) {
                 console.log("Please wait a little more for diagram updates, and try again.") ;
               }
-              Action.highlightByIndexCM6(startIndex, endIndex);
-              // Action.highlightByIndexCM6(1, 7);
-
-              //console.log("startIndex: ", startIndex);
-              //console.log("endIndex: ", endIndex);  
-
+              Action.highlightByIndexCM6(startIndex, endIndex); 
               return { startIndex: startIndex, endIndex: endIndex };
 
           }
@@ -5588,7 +4499,6 @@ Action.selectAssociation = function(associationDetails) {
       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       var patternString = startEscaped + ".*?" + endEscaped+ "\\s*;";
       var pattern = new RegExp(patternString, "g");
-      // var code = Page.codeMirrorEditor.getValue();
       var code = Page.codeMirrorEditor6.state.doc.toString();
       //Finding matches using the constructed pattern
       var matches = selectedText.match(pattern);
@@ -5605,12 +4515,8 @@ Action.selectAssociation = function(associationDetails) {
 // Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) 
 {
-  // console.log("Inside selectClass: ")
 	var scursor = new RegExp("(associationClass|class|interface|trait) "+className+"($|\\\s|[{])");
 	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
-
-  // Removing CM5
-  // Action.selectItem(scursor, ncursor);
 
   var selectionIndiciesCM6 = Action.selectItemCM6(scursor);
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
@@ -5619,12 +4525,8 @@ Action.selectClass = function(className)
 // Highlights the text of the state that is currently selected.
 Action.selectState = function(stateName)
 {
-  // console.log("Inside selectState: ")
     var scursor = new RegExp("(class|interface|trait) "+stateName+"($|\\\s|[{])");
     var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
-
-  // Removing CM5
-  // Action.selectItem(scursor, ncursor);
 
   var selectionIndiciesCM6 = Action.selectItemCM6(scursor);
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
@@ -5690,58 +4592,6 @@ Action.indexToPos = function(index,inputText){
   return  output;
 }
 
-// Removing CM5
-// Action.selectStateInClass = function(className, smName, stateName)
-// {
-//   console.log("Debug: Inside selectStateInClass")
-//   if(Page.codeMirrorOn) {
-//     let text = Page.codeMirrorEditor.getValue();
-//     let splitBuffer=Action.splitStates(text);
-//     let currClass=null;
-//     let pattern = new RegExp("(?:class|queued)\\s+"+className,"");
-//     for(let i=0;i<splitBuffer.length;i++){
-//       if(splitBuffer[i].search(pattern)==0){
-//         currClass=splitBuffer[i]; //set currClass to class code
-//         break;
-//       }
-//     }
-//     splitBuffer=Action.splitStates(currClass.substr(currClass.indexOf("{")+1)); //split class into un-nested SMs
-//     let currSM=null;
-//     for(let i=0;i<splitBuffer.length;i++){
-//       let query=new RegExp("(?:queued\\s*)?"+smName);
-//       if(splitBuffer[i].search(query)==0){
-//         currSM=splitBuffer[i]; //set currSM to un-nested SM code
-//         break;
-//       }
-//     }
-//     splitBuffer=Action.splitStates(currSM.substr(currSM.indexOf("{")+1));
-//     if (splitBuffer!=null) {
-//       let states = splitBuffer;
-//       let finState=null;
-//       for(let i=0;i<states.length;i++){
-//         if(states[i].search(stateName)==0){
-//           finState=states[i];
-//           break;
-//         }
-//       }
-//       let startIndex=text.indexOf(currClass);//index of class start
-//       let endIndex=startIndex+currClass.length;
-//       startIndex=text.substr(startIndex,endIndex).indexOf(currSM)+startIndex;//match[1] contains the SM definition+name
-//       endIndex=startIndex+currSM.length;
-//       startIndex=text.substr(startIndex,endIndex).indexOf(finState)+startIndex;//finds target state definition within target class and state machine
-//       endIndex=startIndex+finState.length;
-//       var outputObj={startIndex:startIndex,endIndex:startIndex+finState.length};
-//       return outputObj;
-      
-//     } else {
-//       console.log("No matching state found with regex:"+pattern);
-//     }
-//   } else {
-//     console.log("No matching class and state machine found for class: "+className+" and sm "+smName);
-//   }
-//   return null;
-// }
-
 /*
   Returns the start and ending position of state inside a state machine in a specific class
   Parameters: stateName - state that has to be searched
@@ -5750,7 +4600,6 @@ Action.indexToPos = function(index,inputText){
 */
 Action.selectStateInClassCM6 = function(className, smName, stateName) 
 {
-  // console.log("Debug: Inside selectStateInClass CM6");
   if(Page.codeMirrorOn) {
     var text = Page.codeMirrorEditor6.state.doc.toString();
     let splitBuffer=Action.splitStates(text);
@@ -5762,7 +4611,6 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
         break;
       }
     }
-    // console.log("currClass: ", currClass)
     splitBuffer=Action.splitStates(currClass.substr(currClass.indexOf("{")+1)); //split class into un-nested SMs
     let currSM=null;
     for(let i=0;i<splitBuffer.length;i++){
@@ -5772,7 +4620,6 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
         break;
       }
     }
-    // console.log("currSM: ", currSM)
     splitBuffer=Action.splitStates(currSM.substr(currSM.indexOf("{")+1));
     if (splitBuffer!=null) {
       let states = splitBuffer;
@@ -5785,14 +4632,10 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
       }
       let startIndex=text.indexOf(currClass);//index of class start
       let endIndex=startIndex+currClass.length;
-      // console.log("initial startIndex: ", startIndex)
-      // console.log("initial endIndex: ", endIndex)
       startIndex=text.substr(startIndex,endIndex).indexOf(currSM)+startIndex;//match[1] contains the SM definition+name
       endIndex=startIndex+currSM.length;
       startIndex=text.substr(startIndex,endIndex).indexOf(finState)+startIndex;//finds target state definition within target class and state machine
       endIndex=startIndex+finState.length;
-      // console.log("startIndex: ", startIndex)
-      // console.log("endIndex: ", endIndex)
       var outputObj={startIndex:startIndex,endIndex:startIndex+finState.length};
       return outputObj;
       
@@ -5805,39 +4648,12 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
   return null; 
 }
 
-// Removing CM5
-// Action.selectStateInState = function(startIndex,endIndex,target){
-//   console.log("Debug: Inside selectStateInState")
-//   // console.log("Parameters: ", startIndex, endIndex, target)
-//   let temp=Page.codeMirrorEditor.getValue().substr(startIndex,endIndex-startIndex);
-//   // console.log("code for NestedState: ", temp)
-//   let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
-//   // console.log("states: ", states)
-//   var stateFin=null;
-//   for(let i=0;i<states.length;i++){
-//     if(states[i].startsWith(target)){
-//       stateFin=states[i];
-//       break;
-//     }
-//   }
-//   // console.log("stateFin: ", stateFin)
-//   // console.log("startIndex: ", startIndex)
-//   let outputStart=temp.indexOf(stateFin)+startIndex;
-//   let outputEnd=outputStart+stateFin.length;
-//   let outputObj={startIndex:outputStart,endIndex:outputEnd};
-//   // console.log("outputObj: ", outputObj)
-//   return outputObj;
-// }
-
 /*
   Returns the start and ending position of target state within given indices range
 */
 Action.selectStateInStateCM6 = function(startIndex,endIndex,target){
-  // console.log("Debug: Inside selectStateInState CM6")
   var temp = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex,endIndex-startIndex);
-  // console.log("code for NestedState: ", temp)
   let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
-  // console.log("states: ", states)
   var stateFin=null;
   for(let i=0;i<states.length;i++){
     if(states[i].startsWith(target)){
@@ -5845,7 +4661,6 @@ Action.selectStateInStateCM6 = function(startIndex,endIndex,target){
       break;
     }
   }
-  // console.log("stateFin: ", stateFin)
   let outputStart=temp.indexOf(stateFin)+startIndex;
   let outputEnd=outputStart+stateFin.length;
   let outputObj={startIndex:outputStart,endIndex:outputEnd};
@@ -5863,29 +4678,16 @@ Action.highlightByIndex = function(startIndex,endIndex){
               Exact position of start and end characters of code block to be highlighted in code-editor
 */
 Action.highlightByIndexCM6 = function(startIndex,endIndex){
-  // console.log("Inside highlightByIndexCM6: Highlighting code ...")
   let startSelection = Action.indexToPos(startIndex,Page.codeMirrorEditor6.state.doc.toString());
   let startDocPosition = Page.codeMirrorEditor6.state.doc.line(startSelection.line +1).from;
-  // console.log("selection start: ", startSelection)
-  // console.log("selection start Document Position: ", startDocPosition)
   let endSelection = Action.indexToPos(endIndex,Page.codeMirrorEditor6.state.doc.toString());
   let endDocPosition = Page.codeMirrorEditor6.state.doc.line(endSelection.line +2).from;
-  // console.log("selection end: ", endSelection)
-  // console.log("selection end Document Position: ", endDocPosition)
-
-  // following code selects first line of intended block
-  // Page.codeMirrorEditor6.dispatch({ 
-  //   selection: { anchor: startDocPosition }, 
-  //   scrollIntoView: true 
-  // })
 
   // following is for multiple selection ranges
   Page.codeMirrorEditor6.dispatch({
     selection: cm6.EditorSelection.create([
       // Reversing selection to keep the active line on the top;
       cm6.EditorSelection.range(endDocPosition,startDocPosition),
-      // cm6.EditorSelection.range(endDocPosition, endDocPosition+1),
-      // cm6.EditorSelection.cursor(endDocPosition+1)
     ]),
     scrollIntoView: true
   })
@@ -5922,10 +4724,7 @@ Action.delayedFocus = function(ms)
 
 Action.updateLineNumberDisplay = function()
 {
-  // console.log("Inside Action.updateLineNumberDisplay()...")
   jQuery("#linenum").val(Action.getCaretPosition());
-    // jQuery("#linenum").val(Page.codeMirrorEditor6.state.doc.lineAt(Page.codeMirrorEditor6.state.selection.main.head).number);
-
 }
 
 Action.umpleTyped = function(eventObject)
@@ -5952,15 +4751,12 @@ Action.umpleTyped = function(eventObject)
 }
 
 Action.umpleCodeMirrorCursorActivity = function() {
-  // console.log("Inside Action.umpleCodeMirrorCursorActivity()...")
-  // Removing CM5
-  // var line = Page.codeMirrorEditor.getCursor(true).line+1;
   var docPosition = Page.codeMirrorEditor6.state.selection.main.head;
   var line = Page.codeMirrorEditor6.state.doc.lineAt(docPosition);
   jQuery("#linenum").val(line.number);
 }
 
-// Called whenever any text is changed in codemirror 5 or codemirror 6
+// Called whenever any text is changed in codemirror 6
 Action.umpleCodeMirrorTypingActivity = function(editorThatChanged) {
   
   // DEBUG
@@ -6070,7 +4866,6 @@ Action.checkComplexity = function()
 		return;
 	}
 	var editorText = jQuery("#newEditor").val();
-	// var editorText = jQuery("#umpleModelEditorText").val();
 	var matches = editorText.match(/class( |\n)((.|\n)*?){/g);
 	if(matches == null)
 	{
@@ -6100,32 +4895,12 @@ Action.removeCheckComplexityWarning = function()
 // Target can be diagramEdit (when diagram changed), newEditor for CM6, codeMirrorEditor (will be obsolete)
 Action.processTyping = function(target, manuallySynchronized, currentCursorPosition)
 {
-  // DEBUG
-  // if(this.lastPositionofCursor != null){
-  // this.lastPositionofCursor = currentCursorPosition;
-  // }
 
   if (debuggerFlag)
   console.log("Inside Action.processTyping ...", target)
 
-  // document.getElementById("umpleModelEditorText").value = Page.codeMirrorEditor6.state.doc.toString();
   document.getElementById("newEditor").value = Page.codeMirrorEditor6.state.doc.toString();
- // we no longer need this part for codemirror 6
-  // if(currentCursorPosition != null){
 
-  //   console.log("current cursor: ", currentCursorPosition );
-
-  //    Page.codeMirrorEditor6.dispatch({ 
-  //      selection: { anchor: currentCursorPosition , head: currentCursorPosition }
-  //         });    
-  // }
-
-  // else if (this.lastPositionofCursor != null){
-  //   console.log("last cursor: ", lastPositionofCursor );
-  //   Page.codeMirrorEditor6.dispatch({ 
-  //     selection: { anchor: this.lastPositionofCursor , head: this.lastPositionofCursor }
-  //        });
-  // }
 
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
@@ -6182,13 +4957,11 @@ Action.updateCurrentUmpleTextBeingEdited = function(codeToSave){
   jQuery("#umpleModelEditorText").val(codeToSave);
   
   // Update the content in CM6 CodeMirror 6
-  // Page.blahblah("stuff");
   Page.setCodeMirror6Text(codeToSave);
 };
 
 Action.updateLayoutEditorAndDiagram = function(target)
 {
-  // console.log(target + ": Inside updateLayoutEditorAndDiagram")
   Action.ajax(Action.updateUmpleLayoutEditor,"language=Json",target);
 }
 
@@ -6219,9 +4992,7 @@ Action.updateUmpleLayoutEditorCallback = function(response)
   // DEBUG
   // console.log("Inside updateUmpleLayoutEditorCallback")
   var umpleCode = response.responseText;
-  // console.log("Extracting Positioning from Response")
   var positioning = Page.splitUmpleCode(umpleCode)[1];
-  // console.log("Positioning: " + positioning)
   Page.setUmplePositioningCode(positioning);
   Page.hideLoading();
   Action.updateUmpleDiagramForce(true);
@@ -6251,15 +5022,6 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
 
 }
 
-//Action.displayAttributeMenu = function(event, attributeName, attributeType) {
-  // For testing: Display an alert or log to the console
-  //alert("Attribute clicked:\nName: " + attributeName + "\nType: " + attributeType);
-  // Or use console.log if you prefer not to use an alert
-  // console.log("Attribute clicked: Name - " + attributeName + ", Type - " + attributeType);
-  
-  // Prevent the default click behavior just in case
-  //event.preventDefault();
-//};
 
 Action.updateUmpleDiagramCallback = function(response)
 {
@@ -6271,7 +5033,6 @@ Action.updateUmpleDiagramCallback = function(response)
   errorMessage = Action.getErrorCode(response.responseText);
   Page.hideExecutionArea();
 
-  // console.log("diagramCode: ", diagramCode)
   if(diagramCode == null || diagramCode == "" || diagramCode == "null") 
   {
     Page.enableDiagram(false);
@@ -6295,7 +5056,6 @@ Action.updateUmpleDiagramCallback = function(response)
       var newSystem = Json.toObject(diagramCode);
       UmpleSystem.merge(newSystem);
       UmpleSystem.update(); 
-      // UmpleSystem.update(); 
       
       //Apply readonly styles
       if (Page.readOnly) 
@@ -6325,9 +5085,6 @@ Action.updateUmpleDiagramCallback = function(response)
           if( JJSdiagram.paper ) 
           JJSdiagram.paper.setDimensions(jQuery("#umpleCanvas")[0].clientWidth, jQuery("#umpleCanvas")[0].clientHeight);
 
-          //scale the content
-          //commented it out because the customized object does not scale
-          //paper.scaleContentToFit({padding: 15});
         }
       };
       // using the umpleCanvas as the mouse wheel event target, as it is a stable entity
@@ -6770,25 +5527,10 @@ Action.generateStructureDiagramFileCallback = function(response)
 
 Action.ajax = function(callback,post,target,errors,tabIndependent)
 {
-  // console.log("Debug E2 : Action.ajax() with target: ", target)
-  // console.log("callback : ", callback)
-  // CM5 -  Page.getUmpleCode()
-  // CM6 - cm6.getCodeMirror6UmpleText()
   var modelAndPositioning = null;
   modelAndPositioning = Page.getUmpleCode();
-  // if-else or conditional based on target will not work here,
-  // because after first AJAX call, the `target` variable is undefined
-  // if(target == "newEditor"){
-  //   modelAndPositioning = cm6.getCodeMirror6UmpleText();
-  // }
-  // else {
-  //   modelAndPositioning = Page.getUmpleCode();
-  // }
-  // console.log("Debug E3: ", target)
-  // console.log(": \nmodelAndPositioning", modelAndPositioning)
   var umpleCode = encodeURIComponent(modelAndPositioning);
   var filename = Page.getFilename();
-  // var errors = typeof(errors) != 'undefined' ? errors : "false";
   var errors = "true";
   TabControl.useActiveTabTo(TabControl.saveTab)(umpleCode);
 
@@ -7181,8 +5923,6 @@ Action.hidegdpr = function()
   Action.gdprHidden = true;
 }
 
-
-
 Action.reindent = function(lines, cursorPos)
 {
   var offset = "";
@@ -7388,7 +6128,6 @@ Action.reindent = function(lines, cursorPos)
   
   if(Page.codeMirrorOn) 
   {
-    // Page.codeMirrorEditor.setValue(codeAfterIndent);
     Page.codeMirrorEditor6.dispatch({
       changes: {from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: codeAfterIndent}
     })
@@ -7398,29 +6137,22 @@ Action.reindent = function(lines, cursorPos)
   // Refactoring definitive text location
   Action.updateCurrentUmpleTextBeingEdited(codeAfterIndent);
 
-  // var cursorLine = Page.getRawUmpleCode().split("\n")[cursorPos.line];
   var cursorLine = Page.getRawUmpleCodeCM6().split("\n")[Page.codeMirrorEditor6.state.doc.lineAt(Page.codeMirrorEditor6.state.selection.main.head).number];
   var whiteSpace = cursorLine.match(/^\s*/)[0].length;
-  // console.log("cursorPos.ch: ", cursorPos.ch);
 
   if (cursorPos.ch >= cursorLine.trim().length) 
   {
-   // Page.codeMirrorEditor.setCursor(cursorPos.line, cursorLine.trim().length + whiteSpace);
     Page.codeMirrorEditor6.dispatch({selection: {anchor: (cursorPos.line), head: (cursorLine.trim().length + whiteSpace)}});
   }
   else if (cursorPos.ch >= 0)
   {
-    // Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch+whiteSpace);
     Page.codeMirrorEditor6.dispatch({selection: {anchor: (cursorPos.line), head: (cursorPos.ch+whiteSpace)}});  
   }
   else
   {
-   // Page.codeMirrorEditor.setCursor(cursorPos.line, 0);
-   //  Page.codeMirrorEditor6.dispatch({selection: {anchor: , head: 0}});
    const position = Page.codeMirrorEditor6.state.selection.main.head;
    Page.codeMirrorEditor6.dispatch({selection: {anchor: position, head: position}});
   }
 
- // Page.codeMirrorEditor.focus();
   Page.codeMirrorEditor6.focus();
 }
