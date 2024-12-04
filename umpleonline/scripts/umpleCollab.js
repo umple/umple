@@ -7,24 +7,29 @@
 // It is responsible for connecting to the UmpleCollabServer, sending and receiving updates,
 // and handling inactivity
 
-Collab = new Object();
-let sockett= null;
-let dc = null;
-let baseclientID = null;  
-let attempt = 0;
-let checktemp = false;
-let isConnected = false;
-let inactivityDisabled = false;
+Collab = new Object();  // Object to store the functions for collaboration
+let oldSocket= null; // Variable to store the socket connection
+let packetLoss = null; // Variable to store the number of packet loss
+let baseclientID = null;  // Variable to store the client ID
+let attempt = 0;   // Variable to store the number of attempts
+let checktemp = false;  // Variable to check if the model is temporary
+let isConnected = false; // Variable to store the connection status
+let inactivityDisabled = false; // Variable to store the inactivity status
 
 // the main process of Idle timer
-let inactivityTime = 600000; // 10 minutes
-let inactivitywarningTime = 540000; // 9 minutes
+let defaultInactivityTime = 600000; // 10 minutes
+let defaultInactivitywarningTime = 540000; // 9 minutes
+let defaultInactivityTimeTest = 10000; // 10 seconds
+let defaultInactivitywarningTimeTest = 6000; // 6 seconds
+
+let inactivityTime = defaultInactivityTime; // 10 minutes
+let inactivitywarningTime = defaultInactivitywarningTime; // 9 minutes
 let diff = (inactivityTime - inactivitywarningTime)/1000; // 60 seconds
 let inactivityTimer; // Variable to store the timer
 let inactivitywarningTimer;
-let collabDebugFlag = false; 
+let collabDebugFlag = false;
 let ackknowledgedTimer = 0; 
-let count = 0; 
+let activeUsercount = 0; 
 let inactivitychecker = true;
 
 
@@ -151,7 +156,7 @@ updateConnectionStatus();
       
 
         const disconnectButton = document.getElementById('collabDisconnect');
-        if(disconnectButton && count>1)
+        if(disconnectButton && activeUsercount>1)
         disconnectButton.style.display = 'inherit'; // Hide disconnect button
 
         if (document.getElementById('activeUsers')){
@@ -170,7 +175,7 @@ updateConnectionStatus();
     document.getElementById('inputExampleType').disabled=false;
     document.getElementById('inputExample').disabled=false;
 
-    if(count > 1 && inactivitychecker)
+    if(activeUsercount > 1 && inactivitychecker)
     startCheckingInactivity();
 
     })
@@ -210,17 +215,17 @@ updateConnectionStatus();
     });
 
 
-    // Set up listener for user count updates
+    // Set up listener for active users count updates
     socket.on('userCountUpdate', function (count) {
-      count = count;
+      activeUsercount = count;
       if(collabDebugFlag){
-        console.warn("Users Online: ", count);
+        console.warn("Users Online: ", activeUsercount);
       }
 
       if(document.getElementById('activeUsers')){
-      document.getElementById('activeUsers').innerText = `${count}`;
+      document.getElementById('activeUsers').innerText = `${activeUsercount}`;
 
-      if(count == 1){
+      if(activeUsercount == 1){
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDMoreThanTwo');
         document.getElementById('led').classList.remove('LEDTwo');
@@ -234,7 +239,7 @@ updateConnectionStatus();
           document.getElementById('collabDisconnect').style.display = 'none';
 
       }
-      else if(count == 2){
+      else if(activeUsercount == 2){
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDOne');
         document.getElementById('led').classList.remove('LEDMoreThanTwo');
@@ -250,7 +255,7 @@ updateConnectionStatus();
           document.getElementById('collabDisconnect').style.display = 'inherit';
 
       }
-      else if(count >2){
+      else if(activeUsercount >2){
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDOne');
         document.getElementById('led').classList.remove('LEDTwo');
@@ -338,13 +343,13 @@ updateConnectionStatus();
         }
       }
 
-      sockett = socket;
+      oldSocket = socket;
 
 }
 
 
 Collab.disconnectFromServer = function(text) {
-  socket=sockett;
+  socket=oldSocket;
   isConnected = false;
   inactivitychecker = true;
   // You can notify the server about disconnection if necessary
@@ -505,6 +510,15 @@ Collab.pullUpdates = function(socket, filekey, version) {
   })));
 }
 
+// peerExtension is a function that returns an array of two elements
+// the first element is a cm6.collab object that is used to manage the collaboration
+// the second element is a cm6.ViewPlugin that is used to manage the view
+// the function takes a socket, a filekey, and a startVersion as arguments
+// the socket is the connection to the server
+// the filekey is the unique identifier for the file being edited
+// the startVersion is the version of the document that the client has
+// the function returns an array of two elements, the first is a cm6.collab object,
+// and the second is a cm6.ViewPlugin
 Collab.peerExtension = function(socket, filekey, startVersion) {
   if(collabDebugFlag){
     console.warn("Inside Collab.peerExtension() ...");
@@ -560,13 +574,13 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
         setTimeout(() => {
           document.getElementById('led').classList.remove('LEDon');
         document.getElementById('led').classList.add('LEDonError');
-        dc+=1;
+        packetLoss+=1;
       }, 200);
 
-      if (dc >= 500){
+      if (packetLoss >= 500){
         console.log("It looks like you're experiencing packet loss, which can cause lag or slow performance.");
         setTimeout(Page.setFeedbackMessage("It looks like you're experiencing packet loss, which can cause lag or slow performance."),3000);
-        dc=0;
+        packetLoss=0;
       }
 
       }
@@ -584,7 +598,7 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       }, 200); 
     }
 
-      if(count > 1)
+      if(activeUsercount > 1)
       debounce(resetInactivityTimer, 2000)(); // Reset the inactivity timer
     }
 
@@ -650,7 +664,7 @@ function userIsInactive() {
 
   Collab.disconnectFromServer(); // Function to handle disconnection
 
-  if(inactivityTime == 600000){
+  if(inactivityTime == defaultInactivityTime){
     setTimeout(()=>{
       console.warn("Collaboration disconnected and model is read only after 10 minutes of inactivity. Click reconnect to continue."); 
       Page.setFeedbackMessage("Collaboration disconnected and model is read only after 10 minutes of inactivity. Click reconnect to continue.");
@@ -724,8 +738,8 @@ Collab.websocketLogging = function(command){
     if (isConnected){
     inactivityDisabled = false;
     console.log("Timeout the client after 10 seconds");
-    inactivityTime = 10000; // 10 seconds
-    inactivitywarningTime = 6000; // 6 seconds
+    inactivityTime = defaultInactivityTimeTest; // 10 seconds
+    inactivitywarningTime = defaultInactivitywarningTimeTest; // 6 seconds
     diff = 4000/1000;
     resetInactivityTimer();
     }
@@ -738,9 +752,9 @@ Collab.websocketLogging = function(command){
     if (isConnected){
     inactivityDisabled = false;
     console.log("Reset to normal inactivity time");
-    inactivityTime = 600000; // 10 minutes
-    inactivitywarningTime = 540000; // 9 minutes
-    diff = (600000- 540000)/1000;
+    inactivityTime = defaultInactivityTime; // 10 minutes
+    inactivitywarningTime = defaultInactivitywarningTime; // 9 minutes
+    diff = (defaultInactivityTime - defaultInactivitywarningTime)/1000; 
     resetInactivityTimer();
     }
     else{
