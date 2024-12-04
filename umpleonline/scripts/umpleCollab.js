@@ -17,17 +17,17 @@ let isConnected = false; // Variable to store the connection status
 let inactivityDisabled = false; // Variable to store the inactivity status
 
 // the main process of Idle timer
-let defaultInactivityTime = 600000; // 10 minutes
-let defaultInactivitywarningTime = 540000; // 9 minutes
-let defaultInactivityTimeTest = 10000; // 10 seconds
-let defaultInactivitywarningTimeTest = 6000; // 6 seconds
+const defaultInactivityTime = 600000; // 10 minutes
+const defaultInactivitywarningTime = 540000; // 9 minutes
+const defaultInactivityTimeTest = 10000; // 10 seconds
+const defaultInactivitywarningTimeTest = 6000; // 6 seconds
 
 let inactivityTime = defaultInactivityTime; // 10 minutes
 let inactivitywarningTime = defaultInactivitywarningTime; // 9 minutes
 let diff = (inactivityTime - inactivitywarningTime)/1000; // 60 seconds
 let inactivityTimer; // Variable to store the timer
 let inactivitywarningTimer;
-let collabDebugFlag = false;
+let collabClientDebugFlag = false;
 let ackknowledgedTimer = 0; 
 let activeUsercount = 0; 
 let inactivitychecker = true;
@@ -57,7 +57,7 @@ Collab.connectCollabServer = async function() {
   if (urlParams.has('model')) {
     let checkModel = urlParams.get('model');
     checktemp = checkModel.startsWith('tmp');
-    if(collabDebugFlag){
+    if(collabClientDebugFlag){
       console.warn("Model Parameter: ", checkModel, "CheckTemp: ", checktemp);
     }
   }
@@ -66,7 +66,7 @@ Collab.connectCollabServer = async function() {
 updateConnectionStatus();
 
   // DEBUG
-  if(collabDebugFlag){
+  if(collabClientDebugFlag){
     console.warn("Inside Collab.connectCollabServer ...");
   }
 
@@ -80,7 +80,7 @@ updateConnectionStatus();
   document.getElementById('inputExample').disabled = true;
 
     // DEBUG
-    if(collabDebugFlag){
+    if(collabClientDebugFlag){
       console.log("Current Page is Bookmark URL --- connecting to Collab Server!");
     }
 
@@ -90,7 +90,7 @@ updateConnectionStatus();
     const serverPath = typeof CollabServerConfig !== 'undefined' ? CollabServerConfig.serverPath : "/collabapi" 
     
     // DEBUG
-    if(collabDebugFlag){
+    if(collabClientDebugFlag){
     console.log("serverURL: ", serverURL);
     console.log("serverPath: ", serverPath);
     }
@@ -109,7 +109,7 @@ updateConnectionStatus();
 
 
     // DEBUG
-    if(collabDebugFlag){
+    if(collabClientDebugFlag){
       console.warn("Socket Info: ", socket);
     }
 
@@ -117,7 +117,7 @@ updateConnectionStatus();
     const led = document.getElementById('led');
     
     const connectionTimeout = setTimeout(() => {
-      if(collabDebugFlag){
+      if(collabClientDebugFlag){
         console.error('Connection to Collaboration server timed out!');
         console.log("Collaboration server is disconnected/down !");
       }
@@ -126,7 +126,7 @@ updateConnectionStatus();
       document.getElementById('led').classList.remove('LEDonDisconnect');
     }, 10000); // 10 seconds timeout
 
-    if(collabDebugFlag){
+    if(collabClientDebugFlag){
       console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
     }
   
@@ -137,7 +137,7 @@ updateConnectionStatus();
       isConnected = true;
       clearTimeout(connectionTimeout);
       
-      if(collabDebugFlag){
+      if(collabClientDebugFlag){
         console.log("Connected to Collab Server....");
       }
       
@@ -182,7 +182,7 @@ updateConnectionStatus();
     .on('connect_error', (error) => {
       isConnected = false;
       
-      if(collabDebugFlag){
+      if(collabClientDebugFlag){
         console.warn('Connection to Collaboration server failed! Please try again later.');
       }
 
@@ -218,7 +218,7 @@ updateConnectionStatus();
     // Set up listener for active users count updates
     socket.on('userCountUpdate', function (count) {
       activeUsercount = count;
-      if(collabDebugFlag){
+      if(collabClientDebugFlag){
         console.warn("Users Online: ", activeUsercount);
       }
 
@@ -302,7 +302,7 @@ updateConnectionStatus();
     const getDocumentResponse = await Collab.getDocument(socket, filekey, inittext)
 
     // DEBUG
-    if(collabDebugFlag){
+    if(collabClientDebugFlag){
       console.log("Version: ", getDocumentResponse.version, "Doc: ", getDocumentResponse.doc);
     }
     // when response document coming from collaboration server has some content,
@@ -310,7 +310,7 @@ updateConnectionStatus();
 
     if(getDocumentResponse.doc.length != 0){
       Page.setCodeMirror6Text(getDocumentResponse.doc);
-      if(collabDebugFlag){
+      if(collabClientDebugFlag){
         console.warn("Document content received from Collab Server: ");
         console.log("response of get document ", getDocumentResponse.doc);
         console.log("Document Version received from Collab Server: ", getDocumentResponse.version);
@@ -330,7 +330,7 @@ updateConnectionStatus();
   }
   else{
     // DEBUG
-    if(collabDebugFlag){
+    if(collabClientDebugFlag){
       console.log("Current Page URL is NOT Bookmarked!");
     }
 
@@ -338,7 +338,7 @@ updateConnectionStatus();
   }
       // DEBUG
       if(socket != null){
-        if(collabDebugFlag){
+        if(collabClientDebugFlag){
           console.warn("Socket Info: ", socket);
         }
       }
@@ -392,7 +392,7 @@ Collab.disconnectFromServer = function(text) {
     setTimeout(() => {
     Page.setFeedbackMessage("Disconnected from Collab Server");
     
-    if(collabDebugFlag){
+    if(collabClientDebugFlag){
       console.log("Disconnected from Collab Server");
     }
 
@@ -422,14 +422,14 @@ Collab.disconnectFromServer = function(text) {
 // once the promise is resolved, returns document version and document content
 Collab.getDocument = function(socket, filekey, inittext) {
   // DEBUG
-  if(collabDebugFlag){
+  if(collabClientDebugFlag){
     console.warn("Inside Collab.getDocument() ...");
   }
 
   return new Promise(function(resolve) {
       socket.emit('getDocument', filekey, inittext);
       
-      if(collabDebugFlag){
+      if(collabClientDebugFlag){
         console.log("Emitted getDocument with filekey: ", filekey);
       }
 
@@ -439,7 +439,7 @@ Collab.getDocument = function(socket, filekey, inittext) {
           doc: cm6.Text.of(doc.split("\n"))
       })
 
-      if(collabDebugFlag){
+      if(collabClientDebugFlag){
         console.log("Version: ", version, "Doc: ", doc);
       }
 
@@ -459,7 +459,7 @@ Collab.pushUpdates = async function(socket, filekey, version, fullUpdates) {
   }));
 
 
- if(collabDebugFlag){
+ if(collabClientDebugFlag){
   console.warn("Inside Collab.pushUpdates() ...");
   console.warn("clientID: ", fullUpdates[0].clientID);
   console.log("Updates: ", updates);
@@ -482,7 +482,7 @@ Collab.pushUpdates = async function(socket, filekey, version, fullUpdates) {
       resolve(status);
     });
 
-    if(collabDebugFlag){
+    if(collabClientDebugFlag){
       console.log("Emitted pushUpdates with filekey: ", filekey, "Version: ", version, "Updates: ", updates , "FullUpdates: ", fullUpdates);
     }
 
@@ -492,7 +492,7 @@ Collab.pushUpdates = async function(socket, filekey, version, fullUpdates) {
 // pullUpdates obtains changes made by other collaborators
 // the arguments are the same three as for pushUpdates above
 Collab.pullUpdates = function(socket, filekey, version) {
-   if (collabDebugFlag){
+   if (collabClientDebugFlag){
     console.log("Inside Collab.pullUpdates() ...");
     console.log("Filekey: ", filekey);
     console.log("Version: ", version);
@@ -520,7 +520,7 @@ Collab.pullUpdates = function(socket, filekey, version) {
 // the function returns an array of two elements, the first is a cm6.collab object,
 // and the second is a cm6.ViewPlugin
 Collab.peerExtension = function(socket, filekey, startVersion) {
-  if(collabDebugFlag){
+  if(collabClientDebugFlag){
     console.warn("Inside Collab.peerExtension() ...");
     console.log("Socket: ", socket);
     console.log("Filekey: ", filekey);
@@ -547,7 +547,7 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       try {
        success = await Collab.pushUpdates(socket, filekey, version, updates);
        
-       if(collabDebugFlag){
+       if(collabClientDebugFlag){
          console.log(success);
          if (success){
           console.warn("Updates have been successfully pushed to the server in : "+ (Date.now() - ackknowledgedTimer) + " milliseconds");
@@ -560,7 +560,7 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
 
       }
      
-      if(collabDebugFlag){
+      if(collabClientDebugFlag){
         console.warn("Inside Collab.peerExtension.push(),update ...");
         console.log("Updates: ", updates);
         console.log("Version: ", version);
@@ -608,7 +608,7 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
         const updates = await Collab.pullUpdates(socket, filekey, version); // filekey added here
         this.view.dispatch(cm6.receiveUpdates(this.view.state, updates));
 
-        if(collabDebugFlag){
+        if(collabClientDebugFlag){
           console.warn("Inside Collab.peerExtension.pull(),update ...");
           console.log("Updates: ", updates);
           console.log("Version: ", version);
@@ -647,7 +647,7 @@ function startCheckingInactivity() {
 
 
 function sendInactivitywarning() {
-  if(collabDebugFlag){
+  if(collabClientDebugFlag){
     console.warn("Only " + diff + " seconds left to disconnect due to inactivity");
   }
 
@@ -657,7 +657,7 @@ function sendInactivitywarning() {
 
 // Function to trigger when the user is considered inactive
 function userIsInactive() {
-  if(collabDebugFlag){
+  if(collabClientDebugFlag){
     console.log("User is inactive, disconnect sequence started...");
   }
   
@@ -704,7 +704,7 @@ function debounce(callback, delay) {
 // Function to reset the inactivity timer
 function resetInactivityTimer() {
   if (!inactivityDisabled){
-  if(collabDebugFlag){
+  if(collabClientDebugFlag){
     console.warn('timer reset called ...');
   }
 
@@ -721,11 +721,11 @@ function resetInactivityTimer() {
 Collab.websocketLogging = function(command){
   if(command == 0){
     console.log("Unlimited collaboration logging");
-    collabDebugFlag = true;
+    collabClientDebugFlag = true;
 
   }else if(command == -1){
     console.log("Disable collaboration logging");
-    collabDebugFlag = false;
+    collabClientDebugFlag = false;
  
   }
  }
