@@ -140,7 +140,6 @@ io.on('connection', (socket: Socket) =>{
 
   });
   
-  
   // core socket event that sends updates to a requesting client
   // when the client requests for them to be pulled
   // fileKey parameter should come from the client - umpdir_filename
@@ -318,8 +317,6 @@ if(collabServerDebugFlag){
   });
   
 })
-
-
 
 // checks if the Map contains any records related to the fileKey coming from the client
 // fileKey is created as follows: umpdir_filename (both of these parameters are passed in the URL by cleint)
