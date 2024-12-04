@@ -16,7 +16,7 @@ import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@cod
 import { SearchCursor, RegExpCursor } from "@codemirror/search";
 
 
-const debuggerFlag = false;
+const codemirrorDebuggerFlag = false;
 
 // Create a compartment for editable state
 const editableCompartment = new Compartment();
@@ -102,7 +102,8 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
   update(update) {
     
     if (update.docChanged) {
-      if (debuggerFlag)
+      // Debug: Check if the editor is updated
+      if (codemirrorDebuggerFlag)
       console.log('Editor updated..');
         
         const newContent = update.state.doc.toString();
@@ -110,7 +111,8 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
         if (newContent !== this.lastContent) {
         const currentPositionofCursor = this.view.state.selection.main.head;
 
-        if (debuggerFlag) {
+        // Debug: Check if the content has changed
+        if (codemirrorDebuggerFlag) {
           console.warn('Content changed');
           console.log('new content lenght:', newContent.length);
           console.log('old content lenght:', this.lastContent.length);
