@@ -173,7 +173,7 @@ $output = $dataHandle->readData('model.ump');
     background: #B06C5B;
   }
 
-::selection {
+  .cm-editor ::selection {
   color: #DD0033;
 }
 
@@ -635,11 +635,6 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="mainApplication" class="row"> 
     <div id="textEditorColumn"  tabIndex="2"  class="inRow"> 
-      
-      <!-- codemirror 5 editor -->
-      <!-- <div id="topTextEditor" style="float:left; width:100%">
-        <textarea id="umpleModelEditorText" class="umpleModelEditor" wrap="off"></textarea>
-      </div> -->
 
       <!-- codemirror 6 editor -->
       <div id="newEditor" style="width:100%">
@@ -658,11 +653,6 @@ $output = $dataHandle->readData('model.ump');
           <ul class="first" id="saveLoad">
             <li class="subtitle">SAVE</li>
             <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-            <!--li id="ttSaveBookmark">
-              <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Resave URL</a>
-              </div>
-            </li-->
             <?php } else if (!isset($_REQUEST["task"])) { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
@@ -696,11 +686,6 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png" alt="Store in Local Browser icon"/> 
               Store in Browser
             </li>
-            
-            <!--li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
-              <img src="scripts/copy.png"/> 
-              Load from Browser
-            </li-->
 
             <li id="buttonDownloadFiles" class="downloadFiles">
               <img src="scripts/copy.png"/> 
@@ -876,10 +861,6 @@ $output = $dataHandle->readData('model.ump');
                <img src="scripts/assoc.png" alt="Icon to click on to create a new transition in certain state modes"/>
                Transition
              </li>            
-            <!-- <li id="buttonBendAssociation" class="toggleToolItem" name="paletteItem">
-              <img src="scripts/assocbend.jpg"/> 
-              Bend Assoc.
-            </li> -->
             <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class." tabindex="0">
               <img src="scripts/generalization.png" alt="Icon to click on to create a generalization (subclass relationship) in editable mode"/> 
               Generalization
