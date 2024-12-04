@@ -67,17 +67,6 @@ let collabfilemap = new Map<string, collabDoc>();
 // Map for tracking online users per session
 let activeUsers = new Map<string, Set<string>>();
 
-// DEBUG
-// The following code is currently not active
-// app.get('/collabapitest/healthCheck', (req: any, res: any)=>{
-//   const data = {
-//     uptime: process.uptime(),
-//     message: 'Collab_Server is running !!!',
-//     date: new Date()
-//     }
-//   res.status(200).send(data);
-// })
-
 let io = new Server(server, {
   path: apiPath,
   cors: {
@@ -85,6 +74,44 @@ let io = new Server(server, {
     methods: ["GET", "POST"]
   }
 });
+
+
+app.get('/healthCheck', (req, res) => {
+  // Server uptime
+  const uptime = process.uptime();
+
+  // Get active users and file info
+  const files = Array.from(activeUsers.keys());
+  
+  // Calculate total active users
+  // Reduce the activeUsers map to a single count of all active users
+  // by summing the size of each Set of users
+  // This is done by iterating over each file key and adding the size of the Set of users
+  // acc: The accumulator, which starts at 0 (as specified in the second argument to reduce), and gets incremented on each iteration.
+  const activeUsersCount = files.reduce((acc, fileKey) => acc + activeUsers.get(fileKey)!.size, 0);
+  
+  // Filter files to only include those with at least one user
+  const filesInfo = files
+      .map((fileKey) => {
+          const userCount = activeUsers.get(fileKey)!.size;
+          return { fileKey, userCount };
+      })
+      .filter(room => room.userCount > 0); // Only include files with active collaboration users
+
+  // Create the response object
+  const healthStatus = {
+      status: 'Server is running',
+      uptime: uptime, // in seconds
+      NumberOfActiveUsers: activeUsersCount, // Total number of active users
+      NumberOfActiveSessions: filesInfo.length, // Number of files with active collaboration users
+      filesInfo
+  };
+
+  // Send the response
+  res.status(200).json(healthStatus);
+});
+
+
 
 io.on('connect_error', (err) => {
   console.log(`could not connect due to ${err.message}`);
