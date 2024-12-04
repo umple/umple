@@ -20,7 +20,7 @@ Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
 
-const debuggerFlag = false;
+const clientDebuggerFlag = false;
 
 
 // Regulators of whether a save occurs on not
@@ -261,8 +261,10 @@ Action.clicked = function(event)
     var cursorPos = Page.codeMirrorEditor6.state.selection.main.head;
     var cursorPosLine = Page.codeMirrorEditor6.state.doc.lineAt(cursorPos).number;
 
-    if (debuggerFlag)
-    console.log(cursorPosLine);
+    if (clientDebuggerFlag){
+      console.log(cursorPosLine);
+    }
+
     var whiteSpace = lines[cursorPosLine].match(/^\s*/)[0].length;
     var lengthToFirstCh = cursorPos.ch - whiteSpace;
     cursorPos.ch = lengthToFirstCh;
@@ -1048,8 +1050,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   document.addEventListener("mousedown", hider);
   if(inputType=="rename"){
 
-    if (debuggerFlag)
-    console.log("Renaming State ...")
+    if (clientDebuggerFlag){
+      console.log("Renaming State ...");
+    }
 
     label.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
     input.value = stateName;
@@ -1058,8 +1061,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
         //only accounts for case where states all have unique names
         if(Action.validateAttributeName(input.value)){
 
-          if (debuggerFlag)
-          console.log("Getting code from codemirror editor ...")
+          if (clientDebuggerFlag){
+            console.log("Getting code from codemirror editor ...");
+          }
           // get contents of codemirror 6 editor
           let orig = Page.codeMirrorEditor6.state.doc.toString();
 
@@ -1069,8 +1073,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
             orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
           }
 
-          if (debuggerFlag)
-          console.log("Setting updated code to codemirror editor ...")
+          if (clientDebuggerFlag){
+            console.log("Setting updated code to codemirror editor ...");
+          }
 
           // update content of codemirror 6 editor with updated code/text
           Page.setCodeMirror6Text(orig);
@@ -1079,8 +1084,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 
           document.removeEventListener("mousedown", hider);
 
-          if (debuggerFlag)
-          console.log("Removing mousedown event ...")
+          if (clientDebuggerFlag){
+            console.log("Removing mousedown event ...");
+          }
           
           prompt.remove();
           Action.removeContextMenu();
@@ -1092,8 +1098,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
     });  
   } else if(inputType=="substate") {
 
-    if (debuggerFlag)
-    console.log("Substating state ...")
+    if (clientDebuggerFlag){
+      console.log("Substating state ...");
+    }
 
     label.appendChild(document.createTextNode("Name of new substate?"));
     input.addEventListener('keydown', function(e) {
@@ -1101,13 +1108,15 @@ Action.drawInputState = function(inputType,stateCode,stateName){
         if(Action.validateAttributeName(input.value)){
           let subtext=unsanitizedState.substr(0,unsanitizedState.length-1)+"  "+input.value+"{}}";
 
-          if (debuggerFlag)
-          console.log("Getting original code and adding substate ...")
+          if (clientDebuggerFlag){
+            console.log("Getting original code and adding substate ...");
+          }
 
           subtext=Page.codeMirrorEditor6.state.doc.toString().replace(unsanitizedState,subtext);
 
-          if (debuggerFlag)
-          console.log("Setting updated code with substate into codemirror editor ...")
+          if (clientDebuggerFlag){
+            console.log("Setting updated code with substate into codemirror editor ...");
+          }
 
           Page.setCodeMirror6Text(subtext);
 
@@ -1115,8 +1124,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 
           document.removeEventListener("mousedown", hider);
 
-          if (debuggerFlag)
-          console.log("Removing mousedown event ...")
+          if (clientDebuggerFlag){
+            console.log("Removing mousedown event ...");
+          }
 
           prompt.remove();
           Action.removeContextMenu();
@@ -1130,8 +1140,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   } else if(inputType=="transition"){
     //should have an indicator after user enters label so they know to press another state
     
-    if (debuggerFlag)
-    console.log("Adding Transition ...")
+    if (clientDebuggerFlag){
+      console.log("Adding Transition ...");
+    }
 
     label.appendChild(document.createTextNode("Condition for new transition?"));
     input.addEventListener('keydown', function(e) {
@@ -1143,8 +1154,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           prompt.remove();
           Action.removeContextMenu();
 
-          if (debuggerFlag)
-          console.log("Waiting to select target state for transition ...")
+          if (clientDebuggerFlag){
+            console.log("Waiting to select target state for transition ...");
+          }
 
           var assocState=function (event){
               let targ=event.target;
@@ -1156,11 +1168,10 @@ Action.drawInputState = function(inputType,stateCode,stateName){
               let subtext="  "+input.value+" -> "+elemText[2]+";\n}";
               let newState=orig.substr(0,orig.length-1)+subtext;
 
-              if (debuggerFlag)
-              console.log("New state created ...")
-
-              if (debuggerFlag)
-              console.log("Replacing original state with new state in the code ...")
+              if (clientDebuggerFlag){
+                console.log("New state created ...");
+                console.log("Replacing original state with new state in the code ...");
+              }
 
               Page.setCodeMirror6Text(Page.codeMirrorEditor6.state.doc.toString().replace(orig,newState));
 
@@ -1205,13 +1216,15 @@ Action.deleteState = function(stateCode,className,smName,stateName){
   // console.log("Inside Action.deleteState ...")
   let subStates=stateName.split(",");
 
-  if (debuggerFlag)
-  console.log("Getting code from codemirror editor ...")
+  if (clientDebuggerFlag){
+    console.log("Getting code from codemirror editor ...");
+  }
 
   let orig=Page.codeMirrorEditor6.state.doc.toString();
 
-  if (debuggerFlag)
-  console.log("Deleting State: ", stateName);
+  if (clientDebuggerFlag){
+    console.log("Deleting State: ", stateName);
+  }
 
   let unsanitizedState = stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   orig=orig.replace(unsanitizedState,"");
@@ -1222,8 +1235,9 @@ Action.deleteState = function(stateCode,className,smName,stateName){
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
   }
 
-  if (debuggerFlag)
-  console.log("Setting updated code to codemirror editor ...");
+  if (clientDebuggerFlag){
+    console.log("Setting updated code to codemirror editor ...");
+  }
 
   Page.setCodeMirror6Text(orig);
 
@@ -2386,8 +2400,9 @@ Action.displayAssociMenu = function(event, associationLink) {
       var classCode = Page.codeMirrorEditor6.state.sliceDoc(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex) ;
       //get the class code f
       
-      if (debuggerFlag)
-      console.warn("classCode: " + classCode);
+      if (clientDebuggerFlag){
+        console.warn("classCode: " + classCode);
+      }
 
   }
 
@@ -2398,8 +2413,9 @@ Action.displayAssociMenu = function(event, associationLink) {
   let endIndex = indices.endIndex;
   var selectedText = Page.codeMirrorEditor6.state.sliceDoc(startIndex,endIndex) ;
 
-  if (debuggerFlag)
+  if (clientDebuggerFlag){
     console.warn("selectedText: " + selectedText);  
+  }
 
 
   if (selectedText.includes(endInfo[0].trim()) == false) {
@@ -3257,27 +3273,31 @@ Action.stateClicked = function(identifier)
     var selectionIndiciesCM6=null;
     if(identifierState.includes('.')){ //nested case
 
-      if (debuggerFlag)
-      console.log("stateClicked - nested state case")
+      if (clientDebuggerFlag){
+        console.log("stateClicked - nested state case");
+      }
       
       identifierState=identifierState.split('.');
       selectionIndiciesCM6=Action.selectStateInClassCM6(identifierClass,identifierSM,identifierState[0]);
       for(let i=1;i<identifierState.length;i++){
 
-        if (debuggerFlag)
-        console.log("Iterating states within Identified state ...")
+        if (clientDebuggerFlag){
+          console.log("Iterating states within Identified state ...");
+        }
 
         selectionIndiciesCM6=Action.selectStateInStateCM6(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex,identifierState[i]);
       }
     } else { //base case
 
-      if (debuggerFlag)
-      console.log("stateClicked - else - base case")
+      if (clientDebuggerFlag){
+        console.log("stateClicked - else - base case");
+      }
 
       selectionIndiciesCM6 = Action.selectStateInClassCM6(identifierClass,identifierSM,identifierState);
 
-      if (debuggerFlag)
-      console.log("selectionIndiciesCM6: ", selectionIndiciesCM6)
+      if (clientDebuggerFlag){
+        console.log("selectionIndiciesCM6: ", selectionIndiciesCM6);
+      }
 
     }
 
@@ -4730,8 +4750,9 @@ Action.updateLineNumberDisplay = function()
 Action.umpleTyped = function(eventObject)
 {
   // DEBUG
-  if (debuggerFlag)
-  console.log("Inside Action.umpleTyped()...")
+  if (clientDebuggerFlag){
+    console.log("Inside Action.umpleTyped()...");
+  }
 
   // This function is not called by CodeMirror
   // See umpleCodeMirrorTypingActivity if CodeMirror is on (as it normally is)
@@ -4760,8 +4781,9 @@ Action.umpleCodeMirrorCursorActivity = function() {
 Action.umpleCodeMirrorTypingActivity = function(editorThatChanged) {
   
   // DEBUG
-  if (debuggerFlag)
-  console.log("Inside Action.umpleCodeMirrorTypingActivity...")
+  if (clientDebuggerFlag){
+    console.log("Inside Action.umpleCodeMirrorTypingActivity...");
+  }
 
   if(Action.freshLoad == false) {
     // Start/restart timer to eventually process this by triggerink disk save and diagram update
@@ -4838,8 +4860,9 @@ Action.removeComments = function(str)
 // ends up being called after a 3s gap in calls to this.
 Action.umpleTypingActivity = function(target) {
 
-  if (debuggerFlag)
-  console.log("Inside Action.umpleTypingActivity()...")
+  if (clientDebuggerFlag){
+    console.log("Inside Action.umpleTypingActivity()...");
+  }
 
   if (Action.manualSync && Action.diagramInSync)
   {
@@ -4896,8 +4919,9 @@ Action.removeCheckComplexityWarning = function()
 Action.processTyping = function(target, manuallySynchronized, currentCursorPosition)
 {
 
-  if (debuggerFlag)
-  console.log("Inside Action.processTyping ...", target)
+  if (clientDebuggerFlag){
+    console.log("Inside Action.processTyping ...", target);
+  }
 
   document.getElementById("newEditor").value = Page.codeMirrorEditor6.state.doc.toString();
 
