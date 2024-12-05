@@ -121,7 +121,7 @@ updateConnectionStatus();
         console.error('Connection to Collaboration server timed out!');
         console.log("Collaboration server is disconnected/down !");
       }
-      Page.setFeedbackMessage("Cannot Collaborate right now, due to connection time out!");
+      Page.setFeedbackMessage("Cannot Collaborate right now, due to too many failed tries!");
       document.getElementById('led').classList.remove('LEDonError');
       document.getElementById('led').classList.remove('LEDonDisconnect');
     }, 10000); // 10 seconds timeout
