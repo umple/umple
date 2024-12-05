@@ -2,17 +2,18 @@
 This file is an Umple translation of a model
 of ANT version 0.3 found at the following URL
 https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Ant.ecore
-date : 2005/07/06
 
-Domain : Building tool
+date: 2005/07/06
 
-Description : A metamodel describing Ant: Apache Ant is a Java-based build tool. It is similar to make, without make s wrinkles. It is configured with a build file that is an XML document. The build files are generally platform independent. It is extended using Java classes not scripts or shell-based commands. It can take care of archiving, compilation, execution, documentation, deployment, and much more.
+Domain: Building tool
+
+Description: A metamodel describing Ant: Apache Ant is a Java-based build tool. It is similar to make, without make s wrinkles. It is configured with a build file that is an XML document. The build files are generally platform independent. It is extended using Java classes not scripts or shell-based commands. It can take care of archiving, compilation, execution, documentation, deployment, and much more.
 
 Title: Ant Build Tool
 
-See : http://ant.apache.org/
+See: http://ant.apache.org/
 
-Authors : Julien Ruchaud, Pauline Brunel (pabrunel_NOSPAM <AT> numericable.fr)
+Authors: Julien Ruchaud, Pauline Brunel (pabrunel_NOSPAM <AT> numericable.fr)
 **************************/
 namespace Ant;
 

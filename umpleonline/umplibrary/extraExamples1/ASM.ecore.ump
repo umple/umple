@@ -3,15 +3,15 @@ This file is an Umple translation of a model
 of ASM version 1.0 found at the following URL
 https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/ASM.ecore
 
-date : 2006/04/12
+date: 2006/04/12
 
-Domain : Microsoft DotNET
+Domain: Microsoft DotNET
 
-Description : Abstract State Machine Language
+Description: Abstract State Machine Language
 
-Title : Abstract State Machine Language
+Title: Abstract State Machine Language
 
-Authors : Albin Jossic (albin.jossic <at> gmail.com)[1] ;[1] ATLAS team (Nantes, France)
+Authors: Albin Jossic (albin.jossic <at> gmail.com)[1] ;[1] ATLAS team (Nantes, France)
 ************************/
 
 

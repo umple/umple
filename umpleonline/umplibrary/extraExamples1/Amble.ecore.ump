@@ -4,15 +4,15 @@ of AMBLE version 1.1 found at the following URL
 https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Amble.ecore
 date : 2005/05/30
 
-Domain : Distributed programs, Objective Caml library
+Domain: Distributed programs, Objective Caml library
 
 Description : This metamodel describes Amble which is a distributed programming language based on Objective Caml. Amble enables to specify a distributed program in terms of processes that run concurrently. These processes are designed as states machines that are connected to each other by means of networks. Each network specifies a set of channels. The source process of a channel is allowed to write to its target process. An Amble program is composed of a single .ml file that includes the definition of the different process types that are involved in the program, as well as a set of .topo files (one for each considered network) that specifies the topology of the defined networks.
 
 Title: Amble Distributed SW
 
-See : http://home.gna.org/amble/
+See: http://home.gna.org/amble/
 
-Authors : David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr)
+Authors: David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr)
 *************************/
 
 namespace PrimitiveTypes;

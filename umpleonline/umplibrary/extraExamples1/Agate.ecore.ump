@@ -2,17 +2,18 @@
 This file is an Umple translation of a model
 of AGATE version 1.1 found at the following URL
 https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Agate.ecore
-date : 2006/06/06
 
-Domain : Architecture Description, SoS (System of System), View, Viewpoint
+date: 2006/06/06
 
-Description : A metamodel of AGATE (Atelier de Gestion de l Architecture des Systemes d Information). AGATE is a framework for Information systems architecture management. This framework was designed by the french DGA (Délégation Générale pour l'Armement in English General delegation for the Armament). The currently version is 3.0.
+Domain: Architecture Description, SoS (System of System), View, Viewpoint
+
+Description: A metamodel of AGATE (Atelier de Gestion de l Architecture des Systemes d Information). AGATE is a framework for Information systems architecture management. This framework was designed by the french DGA (Délégation Générale pour l'Armement in English General delegation for the Armament). The currently version is 3.0.
 
 Title: AGATE Architecture Mgt. 3.0
 
-See : http://www.ixarm.com/Referentiel-AGATE
+See: http://www.ixarm.com/Referentiel-AGATE
 
-Authors : Albin Jossic (jossic.albin <at> gmail.com)
+Authors: Albin Jossic (jossic.albin <at> gmail.com)
 ***************************/
 
 namespace AGATE;

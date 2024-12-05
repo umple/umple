@@ -5,13 +5,18 @@ example menus in UmpleOnline
 */
 
 //Prepare to re-create the data file containing the menu items
-$fhandle = fopen("../generatedExtraExample1Options.html","w");
+$fhandle = fopen("generatedExtraExample1Options.html","w");
 
+try {
+  $dirIterator = new DirectoryIterator('umplibrary/extraExamples1');
+}
+catch (Exception $e) {
+  echo "umplibrary/extraExamples1 ... likely not being run from umpleonline dir";
+}
 // Loop through each example directory
-foreach (new DirectoryIterator('../umplibrary/extraExamples1') as $fileInfo) {
+foreach ($dirIterator as $fileInfo) {
   if($fileInfo->isDot()) continue;
   $fileNameFound = $fileInfo->getFilename();
-  echo "DEBUG FILENAME: ".$fileNameFound . "<br>\n";
   $file = $fileInfo->openFile();
   // Loop through each line in the file, to obtain the Title
   while (!$file->eof()) {
@@ -21,8 +26,6 @@ foreach (new DirectoryIterator('../umplibrary/extraExamples1') as $fileInfo) {
     // extract the title, when found
     if (!strcmp("Title: ",substr($line,0,7))) {
       $titleFound=substr($line,7,-1);
-      echo("DEBUG FOUND TITLE: ".$titleFound."\n");
-      
       
       $newLine = "<option name = \"optionExample\" value=\"extraExamples1/".
         $fileNameFound."\">".$titleFound."</option>\n";

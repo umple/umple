@@ -863,15 +863,19 @@ $output = $dataHandle->readData('model.ump');
               <select id="inputExample5" name="inputExample5" class="button" size="1" data-diagram-type="class">
                 <option name = "optionExample5" id = "defaultExampleOption5" value="">Select Example</option>
                 <?php
-// DEBUG ... the following is under dev
-//   TODO if file doesn't exist, generates it
-//  TODO  if it does exist, checks age, and generates if old
+
+                // generate file if it does not exist or is older than 24h
+                $genFileName = "generatedExtraExample1Options.html";
+                if((!file_exists($genFileName)) || (time()-filemtime($genFileName) > 60 * 60 * 24)) {
+                  include("scripts/genExtraExamples.php");
+                }
+
                 $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1Options.html");
                 if($exampleHtmlOptionLines) {
                   echo $exampleHtmlOptionLines;
                 }
                 else {
-                   ?><option name = "optionExample" value="BerkeleyDB_SPL.ump"> CFF </option> <?php
+                   ?><option name = "optionExample" value="invalid.ump">Could not find set of extra files </option> <?php
                 }
                 ?>
               </select>

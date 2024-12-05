@@ -2,17 +2,17 @@
 This file is an Umple translation of a model
 of CPDL version 1.14 found at the following URL
 
-date : 2005/08/09
+date: 2005/08/09
 
-Domain : programming language
+Domain: programming language
 
-Description : This metamodel describes programs in AWK which is a Unix utility designed for processing text based data, either in files or data streams. The name AWK is derived from the surnames of its authors - Alfred V. Aho, Peter J. Weinberger, and Brian W. Kernighan.
+Description: This metamodel describes programs in AWK which is a Unix utility designed for processing text based data, either in files or data streams. The name AWK is derived from the surnames of its authors - Alfred V. Aho, Peter J. Weinberger, and Brian W. Kernighan.
 
 Title: AWK Unix Utility
 
-See : The GNU Awk Webpage, http://www.gnu.org/software/gawk/gawk.html
+See: The GNU Awk Webpage, http://www.gnu.org/software/gawk/gawk.html
 
-Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+Authors: Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
 ***************/
 
 namespace PrimitiveTypes;
