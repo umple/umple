@@ -1417,13 +1417,34 @@ Page.getSelectedExample = function()
 {
   var inputExample = "";
   var theExampleType = Page.getExampleType();
+
+  // store the menu id of the example set as there will be more than one for class diagrams
+  var exampleSet = theExampleType;
+
+  // The default model type comes from the first 4 menu items created in umple.php
+  // But as we add additional special sets of examples, we need to define the exampleType
+  if(theExampleType == "extra1Models1") {
+    theExampleType = "cdModels";
+  }
+
   if(theExampleType == "cdModels") {
     var requiresGvClass = false; // Some class diagrams  are too complex to edit
-    inputExample = jQuery("#inputExample option:selected").val();
+
+    var exampleSetIDToLoad = "inputExample";
+    if (exampleSet == "extra1Models1") {
+      exampleSetIDToLoad = "inputExample5";
+      requiresGvClass = true; // All these examples are too complex for E mode
+    }
+
+    inputExample = jQuery("#"+exampleSetIDToLoad+" option:selected").val();
+
+    // Override special case to use G mode where E mode is too complex
+    // TODO: Consider making G mode default
+    // TODO: Consider tagging the examples by mode in umple.php rather than here
     if (inputExample == "GeometricSystem.ump") {
       requiresGvClass = true;
     }
-    
+
     if(requiresGvClass) {
       // if diagram type not a editable class diagram, set it 
       if(!Page.useGvClassDiagram) {

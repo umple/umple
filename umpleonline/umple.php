@@ -862,7 +862,18 @@ $output = $dataHandle->readData('model.ump');
             <li id="itemLoadExamples5">
               <select id="inputExample5" name="inputExample5" class="button" size="1" data-diagram-type="class">
                 <option name = "optionExample5" id = "defaultExampleOption5" value="">Select Example</option>
-                <option name = "optionExample" value="ToBeGenerated.ump"> Generated Name </option>
+                <?php
+// DEBUG ... the following is under dev
+//   TODO if file doesn't exist, generates it
+//  TODO  if it does exist, checks age, and generates if old
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1Options.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="BerkeleyDB_SPL.ump"> CFF </option> <?php
+                }
+                ?>
               </select>
             </li>
           
