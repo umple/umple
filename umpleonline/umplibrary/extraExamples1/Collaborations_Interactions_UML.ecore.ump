@@ -1,0 +1,104 @@
+/*****************
+This file is an Umple translation of a model
+of Collaborations and Interactions in UML Metamodel version 1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Collaborations_Interactions_UML.ecore
+
+date : 2006/07/10
+
+Domain : UML
+
+Description : This metamodel fragment describes collaborations and interactions in UML metamodel
+
+Title: Collaborations and Interactions UML 
+
+See : This metamodel fragment has been extracted from information available in the following article: Article Supporting Disciplined Reuse and Evolution of UML Models by Tom mens, Carine Lucas, Patrick Steyaert Page 384, Section 3.3, Fig. 3 Collaborations and Interactions in UML Metamodel Lecture Notes in Computer Science 1618 Jean Bézivin, Pierre-Alain Muller The Unified Modeling Language UML 98: Beyond the notation
+
+Authors : Julien Baudry (jul.baudry_NOSPAM <AT> gmail.com)
+******************/
+
+namespace ExtendedUMLCorePackage;
+
+class Package
+{
+	isA ProviderClause;
+}
+
+class ProviderClause
+{
+	0..1 -> 1..* CollaborationPackage ownedEltColl;
+	1..* providerClause -- * InteractionPackage ownedEltInt;
+}
+
+class CollaborationPackage
+{
+	0..1 -> 1..* Collaboration ownedElt;
+}
+
+class Collaboration
+{
+	0..1 -> 1..* AssociationRole ownedEltAss;
+	0..1 -> 1..* ClassifierRole ownedEltClass;
+	1..* context -- * Interaction interaction;
+}
+
+class InteractionPackage
+{
+	0..1 -> 1..* Interaction ownedElt;
+}
+
+class Interaction
+{
+	* interaction -- 1..* Message message;
+}
+
+class AssociationRole
+{
+	1..* associationRole -- 2 AssociationEndRole connection;
+}
+
+class ClassifierRole
+{
+	0..1 receiver -- 1..* Message receiverMess;
+	1..* type -- * AssociationEndRole associationEndRole;
+	1..* sender -- 1..* Message senderMess;
+	* classifierRole -- * Operation availableFeature;
+	* classifierRole -- 1..* Interface base;
+}
+
+class AssociationEndRole
+{
+}
+
+class Message
+{
+	* activator -- * Message message;
+	* message -- 1..* Request specification;
+}
+
+class Request
+{
+}
+
+class Operation
+{
+	isA Request;
+	* feature -- 1..* Interface owner;
+}
+
+class Interface
+{
+}
+
+namespace PrimitiveTypes;
+
+class Boolean
+{
+}
+
+class Integer
+{
+}
+
+class String
+{
+}
