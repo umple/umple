@@ -512,42 +512,8 @@ Page.initUmpleTextArea = function()
   if (!Layout.isLayoutVisible) {Layout.showHideLayoutEditor(false);}
 }
 
-/* CodeMirror 5 */
+/* codemirror 6 */
 Page.initCodeMirrorEditor = function() {
-  // Page.codeMirrorEditor = CodeMirror.fromTextArea(
-  //   document.getElementById('umpleModelEditorText'),{
-  //       lineNumbers: true,
-  //       matchBrackets: true,
-  //       readOnly: Page.readOnly,
-  //       mode: "text/x-umple",
-  //       lineWrapping: true,
-                   
-  //       extraKeys: { // Change consistently in umple_action.js for Mousetrap
-  //         "Ctrl-E": function(cm) {Page.clickShowEditableClassDiagram()},
-  //         "Ctrl-J": function(cm) {Page.clickShowJointJSClassDiagram()},
-  //         "Ctrl-G": function(cm) {Page.clickShowGvClassDiagram()},
-  //         "Ctrl-S": function(cm) {Page.clickShowGvStateDiagram()},
-  //         "Ctrl-L": function(cm) {Page.clickShowStructureDiagram()},
-  //         "Ctrl-T": function(cm) {Page.clickShowHideText()},
-  //         "Shift-Ctrl-Alt-T": function(cm) {Page.clickShowHideText()},
-  //         "Ctrl-D": function(cm) {Page.clickShowHideCanvas()},
-  //         "Ctrl-N": function(cm) {Page.clickShowHideMenu()},
-  //         "Ctrl-Alt-N": function(cm) {Page.clickShowHideMenu()},
-  //         "Ctrl-Shift-=": function(cm) {Page.clickButtonlarger()},
-  //         "Ctrl-Shift--": function(cm) {Page.clickButtonSmaller()},
-  //         "Shift-Ctrl-A": function(cm) {Page.clickToggleAttributes()},
-  //         "Ctrl-M": function(cm) {Page.clickToggleMethods()},
-  //         "Ctrl-R": function(cm) {Page.clickToggleTraits()},
-  //         "Ctrl-I": function(cm) {Page.clickToggleTransitionLabels()},
-  //         "Ctrl-K": function(cm) {Page.clickToggleGuardLabels()},
-  //         "Ctrl-O": function(cm) {Action.copyCommandLineCode()},
-  //         "Ctrl-B": function(cm) {Action.promptAndExecuteTest()},
-  //         "Esc": function(cm) {cm.getInputField().blur()}
-  //         }
-  //       }
-  //     );
-    
-  /* codemirror 6 */
   const extraKeys = [
     { key: "Ctrl-E", run: function() { Page.clickShowEditableClassDiagram() } },
     { key: "Ctrl-J", run: function() { Page.clickShowJointJSClassDiagram() } },
@@ -574,7 +540,6 @@ Page.initCodeMirrorEditor = function() {
   // codemirror 6 
   // comment the following when trying to mount react app
   const initialState = cm6.createEditorState(
-   // document.getElementById("umpleModelEditorText").value, 
     document.getElementById("newEditor").value, 
      {
        extensions: []
@@ -592,53 +557,13 @@ Page.initCodeMirrorEditor = function() {
   });
 
   if (Page.readOnly) {
-    // Page.codeMirrorEditor6.dispatch({
-    //   effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
-    //     });
             Page.codeMirrorEditor6.dispatch({
           effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
       });
   }
-  
-  // monitor codemirror6 state to listen to any changes in editor contents and update diagram accordingly
-  // Page.codeMirrorEditor6.dom.addEventListener("input", () => {
-  //   console.log("Input event triggered...")
-  //   const newText = Page.codeMirrorEditor6.state.doc.toString();
-  //   setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
-  // });
-
-  // ==================== this should be change for code mirror 6 ====================
-
-  // no longer need on cm6
-  // Event triggering changes for CodeMirror 5
-  // Page.codeMirrorEditor.on('focus', function (id, gained) {
-  //   Action.focusOn('CodeMirror', true);
-  // });
-  // Page.codeMirrorEditor.on('blur', function (id, gained) {
-  //   Action.focusOn('CodeMirror', false);
-  // });
-  // Page.codeMirrorEditor.on('gutterClick', function (id, theLine) {
-  //   Page.codeMirrorEditor.foldCode(theLine);
-  // });
-  // ==================== this should be change up to this point ====================
-
-  
-  /* codemirror 5: detect changes. See below for inverse */
-  /* This is triggered indirectly by keyUP, which causes save to element 
-    umpleModelEditorText */
-  // Removing CM5
-  // Page.codeMirrorEditor.on('change', function (ed, changes) {
-  //   /* start timer to process changes 3s after after the editing is done */
-  //   console.log("onChange Triggered")
-  //   Action.umpleCodeMirrorTypingActivity("codeMirrorEditor");
-  //   /* update codemirror 6 panel with the same changes  .. NO LONGER DONE HERE  */
-  //   // Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
-  //  });
       
   // Sets the codemirror 6 text without any change trigger (hopefully)
   Page.setCodeMirror6Text = function (textToSet) {
-    // DEBUG
-    // console.log("Inside Page.setCodeMirror6Text() ...")
     Page.codeMirrorEditor6.dispatch({ 
       changes: { 
         from: 0, 
@@ -647,44 +572,12 @@ Page.initCodeMirrorEditor = function() {
         }
     } )
   }
-   
-  // codemirror 6: respond to each keyup to start the process of marking a change
-  // Page.codeMirrorEditor6.dom.addEventListener('keyup', function (ed, changes) {
-  //   console.log("keyup Event Triggered ...")
-  //   // start timer to process changes 3s after the editing is done
-  //   // Action.umpleCodeMirrorTypingActivity("newEditor");
-  //   setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
-  //  // console.log("keyup event triggered in CodeMirror 6 and hopefully saved text !!"+cm6.getCodeMirror6UmpleText());
-  // });
-
-  // Removing CM5
-  // CM5 cursorActivity event
-  // Page.codeMirrorEditor.on('cursorActivity', function () {
-  //   Page.codeMirrorEditor.addLineClass(Page.hLine, null);
-  //   Page.hLine = Page.codeMirrorEditor.addLineClass(
-  //   Page.codeMirrorEditor.getCursor().line,'activeline');
-  //   Action.umpleCodeMirrorCursorActivity();
-  // });
 
    Page.codeMirrorEditor6.dom.addEventListener('mousedown', function () {
-   // console.log("mousedown Event Triggered by CM6 editor ...")
     Action.umpleCodeMirrorCursorActivity();
    });
 
-  // Event triggering events end here
-  // Page.hLine = Page.codeMirrorEditor.addLineClass(0, "activeline");
-
-
-
   Page.codeMirrorOn = true;  
-  
-  // DOES NOT WORK - DEBUG ... testing to see if we can trigger change made in CodeMirror 6
-/*  document.getElementById('umpleModelEditorText')
-     .addEventListener('DOMSubtreeModified',function () {
-    console.log("       CM6 changes to umpleModelEditorText: "+Page.codeMirrorEditor6.state.doc.toString());
-    // start timer to process changes 3s after after the editing is done
-    Action.umpleCodeMirrorTypingActivity("notUsed");    
-  } ); */
 }
 
 // Function to make the E G S icons in UmpleOnline context senstive (#1400)
@@ -965,6 +858,7 @@ Page.initExamples = function()
   }  
 }
 
+
 Page.highlightItem = function(id)
 {
   var selector = "#" + id;
@@ -1079,17 +973,12 @@ Page.canShowHovers = function()
 
 Page.getRawUmpleCode = function()
 {
-  // DEBUG
-  // console.log("Inside Page.getRawUmpleCode ...")
-  // console.log("Reading Model Code from 'umpleModelEditorText' html element ...")
   return document.getElementById('umpleModelEditorText').value;
 }
 
 // CM6 function corresponding to CM5 Page.getRawUmpleCode()
 Page.getRawUmpleCodeCM6 = function()
 {
-  // DEBUG
-  // console.log("Reading Model Code from CM6 editor ...")
   return Page.codeMirrorEditor6.state.doc.toString();
 }
 
@@ -1097,9 +986,7 @@ Page.getUmpleCode = function()
 {
   // DEBUG
   // console.log("Inside Page.getUmpleCode ...")
-  // var modelCleaned = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var modelCleaned = Page.getRawUmpleCodeCM6().replace(Page.modelDelimiter, "");
-  // console.log("Reading Positioning Code from 'umpleLayoutEditorText' html element ...")
   var positioning = jQuery("#umpleLayoutEditorText").val().replace(Page.modelDelimiter, "");
   if(positioning !== "" && !positioning.includes("namespace -;")){
    // prepend namespace cancellation to prevent namespace redefinition errors
@@ -1122,6 +1009,7 @@ Page.splitUmpleCode = function(umpleCode)
 {
   // DEBUG
   // console.log("Inside Page.splitUmpleCode ...")
+
   var splitIndex = umpleCode.indexOf(Page.modelDelimiter);
   if (splitIndex == -1)
   {
@@ -1157,9 +1045,6 @@ Page.setUmpleCode = function(umpleCode, reason)
     // issue#1409  Do not Set the umple code if codeChange is false(i.e. reason is false)
     if (!((typeof reason === 'boolean') && reason == false))
     {
-      // Update the codemirror 5 editor itself
-      // console.log("Setting modelCode to codeMirror editor ...")
-      // Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
       Page.setCodeMirror6Text(modelAndPositioning[0]);
     }
   }
@@ -1167,7 +1052,6 @@ Page.setUmpleCode = function(umpleCode, reason)
   // Update Codemirror 6 and the backup variable
   // console.log("Setting modelCode to codeMirror 6 ...")
   Action.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0]);
-  //OLD jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
 
   if (typeof reason === 'function'){
     reason();
@@ -1234,7 +1118,6 @@ Page.createTaskCallback = function(response)
   }
   else 
   {
-    //window.alert("Successfully created a Task! Now you will be navaigate to task modfication page");
     window.location.href = "umple.php?task=1&model=" + response.responseText;
   }
 }
@@ -1358,7 +1241,6 @@ Page.hideLoading = function()
 Page.showModelLoading = function()
 {
   // change to code mirror 6
-  // var modelEditor = jQuery("#topTextEditor");
   var modelEditor = jQuery("#newEditor");
 
   if(Page.modelLoadingCount == 0)
@@ -1391,8 +1273,7 @@ Page.showLayoutLoading = function()
 
 Page.showCanvasLoading = function()
 {
-  if (debuggerFlag)   
-  console.log("Inside Page.showCanvasLoading() ...")
+  // console.log("Inside Page.showCanvasLoading() ...")
 
   var canvas = jQuery("#umpleCanvas");
   if(Page.canvasLoadingCount == 0)
@@ -1662,7 +1543,8 @@ Page.getGeneratedMarkup = function(code, language)
     // No generated code to extract
   }
   else if(language == "structureDiagram") 
-  {// Covers the structure diagram code
+  {
+    // Covers the structure diagram code
     output = code.split("<p>URL_SPLIT")[1];
     output = output.replace(/##CANVAS_ID##/g, "generatedSVGCanvas");
     // Converts html encoded special characters to plaintext

@@ -1,3 +1,7 @@
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
+
 // This provides collaboration server functionality to allow multiple
 // collaborations among Codemirror6 clients. 
 //
@@ -30,9 +34,9 @@ const server = http.createServer(app);
 const port:string = config.get('collab_server.port');
 const apiPath:string = config.get('collab_server.path');
 
-const serverDebugFlag = true; // set to true to enable debug messages
+const collabServerDebugFlag = false; // set to true to enable debug messages
 
-if(serverDebugFlag){
+if(collabServerDebugFlag){
   console.log("=====================================");
   console.log("Server", server);
   console.log("=====================================");
@@ -43,14 +47,6 @@ if(serverDebugFlag){
 }
 
 // The updates received so far (updates.length gives the current version)
-
-// ORIGINAL Variables related to single document collaboration
-//  these were defined in base code that was adapted by umple to enable multi-file collaboration
-// let updates: Update[] = []
-// The current document
-// let doc = Text.of(["Start document"])
-// let pending: ((value: any) => void)[] = []
-
 
 // CUSTOM TYPE to store updates, document, pending updates
 // updates: an array to store document updates corresponding to each filekey
@@ -71,17 +67,6 @@ let collabfilemap = new Map<string, collabDoc>();
 // Map for tracking online users per session
 let activeUsers = new Map<string, Set<string>>();
 
-// DEBUG
-// The following code is currently not active
-// app.get('/collabapitest/healthCheck', (req: any, res: any)=>{
-//   const data = {
-//     uptime: process.uptime(),
-//     message: 'Collab_Server is running !!!',
-//     date: new Date()
-//     }
-//   res.status(200).send(data);
-// })
-
 let io = new Server(server, {
   path: apiPath,
   cors: {
@@ -90,6 +75,44 @@ let io = new Server(server, {
   }
 });
 
+
+app.get('/healthCheck', (req, res) => {
+  // Server uptime
+  const uptime = process.uptime();
+
+  // Get active users and file info
+  const files = Array.from(activeUsers.keys());
+  
+  // Calculate total active users
+  // Reduce the activeUsers map to a single count of all active users
+  // by summing the size of each Set of users
+  // This is done by iterating over each file key and adding the size of the Set of users
+  // acc: The accumulator, which starts at 0 (as specified in the second argument to reduce), and gets incremented on each iteration.
+  const activeUsersCount = files.reduce((acc, fileKey) => acc + activeUsers.get(fileKey)!.size, 0);
+  
+  // Filter files to only include those with at least one user
+  const filesInfo = files
+      .map((fileKey) => {
+          const userCount = activeUsers.get(fileKey)!.size;
+          return { fileKey, userCount };
+      })
+      .filter(room => room.userCount > 0); // Only include files with active collaboration users
+
+  // Create the response object
+  const healthStatus = {
+      status: 'Server is running',
+      uptime: uptime, // in seconds
+      NumberOfActiveUsers: activeUsersCount, // Total number of active users
+      NumberOfActiveSessions: filesInfo.length, // Number of files with active collaboration users
+      filesInfo
+  };
+
+  // Send the response
+  res.status(200).json(healthStatus);
+});
+
+
+
 io.on('connect_error', (err) => {
   console.log(`could not connect due to ${err.message}`);
 });
@@ -97,19 +120,18 @@ io.on('connect_error', (err) => {
 // listening for connections from clients
 io.on('connection', (socket: Socket) =>{
   // DEBUG
-  if (serverDebugFlag){
+  if (collabServerDebugFlag){
     console.warn("=====================================");
     console.warn("Client connected!", "Socket ID: ", socket.id);
     console.warn("=====================================");
     console.warn('New connection from ' + socket.handshake.address + ' with socket id: ' + socket.id);
-    // console.warn('socket ip: ', socket.request.connection.remoteAddress);
   }
 
 
   // Listen for a new session
   socket.on('joinSession', (fileKey: string) => {
 
-  if(serverDebugFlag){
+  if(collabServerDebugFlag){
     console.log("=====================================");
     console.warn("user joined Session with this keyfile: ", fileKey);
   }
@@ -117,7 +139,7 @@ io.on('connection', (socket: Socket) =>{
     if (!activeUsers.has(fileKey)) {
       activeUsers.set(fileKey, new Set());
 
-      if(serverDebugFlag){
+      if(collabServerDebugFlag){
         console.log("=====================================");
         console.log(`New session created, file ID: ${fileKey}`);
       }
@@ -127,7 +149,7 @@ io.on('connection', (socket: Socket) =>{
     const users = activeUsers.get(fileKey)!;
     users.add(socket.id);
 
-    if(serverDebugFlag){
+    if(collabServerDebugFlag){
       console.log("=====================================");
       console.warn(`User count for session: ${fileKey}, count: ${users.size}`);
       console.warn(`Active users: ${users}`);
@@ -137,28 +159,27 @@ io.on('connection', (socket: Socket) =>{
     socket.join(fileKey);
 
     io.in(fileKey).emit('userCountUpdate', users.size);
-    console.log("=====================================");
-    console.log(`User joined session: ${fileKey}, current count: ${users.size}`);
+
+    if(collabServerDebugFlag){
+      console.log("=====================================");
+      console.log(`User joined session: ${fileKey}, current count: ${users.size}`);
+    }
+
   });
-  
   
   // core socket event that sends updates to a requesting client
   // when the client requests for them to be pulled
   // fileKey parameter should come from the client - umpdir_filename
   socket.on('pullUpdates', (fileKey: string, version: number) => {
-    // DEBUG
-    // console.log("inside pullUpdates with filekey: ", fileKey)
 
-    if(serverDebugFlag){
+    if(collabServerDebugFlag){
       console.warn(`User:${socket.id} pullUpdates calls - fileKey: ${fileKey} update number: ${version}`);
     }
-
-    // console.log(`pullUpdates - fileKey: ${fileKey} update number: ${version}`)
     let currentCollabDoc: collabDoc = getOrCreate(fileKey);
     let updates: Update[] = currentCollabDoc.updates;
     let pending: ((value: any) => void)[] = currentCollabDoc.pending;
 
-    if(serverDebugFlag){
+    if(collabServerDebugFlag){
       console.log("=====================================");
       console.warn(`currentCollabDoc.updates.length: ${updates.length}`);
     }
@@ -166,7 +187,7 @@ io.on('connection', (socket: Socket) =>{
     if (version < updates.length) {
       socket.emit("pullUpdateResponse", JSON.stringify(updates.slice(version)));
 
-      if(serverDebugFlag){
+      if(collabServerDebugFlag){
         console.log("=====================================");
         console.warn(`pullUpdateResponse sent with updates: ${updates.slice(version)}`);
       }
@@ -175,8 +196,7 @@ io.on('connection', (socket: Socket) =>{
       pending.push((updates) => { 
         socket.emit('pullUpdateResponse', JSON.stringify(updates.slice(version))) });
 
-      if(serverDebugFlag){
-        // console.warn(`pending.push called with updates (pullUpdateResponse): ${updates.slice(version)}`)
+      if(collabServerDebugFlag){
         console.log("=====================================");
         console.warn(`pending.push called with updates (pullUpdateResponse)`);
       }
@@ -187,11 +207,8 @@ io.on('connection', (socket: Socket) =>{
     currentCollabDoc.pending = pending;
     collabfilemap.set(fileKey, currentCollabDoc);
 
-if(serverDebugFlag){
-    // console.log("collabfilemap: ", collabfilemap);
+if(collabServerDebugFlag){
      console.log("currentCollabDoc: ", currentCollabDoc);
-    // console.log("currentCollabDoc.updates: ", currentCollabDoc.updates);
-    // console.log("currentCollabDoc.pending: ", currentCollabDoc.pending);
   }
 
   })
@@ -201,38 +218,36 @@ if(serverDebugFlag){
   // fileKey parameter should come from the client - umpdir_filename
   socket.on('pushUpdates', (fileKey: string, version, docUpdates) => {
 
-    if(serverDebugFlag){
+    if(collabServerDebugFlag){
       console.warn(`User:${socket.id} pushUpdates called - fileKey: ${fileKey} update number: ${version} docUpdates: ${docUpdates}`);
     }
-
-    // DEBUG
-    //console.log(`pushUpdates - fileKey: ${fileKey} update number: ${version}`)
     let currentCollabDoc : collabDoc = getOrCreate(fileKey);
     let updates: Update[] = currentCollabDoc.updates;
     docUpdates = JSON.parse(docUpdates);
 
-    if(serverDebugFlag){
+    if(collabServerDebugFlag){
       console.log("=====================================");
       console.warn(`currentCollabDoc.updates.length: ${updates.length}`);
       console.log(`docUpdates: ${docUpdates}`);
       console.log(`docUpdates.length: ${docUpdates.length}`);
       console.log("=====================================");
+      
+      // DEBUG
+      console.log(`document (10 chars): ${currentCollabDoc.doc.slice(0, 10)}`);
+      console.log("document updates: ", docUpdates.toString());
+      
     }
-
-    // DEBUG
-    console.log(`document (10 chars): ${currentCollabDoc.doc.slice(0, 10)}`);
-    console.log("document updates: ", docUpdates.toString());
 
     try {
       // DEBUG
-      if(serverDebugFlag){
+      if(collabServerDebugFlag){
       console.log(`fileKey: ${fileKey} , version: ${version} , updates.length: ${updates.length}`);
       }
 
       if (version != updates.length) {
         socket.emit('pushUpdateResponse', false);
 
-        if(serverDebugFlag){
+        if(collabServerDebugFlag){
           console.log(`pushUpdateResponse sent with false`);
           console.log(`filekey: ${fileKey} version: ${version} != updates.length: ${updates.length}`);
         }
@@ -255,7 +270,7 @@ if(serverDebugFlag){
             socket.emit('pushUpdateResponse', false);
           }
 
-          if(serverDebugFlag)
+          if(collabServerDebugFlag)
             {
               console.log("=====================================");
               console.warn(`update.changes: ${update.changes}`);
@@ -265,7 +280,7 @@ if(serverDebugFlag){
         }
         socket.emit('pushUpdateResponse', true);
 
-        if(serverDebugFlag){
+        if(collabServerDebugFlag){
           console.log(`Emitted, pushUpdateResponse sent with true`);
         }
 
@@ -289,13 +304,10 @@ if(serverDebugFlag){
 
   socket.on('getDocument', (fileKey, initText) => {
 
-if(serverDebugFlag){
-    console.log("=====================================");
-    console.warn(`getDocument event called with this key: ${fileKey}`);
-}
-
-    // DEBUG
-    // console.log(`getDocument event: ${fileKey}`) // ${initText}
+    if(collabServerDebugFlag){
+      console.log("=====================================");
+      console.warn(`getDocument event called with this key: ${fileKey}`);
+    }
 
       let currentCollabDoc: collabDoc = getOrCreate(fileKey)
       let updates: Update[] = currentCollabDoc.updates
@@ -304,16 +316,14 @@ if(serverDebugFlag){
         doc = Text.of([initText])
         currentCollabDoc.doc = doc
 
-      if(serverDebugFlag){
-        
+      if(collabServerDebugFlag){
         console.log("=====================================");
         console.warn(`Document text not present on server, setting to: ${initText}`);
-
       }
 
       }
       else{
-        console.log(`${fileKey} - Document text present on server`)
+        console.log(`${fileKey} - Document text present on server`);
       }
       socket.emit('getDocumentResponse', updates.length, doc.toString());
   })
@@ -324,8 +334,10 @@ if(serverDebugFlag){
       if (users.delete(socket.id)) {
         // Emit the updated user count to all clients in the session
         io.in(fileKey).emit('userCountUpdate', users.size);
+        if(collabServerDebugFlag){
         console.log("=====================================");
         console.log(`User disconnected from session: ${fileKey}, current count: ${users.size}`);
+        }
         break; // Exit after handling the first found session
       }
     }
@@ -333,22 +345,17 @@ if(serverDebugFlag){
   
 })
 
-
-
 // checks if the Map contains any records related to the fileKey coming from the client
 // fileKey is created as follows: umpdir_filename (both of these parameters are passed in the URL by cleint)
 // if a corresponding record for fileKey sent by client is not found, an empty record of custom type collabDoc is created
 // custom type: collabDoc is defined at start of the file
 function getOrCreate(fileKey: string): collabDoc {
 
-  if(serverDebugFlag){
+  if(collabServerDebugFlag){
     console.log("=====================================");
     console.warn(`getOrCreate called with fileKey: ${fileKey}`);
   }
   
-  // DEBUG
-  // console.log("collabfilemap.size : ", collabfilemap.size)
-  // console.log('collabfilemap: ', collabfilemap)
   if(!collabfilemap.has(fileKey)){
     collabfilemap.set(fileKey, 
       {
@@ -363,8 +370,5 @@ function getOrCreate(fileKey: string): collabDoc {
 
 // start listening to calls to collaborate
 server.listen(port, () => {
-  console.log(`Collab server listening on port: ${port}`)
-  // DEBUG
-  // console.log(`Connect your client to path: ${apiPath}`)
-  // console.log(server.address())
+  console.log(`Collab server listening on port: ${port}`);
 });
