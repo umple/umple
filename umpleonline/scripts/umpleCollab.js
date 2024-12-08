@@ -1,36 +1,39 @@
-// console.log("umpleCollab.js loaded ...");
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
 
-Collab = new Object();
-let sockett= null;
-let dc = null;
-let baseclientID = null;  
-let attempt = 0;
-let checktemp = false;
-let isConnected = false;
-let inactivityDisabled = false;
-// let inActivityIntervalID;
+// Project: UmpleOnline
+// This file contains the code for the collaboration feature of UmpleOnline
+// It is responsible for connecting to the UmpleCollabServer, sending and receiving updates,
+// and handling inactivity
+
+Collab = new Object();  // Object to store the functions for collaboration
+let oldSocket= null; // Variable to store the socket connection
+let packetLoss = null; // Variable to store the number of packet loss
+let baseclientID = null;  // Variable to store the client ID
+let attempt = 0;   // Variable to store the number of attempts
+let checktemp = false;  // Variable to check if the model is temporary
+let isConnected = false; // Variable to store the connection status
+let inactivityDisabled = false; // Variable to store the inactivity status
 
 // the main process of Idle timer
-// let inactivityTime = 300000; // 5 minutes 
-// let inactivityTime = 6000; // 6 seconds
-let inactivityTime = 600000; // 10 minutes
-let inactivitywarningTime = 540000; // 9 minutes
-let diff = (inactivityTime - inactivitywarningTime)/1000;
-let inactivityTimer;
+const defaultInactivityTime = 600000; // 10 minutes
+const defaultInactivitywarningTime = 540000; // 9 minutes
+const defaultInactivityTimeTest = 10000; // 10 seconds
+const defaultInactivitywarningTimeTest = 6000; // 6 seconds
+
+let inactivityTime = defaultInactivityTime; // 10 minutes
+let inactivitywarningTime = defaultInactivitywarningTime; // 9 minutes
+let diff = (inactivityTime - inactivitywarningTime)/1000; // 60 seconds
+let inactivityTimer; // Variable to store the timer
 let inactivitywarningTimer;
-let debugFlag = false;
-let achknowledgedTimer = 0;
-let count = 0;
+let collabClientDebugFlag = false;
+let ackknowledgedTimer = 0; 
+let activeUsercount = 0; 
 let inactivitychecker = true;
 
 
 function updateConnectionStatus() {
-  // if (navigator.onLine) {
-  //     console.log("You are online");
-  // } else {
-  //     console.log("You are offline");
-  //     this.Collab.disconnectFromServer();
-  // }
 
   if(!navigator.onLine){
     console.warn("You are not connected to the Internet. Please check your connection and try again.");
@@ -41,7 +44,6 @@ function updateConnectionStatus() {
 }
 
 // Listen for changes
-// window.addEventListener('online', updateConnectionStatus);
 window.addEventListener('offline', updateConnectionStatus);
 
 // this method is called in umple.php when it is verified that current URL is Bookmarked/Collaborative URL
@@ -55,16 +57,18 @@ Collab.connectCollabServer = async function() {
   if (urlParams.has('model')) {
     let checkModel = urlParams.get('model');
     checktemp = checkModel.startsWith('tmp');
-    if(debugFlag)
-    console.warn("Model Parameter: ", checkModel, "CheckTemp: ", checktemp);
+    if(collabClientDebugFlag){
+      console.warn("Model Parameter: ", checkModel, "CheckTemp: ", checktemp);
+    }
   }
 
 // Check the initial status
 updateConnectionStatus();
 
   // DEBUG
-  if(debugFlag)
-  console.warn("Inside Collab.connectCollabServer ...");
+  if(collabClientDebugFlag){
+    console.warn("Inside Collab.connectCollabServer ...");
+  }
 
 // Check if 'model' parameter exists and starts with 'tmp'
   if(Page.isBookmarkURL() && checktemp!=true){
@@ -76,8 +80,9 @@ updateConnectionStatus();
   document.getElementById('inputExample').disabled = true;
 
     // DEBUG
-    if(debugFlag)
-    console.log("Current Page is Bookmark URL --- connecting to Collab Server!");
+    if(collabClientDebugFlag){
+      console.log("Current Page is Bookmark URL --- connecting to Collab Server!");
+    }
 
     // setup default values CollabServerConfig is not set by creating collab-server-config.js
     // The client will try to connect to serverURL: https://cruise.umple.org and serverPath: /collabapi
@@ -85,7 +90,7 @@ updateConnectionStatus();
     const serverPath = typeof CollabServerConfig !== 'undefined' ? CollabServerConfig.serverPath : "/collabapi" 
     
     // DEBUG
-    if(debugFlag){
+    if(collabClientDebugFlag){
     console.log("serverURL: ", serverURL);
     console.log("serverPath: ", serverPath);
     }
@@ -104,41 +109,37 @@ updateConnectionStatus();
 
 
     // DEBUG
-    if(debugFlag)
-    console.warn("Socket Info: ", socket);
+    if(collabClientDebugFlag){
+      console.warn("Socket Info: ", socket);
+    }
 
     // LED updates:
     const led = document.getElementById('led');
     
     const connectionTimeout = setTimeout(() => {
-      // console.error('Connection to Collaboration server timed out!', window.performance.now()-snapshot);
-      if(debugFlag){
+      if(collabClientDebugFlag){
         console.error('Connection to Collaboration server timed out!');
         console.log("Collaboration server is disconnected/down !");
       }
-      Page.setFeedbackMessage("Cannot Collaborate right now, due to connection time out!");
-      // led.style.backgroundColor = 'red' ; 
+      Page.setFeedbackMessage("Cannot Collaborate right now, due to too many failed tries!");
       document.getElementById('led').classList.remove('LEDonError');
       document.getElementById('led').classList.remove('LEDonDisconnect');
-
-      
     }, 10000); // 10 seconds timeout
 
-    // const snapshot= window.performance.now();
-    // console.log("timeout registered", snapshot);
-    if(debugFlag)
-    console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
+    if(collabClientDebugFlag){
+      console.log("serverURL: ", serverURL, "serverPath: ", serverPath);
+    }
   
 
 
 
     socket.on('connect', () => {
       isConnected = true;
-      // console.log("connected", window.performance.now()-snapshot);
       clearTimeout(connectionTimeout);
       
-      if(debugFlag)
-      console.log("Connected to Collab Server....");
+      if(collabClientDebugFlag){
+        console.log("Connected to Collab Server....");
+      }
       
       // set a feedback message for connected umpleonline window
       setTimeout(Page.setFeedbackMessage("Connected to Collab Server"),2500);
@@ -155,18 +156,14 @@ updateConnectionStatus();
       
 
         const disconnectButton = document.getElementById('collabDisconnect');
-        if(disconnectButton && count>1)
+        if(disconnectButton && activeUsercount>1)
         disconnectButton.style.display = 'inherit'; // Hide disconnect button
 
         if (document.getElementById('activeUsers')){
         document.getElementById('activeUsers').style.display = 'inherit'; // Hide active users display
         document.getElementById('activeUsersIcon').style.display = 'inherit'; // Hide active users label
         }
-        // if(cm6.EditorView.editable.of(false) == true)
-        //   console.log("Editor is not editable")
-        // Page.codeMirrorEditor6.dispatch({
-        //   effects: cm6.StateEffect.removeConfig.of(cm6.EditorView.editable.of(false))
-        // });
+   
       socket.emit('joinSession', filekey); // Notify server of joining the session
       
       Page.codeMirrorEditor6.dispatch({
@@ -178,17 +175,16 @@ updateConnectionStatus();
     document.getElementById('inputExampleType').disabled=false;
     document.getElementById('inputExample').disabled=false;
 
-    // Action.changeDiagramType({type:"editableClass"});
-    if(count > 1 && inactivitychecker)
+    if(activeUsercount > 1 && inactivitychecker)
     startCheckingInactivity();
-    // resetInactivityTimer();
 
     })
     .on('connect_error', (error) => {
       isConnected = false;
       
-      if(debugFlag)
+      if(collabClientDebugFlag){
         console.warn('Connection to Collaboration server failed! Please try again later.');
+      }
 
         Page.setFeedbackMessage("Connection to Collaboration server failed! Please try again later.");
 
@@ -200,8 +196,8 @@ updateConnectionStatus();
         const disconnectButton = document.getElementById('collabDisconnect');
         const collabFork = document.getElementById('buttonCollabFork');
 
-        // led.style.backgroundColor = 'red';
         document.getElementById('led').classList.add('LEDonError');
+
         // Hide disconnect button
         if(disconnectButton.style.display == 'inherit'){
         disconnectButton.style.display = 'none'; // Hide disconnect button
@@ -210,31 +206,26 @@ updateConnectionStatus();
 
         attempt+=1;  
         if (attempt >= 3){
-        // console.log("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
-        // Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
-        
         attempt=0;
         Collab.disconnectFromServer("You have been disconnected from the server due to multiple failed attempts to update the document. Please try to reconnect to your collaboration session later.");
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDonDisconnect');
-
-
         }
       
     });
 
 
-    // Set up listener for user count updates
+    // Set up listener for active users count updates
     socket.on('userCountUpdate', function (count) {
-      count = count;
-      // document.getElementById('userCountDisplay').innerText = `Users Online: ${count}`;
-      if(debugFlag)
-      console.warn("Users Online: ", count);
+      activeUsercount = count;
+      if(collabClientDebugFlag){
+        console.warn("Users Online: ", activeUsercount);
+      }
 
       if(document.getElementById('activeUsers')){
-      document.getElementById('activeUsers').innerText = `${count}`;
+      document.getElementById('activeUsers').innerText = `${activeUsercount}`;
 
-      if(count == 1){
+      if(activeUsercount == 1){
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDMoreThanTwo');
         document.getElementById('led').classList.remove('LEDTwo');
@@ -248,7 +239,7 @@ updateConnectionStatus();
           document.getElementById('collabDisconnect').style.display = 'none';
 
       }
-      else if(count == 2){
+      else if(activeUsercount == 2){
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDOne');
         document.getElementById('led').classList.remove('LEDMoreThanTwo');
@@ -256,14 +247,15 @@ updateConnectionStatus();
 
         document.getElementById('led').classList.add('LEDTwo');
         
-        if(inactivitychecker)
-        startCheckingInactivity();
+        if(inactivitychecker){
+          startCheckingInactivity();
+        }
 
         if(isConnected)
           document.getElementById('collabDisconnect').style.display = 'inherit';
 
       }
-      else if(count >2){
+      else if(activeUsercount >2){
         document.getElementById('led').classList.remove('LEDonError');
         document.getElementById('led').classList.remove('LEDOne');
         document.getElementById('led').classList.remove('LEDTwo');
@@ -271,11 +263,13 @@ updateConnectionStatus();
         document.getElementById('led').classList.remove('LEDonDisconnect');
         document.getElementById('led').classList.add('LEDMoreThanTwo');
 
-        if(inactivitychecker)
-        startCheckingInactivity();
+        if(inactivitychecker){
+          startCheckingInactivity();
+        }
 
-        if(isConnected)
+        if(isConnected){
           document.getElementById('collabDisconnect').style.display = 'inherit';
+        }
         
       }
       else {
@@ -292,9 +286,6 @@ updateConnectionStatus();
     });
 
     socket.on('disconnect', function () {
-     // console.log('You are disconnected from server.');
-     // Page.setFeedbackMessage("Disconnected from Collab Server")
-    // Collab.disconnectFromServer();
     isConnected = false;
       
     });
@@ -302,27 +293,24 @@ updateConnectionStatus();
 
     const umpdir = Page.getModel();
     const filename = TabControl.activeTab != null ? TabControl.activeTab.name : "Untitled";
-    // const filename = "untitled";
 
     const inittext = Page.codeMirrorEditor6.state.doc.toString();
-    // const inittext = "Test Content";
 
     var filekey = umpdir+"_"+filename;
     // DEBUG
-    // console.log(umpdir, filename, inittext)
 
     const getDocumentResponse = await Collab.getDocument(socket, filekey, inittext)
-    // const {version, doc} = getDocument(socket, filekey, inittext)
 
     // DEBUG
-    if(debugFlag)
-    console.log("Version: ", getDocumentResponse.version, "Doc: ", getDocumentResponse.doc);
+    if(collabClientDebugFlag){
+      console.log("Version: ", getDocumentResponse.version, "Doc: ", getDocumentResponse.doc);
+    }
     // when response document coming from collaboration server has some content,
     // then only update the code editor
 
     if(getDocumentResponse.doc.length != 0){
       Page.setCodeMirror6Text(getDocumentResponse.doc);
-      if(debugFlag){
+      if(collabClientDebugFlag){
         console.warn("Document content received from Collab Server: ");
         console.log("response of get document ", getDocumentResponse.doc);
         console.log("Document Version received from Collab Server: ", getDocumentResponse.version);
@@ -342,27 +330,29 @@ updateConnectionStatus();
   }
   else{
     // DEBUG
-    if(debugFlag)
-    console.log("Current Page URL is NOT Bookmarked!");
+    if(collabClientDebugFlag){
+      console.log("Current Page URL is NOT Bookmarked!");
+    }
 
     Page.setFeedbackMessage("Current URL is not Collaborative!");
   }
       // DEBUG
       if(socket != null){
-        if(debugFlag)
-        console.warn("Socket Info: ", socket);
+        if(collabClientDebugFlag){
+          console.warn("Socket Info: ", socket);
+        }
       }
 
-      sockett = socket;
+      oldSocket = socket;
 
 }
 
 
 Collab.disconnectFromServer = function(text) {
-  socket=sockett;
+  socket=oldSocket;
   isConnected = false;
   inactivitychecker = true;
-  // Notify the server about disconnection if necessary
+  // You can notify the server about disconnection if necessary
   // socket.emit('disconnectRequest');
 
   // Clean up the socket connection
@@ -374,7 +364,6 @@ Collab.disconnectFromServer = function(text) {
 
   // Update UI for disconnected state
   const led = document.getElementById('led');
-  // led.style.backgroundColor = 'gray'; // Indicate disconnected state
   document.getElementById('led').classList.add('LEDonDisconnect');
   document.getElementById('led').classList.remove('LEDon');
   document.getElementById('led').classList.remove('LEDonError');
@@ -384,8 +373,6 @@ Collab.disconnectFromServer = function(text) {
   document.getElementById('led').classList.remove('LEDMoreThanTwo');
 
 
-  // const reconnectButton = document.getElementById('collabReconnect');
-  // reconnectButton.style.display = 'inherit'; // Show reconnect button
 
   const disconnectButton = document.getElementById('collabDisconnect');
   disconnectButton.style.display = 'none'; // Hide disconnect button
@@ -405,18 +392,12 @@ Collab.disconnectFromServer = function(text) {
     setTimeout(() => {
     Page.setFeedbackMessage("Disconnected from Collab Server");
     
-    if(debugFlag)
-    console.log("Disconnected from Collab Server");
+    if(collabClientDebugFlag){
+      console.log("Disconnected from Collab Server");
+    }
 
   }, 1000);
   }
-      // Page.setFeedbackMessage("Disconnected from Collab Server");
-      // // console.log("Disconnected from Collab Server")
-      // console.log("Disconnected from Collab Server",socket);
-
-    // Page.codeMirrorEditor6.dispatch({
-    //   effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
-    // });
 
   Page.codeMirrorEditor6.dispatch({
     effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
@@ -424,7 +405,6 @@ Collab.disconnectFromServer = function(text) {
 
   Page.readOnly = true;
   
-  // Action.redrawDiagram();
   UmpleSystem.redrawCanvas();
 
   
@@ -438,35 +418,31 @@ Collab.disconnectFromServer = function(text) {
 }
 
 
-
-// DEBUG
-// console.log(Page.getModel())
-// console.log(TabControl.activeTab.name)
-// console.log(Page.codeMirrorEditor6.state.doc.toString())
-// Collab.connectCollabServer(Page.getModel(), TabControl.activeTab.name, Page.codeMirrorEditor6.state.doc.toString());
-  
-
 // emits getDocument event and waits for server to return version and document
 // once the promise is resolved, returns document version and document content
 Collab.getDocument = function(socket, filekey, inittext) {
   // DEBUG
-  if(debugFlag)
-  console.warn("Inside Collab.getDocument() ...");
-  // socket.emit('getDocument', filekey, inittext);
-  // return {version: 0, doc: "FROM getDocument"}
+  if(collabClientDebugFlag){
+    console.warn("Inside Collab.getDocument() ...");
+  }
+
   return new Promise(function(resolve) {
       socket.emit('getDocument', filekey, inittext);
       
-      if(debugFlag)
-      console.log("Emitted getDocument with filekey: ", filekey);
+      if(collabClientDebugFlag){
+        console.log("Emitted getDocument with filekey: ", filekey);
+      }
 
       socket.once('getDocumentResponse', function(version, doc) {
       resolve({
           version,
           doc: cm6.Text.of(doc.split("\n"))
       })
-      if(debugFlag)
+
+      if(collabClientDebugFlag){
         console.log("Version: ", version, "Doc: ", doc);
+      }
+
       })
     })
 }
@@ -483,14 +459,14 @@ Collab.pushUpdates = async function(socket, filekey, version, fullUpdates) {
   }));
 
 
- if(debugFlag){
+ if(collabClientDebugFlag){
   console.warn("Inside Collab.pushUpdates() ...");
   console.warn("clientID: ", fullUpdates[0].clientID);
   console.log("Updates: ", updates);
   console.log("Filekey: ", filekey);
   console.log("Version: ", version);
   console.log("FullUpdates: ", fullUpdates);
-  achknowledgedTimer = Date.now();
+  ackknowledgedTimer = Date.now();
  }
 
 
@@ -499,25 +475,24 @@ Collab.pushUpdates = async function(socket, filekey, version, fullUpdates) {
   return new Promise(function(resolve) {
     socket.emit('pushUpdates', filekey, version, JSON.stringify(updates));
     socket.once('pushUpdateResponse', function(status) {
-      // DEBUG
-      // console.log("status: ", status)
-      // ===================
+
       if (status.error) {
         return reject(new Error(status.error));
       }
-      // ===================
       resolve(status);
     });
 
-    if(debugFlag)
-    console.log("Emitted pushUpdates with filekey: ", filekey, "Version: ", version, "Updates: ", updates , "FullUpdates: ", fullUpdates);
+    if(collabClientDebugFlag){
+      console.log("Emitted pushUpdates with filekey: ", filekey, "Version: ", version, "Updates: ", updates , "FullUpdates: ", fullUpdates);
+    }
+
   });
 }
 
 // pullUpdates obtains changes made by other collaborators
 // the arguments are the same three as for pushUpdates above
 Collab.pullUpdates = function(socket, filekey, version) {
-   if (debugFlag){
+   if (collabClientDebugFlag){
     console.log("Inside Collab.pullUpdates() ...");
     console.log("Filekey: ", filekey);
     console.log("Version: ", version);
@@ -526,8 +501,6 @@ Collab.pullUpdates = function(socket, filekey, version) {
   return new Promise(function(resolve) {
     socket.emit('pullUpdates', filekey, version);
 
-    // DEBUG
-    // console.log("Emitted pullUpdates with filekey: ", filekey)
     socket.once('pullUpdateResponse', function(updates) {
       resolve(JSON.parse(updates));
     });
@@ -537,14 +510,22 @@ Collab.pullUpdates = function(socket, filekey, version) {
   })));
 }
 
+// peerExtension is a function that returns an array of two elements
+// the first element is a cm6.collab object that is used to manage the collaboration
+// the second element is a cm6.ViewPlugin that is used to manage the view
+// the function takes a socket, a filekey, and a startVersion as arguments
+// the socket is the connection to the server
+// the filekey is the unique identifier for the file being edited
+// the startVersion is the version of the document that the client has
+// the function returns an array of two elements, the first is a cm6.collab object,
+// and the second is a cm6.ViewPlugin
 Collab.peerExtension = function(socket, filekey, startVersion) {
-  if(debugFlag){
+  if(collabClientDebugFlag){
     console.warn("Inside Collab.peerExtension() ...");
     console.log("Socket: ", socket);
     console.log("Filekey: ", filekey);
     console.log("StartVersion: ", startVersion);
   }
-  // console.log("filekey inside PeerExtension! ", filekey)
   const plugin = cm6.ViewPlugin.fromClass(class {
     constructor(view) {
       this.view = view;
@@ -566,10 +547,10 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       try {
        success = await Collab.pushUpdates(socket, filekey, version, updates);
        
-       if(debugFlag){
+       if(collabClientDebugFlag){
          console.log(success);
          if (success){
-          console.warn("Updates have been successfully pushed to the server in : "+ (Date.now() - achknowledgedTimer) + " milliseconds");
+          console.warn("Updates have been successfully pushed to the server in : "+ (Date.now() - ackknowledgedTimer) + " milliseconds");
           }
           }
       } catch (e) {
@@ -579,7 +560,7 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
 
       }
      
-      if(debugFlag){
+      if(collabClientDebugFlag){
         console.warn("Inside Collab.peerExtension.push(),update ...");
         console.log("Updates: ", updates);
         console.log("Version: ", version);
@@ -593,16 +574,13 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
         setTimeout(() => {
           document.getElementById('led').classList.remove('LEDon');
         document.getElementById('led').classList.add('LEDonError');
-        dc+=1;
+        packetLoss+=1;
       }, 200);
 
-      if (dc >= 500){
-        // Collab.disconnectFromServer("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later.");
-        // setTimeout(Page.setFeedbackMessage("You have been disconnected from server due to multiple failed attempts. Please try to reconnect to your collaboration session later."),3000);
-        
+      if (packetLoss >= 500){
         console.log("It looks like you're experiencing packet loss, which can cause lag or slow performance.");
         setTimeout(Page.setFeedbackMessage("It looks like you're experiencing packet loss, which can cause lag or slow performance."),3000);
-        dc=0;
+        packetLoss=0;
       }
 
       }
@@ -620,7 +598,7 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
       }, 200); 
     }
 
-      if(count > 1)
+      if(activeUsercount > 1)
       debounce(resetInactivityTimer, 2000)(); // Reset the inactivity timer
     }
 
@@ -630,16 +608,12 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
         const updates = await Collab.pullUpdates(socket, filekey, version); // filekey added here
         this.view.dispatch(cm6.receiveUpdates(this.view.state, updates));
 
-        if(debugFlag){
+        if(collabClientDebugFlag){
           console.warn("Inside Collab.peerExtension.pull(),update ...");
           console.log("Updates: ", updates);
           console.log("Version: ", version);
           console.warn("client ID",updates[0].clientID);
         }
-
-        // console.log("updates: ", updates);
-        // console.log(updates[0].clientID);
-        // console.log(baseclientID);
 
         if(updates[0].clientID != baseclientID){ 
           document.getElementById('led').classList.add('LEDonReceive');
@@ -666,8 +640,6 @@ Collab.peerExtension = function(socket, filekey, startVersion) {
 
 
 function startCheckingInactivity() {
-// Inactive timer:
-// if(document.getElementById('disconnectButton')){
   resetInactivityTimer();
   inactivitychecker = false;
 
@@ -675,26 +647,25 @@ function startCheckingInactivity() {
 
 
 function sendInactivitywarning() {
-  if(debugFlag)
-  console.warn("Only " + diff + " seconds left to disconnect due to inactivity");
+  if(collabClientDebugFlag){
+    console.warn("Only " + diff + " seconds left to disconnect due to inactivity");
+  }
 
   Page.setFeedbackMessage("Only " + diff + " seconds left to disconnect due to inactivity");  
-  // Page.setFeedbackMessage("You will be disconnected from collaboration due to inactivity in 20 seconds. Please type something on the editor to continue collaborating."); 
 }
 
 
 // Function to trigger when the user is considered inactive
 function userIsInactive() {
-  if(debugFlag)
-  console.log("User is inactive, disconnect sequence started...");
+  if(collabClientDebugFlag){
+    console.log("User is inactive, disconnect sequence started...");
+  }
   
-  // stopActivityInterval();
 
   Collab.disconnectFromServer(); // Function to handle disconnection
 
-  if(inactivityTime == 600000){
+  if(inactivityTime == defaultInactivityTime){
     setTimeout(()=>{
-      // alert("You have disconnected from collaboration due to inactivity. Please click reconnect if you want to connect to your collaboration session again.");
       console.warn("Collaboration disconnected and model is read only after 10 minutes of inactivity. Click reconnect to continue."); 
       Page.setFeedbackMessage("Collaboration disconnected and model is read only after 10 minutes of inactivity. Click reconnect to continue.");
     } ,3000);
@@ -703,13 +674,11 @@ function userIsInactive() {
   else
   {
     setTimeout(()=>{
-      // alert("You have disconnected from collaboration due to inactivity. Please click reconnect if you want to connect to your collaboration session again.");
       console.warn("Collaboration disconnected and model is read only after " + inactivityTime/1000 + " seconds of inactivity. Click reconnect to continue.");
       Page.setFeedbackMessage("Collaboration disconnected and model is read only after " + inactivityTime/1000 + " seconds of inactivity. Click reconnect to continue.");
     } ,3000);
 
   }
-  // resetInactivityTimer(); // Reset the inactivity timer 
 
 }
 
@@ -735,8 +704,9 @@ function debounce(callback, delay) {
 // Function to reset the inactivity timer
 function resetInactivityTimer() {
   if (!inactivityDisabled){
-  if(debugFlag)
-  console.warn('timer reset called ...');
+  if(collabClientDebugFlag){
+    console.warn('timer reset called ...');
+  }
 
   clearTimeout(inactivityTimer); // Clear the existing timer
   clearTimeout(inactivitywarningTimer); // Clear the existing timer
@@ -751,22 +721,25 @@ function resetInactivityTimer() {
 Collab.websocketLogging = function(command){
   if(command == 0){
     console.log("Unlimited collaboration logging");
-    debugFlag = true;
+    collabClientDebugFlag = true;
 
   }else if(command == -1){
     console.log("Disable collaboration logging");
-    debugFlag = false;
+    collabClientDebugFlag = false;
  
   }
  }
 
+ // Function to set the inactivity time
+ // command = 10 for 10 seconds, -1 for 10 minutes, 0 to disable
+ // This function is called from the Line Number
  Collab.clientSetTimeout = function(command){
   if(command == 10){
     if (isConnected){
     inactivityDisabled = false;
     console.log("Timeout the client after 10 seconds");
-    inactivityTime = 10000; // 10 seconds
-    inactivitywarningTime = 6000; // 6 seconds
+    inactivityTime = defaultInactivityTimeTest; // 10 seconds
+    inactivitywarningTime = defaultInactivitywarningTimeTest; // 6 seconds
     diff = 4000/1000;
     resetInactivityTimer();
     }
@@ -779,9 +752,9 @@ Collab.websocketLogging = function(command){
     if (isConnected){
     inactivityDisabled = false;
     console.log("Reset to normal inactivity time");
-    inactivityTime = 600000; // 10 minutes
-    inactivitywarningTime = 540000; // 9 minutes
-    diff = (600000- 540000)/1000;
+    inactivityTime = defaultInactivityTime; // 10 minutes
+    inactivitywarningTime = defaultInactivitywarningTime; // 9 minutes
+    diff = (defaultInactivityTime - defaultInactivitywarningTime)/1000; 
     resetInactivityTimer();
     }
     else{
@@ -803,14 +776,4 @@ Collab.websocketLogging = function(command){
     }
   }
  }
-
-
-//  if(command == 10){
-//   console.log("Ten seconds of collaboration logging started");
-//   debugFlag = true;
-//   setTimeout(() => {
-//     debugFlag = false;
-//     Page.setFeedbackMessage("Ten seconds of collaboration logging ended");
-//   }, 10000);
-// }
 
