@@ -173,7 +173,7 @@ $output = $dataHandle->readData('model.ump');
     background: #B06C5B;
   }
 
-::selection {
+  .cm-editor ::selection {
   color: #DD0033;
 }
 
@@ -335,7 +335,9 @@ $output = $dataHandle->readData('model.ump');
 <meta name="theme-color" content="#8f001a">
 </head>
 <body>
-<!-- 
+
+<!-- you can use this to show a modal if you need this in future
+
 <div id="modal-container" class="modal-container">
   <div class="modal">
 
@@ -440,8 +442,6 @@ $output = $dataHandle->readData('model.ump');
           <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="https://umple.org/donate" target="donatepage" title="Go to a University of Ottawa page that will enable you to donate to support Umple; even a few dollars will be much appreciated">Donate</a>&nbsp;
           
           </span>&nbsp;
-    <!-- </span>&nbsp; &nbsp; -->
-
              
     <span> &nbsp; For help: </span>
     <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="https://manual.umple.org";} ?>                
@@ -606,15 +606,8 @@ $output = $dataHandle->readData('model.ump');
     
                <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer('Disconnected from the server, the collaboration session has ended at the user\'s request.');"> Disconnect </a>
                &nbsp;
-               <!-- &nbsp; -->
-               
-              <!-- <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a> -->
-              <!-- <a class="button2" id="buttonCollabFork" style="display:none" href="javascript:Page.createBookmarkFork();"> Fork </a> -->
-
-
              <?php } else if (!isset($_REQUEST["task"])) { ?>
                <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
-                 <!-- <span id="led" class="led"> </span> -->
                </a>
                &nbsp;
              <?php } ?>
@@ -622,11 +615,6 @@ $output = $dataHandle->readData('model.ump');
              </span>
              
               <!-- collaboration LED -->
-         
-             <!-- <span id="led" class="led"> </span> -->
-
-
-
 
     <span style="font-size: 30%; white-space:nowrap; display:none;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
@@ -647,11 +635,6 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="mainApplication" class="row"> 
     <div id="textEditorColumn"  tabIndex="2"  class="inRow"> 
-      
-      <!-- codemirror 5 editor -->
-      <!-- <div id="topTextEditor" style="float:left; width:100%">
-        <textarea id="umpleModelEditorText" class="umpleModelEditor" wrap="off"></textarea>
-      </div> -->
 
       <!-- codemirror 6 editor -->
       <div id="newEditor" style="width:100%">
@@ -670,11 +653,6 @@ $output = $dataHandle->readData('model.ump');
           <ul class="first" id="saveLoad">
             <li class="subtitle">SAVE</li>
             <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-            <!--li id="ttSaveBookmark">
-              <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Resave URL</a>
-              </div>
-            </li-->
             <?php } else if (!isset($_REQUEST["task"])) { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
@@ -708,11 +686,6 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png" alt="Store in Local Browser icon"/> 
               Store in Browser
             </li>
-            
-            <!--li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
-              <img src="scripts/copy.png"/> 
-              Load from Browser
-            </li-->
 
             <li id="buttonDownloadFiles" class="downloadFiles">
               <img src="scripts/copy.png"/> 
@@ -871,9 +844,7 @@ $output = $dataHandle->readData('model.ump');
 
               </select>
             </li>
-          
-            <!-- <li class="dropbox-add-chooser"></li> --> 
-          </ul>
+            </ul>
           <?php } ?>
       
           <ul id="mainDrawMenu" class="second toggle">
@@ -890,10 +861,6 @@ $output = $dataHandle->readData('model.ump');
                <img src="scripts/assoc.png" alt="Icon to click on to create a new transition in certain state modes"/>
                Transition
              </li>            
-            <!-- <li id="buttonBendAssociation" class="toggleToolItem" name="paletteItem">
-              <img src="scripts/assocbend.jpg"/> 
-              Bend Assoc.
-            </li> -->
             <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class." tabindex="0">
               <img src="scripts/generalization.png" alt="Icon to click on to create a generalization (subclass relationship) in editable mode"/> 
               Generalization
@@ -1121,35 +1088,10 @@ $output = $dataHandle->readData('model.ump');
   </script>
 
   <script>
-    // if (document.getElementById('collabReconnect')) {
-    // const open = document.getElementById('collabReconnect');
-    // const modalContainer = document.getElementById('modal-container');
-    // const close = document.getElementById('closeModal');
-
-    // open.addEventListener('click', () => {
-    //   modalContainer.classList.add('show');
-    // });
-
-    // close.addEventListener('click', () => {
-    //   modalContainer.classList.remove('show');
-    // });
-
-    // }
-
-
-
     function reconnect() {
       var currentaddress = document.location.href;
       window.location.href = currentaddress;
     }
-
-
-    // function reconnectToSpecificlocation() {
-    //   var collabURL = document.getElementById('collabSessionURL').value;
-    //   window.open(collabURL,'_blank');
-    //     }
-
-
   </script>
 
 <script>
