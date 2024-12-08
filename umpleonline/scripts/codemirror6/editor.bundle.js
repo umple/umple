@@ -25001,6 +25001,11 @@ var cm6 = (function (exports) {
        return state.field(collabField).version;
    }
 
+   // Copyright: All contributers to the Umple Project
+   // This file is made available subject to the open source license found at:
+   // http://umple.org/license
+
+
    // Create a compartment for editable state
    const editableCompartment = new Compartment();
 
@@ -25018,7 +25023,7 @@ var cm6 = (function (exports) {
    });
 
 
-
+   // Function to create the editor state
    function createEditorState(initialContents, options={}) {
      
      let extensions = [
@@ -25083,7 +25088,6 @@ var cm6 = (function (exports) {
      }
 
      update(update) {
-       // console.log('update:', update);
        
        if (update.docChanged) {
            
@@ -25091,23 +25095,10 @@ var cm6 = (function (exports) {
            
            if (newContent !== this.lastContent) {
            const currentPositionofCursor = this.view.state.selection.main.head;
-         
-         // DEBUG
-           // console.log('Editor content changed...', 'Update the Diagram!');
+
            this.lastContent = newContent;
 
            debouncedProcessTyping("newEditor", false ,currentPositionofCursor); // call the debounced function
-
-           // // Use setTimeout to avoid the update-in-progress error
-           // setTimeout(() => {
-           //   this.view.dispatch({
-           //     selection: EditorSelection.single(currentPositionofCursor)
-           //   });
-
-           // }, 0); // This will schedule the execution in the next event loop cycle
-
-
-         // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
          }
        }
        Action.updateLineNumberDisplay();
