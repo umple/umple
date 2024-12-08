@@ -1,3 +1,11 @@
+// Copyright: All contributers to the Umple Project
+// This file is made available subject to the open source license found at:
+// http://umple.org/license
+
+// This file is used to create the code editor using CodeMirror 6
+// It also contains the custom theme and the custom plugin to listen for changes in the editor
+// It also have the debounced function to process the typing in the editor
+
 import { basicSetup } from "codemirror"
 import { EditorSelection, EditorState, Text, ChangeSet, StateEffect, Compartment } from "@codemirror/state";
 import { javascript } from "@codemirror/lang-javascript"
@@ -8,7 +16,7 @@ import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@cod
 import { SearchCursor, RegExpCursor } from "@codemirror/search";
 
 
-const debuggerFlag = false;
+const codemirrorDebuggerFlag = false;
 
 // Create a compartment for editable state
 const editableCompartment = new Compartment();
@@ -27,7 +35,7 @@ const myTheme = EditorView.theme({
 });
 
 
-
+// Function to create the editor state
 function createEditorState(initialContents, options={}) {
   
   let extensions = [
@@ -92,51 +100,28 @@ const changeListenerPlugin = ViewPlugin.fromClass(class {
   }
 
   update(update) {
-    // console.log('update:', update);
     
     if (update.docChanged) {
-      if (debuggerFlag)
+      // Debug: Check if the editor is updated
+      if (codemirrorDebuggerFlag)
       console.log('Editor updated..');
         
         const newContent = update.state.doc.toString();
         
         if (newContent !== this.lastContent) {
         const currentPositionofCursor = this.view.state.selection.main.head;
-       // if (newContent.localeCompare(this.lastContent) !== 0) {
 
-        if (debuggerFlag)   
-       console.warn('Content changed');
+        // Debug: Check if the content has changed
+        if (codemirrorDebuggerFlag) {
+          console.warn('Content changed');
+          console.log('new content lenght:', newContent.length);
+          console.log('old content lenght:', this.lastContent.length);
+          console.warn('details:', update.changes);
+        }  
 
-        //console.warn('new content:', newContent); 
-        if (debuggerFlag)
-        console.log('new content lenght:', newContent.length);
-
-        // console.warn('old content:', this.lastContent);
-        if (debuggerFlag)
-        console.log('old content lenght:', this.lastContent.length);
-
-        // console.warn('update:', update);
-
-        // console.log('update lenght:', update.length);
-        if (debuggerFlag)
-        console.warn('details:', update.changes);
-      
-      // DEBUG
-        // console.log('Editor content changed...', 'Update the Diagram!');
         this.lastContent = newContent;
 
         debouncedProcessTyping("newEditor", false ,currentPositionofCursor); // call the debounced function
-
-        // // Use setTimeout to avoid the update-in-progress error
-        // setTimeout(() => {
-        //   this.view.dispatch({
-        //     selection: EditorSelection.single(currentPositionofCursor)
-        //   });
-
-        // }, 0); // This will schedule the execution in the next event loop cycle
-
-
-      // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
       }
     }
     Action.updateLineNumberDisplay();
