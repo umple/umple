@@ -802,6 +802,18 @@ Page.setExamples = function(ex)
     }
    }
   )
+
+  // TODO the following does not yet properly work to open the files from the command line
+  // DEBUG
+  jQuery("#inputExample5").change(Action.loadExample);
+  jQuery("#inputExample5 option").each(function(){
+    if (this.value==exValue || 
+      (this.value.startsWith("http") && this.value.endsWith(exValue))){
+      jQuery("#inputExample5 option[value = \"extraExamples1/"+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
 }
 Page.initExamples = function()
 {
