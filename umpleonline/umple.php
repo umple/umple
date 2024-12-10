@@ -712,7 +712,11 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExampleType" id = "smModels" value="smModels">State Machines</option>
                 <option name = "optionExampleType" id = "structureModels" value="structureModels">Composite Structure</option>
                 <option name = "optionExampleType" id = "featureModels" value="featureModels">Feature Diagram</option>
-                <option name = "optionExampleType" id = "extra1Models1" value="extra1Models1">Extra Class Diagrams 1</option>
+                <option name = "optionExampleType" id = "extra1ModelsAD" value="extra1ModelsAD">Extra Class Diagrams A-D</option>
+                <option name = "optionExampleType" id = "extra1ModelsEL" value="extra1ModelsEL">Extra Class Diagrams E-L</option>
+                <option name = "optionExampleType" id = "extra1ModelsMP" value="extra1ModelsMP">Extra Class Diagrams M-P</option>
+                <option name = "optionExampleType" id = "extra1ModelsQZ" value="extra1ModelsQZ">Extra Class Diagrams Q-Z</option>
+
               </select>
             </li>
             <li id="itemLoadExamples">
@@ -838,21 +842,70 @@ $output = $dataHandle->readData('model.ump');
                 <?php
 
                 // generate file if it does not exist or is older than 24h
-                $genFileName = "generatedExtraExample1Options.html";
+                $genFileName = "generatedExtraExample1OptionsAD.html";
                 if((!file_exists($genFileName)) || (time()-filemtime($genFileName) > 60 * 60 * 24)) {
                   include("scripts/genExtraExamples.php");
                 }
 
-                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1Options.html");
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsAD.html");
                 if($exampleHtmlOptionLines) {
                   echo $exampleHtmlOptionLines;
                 }
                 else {
-                   ?><option name = "optionExample" value="invalid.ump">Could not find set of extra files </option> <?php
+                   ?><option name = "optionExample" value="invalid.ump">Could not find AD 5 set of extra files </option> <?php
                 }
                 ?>
               </select>
             </li>
+
+            <li id="itemLoadExamples6">
+              <select id="inputExample6" name="inputExample6" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample6" id = "defaultExampleOption5" value="">Select Example</option>
+                <?php
+
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsEL.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="invalid.ump">Could not find EL 6 set of extra files </option> <?php
+                }
+                ?>
+              </select>
+            </li>
+
+            <li id="itemLoadExamples7">
+              <select id="inputExample7" name="inputExample7" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample7" id = "defaultExampleOption7" value="">Select Example</option>
+                <?php
+
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsMP.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="invalid.ump">Could not find MP 7 set of extra files </option> <?php
+                }
+                ?>
+              </select>
+            </li>
+
+            <li id="itemLoadExamples8">
+              <select id="inputExample8" name="inputExample6" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample8" id = "defaultExampleOption8" value="">Select Example</option>
+                <?php
+
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsQZ.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="invalid.ump">Could not find QZ 8 set of extra files </option> <?php
+                }
+                ?>
+              </select>
+            </li>
+
           
             <!-- <li class="dropbox-add-chooser"></li> --> 
           </ul>

@@ -835,6 +835,15 @@ Page.initExamples = function()
   jQuery("#inputExample5").change(Action.loadExample);
   jQuery("#defaultExampleOption5").attr("selected",true);
 
+  jQuery("#inputExample6").change(Action.loadExample);
+  jQuery("#defaultExampleOption6").attr("selected",true);
+
+  jQuery("#inputExample7").change(Action.loadExample);
+  jQuery("#defaultExampleOption7").attr("selected",true);
+
+  jQuery("#inputExample8").change(Action.loadExample);
+  jQuery("#defaultExampleOption8").attr("selected",true);
+
 
   if (Page.useStructureDiagram) {
     jQuery("#structureModels").prop("selected",true);
@@ -842,6 +851,10 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples4").hide();      
     jQuery("#itemLoadExamples5").hide();   
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();   
+
   }
   else if (Page.useGvStateDiagram) {
     jQuery("#smModels").prop("selected",true);
@@ -849,6 +862,10 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples3").hide();
     jQuery("#itemLoadExamples4").hide();
     jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();   
+
   }
  else if (Page.useGvFeatureDiagram) {
     jQuery("#featureModels").prop("selected",true);
@@ -856,17 +873,25 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide();
     jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();   
+
   }
   else {
     // TODO any examples loaded on initialization without a 
     // URL argument will choose class diagrams
-    // Therefore for new example set 5, we will need to change this logic
+    // Therefore for new example sets 5-8, we will need to change this logic
     // to determine which set to hide
     jQuery("#cdModels").prop("selected",true); 
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide(); 
     jQuery("#itemLoadExamples4").hide();
     jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();   
+
   }  
 }
 
@@ -1316,7 +1341,7 @@ Page.getSelectedExample = function()
 
   // The default model type comes from the first 4 menu items created in umple.php
   // But as we add additional special sets of examples, we need to define the exampleType
-  if(theExampleType == "extra1Models1") {
+  if(theExampleType.substring(0,5) == "extra") {
     theExampleType = "cdModels";
   }
 
@@ -1324,8 +1349,20 @@ Page.getSelectedExample = function()
     var requiresGvClass = false; // Some class diagrams  are too complex to edit
 
     var exampleSetIDToLoad = "inputExample";
-    if (exampleSet == "extra1Models1") {
+    if (exampleSet == "extra1ModelsAD") {
       exampleSetIDToLoad = "inputExample5";
+      requiresGvClass = true; // All these examples are too complex for E mode
+    }
+    else if (exampleSet == "extra1ModelsEL") {
+      exampleSetIDToLoad = "inputExample6";
+      requiresGvClass = true; // All these examples are too complex for E mode
+    }
+    else if (exampleSet == "extra1ModelsMP") {
+      exampleSetIDToLoad = "inputExample7";
+      requiresGvClass = true; // All these examples are too complex for E mode
+    }
+    else if (exampleSet == "extra1ModelsQZ") {
+      exampleSetIDToLoad = "inputExample8";
       requiresGvClass = true; // All these examples are too complex for E mode
     }
 
