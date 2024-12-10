@@ -1,0 +1,133 @@
+/************
+This file is an Umple translation of a model
+of C++ version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/CPP.ecore
+
+date : 2005/08/05
+
+Domain : Programming language
+
+Description : This metamodel simply describes C++ which is a general-purpose computer programming language. This is a statically typed language supporting procedural programming, data abstraction, object-oriented programming, and generic programming. During the 1990s, C++ became one of the most popular commercial programming languages. The C++ programming language standard was ratified in 1998 as ISO/IEC 14882:1998, the current version of which is the 2003 version, ISO/IEC 14882:2003.
+
+Title: C++ Primitives
+
+See : http://www.cplusplus.com/
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+***********/
+
+namespace PrimitiveTypes;
+
+class Integer
+{
+}
+
+class String
+{
+}
+
+class Boolean
+{
+}
+
+class Double
+{
+}
+
+namespace CPP;
+
+class CDerived
+{
+}
+
+class CStructured
+{
+}
+
+class CBehavorialFeature
+{
+}
+
+class CFunction
+{
+	isA CBehavorialFeature;
+	Boolean isVsrArg;
+}
+
+class CStructureContents
+{
+}
+
+class CField
+{
+}
+
+class CDerivableType
+{
+}
+
+class CPPReference
+{
+	isA CDerived;
+}
+
+class CPPExtern
+{
+	isA CDerived;
+	String linkage;
+}
+
+class CPPConst
+{
+	isA CDerived;
+}
+
+class CPPTemplate
+{
+	isA CDerived;
+	* templates -- * CPPClass classes;
+}
+
+class CPPClass
+{
+	isA CStructured;
+	Boolean isAbstract;
+	Boolean isVolatile;
+	VisibilityKind visibility;
+	0..1 -> * CPPGeneralization generalizations;
+}
+
+class CPPGeneralization
+{
+	VisibilityKind visibility;
+	Boolean isVirtual;
+}
+
+class CPPOperation
+{
+	isA CFunction ;
+	Boolean isStatic;
+	Boolean isExtern;
+	Boolean isInline;
+	Boolean isVirtual;
+	Boolean isPure;
+	VisibilityKind visibility;
+	Boolean isCtor;
+	Boolean isDtor;
+	0..1 -> * CPPClass throws;
+}
+
+class CPPOperator
+{
+	isA CStructureContents;
+	Boolean isInline;
+	VisibilityKind visibility;
+}
+
+class CPPMember
+{
+	Boolean isStatic;
+	Boolean isVolatile;
+	Boolean isRegister;
+	VisibilityKind visibility;
+}

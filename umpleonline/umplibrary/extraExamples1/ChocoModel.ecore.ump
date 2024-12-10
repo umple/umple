@@ -1,0 +1,137 @@
+/************
+This file is an Umple translation of a model
+of Choco version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/ChocoModel.ecore
+
+date: 2008/07/18
+
+Domain: Constraints Programming Language, CSP
+
+Description: Choco is a java library for constraint satisfaction problems (CSP), constraint programming (CP) and explanation-based constraint solving (e-CP). It is built on a event-based propagation mechanism with backtrackable structures.
+
+Title: Choco Windows Package Mgr
+
+See: http://www.emn.fr/x-info/choco-solver/doku.php
+
+Authors: Mathieu Vénisse
+*************/
+namespace ChocoModel;
+
+class LocatedElement
+{
+	String location;
+	String[] commentsBefore;
+	String[] commentsAfter;
+}
+
+class Package
+{
+	isA LocatedElement;
+	String name;
+	0..1 -> * Import import;
+	0..1 -> 1..* ChocoProblem problem;
+}
+
+class Import
+{
+	isA LocatedElement;
+	String fqn;
+}
+
+class ChocoProblem
+{
+	isA LocatedElement;
+	String name;
+	0..1 -> * Element elements;
+}
+
+class Element
+{
+	isA LocatedElement;
+	String label;
+}
+
+class Expression
+{
+	isA Element;
+}
+
+class ConstraintDef
+{
+	isA Expression;
+	OpConstraint op;
+	0..1 -> 1..* Expression left;
+	0..1 -> 1..* Expression right;
+}
+
+class IntVar
+{
+	isA Expression;
+	0..1 -> 1..* Domain domain;
+}
+
+class Domain
+{
+	isA LocatedElement;
+	Integer lower;
+	Integer upper;
+}
+
+class IntConstant
+{
+	isA Expression;
+	Integer val;
+}
+
+class SymbolicTerm
+{
+	isA Expression;
+	0..1 -> 1..* Expression term;
+}
+
+class IntValue
+{
+	isA Expression;
+	Integer val;
+}
+
+class IntExp
+{
+	isA Expression;
+	OpConstraint op;
+	0..1 -> 1..* Expression left;
+	0..1 -> 1..* Expression right;
+}
+
+class Constraint
+{
+	isA Expression;
+	OpConstraint op;
+	0..1 -> 1..* Expression left;
+	0..1 -> 1..* Expression right;
+}
+
+class PostConstraint
+{
+	isA Element;
+	OpConstraint op;
+	0..1 -> 1..* ConstraintDef constraint;
+}
+
+namespace PrimitiveTypes;
+
+class Boolean
+{
+}
+
+class Double
+{
+}
+
+class Integer
+{
+}
+
+class String
+{
+}

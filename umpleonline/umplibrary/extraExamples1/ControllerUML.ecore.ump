@@ -1,0 +1,80 @@
+/************
+This file is an Umple translation of a model
+of ControllerUML version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/ControllerUML.ecore
+
+date : 2006/07/28
+
+Domain :
+
+Description : This metamodel describes ControllerUML.
+
+Title: ControllerUML
+
+See : http://delivery.acm.org/10.1145/1130000/1125810/p39-basin.pdf?key1=1125810&key2=6220095511&coll=GUIDE&dl=&CFID=15151515&CFTOKEN=6184618
+
+Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+************/
+
+namespace PrimitiveTypes;
+
+class String
+{
+}
+
+class Boolean
+{
+}
+
+class Integer
+{
+}
+
+namespace ControllerUML;
+
+class ControllerAttribute
+{
+	* controllerAttribute -- 1..* Controller controller;
+}
+
+class Controller
+{
+	0..1 -> 1..* StateMachine behavior;
+}
+
+class StateMachine
+{
+	0..1 -> * State states;
+}
+
+class State
+{
+	* theContainer -- * State substates;
+	0..1 source -- * StateTransition outGoing;
+	1..* target -- * StateTransition incoming;
+}
+
+class SubControllerState
+{
+	isA State;
+	0..1 -> 1..* Controller controller;
+}
+
+class ViewState
+{
+	isA State;
+}
+
+class StateTransition
+{
+	0..1 -> 1..* Event trigger;
+	0..1 -> * StateMachineAction effect;
+}
+
+class StateMachineAction
+{
+}
+
+class Event
+{
+}

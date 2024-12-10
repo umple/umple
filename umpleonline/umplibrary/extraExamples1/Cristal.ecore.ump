@@ -1,0 +1,77 @@
+/************
+This file is an Umple translation of a model
+of Cristal version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Cristal.ecore
+
+date : 2006/07/28
+
+Description : This metamodel describes CRISTAL. The CRISTAL system is being developed to control the production and assembly process of the CMS Electromagnetic Calorimeter (ECAL) detector.
+
+Title: Cristal Electromagnetic Calorimeter
+
+See : http://chep2000.pd.infn.it/paper/pap-a010.pdf
+
+Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+*************/
+
+namespace Cristal;
+
+class Condition
+{
+	0..1 -> * PartCompositeMember partCompositeMembers;
+	0..1 -> * ActCompositeMember actCompositeMembers;
+}
+
+class CompositeParDef
+{
+	isA PartDefinition;
+	0..1 -> * PartCompositeMember partCompositeMember;
+}
+
+class ElementaryPartDef
+{
+	isA PartDefinition;
+}
+
+class ElementaryActDef
+{
+	isA ActivityDefinition;
+}
+
+class CompositeActDef
+{
+	isA ActivityDefinition;
+	0..1 -> * ActCompositeMember actCompositeMembers;
+}
+
+class ActCompositeMember
+{
+	1..* actCompositeMember -- * ActivityDefinition activityDefinitions;
+}
+
+class ActivityDefinition
+{
+}
+
+class PartDefinition
+{
+	1..* partDefinitions -- * PartCompositeMember partCompositeMembers;
+}
+
+class PartCompositeMember
+{
+}
+
+namespace PrimitiveTypes;
+
+class String
+{
+}
+
+class Boolean
+{
+}
+
+class Integer
+{
+}
