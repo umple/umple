@@ -94,6 +94,9 @@ digraph "<<=filename>>" {
     else if(hasSuboption("gvdeoverlaportho")) {
       code.append("  overlap = ortho;\n");
     }
+    else if(hasSuboption("gvdeoverlapprism")) {
+      code.append("  overlap = prism;\n");
+    }
 
     // Iterate through each class. 
     for (UmpleClass uClass : model.getUmpleClasses())

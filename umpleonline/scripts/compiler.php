@@ -162,12 +162,20 @@ else if (isset($_REQUEST["umpleCode"]))
           continue;
         }
         
-        // If a filter word is a standard suboption use it
+        // If a filter word is the separator subopttion, use it
+        if(substr($afilterword,0,12) == "gvseparator=") {
+          // decimal place had been changed to @@@ so replace
+          $suboptions = $suboptions . " -s " . str_replace("@@@",".",$afilterword);
+          continue;
+        }
+                
+        // If a filter word is a standard single word suboption use it
         $foundsuboption = false;
         switch ($afilterword) {
           case 'gvneato': case 'gvspring': case 'gvfdp': case 'gvsfdp': case 'gvcirco':
           case 'gvtwopi': case 'nop2':
           case 'gvortho': case 'gvpolyline': case 'gvdeoverlapscale': case 'gvdeoverlaportho':
+          case 'gvdeoverlapprism':
             $suboptions = $suboptions . " -s " . $afilterword;
             $foundsuboption = true;
             break;

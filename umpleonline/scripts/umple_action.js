@@ -4348,7 +4348,13 @@ Action.setFilter = function(newFilter)
   var filterWordsInput=newFilter.split(" ");
 
   filterWordsInput.forEach(function(foundFilterWord) {
-    Page.filterWordsOutput+=(foundFilterWord+"!@");
+    var actualFilterWord = foundFilterWord;
+    if(foundFilterWord.startsWith("gvseparator=")) {
+      // transform any dot decimal so it does not get split in transfer
+      actualFilterWord=foundFilterWord.replace(".","@@@");
+    }
+    
+    Page.filterWordsOutput+=(actualFilterWord+"!@");
 
   });
 
