@@ -1115,8 +1115,6 @@ $output = $dataHandle->readData('model.ump');
     </span>
 
          <span id="filtertext">Filter=<input size=15 style="font-size: 12px;" id="filtervalues" value="*" onChange="Action.setFilter(value);"></input>&nbsp; </span>   
-
-         <span id="hopstext">Hops=<input size=2 style="font-size: 12px;" id="hopsvalues" value="0" onChange="Action.setFilterHops(value);"></input>&nbsp; &nbsp;</span>   
  
       </div>
       <div id="umpleCanvas"  tabIndex="1" class="surface"></div>

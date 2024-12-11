@@ -4335,36 +4335,24 @@ Action.promptAndExecuteTest = function() {
   return;
 }
 
-// Processes the filter (limits the classes shown)
+// Processes the filter
+// If an integer treated as hops
+// Then could be suboptions
+// Second could be mixsets to turn on
+// Otherwise treated as class filter patterns
 Action.setFilter = function(newFilter)
 {
   // Reset first
-  Page.gvOrtho = false;
-  Page.gvScale = false;
-  Page.gvLayout = "";
+  Page.filterWordsOutput = "";
   
-  const filterWordsInput=newFilter.split(" ");
+  var filterWordsInput=newFilter.split(" ");
 
   filterWordsInput.forEach(function(foundFilterWord) {
-    if(foundFilterWord == "gvortho") {Page.gvOrtho = true;}
-    if(foundFilterWord =="gvscale") {Page.gvScale = true;}
-    if(foundFilterWord.includes("gvlayout=")) {
-      Page.gvLayout = foundFilterWord;
-    }
-      
-      // Glom together filter words to make a proper filter
-      // TODO
-    
+    Page.filterWordsOutput+=(foundFilterWord+"!@");
+
   });
 
-   Action.redrawDiagram();
-}
-
-
-// Processes the filter hops (adds classes this many hops from the ones shown)
-Action.setFilterHops = function(newHops)
-{
-  Page.setFeedbackMessage("Hops set to"+newHops);  
+  Action.redrawDiagram();
 }
 
 // Adds a class with the given name. The class may already be there. Just edits the text.
@@ -5970,15 +5958,13 @@ Action.getLanguage = function()
   if(Page.useGvClassDiagram) { 
     if(Page.showMethods) language=language+".showmethods";
     if(!Page.showAttributes) language=language+".hideattributes";
-    if(Page.gvLayout) language=language+"."+Page.gvLayout;
-    if(Page.gvOrtho) language=language+".gvortho";    
-    if(Page.gvScale) language=language+".gvscale";
   }
   // append any suboptions needed for GvFeatureDiagram
   if(Page.useGvFeatureDiagram) {
     language="language=featureDiagram";
     if(Page.showFeatureDependency) language=language+".showFeatureDependency";
   }
+  if(Page.filterWordsOutput != "") language=language+".!@FW!@"+Page.filterWordsOutput;     
   return language;
 }
 

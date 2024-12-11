@@ -145,24 +145,49 @@ else if (isset($_REQUEST["umpleCode"]))
   $langparts = explode('.',$fulllanguage);
   $language = $langparts[0];
   $suboptions = "";
+  $filterPats = "";
+// DEBUG MAYBE DELETE AND DELETE LATER USES of $extradotargs
   $extradotargs = "";
   for($i=1; $i<count($langparts); $i++){
     $potentialSuboption = $langparts[$i];
-    if(str_starts_with($potentialSuboption,"gvlayout=")) {
-      $algo = substr($potentialSuboption, 9);
-      switch ($algo) {
-        case 'neato': case 'fdp': case 'sfdp': case 'circo': case 'twopi':
-        case 'nop': case 'nop2':
-          $extradotargs = $extradotargs . " -K" . $algo . " ";
+    if(str_starts_with($potentialSuboption,"!@FW!@")) {
+      $filterwords = explode('!@',substr($potentialSuboption,6));
+      for($fw=0;$fw<count($filterwords);$fw++){
+        $afilterword=$filterwords[$fw];
+        if ($afilterword =="") {continue;}
+        
+        // if a filter word is numeric then we assume it is for hops
+        if(is_numeric($afilterword)) {
+          $filterPats = $filterPats . " hops { association ".round($afilterword).";} ";
+          continue;
+        }
+        
+        // If a filter word is a standard suboption use it
+        $foundsuboption = false;
+        switch ($afilterword) {
+          case 'gvneato': case 'gvspring': case 'gvfdp': case 'gvsfdp': case 'gvcirco':
+          case 'gvtwopi': case 'nop2':
+          case 'gvortho': case 'gvpolyline': case 'gvdeoverlapscale': case 'gvdeoverlaportho':
+            $suboptions = $suboptions . " -s " . $afilterword;
+            $foundsuboption = true;
+            break;
+        }
+        if ($foundsuboption) continue;
+        
+        // To do if a filter word matches one of the mixsets then add a use clause
+        
+        // To make else ... if a filter word is not blank then filter in this set of words
+        if ($afilterword !="") {
+          $filterPats = $filterPats . " include ".$afilterword.";";
+        }
+      }
+
+      if($filterPats != "") {
+        $suboptions = $suboptions . " -u \"filter {".$filterPats."}\" ";
       }
     }
-    else if ($potentialSuboption == "gvortho") {
-      $extradotargs = $extradotargs . " -Gsplines=ortho ";
-    }
-    else if ($potentialSuboption == "gvscale") {
-      $extradotargs = $extradotargs . " -x -Goverlap=scale ";
-    }    
     else {
+      // A suboption specified in the options panel as opposed to the filter line
       $suboptions = $suboptions . " -s " . $potentialSuboption;
     }
   }
