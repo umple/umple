@@ -150,7 +150,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $extradotargs = "";
   for($i=1; $i<count($langparts); $i++){
     $potentialSuboption = $langparts[$i];
-    if(str_starts_with($potentialSuboption,"!@FW!@")) {
+    if(substr($potentialSuboption,0,6) == "!@FW!@") {
       $filterwords = explode('!@',substr($potentialSuboption,6));
       for($fw=0;$fw<count($filterwords);$fw++){
         $afilterword=$filterwords[$fw];
