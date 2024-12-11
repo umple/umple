@@ -182,6 +182,11 @@ else if (isset($_REQUEST["umpleCode"]))
         }
         if ($foundsuboption) continue;
         
+        // Ignore any other codes starting with gv to avoid blanking the diagram on a misspelling
+        if(substr($afilterword,0,2) == "gv") {
+          continue;
+        }
+
         // To do if a filter word matches one of the mixsets then add a use clause
         
         // To make else ... if a filter word is not blank then filter in this set of words
