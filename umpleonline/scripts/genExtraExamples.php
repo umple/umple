@@ -18,6 +18,7 @@ catch (Exception $e) {
 foreach ($dirIterator as $fileInfo) {
   if($fileInfo->isDot()) continue;
   $fileNameFound = $fileInfo->getFilename();
+  if(substr($fileNameFound,-4,4) != ".ump") continue;
   $file = $fileInfo->openFile();
   // Loop through each line in the file, to obtain the Title
   while (!$file->eof()) {
