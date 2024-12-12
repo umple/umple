@@ -1,0 +1,118 @@
+/************
+This file is an Umple translation of a model
+of GUI version 0.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/GUI.ecore
+
+date : 2006/04/11
+
+Domain : IDE
+
+Description : This metamodel describes the notion of Graphical User Interface (GUI).
+
+Title: GUI
+
+Authors : Anas Abouzahra, Pierre-Yves Baudouin, Thomas Broussaud, Grégory Pouliquen
+************/
+namespace GUI;
+
+class LocatedElement
+{
+	String location;
+}
+
+class Named
+{
+	isA LocatedElement;
+	String name;
+}
+
+class GUI
+{
+	isA Named;
+	1..* gui -- * Tab guiTabs;
+}
+
+class Tab
+{
+	isA Named;
+	String title;
+	* tabGroup -- 1..* Group group;
+}
+
+class Composant
+{
+	isA Named;
+	* composants -- 1..* Group composantGroup;
+}
+
+class Group
+{
+	isA Composant;
+	String title;
+	Layout layout;
+	String description;
+}
+
+class Label
+{
+	isA Composant;
+	String text;
+}
+
+class TextArea
+{
+	isA Composant;
+	String text;
+	Integer nbRows;
+}
+
+class Table
+{
+	isA Composant;
+	1..* columnTab -- * Column tabColumns;
+}
+
+class Column
+{
+	isA LocatedElement;
+	String title;
+}
+
+class ComboBox
+{
+	isA Composant;
+	1..* rowList -- * Row listRows;
+}
+
+class Row
+{
+	isA Composant;
+	String text;
+	1..* itemList -- * Item listItems;
+}
+
+class Item
+{
+	isA Composant;
+	String text;
+}
+
+class Button
+{
+	isA Composant;
+	String title;
+}
+
+namespace PrimitiveTypes;
+
+class Boolean
+{
+}
+
+class Integer
+{
+}
+
+class String
+{
+}
