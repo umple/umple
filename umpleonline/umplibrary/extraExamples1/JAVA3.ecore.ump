@@ -1,0 +1,96 @@
+/************
+This file is an Umple translation of a model
+of JAVA3 version 1. found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/JAVA3.ecore
+
+date : 2005/08/11
+
+Domain : Object-oriented programming, Java
+
+Description : This basic metamodel describes JAVA. The Java language is an object-oriented programming language created by James Gosling and other engineers at Sun Microsystems. It was developed in 1991, as part of the Green Project, and officially announced on May 23 1995, at SunWorld; being released in November. Gosling and friends initially designed Java, which was called Oak at first (in honor of a tree outside Gosling s office), to replace C++ (although the feature set better resembles that of Objective C). The Java specifications are community-maintained through the Sun-managed Java Community Process. Sun holds a trademark on the Java name. The Java software plays three crucial roles or identities in the field of software: as a programming language, as middleware, as a platform. A crucial component of Java is the Java Virtual Machine (JVM). The availability of the JVM on almost all types of device, chips and software package enables Java to function both as middleware and a computing platform. The JVM enables Java to be platform independent since the JVM on each device/chip interprets the standard Java bytecode. This means you can develop code on your PC and expect it to run on Java-enabled phones as well as on mainframes equipped with Java without any adjustments. Hence the expression Write once, run anywhere. This also represents a huge amount of savings for software developers as code can be developed locally and cheaply.
+
+Title: Java Core 
+
+Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
+*************/
+namespace Java;
+
+class Modifier
+{
+	String visibility;
+	String state;
+	String name;
+}
+
+class Class
+{
+	isA Modifier;
+	0..1 -> * Class superClass;
+	* implementedBy -- * Interface implement;
+	1..* class -- * Method methods;
+	1..* class -- * Field fields;
+}
+
+class Interface
+{
+	isA Modifier;
+	0..1 -> * Interface superInterface;
+	1..* interface -- * Method abstractMethods;
+	1..* interface -- * Field constants;
+}
+
+class Method
+{
+	isA Modifier;
+	Boolean share;
+	0..1 -> * Type resultOf;
+	1..* owner -- * Parameter parameters;
+}
+
+class Field
+{
+	isA Modifier;
+	Boolean share;
+	0..1 -> 1..* Value value;
+	0..1 -> 1..* Type typeOf;
+}
+
+class Value
+{
+}
+
+class Parameter
+{
+	String name;
+	0..1 -> * Type typeOf;
+}
+
+class Type
+{
+}
+
+class ReferenceType
+{
+	isA Type;
+	0..1 -> 1..* Class reference;
+}
+
+class PrimitiveType
+{
+	isA Type;
+}
+
+class Int
+{
+	isA PrimitiveType;
+}
+
+namespace PrimitiveTypes;
+
+class String
+{
+}
+
+class Boolean
+{
+}
