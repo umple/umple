@@ -369,6 +369,54 @@ Action.clicked = function(event)
   {
     Action.toggleTabs();
   }
+  else if(action.substr(0,6) == "mixset")
+  {
+    Action.toggleMixsetUseStatement(action.substr(6));
+  }
+  else if(action.substr(0,6) == "filter")
+  {
+    Action.toggleFilterUseStatement(action.substr(6));
+  }
+  else if(action.substr(0,2) == "gv")
+  {
+    Action.toggleSpecialSuboption(action);
+  }  
+}
+
+Action.toggleSpecialSuboption = function(suboption) {
+  // If suboption  is not in active ones then add it
+  if(Page.specialSuboptionsActive.has(suboption)) {
+    Page.specialSuboptionsActive.delete(suboption);
+  }
+  else {
+    Page.specialSuboptionsActive.add(suboption);
+  }
+  Action.redrawDiagram();
+}
+
+
+Action.toggleMixsetUseStatement = function(mixset) {
+  // If use statement is not in active ones then add it
+  if(Page.mixsetsActive.has(mixset)) {
+    Page.mixsetsActive.delete(mixset);
+  }
+  else {
+    Page.mixsetsActive.add(mixset);
+  }
+
+  Action.redrawDiagram();
+}
+
+Action.toggleFilterUseStatement = function(filter) {
+  // If use statement is not in active ones then add it
+  if(Page.filtersActive.has(filter)) {
+    Page.filtersActive.delete(filter);
+  }
+  else {
+    Page.filtersActive.add(filter);
+  }
+
+  Action.redrawDiagram();
 }
 
 Action.focusOn = function(id, gained)
@@ -5121,13 +5169,76 @@ Action.updateUmpleDiagramCallback = function(response)
 
     Page.setFeedbackMessage("");
     Page.hideGeneratedCode();
+
+    // Enable dynamic checkboxes of mixsets and named filters
+    // Find any phrases describing
+    // named mixsets of filters not commented out
+    var dynamicCheckboxItems = Page.getUmpleCode()
+      .match(/(((?<!(\/\/.*))(mixset))|((?<!(\/\/.*))(filter)))\s+[a-zA-Z1-9-_]+/g);
+    // Add special suboptions
+    if(dynamicCheckboxItems == null) dynamicCheckboxItems = new Array();
+    dynamicCheckboxItems.push("gvortho", "gvsfdp","gvcirco");
     
+    // Clear out previous
+    // TODO. May need to keep some so as to preserve selections
+    var spanToInjectItem = 
+      document.getElementById("ShowMFDynamicArea");
+    spanToInjectItem.innerHTML = "";
+
+    if(dynamicCheckboxItems == null
+      || dynamicCheckboxItems.length == 0) {
+// DEBUG
+      Page.catFeedbackMessage("PDS: No items ");
+    }
+    else {
+      var boxesToActivate = new Set();
+      // Iterate through all the named filters of mixsets
+      dynamicCheckboxItems.forEach(
+       function(aDynamicCheckboxItem) {
+        // remove spaces from the item so it can also serve
+        //  as part of the ID,
+        // so idPart would be something like filterF1
+        var idPart = aDynamicCheckboxItem.replace(/\s/g, '');
+
+        var htmlToAdd = "<li id=\"tt"+idPart
+          +"\" class=\"layoutListItem view_opt_class\">\
+                <input id=\"button"+idPart+"\" class=\"checkbox\" type=\"checkbox\"/>\
+                <a id=\"label"+idPart+"\" class=\"buttonExtend\">"+aDynamicCheckboxItem+"</a>\
+              </li>";
+        spanToInjectItem.innerHTML += htmlToAdd;
+        // Make sure it is clickable ... have to do this after completion
+        // Since activation is cancelled as new items are added
+        boxesToActivate.add(idPart);
+      });
+      boxesToActivate.forEach(
+       function(aBoxToActivate) {
+        Page.initHighlighter("button"+aBoxToActivate);
+        // Select it if it was already selected
+        var buttonSetting = false;
+        if(aBoxToActivate.substr(0,6)=="mixset"
+          && Page.mixsetsActive.has(aBoxToActivate.substr(6))) {
+          buttonSetting = true;
+        }
+        else if(aBoxToActivate.substr(0,6)=="filter"
+          && Page.filtersActive.has(aBoxToActivate.substr(6))) {
+          buttonSetting = true;
+        }
+        else if(aBoxToActivate.substr(0,2)=="gv"
+          && Page.specialSuboptionsActive.has(aBoxToActivate)) {
+          buttonSetting = true;
+        }        
+        jQuery("#button"+aBoxToActivate).prop('checked',buttonSetting);       
+        Page.initAction("button"+aBoxToActivate);
+        jQuery("#tt"+aBoxToActivate).show();
+      });
+    }
+
     // Display editable class diagram
     if(Page.useEditableClassDiagram) {
       var newSystem = Json.toObject(diagramCode);
       UmpleSystem.merge(newSystem);
       UmpleSystem.update(); 
-      
+
       //Apply readonly styles
       if (Page.readOnly) 
       {
@@ -5970,7 +6081,19 @@ Action.getLanguage = function()
     language="language=featureDiagram";
     if(Page.showFeatureDependency) language=language+".showFeatureDependency";
   }
+  // append the list of words specified in the filterwords
   if(Page.filterWordsOutput != "") language=language+".!@FW!@"+Page.filterWordsOutput;     
+  // append any of the mixsets of filters
+  Page.filtersActive.forEach(function(aNamedFilter){
+    language=language+".filter"+aNamedFilter;
+  });
+  Page.mixsetsActive.forEach(function(aMixset){
+    language=language+".mixset"+aMixset;
+  });
+  Page.specialSuboptionsActive.forEach(function(aSpecialSuboption){
+    language=language+"."+aSpecialSuboption;
+  });
+
   return language;
 }
 

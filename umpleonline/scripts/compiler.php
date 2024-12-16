@@ -146,6 +146,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $language = $langparts[0];
   $suboptions = "";
   $filterPats = "";
+  $mixsetsToAdd = "";
 // DEBUG MAYBE DELETE AND DELETE LATER USES of $extradotargs
   $extradotargs = "";
   for($i=1; $i<count($langparts); $i++){
@@ -182,29 +183,64 @@ else if (isset($_REQUEST["umpleCode"]))
         }
         if ($foundsuboption) continue;
         
-        // Ignore any other codes starting with gv to avoid blanking the diagram on a misspelling
-        if(substr($afilterword,0,2) == "gv") {
+        // A named mixset then we add this as a direct argument (use statement)
+        // warning nearly-dup code below (TODO fix)
+        if(substr($afilterword,0,6) == "mixset") {
+          $mixsetsToAdd = $mixsetsToAdd . " use ".substr($afilterword,6)."; ";
           continue;
         }
 
-        // To do if a filter word matches one of the mixsets then add a use clause
+        // Named filter then we need to add an includefilter code block
+        // warning nearly-dup code below (TODO fix)
+        if(substr($afilterword,0,6) == "filter") {
+          $filterPats= $filterPats . " includeFilter ".substr($afilterword,6).";";
+          continue;
+        }
+
+        // Any pattern starting gv would just be a mis-spelling so we don't want that to have effect
+        if(substr($afilterword,0,2) == "gv") {
+          continue;
+        }
         
         // To make else ... if a filter word is not blank then filter in this set of words
         if ($afilterword !="") {
           $filterPats = $filterPats . " include ".$afilterword.";";
         }
-      }
+      } // end of processing the words generated from the filter text panel
 
-      if($filterPats != "") {
-        $suboptions = $suboptions . " -u \"filter {".$filterPats."}\" ";
-      }
     }
     else {
-      // A suboption specified in the options panel as opposed to the filter line
-      $suboptions = $suboptions . " -s " . $potentialSuboption;
+      // A suboption specified as a checkbox as opposed to the filter line
+
+      // A named mixset then we add this as a direct argument (use statement)
+      // warning nearly-dup code above (TODO fix)
+      if(substr($potentialSuboption,0,6) == "mixset") {
+        $mixsetsToAdd = $mixsetsToAdd . " use ".substr($potentialSuboption,6)."; ";      
+      }
+
+      // Named filter then we need to add an includefilter code block
+      // warning nearly-dup code below (TODO fix)
+      else if(substr($potentialSuboption,0,6) == "filter") {
+        $filterPats = $filterPats . " includeFilter ".substr($potentialSuboption,6).";";
+      }
+      else {
+        $suboptions = $suboptions . " -s " . $potentialSuboption;
+      }
     }
+  } // end of loop of langparts that had been separated by dots
+
+  // At this point we have collected together all filter patterns and mixsets
+  $umpleDirectToAdd="";
+  if($mixsetsToAdd != "") {
+    $umpleDirectToAdd = $mixsetsToAdd;
   }
-  
+  if($filterPats != "") {
+    $umpleDirectToAdd = $umpleDirectToAdd . "filter {".$filterPats."} ";
+  }
+  if($umpleDirectToAdd != "") {
+    $suboptions = $suboptions . " -u \"" . $umpleDirectToAdd . "\"";
+  }
+
   $languageStyle = isset($_REQUEST["languageStyle"])?
     $_REQUEST["languageStyle"] : false;
   $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;

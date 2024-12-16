@@ -952,57 +952,15 @@ $output = $dataHandle->readData('model.ump');
             </li>
         </ul>
         <?php generateMenu("") ?>
-      </div>
-      
-      <!-- GROUP 3 OF OPTIONS -->
-      <h3><a href="#options">OPTIONS</a></h3>
-      
-      <div class="section">
-        <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
-         <!-- DIAGRAM TYPE OPTIONS -->
-          <ul class="first toggle">
-            <li class="subtitle">  Diagram Type </li>
-              
-            <li id="ttShowEditableClassDiagram"> 
-              <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
-              <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
-            </li>
-            <li id="ttShowJointJSClassDiagram"> 
-              <input id="buttonShowJointJSClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeJointJSClassDiagram"/> 
-              <a id="labelShowJointJSClassDiagram" class="buttonExtend">JointJS Class</a> 
-            </li>
-            <li id="ttShowGvClassDiagram"> 
-              <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> 
-              <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a> 
-            </li>
-            <li id="ttShowGvStateDiagram"> 
-              <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
-              <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
-            </li>
-	    <li id="ttShowGvFeatureDiagram"> 
-              <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
-              <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
-            </li>
-            <li id="ttShowStructureDiagram"> 
-              <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
-              <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
-            </li>
-          </ul>
-          <!-- SHOW VIEW OPTIONS -->
-          <ul class="second">
-          <li id="ShowViewTitle" class="subtitle"> Show View </li>
-          <li id="ttShowHideCanvas"> 
-              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
-              <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
-            </li>
-            <li id="ttShowHideTextEditor"> 
-              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
-              <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
-            </li>
-            <li id="ttShowHideLayoutEditor" class="layoutListItem view_opt_class"> 
-              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
-              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
-            </li>          
+                  
+          <!-- SHOW And Hide OPTIONS -->
+          <ul id="ShowHideOptionsList" class="second">
+            <li id="ShowMF" class="subtitle"> Show and Hide </li>
+
+            <!-- Location to inject mixsets and filters found ... used by Action.updateUmpleDiagramCallback -->
+            <span id="ShowMFDynamicArea">
+            </span>
+
             <li id="ttToggleAttributes" class="layoutListItem view_opt_class"> 
               <input id="buttonToggleAttributes" class="checkbox" type="checkbox"/> 
               <a id="labelToggleAttributes" class="buttonExtend">Attributes</a>
@@ -1026,7 +984,7 @@ $output = $dataHandle->readData('model.ump');
             <li id="ttToggleGuards" class="layoutListItem view_opt_state"> 
               <input id="buttonToggleGuards" class="checkbox" type="checkbox"/> 
               <a id="labelToggleGuards" class="buttonExtend">Guards</a> 
-            </li>            
+            </li>
             <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state"> 
               <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
               <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
@@ -1035,7 +993,59 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonToggleFeatureDependency" class="checkbox" type="checkbox"/> 
               <a id="labelToggleFeatureDependencyLabels" class="buttonExtend">Feature Dependency</a> 
             </li>
+            <li id="ttAllowPinch">
+              <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
+              <a id="labelAllowPinch" class="buttonExtend">Pinch to Zoom</a>
+            </li> 
+          </ul>
+      </div>
+      
+      <!-- GROUP 3 OF OPTIONS -->
+      <h3><a href="#options">OTHER OPTIONS</a></h3>
+      
+      <div class="section">
+        <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
+         <!-- DIAGRAM TYPE OPTIONS -->
+          <ul class="first toggle">
+            <li class="subtitle">  Diagram Type </li>
+              
+            <li id="ttShowEditableClassDiagram"> 
+              <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
+              <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
+            </li>
+            <li id="ttShowGvClassDiagram"> 
+              <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> 
+              <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a> 
+            </li>
+            <li id="ttShowGvStateDiagram"> 
+              <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
+              <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
+            </li>
+	    <li id="ttShowGvFeatureDiagram"> 
+              <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
+              <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
+            </li>
+            <li id="ttShowStructureDiagram"> 
+              <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
+              <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
+            </li>
+          </ul>
 
+          <!-- SHOW VIEW OPTIONS -->
+          <ul class="second">
+          <li id="ShowViewTitle" class="subtitle"> Show View </li>
+          <li id="ttShowHideCanvas"> 
+              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
+              <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
+            </li>
+            <li id="ttShowHideTextEditor"> 
+              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
+              <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
+            </li>
+            <li id="ttShowHideLayoutEditor" class="layoutListItem view_opt_class"> 
+              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
+              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
+            </li>          
             
           </ul>
           <!-- PREFERENCES OPTIONS -->
@@ -1049,10 +1059,6 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonManualSync" class="checkbox" type="checkbox" name="manualSync" value="manualSync"/> 
               <a id="labelManualSync" class="buttonExtend">Manual Sync</a>              
             </li>
-            <li id="ttAllowPinch">
-              <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
-              <a id="labelAllowPinch" class="buttonExtend">Pinch to Zoom</a>               
-            </li> 
           </ul>
          </div>
 
