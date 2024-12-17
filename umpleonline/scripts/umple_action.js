@@ -385,11 +385,12 @@ Action.clicked = function(event)
 
 Action.toggleSpecialSuboption = function(suboption) {
   // If suboption  is not in active ones then add it
-  if(Page.specialSuboptionsActive.has(suboption)) {
-    Page.specialSuboptionsActive.delete(suboption);
+  var index = Page.specialSuboptionsActive.indexOf(suboption);  
+  if(index !== -1) {
+    Page.specialSuboptionsActive.splice(index,1);
   }
   else {
-    Page.specialSuboptionsActive.add(suboption);
+    Page.specialSuboptionsActive.push(suboption);
   }
   Action.redrawDiagram();
 }
@@ -397,11 +398,12 @@ Action.toggleSpecialSuboption = function(suboption) {
 
 Action.toggleMixsetUseStatement = function(mixset) {
   // If use statement is not in active ones then add it
-  if(Page.mixsetsActive.has(mixset)) {
-    Page.mixsetsActive.delete(mixset);
+  var index = Page.mixsetsActive.indexOf(mixset);
+  if(index !== -1) {
+    Page.mixsetsActive.splice(index,1);
   }
   else {
-    Page.mixsetsActive.add(mixset);
+    Page.mixsetsActive.push(mixset);
   }
 
   Action.redrawDiagram();
@@ -409,11 +411,12 @@ Action.toggleMixsetUseStatement = function(mixset) {
 
 Action.toggleFilterUseStatement = function(filter) {
   // If use statement is not in active ones then add it
-  if(Page.filtersActive.has(filter)) {
-    Page.filtersActive.delete(filter);
+  var index = Page.filtersActive.indexOf(filter);
+  if(index !== -1) {
+    Page.filtersActive.splice(index,1);
   }
   else {
-    Page.filtersActive.add(filter);
+    Page.filtersActive.push(filter);
   }
 
   Action.redrawDiagram();
@@ -5191,7 +5194,7 @@ Action.updateUmpleDiagramCallback = function(response)
       Page.catFeedbackMessage("PDS: No items ");
     }
     else {
-      var boxesToActivate = new Set();
+      var boxesToActivate = new Array();
       // Iterate through all the named filters of mixsets
       dynamicCheckboxItems.forEach(
        function(aDynamicCheckboxItem) {
@@ -5208,7 +5211,7 @@ Action.updateUmpleDiagramCallback = function(response)
         spanToInjectItem.innerHTML += htmlToAdd;
         // Make sure it is clickable ... have to do this after completion
         // Since activation is cancelled as new items are added
-        boxesToActivate.add(idPart);
+        boxesToActivate.push(idPart);
       });
       boxesToActivate.forEach(
        function(aBoxToActivate) {
@@ -5216,15 +5219,15 @@ Action.updateUmpleDiagramCallback = function(response)
         // Select it if it was already selected
         var buttonSetting = false;
         if(aBoxToActivate.substr(0,6)=="mixset"
-          && Page.mixsetsActive.has(aBoxToActivate.substr(6))) {
+          && Page.mixsetsActive.includes(aBoxToActivate.substr(6))) {
           buttonSetting = true;
         }
         else if(aBoxToActivate.substr(0,6)=="filter"
-          && Page.filtersActive.has(aBoxToActivate.substr(6))) {
+          && Page.filtersActive.includes(aBoxToActivate.substr(6))) {
           buttonSetting = true;
         }
         else if(aBoxToActivate.substr(0,2)=="gv"
-          && Page.specialSuboptionsActive.has(aBoxToActivate)) {
+          && Page.specialSuboptionsActive.includes(aBoxToActivate)) {
           buttonSetting = true;
         }        
         jQuery("#button"+aBoxToActivate).prop('checked',buttonSetting);       
