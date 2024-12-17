@@ -5213,6 +5213,20 @@ Action.updateUmpleDiagramCallback = function(response)
         // Since activation is cancelled as new items are added
         boxesToActivate.push(idPart);
       });
+
+      // If there are any items active that are not in the new set because
+      // deleted or commented out, then remove them from being active
+      Page.mixsetsActive = Page.mixsetsActive.filter(function(aMixset){
+        return boxesToActivate.includes("mixset"+aMixset);
+      });
+      Page.filtersActive = Page.filtersActive.filter(function(aFilter){
+        return boxesToActivate.includes("filter"+aFilter);
+      });
+      Page.specialSuboptionsActive = Page.specialSuboptionsActive.filter(function(aSuboption){
+        return boxesToActivate.includes(aSuboption);
+      });
+
+      // Now activate the new ones found
       boxesToActivate.forEach(
        function(aBoxToActivate) {
         Page.initHighlighter("button"+aBoxToActivate);
