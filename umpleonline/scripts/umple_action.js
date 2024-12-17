@@ -145,6 +145,10 @@ Action.clicked = function(event)
   {
     Action.copyClipboardCode();
   }  
+  else if (action == "CopyMix")
+  {
+    Action.copyClipboardMixset();
+  }  
   else if (action == "Copy")
   {
     Action.showCodeInSeparateWindow();
@@ -1003,6 +1007,12 @@ Action.copyClipboardCode = function()
 {
   Action.copyToClp(Page.getUmpleCode());
   Page.setFeedbackMessage("Code has been copied to the clipboard");  
+}
+
+Action.copyClipboardMixset = function()
+{
+  Action.copyToClp(Page.copyableMixset);
+  Page.setFeedbackMessage("Mixset with selected diagram filters and options is in clipboard");  
 }
 
 Action.copyCommandLineCode = function()
@@ -6099,18 +6109,35 @@ Action.getLanguage = function()
     if(Page.showFeatureDependency) language=language+".showFeatureDependency";
   }
   // append the list of words specified in the filterwords
-  if(Page.filterWordsOutput != "") language=language+".!@FW!@"+Page.filterWordsOutput;     
+  // Also gather together copyable code to create a mixset from these
+  copyableMixset ="";
+  if(Page.filterWordsOutput != "") {
+    language=language+".!@FW!@"+Page.filterWordsOutput;
+    Page.filterWordsOutput.split("!@").forEach(function(aFilterWord){
+      if(aFilterWord != "") {
+        copyableMixset+=" include "+aFilterWord+";";
+      }
+    });
+    if(copyableMixset != "") {
+      copyableMixset = "  filter F1 {"+copyableMixset+"}\n";
+    }
+  }   
   // append any of the mixsets of filters
   Page.filtersActive.forEach(function(aNamedFilter){
     language=language+".filter"+aNamedFilter;
+    copyableMixset+="  filter {includeFilter "+aNamedFilter+";}\n";
   });
   Page.mixsetsActive.forEach(function(aMixset){
     language=language+".mixset"+aMixset;
+    copyableMixset+="  use "+aMixset+";\n";
   });
   Page.specialSuboptionsActive.forEach(function(aSpecialSuboption){
     language=language+"."+aSpecialSuboption;
+    copyableMixset+="  suboption \""+aSpecialSuboption+"\";\n";    
   });
-
+  Page.copyableMixset="mixset M1 {\n"+copyableMixset+"}";
+  //debug
+  console.log(Page.copyableMixset);
   return language;
 }
 

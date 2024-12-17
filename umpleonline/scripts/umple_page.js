@@ -48,6 +48,7 @@ Page.showMethods = false;
 Page.filterWordsOutput = "";
 Page.mixsetsActive = new Array();
 Page.filtersActive = new Array();
+Page.copyableMixset="";
 Page.specialSuboptionsActive = new Array();
 Page.showActions = true;
 Page.showText = true;
@@ -185,6 +186,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonSimulateCode");
   Page.initHighlighter("buttonUigu");
   Page.initHighlighter("buttonCopyClip");
+  Page.initHighlighter("buttonCopyMix");  
   Page.initHighlighter("buttonCollabFork");
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
@@ -252,6 +254,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopyClip");
+  Page.initAction("buttonCopyMix");
   Page.initAction("buttonCollabFork");
   Page.initAction("buttonCopy");
   Page.initAction("buttonCopyEncodedURL");

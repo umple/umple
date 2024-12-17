@@ -1013,6 +1013,10 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
               <a id="labelAllowPinch" class="buttonExtend">Pinch to Zoom</a>
             </li> 
+            <li id="buttonCopyMix" class="copyMix" >
+              <img src="scripts/copy.png" alt="Copy Mixset with Above"/> 
+               Make Mixset
+            </li>              
           </ul>
       </div>
       
