@@ -15,6 +15,18 @@ See : http://www.eclipse.org/uml2/
 
 Authors : Julien Baudry (jul.baudry_NOSPAM <AT> gmail.com)
 *************/
+
+mixset FocusOnElement {
+  filter { include Element; hops {association 1;}}
+  suboption "gvseparator=1.5"
+}
+
+mixset FocusOnProperty {
+  filter { include Property; hops {association 1;} }
+  suboption "gvseparator=2"
+}
+
+
 namespace PrimitiveTypes;
 
 class Boolean
