@@ -6113,29 +6113,61 @@ Action.getLanguage = function()
   copyableMixset ="";
   if(Page.filterWordsOutput != "") {
     language=language+".!@FW!@"+Page.filterWordsOutput;
+
+    // Grab the words people have typed in manually for use in mixset
+    var copyableIncludeStatements = "";
     Page.filterWordsOutput.split("!@").forEach(function(aFilterWord){
       if(aFilterWord != "") {
-        copyableMixset+=" include "+aFilterWord+";";
+        // If it is a number then add a hops clause
+        if(!isNaN(aFilterWord)) {
+          copyableIncludeStatements+="  hops { association "+aFilterWord+"} ";
+        }
+        // If it starts with gv it is a filter word and if separator needs cleaning
+        else if(aFilterWord.substr(0,2) == "gv") {
+          if(aFilterWord.substr(0,11) == "gvseparator") {
+            copyableMixset+="  suboption \""+aFilterWord.replace("@@","")+"\";\n";
+          }
+          else {
+            copyableMixset+="  suboption \""+aFilterWord+"\";\n";
+          }
+        }
+        // If it starts with mixset or filter then process as named
+        else if(aFilterWord.substr(0,6) == "filter") {
+          copyableMixset+="  filter {includeFilter "+aFilterWord.substr(6)+";}\n";
+        }
+        else if(aFilterWord.substr(0,6) == "mixset") {
+          copyableMixset+="  use "+aFilterWord.substr(6)+";\n";        
+        }
+        // Otherwise process as a filter pattern
+        else {
+          copyableIncludeStatements+=" include "+aFilterWord+";";
+        }
       }
     });
-    if(copyableMixset != "") {
-      copyableMixset = "  filter F1 {"+copyableMixset+"}\n";
+    if(copyableIncludeStatements != "") {
+      copyableMixset += "  filter F1 {"+copyableIncludeStatements+"}\n";
     }
   }   
   // append any of the mixsets of filters
+  // words in checkboxes that start with filter, followed by a named filter name
   Page.filtersActive.forEach(function(aNamedFilter){
     language=language+".filter"+aNamedFilter;
     copyableMixset+="  filter {includeFilter "+aNamedFilter+";}\n";
   });
+  // words in checkboxes that start with mixset, followed by a mixset name
   Page.mixsetsActive.forEach(function(aMixset){
     language=language+".mixset"+aMixset;
     copyableMixset+="  use "+aMixset+";\n";
   });
+  // words in checkboxes starting gv  
   Page.specialSuboptionsActive.forEach(function(aSpecialSuboption){
     language=language+"."+aSpecialSuboption;
-    copyableMixset+="  suboption \""+aSpecialSuboption+"\";\n";    
+    copyableMixset+="  suboption \""+aSpecialSuboption+"\";\n";
   });
-  Page.copyableMixset="mixset M1 {\n"+copyableMixset+"}";
+  // Generate the actual copyable mixset, calling it
+  Page.copyableMixset="\/\/ The following was generated from the show and hide options\n"
+    +"\/\/ Rename the mixset and paste into the code so you can invoke it at any time\n"
+    +"mixset M1 {\n"+copyableMixset+"}";
   //debug
   console.log(Page.copyableMixset);
   return language;
