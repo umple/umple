@@ -6120,12 +6120,12 @@ Action.getLanguage = function()
       if(aFilterWord != "") {
         // If it is a number then add a hops clause
         if(!isNaN(aFilterWord)) {
-          copyableIncludeStatements+="  hops { association "+aFilterWord+"} ";
+          copyableIncludeStatements+="  hops { association "+aFilterWord+";} ";
         }
         // If it starts with gv it is a filter word and if separator needs cleaning
         else if(aFilterWord.substr(0,2) == "gv") {
           if(aFilterWord.substr(0,11) == "gvseparator") {
-            copyableMixset+="  suboption \""+aFilterWord.replace("@@","")+"\";\n";
+            copyableMixset+="  suboption \""+aFilterWord.replace("@@@","")+"\";\n";
           }
           else {
             copyableMixset+="  suboption \""+aFilterWord+"\";\n";
@@ -6145,7 +6145,8 @@ Action.getLanguage = function()
       }
     });
     if(copyableIncludeStatements != "") {
-      copyableMixset += "  filter F1 {"+copyableIncludeStatements+"}\n";
+      var randomFilterNumber = Math.floor(Math.random() * 899.0 + 100.0);
+      copyableMixset += "  filter F"+randomFilterNumber+" {"+copyableIncludeStatements+"}\n";
     }
   }   
   // append any of the mixsets of filters
@@ -6164,10 +6165,11 @@ Action.getLanguage = function()
     language=language+"."+aSpecialSuboption;
     copyableMixset+="  suboption \""+aSpecialSuboption+"\";\n";
   });
-  // Generate the actual copyable mixset, calling it
+  // Generate the actual copyable mixset, calling M followed by 3 digits
+  var randomMixsetNumber = Math.floor(Math.random() * 899.0 + 100.0);
   Page.copyableMixset="\/\/ The following was generated from the show and hide options\n"
     +"\/\/ Rename the mixset and paste into the code so you can invoke it at any time\n"
-    +"mixset M1 {\n"+copyableMixset+"}";
+    +"mixset M"+randomMixsetNumber+" {\n"+copyableMixset+"}";
   //debug
   console.log(Page.copyableMixset);
   return language;
