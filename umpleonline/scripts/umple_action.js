@@ -6145,8 +6145,7 @@ Action.getLanguage = function()
       }
     });
     if(copyableIncludeStatements != "") {
-      var randomFilterNumber = Math.floor(Math.random() * 899.0 + 100.0);
-      copyableMixset += "  filter F"+randomFilterNumber+" {"+copyableIncludeStatements+"}\n";
+      copyableMixset += "  filter {"+copyableIncludeStatements+"}\n";
     }
   }   
   // append any of the mixsets of filters
