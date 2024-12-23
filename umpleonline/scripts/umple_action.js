@@ -5190,7 +5190,7 @@ Action.updateUmpleDiagramCallback = function(response)
       .match(/(((?<!(\/\/.*))(mixset))|((?<!(\/\/.*))(filter)))\s+[a-zA-Z1-9-_]+/g);
     // Add special suboptions
     if(dynamicCheckboxItems == null) dynamicCheckboxItems = new Array();
-    dynamicCheckboxItems.push("gvortho", "gvsfdp","gvcirco");
+    dynamicCheckboxItems.push("gvortho","gvmanual","gvsfdp","gvcirco");
     
     // Clear out previous
     // TODO. May need to keep some so as to preserve selections
@@ -5198,12 +5198,7 @@ Action.updateUmpleDiagramCallback = function(response)
       document.getElementById("ShowMFDynamicArea");
     spanToInjectItem.innerHTML = "";
 
-    if(dynamicCheckboxItems == null
-      || dynamicCheckboxItems.length == 0) {
-// DEBUG
-      Page.catFeedbackMessage("PDS: No items ");
-    }
-    else {
+    if(! (dynamicCheckboxItems == null || dynamicCheckboxItems.length == 0)) {
       var boxesToActivate = new Array();
       // Iterate through all the named filters of mixsets
       dynamicCheckboxItems.forEach(
@@ -6169,8 +6164,6 @@ Action.getLanguage = function()
   Page.copyableMixset="\/\/ The following was generated from the show and hide options\n"
     +"\/\/ Rename the mixset and paste into the code so you can invoke it at any time\n"
     +"mixset M"+randomMixsetNumber+" {\n"+copyableMixset+"}";
-  //debug
-  console.log(Page.copyableMixset);
   return language;
 }
 

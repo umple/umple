@@ -59,10 +59,11 @@ digraph "<<=filename>>" {
     }
 
     // set graph setting for layout algorithm if there is a suboption
-    if(hasSuboption("gvneato") || hasSuboption("gvspring")) {
+    if(hasSuboption("gvneato") || hasSuboption("gvspring")
+      || (hasSuboption("gvmanual") && ! hasSuboption("gvmanual")) ) {
       code.append("  layout = neato;\n");
     }
-    else if(hasSuboption("gvfdp")) {
+    else if(hasSuboption("gvfdp") || hasSuboption("gvmanual")) {
       code.append("  layout = fdp;\n");
     }
     else if(hasSuboption("gvsfdp")) {
