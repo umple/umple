@@ -60,6 +60,9 @@ Page.showGuards = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
 
+Page.initialMouseDownX=0;
+Page.initialMouseDownY=0;
+Page.selectedGvClass="";
 
   Page.blahblah = function (theString) {
     console.log("In blah blah "+theString);

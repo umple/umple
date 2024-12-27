@@ -2336,7 +2336,19 @@ Action.addAssociationGv = function(classCode, className){
     });
   }
 }
- 
+
+// Get the class name
+Action.getGvClassName = function(event) {
+  var elemText=event.target;
+  //iterate up to top of class table
+  while(elemText.parentElement.id!="graph0"){
+    elemText=elemText.parentNode;
+  }
+  //unstable - grabs class name
+  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+  return(elemText);
+}
+
 //Action.displayMenu() is triggered by contextmenu event on Graphviz Class "node" elements
 //Draws a div containing the editing options for class GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
@@ -2346,13 +2358,8 @@ Action.displayMenu = function(event) {
   }
   // Remove old menu, if any
   Action.removeContextMenu();
-  var elemText=event.target;
-  //iterate up to top of class table
-  while(elemText.parentElement.id!="graph0"){
-    elemText=elemText.parentNode;
-  }
-  //unstable - grabs class name
-  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+  var elemText=Action.getGvClassName(event);
+
  var orig=Page.codeMirrorEditor6.state.doc.toString();
 
  var chosenClass=Action.splitStates(orig);
@@ -4986,41 +4993,6 @@ Action.umpleTypingActivity = function(target) {
   else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
 }
 
-var checkComplexityCooldown = 300000;
-var checkComplexityLastUsage = 0;
-var checkComplexityFeedbackMessage = 'Suggestion: Since there are so many classes, <a href="javascript:Page.clickShowGvClassDiagram()">switch to automated layout</a> (G).';
-var checkComplexityDisplayTime = 120000;
-Action.checkComplexity = function()
-{
-	if((Date.now() - checkComplexityCooldown) < checkComplexityLastUsage)
-	{
-		return;
-	}
-	var editorText = jQuery("#newEditor").val();
-	var matches = editorText.match(/class( |\n)((.|\n)*?){/g);
-	if(matches == null)
-	{
-		return;
-	}
-	var numMatches = matches.length;
-	if(numMatches > 10)
-	{
-		Page.setFeedbackMessage(checkComplexityFeedbackMessage);
-		checkComplexityLastUsage = Date.now();
-		setTimeout(Action.removeCheckComplexityWarning, checkComplexityDisplayTime);
-	}
-}
-
-//since there is a cooldown on when checkComplexity is called
-//removeCheckComplexityWarning will only be called after the 5 minute cooldown has passed.
-Action.removeCheckComplexityWarning = function()
-{
-	if(Page.getFeedbackMessage() == checkComplexityFeedbackMessage)
-	{
-		Page.setFeedbackMessage("");
-	}
-}
-
 // Called after a 3s delay as controlled by umpleTypingActivity when
 // text has been edited in any of the editors (indicated by target)
 // Target can be diagramEdit (when diagram changed), newEditor for CM6, codeMirrorEditor (will be obsolete)
@@ -5073,9 +5045,6 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
     Page.setExampleMessage("");
     
   }
-
-
-	setTimeout(Action.checkComplexity,10000);
 }
 
 // Refactoring definitive text location
@@ -5333,15 +5302,68 @@ Action.updateUmpleDiagramCallback = function(response)
     var elems=document.getElementsByClassName("node");
     // Add event listener to Graphviz Class nodes for right click
     for(let i=0;i<elems.length;i++){
-      elems[i].addEventListener("contextmenu", function(event){
+      let theNode = elems[i];
+      theNode.addEventListener("contextmenu", function(event){
         event.preventDefault();
         Action.displayMenu(event);
       });
       // Add event listener for double click, calling the same function as right-click
-      elems[i].addEventListener("dblclick", function(event){
+      theNode.addEventListener("dblclick", function(event){
         event.preventDefault(); // Prevent the default double-click behavior
         Action.displayMenu(event); // Call the same function to display the menu
       });
+      // Add event listener for mousedown to  initiate a move (drag)
+      theNode.addEventListener("mousedown", function(event){
+        event.preventDefault();
+
+        // Total amount moved
+        let deltaXSum=0;
+        let deltaYSum=0;
+        let didAMove=false;
+
+        Page.selectedGvClass=Action.getGvClassName(event);
+        Page.initialMouseDownX = event.clientX;
+        Page.initialMouseDownY = event.clientY;
+        let prevX = Page.initialMouseDownX;
+        let prevY = Page.initialMouseDownY;
+
+        Page.setFeedbackMessage("!! down!! "+Page.selectedGvClass + " X="+Page.initialMouseDownX +  " Y="+Page.initialMouseDownY);
+
+        function moveClass(moveEvent) {
+          moveEvent.preventDefault();
+          let currentX = moveEvent.clientX;
+          let currentY = moveEvent.clientY;
+
+          let deltaX = currentX - prevX;
+          let deltaY = currentY - prevY;
+          deltaXSum+=deltaX;
+          deltaYSum+=deltaY;
+
+          if(didAMove || deltaXSum+deltaYSum>10) {
+            theNode.setAttribute('transform', ' translate(' + deltaXSum + ',' + deltaYSum + ')');
+            didAMove=true;
+          }
+
+          prevX = currentX;
+          prevY = currentY;
+        }
+
+        function stopMovingClass(stopEvent) {
+          if(didAMove && (deltaXSum != 0 || deltaXSum != 0) ) {
+//Debug
+Page.setFeedbackMessage("!!moved!! "+Page.selectedGvClass + " dx="+deltaXSum+" dy="+deltaYSum);
+            // Update the text and get thebackend to refresh
+            // TODO
+          }
+        
+          document.removeEventListener('mousemove', moveClass);
+          document.removeEventListener('mouseup', stopMovingClass);
+        }
+
+        document.addEventListener('mousemove', moveClass);
+        document.addEventListener('mouseup', stopMovingClass);
+      });
+
       var attributeAnchors = elems[i].getElementsByTagName("a");
       // Start from 1 to skip the first <a> element which is for the class name
       for (let j = 1; j < attributeAnchors.length; j++) {
