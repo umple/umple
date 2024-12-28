@@ -2049,11 +2049,61 @@ Action.setColor=function(classCode,className,color){
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(classyCode,subtext) } });
 
     setTimeout(function(){
-        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "setColor");
     }, 100);
 
   }
 }
+
+// Called when a class is being moved by direct manipulation
+// To ways this could have been done:
+// 1. Front end in CodeMirror6: Edit the text as above in setColor as per G mode
+//   .. won't work as the diagram code is not necessarily in the visible text
+// 2. Backend function as used by E mode as in DiagramEdit.classMoved and
+//    DiagramEdit.updateUmpleText with editClass
+//   .. won't work as we would have to have full details of the class parsed as Json
+// Solution: Edit code in the layout editor, then trigger CodeMirror6 to send change
+Action.updateGvPosition=function(className,deltaX,deltaY) {
+  // Get the positioning code that we will update
+  var positioningCode = jQuery("#umpleLayoutEditorText").val();
+  // DEBUG TEMPORARY
+  // simply add a comment to the end of the layout editor
+  //  positioning = positioning+ "\n//DEBUG modified .. class="+className+" dx="+deltaX+" dy="+deltaY+"\nclass ZZZZZ {}\n";
+
+  // Find the positioning code for the class
+  var regexForPositions = new RegExp(
+    "class[\\s]*"
+    +className
+    +"[\\s]{\\s*position ([\\d.]*) ([\\d.]*) ([\\d.]*) ([\\d.]*);([\\sa-zA-Z\.,;\-\_0-9]*)}","s");
+  var theMatch=positioningCode.match(regexForPositions);
+  if(theMatch == null) {
+    // Could not find position for this class
+    return;
+  }
+
+  // Update the position for this class
+  var matchedClassPos=theMatch[0];
+  var xPos=Number(theMatch[1]);
+  var yPos=Number(theMatch[2]);
+  var associationPos=theMatch[3];
+  var newClassPos=matchedClassPos.replace(
+    "position "+xPos+" "+yPos,
+    "position "+(xPos+deltaX)+" "+(yPos+deltaY));
+
+  // Remove any association positioning that has been left
+  if(associationPos != null) {
+    newClassPos=newClassPos.replace(";"+associationPos+"}",";\n}");
+  }
+  //Update the text
+  Page.setUmplePositioningCode(positioningCode.replace(matchedClassPos,newClassPos));
+
+  // Update the backend, triggering redraw
+  setTimeout(function(){
+    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "moveClass");
+  }, 100);
+    Action.redrawDiagram();
+}
+
 
 //Multiuse function called whenever a user wants to use a menu edit function that requires user input
 //allows users to input their text/color selection, listens for "enter", then performs the relevant edit
@@ -5326,8 +5376,8 @@ Action.updateUmpleDiagramCallback = function(response)
         Page.initialMouseDownY = event.clientY;
         let prevX = Page.initialMouseDownX;
         let prevY = Page.initialMouseDownY;
-
-        Page.setFeedbackMessage("!! down!! "+Page.selectedGvClass + " X="+Page.initialMouseDownX +  " Y="+Page.initialMouseDownY);
+//Debug
+//        Page.setFeedbackMessage("!! down!! "+Page.selectedGvClass + " X="+Page.initialMouseDownX +  " Y="+Page.initialMouseDownY);
 
         function moveClass(moveEvent) {
           moveEvent.preventDefault();
@@ -5339,7 +5389,7 @@ Action.updateUmpleDiagramCallback = function(response)
           deltaXSum+=deltaX;
           deltaYSum+=deltaY;
 
-          if(didAMove || deltaXSum+deltaYSum>10) {
+          if(didAMove || Math.abs(deltaXSum+deltaYSum)>10) {
             theNode.setAttribute('transform', ' translate(' + deltaXSum + ',' + deltaYSum + ')');
             didAMove=true;
           }
@@ -5350,10 +5400,10 @@ Action.updateUmpleDiagramCallback = function(response)
 
         function stopMovingClass(stopEvent) {
           if(didAMove && (deltaXSum != 0 || deltaXSum != 0) ) {
-//Debug
-Page.setFeedbackMessage("!!moved!! "+Page.selectedGvClass + " dx="+deltaXSum+" dy="+deltaYSum);
+//DebugPosition
+//Page.setFeedbackMessage("!!moved!! "+Page.selectedGvClass + " dx="+deltaXSum+" dy="+deltaYSum);
             // Update the text and get thebackend to refresh
-            // TODO
+            Action.updateGvPosition(Page.selectedGvClass,deltaXSum,deltaYSum);
           }
         
           document.removeEventListener('mousemove', moveClass);
