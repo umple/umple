@@ -67,6 +67,11 @@ let collabfilemap = new Map<string, collabDoc>();
 // Map for tracking online users per session
 let activeUsers = new Map<string, Set<string>>();
 
+// Variables for tracking cumulative usage during server runtime
+let sessionsInitiatedSinceStart = 0;
+let sessionsCollaboratedSinceStart = 0;
+let maxConcurrentCollaborators = 0;
+
 let io = new Server(server, {
   path: apiPath,
   cors: {
@@ -104,6 +109,9 @@ app.get('/healthCheck', (req, res) => {
       uptime: uptime, // in seconds
       NumberOfActiveUsers: activeUsersCount, // Total number of active users
       NumberOfActiveSessions: filesInfo.length, // Number of files with active collaboration users
+      SessionsInitiatedSinceStart: sessionsInitiatedSinceStart,
+      SessionsCollaboratedSinceStart: sessionsCollaboratedSinceStart,
+      MaxConcurrentCollaborators: maxConcurrentCollaborators,
       filesInfo
   };
 
@@ -159,6 +167,17 @@ io.on('connection', (socket: Socket) =>{
     socket.join(fileKey);
 
     io.in(fileKey).emit('userCountUpdate', users.size);
+
+    // Update counts to be returned in healthcheck
+    if(users.size == 1) {
+      sessionsInitiatedSinceStart++;
+    }
+    else if (users.size == 2) {
+      sessionsCollaboratedSinceStart++;
+    }
+    if(users.size > maxConcurrentCollaborators) {
+      maxConcurrentCollaborators=users.size;
+    }
 
     if(collabServerDebugFlag){
       console.log("=====================================");
