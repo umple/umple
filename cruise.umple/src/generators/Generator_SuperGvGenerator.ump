@@ -77,7 +77,7 @@ digraph "<<=filename>>" {
     }
     else if(hasSuboption("gvdot")) {
       // default, but can override special inout if needed
-      code.append("  layout = gvdot;\n");
+      code.append("  layout = dot;\n");
     }
 
     // set graph setting for orthogonality if there is a suboption

@@ -2055,6 +2055,28 @@ Action.setColor=function(classCode,className,color){
   }
 }
 
+// Get the positioning information for a given class as stored in the
+// Umple model
+Action.getGvPosition=function(positioningCode, className) {
+  // Returns an array with 
+  //   0 matchedClassPos ... the overall match
+  //   1 the X position
+  //   2 the y position
+  //   3 any code describing association locations
+  
+  // Find the positioning code for the class
+  var regexForPositions = new RegExp(
+    "class[\\s]*"
+    +className
+    +"[\\s]{\\s*position ([\\d.]*) ([\\d.]*) ([\\d.]*) ([\\d.]*);([\\sa-zA-Z\.,;\-\_0-9]*)}","s");
+  var theMatch=positioningCode.match(regexForPositions);
+  if(theMatch == null) {
+    // Could not find position for this class
+    return null;
+  }
+  return theMatch;
+}
+
 // Called when a class is being moved by direct manipulation
 // To ways this could have been done:
 // 1. Front end in CodeMirror6: Edit the text as above in setColor as per G mode
@@ -2066,19 +2088,12 @@ Action.setColor=function(classCode,className,color){
 Action.updateGvPosition=function(className,deltaX,deltaY) {
   // Get the positioning code that we will update
   var positioningCode = jQuery("#umpleLayoutEditorText").val();
-  // DEBUG TEMPORARY
-  // simply add a comment to the end of the layout editor
-  //  positioning = positioning+ "\n//DEBUG modified .. class="+className+" dx="+deltaX+" dy="+deltaY+"\nclass ZZZZZ {}\n";
 
-  // Find the positioning code for the class
-  var regexForPositions = new RegExp(
-    "class[\\s]*"
-    +className
-    +"[\\s]{\\s*position ([\\d.]*) ([\\d.]*) ([\\d.]*) ([\\d.]*);([\\sa-zA-Z\.,;\-\_0-9]*)}","s");
-  var theMatch=positioningCode.match(regexForPositions);
+  var theMatch = Action.getGvPosition(positioningCode, className);
+
   if(theMatch == null) {
     // Could not find position for this class
-    return;
+    return null;
   }
 
   // Update the position for this class
@@ -2086,9 +2101,14 @@ Action.updateGvPosition=function(className,deltaX,deltaY) {
   var xPos=Number(theMatch[1]);
   var yPos=Number(theMatch[2]);
   var associationPos=theMatch[3];
+
+  // Prevent positions from being set to values off or too close to diagram edge
+  var newXpos = Math.max(xPos+deltaX,5);
+  var newYpos = Math.max(yPos+deltaY,5);
+
   var newClassPos=matchedClassPos.replace(
     "position "+xPos+" "+yPos,
-    "position "+(xPos+deltaX)+" "+(yPos+deltaY));
+    "position "+newXpos+" "+newYpos);
 
   // Remove any association positioning that has been left
   if(associationPos != null) {
@@ -2387,9 +2407,13 @@ Action.addAssociationGv = function(classCode, className){
   }
 }
 
-// Get the class name
+// Get the class name from a SVGGelement
 Action.getGvClassName = function(event) {
-  var elemText=event.target;
+  return Action.getGvClassNameFromNode(event.target);
+}
+
+// Get the class name from a selection event
+Action.getGvClassNameFromNode = function(elemText) {
   //iterate up to top of class table
   while(elemText.parentElement.id!="graph0"){
     elemText=elemText.parentNode;
@@ -5209,7 +5233,7 @@ Action.updateUmpleDiagramCallback = function(response)
       .match(/(((?<!(\/\/.*))(mixset))|((?<!(\/\/.*))(filter)))\s+[a-zA-Z1-9-_]+/g);
     // Add special suboptions
     if(dynamicCheckboxItems == null) dynamicCheckboxItems = new Array();
-    dynamicCheckboxItems.push("gvortho","gvmanual","gvsfdp","gvcirco");
+    dynamicCheckboxItems.push("gvortho","gvmanual","gvdot","gvsfdp","gvcirco");
     
     // Clear out previous
     // TODO. May need to keep some so as to preserve selections
@@ -5287,6 +5311,7 @@ Action.updateUmpleDiagramCallback = function(response)
       }
     }
     else if(Page.useJointJSClassDiagram) {
+      // This code is deprecated as Joint.js functionality is no longer supported
 
       var model = JSON.parse(diagramCode.replace( new RegExp('} { "name": "', "gi"), '}, { "name": "' ));
 
@@ -5329,8 +5354,40 @@ Action.updateUmpleDiagramCallback = function(response)
     // Display static svg diagram
     else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram )
     {
-      jQuery("#umpleCanvas").html(format('{0}', diagramCode));
-      jQuery("#umpleCanvas").children().first().attr("id", "svgCanvas");
+      var theCanvas = jQuery("#umpleCanvas");
+      theCanvas.html(format('{0}', diagramCode));
+      theCanvas.children().first().attr("id", "svgCanvas");
+
+      // If gv class mode is gvmanual then we need to update all the umple 
+      // positioning information given the diagram locations
+      if(Page.useGvClassDiagram && Page.specialSuboptionsActive.includes("gvmanual")) {
+        var canvasX=Math.round(theCanvas.offset().left);
+        var canvasY=Math.round(theCanvas.offset().top);
+        // DEBUG
+        Page.catFeedbackMessage("updating class diagram layout due to gvmanual "+canvasX+" "+canvasY+" | ");
+
+        // For each of the nodes loop through it
+        var positioningCode = jQuery("#umpleLayoutEditorText").val();
+        var elems=document.getElementsByClassName("node");
+        for(let i=0;i<elems.length;i++){
+          var currentClassForPos = Action.getGvClassNameFromNode(elems[i]);
+          var umplePosOfCurrentClass = Action.getGvPosition(positioningCode, currentClassForPos);
+
+          if (umplePosOfCurrentClass == null) {
+            // Position not found ... this is actually a bug caused
+            // when updating the name of a class in the text ... needs fixing
+            continue;
+          }
+          var svgRect = elems[i].getBoundingClientRect();
+          var rectX=Math.round(svgRect.left-canvasX);
+          var rectY=Math.round(svgRect.top-canvasY);
+          // DEBUG
+          Page.catFeedbackMessage(".."+currentClassForPos
+            +" "+umplePosOfCurrentClass[1]+"/"+rectX
+            +" "+umplePosOfCurrentClass[2]+"/"+rectY);
+
+        }
+      }
       Action.setupPinch();
     }
     //Display structure diagram

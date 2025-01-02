@@ -174,7 +174,7 @@ else if (isset($_REQUEST["umpleCode"]))
         $foundsuboption = false;
         switch ($afilterword) {
           case 'gvneato': case 'gvspring': case 'gvfdp': case 'gvsfdp': case 'gvcirco':
-          case 'gvtwopi': case 'nop2':
+          case 'gvtwopi': case 'gvdot':
           case 'gvortho': case 'gvpolyline': case 'gvdeoverlapscale': case 'gvdeoverlaportho':
           case 'gvdeoverlapprism':
             $suboptions = $suboptions . " -s " . $afilterword;
