@@ -2056,36 +2056,39 @@ Action.setColor=function(classCode,className,color){
 }
 
 // Get the positioning information for a given class as stored in the
-// Umple model
-Action.getGvPosition=function(positioningCode, className) {
-  // Returns an array with 
-  //   0 matchedClassPos ... the overall match
-  //   1 the X position
-  //   2 the y position
-  //   3 any code describing association locations
+// Umple model. 
+Action.getGvPosition =function(positioningCode, className) {
+  // Returns an structure with 
+  //  all  matchedClassPos ... the overall match
+  //  assoc1 any initial code describing assoc positions
+  //  x  the X position (left)
+  //  y  the y position (right)
+  //  width the width (we will not edit)
+  //  height the height (we will not edit)
+  //  assoc2   any more code describing association locations
   
   // Find the positioning code for the class
   var regexForPositions = new RegExp(
     "class[\\s]*" +className +"[\\s]{"
-    +"\\s*position ([\\d.]*) ([\\d.]*) [\\d.]* [\\d.]*;"
+    +"([\\sa-zA-Z\\:\\.\\,\\;\\-\\_0-9]*)"
+    +"\\s*position ([\\d.]*) ([\\d.]*) ([\\d.]*) ([\\d.]*);"
     +"([\\sa-zA-Z\\:\\.\\,\\;\\-\\_0-9]*)}","s");
-
   var theMatch=positioningCode.match(regexForPositions);
   if(theMatch == null) {
-    // Could not find position for this class, likely because there is
-    // association code at the start, not the end. So try this
-    regexForPositions = new RegExp(
-      "class[\\s]*" +className +"[\\s]{"
-      +"[\\sa-zA-Z\\:\\.\\,\\;\\-\\_0-9]*"
-      +"\\s*position ([\\d.]*) ([\\d.]*) [\\d.]* [\\d.]*;"
-      +"([\\sa-zA-Z\\:\\.\\,\\;\\-\\_0-9]*)}","s");
-    theMatch=positioningCode.match(regexForPositions);
-    if(theMatch == null) {
-      // This should be an error
-      return null;
-    }
+    // This should be an error
+    return null;
   }
-  return theMatch;
+  var positionStruct = {
+    all: theMatch[0],
+    assoc1: theMatch[1],
+    x: theMatch[2],
+    y: theMatch[3],
+    width: theMatch[4],
+    height: theMatch[5],
+    assoc2: theMatch[6]
+  };
+  
+  return positionStruct;
 }
 
 // Called when a class is being moved by direct manipulation
@@ -2100,6 +2103,7 @@ Action.updateGvPosition=function(className,deltaX,deltaY) {
   // Get the positioning code that we will update
   var positioningCode = jQuery("#umpleLayoutEditorText").val();
 
+  // get astructure containing the umple positioning info in the current model
   var theMatch = Action.getGvPosition(positioningCode, className);
 
   if(theMatch == null) {
@@ -2111,24 +2115,25 @@ Page.catFeedbackMessage("NOPOS:"+className+" ");
   }
 
   // Update the position for this class
-  var matchedClassPos=theMatch[0];
-  var xPos=Number(theMatch[1]);
-  var yPos=Number(theMatch[2]);
-  var associationPos=theMatch[3];
+  var matchedClassPos=theMatch.all; // full positioning text
+  var xPos=Number(theMatch.x); // left
+  var yPos=Number(theMatch.y); // top
+  var associationPos1=theMatch.assoc1; // only used by E mode
+  var associationPos2=theMatch.assoc2; // only used by E mode
 
   return Action.updateGVPositionBasic(className,deltaX,deltaY,positioningCode,
-    matchedClassPos,xPos,yPos,associationPos,true);
+    matchedClassPos,xPos,yPos,associationPos1,associationPos2,true);
 }
 
 // Completion for the above, called both by the above on direct manip
 // and also in updateUmpleDiagramCallback when gv is updated and
 // gvmanual is set
 Action.updateGVPositionBasic=function(className,deltaX,deltaY,positioningCode,
-    matchedClassPos,xPos,yPos,associationPos,doRedraw) {
+    matchedClassPos,xPos,yPos,associationPos1,associationPos2, doRedraw) {
 
   // Prevent positions from being set to values off or too close to diagram edge
-  var newXpos = Math.max(Number(xPos)+deltaX,5);
-  var newYpos = Math.max(Number(yPos)+deltaY,5);
+  var newXpos = Math.max(Number(xPos)+deltaX,5); // just before left border
+  var newYpos = Math.max(Number(yPos)+deltaY,5); // just below top border
 //DEBUG
 //if(isNaN(xPos)) Page.catFeedbackMessage("OXNAN");
 //if(isNaN(yPos)) Page.catFeedbackMessage("OYNAN");
@@ -2142,9 +2147,13 @@ Action.updateGVPositionBasic=function(className,deltaX,deltaY,positioningCode,
     "position "+newXpos+" "+newYpos);
 
   // Remove any association positioning that has been left
-  if(associationPos != null) {
-    newClassPos=newClassPos.replace(";"+associationPos+"}",";\n}");
+  if(associationPos1 != null) {
+    newClassPos=newClassPos.replace(""+associationPos1+"","\n");
   }
+  if(associationPos2 != null) {
+    newClassPos=newClassPos.replace(""+associationPos2+"","\n");
+  }
+  
   //Update the text
   Page.setUmplePositioningCode(
     positioningCode.replace(matchedClassPos,newClassPos));
@@ -5419,25 +5428,34 @@ Action.updateUmpleDiagramCallback = function(response)
             continue;
           }
           var svgRect = elems[i].getBoundingClientRect();
-          var rectX=Math.round(svgRect.left-canvasX);
-          var rectY=Math.round(svgRect.top-canvasY);
+          var rectLeft= Math.round(svgRect.left-canvasX);
+          var rectTop= Math.round(svgRect.top-canvasY);
+          // Get the centre of the rectangle as it actually appears
+          // as the gv positions are also centre-focused
+          var rectX=Math.round(svgRect.left-canvasX + (Math.abs(svgRect.width/2)));
+          var rectY=Math.round(svgRect.top-canvasY  + (Math.abs(svgRect.height/2)));
 
 // DEBUG
 //Page.catFeedbackMessage(".."+currentClassForPos
-//  +" "+umplePosOfCurrentClass[1]+"/"+rectX
-//  +" "+umplePosOfCurrentClass[2]+"/"+rectY);
-          posMap.push({className:currentClassForPos,
-            fullUmplePosOfCurrentClass: umplePosOfCurrentClass[0],
-            umpleX: umplePosOfCurrentClass[1],
+//  +" "+umplePosOfCurrentClass.x+"/"+rectX
+//  +" "+umplePosOfCurrentClass.y+"/"+rectY);
+          posMap.push({className: currentClassForPos,
+            fullUmplePosOfCurrentClass: umplePosOfCurrentClass.all,
+            left: Number(umplePosOfCurrentClass.x),
+            umpleX: Number(umplePosOfCurrentClass.x)
+              + umplePosOfCurrentClass.width / 2,
             rectX: rectX,
-            umpleY: umplePosOfCurrentClass[2],
+            top: umplePosOfCurrentClass.y,
+            umpleY: umplePosOfCurrentClass.y
+              + umplePosOfCurrentClass.height / 2,
             rectY: rectY,
-            associationPos: umplePosOfCurrentClass[3]
+            associationPos1: umplePosOfCurrentClass.assoc1,
+            associationPos2: umplePosOfCurrentClass.assoc2
           });
-          minUmpleX=Math.min(minUmpleX,umplePosOfCurrentClass[1]);
-          minUmpleY=Math.min(minUmpleY,umplePosOfCurrentClass[2]);
-          minRectX=Math.min(minRectX,rectX);
-          minRectY=Math.min(minRectY,rectY);
+          minUmpleX=Math.min(minUmpleX,posMap.left);
+          minUmpleY=Math.min(minUmpleY,posMap.top);
+          minRectX=Math.min(minRectX,rectLeft);
+          minRectY=Math.min(minRectY,rectTop);
         }
 
         let diffX=minUmpleX-minRectX;
@@ -5450,19 +5468,18 @@ Action.updateUmpleDiagramCallback = function(response)
           var deltaX= (thePos.rectX+diffX)-thePos.umpleX;
           var deltaY= (thePos.rectY+diffY)-thePos.umpleY;
           if(Math.abs(deltaX) > changeThreshold || Math.abs(deltaY) > changeThreshold) {
-             // Update Umple text, but do not redraw at this time
+             // Update Umple text, 
              Action.updateGVPositionBasic(thePos.className,deltaX,deltaY,
                positioningCode,
                thePos.fullUmplePosOfCurrentClass,
                thePos.umpleX,
                thePos.umpleY,
-               thePos.associationPos,
+               thePos.associationPos1,
+               thePos.associationPos2,
                false);
 // DEBUG
 // Page.catFeedbackMessage(" redrawn: "+thePos.className+" x"+thePos.umpleX+"->"+deltaX+"/"+(thePos.rectX+diffX)
 //  +" x"+thePos.umpleY+"->"+deltaY+"/"+(thePos.rectY+diffY));
-
-
 
           }
         });
