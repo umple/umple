@@ -2293,16 +2293,17 @@ Action.drawInput = function(inputType,classCode,className){
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
+        
+          // Update core text
           let orig = Page.codeMirrorEditor6.state.doc.toString();
           orig = Action.renameClassAssistant(orig, className, input.value.trim());
-/*
-          let regex=new RegExp("(\\W+)("+className+")(\\W+)");
-          let res;
-          while((res=orig.match(regex))!=null){
-            orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
-          }
-*/
           Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
+          
+          // Update diagram text
+          var positioningCode = jQuery("#umpleLayoutEditorText").val();
+          positioningCode =  Action.renameClassAssistant(positioningCode, className, input.value.trim());
+          Page.setUmplePositioningCode(positioningCode);
+          
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
