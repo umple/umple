@@ -4456,6 +4456,7 @@ Action.setCaretPosition = function(line)
     // DEBUG
     /* codemirror 6 line highlight by number*/
     if(line >= 1) {
+      line = Math.min(line, Page.codeMirrorEditor6.state.doc.lines);
       const docPosition = Page.codeMirrorEditor6.state.doc.line(line).from;
       Page.codeMirrorEditor6.dispatch({
         selection: { anchor: docPosition },
@@ -4957,7 +4958,8 @@ Action.highlightByIndexCM6 = function(startIndex,endIndex){
   let startSelection = Action.indexToPos(startIndex,Page.codeMirrorEditor6.state.doc.toString());
   let startDocPosition = Page.codeMirrorEditor6.state.doc.line(startSelection.line +1).from;
   let endSelection = Action.indexToPos(endIndex,Page.codeMirrorEditor6.state.doc.toString());
-  let endDocPosition = Page.codeMirrorEditor6.state.doc.line(endSelection.line +2).from;
+  let endLine = Math.min(endSelection.line +2, Page.codeMirrorEditor6.state.doc.lines);
+  let endDocPosition = Page.codeMirrorEditor6.state.doc.line(endLine).from;
 
   // following is for multiple selection ranges
   Page.codeMirrorEditor6.dispatch({
