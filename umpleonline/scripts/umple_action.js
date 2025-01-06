@@ -5403,7 +5403,7 @@ Action.updateUmpleDiagramCallback = function(response)
 
       // If gv class mode is gvmanual then we need to update all the umple 
       // positioning information given the diagram locations
-      if(Page.useGvClassDiagram && Page.specialSuboptionsActive.includes("gvmanual")) {
+      if(Page.useGvClassDiagram && Page.isGvManual()) {
         var canvasX=Math.round(theCanvas.offset().left);
         var canvasY=Math.round(theCanvas.offset().top);
 // DEBUG
@@ -5502,7 +5502,14 @@ Action.updateUmpleDiagramCallback = function(response)
   
   Page.hideLoading();
   if(Page.useGvClassDiagram){
+
+    // If we are in gvmanual mode, then allow node movement, otherwise do not
+    allowNodeMovement = true;
+    if(!Page.isGvManual()) {
+      allowNodeMovement = false;
+    }
     var elems=document.getElementsByClassName("node");
+
     // Add event listener to Graphviz Class nodes for right click
     for(let i=0;i<elems.length;i++){
       let theNode = elems[i];
@@ -5542,17 +5549,24 @@ Action.updateUmpleDiagramCallback = function(response)
           deltaXSum+=deltaX;
           deltaYSum+=deltaY;
 
-          if(didAMove || Math.abs(deltaXSum+deltaYSum)>10) {
+          if(allowNodeMovement  && (didAMove || Math.abs(deltaXSum+deltaYSum)>10)) {
             theNode.setAttribute('transform', ' translate(' + deltaXSum + ',' + deltaYSum + ')');
             didAMove=true;
           }
 
           prevX = currentX;
           prevY = currentY;
+          if(!allowNodeMovement) {
+            Page.setFeedbackMessage("To enable moving of classes, set gvmanual mode in the Show and Hide menu");
+          }
+          else {
+//DebugPosition
+Page.setFeedbackMessage("!!moving!! "+Page.selectedGvClass + " dx="+deltaXSum+" dy="+deltaYSum);
+          }
         }
 
         function stopMovingClass(stopEvent) {
-          if(didAMove && (deltaXSum != 0 || deltaXSum != 0) ) {
+          if(allowNodeMovement && (didAMove && (deltaXSum != 0 || deltaXSum != 0)) ) {
 //DebugPosition
 Page.setFeedbackMessage("!!moved!! "+Page.selectedGvClass + " dx="+deltaXSum+" dy="+deltaYSum);
             // Update the text and get thebackend to refresh

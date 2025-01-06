@@ -440,6 +440,8 @@ class UmpleElement
   // Used if suboption 'gvmanual" is present.
   // y is negated since in Umple coordinates run from top to bottom, but in gv it is bottom to top
   // value is in inches as required by graphviz
+  // Graphviz positions refer to the centre of the node to be displayed
+  // whereas the Umple positions refer to the left and top
   // returns empty string if there is no coordinate stored
   public String getPosition(Double expand) {
     if(hasPosition()) {

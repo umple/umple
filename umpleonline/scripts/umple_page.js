@@ -68,6 +68,12 @@ Page.selectedGvClass="";
     console.log("In blah blah "+theString);
   }
 
+// Gvmanual determines behaviour of editing so this function
+// provides a shortcut to check for it
+// Returns boolean
+Page.isGvManual = function () {
+  return Page.specialSuboptionsActive.includes("gvmanual");
+}
 
 
 // The following is set called from umple.php
