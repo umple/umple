@@ -5363,6 +5363,7 @@ Action.updateUmpleDiagramCallback = function(response)
         }        
         jQuery("#button"+aBoxToActivate).prop('checked',buttonSetting);       
         Page.initAction("button"+aBoxToActivate);
+        Page.initLabel("label"+aBoxToActivate);
         jQuery("#tt"+aBoxToActivate).show();
       });
     }

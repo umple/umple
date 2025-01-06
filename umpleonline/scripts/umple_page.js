@@ -489,13 +489,18 @@ Page.initLabels = function()
   
   for(var i = 0, len = labels.length; i < len; i++)
   {
-    var labelId = "#" + jQuery(labels[i]).prop("id");
-    jQuery(labelId).click(function(x) {
-      return function() {
-        jQuery("#" + jQuery(x).prop("id").replace("label", "button")).trigger('click');
-      }
-    }(labelId));
+    Page.initLabel(jQuery(labels[i]).prop("id") );
   }
+}
+
+Page.initLabel = function(id)
+{
+  var labelId = "#" + id;
+  jQuery(labelId).click(function(x) {
+    return function() {
+      jQuery("#" + jQuery(x).prop("id").replace("label", "button")).trigger('click');
+    }
+  }(labelId));  
 }
 
 // BOOKMARK: adding basic event handlers to model and layout editors:: calls to Action...
