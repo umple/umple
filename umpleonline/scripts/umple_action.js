@@ -2188,7 +2188,7 @@ Action.drawInput = function(inputType,classCode,className){
     prompt.style.left = event.clientX+"px";
   }
   if(event.clientY+promptRect.height>window.innerHeight){
-    prompt.style.bottom=(window.innerHieght-event.clientY)+"px";
+    prompt.style.bottom=(window.innerHeight-event.clientY)+"px";
   } else {
     prompt.style.top = event.clientY+"px";
   }
@@ -2294,11 +2294,14 @@ Action.drawInput = function(inputType,classCode,className){
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
           let orig = Page.codeMirrorEditor6.state.doc.toString();
+          orig = Action.renameClassAssistant(orig, className, input.value.trim());
+/*
           let regex=new RegExp("(\\W+)("+className+")(\\W+)");
           let res;
           while((res=orig.match(regex))!=null){
             orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
           }
+*/
           Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
           document.removeEventListener("mousedown", hider);
           prompt.remove();
@@ -2368,6 +2371,26 @@ Action.drawInput = function(inputType,classCode,className){
   document.body.appendChild(prompt);
   input.focus();
 
+}
+
+//Replaces a word anywhere in the text repeatedly
+//Used to rename classes ... both their definition() 
+//including diagram layout
+//and use as a type.
+Action.renameClassAssistant = function(text, oldClassName, newClassName) {
+  let newText= text;
+  let regex=new RegExp("(\\W+)("+oldClassName+")(\\W+)");
+  let res;
+  while((res=newText.match(regex))!=null){
+    newText=
+      newText.substr(0,res.index+res[1].length)
+      +newClassName
+      +newText.substr(
+        res.index+res[1].length+res[2].length,
+        newText.length-(res.index+res[1].length+res[2].length)
+      );
+  }
+  return newText;
 }
 
 //Searches for existing associations, children, and associationClasses related to the target class
