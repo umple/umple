@@ -5364,6 +5364,7 @@ Action.updateUmpleDiagramCallback = function(response)
         jQuery("#button"+aBoxToActivate).prop('checked',buttonSetting);       
         Page.initAction("button"+aBoxToActivate);
         Page.initLabel("label"+aBoxToActivate);
+        ToolTips.setATooltipBasic(ToolTips.dynamicTooltips,"tt"+aBoxToActivate,"right");
         jQuery("#tt"+aBoxToActivate).show();
       });
     }
