@@ -82,4 +82,72 @@ class Integer
 
 class String
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class DataType
+{
+position 5 40 109 45;
+}
+
+class Action
+{
+position 95 132 109 45;
+}
+
+class Class
+{
+position 5 484 109 45;
+}
+
+class BusinessEntityPropertySet
+{
+position 5 288 109 45;
+}
+
+class BusinessRole
+{
+position 94 489 109 45;
+}
+
+class Task
+{
+  position 250 30 109 45;
+}
+
+class ArtifactRole
+{
+position 468 450 109 45;
+}
+
+class PerformerRole
+{
+position 307 329 109 45;
+}
+
+class OrganisationalUnit
+{
+position 365 495 109 45;
+}
+
+class BusinessEntity
+{
+position 98 571 109 45;
+}
+
+class Boolean
+{
+  position 450 30 109 45;
+}
+
+class Integer
+{
+  position 450 130 109 45;
+}
+
+class String
+{
+position 540 220 109 45;
 }

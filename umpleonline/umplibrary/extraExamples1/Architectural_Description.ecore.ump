@@ -62,4 +62,52 @@ class Integer
 
 class String
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Architecture
+{
+position 529 97 109 45;
+}
+
+class ArchitectureDescription
+{
+position 57 92 109 45;
+}
+
+class ArchitectureView
+{
+position 5 220 109 45;
+}
+
+class ArchitectureViewPoint
+{
+position 488 278 109 45;
+}
+
+class MainView
+{
+position 5 532 109 45;
+}
+
+class ModelElement
+{
+position 157 331 109 45;
+}
+
+class Boolean
+{
+position 163 21 109 45;
+}
+
+class Integer
+{
+position 526 63 109 45;
+}
+
+class String
+{
+position 5 24 109 45;
 }

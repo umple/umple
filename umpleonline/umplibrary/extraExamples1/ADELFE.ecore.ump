@@ -17,9 +17,6 @@ Authors: SIMON Eric(simon.eric3_NOSPAM <AT> gmail.com)
 
 ************/
 
-
-suboption "gvseparator=9";
-
 class Classifier
 {
 }
@@ -118,4 +115,102 @@ class Conflict
 class Uselessness
 {
 	isA NCS;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Classifier
+{
+position 5 10 109 45;
+}
+
+class Environnement
+{
+position 102 107 109 45;
+}
+
+class Element
+{
+position 5 338 109 45;
+}
+
+class CooperativeAgent
+{
+position 354 343 109 45;
+}
+
+class Representation
+{
+position 5 640 109 45;
+}
+
+class Skill
+{
+position 299 5 109 45;
+}
+
+class Aptitude
+{
+position 171 5 109 45;
+}
+
+class Characteristic
+{
+position 565 503 109 45;
+}
+
+class Communication
+{
+position 304 556 109 45;
+}
+
+class AIP
+{
+position 412 651 109 45;
+}
+
+class CooperationRules
+{
+  position 450 30 109 45;
+}
+
+class NCS
+{
+position 865 255 109 45;
+}
+
+class Incomprehension
+{
+position 568 192 109 45;
+}
+
+class Ambiguity
+{
+position 680 390 109 45;
+}
+
+class Incompetence
+{
+position 780 549 109 45;
+}
+
+class Unproductiveness
+{
+position 657 5 109 45;
+}
+
+class Concurrency
+{
+position 983 70 109 45;
+}
+
+class Conflict
+{
+position 1221 253 109 45;
+}
+
+class Uselessness
+{
+position 1036 468 109 45;
 }

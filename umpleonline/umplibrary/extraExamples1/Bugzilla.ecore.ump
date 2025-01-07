@@ -122,3 +122,89 @@ class Attachment
 	String type;
 	String data;
 }
+
+namespace -;
+
+
+class Integer
+{
+  position 50 30 109 45;
+}
+
+class String
+{
+  position 50 130 109 45;
+}
+
+class Boolean
+{
+  position 50 230 109 45;
+}
+
+class Double
+{
+  position 50 330 109 45;
+}
+
+class BugzillaRoot
+{
+position 220 417 109 45;
+}
+
+class Bug
+{
+  position 250 30 109 45;
+}
+
+class StringElt
+{
+position 428 136 109 45;
+}
+
+class Keywords
+{
+position 627 81 109 45;
+}
+
+class Dependson
+{
+position 629 85 109 45;
+}
+
+class Blocks
+{
+position 348 5 109 45;
+}
+
+class Cc
+{
+position 317 69 109 45;
+}
+
+class LongDesc
+{
+position 210 5 109 45;
+}
+
+class Attachment
+{
+position 232 5 109 45;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Boolean
+{
+  position 50 30 109 45;
+}
+
+class String
+{
+  position 50 130 109 45;
+}
+
+class Integer
+{
+  position 50 230 109 45;
+}

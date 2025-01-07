@@ -121,4 +121,92 @@ class Variable
 	isA Element;
 	String type;
 	String initValue;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Boolean
+{
+position 5 29 109 45;
+}
+
+class String
+{
+position 5 129 109 45;
+}
+
+class Integer
+{
+position 25 227 109 45;
+}
+
+class Element
+{
+position 188 472 109 45;
+}
+
+class Program
+{
+position 254 192 109 45;
+}
+
+class Process
+{
+position 673 349 109 45;
+}
+
+class State
+{
+position 156 71 109 45;
+}
+
+class Transition
+{
+position 795 204 109 45;
+}
+
+class Trans
+{
+position 942 34 109 45;
+}
+
+class Strans
+{
+position 1089 205 109 45;
+}
+
+class Transall
+{
+  position 450 30 109 45;
+}
+
+class Guard
+{
+position 1006 455 109 45;
+}
+
+class Action
+{
+position 408 132 109 45;
+}
+
+class Network
+{
+position 325 303 109 45;
+}
+
+class Channel
+{
+position 458 345 109 45;
+}
+
+class Message
+{
+  position 650 30 109 45;
+}
+
+class Variable
+{
+position 595 651 109 45;
 }

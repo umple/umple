@@ -15,6 +15,8 @@ Authors: David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr)
 **************************/
 namespace PrimitiveTypes;
 
+suboption "gvseparator=4";
+
 class String
 {
 }
@@ -143,4 +145,87 @@ class Date
 	Integer hours;
 	Integer minutes;
 	Integer seconds;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class String
+{
+position 5 37 109 45;
+}
+
+class Integer
+{
+position 5 5 109 45;
+}
+
+class ATOM
+{
+position 511 5 109 45;
+}
+
+class Entry
+{
+position 580 248 109 45;
+}
+
+class Source
+{
+position 187 324 109 45;
+}
+
+class Content
+{
+position 610 441 109 45;
+}
+
+class InLineXHTMLContent
+{
+position 729 575 109 45;
+}
+
+class InLineOtherContent
+{
+position 666 570 109 45;
+}
+
+class OutOfLineContent
+{
+position 749 437 109 45;
+}
+
+class Generator
+{
+position 5 195 109 45;
+}
+
+class Category
+{
+position 412 104 109 45;
+}
+
+class Link
+{
+position 136 5 109 45;
+}
+
+class Person
+{
+position 847 5 109 45;
+}
+
+class Author
+{
+position 794 111 109 45;
+}
+
+class Contributor
+{
+position 698 5 109 45;
+}
+
+class Date
+{
+position 317 384 109 45;
 }
