@@ -94,4 +94,82 @@ class InitialRule
 class FinalRule
 {
 	isA Rule;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Integer
+{
+position 431 488 109 45;
+}
+
+class String
+{
+position 305 490 109 45;
+}
+
+class Boolean
+{
+position 180 490 109 45;
+}
+
+class Double
+{
+position 47 489 109 45;
+}
+
+class AWKProgram
+{
+position 57 181 109 45;
+}
+
+class File
+{
+position 48 45 109 45;
+}
+
+class Record
+{
+position 255 60 109 45;
+}
+
+class Field
+{
+position 403 62 109 45;
+}
+
+class Script
+{
+position 52 290 109 45;
+}
+
+class Rule
+{
+position 223 282 109 45;
+}
+
+class Pattern
+{
+position 295 170 109 45;
+}
+
+class Action
+{
+position 409 280 109 45;
+}
+
+class Instruction
+{
+position 457 401 109 45;
+}
+
+class InitialRule
+{
+position 241 402 109 45;
+}
+
+class FinalRule
+{
+position 86 402 109 45;
 }
