@@ -5585,11 +5585,11 @@ Action.updateUmpleDiagramCallback = function(response)
           prevX = currentX;
           prevY = currentY;
           if(!allowNodeMovement) {
-            Page.setFeedbackMessage("To enable moving of classes, set gvmanual mode in the Show and Hide menu");
+            Page.setFeedbackMessage("To enable moving of classes in G mode, set gvmanual in the Show and Hide menu");
           }
           else {
 //DebugPosition
-Page.setFeedbackMessage("!!moving!! "+Page.selectedGvClass + " dx="+deltaXSum+" dy="+deltaYSum);
+Page.setFeedbackMessage("Moving "+Page.selectedGvClass + "to "+currentX+", "+currentY+"dx="+deltaXSum+" dy="+deltaYSum);
           }
         }
 

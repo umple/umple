@@ -1364,7 +1364,8 @@ Page.getSelectedExample = function()
   }
 
   if(theExampleType == "cdModels") {
-    var requiresGvClass = false; // Some class diagrams  are too complex to edit
+    // Jan 2025 change to ensure class diagrams by default use GvClass.
+    var requiresGvClass = true; // Some class diagrams  are too complex to edit
 
     var exampleSetIDToLoad = "inputExample";
     if (exampleSet == "extra1ModelsAD") {
@@ -1387,11 +1388,11 @@ Page.getSelectedExample = function()
     inputExample = jQuery("#"+exampleSetIDToLoad+" option:selected").val();
 
     // Override special case to use G mode where E mode is too complex
-    // TODO: Consider making G mode default
+    // Commented out when making G mode default
     // TODO: Consider tagging the examples by mode in umple.php rather than here
-    if (inputExample == "GeometricSystem.ump") {
-      requiresGvClass = true;
-    }
+    // if (inputExample == "GeometricSystem.ump") {
+    //  requiresGvClass = true;
+    // }
 
     if(requiresGvClass) {
       // if diagram type not a editable class diagram, set it 

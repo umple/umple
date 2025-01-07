@@ -756,7 +756,6 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="Compositions.ump">Compositions</option>
                 <option name = "optionExample" value="CoOpSystem.ump">Co-Op System</option>
                 <option name = "optionExample" value="DMMOverview.ump">DMM Overview</option>
-                <option name = "optionExample" value="GeometricSystem.ump">Geometric system</option>
                 <!-- <option name = "optionExample" value="DMMModelElementHierarchy.ump">DMM Model Element Hierarchy</option> -->
                 <option name = "optionExample" value="DMMSourceObjectHierarchy.ump">DMM Source Object Hierarchy</option>
                 <option name = "optionExample" value="DMMRelationshipHierarchy.ump">DMM Relationship Hierarchy</option>
@@ -768,6 +767,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="GenealogyB.ump">Genealogy B</option>
                 <option name = "optionExample" value="GenealogyC.ump">Genealogy C</option>
                 <option name = "optionExample" value="GeographicalInformationSystem.ump">Geographical Information System</option>
+                <option name = "optionExample" value="GeometricSystem.ump">Geometric system</option>
                 <option name = "optionExample" value="Hospital.ump">Hospital</option>
                 <option name = "optionExample" value="Hotel.ump">Hotel</option>
                 <option name = "optionExample" value="Insurance.ump">Insurance</option>
