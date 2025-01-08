@@ -391,10 +391,24 @@ Action.toggleSpecialSuboption = function(suboption) {
   // If suboption  is not in active ones then add it
   var index = Page.specialSuboptionsActive.indexOf(suboption);  
   if(index !== -1) {
+    // Turn off suboption if not already on by deleting it
+    // This sets some options to the default
+    // Suboptions specified in the code always override this though
     Page.specialSuboptionsActive.splice(index,1);
   }
   else {
+    // Turn on suboption if off by adding it
+    // May have no effect if the code requires a conflicting one
     Page.specialSuboptionsActive.push(suboption);
+
+    // If gvmanual is active, then the options affecting layout
+    // will be applied to the manual layout too
+    // this is done in Action.updateUmpleDiagramCallback
+
+    // Only one of the layout algorithms can be active at a time
+    // so turn off others that are mutually exclusive. These are
+    // gvdot, gvsfdp, gvcirco
+    Action.deactivateSpecialLayoutAlgorithmsExcept(suboption);
   }
   Action.redrawDiagram();
 }
@@ -2116,8 +2130,9 @@ Page.catFeedbackMessage("NOPOS:"+className+" ");
 
   // Update the position for this class
   var matchedClassPos=theMatch.all; // full positioning text
-  var xPos=Number(theMatch.x); // left
-  var yPos=Number(theMatch.y); // top
+  var xPos=theMatch.x; // left
+  
+  var yPos=theMatch.y; // top
   var associationPos1=theMatch.assoc1; // only used by E mode
   var associationPos2=theMatch.assoc2; // only used by E mode
 
@@ -2132,8 +2147,8 @@ Action.updateGVPositionBasic=function(className,deltaX,deltaY,positioningCode,
     matchedClassPos,xPos,yPos,associationPos1,associationPos2, doRedraw) {
 
   // Prevent positions from being set to values off or too close to diagram edge
-  var newXpos = Math.max(Number(xPos)+deltaX,5); // just before left border
-  var newYpos = Math.max(Number(yPos)+deltaY,5); // just below top border
+  var newXpos = Math.round(Math.max(Number(xPos)+deltaX,5)); // just before left border
+  var newYpos = Math.round(Math.max(Number(yPos)+deltaY,5)); // just below top border
 //DEBUG
 //if(isNaN(xPos)) Page.catFeedbackMessage("OXNAN");
 //if(isNaN(yPos)) Page.catFeedbackMessage("OYNAN");
@@ -2153,6 +2168,13 @@ Action.updateGVPositionBasic=function(className,deltaX,deltaY,positioningCode,
   if(associationPos2 != null) {
     newClassPos=newClassPos.replace(""+associationPos2+"","\n");
   }
+//DEBUG
+if (matchedClassPos == newClassPos) {
+  Page.catFeedbackMessage(" @@@"+deltaX+"&"+xPos+"&"+newXpos+" ");
+}
+else {
+  Page.catFeedbackMessage("###"+deltaX);
+}
   
   //Update the text
   Page.setUmplePositioningCode(
@@ -5308,7 +5330,7 @@ Action.updateUmpleDiagramCallback = function(response)
       .match(/(((?<!(\/\/.*))(mixset))|((?<!(\/\/.*))(filter)))\s+[a-zA-Z1-9-_]+/g);
     // Add special suboptions
     if(dynamicCheckboxItems == null) dynamicCheckboxItems = new Array();
-    dynamicCheckboxItems.push("gvortho","gvmanual","gvdot","gvsfdp","gvcirco");
+    dynamicCheckboxItems.push("gvmanual","gvdot","gvsfdp","gvcirco","gvortho");
     
     // Clear out previous
     // TODO. May need to keep some so as to preserve selections
@@ -5438,6 +5460,10 @@ Action.updateUmpleDiagramCallback = function(response)
       // positioning information given the diagram locations
       if(Page.useGvClassDiagram && Page.isGvManual()) {
 
+        // First, in case we have used a special algorithm to reformulate we first turn them all off
+        // This will not have effect if the algorithm is specified in the code.
+        Action.deactivateSpecialLayoutAlgorithmsExcept(null);
+
 // DEBUG
 // Page.catFeedbackMessage("updating class diagram layout due to gvmanual "+canvasX+" "+canvasY+" | ");
 
@@ -5445,10 +5471,10 @@ Action.updateUmpleDiagramCallback = function(response)
         var positioningCode = jQuery("#umpleLayoutEditorText").val();
         var elems=document.getElementsByClassName("node");
         var posMap = new Array();
-        var minUmpleX = 9999999;
-        var minUmpleY = 9999999;
-        var minRectX = 9999999;
-        var minRectY = 9999999;
+        var minUmpleLeft = 9999999;
+        var minUmpleTop = 9999999;
+        var minRectLeft = 9999999;
+        var minRectTop = 9999999;
 
         for(let i=0;i<elems.length;i++){
           var currentClassForPos = Action.getGvClassNameFromNode(elems[i]);
@@ -5462,59 +5488,67 @@ Action.updateUmpleDiagramCallback = function(response)
           var theRect=Action.getRectFromSvgNode(elems[i], canvasX, canvasY);
           var rectLeft = theRect.left;
           var rectTop = theRect.top;
-          // Get the centre of the rectangle as it actually appears
-          // as the gv positions are also centre-focused
-          var rectX = theRect.centreX;
-          var rectY = theRect.centreY;
+          // Get the centre of the rectangle as
+          // the gv positions are also centre-focused
+          var rectCentreX = theRect.centreX;
+          var rectCentreY = theRect.centreY;
+          var uLeft = umplePosOfCurrentClass.x;
+          var uTop = umplePosOfCurrentClass.y;
 
 // DEBUG
-//Page.catFeedbackMessage(".."+currentClassForPos
-//  +" "+umplePosOfCurrentClass.x+"/"+rectX
-//  +" "+umplePosOfCurrentClass.y+"/"+rectY);
+Page.setFeedbackMessage(".."+currentClassForPos
+  +" "+umplePosOfCurrentClass.x+"/"+rectCentreX
+  +" "+umplePosOfCurrentClass.y+"/"+rectCentreY);
+
           posMap.push({className: currentClassForPos,
             fullUmplePosOfCurrentClass: umplePosOfCurrentClass.all,
-            left: Number(umplePosOfCurrentClass.x),
+            left: uLeft,
             umpleX: Number(umplePosOfCurrentClass.x)
-              + umplePosOfCurrentClass.width / 2,
-            rectX: rectX,
-            top: umplePosOfCurrentClass.y,
-            umpleY: umplePosOfCurrentClass.y
-              + umplePosOfCurrentClass.height / 2,
-            rectY: rectY,
+              + Number(umplePosOfCurrentClass.width) / 2,
+            rectCentreX: rectCentreX,
+            top: uTop,
+            umpleY: Number(umplePosOfCurrentClass.y)
+              + Number(umplePosOfCurrentClass.height) / 2,
+            rectCentreY: rectCentreY,
             associationPos1: umplePosOfCurrentClass.assoc1,
             associationPos2: umplePosOfCurrentClass.assoc2
           });
-          minUmpleX=Math.min(minUmpleX,posMap.left);
-          minUmpleY=Math.min(minUmpleY,posMap.top);
-          minRectX=Math.min(minRectX,rectLeft);
-          minRectY=Math.min(minRectY,rectTop);
+          minUmpleLeft=Math.min(minUmpleLeft,uLeft);
+          minUmpleTop=Math.min(minUmpleTop,uTop);
+          minRectLeft=Math.min(minRectLeft,rectLeft);
+          minRectTop=Math.min(minRectTop,rectTop);
         }
 
-        let diffX=minUmpleX-minRectX;
-        let diffY=minUmpleY-minRectY;
+        let diffX=minUmpleLeft-minRectLeft;
+        let diffY=minUmpleTop-minRectTop;
 // DEBUG
-// Page.catFeedbackMessage(" diffx="+diffX+" diffy="+diffY+" ");
+ Page.catFeedbackMessage("In process of updating nodes from gv diffx="+diffX+" diffy="+diffY+" ");
         // Now loop through the Map updating the Umple code if needed
+        var nodesMoved = 0;
         posMap.forEach(function(thePos) {
           const changeThreshold = 10;
-          var deltaX= (thePos.rectX+diffX)-thePos.umpleX;
-          var deltaY= (thePos.rectY+diffY)-thePos.umpleY;
+          var deltaX= Math.round((thePos.rectCentreX+diffX)-thePos.umpleX);
+          var deltaY= Math.round((thePos.rectCentreY+diffY)-thePos.umpleY);
           if(Math.abs(deltaX) > changeThreshold || Math.abs(deltaY) > changeThreshold) {
              // Update Umple text, 
+             nodesMoved++;
              Action.updateGVPositionBasic(thePos.className,deltaX,deltaY,
                positioningCode,
                thePos.fullUmplePosOfCurrentClass,
-               thePos.umpleX,
-               thePos.umpleY,
+               thePos.left,
+               thePos.top,
                thePos.associationPos1,
                thePos.associationPos2,
                false);
 // DEBUG
-// Page.catFeedbackMessage(" redrawn: "+thePos.className+" x"+thePos.umpleX+"->"+deltaX+"/"+(thePos.rectX+diffX)
-//  +" x"+thePos.umpleY+"->"+deltaY+"/"+(thePos.rectY+diffY));
+ Page.catFeedbackMessage(" redrawn: "+thePos.className+" x"+thePos.umpleX+"->"+deltaX+"/"+(thePos.rectCentreX+diffX)
+  +" y"+thePos.umpleY+"->"+deltaY+"/"+(thePos.rectCentreY+diffY));
 
           }
         });
+//DEBUG
+Page.catFeedbackMessage(" Moved "+nodesMoved+" nodes");
+        
       }
       Action.setupPinch();
     }
@@ -5647,11 +5681,10 @@ Page.setFeedbackMessage("!!moved!! "+Page.selectedGvClass + " dx="+deltaXSum+" d
         associationAnchors[j].addEventListener("contextmenu", function(event) {
           event.preventDefault(); // Prevent the default click behavior
           Action.displayAssociMenu(event,associationLink);
-      });
+        });
+      }
     }
   }
-}
-  
 
   if(Page.useGvStateDiagram){
     //add double click to display menu, issue#2081
@@ -5694,6 +5727,34 @@ Page.setFeedbackMessage("!!moved!! "+Page.selectedGvClass + " dx="+deltaXSum+" d
     });
     }
   }  
+}
+
+// Called when a layout algorithm is clicked, in order to unselect the others
+// Can also be used to unselect all of them when gvmanual is active and
+// we are in the update callback
+Action.deactivateSpecialLayoutAlgorithmsExcept = function(onlyAlgoToKeep) {
+  var specialAlgos = new Array();
+  var didRemove = false;
+  specialAlgos.push("gvdot","gvsfdp","gvcirco");
+
+  // If the one to keep is not a special algo such as gvortho then do nothing
+  if(onlyAlgoToKeep != null && (! specialAlgos.includes(onlyAlgoToKeep)) ) {
+    return false;
+  }
+ 
+  // Search for any of the specialAlgos and turn off except the one to keep
+  specialAlgos.forEach(function(anAlgo) {
+    if(onlyAlgoToKeep == null || anAlgo != onlyAlgoToKeep) {
+      jQuery("#button"+anAlgo).prop('checked',false);
+      var index = Page.specialSuboptionsActive.indexOf(anAlgo);
+      if(index !== -1) {
+        // remove an algo that was selected
+        Page.specialSuboptionsActive.splice(index,1);
+        didRemove = true;
+      }
+    }
+  });
+  return didRemove;
 }
 
 Action.getRectFromSvgNode = function(node,canvasX, canvasY) {

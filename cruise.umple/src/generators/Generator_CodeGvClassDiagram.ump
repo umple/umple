@@ -47,7 +47,7 @@ class GvClassDiagramGenerator
     
     // Arrange for manual layout of class if requested (see also code for interface)
     String classPosition = "";
-    if(hasSuboption("gvmanual")) {
+    if(hasSuboption("gvmanual") && ! hasSpecialLayoutAlgorithmSuboption() ) {
       double sepValForPosition = getSuboptionValue("gvseparator", 1.0);
       classPosition = uClass.getPosition(sepValForPosition);
     }
@@ -459,9 +459,9 @@ class GvClassDiagramGenerator
 	    String interfaceColor = inInterface.getDisplayColor();
 	    if (!interfaceColor.equals("")) interfaceColor=" style=filled, fillcolor="+interfaceColor+" ";
 
-      // Arrange for manual layout of class if requested (see also code for class)
+      // Arrange for manual layout of interface if requested (see also code for class)
       String interfacePosition = "";
-      if(hasSuboption("gvmanual")) {
+      if(hasSuboption("gvmanual") && ! hasSpecialLayoutAlgorithmSuboption() ) {
         double sepValForPosition = getSuboptionValue("gvseparator", 1.0);
         interfacePosition = inInterface.getPosition(sepValForPosition);
       }

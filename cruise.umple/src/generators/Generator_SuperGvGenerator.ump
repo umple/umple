@@ -59,12 +59,8 @@ digraph "<<=filename>>" {
     }
 
     // set graph setting for layout algorithm if there is a suboption
-    if(hasSuboption("gvneato") || hasSuboption("gvspring")
-      || (hasSuboption("gvmanual") && ! hasSuboption("gvmanual")) ) {
+    if(hasSuboption("gvneato") || hasSuboption("gvspring")) {
       code.append("  layout = neato;\n");
-    }
-    else if(hasSuboption("gvfdp") || hasSuboption("gvmanual")) {
-      code.append("  layout = fdp;\n");
     }
     else if(hasSuboption("gvsfdp")) {
       code.append("  layout = sfdp;\n");
@@ -78,6 +74,13 @@ digraph "<<=filename>>" {
     else if(hasSuboption("gvdot")) {
       // default, but can override special inout if needed
       code.append("  layout = dot;\n");
+    }
+    else if(hasSuboption("gvfdp") || hasSuboption("gvmanual")) {
+      // manual layout uses fdp but with ! after the position
+      // to actually force use of manual positions
+      // note that dot and the above override manual here
+      // to allow them to alter the manual layout
+      code.append("  layout = fdp;\n");
     }
 
     // set graph setting for orthogonality if there is a suboption
@@ -109,6 +112,17 @@ digraph "<<=filename>>" {
     	createInterfacesAndTheirHirerarchy(uInterface,code); 
     }
     terminateCode(code, associations);
+  }
+  
+  // returns true if a special algorithm is going to be requested
+  // in the generator, rather than the default
+  // even if gvmanual is active, these are allowed to change the manual layout
+  public boolean hasSpecialLayoutAlgorithmSuboption() {
+    return (hasSuboption("gvneato") || hasSuboption("gvspring")
+      || hasSuboption("gvsfdp") || hasSuboption("gvcirco")
+      || hasSuboption("gvtwopi") || hasSuboption("gvfdp")
+      || hasSuboption("gvdot")
+    );
   }
 
   // Actually output the class contents  
