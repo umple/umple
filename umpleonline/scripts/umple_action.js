@@ -2168,13 +2168,13 @@ Action.updateGVPositionBasic=function(className,deltaX,deltaY,positioningCode,
   if(associationPos2 != null) {
     newClassPos=newClassPos.replace(""+associationPos2+"","\n");
   }
-//DEBUG
-if (matchedClassPos == newClassPos) {
-  Page.catFeedbackMessage(" @@@"+deltaX+"&"+xPos+"&"+newXpos+" ");
-}
-else {
-  Page.catFeedbackMessage("###"+deltaX);
-}
+//DEBUG next 6 lines
+//if (matchedClassPos == newClassPos) {
+//  Page.catFeedbackMessage(" @@@"+deltaX+"&"+xPos+"&"+newXpos+" ");
+//}
+//else {
+//  Page.catFeedbackMessage("###"+deltaX);
+//}
   
   //Update the text
   Page.setUmplePositioningCode(
@@ -5462,7 +5462,7 @@ Action.updateUmpleDiagramCallback = function(response)
 
         // First, in case we have used a special algorithm to reformulate we first turn them all off
         // This will not have effect if the algorithm is specified in the code.
-        Action.deactivateSpecialLayoutAlgorithmsExcept(null);
+        var algoWasRemoved = Action.deactivateSpecialLayoutAlgorithmsExcept(null);
 
 // DEBUG
 // Page.catFeedbackMessage("updating class diagram layout due to gvmanual "+canvasX+" "+canvasY+" | ");
@@ -5496,9 +5496,9 @@ Action.updateUmpleDiagramCallback = function(response)
           var uTop = umplePosOfCurrentClass.y;
 
 // DEBUG
-Page.setFeedbackMessage(".."+currentClassForPos
-  +" "+umplePosOfCurrentClass.x+"/"+rectCentreX
-  +" "+umplePosOfCurrentClass.y+"/"+rectCentreY);
+//Page.setFeedbackMessage(".."+currentClassForPos
+//  +" "+umplePosOfCurrentClass.x+"/"+rectCentreX
+//  +" "+umplePosOfCurrentClass.y+"/"+rectCentreY);
 
           posMap.push({className: currentClassForPos,
             fullUmplePosOfCurrentClass: umplePosOfCurrentClass.all,
@@ -5522,7 +5522,7 @@ Page.setFeedbackMessage(".."+currentClassForPos
         let diffX=minUmpleLeft-minRectLeft;
         let diffY=minUmpleTop-minRectTop;
 // DEBUG
- Page.catFeedbackMessage("In process of updating nodes from gv diffx="+diffX+" diffy="+diffY+" ");
+// Page.catFeedbackMessage("In process of updating nodes from gv diffx="+diffX+" diffy="+diffY+" ");
         // Now loop through the Map updating the Umple code if needed
         var nodesMoved = 0;
         posMap.forEach(function(thePos) {
@@ -5541,14 +5541,17 @@ Page.setFeedbackMessage(".."+currentClassForPos
                thePos.associationPos2,
                false);
 // DEBUG
- Page.catFeedbackMessage(" redrawn: "+thePos.className+" x"+thePos.umpleX+"->"+deltaX+"/"+(thePos.rectCentreX+diffX)
-  +" y"+thePos.umpleY+"->"+deltaY+"/"+(thePos.rectCentreY+diffY));
+// Page.catFeedbackMessage(" redrawn: "+thePos.className+" //x"+thePos.umpleX+"->"+deltaX+"/"+(thePos.rectCentreX+diffX)
+//  +" y"+thePos.umpleY+"->"+deltaY+"/"+(thePos.rectCentreY+diffY));
 
           }
         });
 //DEBUG
-Page.catFeedbackMessage(" Moved "+nodesMoved+" nodes");
-        
+//Page.catFeedbackMessage(" Moved "+nodesMoved+" nodes");
+        if(algoWasRemoved) {
+          // We are coming back from an algo update so we need to push to history
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "moveClass");
+        }
       }
       Action.setupPinch();
     }
