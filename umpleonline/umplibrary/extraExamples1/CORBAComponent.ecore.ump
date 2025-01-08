@@ -113,4 +113,97 @@ class Boolean
 
 class Double
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class InterfaceDef
+{
+position 58 5 109 45;
+}
+
+class OperationDef
+{
+position 248 10 109 45;
+}
+
+class ValueDef
+{
+position 329 159 109 45;
+}
+
+class ComponentDef
+{
+position 121 265 109 45;
+}
+
+class ProvidesDef
+{
+position 5 310 109 45;
+}
+
+class UsesDef
+{
+position 5 198 109 45;
+}
+
+class EventDef
+{
+position 406 20 109 45;
+}
+
+class EmitsDef
+{
+position 256 145 109 45;
+}
+
+class PublishesDef
+{
+position 213 378 109 45;
+}
+
+class ConsumesDef
+{
+position 220 473 109 45;
+}
+
+class HomeDef
+{
+  position 450 30 109 45;
+}
+
+class FactoryDef
+{
+position 461 140 109 45;
+}
+
+class FinderDef
+{
+position 469 229 109 45;
+}
+
+class PrimaryKeyDef
+{
+  position 450 330 109 45;
+}
+
+class Integer
+{
+position 303 522 109 45;
+}
+
+class String
+{
+position 712 493 109 45;
+}
+
+class Boolean
+{
+position 587 503 109 45;
+}
+
+class Double
+{
+position 413 519 109 45;
 }

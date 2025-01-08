@@ -134,4 +134,102 @@ class Integer
 
 class String
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class LocatedElement
+{
+position 15 13 109 45;
+}
+
+class Package
+{
+position 243 80 109 45;
+}
+
+class Import
+{
+  position 50 230 109 45;
+}
+
+class ChocoProblem
+{
+position 245 114 109 45;
+}
+
+class Element
+{
+position 5 63 109 45;
+}
+
+class Expression
+{
+position 5 338 109 45;
+}
+
+class ConstraintDef
+{
+position 5 240 109 45;
+}
+
+class IntVar
+{
+position 262 257 109 45;
+}
+
+class Domain
+{
+position 269 213 109 45;
+}
+
+class IntConstant
+{
+position 195 494 109 45;
+}
+
+class SymbolicTerm
+{
+position 5 412 109 45;
+}
+
+class IntValue
+{
+position 279 383 109 45;
+}
+
+class IntExp
+{
+  position 450 230 109 45;
+}
+
+class Constraint
+{
+  position 450 330 109 45;
+}
+
+class PostConstraint
+{
+position 53 113 109 45;
+}
+
+class Boolean
+{
+position 97 552 109 45;
+}
+
+class Double
+{
+position 234 554 109 45;
+}
+
+class Integer
+{
+position 379 555 109 45;
+}
+
+class String
+{
+position 5 553 109 45;
 }

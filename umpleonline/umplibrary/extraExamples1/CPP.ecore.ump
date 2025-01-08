@@ -130,4 +130,107 @@ class CPPMember
 	Boolean isVolatile;
 	Boolean isRegister;
 	VisibilityKind visibility;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Integer
+{
+position 145 503 109 45;
+}
+
+class String
+{
+position 203 490 109 45;
+}
+
+class Boolean
+{
+position 195 464 109 45;
+}
+
+class Double
+{
+position 148 488 109 45;
+}
+
+class CDerived
+{
+position 5 73 109 45;
+}
+
+class CStructured
+{
+position 487 5 109 45;
+}
+
+class CBehavorialFeature
+{
+position 131 39 109 45;
+}
+
+class CFunction
+{
+position 375 143 109 45;
+}
+
+class CStructureContents
+{
+  position 250 330 109 45;
+}
+
+class CField
+{
+position 301 476 109 45;
+}
+
+class CDerivableType
+{
+position 517 432 109 45;
+}
+
+class CPPReference
+{
+position 5 191 109 45;
+}
+
+class CPPExtern
+{
+position 101 284 109 45;
+}
+
+class CPPConst
+{
+position 225 279 109 45;
+}
+
+class CPPTemplate
+{
+position 199 143 109 45;
+}
+
+class CPPClass
+{
+position 537 69 109 45;
+}
+
+class CPPGeneralization
+{
+position 883 32 109 45;
+}
+
+class CPPOperation
+{
+  position 650 230 109 45;
+}
+
+class CPPOperator
+{
+  position 650 330 109 45;
+}
+
+class CPPMember
+{
+position 76 504 109 45;
 }

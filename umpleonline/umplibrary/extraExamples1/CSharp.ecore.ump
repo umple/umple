@@ -105,4 +105,77 @@ class Boolean
 
 class Double
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Member
+{
+position 52 5 109 45;
+}
+
+class TypedAttribute
+{
+position 5 141 109 45;
+}
+
+class Field
+{
+position 5 250 109 45;
+}
+
+class Property
+{
+  position 50 330 109 45;
+}
+
+class MethodBase
+{
+position 374 76 109 45;
+}
+
+class Constructor
+{
+position 529 330 109 45;
+}
+
+class Method
+{
+position 431 404 109 45;
+}
+
+class Type
+{
+  position 250 230 109 45;
+}
+
+class Parameter
+{
+position 670 114 109 45;
+}
+
+class Assembly
+{
+  position 250 430 109 45;
+}
+
+class Integer
+{
+position 551 576 109 45;
+}
+
+class String
+{
+position 284 587 109 45;
+}
+
+class Boolean
+{
+position 418 589 109 45;
+}
+
+class Double
+{
+position 157 585 109 45;
 }

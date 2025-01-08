@@ -81,4 +81,72 @@ class Boolean
 
 class Double
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class IUmlType
+{
+position 5 16 109 45;
+}
+
+class ICdeComponentSpec
+{
+position 125 119 109 45;
+}
+
+class IUmlClass
+{
+position 5 187 109 45;
+}
+
+class IUmlComponent
+{
+  position 50 330 109 45;
+}
+
+class ICdeServer
+{
+position 270 416 109 45;
+}
+
+class ICdeComponent
+{
+position 5 420 109 45;
+}
+
+class IUmlMember
+{
+position 245 19 109 45;
+}
+
+class ICdeMember
+{
+  position 250 230 109 45;
+}
+
+class ICdeMemberExe
+{
+position 86 622 109 45;
+}
+
+class Integer
+{
+position 10 525 109 45;
+}
+
+class String
+{
+position 369 526 109 45;
+}
+
+class Boolean
+{
+position 249 526 109 45;
+}
+
+class Double
+{
+position 126 526 109 45;
 }

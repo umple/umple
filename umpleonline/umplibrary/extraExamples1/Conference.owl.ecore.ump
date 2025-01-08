@@ -4,7 +4,7 @@ of CPDL version 1.14 found at the following URL
 https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Conference.owl.ecore
 
 Title: Conference Organization
-*************\
+*************/
 
 namespace Conference;
 
@@ -740,4 +740,4 @@ class Integer
 
 class String
 {
-}
+}//$?[End_of_model]$?

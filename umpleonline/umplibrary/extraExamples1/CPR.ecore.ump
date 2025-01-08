@@ -36,7 +36,6 @@ namespace CPR;
 class Plan
 {
 	* super_plan -- * Plan sub_plans;
-	1..* sub_plans -- 1..* Plan super_plan;
 	1..* objective_plan -- * Objective objectives;
 	1..* action_plan -- * Action actions;
 }
@@ -53,7 +52,6 @@ class EvaluationCriteria
 class Action
 {
 	* super_action -- * Action sub_actions;
-	1..* sub_actions -- 1..* Action super_action;
 	1..* actor_action -- 1..* Actor actor;
 	1..* resource_action -- * Resource resources;
 	1..* timeSpec_action -- * TimeSpec timeSpecs;
@@ -62,7 +60,6 @@ class Action
 class Actor
 {
 	* super_actor -- * Actor sub_actors;
-	1..* sub_actors -- 1..* Actor super_actor;
 }
 
 class Resource
@@ -71,4 +68,62 @@ class Resource
 
 class TimeSpec
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Integer
+{
+position 331 468 109 45;
+}
+
+class String
+{
+position 531 481 109 45;
+}
+
+class Boolean
+{
+position 195 473 109 45;
+}
+
+class Double
+{
+position 479 485 109 45;
+}
+
+class Plan
+{
+  position 50 430 109 45;
+}
+
+class Objective
+{
+position 5 223 109 45;
+}
+
+class EvaluationCriteria
+{
+position 44 87 109 45;
+}
+
+class Action
+{
+position 502 250 109 45;
+}
+
+class Actor
+{
+position 357 162 109 45;
+}
+
+class Resource
+{
+position 431 432 109 45;
+}
+
+class TimeSpec
+{
+position 728 157 109 45;
 }

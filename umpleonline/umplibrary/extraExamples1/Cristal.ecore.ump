@@ -74,4 +74,67 @@ class Boolean
 
 class Integer
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Condition
+{
+position 388 167 109 45;
+}
+
+class CompositeParDef
+{
+position 688 245 109 45;
+}
+
+class ElementaryPartDef
+{
+position 996 256 109 45;
+}
+
+class ElementaryActDef
+{
+  position 50 330 109 45;
+}
+
+class CompositeActDef
+{
+position 200 219 109 45;
+}
+
+class ActCompositeMember
+{
+  position 250 30 109 45;
+}
+
+class ActivityDefinition
+{
+position 104 19 109 45;
+}
+
+class PartDefinition
+{
+position 765 40 109 45;
+}
+
+class PartCompositeMember
+{
+  position 250 330 109 45;
+}
+
+class String
+{
+position 339 479 109 45;
+}
+
+class Boolean
+{
+position 39 482 109 45;
+}
+
+class Integer
+{
+position 199 477 109 45;
 }

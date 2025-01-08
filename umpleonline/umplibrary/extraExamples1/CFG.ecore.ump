@@ -54,4 +54,42 @@ class String
 
 class Integer
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class AbstractNode
+{
+  position 50 30 109 45;
+}
+
+class Node
+{
+position 301 216 109 45;
+}
+
+class ConditionalNode
+{
+position 5 201 109 45;
+}
+
+class Expression
+{
+position 393 38 109 45;
+}
+
+class Boolean
+{
+  position 50 430 109 45;
+}
+
+class String
+{
+position 318 424 109 45;
+}
+
+class Integer
+{
+position 169 430 109 45;
 }

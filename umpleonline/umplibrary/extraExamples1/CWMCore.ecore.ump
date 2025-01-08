@@ -113,4 +113,97 @@ class Boolean
 
 class Double
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class BooleanExpression
+{
+position 5 478 109 45;
+}
+
+class ModelElement
+{
+position 7 5 109 45;
+}
+
+class Dependency
+{
+position 358 88 109 45;
+}
+
+class Constraint
+{
+position 5 361 109 45;
+}
+
+class Feature
+{
+position 143 359 109 45;
+}
+
+class StructuralFeature
+{
+position 73 501 109 45;
+}
+
+class Attribute
+{
+position 95 554 109 45;
+}
+
+class NameSpace
+{
+position 5 121 109 45;
+}
+
+class Classifier
+{
+position 106 200 109 45;
+}
+
+class Package
+{
+position 267 305 109 45;
+}
+
+class Class
+{
+position 477 278 109 45;
+}
+
+class Datatype
+{
+position 564 214 109 45;
+}
+
+class Subsystem
+{
+position 5 272 109 45;
+}
+
+class Model
+{
+position 297 414 109 45;
+}
+
+class Integer
+{
+position 574 504 109 45;
+}
+
+class String
+{
+position 709 500 109 45;
+}
+
+class Boolean
+{
+position 431 506 109 45;
+}
+
+class Double
+{
+position 828 500 109 45;
 }

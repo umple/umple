@@ -101,4 +101,87 @@ class Integer
 
 class String
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Package
+{
+position 5 39 109 45;
+}
+
+class ProviderClause
+{
+position 51 11 109 45;
+}
+
+class CollaborationPackage
+{
+position 81 6 109 45;
+}
+
+class Collaboration
+{
+position 430 43 109 45;
+}
+
+class InteractionPackage
+{
+position 66 189 109 45;
+}
+
+class Interaction
+{
+position 253 50 109 45;
+}
+
+class AssociationRole
+{
+position 676 142 109 45;
+}
+
+class ClassifierRole
+{
+  position 250 230 109 45;
+}
+
+class AssociationEndRole
+{
+position 663 311 109 45;
+}
+
+class Message
+{
+position 209 627 109 45;
+}
+
+class Request
+{
+position 5 294 109 45;
+}
+
+class Operation
+{
+position 145 395 109 45;
+}
+
+class Interface
+{
+position 85 241 109 45;
+}
+
+class Boolean
+{
+position 244 729 109 45;
+}
+
+class Integer
+{
+position 142 738 109 45;
+}
+
+class String
+{
+position 421 729 109 45;
 }

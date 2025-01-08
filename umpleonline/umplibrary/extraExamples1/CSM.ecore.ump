@@ -137,4 +137,127 @@ class Boolean
 
 class Integer
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class CSM
+{
+  position 50 30 109 45;
+}
+
+class GeneralResource
+{
+position 5 31 109 45;
+}
+
+class Step
+{
+position 133 5 109 45;
+}
+
+class Scenarion
+{
+position 5 5 109 45;
+}
+
+class Start
+{
+position 47 377 109 45;
+}
+
+class End
+{
+position 355 63 109 45;
+}
+
+class ResourceAcquire
+{
+position 266 130 109 45;
+}
+
+class ResourceRelease
+{
+  position 250 230 109 45;
+}
+
+class Workload
+{
+position 56 393 109 45;
+}
+
+class Component
+{
+  position 250 430 109 45;
+}
+
+class ProcessingResource
+{
+position 5 411 109 45;
+}
+
+class ExternalService
+{
+position 5 387 109 45;
+}
+
+class ActiveResource
+{
+position 5 237 109 45;
+}
+
+class PassiveResource
+{
+  position 450 330 109 45;
+}
+
+class Message
+{
+position 887 13 109 45;
+}
+
+class PathConnection
+{
+position 652 5 109 45;
+}
+
+class Join
+{
+position 528 153 109 45;
+}
+
+class Fork
+{
+position 601 239 109 45;
+}
+
+class Merge
+{
+position 685 328 109 45;
+}
+
+class Branch
+{
+position 888 370 109 45;
+}
+
+class Seqence
+{
+position 903 139 109 45;
+}
+
+class String
+{
+position 158 603 109 45;
+}
+
+class Boolean
+{
+position 311 594 109 45;
+}
+
+class Integer
+{
+position 499 593 109 45;
 }

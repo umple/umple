@@ -119,4 +119,87 @@ class SQLSimpleType
 	Integer numericPrecisionRadix;
 	Integer numericScale;
 	Integer dateTimePrecision;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Integer
+{
+position 296 511 109 45;
+}
+
+class String
+{
+position 633 510 109 45;
+}
+
+class Boolean
+{
+position 482 509 109 45;
+}
+
+class Double
+{
+position 231 507 109 45;
+}
+
+class QueryExpression
+{
+  position 50 430 109 45;
+}
+
+class CheckConstraint
+{
+  position 250 30 109 45;
+}
+
+class Column
+{
+position 358 178 109 45;
+}
+
+class ColumnSet
+{
+position 5 5 109 45;
+}
+
+class NamedColumnSet
+{
+position 15 135 109 45;
+}
+
+class QueryColumnSet
+{
+position 248 419 109 45;
+}
+
+class Table
+{
+position 5 275 109 45;
+}
+
+class View
+{
+position 380 341 109 45;
+}
+
+class Trigger
+{
+position 5 125 109 45;
+}
+
+class SQLDataType
+{
+position 482 17 109 45;
+}
+
+class SQLDistinctType
+{
+position 626 220 109 45;
+}
+
+class SQLSimpleType
+{
+position 915 193 109 45;
 }

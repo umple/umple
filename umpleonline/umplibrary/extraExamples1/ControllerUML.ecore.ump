@@ -77,4 +77,67 @@ class StateMachineAction
 
 class Event
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class String
+{
+position 278 402 109 45;
+}
+
+class Boolean
+{
+position 381 395 109 45;
+}
+
+class Integer
+{
+position 529 413 109 45;
+}
+
+class ControllerAttribute
+{
+  position 50 330 109 45;
+}
+
+class Controller
+{
+position 5 243 109 45;
+}
+
+class StateMachine
+{
+  position 250 30 109 45;
+}
+
+class State
+{
+  position 250 130 109 45;
+}
+
+class SubControllerState
+{
+  position 250 230 109 45;
+}
+
+class ViewState
+{
+position 468 237 109 45;
+}
+
+class StateTransition
+{
+position 532 130 109 45;
+}
+
+class StateMachineAction
+{
+  position 450 30 109 45;
+}
+
+class Event
+{
+position 720 168 109 45;
 }

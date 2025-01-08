@@ -52,4 +52,47 @@ class Method
 
 class Attribute
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class String
+{
+position 200 464 109 45;
+}
+
+class Boolean
+{
+position 343 472 109 45;
+}
+
+class Integer
+{
+position 47 466 109 45;
+}
+
+class Entity
+{
+  position 50 330 109 45;
+}
+
+class AssociationEnd
+{
+position 474 351 109 45;
+}
+
+class Association
+{
+  position 250 30 109 45;
+}
+
+class Method
+{
+position 41 205 109 45;
+}
+
+class Attribute
+{
+position 225 208 109 45;
 }
