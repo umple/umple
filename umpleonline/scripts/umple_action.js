@@ -5266,9 +5266,15 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
 
 }
 
-
+// Updates all formats of Umple diagram given the response from the
+// backend. This can be svg or else node for Emode.
 Action.updateUmpleDiagramCallback = function(response)
 {
+  // Get the canvas position information, used in several places
+  var theCanvas = jQuery("#umpleCanvas");
+  var canvasX=Math.round(theCanvas.offset().left);
+  var canvasY=Math.round(theCanvas.offset().top);
+
   // console.log("Debug E6.1: Inside updateUmpleDiagramCallback")
   var diagramCode = "";
   var errorMessage = "";
@@ -5425,15 +5431,13 @@ Action.updateUmpleDiagramCallback = function(response)
     // Display static svg diagram
     else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram )
     {
-      var theCanvas = jQuery("#umpleCanvas");
       theCanvas.html(format('{0}', diagramCode));
       theCanvas.children().first().attr("id", "svgCanvas");
 
       // If gv class mode is gvmanual then we need to update all the umple 
       // positioning information given the diagram locations
       if(Page.useGvClassDiagram && Page.isGvManual()) {
-        var canvasX=Math.round(theCanvas.offset().left);
-        var canvasY=Math.round(theCanvas.offset().top);
+
 // DEBUG
 // Page.catFeedbackMessage("updating class diagram layout due to gvmanual "+canvasX+" "+canvasY+" | ");
 
@@ -5455,13 +5459,13 @@ Action.updateUmpleDiagramCallback = function(response)
             // when updating the name of a class in the text ... needs fixing
             continue;
           }
-          var svgRect = elems[i].getBoundingClientRect();
-          var rectLeft= Math.round(svgRect.left-canvasX);
-          var rectTop= Math.round(svgRect.top-canvasY);
+          var theRect=Action.getRectFromSvgNode(elems[i], canvasX, canvasY);
+          var rectLeft = theRect.left;
+          var rectTop = theRect.top;
           // Get the centre of the rectangle as it actually appears
           // as the gv positions are also centre-focused
-          var rectX=Math.round(svgRect.left-canvasX + (Math.abs(svgRect.width/2)));
-          var rectY=Math.round(svgRect.top-canvasY  + (Math.abs(svgRect.height/2)));
+          var rectX = theRect.centreX;
+          var rectY = theRect.centreY;
 
 // DEBUG
 //Page.catFeedbackMessage(".."+currentClassForPos
@@ -5564,13 +5568,19 @@ Action.updateUmpleDiagramCallback = function(response)
         Page.initialMouseDownY = event.clientY;
         let prevX = Page.initialMouseDownX;
         let prevY = Page.initialMouseDownY;
+        let classRect = Action.getRectFromSvgNode(theNode, canvasX, canvasY);
+        let currentTop = classRect.top;
+        let currentLeft = classRect.left;        
 //Debug
-        Page.setFeedbackMessage("!! down!! "+Page.selectedGvClass + " X="+Page.initialMouseDownX +  " Y="+Page.initialMouseDownY);
+        Page.setFeedbackMessage("!! down!! "+Page.selectedGvClass + " X="+currentLeft +  " Y="+currentTop);
 
         function moveClass(moveEvent) {
           moveEvent.preventDefault();
           let currentX = moveEvent.clientX;
           let currentY = moveEvent.clientY;
+          classRect = Action.getRectFromSvgNode(theNode, canvasX, canvasY);
+          currentTop = classRect.top;
+          currentLeft = classRect.left;
 
           let deltaX = currentX - prevX;
           let deltaY = currentY - prevY;
@@ -5589,7 +5599,7 @@ Action.updateUmpleDiagramCallback = function(response)
           }
           else {
 //DebugPosition
-Page.setFeedbackMessage("Moving "+Page.selectedGvClass + "to "+currentX+", "+currentY+"dx="+deltaXSum+" dy="+deltaYSum);
+Page.setFeedbackMessage("Moving "+Page.selectedGvClass + "to "+currentLeft+", "+currentTop+" dx="+deltaXSum+" dy="+deltaYSum);
           }
         }
 
@@ -5684,6 +5694,18 @@ Page.setFeedbackMessage("!!moved!! "+Page.selectedGvClass + " dx="+deltaXSum+" d
     });
     }
   }  
+}
+
+Action.getRectFromSvgNode = function(node,canvasX, canvasY) {
+  var svgRect = node.getBoundingClientRect();
+  return {
+    left: Math.round(svgRect.left-canvasX),
+    top: Math.round(svgRect.top-canvasY),
+    // Get the centre of the rectangle as it actually appears
+    // as the gv positions are also centre-focused
+    centreX: Math.round(svgRect.left-canvasX + (Math.abs(svgRect.width/2))),
+    centreY: Math.round(svgRect.top-canvasY  + (Math.abs(svgRect.height/2)))
+  };
 }
 
 Action.updateFromDiagramCallback = function(response)

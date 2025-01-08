@@ -53,8 +53,10 @@ class GvClassDiagramGenerator
     }
 
     if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
+// DEBUG
+//    code.append("\n  // Class: "+className+" "+uClass.getUmplePosition()+"\n");
     code.append("\n  // Class: "+className+"\n");
-    
+
     if (manyClass) {
       code.append("  \""+className+"\" ["+classPosition+classColor+"shape=record, label=\"{"+className);
 

@@ -447,13 +447,28 @@ class UmpleElement
     if(hasPosition()) {
       Coordinate c = getCoordinates();
       // round 2 places and save as string. Also convert points to inches
+      
+      // Gets Centre as that is what GV expects
       String xpos=String.format("%.2f",((c.getX() + c.getWidth()/2.0)/72.0*expand)); 
       String ypos=String.format("%.2f",-((c.getY() + c.getHeight()/2.0)/72.0*expand));
+//      String xpos=String.format("%.2f",(c.getX()/72.0*expand)); 
+//      String ypos=String.format("%.2f",-(c.getY()/72.0*expand));
+
       return("pos=\""+xpos+","+ypos+"!\" ");
     }
     return("");
   } 
+
+  // Used for a comments in GV when debugging
+  public String getUmplePosition() {
+    if(hasPosition()) {
+      Coordinate c = getCoordinates();
+      return(" leftX="+c.getX()+" rightY="+c.getY()+" w="+c.getWidth()+" h="+c.getHeight());
+    }
+    return("");
+  } 
 }
+
 
 class UmpleClassifier{
   
