@@ -177,40 +177,40 @@ class CooperationRules
 
 class NCS
 {
-position 865 255 109 45;
+position 807 36 109 45;
 }
 
 class Incomprehension
 {
-position 568 192 109 45;
+position 634 151 109 45;
 }
 
 class Ambiguity
 {
-position 680 390 109 45;
+position 696 237 109 45;
 }
 
 class Incompetence
 {
-position 780 549 109 45;
+position 774 335 109 45;
 }
 
 class Unproductiveness
 {
-position 657 5 109 45;
+position 919 384 109 45;
 }
 
 class Concurrency
 {
-position 983 70 109 45;
+position 1063 213 109 45;
 }
 
 class Conflict
 {
-position 1221 253 109 45;
+position 1103 137 109 45;
 }
 
 class Uselessness
 {
-position 1036 468 109 45;
+position 1021 304 109 45;
 }

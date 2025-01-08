@@ -17,6 +17,8 @@ Authors: David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr)
 
 namespace PrimitiveTypes;
 
+suboption "gvortho";
+
 class Boolean
 {
 }
@@ -128,57 +130,57 @@ namespace -;
 
 class Boolean
 {
-position 5 29 109 45;
+position 47 764 109 45;
 }
 
 class String
 {
-position 5 129 109 45;
+position 331 763 109 45;
 }
 
 class Integer
 {
-position 25 227 109 45;
+position 190 762 109 45;
 }
 
 class Element
 {
-position 188 472 109 45;
+position 196 5 109 45;
 }
 
 class Program
 {
-position 254 192 109 45;
+position 151 273 109 45;
 }
 
 class Process
 {
-position 673 349 109 45;
+position 675 147 109 45;
 }
 
 class State
 {
-position 156 71 109 45;
+position 46 141 109 45;
 }
 
 class Transition
 {
-position 795 204 109 45;
+position 96 447 109 45;
 }
 
 class Trans
 {
-position 942 34 109 45;
+position 386 697 109 45;
 }
 
 class Strans
 {
-position 1089 205 109 45;
+position 317 579 109 45;
 }
 
 class Transall
 {
-  position 450 30 109 45;
+position 77 643 109 45;
 }
 
 class Guard
@@ -188,25 +190,25 @@ position 1006 455 109 45;
 
 class Action
 {
-position 408 132 109 45;
+position 287 162 109 45;
 }
 
 class Network
 {
-position 325 303 109 45;
+position 403 358 109 45;
 }
 
 class Channel
 {
-position 458 345 109 45;
+position 929 304 109 45;
 }
 
 class Message
 {
-  position 650 30 109 45;
+position 575 513 109 45;
 }
 
 class Variable
 {
-position 595 651 109 45;
+position 420 49 109 45;
 }
