@@ -102,4 +102,97 @@ class Boolean
 
 class Integer
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class RoutingChain
+{
+position 5 471 109 45;
+}
+
+class QueuingNetwork
+{
+position 5 438 109 45;
+}
+
+class ExecutionGraph
+{
+position 5 311 109 45;
+}
+
+class Center
+{
+position 5 22 109 45;
+}
+
+class Node
+{
+position 5 170 109 45;
+}
+
+class Special
+{
+  position 250 30 109 45;
+}
+
+class ActiveCenter
+{
+position 169 519 109 45;
+}
+
+class PassiveCenter
+{
+position 103 169 109 45;
+}
+
+class Source
+{
+position 191 326 109 45;
+}
+
+class Sink
+{
+  position 250 430 109 45;
+}
+
+class Fork
+{
+position 299 250 109 45;
+}
+
+class Join
+{
+  position 450 130 109 45;
+}
+
+class Split
+{
+  position 450 230 109 45;
+}
+
+class Allocate
+{
+  position 450 330 109 45;
+}
+
+class Release
+{
+  position 450 430 109 45;
+}
+
+class String
+{
+position 134 585 109 45;
+}
+
+class Boolean
+{
+position 5 591 109 45;
+}
+
+class Integer
+{
+position 251 485 109 45;
 }

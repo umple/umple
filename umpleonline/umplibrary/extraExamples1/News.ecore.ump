@@ -69,4 +69,47 @@ class Integer
 
 class Boolean
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Element
+{
+  position 50 30 109 45;
+}
+
+class Newspaper
+{
+position 602 213 109 45;
+}
+
+class News
+{
+position 5 196 109 45;
+}
+
+class Category
+{
+position 201 147 109 45;
+}
+
+class Date
+{
+position 7 430 109 45;
+}
+
+class String
+{
+position 111 541 109 45;
+}
+
+class Integer
+{
+position 5 544 109 45;
+}
+
+class Boolean
+{
+position 253 419 109 45;
 }

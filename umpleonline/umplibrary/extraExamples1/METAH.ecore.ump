@@ -129,4 +129,92 @@ class Integer
 
 class String
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class METAHFile
+{
+position 5 78 109 45;
+}
+
+class METAHEntry
+{
+position 48 5 109 45;
+}
+
+class Package
+{
+position 123 212 109 45;
+}
+
+class PackageImplementation
+{
+position 213 5 109 45;
+}
+
+class Data
+{
+position 255 216 109 45;
+}
+
+class Attribute
+{
+position 389 5 109 45;
+}
+
+class ProcessDeclaration
+{
+  position 250 130 109 45;
+}
+
+class ProcessImplementation
+{
+position 5 303 109 45;
+}
+
+class ProcessAttribute
+{
+  position 250 330 109 45;
+}
+
+class Process
+{
+position 701 414 109 45;
+}
+
+class Port
+{
+  position 450 30 109 45;
+}
+
+class Connection
+{
+position 273 37 109 45;
+}
+
+class MacroDeclaration
+{
+position 589 219 109 45;
+}
+
+class MacroImplementation
+{
+position 531 304 109 45;
+}
+
+class Boolean
+{
+position 136 479 109 45;
+}
+
+class Integer
+{
+position 10 484 109 45;
+}
+
+class String
+{
+position 3340 1143 109 45;
 }

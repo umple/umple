@@ -112,4 +112,82 @@ class double
 
 class String
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class LocatedElement
+{
+  position 50 30 109 45;
+}
+
+class Root
+{
+position 131 218 109 45;
+}
+
+class Element
+{
+position 5 114 109 45;
+}
+
+class Key
+{
+position 181 348 109 45;
+}
+
+class Graph
+{
+position 12 588 109 45;
+}
+
+class Edge
+{
+position 476 25 109 45;
+}
+
+class HyperEdge
+{
+position 5 290 109 45;
+}
+
+class Node
+{
+position 381 380 109 45;
+}
+
+class Port
+{
+position 653 206 109 45;
+}
+
+class EndPoint
+{
+position 353 709 109 45;
+}
+
+class Data
+{
+position 246 160 109 45;
+}
+
+class Boolean
+{
+position 5 800 109 45;
+}
+
+class Integer
+{
+position 234 727 109 45;
+}
+
+class double
+{
+position 5 696 109 45;
+}
+
+class String
+{
+position 42 446 109 45;
 }

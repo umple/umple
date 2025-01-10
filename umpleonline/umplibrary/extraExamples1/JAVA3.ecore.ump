@@ -93,4 +93,72 @@ class String
 
 class Boolean
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Modifier
+{
+position 128 5 109 45;
+}
+
+class Class
+{
+position 170 153 109 41.3594;
+}
+
+class Interface
+{
+position 5 335 109 45;
+}
+
+class Method
+{
+position 5 106 109 45;
+}
+
+class Field
+{
+position 318 29 125.5 58.3594;
+}
+
+class Value
+{
+position 460 134 109 41.3594;
+}
+
+class Parameter
+{
+position 365 296 109 45;
+}
+
+class Type
+{
+position 328 176 109 41.3594;
+}
+
+class ReferenceType
+{
+position 174 349 109 45;
+}
+
+class PrimitiveType
+{
+position 278 430 109 45;
+}
+
+class Int
+{
+position 275 486 109 45;
+}
+
+class String
+{
+position 313 556 109 41.3594;
+}
+
+class Boolean
+{
+position 455 600 109 41.3594;
 }

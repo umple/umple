@@ -70,4 +70,57 @@ class String
 
 class Boolean
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class LaunchConfiguration
+{
+position 332 5 109 45;
+}
+
+class Attribute
+{
+position 75 5 109 45;
+}
+
+class StringAttribute
+{
+position 124 274 109 45;
+}
+
+class BooleanAttribute
+{
+position 377 186 109 45;
+}
+
+class MapAttribute
+{
+position 308 370 109 45;
+}
+
+class MapEntry
+{
+position 136 350 109 45;
+}
+
+class ListAttribute
+{
+position 5 127 109 45;
+}
+
+class ListEntry
+{
+position 5 219 109 45;
+}
+
+class String
+{
+position 51 452 109 45;
+}
+
+class Boolean
+{
+position 197 433 109 45;
 }

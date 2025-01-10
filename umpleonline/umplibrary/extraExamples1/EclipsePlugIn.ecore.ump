@@ -75,4 +75,52 @@ class Integer
 
 class String
 {
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class Application
+{
+  position 50 30 109 45;
+}
+
+class ExtensionPoint
+{
+  position 50 130 109 45;
+}
+
+class Description
+{
+position 343 23 109 45;
+}
+
+class Extension
+{
+position 501 200 109 45;
+}
+
+class PlugIn
+{
+  position 50 430 109 45;
+}
+
+class Librairy
+{
+position 180 294 109 45;
+}
+
+class Class
+{
+position 232 214 109 45;
+}
+
+class Integer
+{
+position 6 560 109 45;
+}
+
+class String
+{
+position 146 592 109 45;
 }
