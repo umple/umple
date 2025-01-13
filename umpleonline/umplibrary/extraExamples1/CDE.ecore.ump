@@ -65,23 +65,7 @@ class ICdeMemberExe
 	String executionDetails;
 }
 
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Double
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -129,24 +113,4 @@ class ICdeMember
 class ICdeMemberExe
 {
 position 86 622 109 45;
-}
-
-class Integer
-{
-position 10 525 109 45;
-}
-
-class String
-{
-position 369 526 109 45;
-}
-
-class Boolean
-{
-position 249 526 109 45;
-}
-
-class Double
-{
-position 126 526 109 45;
 }

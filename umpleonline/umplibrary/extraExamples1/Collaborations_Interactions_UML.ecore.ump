@@ -89,19 +89,7 @@ class Interface
 {
 }
 
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -169,19 +157,4 @@ position 145 395 109 45;
 class Interface
 {
 position 85 241 109 45;
-}
-
-class Boolean
-{
-position 244 729 109 45;
-}
-
-class Integer
-{
-position 142 738 109 45;
-}
-
-class String
-{
-position 421 729 109 45;
 }

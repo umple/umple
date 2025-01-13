@@ -16,20 +16,6 @@ See : http://delivery.acm.org/10.1145/1130000/1125810/p39-basin.pdf?key1=1125810
 Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
 ************/
 
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
 namespace ControllerUML;
 
 class ControllerAttribute
@@ -80,22 +66,6 @@ class Event
 }//$?[End_of_model]$?
 
 namespace -;
-
-
-class String
-{
-position 278 402 109 45;
-}
-
-class Boolean
-{
-position 381 395 109 45;
-}
-
-class Integer
-{
-position 529 413 109 45;
-}
 
 class ControllerAttribute
 {

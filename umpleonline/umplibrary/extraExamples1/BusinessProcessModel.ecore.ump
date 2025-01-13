@@ -159,17 +159,3 @@ class BusinessProcess
 {
 	isA ApplicationTask;
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

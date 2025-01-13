@@ -203,17 +203,3 @@ class unsignedLong
 class anyURI
 {
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

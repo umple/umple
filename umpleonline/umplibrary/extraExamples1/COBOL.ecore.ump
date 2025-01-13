@@ -99,23 +99,7 @@ class COBOLVariableLengthArray
 	0..1 -> 1..* COBOLElement dependingOn;
 }
 
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Double
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -178,24 +162,4 @@ position 457 58 109 45;
 class COBOLVariableLengthArray
 {
 position 467 130 109 45;
-}
-
-class Integer
-{
-position 129 627 109 45;
-}
-
-class String
-{
-position 49 621 109 45;
-}
-
-class Boolean
-{
-position 203 614 109 45;
-}
-
-class Double
-{
-position 127 627 109 45;
 }

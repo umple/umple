@@ -445,17 +445,3 @@ class Email_Template
 {
 	isA Event_Setup;
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

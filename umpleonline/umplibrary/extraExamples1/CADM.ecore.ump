@@ -221,9 +221,3 @@ class Facility
 {
 	isA Element;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}

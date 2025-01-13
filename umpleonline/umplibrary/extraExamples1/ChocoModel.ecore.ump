@@ -118,23 +118,7 @@ class PostConstraint
 	0..1 -> 1..* ConstraintDef constraint;
 }
 
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Double
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -212,24 +196,4 @@ class Constraint
 class PostConstraint
 {
 position 53 113 109 45;
-}
-
-class Boolean
-{
-position 97 552 109 45;
-}
-
-class Double
-{
-position 234 554 109 45;
-}
-
-class Integer
-{
-position 379 555 109 45;
-}
-
-class String
-{
-position 5 553 109 45;
 }

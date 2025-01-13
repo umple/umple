@@ -1199,17 +1199,3 @@ class Regular
 class positiveInteger
 {
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

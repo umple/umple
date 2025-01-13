@@ -117,19 +117,7 @@ class OrderDetail
 	0..1 -> 1..* Product product;
 }
 
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
-
-class Double
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -187,19 +175,4 @@ position 192 487 109 45;
 class OrderDetail
 {
 position 357 628 109 45;
-}
-
-class String
-{
-position 204 736 109 45;
-}
-
-class Integer
-{
-position 84 738 109 45;
-}
-
-class Double
-{
-position 18 751 109 45;
 }

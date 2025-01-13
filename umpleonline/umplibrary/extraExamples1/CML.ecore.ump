@@ -16,20 +16,6 @@ See : http://www.xml-cml.org/
 Authors : Pierrick Guyard (pierrick.guyard_NOSPAM <AT> gmail.com)
 ************/
 
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
-
-class Boolean
-{
-}
-
 namespace CML;
 
 class PCDATA
