@@ -1042,21 +1042,3 @@ class WhetherornotFormulation
 	0..1 -> * LogicalFormulation inconsequent;
 	0..1 -> * LogicalFormulation consequent;
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class integer
-{
-}
-
-class String
-{
-}
-
-class Double
-{
-}

@@ -351,21 +351,3 @@ class ModalBeginC
 {
 	isA ModalBegin;
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Double
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

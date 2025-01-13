@@ -117,13 +117,3 @@ class Date
 	Integer minutes;
 	Integer seconds;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}

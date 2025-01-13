@@ -15,19 +15,6 @@ See : http://www.wfmc.org/standards/XPDL.htm http://en.wikipedia.org/wiki/XPDL
 
 Authors : David Touzet, Freddy Allilaire
 *************/
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
-
-class Boolean
-{
-}
 
 namespace DataTypes;
 

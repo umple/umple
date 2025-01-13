@@ -492,16 +492,6 @@ class ByDefault
 	isA Branch;
 }
 
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
-
 namespace Template;
 
 class Template

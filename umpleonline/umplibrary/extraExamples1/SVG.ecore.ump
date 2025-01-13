@@ -264,21 +264,3 @@ class SvgFile
 {
 	isA ReferencedFile;
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Double
-{
-}

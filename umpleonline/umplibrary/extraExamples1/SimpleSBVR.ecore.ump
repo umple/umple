@@ -202,13 +202,3 @@ class RoleBinding
 	0..1 -> 1..* FactType isOf;
 	0..1 -> 1..* BindableTarget bindsTo;
 }
-
-namespace ptype;
-
-class String
-{
-}
-
-class Integer
-{
-}

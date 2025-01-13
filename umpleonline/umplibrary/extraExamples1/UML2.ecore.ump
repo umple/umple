@@ -26,33 +26,6 @@ mixset FocusOnProperty {
   suboption "gvseparator=2"
 }
 
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class UnlimitedNatural
-{
-}
-
-class Sequence
-{
-}
-
-class Set
-{
-}
-
 namespace uml2;
 
 class Element

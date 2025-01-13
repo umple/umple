@@ -248,32 +248,6 @@ class FinalState
 	isA State;
 }
 
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Float
-{
-}
-
-class Integer
-{
-}
-
-class Long
-{
-}
-
-class String
-{
-}
-
-class Double
-{
-}
-
 namespace Core;
 
 class Element

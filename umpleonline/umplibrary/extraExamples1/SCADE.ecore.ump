@@ -761,25 +761,3 @@ class Loader
 {
 	0..1 -> * Descriptor descriptor;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
-
-class Boolean
-{
-}
-
-class Char
-{
-}
-
-class Double
-{
-}

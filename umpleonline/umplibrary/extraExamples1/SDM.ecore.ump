@@ -15,19 +15,6 @@ See : SystemDefinitionModel.xsd, DeploymentReport.km3
 
 Authors : Albin Jossic (jossic.albin_NOSPAM <AT> gmail.com), Microsoft
 *************/
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
-
-class Boolean
-{
-}
 
 namespace SDM;
 

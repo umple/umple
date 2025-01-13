@@ -419,13 +419,3 @@ class ResearchTopic
 {
 	isA Topic;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
