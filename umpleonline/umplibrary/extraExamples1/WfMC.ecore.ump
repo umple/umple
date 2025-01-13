@@ -51,9 +51,3 @@ class WorkflowProcessActivity
 class TransitionInformation
 {
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}

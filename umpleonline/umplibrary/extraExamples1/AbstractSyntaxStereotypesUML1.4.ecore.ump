@@ -15,20 +15,6 @@ See: This metamodel fragment has been extracted from information available in th
 Authors: Julien Baudry (jul.baudry_NOSPAM <AT> gmail.com)
 ********************/
 
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}
-
 namespace AbstractSynthax;
 
 class ModelElement

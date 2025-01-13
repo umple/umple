@@ -15,21 +15,7 @@ See: http://home.gna.org/amble/
 Authors: David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr)
 *************************/
 
-namespace PrimitiveTypes;
-
 suboption "gvortho";
-
-class Boolean
-{
-}
-
-class String
-{
-}
-
-class Integer
-{
-}
 
 namespace Amble;
 
@@ -126,22 +112,6 @@ class Variable
 }//$?[End_of_model]$?
 
 namespace -;
-
-
-class Boolean
-{
-position 47 764 109 45;
-}
-
-class String
-{
-position 331 763 109 45;
-}
-
-class Integer
-{
-position 190 762 109 45;
-}
 
 class Element
 {

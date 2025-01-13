@@ -49,20 +49,7 @@ class MainView
 class ModelElement
 {
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -95,19 +82,4 @@ position 174 387 109 45;
 class ModelElement
 {
 position 5 305 109 45;
-}
-
-class Boolean
-{
-position 131 456 109 45;
-}
-
-class Integer
-{
-position 260 456 109 45;
-}
-
-class String
-{
-position 5 457 109 45;
 }

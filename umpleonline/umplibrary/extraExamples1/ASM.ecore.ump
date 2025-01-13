@@ -14,21 +14,6 @@ Title: Abstract State Machine Language
 Authors: Albin Jossic (albin.jossic <at> gmail.com)[1] ;[1] ATLAS team (Nantes, France)
 ************************/
 
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
-
-class Boolean
-{
-}
-
 namespace ASM;
 
 class LocatedElement

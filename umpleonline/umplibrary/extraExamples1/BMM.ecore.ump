@@ -216,21 +216,3 @@ class Risk
 {
 	isA PotentialImpact;
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Double
-{
-}

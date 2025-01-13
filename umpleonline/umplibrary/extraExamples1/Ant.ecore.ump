@@ -364,9 +364,3 @@ class Delete
 	String excludesfile;
 	String defaultexcludes;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}

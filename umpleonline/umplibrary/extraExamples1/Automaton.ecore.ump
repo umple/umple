@@ -37,13 +37,3 @@ class State
 	String name;
 	0..1 -> 1..* State combination;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}

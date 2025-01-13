@@ -88,9 +88,3 @@ class TaskParameter
 {
 	isA TaskElement;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
