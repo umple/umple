@@ -444,16 +444,3 @@ class NullConstant
 	isA Constant;
 }
 
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
-
-class Boolean
-{
-}

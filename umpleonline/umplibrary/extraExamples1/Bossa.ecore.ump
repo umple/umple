@@ -716,17 +716,3 @@ class AssignBinop
 	Boolean doubleLtEqual;
 	Boolean doubleGtEqual;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}

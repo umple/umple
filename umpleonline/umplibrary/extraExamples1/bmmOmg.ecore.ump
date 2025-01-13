@@ -262,7 +262,3 @@ class Risk
 {
 	isA PotentialImpact;
 }
-
-class String
-{
-}

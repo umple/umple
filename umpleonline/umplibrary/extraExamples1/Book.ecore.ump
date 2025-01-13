@@ -15,20 +15,6 @@ Authors : Frédéric Jouault (frederic.jouault_NOSPAM <AT> univ-nantes.fr)
 
 **************/
 
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
 namespace Book;
 
 class Book

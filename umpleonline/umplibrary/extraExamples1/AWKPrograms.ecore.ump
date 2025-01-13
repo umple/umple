@@ -15,23 +15,6 @@ See: The GNU Awk Webpage, http://www.gnu.org/software/gawk/gawk.html
 Authors: Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
 ***************/
 
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Double
-{
-}
 
 namespace AWKPrograms;
 
