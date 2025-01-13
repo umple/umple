@@ -15,23 +15,7 @@ See : M4 - The Mining Mart MetaModel Authors: Anca Vaduva, JÃ?Â¶rg-Uwe Kietz,
 
 Authors : SIMON Eric(simon.eric3<at>gmail.com)
 *************/
-namespace PrimitiveTypes;
 
-class String
-{
-}
-
-class Integer
-{
-}
-
-class Real
-{
-}
-
-class Boolean
-{
-}
 
 namespace MiningMart;
 

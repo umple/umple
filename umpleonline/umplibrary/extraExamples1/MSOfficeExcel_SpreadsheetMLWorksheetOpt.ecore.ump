@@ -309,21 +309,3 @@ class WorksheetOptionsElt
 	Boolean allowFilter;
 	Boolean allowUsePivotTables;
 }
-
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Double
-{
-}

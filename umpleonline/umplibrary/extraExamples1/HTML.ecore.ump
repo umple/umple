@@ -15,19 +15,7 @@ See : http://www.w3.org/MarkUp/
 
 Authors : Freddy Allilaire (freddy.allilaire_NOSPAM <AT> univ-nantes.fr)
 *************/
-namespace PrimitiveTypes;
 
-class Boolean
-{
-}
-
-class String
-{
-}
-
-class Integer
-{
-}
 
 namespace HTML;
 

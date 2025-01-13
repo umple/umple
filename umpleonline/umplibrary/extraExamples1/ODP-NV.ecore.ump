@@ -177,9 +177,3 @@ class EngineeringInterfaceReferenceManagementPolicy
 class EngineeringInterfaceReference
 {
 }
-
-namespace datatypes;
-
-class String
-{
-}

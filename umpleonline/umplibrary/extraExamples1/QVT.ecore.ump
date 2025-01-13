@@ -379,23 +379,7 @@ class URIExtent
 	isA Extent;
 }
 
-class Boolean
-{
-}
-
-class String
-{
-}
-
 class UnlimitedNatural
-{
-}
-
-class Integer
-{
-}
-
-class Real
 {
 }
 

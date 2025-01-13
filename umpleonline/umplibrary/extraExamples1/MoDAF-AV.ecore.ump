@@ -15,11 +15,6 @@ See : http://modaf.modelfutures.com/m3/ Recommended Practice for Architectural d
 
 Authors : Albin Jossic (jossic.albin <at> gmail.com)
 *************/
-namespace PrimitiveTypes;
-
-class String
-{
-}
 
 namespace MoDAF;
 

@@ -187,13 +187,3 @@ class Document
 	0..1 -> * Abstract abstract;
 	0..1 -> * Keywords keywords;
 }
-
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}

@@ -15,11 +15,6 @@ See : A Study of some Multi-Agent Meta-Models Authors: Carole Bernon, Massimo Co
 
 Authors : SIMON Eric(simon.eric3_NOSPAM <AT> gmail.com)
 *************/
-namespace PrimitiveTypes;
-
-class String
-{
-}
 
 namespace MAS;
 

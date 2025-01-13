@@ -15,15 +15,6 @@ See : http://www.isis.vanderbilt.edu/Projects/mobies/Presentations/Mobies-PI-01-
 
 Authors : Youssef Srour (srour.youssef_NOSPAM <AT> gmail.com)
 *************/
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
 
 namespace Matlab;
 

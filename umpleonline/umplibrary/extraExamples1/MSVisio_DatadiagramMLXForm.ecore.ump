@@ -566,21 +566,3 @@ class HeaderFooter
 class SolutionXML
 {
 }
-
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Double
-{
-}

@@ -565,17 +565,3 @@ class WhileStatement
 	0..1 -> 1..* Expression expression;
 	0..1 -> 1..* Statement body;
 }
-
-namespace PrimitiveType;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}

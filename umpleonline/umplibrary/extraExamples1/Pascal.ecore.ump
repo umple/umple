@@ -105,9 +105,3 @@ class Repeat
 {
 	isA Loop;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}

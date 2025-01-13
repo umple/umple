@@ -15,19 +15,6 @@ See : http://hal.ccsd.cnrs.fr/, http://import.ccsd.cnrs.fr/doc/
 
 Authors : Guillaume Hillairet (g.hillairet_NOSPAM <AT> gmail.com)
 ************/
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}
 
 namespace HAL;
 

@@ -138,17 +138,3 @@ class Declaration
 	String name;
 	0..1 -> * DataType elements;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}

@@ -103,19 +103,7 @@ class Button
 	String title;
 }
 
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -188,19 +176,4 @@ position 516 417 109 45;
 class Button
 {
   position 450 330 109 45;
-}
-
-class Boolean
-{
-position 130 582 109 45;
-}
-
-class Integer
-{
-position 257 582 109 41.3594;
-}
-
-class String
-{
-position 19 405 109 41.3594;
 }

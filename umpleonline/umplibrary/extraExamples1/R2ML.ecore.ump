@@ -707,29 +707,3 @@ class GenericFunctionTerm
 {
 	isA Terms/GenericTerm;
 }
-
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class Long
-{
-}
-
-class Float
-{
-}
-
-class Double
-{
-}
-
-class Boolean
-{
-}
-
-class String
-{
-}

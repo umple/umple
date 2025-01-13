@@ -85,15 +85,7 @@ class Int
 	isA PrimitiveType;
 }
 
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -151,14 +143,4 @@ position 278 430 109 45;
 class Int
 {
 position 275 486 109 45;
-}
-
-class String
-{
-position 313 556 109 41.3594;
-}
-
-class Boolean
-{
-position 455 600 109 41.3594;
 }

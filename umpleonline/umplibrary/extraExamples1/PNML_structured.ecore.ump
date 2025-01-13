@@ -237,13 +237,3 @@ class Font
 	AlignType align;
 	Integer rotation;
 }
-
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}

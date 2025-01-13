@@ -15,19 +15,6 @@ See : http://delivery.acm.org/10.1145/360000/355280/p39-brodeur.pdf?key1=355280&
 
 Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
 ***************/
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
 
 namespace Perceptory;
 

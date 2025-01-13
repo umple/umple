@@ -7,11 +7,6 @@ Title: Software Arch IEEE 1471
 
 (no description provided)
 ***************/
-namespace PrimitiveTypes;
-
-class String
-{
-}
 
 namespace IEEE1471;
 

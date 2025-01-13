@@ -106,21 +106,3 @@ class Date
 	Integer seconds;
 	Integer year;
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Double
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

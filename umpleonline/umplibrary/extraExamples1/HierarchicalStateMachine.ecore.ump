@@ -116,17 +116,3 @@ class AssociationStateState
 class AssociationDataStateBase
 {
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}

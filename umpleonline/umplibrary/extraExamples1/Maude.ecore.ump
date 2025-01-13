@@ -291,9 +291,3 @@ class LabelMapping
 	String from;
 	String to;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}

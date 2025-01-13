@@ -13,19 +13,6 @@ See : http://delivery.acm.org/10.1145/360000/353185/p188-herrmann.pdf?key1=35318
 
 Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
 *************/
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
 
 namespace Repository;
 

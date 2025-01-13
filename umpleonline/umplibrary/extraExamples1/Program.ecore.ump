@@ -157,17 +157,3 @@ class ExpressionStat
 	isA Statement;
 	0..1 -> 1..* Expression expression;
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

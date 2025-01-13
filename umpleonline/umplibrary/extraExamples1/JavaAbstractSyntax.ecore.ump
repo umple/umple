@@ -15,23 +15,6 @@ See : The Eclipse JDT API Specification : http://help.eclipse.org/help32/index.j
 
 Authors : MikaÃ?Â«l Barbero <mikael.barbero_NOSPAM <AT> univ-nantes.fr>
 ************/
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class Character
-{
-}
 
 namespace JavaAbstractSyntax;
 

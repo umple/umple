@@ -13,19 +13,6 @@ Title: MySQL Core
 
 Authors : Marcos Didonet Del Fabro
 **************/
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}
 
 namespace MySQL;
 

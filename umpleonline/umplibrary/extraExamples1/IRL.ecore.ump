@@ -314,21 +314,3 @@ class InvokeAction
 	isA RuleAction;
 	0..1 -> 1..* Expression invocation;
 }
-
-namespace PrimitiveTypes;
-
-class Double
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}

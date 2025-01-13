@@ -460,21 +460,3 @@ class NamedRange
 	String refersTo;
 	Boolean hidden;
 }
-
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Double
-{
-}
