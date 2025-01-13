@@ -16,23 +16,6 @@ See : http://www.graphviz.org
 Authors : Jean PaliÃ?Â¨s
 
 *****************/
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Double
-{
-}
 
 namespace DOT;
 

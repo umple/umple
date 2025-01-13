@@ -109,15 +109,3 @@ class Enumeration
 	isA Type;
 	0..1 -> * EnumerationLiteral literals;
 }
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

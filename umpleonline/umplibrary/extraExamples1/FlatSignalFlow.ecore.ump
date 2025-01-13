@@ -87,13 +87,3 @@ class AssociationReceiverQueue
 class AssociationQueueTransmitter
 {
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}

@@ -97,19 +97,7 @@ class Previous
 {
 }
 
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
-
-class Boolean
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -162,19 +150,4 @@ position 187 535 109 45;
 class Previous
 {
 position 5 590 109 45;
-}
-
-class String
-{
-position 99 528 109 45;
-}
-
-class Integer
-{
-position 7 670 109 45;
-}
-
-class Boolean
-{
-position 159 591 109 45;
 }

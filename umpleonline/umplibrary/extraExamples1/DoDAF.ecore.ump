@@ -363,13 +363,3 @@ class Target
 class MIDB
 {
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}

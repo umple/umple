@@ -122,13 +122,3 @@ class OtherAttributeType
 {
 	OtherAttributeTypeEnum type;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}

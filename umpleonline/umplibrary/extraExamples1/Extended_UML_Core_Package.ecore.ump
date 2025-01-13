@@ -119,15 +119,3 @@ class Expression
 }
 
 namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

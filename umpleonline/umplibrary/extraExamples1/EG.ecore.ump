@@ -81,17 +81,3 @@ class Split
 {
 	isA Control;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}

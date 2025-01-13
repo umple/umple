@@ -225,9 +225,3 @@ class PAExchangeRequirement
 	isA InformationTechnologyRequirement;
 	0..1 -> * InformationExchangeRequirement isCitedIn;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}

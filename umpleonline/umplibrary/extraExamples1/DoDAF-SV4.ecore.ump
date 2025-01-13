@@ -305,9 +305,3 @@ class Position
 	isA Element;
 	0..1 -> * OperationalRole mayBeCitedFor;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}

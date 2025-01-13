@@ -56,17 +56,3 @@ class Map
 	isA LocatedElement;
 	String mapString;
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

@@ -13,15 +13,6 @@ Title: Grafcet Discrete Modeling
 
 Authors : Pierrick Guyard (pierrick.guyard_NOSPAM <AT> gmail.com)
 ************/
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
 
 namespace Grafcet;
 

@@ -232,17 +232,3 @@ class Reject
 	String status;
 	String reason;
 }
-
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

@@ -125,19 +125,7 @@ class Seqence
 	isA PathConnection;
 }
 
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -245,19 +233,4 @@ position 888 370 109 45;
 class Seqence
 {
 position 903 139 109 45;
-}
-
-class String
-{
-position 158 603 109 45;
-}
-
-class Boolean
-{
-position 311 594 109 45;
-}
-
-class Integer
-{
-position 499 593 109 45;
 }

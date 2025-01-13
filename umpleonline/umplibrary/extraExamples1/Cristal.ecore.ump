@@ -62,19 +62,7 @@ class PartCompositeMember
 {
 }
 
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -122,19 +110,4 @@ position 765 40 109 45;
 class PartCompositeMember
 {
   position 250 330 109 45;
-}
-
-class String
-{
-position 339 479 109 45;
-}
-
-class Boolean
-{
-position 39 482 109 45;
-}
-
-class Integer
-{
-position 199 477 109 45;
 }

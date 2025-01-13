@@ -233,9 +233,3 @@ class DOSCR
 	0..1 -> * PersonType appliesTo;
 	0..1 -> * OperationalRole mayBeCitedFor;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}

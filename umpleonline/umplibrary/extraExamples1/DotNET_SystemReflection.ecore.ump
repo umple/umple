@@ -13,20 +13,6 @@ Title: DotNET System Reflection
 
 Authors : Jean-Marc Prieur (j-m.prieur <at> wanadoo.fr), Régis Chevrel (chevrel.regis <at> gmail.com) [1], Hugo BruneliÃ?Â¨re (hugo.bruneliere <at> gmail.com)[1] ; Albin Jossic (albin.jossic <at> gmail.com)[1] ;[1] ATLAS team (Nantes, France)
 *************/
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
 namespace DNSR;
 
 class NamedElement

@@ -35,17 +35,3 @@ class Point
 	Double y;
 	Double z;
 }
-
-namespace PrimitiveTypes;
-
-class Double
-{
-}
-
-class Integer
-{
-}
-
-class String
-{
-}

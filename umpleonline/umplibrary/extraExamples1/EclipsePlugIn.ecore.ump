@@ -114,13 +114,3 @@ class Class
 {
 position 232 214 109 45;
 }
-
-class Integer
-{
-position 6 560 109 45;
-}
-
-class String
-{
-position 146 592 109 45;
-}

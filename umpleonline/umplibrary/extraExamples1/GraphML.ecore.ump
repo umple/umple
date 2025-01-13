@@ -96,23 +96,7 @@ class Data
 	String value;
 }
 
-namespace PrimitiveTypes;
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
-
-class double
-{
-}
-
-class String
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -175,19 +159,4 @@ position 246 160 109 45;
 class Boolean
 {
 position 5 800 109 45;
-}
-
-class Integer
-{
-position 234 727 109 45;
-}
-
-class double
-{
-position 5 696 109 45;
-}
-
-class String
-{
-position 42 446 109 45;
 }

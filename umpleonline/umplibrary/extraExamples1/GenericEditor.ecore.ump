@@ -82,17 +82,3 @@ class Indent
 	isA LocatedElement;
 	String retrait;
 }
-
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Integer
-{
-}
-
-class Boolean
-{
-}

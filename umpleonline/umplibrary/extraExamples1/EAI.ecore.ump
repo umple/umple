@@ -46,15 +46,7 @@ class EAIQueue
 	String name;
 }
 
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -87,14 +79,4 @@ position 190 410 109 45;
 class EAIQueue
 {
 position 389 487 109 45;
-}
-
-class Integer
-{
-position 142 580 109 45;
-}
-
-class String
-{
-position 18 580 109 45;
 }

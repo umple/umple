@@ -63,19 +63,3 @@ class ORGroup
 }
 
 namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Double
-{
-}

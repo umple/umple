@@ -97,23 +97,7 @@ class Model
 	isA Package;
 }
 
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Double
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -191,19 +175,4 @@ position 297 414 109 45;
 class Integer
 {
 position 574 504 109 45;
-}
-
-class String
-{
-position 709 500 109 45;
-}
-
-class Boolean
-{
-position 431 506 109 45;
-}
-
-class Double
-{
-position 828 500 109 45;
 }

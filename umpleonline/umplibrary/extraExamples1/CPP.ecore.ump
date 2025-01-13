@@ -16,24 +16,6 @@ See : http://www.cplusplus.com/
 Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
 ***********/
 
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Double
-{
-}
-
 namespace CPP;
 
 class CDerived

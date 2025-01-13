@@ -90,19 +90,7 @@ class Release
 	isA Special;
 }
 
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}//$?[End_of_model]$?
+//$?[End_of_model]$?
 
 namespace -;
 
@@ -180,19 +168,4 @@ class Allocate
 class Release
 {
   position 450 430 109 45;
-}
-
-class String
-{
-position 134 585 109 45;
-}
-
-class Boolean
-{
-position 5 591 109 45;
-}
-
-class Integer
-{
-position 251 485 109 45;
 }

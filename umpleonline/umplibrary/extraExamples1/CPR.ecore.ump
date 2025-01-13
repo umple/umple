@@ -13,23 +13,6 @@ Title: Core Plan Representation
 
 Authors : Hugo Bruneliere (hugo.bruneliere <at> gmail.com), Pierrick Guyard (pierrick.guyard <at> gmail.com)
 ************/
-namespace PrimitiveTypes;
-
-class Integer
-{
-}
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Double
-{
-}
 
 namespace CPR;
 
@@ -71,27 +54,6 @@ class TimeSpec
 }//$?[End_of_model]$?
 
 namespace -;
-
-
-class Integer
-{
-position 331 468 109 45;
-}
-
-class String
-{
-position 531 481 109 45;
-}
-
-class Boolean
-{
-position 195 473 109 45;
-}
-
-class Double
-{
-position 479 485 109 45;
-}
 
 class Plan
 {

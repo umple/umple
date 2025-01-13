@@ -13,19 +13,6 @@ See : http://delivery.acm.org/10.1145/1080000/1071024/p25-grassi.pdf?key1=107102
 
 Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
 *************/
-namespace PrimitiveTypes;
-
-class String
-{
-}
-
-class Boolean
-{
-}
-
-class Integer
-{
-}
 
 namespace DTMP;
 
