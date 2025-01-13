@@ -50,7 +50,19 @@ class ModelElement
 {
 }
 
-//$?[End_of_model]$?
+namespace PrimitiveTypes;
+
+class Boolean
+{
+}
+
+class Integer
+{
+}
+
+class String
+{
+}//$?[End_of_model]$?
 
 namespace -;
 

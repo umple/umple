@@ -213,3 +213,9 @@ class Misc
 	String note;
 	0..1 -> * Author authors;
 }
+
+namespace PrimitiveTypes;
+
+class String
+{
+}

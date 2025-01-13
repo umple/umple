@@ -56,42 +56,4 @@ namespace PrimitiveTypes;
 
 class String
 {
-}//$?[End_of_model]$?
-
-namespace -;
-
-
-class WorkflowProcessDefinition
-{
-position 5 177 109 45;
-}
-
-class WorkflowApplicationDeclaration
-{
-position 745 242 109 45;
-}
-
-class WorkflowRelevantData
-{
-position 433 371 109 45;
-}
-
-class WorkflowParticipantSpecification
-{
-  position 50 330 109 45;
-}
-
-class WorkflowProcessActivity
-{
-position 242 46 109 45;
-}
-
-class TransitionInformation
-{
-position 702 50 109 45;
-}
-
-class String
-{
-position 8649 2488 109 45;
 }

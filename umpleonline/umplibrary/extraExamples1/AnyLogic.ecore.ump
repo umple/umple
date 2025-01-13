@@ -196,3 +196,21 @@ class Font
 	Integer size;
 	Integer style;
 }
+
+namespace PrimitiveTypes;
+
+class Boolean
+{
+}
+
+class Integer
+{
+}
+
+class String
+{
+}
+
+class Double
+{
+}

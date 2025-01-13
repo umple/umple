@@ -15,7 +15,21 @@ See: http://home.gna.org/amble/
 Authors: David Touzet (david.touzet_NOSPAM <AT> univ-nantes.fr)
 *************************/
 
+namespace PrimitiveTypes;
+
 suboption "gvortho";
+
+class Boolean
+{
+}
+
+class String
+{
+}
+
+class Integer
+{
+}
 
 namespace Amble;
 

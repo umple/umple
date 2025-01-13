@@ -129,3 +129,13 @@ class MasterThesis
 {
 	isA ThesisEntry;
 }
+
+namespace PrimitiveTypes;
+
+class String
+{
+}
+
+class Integer
+{
+}

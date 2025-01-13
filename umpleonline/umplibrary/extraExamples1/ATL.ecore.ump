@@ -538,3 +538,21 @@ class OclModel
 	String name;
 	* metamodel -- * OclModel model;
 }
+
+namespace http://www.eclipse.org/gmt/2005/PrimitiveTypes;
+
+class Boolean
+{
+}
+
+class Double
+{
+}
+
+class Integer
+{
+}
+
+class String
+{
+}

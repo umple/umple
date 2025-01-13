@@ -561,3 +561,17 @@ class Activity
 	0..1 -> * Package isCoveredByP;
 	0..1 -> * Service isisCoveredByS;
 }
+
+namespace PrimitiveTypes;
+
+class String
+{
+}
+
+class Integer
+{
+}
+
+class Boolean
+{
+}

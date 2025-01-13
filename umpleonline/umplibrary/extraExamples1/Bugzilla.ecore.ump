@@ -190,3 +190,21 @@ class Attachment
 {
 position 232 5 109 45;
 }//$?[End_of_model]$?
+
+namespace -;
+
+
+class Boolean
+{
+  position 50 30 109 45;
+}
+
+class String
+{
+  position 50 130 109 45;
+}
+
+class Integer
+{
+  position 50 230 109 45;
+}

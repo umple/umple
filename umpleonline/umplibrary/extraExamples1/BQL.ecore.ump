@@ -55,3 +55,13 @@ class Expression
 	String field;
 	String value;
 }
+
+namespace PrimitiveTypes;
+
+class String
+{
+}
+
+class Boolean
+{
+}
