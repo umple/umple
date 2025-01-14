@@ -69,20 +69,20 @@ class Element
 
 class Newspaper
 {
-position 602 213 109 45;
+position 206 472 109 45;
 }
 
 class News
 {
-position 5 196 109 45;
+position 343 90 109 45;
 }
 
 class Category
 {
-position 201 147 109 45;
+position 442 291 109 45;
 }
 
 class Date
 {
-position 7 430 109 45;
+position 217 226 109 45;
 }

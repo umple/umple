@@ -13,7 +13,7 @@ Title: Profile Data HPROF
 
 See : http://java.sun.com/developer/technicalArticles/Programming/HPROF.html
 
-Authors : Frédéric Jouault (frederic.jouault <at> inria.fr)
+Authors : Fr??d??ric Jouault (frederic.jouault <at> inria.fr)
 *************/
 namespace HPROF;
 
@@ -105,4 +105,62 @@ class Date
 	Integer minutes;
 	Integer seconds;
 	Integer year;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class LocatedElement
+{
+position 263 5 109 45;
+}
+
+class Profile
+{
+position 208 430 121.891 58.3594;
+}
+
+class Method
+{
+position 5 168 201.625 58.3594;
+}
+
+class ThreadAction
+{
+  position 46 461 111.781 58.3594;
+}
+
+class ThreadStart
+{
+position 122 543 109 45;
+}
+
+class ThreadEnd
+{
+position 1 547 109 41.3594;
+}
+
+class Trace
+{
+position 306 296 141.844 75.3594;
+}
+
+class StackTraceElement
+{
+position 21 16 150.781 75.3594;
+}
+
+class Times
+{
+position 636 407 114.547 75.3594;
+}
+
+class Time
+{
+position 1 315 125.125 109.359;
+}
+
+class Date
+{
+position 282 105 165.016 160.359;
 }

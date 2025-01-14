@@ -63,4 +63,47 @@ class EnumSet
 class EnumItem
 {
 	isA NamedElement;
+}//$?[End_of_model]$?
+
+namespace -;
+
+
+class NamedElement
+{
+position 321 25 109 45;
+}
+
+class DataBase
+{
+position 485 354 109 45;
+}
+
+class Table
+{
+position 278 358 109 45;
+}
+
+class Column
+{
+position 142 242 109 45;
+}
+
+class IntegerColumn
+{
+position 140 469 109 45;
+}
+
+class EnumColumn
+{
+position 16 277 109 45;
+}
+
+class EnumSet
+{
+position 85 57 109 45;
+}
+
+class EnumItem
+{
+position 196 66 109 45;
 }
