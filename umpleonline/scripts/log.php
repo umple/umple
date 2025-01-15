@@ -41,7 +41,9 @@
   
   if($isSuccess) {
     echo "<p>Successfully established connection to server\n";
-   
+
+    echo "<h4 style =\"Color: blue\">Currently configured software</h4>";
+
     echo "\n<p>php version: ".PHP_VERSION;
         
     echo "<p>Java version: ";
@@ -62,16 +64,20 @@
     echo "\n<p>Docker version: ";
     passthru("docker --version 2>&1");
 
+    echo "<span style =\"Color: blue\">";
     echo "\n<p> Git commit: ";
     @passthru("git rev-parse --short HEAD 2>&1");
     echo " &nbsp; Branch: ";
     @passthru("git rev-parse --abbrev-ref HEAD");
     echo " &nbsp; Updated: ";
     @passthru("git log -1 --format=%cd --date=relative");
+    echo "</span>";
+
+    echo "<h4 style =\"Color: blue\">Umple internal JVM server log running umplesync.jar</h4>";
 
     $numBytesSent= socket_write($theSocket, $commandLine);
     if($numBytesSent === FALSE) {
-      echo "<p>Cound not send log command to server\n";
+      echo "<p>Could not send log command to server\n";
       $isSuccess - FALSE;
     }
   }
@@ -105,6 +111,74 @@
     echo "</pre>\n";
     socket_close($theSocket);
   }
+
+  echo "<h4 style =\"Color: blue\">Umple collab server status</h4>";
+
+  // Obtain the config info and iterate through each config
+  $collabConfigLines = file("../../UmpleCollabServer/config.cfg");
+  foreach ($collabConfigLines as $line_num => $line) {
+    $words = explode("=", $line);
+    if(sizeof($words) == 2) {
+      if($words[0] == "mainContainerName") {
+        echo "<p>Collab Docker Container: ".$words[1]."</p>\n";
+        echo "\n<p>&nbsp;Stats: ";
+        passthru("docker container stats --no-stream --format json ".$words[1]."  2>&1");
+      }
+      else if($words[0] == "portToUse") {
+        $portToUse = $words[1];
+        echo "<p>Port: ".$portToUse."</p>\n";
+        try {
+          $healthCheckJson = file_get_contents("http://localhost:".$portToUse."/healthcheck");
+        }
+        catch (Exception $e) {
+          echo "<p>Port ".$portToUse." did not provide health check response for collab server. Exception:".$e."</p>\n";
+        }
+        if($healthCheckJson != "") {
+          $jsonAsArray = json_decode($healthCheckJson);
+          foreach ($jsonAsArray as $healthKey => $healthVal) {
+            if ($healthKey == "uptime") {
+              echo "<p>Collab server up: ". round($healthVal)."s &nbsp; ".round($healthVal/86400,1)."d</p>\n";
+            }
+            else if ($healthKey == "filesInfo") {
+              // Do nothing with this array as it would give away confidential info
+            }
+            else {
+              echo "<p>".ucfirst($healthKey).": ".$healthVal."</p>\n";
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+  echo "<h4 style =\"Color: blue\">TODO  Umple execution server status</h4>";
+
+  // Obtain the correct socket in use
+  $execConfigLines = file("../../UmpleCodeExecution/config.cfg") ;
+  foreach ($execConfigLines as $line_num => $line) {
+    $words = explode("=", $line);
+    if(sizeof($words) == 2) {
+      if($words[0] == "mainContainerName") {
+        echo "<p>Main Exec Docker Image/Container: ".$words[1]."/my".$words[1]."</p>\n";
+        echo "\n<p>&nbsp;Stats: ";
+        passthru("docker container stats --no-stream --format json my".$words[1]."  2>&1");
+      }
+      else if($words[0] == "tempContainerName") {
+        echo "<p>Java+Python Exec Docker Image/Container: ".$words[1]."/my".$words[1]."</p>\n";
+        echo "\n<p>&nbsp;Stats: ";
+        passthru("docker container stats --no-stream --format json my".$words[1]."  2>&1");
+      }
+      else if($words[0] == "portToUse") {
+        $portToUse = $words[1];
+        echo "<p>Port: ".$portToUse."</p>\n";
+      }
+      else if($words[0] == "timeoutValue") {
+        echo "<p>Exec Timeout: ".$words[1]."s</p>\n";
+      }
+    }
+  }
+
 ?>
 </body>
 </html>
