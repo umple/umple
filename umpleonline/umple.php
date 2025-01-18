@@ -25,6 +25,7 @@ if (isset($_REQUEST["model"])) {
 
 
 $diagramtype = "";
+$displayoptions = "";
 $isCachedExample = false;
 $imageoutput="";
 $messageURL="";
@@ -75,7 +76,7 @@ if (isset($_REQUEST["model"]) && substr(explode("-", $_REQUEST["model"])[0], 0, 
 }
 // Core options after ? and between &. One of the first four is allowed
 
-// example=xxx means load the .ump file named xxx
+// example=xxx means load the builtin example file from the umplib directory or subdirectories
 
 // filename=xxx means load the URL named xxx (but without the leading http:// or https://
 
@@ -98,6 +99,10 @@ if (isset($_REQUEST["diagramtype"])) {
   else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature" && $diagramType !="GvClassTrait" ) $diagramType = "class";
 }
 if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
+
+if (isset($_REQUEST["displayoptions"])) {
+  $displayoptions=$_REQUEST["displayoptions"];
+}
 
 // notext means suppress creation of the text pane - passed to JavaScript
 // ignored if nodiagram is also set
@@ -1166,7 +1171,8 @@ $output = $dataHandle->readData('model.ump');
       "<?php echo $generateDefault ?>",
       <?php if($doLoadTaskInstruction) { ?> true  <?php } else { ?> false <?php } ?>,
       <?php if(isset($_REQUEST["task"])) { ?> true <?php } else { ?> false <?php } ?>,
-      <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>
+      <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>,
+      "<?php echo $displayoptions ?>"
       ); 
       <?php if (isset($_REQUEST['example']) && $actualExample != ""){?> 
       Page.setExamples("<?php echo $actualExample ?>")

@@ -4572,7 +4572,7 @@ Action.promptAndExecuteTest = function() {
 // Then could be suboptions
 // Second could be mixsets to turn on
 // Otherwise treated as class filter patterns
-Action.setFilter = function(newFilter)
+Action.setFilterFull = function(newFilter, doRedraw)
 {
   // Reset first
   Page.filterWordsOutput = "";
@@ -4589,8 +4589,15 @@ Action.setFilter = function(newFilter)
     Page.filterWordsOutput+=(actualFilterWord+"!@");
 
   });
+  if(doRedraw) {
+    Action.redrawDiagram();
+  }
+}
 
-  Action.redrawDiagram();
+// version of the above that redraws by default
+Action.setFilter = function(newFilter)
+{
+  return Action.setFilterFull(newFilter, true);
 }
 
 // Adds a class with the given name. The class may already be there. Just edits the text.

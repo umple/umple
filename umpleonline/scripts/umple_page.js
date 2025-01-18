@@ -77,7 +77,7 @@ Page.isGvManual = function () {
 
 
 // The following is set called from umple.php
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask)
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask, displayoptions)
 { 
   if(performance.navigation.type == 2)
   {
@@ -95,7 +95,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   jQuery(".layoutListItem").hide();
 
   // Set diagram type - anything else means use the default editable class diagram
-  if(diagramType == "GvState")   
+  if(diagramType.toLowerCase() == "gvstate" || diagramType.toLowerCase() == "state")   
   { 
     Page.useGvStateDiagram = true;
     Page.useEditableClassDiagram = false; 
@@ -104,7 +104,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     jQuery(".view_opt_state").show();
 
   }
-  else if(diagramType == "GvClass")   
+  else if(diagramType.toLowerCase() == "gvclass")
   {
     Page.useGvClassDiagram = true;
     Page.useEditableClassDiagram = false;
@@ -113,7 +113,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     jQuery(".view_opt_class").show();
 
   }
-  else if(diagramType == "GvClassTrait")   
+  else if(diagramType.toLowerCase() == "gvclasstrait")
   {
     Page.useGvClassDiagram = true;
     Page.useEditableClassDiagram = false;
@@ -122,7 +122,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.showTraits=true;
     jQuery(".view_opt_class").show();
   } 
-  else if(diagramType == "GvFeature")   
+  else if(diagramType.toLowerCase() == "gvfeature")
   {
     Page.useGvFeatureDiagram = true;
     Page.useEditableClassDiagram = false;
@@ -132,7 +132,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     jQuery(".view_opt_feature").show();
 
   }
-  else if(diagramType == "structureDiagram")
+  else if(diagramType.toLowerCase() == "structurediagram")
   {
     Page.useStructureDiagram = true;
     Page.useEditableClassDiagram = false;  
@@ -143,6 +143,30 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   {
     jQuery(".view_opt_class").show();
     jQuery(".view_opt_class_palette").show();
+  }
+
+  // Set the default displayoptions if there are any
+  if(displayoptions != "") {
+    if (displayoptions.includes("gvmanual")) {
+      Page.specialSuboptionsActive.push("gvmanual");
+      displayoptions=displayoptions.replace("gvmanual","");
+    }
+
+    if (displayoptions.includes("gvdot")) {
+      Page.specialSuboptionsActive.push("gvdot");
+      displayoptions=displayoptions.replace("gvdot","");
+    }
+    else if (displayoptions.includes("gvsfdp")) {
+      Page.specialSuboptionsActive.push("gvsfdp");
+      displayoptions=displayoptions.replace("gvsfdp","");
+    }
+    else if (displayoptions.includes("gvortho")) {
+      Page.specialSuboptionsActive.push("gvortho");
+      displayoptions=displayoptions.replace("gvortho","");
+    }
+
+    jQuery("#filtervalues").val(displayoptions);
+    Action.setFilterFull(displayoptions,false);
   }
 
   jQuery.noConflict();
