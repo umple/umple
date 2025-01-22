@@ -81,7 +81,7 @@ noreferences
 <li><p>Give them the URL obtained from selecting <b>Copy Participant URL</b>; clicking on this URL will create a new individual response (a new secret URL) for the person clicking. Note you can't give them the URL that appears from selecting Launch Participant URL in a new tab because that is an individual response from <em>you</em> and you would be giving all participants access to the same response!</p>
 </ul>
 
-<p>Note: If the requestor edits the model of a task after a responder creates a response, the responder will not have access to rhe revised model. However, responders will have access to revised instructions.</p>
+<p>Note: If the requestor edits the model of a task after a responder creates a response, the responder will not have access to the revised model. However, responders will have access to revised instructions.</p>
 
 <p>Requestors can distribute the task name or the participant URL via email, a learning management system, or any other means.</p>
 
