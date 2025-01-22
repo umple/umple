@@ -221,7 +221,7 @@
 
 1511 : 2, "https://manual.umple.org/?E1511InlineMixsetIsNotSupported.html", Inline syntax for the mixset '{0}' is not supported. Please enclose the body of '{0}' with curly brackets. ; 
 1512 : 4, "https://manual.umple.org/?W1512CodeLabelsInsideMethodAreNotUnique.html", Multiple code labels having the same name should be avoided for the method '{0}' at line '{1}'. Please consider unique names for code labels. ; 
-1513 : 4, "https://manual.umple.org/?W1513MixsetUsedWithNoDeclaration.html", The mixset '{0}' has a use statement at line '{1}', however there is no declaration for this mixset. To avoid this warning, you many remove the use statement or you may add a declaration for mixset '{0}'. ; 
+1513 : 4, "https://manual.umple.org/?W1513MixsetUsedWithNoDeclaration.html", The mixset '{0}' has a use statement at line '{1}', however there is no declaration for this mixset. To avoid this warning, you may remove the use statement or you may add a declaration for mixset '{0}'. ; 
 
 
 # Messages to be emitted when embedded code from another language is compiled and you are passing on the error. These have not yet been activated.
