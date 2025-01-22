@@ -91,7 +91,7 @@ graphical pane, as described later.
     is a .ump file in the repository at the following URL: <a href="https://raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump">   https://raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump
     </a>. This can be loaded into Umple using the following URL: <a href="https://try.umple.org/?filename=raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump">   https://try.umple.org/?filename=raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump</a><br /></li> 
     <li><b>Paste Umple code into UmpleOnline.</b> Note however, that you have to make
-    sure the pasted file contains the layout information, as described under the saving methods above. it is suggested to drag and drop the file into the center pane to insure the layout information is properly handled.
+    sure the pasted file contains the layout information, as described under the saving methods above. it is suggested to drag and drop the file into the center pane to ensure the layout information is properly handled.
   </ol>
    <br>Note that in most of these cases, the user can edit the Umple, without affecting the 
 original content. In other words, a copy is saved first. The only exception is that when you edit Umple saved using method 1, any changes are saved permanently.
@@ -212,7 +212,7 @@ Umple code in the left (textual) pane.</li>
 <li><b>To adjust the location of an association</b>, in other words how it 
 is connected to each class, hover over the association until you see 
 little squares at its ends, then click. The squares should change to a 
-darker colour. Select the little squares and move it to a new location on 
+darker colour. Select a little square and move it to a new location on 
 the class. If an association crosses a class's border, just move the class 
 a little. Note that the location of the association end is saved with the 
 layout information of the diagram.</li>
@@ -228,7 +228,7 @@ layout information of the diagram.</li>
 <li><b>To hide the 'add more' line in each class</b>, select 'Photo 
 Ready' from the 'OPTIONS' menu. You can also click on any class to adjust its 
 size a little. UmpleOnline is an excellent tool for preparing nice-looking 
-diagrams ready for publication. Note that this works best in Firefox at the current time. You can also turn on pinch to zoom in the tools "show and hide" menu to more easily change your view of the diagram to make the diagram more legible.</li>
+diagrams ready for publication. Note that this works best in Firefox at the current time. You can also turn on pinch to zoom in the "show and hide" menu in tools, to more easily change your view of the diagram and to make the diagram more legible.</li>
 
 <br />
 </ul>
