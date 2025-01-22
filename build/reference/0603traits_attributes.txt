@@ -22,7 +22,7 @@ Another way to avoid conflicts is to use stateless traits. In that case, traits 
 
 &nbsp;
 
-<p>When exploring the following examples in UmpleOnline, you can use the Options menu to control what is visible, or you can use control-R to flip back and forth between showing the diagram with the original traits, vs. the diagram collapsed into the classes to be compiled; or you can use control-M to show/hide methods. (NOTE: on some browsers, these keyboard shortcuts may do other things that override umple. For instance, control-R reloads tabs in some browsers, which may take precedent over umple's built in keyboard commands)</p>
+<p>When exploring the following examples in UmpleOnline, you can use the Options menu to control what is visible, or you can use control-R to flip back and forth between showing the diagram with the original traits, vs. the diagram collapsed into the classes to be compiled; or you can use control-M to show/hide methods. (NOTE: on some browsers, these keyboard shortcuts may do other things that override umple. For instance, control-R reloads tabs in some browsers, which may take precedent over umple&#39;s built in keyboard commands)</p>
 
 @@example @@caption Example showing how to use a trait in Umple @@endcaption
 @@source manualexamples/traits_example_003.ump &diagramtype=GvClassTrait
