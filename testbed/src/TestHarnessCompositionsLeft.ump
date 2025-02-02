@@ -2,6 +2,8 @@ namespace cruise.associations.compositions;
 
 // Ignore warnings about multiplicity bounds on directed association
 strictness ignore 36;
+// Ignore warnings about role name matching class name
+strictness ignore 89;
 
 class X_comp {}
 

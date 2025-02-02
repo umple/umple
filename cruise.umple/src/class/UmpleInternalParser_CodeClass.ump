@@ -670,6 +670,9 @@ class UmpleInternalParser
       checkIgnoredAssociations();
       checkSubclassSameAssociationDifferentRoleNames();
 
+      //Issue 1662
+      checkRolenameMatchingClassname();
+
       checkExtendsForCycles();
       checkSortedAssociations();
       checkAssociationsValidity();
@@ -2979,6 +2982,23 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     
   }
 
+  private void checkRolenameMatchingClassname()
+  {
+    for (Association assoc : model.getAssociations()) {
+      AssociationEnd firstEnd = assoc.getEnd(0);
+      AssociationEnd secondEnd = assoc.getEnd(1); 
+
+      if (firstEnd.getRoleName().toLowerCase().equals(firstEnd.getClassName().toLowerCase()) && !firstEnd.getIsDefaultRoleName()) 
+      {
+        getParseResult().addErrorMessage(new ErrorMessage(89,assoc.getTokenPosition(),firstEnd.getRoleName(), firstEnd.getClassName()));
+      } 
+      if (secondEnd.getRoleName().toLowerCase().equals(secondEnd.getClassName().toLowerCase()) && !secondEnd.getIsDefaultRoleName()) 
+      {
+        getParseResult().addErrorMessage(new ErrorMessage(89,assoc.getTokenPosition(),secondEnd.getRoleName(), secondEnd.getClassName()));
+      }
+    }
+  }
+
   private void checkDuplicateAssociationNames()
   {
     for(UmpleClass C : model.getUmpleClasses())
@@ -3008,7 +3028,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         AssociationEnd firstEnd = assoc.getEnd(0);
         AssociationEnd secondEnd = assoc.getEnd(1); 
 
-      if ( assoc.getIsSpecialization() )
+        if ( assoc.getIsSpecialization() )
         {
         //getParseResult().addErrorMessage(new ErrorMessage(400,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
           continue;
@@ -3020,7 +3040,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
         Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
         
-        //issue 288: firstEnd of association does not indicate current (this) class being analyzed.
+        //issue 188: firstEnd of association does not indicate current (this) class being analyzed.
         //If association is NOT reflexive, must check the differing class.  Check if role name
         //matches class name, but only if it is a user entered role name.  Current class must
         //also have multiple associations to the same class to cause java compile errors.  

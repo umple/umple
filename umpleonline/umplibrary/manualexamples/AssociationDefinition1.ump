@@ -20,7 +20,7 @@ association {
 
 // Class with composition
 class E {
-  0..1 e <@>- * A a;
+  0..1 <@>- * A;
 }
 
 // Reference to a class defined elsewhere

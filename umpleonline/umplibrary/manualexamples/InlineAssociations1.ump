@@ -4,7 +4,7 @@ class Group
   // a many-to-many association
   // An item has zero or more groups and a group
   // has zero or more items
-  * -- * Item item;
+  * -- * Item;
   
   // An item has an optional description
   // The association is directed, so descriptions
