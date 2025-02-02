@@ -3402,7 +3402,7 @@ public class UmpleParserTest
 
  //Issue 1662
  @Test
- public void rolenameMatchingClassNameWarning() {
+ public void rolenameMatchingClassnameWarning() {
     assertHasWarningsParse("089_rolenameMatchingClassname1.ump", 89);
     assertHasWarningsParse("089_rolenameMatchingClassname2.ump", 89);
     assertHasNoWarningsParse("089_rolenameMatchingClassname3.ump");

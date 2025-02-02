@@ -2,4 +2,4 @@ class Temp{}
 
 class Other{}
 
-association { 1 Temp -> * Other other;}
+association { * Temp -> 1 Other other;}
