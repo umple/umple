@@ -1,0 +1,5 @@
+class A{
+  0..1  -- * B assoc;
+  0..1  -- * B Assoc;
+}
+class B{}
