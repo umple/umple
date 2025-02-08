@@ -2797,6 +2797,7 @@ public class UmpleParserTest
     assertFailedParse("024_multipleAssociationsWithSameName.ump", new Position("024_multipleAssociationsWithSameName.ump",7,2,79), 19);
     assertFailedParse("024_roleNameSameAsClassWithMultiAssocToSameClass.ump", 19);
     assertFailedParse("024_multiAssocToAnotherClassNeedRoleName.ump", 19);
+    assertFailedParse("024_multiAssocToAnotherClassCapitalizationRoleName.ump", 19);
     
     List<ErrorMessage> errorMessage = parseErrorMessage("024_multiAssocToSameClassNeedRoleName.ump");
     Assert.assertEquals("There are multiple associations between class 'B' and class 'A'. Unique role names need to be added at 'B' side to distinguish the different association ends in that class.",errorMessage.get(0).getFormattedMessage());
