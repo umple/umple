@@ -3058,10 +3058,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
         }
 
+        //Issue 2210: existingNames now uses the lowercase of role names
+
         // check names on other-class end of associations to other classes
         if (!isSymmetricReflexive && (checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
         { 
-          if (existingNames.contains(firstEnd.getRoleName()) || hasMultipleAssocToSameClass)
+          if (existingNames.contains(firstEnd.getRoleName().toLowerCase()) || hasMultipleAssocToSameClass)
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),firstEnd.getClassName(), C.getName()));
             return;
@@ -3073,12 +3075,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
           else
           {
-            existingNames.add(firstEnd.getRoleName());
+            existingNames.add(firstEnd.getRoleName().toLowerCase());
           }
         }
         if (!isSymmetricReflexive && (checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
         {
-          if (existingNames.contains(secondEnd.getRoleName()) || hasMultipleAssocToSameClass)
+          if (existingNames.contains(secondEnd.getRoleName().toLowerCase()) || hasMultipleAssocToSameClass)
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(), secondEnd.getClassName(), C.getName()));
             return;
@@ -3090,7 +3092,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
           else
           {
-            existingNames.add(secondEnd.getRoleName());
+            existingNames.add(secondEnd.getRoleName().toLowerCase());
           }
         }
         
@@ -3105,7 +3107,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             roleNameToCheck = secondEnd.getRoleName();
           }
 
-          if(existingNames.contains(roleNameToCheck))
+          if(existingNames.contains(roleNameToCheck.toLowerCase()))
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),roleNameToCheck));
             return;
@@ -3117,7 +3119,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
           else
           {
-            existingNames.add(roleNameToCheck);
+            existingNames.add(roleNameToCheck.toLowerCase());
           }
         }
 
