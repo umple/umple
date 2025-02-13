@@ -45,6 +45,11 @@ Page.useStructureDiagram = false;
 Page.useFeatureDiagram = false;
 Page.showAttributes = true;
 Page.showMethods = false;
+Page.filterWordsOutput = "";
+Page.mixsetsActive = new Array();
+Page.filtersActive = new Array();
+Page.copyableMixset="";
+Page.specialSuboptionsActive = new Array();
 Page.showActions = true;
 Page.showText = true;
 Page.showCanvas = true;
@@ -55,15 +60,24 @@ Page.showGuards = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
 
+Page.initialMouseDownX=0;
+Page.initialMouseDownY=0;
+Page.selectedGvClass="";
 
   Page.blahblah = function (theString) {
     console.log("In blah blah "+theString);
   }
 
+// Gvmanual determines behaviour of editing so this function
+// provides a shortcut to check for it
+// Returns boolean
+Page.isGvManual = function () {
+  return Page.specialSuboptionsActive.includes("gvmanual");
+}
 
 
 // The following is set called from umple.php
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask)
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask, displayoptions)
 { 
   if(performance.navigation.type == 2)
   {
@@ -81,7 +95,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   jQuery(".layoutListItem").hide();
 
   // Set diagram type - anything else means use the default editable class diagram
-  if(diagramType == "GvState")   
+  if(diagramType.toLowerCase() == "gvstate" || diagramType.toLowerCase() == "state")   
   { 
     Page.useGvStateDiagram = true;
     Page.useEditableClassDiagram = false; 
@@ -90,7 +104,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     jQuery(".view_opt_state").show();
 
   }
-  else if(diagramType == "GvClass")   
+  else if(diagramType.toLowerCase() == "gvclass")
   {
     Page.useGvClassDiagram = true;
     Page.useEditableClassDiagram = false;
@@ -99,7 +113,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     jQuery(".view_opt_class").show();
 
   }
-  else if(diagramType == "GvClassTrait")   
+  else if(diagramType.toLowerCase() == "gvclasstrait")
   {
     Page.useGvClassDiagram = true;
     Page.useEditableClassDiagram = false;
@@ -108,7 +122,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.showTraits=true;
     jQuery(".view_opt_class").show();
   } 
-  else if(diagramType == "GvFeature")   
+  else if(diagramType.toLowerCase() == "gvfeature")
   {
     Page.useGvFeatureDiagram = true;
     Page.useEditableClassDiagram = false;
@@ -118,7 +132,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     jQuery(".view_opt_feature").show();
 
   }
-  else if(diagramType == "structureDiagram")
+  else if(diagramType.toLowerCase() == "structurediagram")
   {
     Page.useStructureDiagram = true;
     Page.useEditableClassDiagram = false;  
@@ -129,6 +143,30 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   {
     jQuery(".view_opt_class").show();
     jQuery(".view_opt_class_palette").show();
+  }
+
+  // Set the default displayoptions if there are any
+  if(displayoptions != "") {
+    if (displayoptions.includes("gvmanual")) {
+      Page.specialSuboptionsActive.push("gvmanual");
+      displayoptions=displayoptions.replace("gvmanual","");
+    }
+
+    if (displayoptions.includes("gvdot")) {
+      Page.specialSuboptionsActive.push("gvdot");
+      displayoptions=displayoptions.replace("gvdot","");
+    }
+    else if (displayoptions.includes("gvsfdp")) {
+      Page.specialSuboptionsActive.push("gvsfdp");
+      displayoptions=displayoptions.replace("gvsfdp","");
+    }
+    else if (displayoptions.includes("gvortho")) {
+      Page.specialSuboptionsActive.push("gvortho");
+      displayoptions=displayoptions.replace("gvortho","");
+    }
+
+    jQuery("#filtervalues").val(displayoptions);
+    Action.setFilterFull(displayoptions,false);
   }
 
   jQuery.noConflict();
@@ -181,6 +219,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonSimulateCode");
   Page.initHighlighter("buttonUigu");
   Page.initHighlighter("buttonCopyClip");
+  Page.initHighlighter("buttonCopyMix");  
   Page.initHighlighter("buttonCollabFork");
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
@@ -248,6 +287,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopyClip");
+  Page.initAction("buttonCopyMix");
   Page.initAction("buttonCollabFork");
   Page.initAction("buttonCopy");
   Page.initAction("buttonCopyEncodedURL");
@@ -473,13 +513,18 @@ Page.initLabels = function()
   
   for(var i = 0, len = labels.length; i < len; i++)
   {
-    var labelId = "#" + jQuery(labels[i]).prop("id");
-    jQuery(labelId).click(function(x) {
-      return function() {
-        jQuery("#" + jQuery(x).prop("id").replace("label", "button")).trigger('click');
-      }
-    }(labelId));
+    Page.initLabel(jQuery(labels[i]).prop("id") );
   }
+}
+
+Page.initLabel = function(id)
+{
+  var labelId = "#" + id;
+  jQuery(labelId).click(function(x) {
+    return function() {
+      jQuery("#" + jQuery(x).prop("id").replace("label", "button")).trigger('click');
+    }
+  }(labelId));  
 }
 
 // BOOKMARK: adding basic event handlers to model and layout editors:: calls to Action...
@@ -799,6 +844,18 @@ Page.setExamples = function(ex)
     }
    }
   )
+
+  // TODO the following does not yet properly work to open the files from the command line
+  // DEBUG
+  jQuery("#inputExample5").change(Action.loadExample);
+  jQuery("#inputExample5 option").each(function(){
+    if (this.value==exValue || 
+      (this.value.startsWith("http") && this.value.endsWith(exValue))){
+      jQuery("#inputExample5 option[value = \"extraExamples1/"+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
 }
 Page.initExamples = function()
 {
@@ -817,29 +874,66 @@ Page.initExamples = function()
   jQuery("#inputExample4").change(Action.loadExample);
   jQuery("#defaultExampleOption4").attr("selected",true);
 
+  jQuery("#inputExample5").change(Action.loadExample);
+  jQuery("#defaultExampleOption5").attr("selected",true);
+
+  jQuery("#inputExample6").change(Action.loadExample);
+  jQuery("#defaultExampleOption6").attr("selected",true);
+
+  jQuery("#inputExample7").change(Action.loadExample);
+  jQuery("#defaultExampleOption7").attr("selected",true);
+
+  jQuery("#inputExample8").change(Action.loadExample);
+  jQuery("#defaultExampleOption8").attr("selected",true);
+
+
   if (Page.useStructureDiagram) {
     jQuery("#structureModels").prop("selected",true);
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples4").hide();      
+    jQuery("#itemLoadExamples5").hide();   
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();   
+
   }
   else if (Page.useGvStateDiagram) {
     jQuery("#smModels").prop("selected",true);
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples3").hide();
-    jQuery("#itemLoadExamples4").hide();  
+    jQuery("#itemLoadExamples4").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();   
+
   }
  else if (Page.useGvFeatureDiagram) {
     jQuery("#featureModels").prop("selected",true);
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples2").hide();
-    jQuery("#itemLoadExamples3").hide();    
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();   
+
   }
   else {
+    // TODO any examples loaded on initialization without a 
+    // URL argument will choose class diagrams
+    // Therefore for new example sets 5-8, we will need to change this logic
+    // to determine which set to hide
     jQuery("#cdModels").prop("selected",true); 
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide(); 
-    jQuery("#itemLoadExamples4").hide();       
+    jQuery("#itemLoadExamples4").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();   
+
   }  
 }
 
@@ -1283,13 +1377,47 @@ Page.getSelectedExample = function()
 {
   var inputExample = "";
   var theExampleType = Page.getExampleType();
+
+  // store the menu id of the example set as there will be more than one for class diagrams
+  var exampleSet = theExampleType;
+
+  // The default model type comes from the first 4 menu items created in umple.php
+  // But as we add additional special sets of examples, we need to define the exampleType
+  if(theExampleType.substring(0,5) == "extra") {
+    theExampleType = "cdModels";
+  }
+
   if(theExampleType == "cdModels") {
-    var requiresGvClass = false; // Some class diagrams  are too complex to edit
-    inputExample = jQuery("#inputExample option:selected").val();
-    if (inputExample == "GeometricSystem.ump") {
-      requiresGvClass = true;
+    // Jan 2025 change to ensure class diagrams by default use GvClass.
+    var requiresGvClass = true; // Some class diagrams  are too complex to edit
+
+    var exampleSetIDToLoad = "inputExample";
+    if (exampleSet == "extra1ModelsAD") {
+      exampleSetIDToLoad = "inputExample5";
+      requiresGvClass = true; // All these examples are too complex for E mode
     }
-    
+    else if (exampleSet == "extra1ModelsEL") {
+      exampleSetIDToLoad = "inputExample6";
+      requiresGvClass = true; // All these examples are too complex for E mode
+    }
+    else if (exampleSet == "extra1ModelsMP") {
+      exampleSetIDToLoad = "inputExample7";
+      requiresGvClass = true; // All these examples are too complex for E mode
+    }
+    else if (exampleSet == "extra1ModelsQZ") {
+      exampleSetIDToLoad = "inputExample8";
+      requiresGvClass = true; // All these examples are too complex for E mode
+    }
+
+    inputExample = jQuery("#"+exampleSetIDToLoad+" option:selected").val();
+
+    // Override special case to use G mode where E mode is too complex
+    // Commented out when making G mode default
+    // TODO: Consider tagging the examples by mode in umple.php rather than here
+    // if (inputExample == "GeometricSystem.ump") {
+    //  requiresGvClass = true;
+    // }
+
     if(requiresGvClass) {
       // if diagram type not a editable class diagram, set it 
       if(!Page.useGvClassDiagram) {
