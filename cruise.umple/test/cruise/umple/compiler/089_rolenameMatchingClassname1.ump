@@ -1,0 +1,5 @@
+class Temp{
+  1 -- 1 Other other;
+}
+
+class Other{}

@@ -21,6 +21,7 @@ strictness allow 46; // For now don't worry about special attribute types
 strictness allow 36; // don't worry about multiplicity of directed associations
 strictness allow 170; // allow custom constructors
 strictness allow 31; // dont worry about namespaces
+strictness allow 89; // dont worry about role name matching class name
 
 
 use Documenter.ump;

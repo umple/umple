@@ -91,6 +91,8 @@
 82: 4, "https://manual.umple.org/?E082ConflictingMethodModifersDeclaredForStateDependentMethod.html", Found conflicting modifiers for method '{0}'. Ignoring '{1}' and using '{2}' ;
 83: 2, "https://manual.umple.org/?E083InvalidMultivaluedAttributeInitialization.html", A derived attribute should not contain a list indicator. If you want to create a list initializer, it should terminate with a semicolon ;
 
+89: 4, "https://manual.umple.org/?W089AssociationRolenameMatchingClassname.html", Role name '{0}' is the same as the class name '{1}' it describes. Choose a role name that explains how the role is a special case of how this class is used ;
+
 # Model Constraints' Error messages
 90: 2, "https://manual.umple.org/?E090AttributeNameNotFoundConstraint.html", Attribute named {0} was not found in class {1}, as required in constraint ;
 91: 2, "https://manual.umple.org/?E091AttributeOfTypeNotFoundConstraint.html", Attribute with type {0} was not found in class {1}, as required in constraint ;
