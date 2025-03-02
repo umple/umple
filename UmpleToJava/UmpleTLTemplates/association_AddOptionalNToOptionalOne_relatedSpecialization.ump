@@ -48,7 +48,7 @@ class UmpleToJava {
       <<=gen.translate("associationMany",av)>>.remove(<<=gen.translate("parameterOne",av)>>);<<#for( TraceItem traceItemAssocRemove : traceItemAssocRemoves )#>><<= 
 (traceItemAssocRemove!=null&&traceItemAssocRemove.getIsPost()?"\n"+traceItemAssocRemove.trace(gen, av,"as_r", uClass,gen.translate("numberOfMethod",av)+"()"):"")
 >>
-      <<=gen.translate("parameterOne",av)>>.clear_<<=gen.relatedTranslate("associationOne",av)>>();
+      <<=gen.translate("parameterOne",av)>>.clear_<<# if (relMulChangedToOne) { #>><<=gen.relatedTranslate("associationMany",av)>><<# } else { #>><<=gen.relatedTranslate("associationOne",av)>><<# } #>>();
       wasRemoved = true;
     }
     <<# if (customRemovePostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customRemovePostfixCode,gen.translate("removeMethod",av)); 

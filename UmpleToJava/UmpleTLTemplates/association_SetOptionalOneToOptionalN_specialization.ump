@@ -16,7 +16,7 @@ class UmpleToJava {
 <<# if (!reqSetCode) { #>>
     wasSet = super.<<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
     <<# } else { #>>
-    super.clear_<<=gen.translate("associationOne",av)>>();
+    super.clear_<<# if (mulChangedToOne) { #>><<=gen.translate("associationMany",av)>><<# } else { #>><<=gen.translate("associationOne",av)>><<# } #>>();
     wasSet = <<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
     <<# } #>>
     <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 

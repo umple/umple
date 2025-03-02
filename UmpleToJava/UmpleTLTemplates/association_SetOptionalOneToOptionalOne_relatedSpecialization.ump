@@ -13,9 +13,9 @@ class UmpleToJava {
       <<=gen.translate("type",av)>> <<=gen.translate("parameterExisting",av)>> = <<# if (mulChangedToOne) { #>><<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>()<<# } else {#>>(<<=gen.translate("type",av)>>)<<=gen.translate("associationOne",av)>><<# } #>>;
       clear_<<=gen.translate("associationOne",av)>>();
       
-      if (<<=gen.translate("parameterExisting",av)>> != null && <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("getMethod",av)>>() != null)
-      {
-        <<=gen.translate("parameterExisting",av)>>.clear_<<=gen.relatedTranslate("associationOne",av)>>();
+      if (<<=gen.translate("parameterExisting",av)>> != null && <<=gen.translate("parameterExisting",av)>>.<<#if (relMulChangedToOne) { #>><<=gen.relatedTranslate("hasManyMethod",av)>>()<<# } else { #>><<=gen.relatedTranslate("getMethod",av)>>() != null<<# } #>>)
+      { 
+        <<=gen.translate("parameterExisting",av)>>.clear_<<# if (relMulChangedToOne) { #>><<=gen.relatedTranslate("associationMany",av)>><<# } else { #>><<=gen.relatedTranslate("associationOne",av)>><<# } #>>();
       }
       wasSet = true;
       <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
@@ -26,7 +26,7 @@ class UmpleToJava {
     <<=gen.translate("type",av)>> <<=gen.translate("parameterCurrent",av)>> = <<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>();
     if (<<=gen.translate("parameterCurrent",av)>> != null && !<<=gen.translate("parameterCurrent",av)>>.equals(<<=gen.translate("parameterNew",av)>>))
     {
-      <<=gen.translate("parameterCurrent",av)>>.clear_<<=gen.relatedTranslate("associationOne",av)>>();
+      <<=gen.translate("parameterCurrent",av)>>.clear_<<# if (relMulChangedToOne) { #>><<=gen.relatedTranslate("associationMany",av)>><<# } else { #>><<=gen.relatedTranslate("associationOne",av)>><<# } #>>();
     }
 
     <<=gen.translate("associationOne",av)>> = <<# if (!mulChangedToOne) { #>><<=gen.translate("parameterNew",av)>><<# } else { #>>new ArrayList<<<=scName>>>()<<# } #>>;
