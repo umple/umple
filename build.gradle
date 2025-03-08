@@ -1735,6 +1735,7 @@ task rtcppUserManualAndExampleTests {
             "ComplexStateMachine.ump",
             "ConcurrencyUsingDoActivities1.ump",
             "ConcurrencyUsingDoActivities2.ump",
+            "DistributedInheritance1.ump",
             "CoordinationStateMachine.ump",
             "DelegationPattern1.ump",
             "Dishwasher.ump",

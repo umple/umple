@@ -1,0 +1,11 @@
+Distributed Using Inheritance
+Distribution
+noreferences
+
+@@description
+
+<p>In this example Vendor and Supplier are made distributed since they are children classes of Agent.</p>
+
+@@example
+@@source manualexamples/DistributedInheritance1.ump
+@@endexample
