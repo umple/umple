@@ -1,0 +1,9 @@
+distributable forced; 
+
+class Person { 
+    String name;
+}
+
+class School {
+    String schoolName;
+}

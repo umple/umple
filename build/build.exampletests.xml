@@ -389,6 +389,10 @@
       <exclude name="ConcurrencyUsingDoActivities1.ump"/>
       <exclude name="ConcurrencyUsingDoActivities2.ump"/>
       <exclude name="DistributedInheritance1.ump"/>
+      <exclude name="DistributedClassInheritance.ump"/>
+      <exclude name="DistributedInterface2.ump"/>
+      <exclude name="DistributedOptions3.ump"/>
+      <exclude name="DistributedOptions4.ump"/>
       <exclude name="CoordinationStateMachine.ump"/>
       <exclude name="DelegationPattern1.ump"/>
       <exclude name="Dishwasher.ump"/>

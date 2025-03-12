@@ -1,0 +1,18 @@
+/* 
+In this example all 3 classes are distributable because Supplier and Vendor both inherent the disributable trait from the Person class. 
+*/  
+  
+class Person {  
+    distributable;  
+}  
+  
+class Supplier implements Person {  
+    String supplierID;
+    isA Person;
+}  
+  
+  
+class Vendor implements Person {  
+    String vendorId;
+    isA Person;
+} 

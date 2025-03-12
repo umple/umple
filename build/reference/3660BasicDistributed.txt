@@ -178,33 +178,6 @@ UmpleRuntime.getInstance();
 
 &nbsp;<br/>
 
-<h2>More options</h2>
-
-<p>
-One can set all classes to be distributable by using the following directive:
-</p>
-
-<pre>
-distributable forced;
-</pre>
-
-<p>
-One can forbid all classes to be distributable by using the following directive:
-</p>
-
-<pre>
-distributable off;
-</pre>
-
-<p>
-One can use Web services instead of RMI by adding ws after distributable keyword in the class:
-</p>
-
-<pre>
-distributable WS;
-</pre>
-
-<p>More examples and details about the distributable feature will be provided shortly.</p>
 
 @@syntax
 [[distribute]] [[distributable]]

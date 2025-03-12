@@ -1,0 +1,17 @@
+
+/*
+In this example the Supplier class and the Vendor class are both distributable because they implement a disributable interface.
+*/
+
+interface Person {
+    distributable;
+}
+
+class Supplier implements Person {
+    String supplierID;
+}
+
+
+class Vendor implements Person {
+    String vendorId;
+}
