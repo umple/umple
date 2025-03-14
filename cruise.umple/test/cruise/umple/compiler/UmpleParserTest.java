@@ -3410,6 +3410,14 @@ public class UmpleParserTest
     assertHasWarningsParse("089_rolenameMatchingClassname4.ump", 89);
  }
 
+ //Issue 2220
+ @Test
+ public void associationSpecializationMultiplicityError() {
+    assertFailedParse("181_associationSpecializationMultiplicity1.ump", 181);
+    assertFailedParse("181_associationSpecializationMultiplicity2.ump", 181);
+    assertParse("181_associationSpecializationMultiplicityFix.ump");
+ }
+
  // Issue 1008
  @Test
  public void namingConflictBetweenEnumerationAndClass() {

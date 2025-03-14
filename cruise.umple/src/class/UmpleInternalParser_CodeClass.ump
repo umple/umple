@@ -2807,7 +2807,6 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         if ( b2UB == -1 ) 
         { 
           secondUpperBoundOK = true;
-
         }
         
         if ( b1UB == -1 || (b1LB == 0 && b1UB != 1))
@@ -2826,8 +2825,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           boundsOK = true;
         }
         
-        if ( subclassOK && namesOK && boundsOK )
+        if ( subclassOK && namesOK )
         {
+          if (!boundsOK) {
+            // The user has either: entered an invalid bound, or reused a rolename unintentionally
+            if (!firstLowerBoundOK || !firstUpperBoundOK) {
+              getParseResult().addErrorMessage(new ErrorMessage(181, A.getTokenPosition(), currentLeftClass.getName(), currentRightClass.getName(), b1LB+"", b1UB+""));
+            } else if (!secondLowerBoundOK || !secondUpperBoundOK) {
+              getParseResult().addErrorMessage(new ErrorMessage(181, A.getTokenPosition(), currentLeftClass.getName(), currentRightClass.getName(), b2LB+"", b2UB+""));
+            }
+          }
+
           // then it's a redefinition
           // so B is a parent
           aFirstEnd.setSuperClassName(bFirstEnd.getClassName());
