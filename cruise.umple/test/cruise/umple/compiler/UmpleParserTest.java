@@ -3415,7 +3415,7 @@ public class UmpleParserTest
  public void associationSpecializationMultiplicityError() {
     assertFailedParse("181_associationSpecializationMultiplicity1.ump", 181);
     assertFailedParse("181_associationSpecializationMultiplicity2.ump", 181);
-    assertParse("181_associationSpecializationMultiplicityFix.ump");
+    assertSimpleParse("181_associationSpecializationMultiplicityFix.ump");
  }
 
  // Issue 1008
