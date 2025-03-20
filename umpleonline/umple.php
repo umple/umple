@@ -126,7 +126,7 @@ if (isset($_REQUEST["model"]) && explode("-", $_REQUEST["model"])[0] == "task")
 //
 $generateDefault="#genclass";
 if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] != "") {
-  $generateDefault="#gen".$_REQUEST['generateDefault'];
+  $generateDefault="#gen".strip_tags($_REQUEST['generateDefault']);
 }
 
 $output = $dataHandle->readData('model.ump');
