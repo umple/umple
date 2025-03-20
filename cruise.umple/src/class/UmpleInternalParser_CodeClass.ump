@@ -2771,6 +2771,25 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         secondLowerBoundOK = (b2LB <= a2LB);
         secondUpperBoundOK = (b2UB >= a2UB);
 
+        // Special case for * multiplicity; any upper bound is more specific than 0..*
+        if ( b1UB == -1 ) 
+        { 
+          firstUpperBoundOK = true;
+        }
+        if ( b2UB == -1 ) 
+        { 
+          secondUpperBoundOK = true;
+        }
+        // Issue 2220: 0..* is LESS specific than 0..X;
+        if ( a1UB == -1 && b1UB != -1) 
+        { 
+          firstUpperBoundOK = false;
+        }
+        if ( a2UB == -1 && b2UB != -1) 
+        { 
+          secondUpperBoundOK = false;
+        }
+
         Boolean firstMulChToOne = false;
         Boolean secondMulChToOne = false;
         Boolean firstMulChToN = false;
@@ -2797,23 +2816,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         // changed to MN (or M*)
         if (a2UB >= a2LB && a2LB != 0 && a2UB > 1 && ((b2LB == 0 && b2UB > 1) || b2UB == -1))
           secondMulChToN = true;    
-           
-        // special case for * multiplicity
-        if ( b1UB == -1 ) 
-        { 
-          firstUpperBoundOK = true;
-        }
-        
-        if ( b2UB == -1 ) 
-        { 
-          secondUpperBoundOK = true;
-        }
         
         if ( b1UB == -1 || (b1LB == 0 && b1UB != 1))
         { 
           secondNeedsSetCode = true;
         } 
-        
         if ( b2UB == -1 || (b2LB == 0 && b2UB != 1))
         {
           firstNeedsSetCode = true;
