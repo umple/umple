@@ -1,0 +1,25 @@
+E181 Association Specialization Invalid Multiplicity
+Errors and Warnings 100-999
+noreferences
+
+@@description
+
+<h2>Umple error raised when an association specialization has an invalid multiplicity</h2>
+
+<p> 
+When performing an Association Specialization, <a href="AssociationSpecializations.html">the multiplicities are more specific than that of the previously defined association.</a>
+If the multiplicities on either side of the specialized association are less strict/specific, the association is considered invalid and this error is raised.
+<br/><br/>
+If you intend to perform specialization, this error can be avoided by narrowing the multiplicity to be more specific than that of the superclass association.
+<br/>
+If you did not intend to perform specialization, you may have reused a rolename in the association. See <a href="E019DuplicateAssociation.html">E019</a>.
+</p>
+
+
+@@example 
+@@source manualexamples/E181AssociationSpecializationInvalidMultiplicity1.ump
+@@endexample
+
+@@example @@caption Solution to the above so the message no longer appears @@endcaption
+@@source manualexamples/E181AssociationSpecializationInvalidMultiplicity2.ump
+@@endexample

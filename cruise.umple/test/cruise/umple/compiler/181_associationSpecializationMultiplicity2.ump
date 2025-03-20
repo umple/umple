@@ -1,0 +1,8 @@
+class A {
+  0..1 vehicleA -- 0..2 Z temp;
+}
+class B {
+  isA A;
+  0..1 vehicleA -- 0..* Z temp;
+}
+class Z {}

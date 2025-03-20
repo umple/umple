@@ -438,6 +438,7 @@
       <exclude name="E018ReflexiveImmutable1.ump"/>
       <exclude name="E083InvalidMultivaluedAttributeInitialization1.ump"/>
       <exclude name="E180DuplicateRoleNameSubclass.ump"/>
+      <exclude name="E181AssociationSpecializationInvalidMultiplicity1.ump"/>
       <exclude name="E3504TemplateReferenceCannotBeResolved1.ump"/>
       <exclude name="E219NoBindingParameters.ump"/>
       <exclude name="E3507DuplicateEmitMethodName1.ump"/>

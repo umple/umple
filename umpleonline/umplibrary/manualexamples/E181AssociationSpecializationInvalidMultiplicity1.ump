@@ -1,0 +1,11 @@
+// This example generates the error
+
+class Vehicle {}
+class Wheel {}
+class Bicycle {isA Vehicle;}
+
+// Parent multiplicity of 0..1 to 0..2
+association { 0..1 Vehicle vehicleA -- 0..2 Wheel vehicleWheel;}
+
+// Broader child multiplicity of 0..1 to 0..3
+association { 0..1 Bicycle vehicleA -- 0..3 Wheel vehicleWheel;}
