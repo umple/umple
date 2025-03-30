@@ -25009,8 +25009,23 @@ var cm6 = (function (exports) {
    // Create a compartment for editable state
    const editableCompartment = new Compartment();
 
-   // Define the custom theme for active line and selection highlighting
+   // Code keyword highlighting style
+   const myHighlightStyle = HighlightStyle.define([
+     {tag: tags.typeName, color: "#9FCF63"}, // Green
+     {tag: tags.string, color: "#EB5F66"}, // Red
+     {tag: tags.lineComment, color: "#8F94A0"}, // Gray
+     {tag: tags.blockComment, color: "#B8922F"}, // Brown
+     {tag: tags.definitionKeyword, color: "#BA90E1"}, // Purple
+     {tag: tags.literal, color: "#BA90E1"}, // Purple
+     {tag: tags.keyword, color: "#306FBA"}, // Dark Blue
+     {tag: tags.heading, color: "#4FADEA"}, // Light Blue
+     {tag: tags.heading1, color: "#EA32D4"}, // Pink
+     {tag: tags.integer, color: "#009909"}, // Dark Green
 
+     {tag: tags.atom, color: "#EA983F"} // Test Orange
+   ]);
+
+   // Define the custom theme for active line and selection highlighting
    const myTheme = EditorView.theme({
      
      ".cm-activeLine": {
@@ -25022,7 +25037,6 @@ var cm6 = (function (exports) {
 
    });
 
-
    // Function to create the editor state
    function createEditorState(initialContents, options={}) {
      
@@ -25031,8 +25045,9 @@ var cm6 = (function (exports) {
        umple(),
        myTheme,
        lineNumbers(),
-       bracketMatching(),
+       bracketMatching({brackets: ["{","(","["]}),
        syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+       syntaxHighlighting(myHighlightStyle),
        EditorView.lineWrapping,
        EditorView.domEventHandlers({
          keydown(e, view) {
