@@ -4,13 +4,14 @@ noreferences
 
 @@description
 
-<p>Test</p>
+<p>By default, compiling an Umple system will result in set of classes that execute as a single application operating on objects that exist in a single Java virtual machine (VM) on a single computer (node). In this default mode of operation all method calls are made locally to methods in the same running VM.
+</p>
 
-<p>By default, compiling an Umple system will result in set of classes that execute as a single application operating on objects that exist in a single Java virtual machine (VM) on a single computer (node). In this default mode of operation all method calls are made locally to methods in the same running VM.</p>
+<p>However, by using the &apos;distributable&apos; keyword, modelers can instruct the Umple compiler to allow objects to be distributed to multiple running VMs most likely running on different computers (although they can be on the same computer if desired). In this mode, some method calls result in remote invocation of methods in a different VM using either Remote Method Invocation, or Web Services.
+</p>
 
-<p>However, by using the &apos;distributable&apos; keyword, modelers can instruct the Umple compiler to allow objects to be distributed to multiple running VMs most likely running on different computers (although they can be on the same computer if desired). In this mode, some method calls result in remote invocation of methods in a different VM using either Remote Method Invocation, or Web Services.</p>
-
-<p>To make an Umple model into a distributable one that runs on multiple VMs, the developer needs to perform the following. Each of these steps is described in more detail later.</p>
+<p>To make an Umple model into a distributable one that runs on multiple VMs, the developer needs to perform the following. Each of these steps is described in more detail later.
+</p>
 
 <ol>
 <li>Identify the distributable classes by adding <i>distributable;</i> to such classes and set a namespace.
@@ -191,6 +192,9 @@ UmpleRuntime.setThisNodeId(1); <br/>
 UmpleRuntime.setFileAddress(&quot;otherconfigFile.txt&quot;);<br/>
 UmpleRuntime.getInstance();
 </pre>
+
+
+
 
 
 
