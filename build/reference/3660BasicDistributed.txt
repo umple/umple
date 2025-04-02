@@ -4,17 +4,16 @@ noreferences
 
 @@description
 
-<p>By default, compiling an Umple system will result in set of classes that execute as a single application operating on objects that exist in a single Java virtual machine (VM) on a single computer (node). In this default mode of operation all method calls are made locally to methods in the same running VM.
-</p>
+<p>Test</p>
 
-<p>However, by using the &apos;distributable&apos; keyword, modelers can instruct the Umple compiler to allow objects to be distributed to multiple running VMs most likely running on different computers (although they can be on the same computer if desired). In this mode, some method calls result in remote invocation of methods in a different VM using either Remote Method Invocation, or Web Services.
-</p>
+<p>By default, compiling an Umple system will result in set of classes that execute as a single application operating on objects that exist in a single Java virtual machine (VM) on a single computer (node). In this default mode of operation all method calls are made locally to methods in the same running VM.</p>
 
-<p>To make an Umple model into a distributable one that runs on multiple VMs, the developer needs to perform the following. Each of these steps is described in more detail later.
-</p>
+<p>However, by using the &apos;distributable&apos; keyword, modelers can instruct the Umple compiler to allow objects to be distributed to multiple running VMs most likely running on different computers (although they can be on the same computer if desired). In this mode, some method calls result in remote invocation of methods in a different VM using either Remote Method Invocation, or Web Services.</p>
+
+<p>To make an Umple model into a distributable one that runs on multiple VMs, the developer needs to perform the following. Each of these steps is described in more detail later.</p>
 
 <ol>
-<li>Identify the distributable classes by adding <i>distributable;</i> to such classes.
+<li>Identify the distributable classes by adding <i>distributable;</i> to such classes and set a namespace.
 <li>Decide on groups of objects that are to exist together on  a given VM by grouping them into different runtime components 
 <li>Identifying the VMs and the groups of objects that must run on each VM using a configuration file.
 <li>Run each VM.
@@ -22,10 +21,11 @@ noreferences
 
 <h2>Distributable classes</h2>
 
-<p>The developer must first identify which classes are allowed to have objects on multiple machines using the &apos;distributable&apos; keyword. For example:
+<p>The developer must first identify which classes are allowed to have objects on multiple machines using the &apos;distributable&apos; keyword. They must also set a namespace. For example:
 </p>
 
 <pre>
+namespace example;
 class Customer{<br/>
 &nbsp;  distributable;<br/>
 }
@@ -137,9 +137,9 @@ Once you have unzipped the file navigate into the Java directory and create your
 To compile the code run the following command in the Java directory (in this example the inner folder is named ecommerce):
 </p>
 
-<p>
-javac ecommerce/*.java
-</p>
+<pre>
+javac ecommerce/&#42;.java
+</pre>
 
 <h2>Running the system</h2>
 
@@ -191,9 +191,6 @@ UmpleRuntime.setThisNodeId(1); <br/>
 UmpleRuntime.setFileAddress(&quot;otherconfigFile.txt&quot;);<br/>
 UmpleRuntime.getInstance();
 </pre>
-
-
-
 
 
 

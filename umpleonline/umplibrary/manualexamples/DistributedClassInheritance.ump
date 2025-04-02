@@ -2,6 +2,8 @@
 In this example all 3 classes are distributable because Supplier and Vendor both inherent the disributable trait from the Person class. 
 */  
   
+namespace example;
+
 class Person {  
     distributable;  
 }  

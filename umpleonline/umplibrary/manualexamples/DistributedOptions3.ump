@@ -1,4 +1,5 @@
 distributable forced; 
+namespace example;
 
 class Person { 
     String name;

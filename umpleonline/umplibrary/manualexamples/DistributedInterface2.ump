@@ -3,6 +3,8 @@
 In this example the Supplier class and the Vendor class are both distributable because they implement a disributable interface.
 */
 
+namespace example;
+
 interface Person {
     distributable;
 }

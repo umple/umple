@@ -16,6 +16,8 @@ noreferences
 
 <pre> distributable WS; </pre>
 
+<p>Note: Web services is not currently working due to an issue with outdated dependencies.</p>
+
 
 @@example
 @@source manualexamples/DistributedOptions3.ump
