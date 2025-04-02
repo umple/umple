@@ -2069,6 +2069,19 @@ Action.setColor=function(classCode,className,color){
   }
 }
 
+//Add filter to a specific class from menu item - gazi
+Action.filterOnOneClass=function(className){
+  Action.setFilterFull(Page.filterWordsOutput+className, true); // passing the classname to setFilterFull to immitate 'include classname' text input
+  jQuery("#filtervalues").val(Page.filterWordsOutput+className);
+  Action.removeContextMenu();
+}
+
+Action.clearFilterOnOneClass=function(className){
+  Page.filterWordsOutput=Page.filterWordsOutput.replace(className+"!@", "");
+  Action.redrawDiagram();
+  Action.removeContextMenu();
+}
+
 // Get the positioning information for a given class as stored in the
 // Umple model. 
 Action.getGvPosition =function(positioningCode, className) {
@@ -2535,9 +2548,27 @@ Action.displayMenu = function(event) {
     return;
   }
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color"];
+  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color", "Filter this Class"];
   var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
-  var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")"];
+  var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")", "Action.filterOnOneClass(\""+elemText+"\")"];
+  // If filter is applied then need to remove Filter option from menu to prevent repeatetive calls - gazi.
+  if(Page.filterWordsOutput.length>0){
+    Page.filterWordsOutput.split("!@").forEach(function(aFilterWord){
+      if(aFilterWord.toLowerCase()==elemText.toLowerCase()){
+        //remove the filter option from the menu
+        //using array.includes("subString") instead of splice() - because menu index can alter in future.
+        rowContent=rowContent.filter(menuItem=>!menuItem.includes("Filter this Class"));
+        //add the Remove Filter option in the menu
+        rowContent.push("Remove Filter");
+        //remove the function of the Filter option
+        rowFuncs=rowFuncs.filter(funcItem=>!funcItem.includes("Action.filterOnOneClass"));
+        //add function for Remove Filter.
+        rowFuncs.push("Action.clearFilterOnOneClass(\""+elemText+"\")");
+      }
+    })
+
+  }
+
 
   menu.style.zIndex = "1000";
   menu.style.border = "1px solid #ccc";

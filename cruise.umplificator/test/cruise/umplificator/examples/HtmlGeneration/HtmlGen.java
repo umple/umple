@@ -1,8 +1,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.21.0.4666 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
 
-import java.util.regex.Pattern;
 import java.util.*;
 
 // line 104 "HtmlGeneration.ump"
@@ -17,13 +16,13 @@ public class HtmlGen
   public static final String TEXT_0 = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
   public static final String TEXT_1 = "xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\"";
   public static final String TEXT_2 = NL + "<html ";
-  public static final String TEXT_3 = " >" + NL + "  <head>" + NL + "  ";
-  public static final String TEXT_4 = "    ";
-  public static final String TEXT_5 = NL + "  ";
-  public static final String TEXT_6 = "  </head>" + NL + "  <body>" + NL + "  ";
-  public static final String TEXT_7 = "    ";
-  public static final String TEXT_8 = NL + "  ";
-  public static final String TEXT_9 = "  </body>" + NL + "</html>" + NL;
+  public static final String TEXT_3 = " >" + NL + "  <head>";
+  public static final String TEXT_4 = NL + "    ";
+  public static final String TEXT_5 = "";
+  public static final String TEXT_6 = NL + "  </head>" + NL + "  <body>";
+  public static final String TEXT_7 = NL + "    ";
+  public static final String TEXT_8 = "";
+  public static final String TEXT_9 = NL + "  </body>" + NL + "</html>" + NL;
 
   //------------------------
   // MEMBER VARIABLES
@@ -31,7 +30,6 @@ public class HtmlGen
 
   //HtmlGen Attributes
   private HtmlNode firstNode;
-  private int _lineNumber;
 
   //HtmlGen Associations
   private List<HtmlNode> headerNodes;
@@ -43,11 +41,11 @@ public class HtmlGen
 
   public HtmlGen()
   {
-    _lineNumber = 1;
     headerNodes = new ArrayList<HtmlNode>();
     bodyNodes = new ArrayList<HtmlNode>();
-    // line 112 "HtmlGeneration.ump"
+    // line 113 "HtmlGeneration.ump"
     firstNode = new HtmlTextNode(filehead());
+    // END OF UMPLE AFTER INJECTION
   }
 
   //------------------------
@@ -62,24 +60,11 @@ public class HtmlGen
     return wasSet;
   }
 
-  public boolean set_lineNumber(int a_lineNumber)
-  {
-    boolean wasSet = false;
-    _lineNumber = a_lineNumber;
-    wasSet = true;
-    return wasSet;
-  }
-
   public HtmlNode getFirstNode()
   {
     return firstNode;
   }
-
-  public int get_lineNumber()
-  {
-    return _lineNumber;
-  }
-
+  /* Code from template association_GetMany */
   public HtmlNode getHeaderNode(int index)
   {
     HtmlNode aHeaderNode = headerNodes.get(index);
@@ -112,7 +97,7 @@ public class HtmlGen
     int index = headerNodes.indexOf(aHeaderNode);
     return index;
   }
-
+  /* Code from template association_GetMany */
   public HtmlNode getBodyNode(int index)
   {
     HtmlNode aBodyNode = bodyNodes.get(index);
@@ -142,12 +127,12 @@ public class HtmlGen
     int index = bodyNodes.indexOf(aBodyNode);
     return index;
   }
-
+  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfHeaderNodes()
   {
     return 0;
   }
-
+  /* Code from template association_AddUnidirectionalMany */
   public boolean addHeaderNode(HtmlNode aHeaderNode)
   {
     boolean wasAdded = false;
@@ -167,7 +152,7 @@ public class HtmlGen
     }
     return wasRemoved;
   }
-
+  /* Code from template association_AddIndexControlFunctions */
   public boolean addHeaderNodeAt(HtmlNode aHeaderNode, int index)
   {  
     boolean wasAdded = false;
@@ -199,12 +184,12 @@ public class HtmlGen
     }
     return wasAdded;
   }
-
+  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfBodyNodes()
   {
     return 0;
   }
-
+  /* Code from template association_AddUnidirectionalMany */
   public boolean addBodyNode(HtmlNode aBodyNode)
   {
     boolean wasAdded = false;
@@ -224,7 +209,7 @@ public class HtmlGen
     }
     return wasRemoved;
   }
-
+  /* Code from template association_AddIndexControlFunctions */
   public boolean addBodyNodeAt(HtmlNode aBodyNode, int index)
   {  
     boolean wasAdded = false;
@@ -330,12 +315,12 @@ public class HtmlGen
   }
 
   private String _createSpacesString(int numSpaces){
-      StringBuilder spaces =  new StringBuilder();
+    
+  StringBuilder spaces =  new StringBuilder();
       for(int i=0; i <numSpaces; i++) {
           spaces.append(" ");
       }
       return spaces.toString();
-    
   }
 
   public StringBuilder _filehead(Integer numSpaces, StringBuilder sb){
@@ -428,10 +413,7 @@ public class HtmlGen
 
   public String toString()
   {
-	  String outputString = "";
-    return super.toString() + "["+
-            "_lineNumber" + ":" + get_lineNumber()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "firstNode" + "=" + (getFirstNode() != null ? !getFirstNode().equals(this)  ? getFirstNode().toString().replaceAll("  ","    ") : "this" : "null")
-     + outputString;
+    return super.toString() + "["+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "firstNode" + "=" + (getFirstNode() != null ? !getFirstNode().equals(this)  ? getFirstNode().toString().replaceAll("  ","    ") : "this" : "null");
   }
 }
