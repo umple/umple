@@ -123,6 +123,23 @@ Vendor v= new Vendor (&quot;Vendor 1&quot;, UmpleRuntime.getComponent(&quot;Comp
 
 &nbsp;<br/>
 
+<h2>Building the system</h2>
+
+<p>
+Once you have generated the code in umpleonline you can download the zip file.
+</p>
+
+<p>
+Once you have unzipped the file navigate into the Java directory and create your configuration.txt file.
+</p>
+
+<p>
+To compile the code run the following command in the Java directory (in this example the inner folder is named ecommerce):
+</p>
+
+<p>
+javac ecommerce/*.java
+</p>
 
 <h2>Running the system</h2>
 
@@ -148,6 +165,10 @@ On machine 1:
 <pre>
 java ecommerce.UmpleRuntime 1
 </pre>
+
+<p>
+Note that the command will display connection refused errors until you have started every node.
+</p>
 
 <p>
 It is also possible to change the configuration file&apos;s default address:

@@ -1735,7 +1735,7 @@ task rtcppUserManualAndExampleTests {
             "ComplexStateMachine.ump",
             "ConcurrencyUsingDoActivities1.ump",
             "ConcurrencyUsingDoActivities2.ump",
-            "DistributedInheritance1.ump",
+            "ExtendedDistributedExample.ump",
             "DistributedClassInheritance.ump",
             "DistributedInterface2.ump",
             "DistributedOptions3.ump",

@@ -6,13 +6,12 @@ class Person {
     distributable;  
 }  
   
-class Supplier implements Person {  
+class Supplier {  
     String supplierID;
     isA Person;
 }  
   
-  
-class Vendor implements Person {  
+class Vendor {  
     String vendorId;
     isA Person;
 } 

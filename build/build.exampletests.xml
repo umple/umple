@@ -388,7 +388,7 @@
       <exclude name="ComplexStateMachine.ump"/>
       <exclude name="ConcurrencyUsingDoActivities1.ump"/>
       <exclude name="ConcurrencyUsingDoActivities2.ump"/>
-      <exclude name="DistributedInheritance1.ump"/>
+      <exclude name="ExtendedDistributedExample.ump"/>
       <exclude name="DistributedClassInheritance.ump"/>
       <exclude name="DistributedInterface2.ump"/>
       <exclude name="DistributedOptions3.ump"/>

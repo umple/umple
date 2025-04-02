@@ -2,7 +2,6 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 package ecommerceRMI1;
 import java.rmi.Remote;
-import javax.jws.WebMethod;
 import ecommerceRMI1.Agent;
 import java.util.*;
 import ecommerceRMI1.Supplier;

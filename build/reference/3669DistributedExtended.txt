@@ -9,6 +9,16 @@ Below is a more in depth model using the distributed feature that you can load i
 and better understand distributed systems.
 </p>
 
+<p>
+The following will be put in the configuration.txt file to run the components on 3 separate nodes:
+</p>
+
+<pre>
+{id=0; port=8081; http://localhost; {component1,Manager}}<br/>
+{id=1; port=8082; http://localhost; {component2,component4}}<br/>
+{id=2; port=8083; http://localhost; {component3,SystemTracer}}<br/>
+</pre>
+
 @@example
-@@source manualexamples/DistributedInheritance1.ump
+@@source manualexamples/ExtendedDistributedExample.ump
 @@endexample

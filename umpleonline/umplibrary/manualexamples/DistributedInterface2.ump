@@ -7,11 +7,12 @@ interface Person {
     distributable;
 }
 
-class Supplier implements Person {
+class Supplier {
+    isA Person;
     String supplierID;
 }
 
-
-class Vendor implements Person {
+class Vendor {
+    isA Person;
     String vendorId;
 }
