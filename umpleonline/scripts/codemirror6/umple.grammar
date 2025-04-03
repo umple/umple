@@ -336,8 +336,11 @@ ConcreteMethodDeclaration {
 }
 
 // Hack: Skip others for now. To be re-considered!!!
+// Issue 2180 improved hack: Allowed methods (assumed to return true) or attributes inside a constraint
 ConstraintExpr {
-  "{" FakeContraint "}"
+  Name
+  | MethodName ParameterList
+  | "{" FakeContraint "}"
 }
 
 LinkingOpBody {
