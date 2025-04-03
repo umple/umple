@@ -46,7 +46,6 @@ class JavaObjectFactoryInterfaceGenerator {
     packageSet.add("javax.jws.soap.SOAPBinding");
     packageSet.add("javax.jws.soap.SOAPBinding.Style");
   }
-  packageSet.add("javax.jws.WebMethod");
   for(UmpleClass uClass: model.getUmpleClasses())
   { GeneratedClass gClass = uClass.getGeneratedClass();
     for (Depend depend : uClass.getDepends())

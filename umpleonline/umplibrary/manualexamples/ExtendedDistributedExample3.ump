@@ -1,0 +1,193 @@
+/*
+The following is an example of how distributed can be used to run a system on multiple nodes with a main class.
+
+Example Taken from
+https://ruor.uottawa.ca/bitstream/10393/37143/5/Zakariapour_Amid_2018_thesis.pdf
+*/
+
+namespace ecommerceRMI1;
+distributable 1 on;
+class Warehouse
+{ 
+	distributable;
+}
+class Agent
+{
+	distributable;
+	* -- * Warehouse;
+}
+class Customer
+{
+	distributable;
+	public Order orderProduct(String productType,String vendorName)
+	{
+		for(Vendor v: getVendors())
+		{
+			if(v.getName().equals(vendorName))
+				return v.makeOrder(self,v.findProduct(new ProductType(productType)));
+		}
+		return null;
+	}
+}
+
+class Vendor
+{   
+	public Order makeOrder(Customer aCustomer, Product aProduct)
+	{	if(aProduct==null)
+			return null;
+		Order aOrder= new Order(aProduct);
+		aOrder.setCustomer(aCustomer);
+		aOrder.setVendor(self);
+		return aOrder;
+	}
+}
+class Main
+{
+  public static void main (String[] args){
+  	Supplier supplier1= new Supplier("supplier1",UmpleRuntime.getComponent("component1"));
+	Supplier supplier2= new Supplier("supplier2",UmpleRuntime.getComponent("component2"));
+	Warehouse warehouse1=new Warehouse("warehouse1",UmpleRuntime.getComponent("component2"));
+	Warehouse warehouse2=new Warehouse("warehouse2",UmpleRuntime.getComponent("component3"));
+	Vendor vendor1= new Vendor("vendor1",UmpleRuntime.getComponent("component3"));
+	Vendor vendor2= new Vendor("vendor2",UmpleRuntime.getComponent("component4"));
+	Customer customer1= new Customer("Customer",UmpleRuntime.getComponent("component5"));
+	Customer customer2= new Customer("Customer",UmpleRuntime.getComponent("component6"));
+	customer1.addVendor(vendor1);
+	customer1.addVendor(vendor2);
+	customer2.addVendor(vendor2);
+	vendor1.addWarehous(warehouse1);
+	vendor2.addWarehous(warehouse1);
+	vendor2.addWarehous(warehouse2);
+	
+	supplier1.addWarehous(warehouse1);
+	supplier2.addWarehous(warehouse2);
+	supplier1.createBulk("freezer",1000,"0013M2X");
+	supplier2.createBulk("freezer",1000,"0023M2X");
+	supplier1.createBulk("microwave",1000,"23M2X");	
+	supplier2.createBulk("microwave",1000,"13M2X");
+	supplier1.createBulk("stove",1000,"M2X");
+	supplier2.createBulk("stove",1000,"M3X");
+	supplier1.createBulk("laptop",1000,"LL3L");
+	supplier2.createBulk("laptop",1000,"LL4L");
+			
+
+	customer1.orderProduct("freezer","vendor1");
+	customer2.orderProduct("freezer","vendor2");
+	customer1.orderProduct("stove","vendor1");
+	customer2.orderProduct("laptop","vendor2");	
+	customer2.orderProduct("laptop","vendor2");
+	customer1.orderProduct("laptop","vendor2");
+
+
+	UmpleRuntime.stopAll();
+	
+  }
+}
+class Warehouse
+{ 
+	name;
+	public Product findProduct(ProductType productType)
+	{
+		for(ProductTypeInWarehouse ptiw:getProductTypeInWarehouses())
+			{
+				if(ptiw.getProductType().equals(productType))
+				{
+					for(Product p : ptiw.getProducts())
+						return p;	
+				}
+			}
+		return null;	
+	}
+	public void addProduct(Product p)
+	{
+		for(ProductTypeInWarehouse ptiw : getProductTypeInWarehouses())
+		{
+			if(ptiw.getProductType().equals(p.getProductType()))
+			{
+				ptiw.addProduct(p);
+				return;
+			}
+		}
+		ProductTypeInWarehouse ptiw = new ProductTypeInWarehouse(p.getProductType());
+		ptiw.addProduct(p);
+		addProductTypeInWarehous(ptiw);	
+	}
+}
+class Agent
+{	
+	name;
+}
+class Order
+{
+	* -- 0..1 Customer;
+	* -- 0..1 Vendor;
+    * -> 1 Product;
+}
+class Supplier
+{
+	isA Agent;
+	0..1 -> * Product;
+	public void createBulk(productType,Integer number,serialNumber)
+	{
+		for(int i=0; i<number; i+=1)
+		{
+			String postfix=String.valueOf(i);
+			putInWarehouse(createProduct(serialNumber+postfix,productType),getWarehous(0));
+		}
+	}
+	public Warehouse createWarehouse(name)
+	{
+		Warehouse warehouse=new Warehouse(name);
+		addWarehous(warehouse);
+		return warehouse;
+	}
+	public Product createProduct(serialNumber, String productType)
+	{
+		Product aProduct=new Product(serialNumber,new ProductType(productType));
+		addProduct(aProduct);
+		return aProduct; 
+	}
+	public void putInWarehouse(Product aProduct,Warehouse warehouse)
+	{
+		warehouse.addProduct(aProduct);
+		removeProduct(aProduct);
+	}
+}
+class Vendor
+{   isA Agent;
+	public Product findProduct(ProductType productType)
+	{
+		for(Warehouse w:getWarehouses())
+		{
+			Product p= w.findProduct(productType);
+			if(p!=null)
+				return p;		
+		}
+		return null;
+	}
+}
+class Product
+{	
+	immutable;
+	serialNumber;
+	* -> 1 ProductType;
+}
+class ProductType
+{
+	immutable;
+	name;
+	key {name};
+}
+class ProductTypeInWarehouse
+{
+	* -> 1 ProductType;
+	* <- 0..1 Warehouse;
+	0..1 -> * Product;
+	
+}
+class Customer
+{
+	name;
+	* -- * Vendor;
+
+}

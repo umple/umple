@@ -1,0 +1,11 @@
+Inheriting Distributable from a class
+Distribution
+noreferences
+
+@@description
+
+<p>If a class is declared distributable then all children classes of that parent class are also distributable. </p>
+
+@@example
+@@source manualexamples/DistributedClassInheritance1.ump
+@@endexample
