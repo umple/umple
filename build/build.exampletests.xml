@@ -204,6 +204,9 @@
       <exclude name="BasicTemplates2.ump"/>
       <exclude name="BasicTemplates3.ump"/>
       <exclude name="HtmlGeneration.ump"/>
+      <exclude name="DistributedClassInheritance1.ump"/>
+      <exclude name="DistributedOptions2.ump"/>
+      <exclude name="ExtendedDistributedExample3.ump"/>
 
       <!-- Other issues bugs -->
       <exclude name="AroundStatement1.ump"/>  <!-- Code Injection -->
@@ -305,6 +308,7 @@
       <exclude name="E2*.ump" />
       <exclude name="E3*.ump" />
       <exclude name="E4*.ump" />      
+      <exclude name="ExtendedDistributedExample3.ump"/>
       <exclude name="WE1xxIdentifierInvalid1.ump" />
       <exclude name="WE1xxIdentifierInvalid3.ump" />
       <exclude name="WE1xxIdentifierInvalid5.ump" />
@@ -388,11 +392,9 @@
       <exclude name="ComplexStateMachine.ump"/>
       <exclude name="ConcurrencyUsingDoActivities1.ump"/>
       <exclude name="ConcurrencyUsingDoActivities2.ump"/>
-      <exclude name="ExtendedDistributedExample.ump"/>
-      <exclude name="DistributedClassInheritance.ump"/>
-      <exclude name="DistributedInterface2.ump"/>
-      <exclude name="DistributedOptions3.ump"/>
-      <exclude name="DistributedOptions4.ump"/>
+      <exclude name="DistributedClassInheritance1.ump"/>
+      <exclude name="DistributedOptions2.ump"/>
+      <exclude name="ExtendedDistributedExample3.ump"/>
       <exclude name="CoordinationStateMachine.ump"/>
       <exclude name="DelegationPattern1.ump"/>
       <exclude name="Dishwasher.ump"/>

@@ -1,6 +1,0 @@
-namespace example;
-
-class Person {
-    distributable WS;
-    String name;
-}

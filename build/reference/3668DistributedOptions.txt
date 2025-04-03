@@ -20,10 +20,5 @@ noreferences
 
 
 @@example
-@@source manualexamples/DistributedOptions3.ump
+@@source manualexamples/DistributedOptions2.ump
 @@endexample
-
-@@example @@caption Using web services instead of RMI @@endcaption
-@@source manualexamples/DistributedOptions4.ump
-@@endexample
-
