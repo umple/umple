@@ -25045,7 +25045,7 @@ var cm6 = (function (exports) {
        umple(),
        myTheme,
        lineNumbers(),
-       bracketMatching({brackets: ["{","(","["]}),
+       bracketMatching(),
        syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
        syntaxHighlighting(myHighlightStyle),
        EditorView.lineWrapping,
