@@ -530,7 +530,7 @@ Page.initLabel = function(id)
 // BOOKMARK: adding basic event handlers to model and layout editors:: calls to Action...
 Page.initUmpleTextArea = function()
 {
-  var modelEditor = jQuery("#umpleModelEditorText");
+  var modelEditor = jQuery("#newEditor");
   var layoutEditor = jQuery("#umpleLayoutEditorText");
   
   modelEditor.keyup(function(eventObject){
@@ -543,9 +543,9 @@ Page.initUmpleTextArea = function()
     Action.setjustUpdateNowtoSaveLater(false);
     Action.umpleCodeMirrorTypingActivity("layoutEditor");
   }); // Fixes Issue#1571 Editing on the layout editor will not update the Umple diagram
-  modelEditor.focus(function(){Action.focusOn("umpleModelEditorText", true);});
+  modelEditor.focusin(function(){Action.focusOn("umpleModelEditorText", true);});
   layoutEditor.focus(function(){Action.focusOn("umpleLayoutEditorText", true);});
-  modelEditor.blur(function(){Action.focusOn("umpleModelEditorText", false);});
+  modelEditor.focusout(function(){Action.focusOn("umpleModelEditorText", false);});
   layoutEditor.blur(function(){Action.focusOn("umpleLayoutEditorText", false);});
   
   Page.initCodeMirrorEditor();
