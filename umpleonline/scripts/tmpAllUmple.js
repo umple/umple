@@ -8715,6 +8715,7 @@ Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
+Action.neighbors=[];
 
 const clientDebuggerFlag = false;
 
@@ -10767,15 +10768,69 @@ Action.setColor=function(classCode,className,color){
 
 //Add filter to a specific class from menu item - gazi
 Action.filterOnOneClass=function(className){
-  Action.setFilterFull(Page.filterWordsOutput+className, true); // passing the classname to setFilterFull to immitate 'include classname' text input
-  jQuery("#filtervalues").val(Page.filterWordsOutput+className);
+  if(Page.filterWordsOutput.length==0 || Page.filterWordsOutput.includes("~")){
+    // Precedence over Filter class - getting rid of other filters like hide class
+    Action.setFilterFull(className, true); 
+  }else{
+    Action.setFilterFull(`${Page.filterWordsOutput} ${className}`, true); // passing the classname to setFilterFull to immitate 'include classname' text input
+  }
+  
+  var textInputValues = jQuery('#filtervalues').val();
+  if(textInputValues.includes('*') || textInputValues.includes("~")){
+    jQuery("#filtervalues").val(className);
+  }else{
+    jQuery("#filtervalues").val(textInputValues+" "+className);
+  }
   Action.removeContextMenu();
+
+
 }
 
 Action.clearFilterOnOneClass=function(className){
-  Page.filterWordsOutput=Page.filterWordsOutput.replace(className+"!@", "");
-  Action.redrawDiagram();
+
+  Page.filterWordsOutput=Page.filterWordsOutput.replace(`${className}!@`, "");
+  Action.setFilterFull(Page.filterWordsOutput.trim(), true);
+  let textInputValues = jQuery('#filtervalues').val();
+  if(textInputValues.length-className.length<2){
+    jQuery("#filtervalues").val('*');
+  }else{
+    let removedClassTextInputValues=textInputValues.replace(className, "");
+    jQuery("#filtervalues").val(removedClassTextInputValues);
+  }
   Action.removeContextMenu();
+
+}
+
+Action.hideClass=function(className){
+
+  if(Page.filterWordsOutput.includes("*")){
+    Action.setFilterFull(`~${className}`, true); 
+  }else{
+    Action.setFilterFull(Page.filterWordsOutput+"~"+className, true); 
+  }
+
+  var textInputValues = jQuery('#filtervalues').val();
+  if(textInputValues.includes('*')){
+    let inputReplace="~"+className;
+    jQuery("#filtervalues").val(inputReplace);
+  }else{
+    jQuery("#filtervalues").val(textInputValues+" ~"+className);
+  }
+  Action.removeContextMenu();
+
+}
+
+Action.unHideClasses=function(){
+  let unhideWordOutputs=Action.removeHiddenClasses(Page.filterWordsOutput);
+  let textInputValues = Action.removeHiddenClasses(jQuery('#filtervalues').val());
+  Action.setFilterFull(unhideWordOutputs, true); 
+  jQuery("#filtervalues").val(textInputValues);
+  Action.removeContextMenu();
+}
+
+Action.removeHiddenClasses=function(textInput){
+  const unHideRegex = /~\w+!?@?/g;
+  return textInput.replace(unHideRegex, "").replace(/\s+/g, "").trim();
 }
 
 // Get the positioning information for a given class as stored in the
@@ -10801,6 +10856,7 @@ Action.getGvPosition =function(positioningCode, className) {
     // This should be an error
     return null;
   }
+
   var positionStruct = {
     all: theMatch[0],
     assoc1: theMatch[1],
@@ -11244,26 +11300,99 @@ Action.displayMenu = function(event) {
     return;
   }
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color", "Filter this Class"];
+  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color", "Filter Class", "Hide Class"];
   var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
-  var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")", "Action.filterOnOneClass(\""+elemText+"\")"];
+  var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")", "Action.filterOnOneClass(\""+elemText+"\")", "Action.hideClass(\""+elemText+"\")"];
+
+
+  // var elems=document.getElementsByClassName("node");
+  // var selectedElement=null;
+  // var nearby=[];
+  var positioningCode = jQuery("#umpleLayoutEditorText").val();
+
+  var currentClasses=[];
+  var showNeighbors=[];
+  var elems=document.getElementsByClassName("node");
+  for(let i=0;i<elems.length;i++){
+    var currentClassForPos = Action.getGvClassNameFromNode(elems[i]);
+    currentClasses.push(currentClassForPos);
+  }
+  console.log('chosen', Action.neighbors[elemText]);
+  console.log('all', Action.neighbors)
+  console.log('current', currentClasses);
+
+  // let maxThreshold = -Infinity;
+  // const parts = positioningCode.split(' ');
+  
+  // for (let i = 0; i < parts.length; i++) {
+  //   const num = parseFloat(parts[i]);
+  
+  //   if (!isNaN(num)) {
+  //     if (num > maxThreshold) {
+  //       maxThreshold = num;
+  //     }
+  //   }
+  // }
+
+  // for(let i=0;i<elems.length;i++){
+  //   var currentClassForPos = Action.getGvClassNameFromNode(elems[i]);
+  //   if(selectedElement!=null){
+  //     if(Action.isWithinRadarZone(positioningCode,selectedElement, elems[i], maxThreshold/2)){
+  //       nearby.push(Action.getGvClassNameFromNode(elems[i]))
+  //     }
+  //   }else{
+  //     if(elemText==currentClassForPos){
+  //       selectedElement=currentClassForPos;
+  //     }
+  //   }
+    
+
+  // }
+
+  // console.log(nearby);
+
+  // UmpleSystem.merge();
+  // console.log(UmpleSystem.findIn(obj.id));
+  // UmpleSystem.merge(null);
+  // console.log(UmpleSystem.find(obj.id));
+
+
+ 
   // If filter is applied then need to remove Filter option from menu to prevent repeatetive calls - gazi.
   if(Page.filterWordsOutput.length>0){
     Page.filterWordsOutput.split("!@").forEach(function(aFilterWord){
       if(aFilterWord.toLowerCase()==elemText.toLowerCase()){
         //remove the filter option from the menu
         //using array.includes("subString") instead of splice() - because menu index can alter in future.
-        rowContent=rowContent.filter(menuItem=>!menuItem.includes("Filter this Class"));
+        rowContent=rowContent.filter(menuItem=>!menuItem.includes("Filter Class"));
+        
         //add the Remove Filter option in the menu
         rowContent.push("Remove Filter");
         //remove the function of the Filter option
         rowFuncs=rowFuncs.filter(funcItem=>!funcItem.includes("Action.filterOnOneClass"));
+
         //add function for Remove Filter.
         rowFuncs.push("Action.clearFilterOnOneClass(\""+elemText+"\")");
+
+
+      rowContent=rowContent.filter(menuItem=>!menuItem.includes("Hide Class"));
+      rowFuncs=rowFuncs.filter(funcItem=>!funcItem.includes("Action.hideClass"));
+      }
+
+      // console.log();
+
+      if(aFilterWord.includes('~')){
+        // Add context menu to show the hidden classes
+        if(!rowContent.includes("Unhide Class(es)")){
+          rowContent.push("Unhide Class(es)");
+          rowFuncs.push("Action.unHideClasses()");
+        }
       }
     })
 
   }
+
+
 
 
   menu.style.zIndex = "1000";
@@ -11324,6 +11453,26 @@ Action.displayMenu = function(event) {
   });
   document.body.appendChild(menu);
 }
+
+
+Action.isWithinRadarZone=function(positioningCode,target, other, Threshold=100){
+
+  
+  var targetClassPos = Action.getGvPosition(positioningCode, target);
+  
+
+  var otherClassName = Action.getGvClassNameFromNode(other);
+  var otherClassPos = Action.getGvPosition(positioningCode, otherClassName);
+
+  const withinX = Math.abs(otherClassPos.x - targetClassPos.x) <= Threshold;
+  const withinY = Math.abs(otherClassPos.y - targetClassPos.y) <= Threshold;
+  // console.log("target", targetClassPos.x, targetClassPos.y);
+  // console.log("other:",otherClassName, otherClassPos.x, otherClassPos.y);
+  // console.log("result",Math.abs(otherClassPos.x - targetClassPos.x),Math.abs(otherClassPos.y - targetClassPos.y) )
+  return withinX && withinY;
+  
+}
+
 
 Action.displayAssociMenu = function(event, associationLink) {
   const regex = /Action\.selectAssociation\('([^']+)'\)/;
@@ -12150,6 +12299,7 @@ Action.unselectAll = function()
 
 Action.classClicked = function(event)
 {
+
   // DEBUG F
   if (!Action.diagramInSync) return;
   Action.focusOn("umpleCanvas", true);
@@ -13304,7 +13454,7 @@ Action.setFilterFull = function(newFilter, doRedraw)
   // Reset first
   Page.filterWordsOutput = "";
   
-  var filterWordsInput=newFilter.split(" ");
+  var filterWordsInput=newFilter.split(" ").filter(word => word.trim() !== '');
 
   filterWordsInput.forEach(function(foundFilterWord) {
     var actualFilterWord = foundFilterWord;
@@ -14136,7 +14286,6 @@ Action.updateUmpleDiagramCallback = function(response)
       var newSystem = Json.toObject(diagramCode);
       UmpleSystem.merge(newSystem);
       UmpleSystem.update(); 
-
       //Apply readonly styles
       if (Page.readOnly) 
       {
@@ -14252,7 +14401,7 @@ Action.updateUmpleDiagramCallback = function(response)
           minRectLeft=Math.min(minRectLeft,rectLeft);
           minRectTop=Math.min(minRectTop,rectTop);
         }
-
+    
         let diffX=minUmpleLeft-minRectLeft;
         let diffY=minUmpleTop-minRectTop;
 // DEBUG
@@ -14287,6 +14436,75 @@ Action.updateUmpleDiagramCallback = function(response)
           TabControl.getCurrentHistory().save(Page.getUmpleCode(), "moveClass");
         }
       }
+
+      // generate association/relation mapping - to show neighbor classes from context menu
+
+
+
+      const umpleCode=Page.getUmpleCode();
+      const lines = umpleCode.split('\n');
+      const result = {};
+      let currentClass = null;
+    
+      const classRegex = /^class\s+(\w+)/;
+      const assocRegex = /\s*(--\*|--|\*--\*|->|<-)\s*/;
+      const isARegex = /^isA\s+([A-Za-z0-9_,\s]+);?/;
+    
+      for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+    
+          // Stop processing at the end marker
+          if (line.includes('//$?[End_of_model]$?')) {
+            break;
+         }
+    
+          // Detect class definition
+          const classMatch = line.match(classRegex);
+          if (classMatch) {
+            currentClass = classMatch[1];
+            if (!result[currentClass]) result[currentClass] = [];
+            continue;
+          }
+    
+          // If no class is currently tracked, skip
+          if (!currentClass) continue;
+    
+            // Handle isA line
+            const isAMatch = line.match(isARegex);
+            if (isAMatch) {
+              const isAClasses = isAMatch[1].split(',').map(cls => cls.trim().replace(/[^a-zA-Z0-9_]/g, ''));
+              result[currentClass].push(...isAClasses);
+              continue;
+            }
+    
+          // Detect association
+          const assocSplit = line.split(assocRegex);
+          if (assocSplit.length >= 3) {
+            const rightPart = assocSplit[2].trim();
+            const parts = rightPart.split(/\s+/);
+    
+            // Usually formatted like: [multiplicity, ClassName, fieldName]
+            const classCandidate = parts.length > 1 ? parts[1] : parts[0];
+            // Clean up any trailing semicolons or symbols
+            const cleanClass = classCandidate.replace(/[^a-zA-Z0-9_]/g, '');
+            if (cleanClass) {
+              result[currentClass].push(cleanClass);
+            }
+          }
+    
+        }
+
+        // Add reverse links (cross-referencing)
+        for (const [cls, dependencies] of Object.entries(result)) {
+          for (const dep of dependencies) {
+            if (!result[dep]) result[dep] = new Set();
+            result[dep].push(cls);
+          }
+        }
+
+        Action.neighbors=result;
+
+
       Action.setupPinch();
     }
     //Display structure diagram
