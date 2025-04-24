@@ -14,7 +14,7 @@ noreferences
 </p>
 
 <ol>
-<li>Identify the distributable classes by adding <i>distributable;</i> to such classes.
+<li>Identify the distributable classes by adding <i>distributable;</i> to such classes and set a namespace.
 <li>Decide on groups of objects that are to exist together on  a given VM by grouping them into different runtime components 
 <li>Identifying the VMs and the groups of objects that must run on each VM using a configuration file.
 <li>Run each VM.
@@ -22,10 +22,11 @@ noreferences
 
 <h2>Distributable classes</h2>
 
-<p>The developer must first identify which classes are allowed to have objects on multiple machines using the &apos;distributable&apos; keyword. For example:
+<p>The developer must first identify which classes are allowed to have objects on multiple machines using the &apos;distributable&apos; keyword. They must also set a namespace. For example:
 </p>
 
 <pre>
+namespace example;
 class Customer{<br/>
 &nbsp;  distributable;<br/>
 }
@@ -123,6 +124,23 @@ Vendor v= new Vendor (&quot;Vendor 1&quot;, UmpleRuntime.getComponent(&quot;Comp
 
 &nbsp;<br/>
 
+<h2>Building the system</h2>
+
+<p>
+Once you have generated the code in umpleonline you can download the zip file.
+</p>
+
+<p>
+Once you have unzipped the file navigate into the Java directory and create your configuration.txt file.
+</p>
+
+<p>
+To compile the code run the following command in the Java directory (in this example the inner folder is named ecommerce):
+</p>
+
+<pre>
+javac ecommerce/&#42;.java
+</pre>
 
 <h2>Running the system</h2>
 
@@ -148,6 +166,10 @@ On machine 1:
 <pre>
 java ecommerce.UmpleRuntime 1
 </pre>
+
+<p>
+Note that the command will display connection refused errors until you have started every node.
+</p>
 
 <p>
 It is also possible to change the configuration file&apos;s default address:
@@ -178,33 +200,6 @@ UmpleRuntime.getInstance();
 
 &nbsp;<br/>
 
-<h2>More options</h2>
-
-<p>
-One can set all classes to be distributable by using the following directive:
-</p>
-
-<pre>
-distributable forced;
-</pre>
-
-<p>
-One can forbid all classes to be distributable by using the following directive:
-</p>
-
-<pre>
-distributable off;
-</pre>
-
-<p>
-One can use Web services instead of RMI by adding ws after distributable keyword in the class:
-</p>
-
-<pre>
-distributable WS;
-</pre>
-
-<p>More examples and details about the distributable feature will be provided shortly.</p>
 
 @@syntax
 [[distribute]] [[distributable]]

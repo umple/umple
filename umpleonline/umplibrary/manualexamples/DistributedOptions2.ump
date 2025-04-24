@@ -1,0 +1,10 @@
+distributable forced; 
+namespace example;
+
+class Person { 
+    String name;
+}
+
+class School {
+    String schoolName;
+}

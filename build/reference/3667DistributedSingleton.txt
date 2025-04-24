@@ -1,0 +1,30 @@
+Distributable Singleton
+Distribution
+noreferences
+
+@@description
+
+<p> 
+In a distributed system, a singleton class could mean two different semantics. One is that the class
+has only one instance on each node. The other semantic is to assume that there is only one instance
+of the object in the whole system. The developer can choose which semantic to be used for the
+singleton class. If a singleton class is also distributable, it means there should be only one instance of
+the class in the whole system and remotely accessible by other nodes. Otherwise, there can be one
+instance on every node. <br><br>
+
+The target runtime
+component of the singleton object is the name of the class by default. All of the getInstance() calls in
+the entire system will be redirected to a single object.<br><br>
+</p>
+
+<pre> SingletonClass.getInstance().getName(); <br><br> </pre>
+
+
+<p> 
+Alternatively, a specific runtime
+component can be given as a parameter of the getInstance() method. In this case, there will
+be a single object on each node. <br><br>
+</p>
+
+<pre> SingletonClass.getInstance(UmpleRuntime.getComponent(“component1”)).getName(); </pre>
+
