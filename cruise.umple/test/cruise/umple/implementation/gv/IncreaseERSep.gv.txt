@@ -4,6 +4,7 @@ digraph "IncreaseERSep" {
   nodesep =2.0;
   ranksep =2.0;
   sep =1.0;
+   edge [minlen=1 headclip="true"];
 
   // Class: X
   "X" [shape=rectangle, label="   X   ",
