@@ -1,6 +1,7 @@
 digraph "RelationshipNN" {
   rankdir="BT"
   node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+   edge [minlen=1 headclip="true"];
 
   // Class: X
   "X" [shape=rectangle, label="   X   ",
