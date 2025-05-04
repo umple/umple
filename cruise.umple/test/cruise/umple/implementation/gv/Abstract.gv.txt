@@ -1,17 +1,18 @@
 digraph "Abstract" {
-  rankdir="BT"
-  node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+ rankdir="BT"
+    node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+     edge [minlen=1 headclip="true"];
 
   // Class: X
-  "X" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    X    </td></tr><tr><td cellpadding="4">&laquo;abstract&raquo;</td></tr><hr/><tr><td align="left" href="" title="String a&#13;">  a : String  </td></tr></table>>,
+  "X" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    X </td></tr><tr><td cellpadding="4">&laquo;abstract&raquo;</td></tr><hr/><tr><td align="left" href="" title="String a&#13;">  a : String  </td></tr></table>>,
    tooltip="class X
 "];
 
   // Class: Y
-  "Y" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    Y    </td></tr><hr/><tr><td align="left" href="" title="String b&#13;">  b : String  </td></tr></table>>,
+  "Y" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    Y </td></tr><hr/><tr><td align="left" href="" title="String b&#13;">  b : String  </td></tr></table>>,
    tooltip="class Y
 "];
-  "Y" -> "X" [arrowhead="empty"; samehead="gen"];
+  "Y" -> "X" [arrowhead="empty"; samehead="";];
 
 
   // All associations
