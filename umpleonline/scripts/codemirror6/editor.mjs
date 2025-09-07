@@ -12,8 +12,9 @@ import { javascript } from "@codemirror/lang-javascript"
 import { umple } from "./umple.js"
 import { EditorView, ViewPlugin, ViewUpdate, lineNumbers, keymap, Decoration } from "@codemirror/view"
 import { receiveUpdates, sendableUpdates, collab, getSyncedVersion } from "@codemirror/collab"
-import { syntaxHighlighting, defaultHighlightStyle, bracketMatching } from "@codemirror/language"
+import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, HighlightStyle } from "@codemirror/language"
 import { SearchCursor, RegExpCursor } from "@codemirror/search";
+import {tags} from "@lezer/highlight";
 
 
 const codemirrorDebuggerFlag = false;
@@ -21,8 +22,23 @@ const codemirrorDebuggerFlag = false;
 // Create a compartment for editable state
 const editableCompartment = new Compartment();
 
-// Define the custom theme for active line and selection highlighting
+// Code keyword highlighting style
+const myHighlightStyle = HighlightStyle.define([
+  {tag: tags.typeName, color: "#9FCF63"}, // Green
+  {tag: tags.string, color: "#EB5F66"}, // Red
+  {tag: tags.lineComment, color: "#8F94A0"}, // Gray
+  {tag: tags.blockComment, color: "#B8922F"}, // Brown
+  {tag: tags.definitionKeyword, color: "#BA90E1"}, // Purple
+  {tag: tags.literal, color: "#BA90E1"}, // Purple
+  {tag: tags.keyword, color: "#306FBA"}, // Dark Blue
+  {tag: tags.heading, color: "#4FADEA"}, // Light Blue
+  {tag: tags.heading1, color: "#EA32D4"}, // Pink
+  {tag: tags.integer, color: "#009909"}, // Dark Green
 
+  {tag: tags.atom, color: "#EA983F"} // Test Orange
+]);
+
+// Define the custom theme for active line and selection highlighting
 const myTheme = EditorView.theme({
   
   ".cm-activeLine": {
@@ -34,7 +50,6 @@ const myTheme = EditorView.theme({
 
 });
 
-
 // Function to create the editor state
 function createEditorState(initialContents, options={}) {
   
@@ -45,6 +60,7 @@ function createEditorState(initialContents, options={}) {
     lineNumbers(),
     bracketMatching(),
     syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+    syntaxHighlighting(myHighlightStyle),
     EditorView.lineWrapping,
     EditorView.domEventHandlers({
       keydown(e, view) {

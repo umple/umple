@@ -91,6 +91,8 @@
 82: 4, "https://manual.umple.org/?E082ConflictingMethodModifersDeclaredForStateDependentMethod.html", Found conflicting modifiers for method '{0}'. Ignoring '{1}' and using '{2}' ;
 83: 2, "https://manual.umple.org/?E083InvalidMultivaluedAttributeInitialization.html", A derived attribute should not contain a list indicator. If you want to create a list initializer, it should terminate with a semicolon ;
 
+89: 4, "https://manual.umple.org/?W089AssociationRolenameMatchingClassname.html", Role name '{0}' is the same as the class name '{1}' it describes. Choose a role name that explains how the role is a special case of how this class is used ;
+
 # Model Constraints' Error messages
 90: 2, "https://manual.umple.org/?E090AttributeNameNotFoundConstraint.html", Attribute named {0} was not found in class {1}, as required in constraint ;
 91: 2, "https://manual.umple.org/?E091AttributeOfTypeNotFoundConstraint.html", Attribute with type {0} was not found in class {1}, as required in constraint ;
@@ -136,6 +138,9 @@
 
 170: 3, "https://manual.umple.org/?CustomConstructor.html", Custom constructors should normally not be provided in Umple. Consider using before or after keywords to adjust what the constructor does, or adjusting constructor parameters using keywords like lazy.;
 180: 2, "https://manual.umple.org/?E180DuplicateAssociationNameClassHierarchy", Class '{0}' is a subclass of class '{1}' and may not have multiple associations with the same name '{2}' ;
+
+# Messages related to association specializations
+181: 2, "https://manual.umple.org/?E181AssociationSpecializationInvalidMultiplicity.html", Invalid multiplicity for association specialization between classes '{0}' and '{1}'. Enter a multiplicity narrower than {2}..{3} or change the rolenames to remove the specialization;
 
 # Messages related to traits starting with 200
 200: 2, "https://manual.umple.org/?E200TraitIdentifierInvalid.html", The name of trait '{0}' must be alphanumeric and start with an alpha character, or _ . ;
@@ -222,7 +227,6 @@
 1511 : 2, "https://manual.umple.org/?E1511InlineMixsetIsNotSupported.html", Inline syntax for the mixset '{0}' is not supported. Please enclose the body of '{0}' with curly brackets. ; 
 1512 : 4, "https://manual.umple.org/?W1512CodeLabelsInsideMethodAreNotUnique.html", Multiple code labels having the same name should be avoided for the method '{0}' at line '{1}'. Please consider unique names for code labels. ; 
 1513 : 4, "https://manual.umple.org/?W1513MixsetUsedWithNoDeclaration.html", The mixset '{0}' has a use statement at line '{1}', however there is no declaration for this mixset. To avoid this warning, you may remove the use statement or you may add a declaration for mixset '{0}'. ; 
-
 
 # Messages to be emitted when embedded code from another language is compiled and you are passing on the error. These have not yet been activated.
 2001: 5, "https://manual.umple.org/?W20xxErrorinEmbeddedCode.html", Error in Java embedded in Umple: '{0}' ;

@@ -255,7 +255,7 @@ trait TComparable<TP2>{
 
 //For geometric objects that cannot have color for edges.
 trait TDrawable {
-  0..1 -> * Color color;
+  0..1 -> * Color;
   Integer getRed() {return 1;}
   Integer getBlue() {return 2;}
   Integer getGreen() {return 3;}

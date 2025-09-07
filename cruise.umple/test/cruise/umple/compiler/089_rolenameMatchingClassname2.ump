@@ -1,0 +1,5 @@
+class Temp{}
+
+class Other{}
+
+association { * Temp -> 1 Other other;}

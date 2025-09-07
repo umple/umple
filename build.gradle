@@ -1876,6 +1876,7 @@ task rtcppUserManualAndExampleTests {
             "E105EnumerationInComposition1.ump",
             "E023AttributeAssociationNameClash1.ump",
             "E214Twosametemplateparameters.ump",
+            "E181AssociationSpecializationInvalidMultiplicity1.ump",
             "src-gen-umple",
             "allExamplesList.txt"]
         runUserManualAndExampleTests("rtcpp", "RTCpp", excludes)
