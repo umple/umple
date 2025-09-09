@@ -38,6 +38,8 @@
       else $isSuccess = TRUE;
     }
   }
+  // Force output so far to be emitted
+  flush();
   
   if($isSuccess) {
     echo "<p>Successfully established connection to server\n";
@@ -57,12 +59,27 @@
       $PATH .= ":/usr/local/bin";
     }
     putenv("PATH=$PATH");
+    
+    echo " Path: ";
+    passthru("which java 2>&1");
  
     echo "<p>Dot/Graphviz version: ";
     passthru("dot -V 2>&1");
 
+    echo " Path: ";
+    passthru("which dot 2>&1");
+
+    echo "\n<p>gcc version: ";
+    passthru("gcc --version 2>&1");
+
+    echo " Path: ";
+    passthru("which gcc 2>&1");
+
     echo "\n<p>Docker version: ";
     passthru("docker --version 2>&1");
+
+    echo " Path: ";
+    passthru("which docker 2>&1");
 
     echo "<span style =\"Color: blue\">";
     echo "\n<p> Git commit: ";
@@ -81,7 +98,10 @@
       $isSuccess - FALSE;
     }
   }
-  
+
+  // Force output so far to be emitted
+  flush();
+
   if($isSuccess) {
     echo "<p>Successfully sent log command to server. Results follow\n<pre>\n";  
     socket_set_option($theSocket, SOL_SOCKET, SO_RCVTIMEO,array("sec"=>25,"usec"=>500000) ); 
@@ -112,6 +132,8 @@
     socket_close($theSocket);
   }
 
+  // Force output so far to be emitted, since docker can hang
+  flush();
   echo "<h4 style =\"Color: blue\">Umple collab server status</h4>";
 
   // Obtain the config info and iterate through each config
