@@ -80,6 +80,7 @@ document.write('<script type="text/javascript" src="scripts/debugger.js"></scrip
 //Syntax Highlighter
 document.write('<script type="text/javascript" src="scripts/shCore.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushJava.js"></script>');
+document.write('<script type="text/javascript" src="scripts/shBrushPython.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushPhp.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushRuby.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushSql.js"></script>');
