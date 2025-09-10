@@ -87,7 +87,8 @@ def buildAliases = [
    'packageUmpleonline' : [
     'packageAllJars',
     'compileUmpleSelf',
-    'deployUmpleonline'
+    'deployUmpleonline',
+    'copyTxlUmpleonline'
    ],
    'genPackages' : [
         'packageDeb',
@@ -957,6 +958,19 @@ task deployUmpleonline(type: Copy) {
   
     dependsOn ':jar'
     dependsOn ':packageSync'
+}
+
+task copyTxlUmpleonline(type: Copy) {
+    group = "Custom"
+    description = "Copying the generated ctxl file to the umpleonline scripts folder"
+    from "${rootProject.projectDir.toString()}/UmpleToPython/txl/umpleJavaToPython.ctxl"
+    into "${rootProject.projectDir.toString()}/umpleonline/scripts/txl/"
+    doFirst {
+        println("Copying umpleJavaToPython.ctxl to umpleonline/scripts/")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
 }
 
 
