@@ -461,6 +461,7 @@
   <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
     <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <copy file="${dist.dir}/${dist.umple.jar}" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
+    <copy file="UmpleToPython/txl/umpleJavaToPython.ctxl" tofile="umpleonline/scripts/txl/umpleJavaToPython.ctxl" overwrite="true" />
     <antcall target="compressAllScripts"/>
   </target>
 
