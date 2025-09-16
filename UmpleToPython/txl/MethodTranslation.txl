@@ -303,16 +303,16 @@ function addNamespaceFunctionImport seeking [id]
     replace [repeat statement]
         stmts [repeat statement]
     import Package [repeat package_statement]
-    deconstruct * [imported] Package
-        packageName [id]
     construct pacakgeLen [number]
-        _ [# packageName]
+        _ [length Package]
+    deconstruct Package
+        'package packageName [imported] ';
     where
         stmts [containsId seeking]
-    where
-        pacakgeLen [> 0]
-    construct seekingPackage [id]
-        packageName [+ '.] [+ seeking]
+    where not
+        pacakgeLen [= 0]
+    construct seekingPackage [method_import]
+        packageName '. seeking
     construct imp [import_statement]
         'from seekingPackage 'import seeking
     where not 
