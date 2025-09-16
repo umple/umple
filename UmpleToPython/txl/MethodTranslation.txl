@@ -769,29 +769,39 @@ function addOverloadArg javaParam [method_parameter]
             [translateArrayType type]
             [translateListType type]
             [translateBaseTypesOverload type]
+            [translateNestedType type]
     deconstruct optAdding  
         adding [overload_data_arg]
     by
         res [. adding]
 end function
 
+% Fallback function to match nested identifiers
+function translateNestedType javaType [nested_identifier]
+    replace [opt overload_data_arg]
+    by
+        javaType
+end function
+
 %Translates a java base type to a python overloading arg
 function translateBaseTypesOverload javaType [nested_identifier]
     replace [opt overload_data_arg]
+    deconstruct javaType
+        baseType [id]
     by
-        javaType [translateBaseTypes]
+        baseType [translateBaseTypes]
 end function
 
 %Translates java base type to python
 function translateBaseTypes 
-    replace [nested_identifier]
-        baseType [nested_identifier]
+    replace [id]
+        baseType [id]
     by
         baseType [translateStringType] [translateBooleanType] [translateDoubleType]
 end function
 
 function translateStringType
-    replace [nested_identifier]
+    replace [id]
         'String
     by 
         'str
@@ -825,14 +835,14 @@ function translateListType javaType [nested_identifier]
 end function
 
 function translateBooleanType 
-    replace [nested_identifier]
+    replace [id]
         'boolean
     by  
         'bool
 end function
 
 function translateDoubleType 
-    replace [nested_identifier]
+    replace [id]
         'double
     by  
         'float
