@@ -749,9 +749,10 @@ end define
 
 %Overload data arg describes the type of an parameter. All together a repeat of these is used to describe the types of all the parameters of a method
 %The types used are pythonic types (so bool instead of boolean). 
-%The optional second id is to specify if the arg is a list. (ex: "list bool" is a list of booleans)
+%The optional first id is to specify if the arg is a list. (ex: "list bool" is a list of booleans)
+% Issue 2233: Switched [id] to [nested_identifier] to allow nested types
 define overload_data_arg
-    [id] [opt id]
+    [opt id] [nested_identifier]
 end define
 
 %Given a java param, adds the appropriate python type to the list of method param types
@@ -768,10 +769,18 @@ function addOverloadArg javaParam [method_parameter]
             [translateArrayType type]
             [translateListType type]
             [translateBaseTypesOverload type]
+            [translateNestedType type]
     deconstruct optAdding  
         adding [overload_data_arg]
     by
         res [. adding]
+end function
+
+% Fallback function to match nested identifiers
+function translateNestedType javaType [nested_identifier]
+    replace [opt overload_data_arg]
+    by
+        javaType
 end function
 
 %Translates a java base type to a python overloading arg
@@ -788,7 +797,7 @@ function translateBaseTypes
     replace [id]
         baseType [id]
     by
-        baseType [translateStringType]  [translateBooleanType] [translateDoubleType]
+        baseType [translateStringType] [translateBooleanType] [translateDoubleType]
 end function
 
 function translateStringType
@@ -1006,7 +1015,7 @@ end function
 function createNormalTypeCheck arg [overload_data_arg] counter [number]
     replace [opt value]
     deconstruct arg
-        type [id]
+        type [nested_identifier]
     construct castedType [value]
         type
     by
@@ -1016,7 +1025,7 @@ end function
 function createListTypeCheck arg [overload_data_arg] counter [number]
     replace [opt value]
     deconstruct arg
-        'list type [id]
+        'list type [nested_identifier]
     construct castedType [value]
         type
     by
