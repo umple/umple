@@ -146,7 +146,7 @@ class Mentor():
         return wasAdded
 
     def delete(self):
-        from Student import Student
+        from example.Student import Student
         copyOfStudents = self._students.copy()
         self._students.clear()
         for aStudent in copyOfStudents:
