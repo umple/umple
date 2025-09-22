@@ -295,13 +295,45 @@ function addFunctionImports
         stmts [repeat statement] 
     import possibleFunctionImports [repeat id]
     by
-        stmts [addFunctionImport each possibleFunctionImports][addTimerImport each possibleFunctionImports]
+        stmts [addFunctionImport each possibleFunctionImports][addTimerImport each possibleFunctionImports][addNamespaceFunctionImport each possibleFunctionImports]
+end function
+
+%Creates specific function import if needed
+function addNamespaceFunctionImport seeking [id]
+    replace [repeat statement]
+        stmts [repeat statement]
+    import Package [repeat package_statement]
+    construct pacakgeLen [number]
+        _ [length Package]
+    deconstruct Package
+        'package packageName [imported] ';
+    where
+        stmts [containsId seeking]
+    where not
+        pacakgeLen [= 0]
+    construct seekingPackage [method_import]
+        packageName '. seeking
+    construct imp [import_statement]
+        'from seekingPackage 'import seeking
+    where not 
+        seeking [= 'Timer]
+    where not 
+        seeking [= 'TimedEventHandler]
+    construct funcImport [repeat statement]
+        imp
+    by
+        funcImport [. stmts]
 end function
 
 %Creates specific function import if needed
 function addFunctionImport seeking [id]
     replace [repeat statement]
         stmts [repeat statement]
+    import Package [repeat package_statement]
+    construct pacakgeLen [number]
+        _ [length Package]
+    where
+        pacakgeLen [= 0]
     where 
         stmts [containsId seeking]
     construct imp [import_statement]
