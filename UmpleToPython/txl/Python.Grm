@@ -165,8 +165,13 @@ redefine class_body_decl
     | [opt constructor] [repeat method_declaration]
 end redefine
 
+define method_import
+    [imported] '. [id]
+end define
+
 redefine import_statement
     ...
+    |   'from [method_import] 'import [list nested_identifier] [NL]
     |   'from [nested_identifier] 'import [list nested_identifier] [NL]
     |   'import [id] [NL]
 end redefine 

@@ -131,7 +131,7 @@ class Student():
         return wasSet
 
     def delete(self):
-        from Mentor import Mentor
+        from example.Mentor import Mentor
         copyOfMentors = self._mentors.copy()
         self._mentors.clear()
         for aMentor in copyOfMentors:
