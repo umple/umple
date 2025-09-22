@@ -124,7 +124,7 @@ class Mentor():
         self._id = aId
         wasSet = True
         if not (anOldId is None) :
-            Mentor.mentorsById.remove(anOldId)
+            Mentor.mentorsById.pop(anOldId, None)
         Mentor.mentorsById[aId] = self
         return wasSet
 
@@ -288,7 +288,7 @@ class Mentor():
         return self._lBool
 
     def delete(self):
-        Mentor.mentorsById.remove(self.getId())
+        Mentor.mentorsById.pop(self.getId(), None)
 
     def __str__(self):
         return str(super().__str__()) + "[" + "x" + ":" + str(self.getX()) + "," + "str" + ":" + str(self.getStr()) + "," + "str2" + ":" + str(self.getStr2()) + "," + "someName" + ":" + str(self.getSomeName()) + "," + "lDoub" + ":" + str(self.getLDoub()) + "," + "lBool" + ":" + str(self.getLBool()) + "," + "name" + ":" + str(self.getName()) + "," + "i" + ":" + str(self.getI()) + "," + "derivedTwiceI" + ":" + str(self.getDerivedTwiceI()) + "," + "id" + ":" + str(self.getId()) + "," + "p" + ":" + str(self.getP()) + "," + "q" + ":" + str(self.getQ()) + "," + "r" + ":" + str(self.getR()) + "," + "s" + ":" + str(self.getS()) + "]" + str(os.linesep) + "  " + "d" + "=" + str((((self.getD().__str__().replaceAll("  ", "    ")) if not self.getD() == self else "this") if not (self.getD() is None) else "null")) + str(os.linesep) + "  " + "tt" + "=" + str((((self.getTt().__str__().replaceAll("  ", "    ")) if not self.getTt() == self else "this") if not (self.getTt() is None) else "null")) + str(os.linesep) + "  " + "u" + "=" + str((((self.getU().__str__().replaceAll("  ", "    ")) if not self.getU() == self else "this") if not (self.getU() is None) else "null")) + str(os.linesep) + "  " + "v" + "=" + str((((self.getV().__str__().replaceAll("  ", "    ")) if not self.getV() == self else "this") if not (self.getV() is None) else "null")) + str(os.linesep) + "  " + "w" + "=" + (((self.getW().__str__().replaceAll("  ", "    ")) if not self.getW() == self else "this") if not (self.getW() is None) else "null")

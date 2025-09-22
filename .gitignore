@@ -41,6 +41,9 @@ testbed_cpp/test/runAllTests
 
 umpleonline/scripts/collab-server-config.js
 
+# duplicate txl file
+umpleonline/scripts/txl/umpleJavaToPython.ctxl
+
 # generated Umple code that is not saved
 src-gen-umple/
 src-gen/

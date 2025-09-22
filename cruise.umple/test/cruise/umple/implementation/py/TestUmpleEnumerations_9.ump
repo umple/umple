@@ -1,0 +1,9 @@
+class Foo {
+	enum Baz {A, B}
+	Baz myBaz;
+	String myStr;
+}
+
+class Bar {
+	1 -- * Foo;
+}
