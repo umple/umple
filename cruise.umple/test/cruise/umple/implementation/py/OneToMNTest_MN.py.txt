@@ -38,7 +38,7 @@ class Pupil():
 
     # Code from template association_SetOneToAtMostN 
     def setMentor(self, aMentor):
-        from Mentor import Mentor
+        from example.Mentor import Mentor
         wasSet = False
         #Must provide mentor to pupil
         if aMentor is None :
