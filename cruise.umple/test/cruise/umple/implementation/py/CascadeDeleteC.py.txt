@@ -1,38 +1,57 @@
-from D import D
-from B import B
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 
 class C():
-    def __init__(self, aMyD, aB):
-        if aMyD is None or aMyD.getC() != None :
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #C Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    @classmethod
+    def alternateConstructor(cls, aMyD, aB):
+        self = cls.__new__(cls)
+        self._b = None
+        self._myD = None
+        if aMyD is None or not (aMyD.getC() is None) :
             raise RuntimeError ("Unable to create C due to aMyD. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
-
         self._myD = aMyD
         didAddB = self.setB(aB)
         if not didAddB :
             raise RuntimeError ("Unable to create myC due to b. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        return self
 
     def __init__(self, aB):
-        self._myD = D(self)
+        from D import D
+        self._b = None
+        self._myD = None
+        self._myD = D.alternateConstructor(self)
         didAddB = self.setB(aB)
         if not didAddB :
             raise RuntimeError ("Unable to create myC due to b. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetOne 
     def getMyD(self):
         return self._myD
 
+    # Code from template association_GetOne 
     def getB(self):
         return self._b
 
+    # Code from template association_SetOneToMany 
     def setB(self, aB):
         wasSet = False
         if aB is None :
             return wasSet
-
         existingB = self._b
         self._b = aB
-        if existingB != None and not existingB.equals(aB) :
+        if not (existingB is None) and not existingB == aB :
             existingB.removeMyC(self)
-
         self._b.addMyC(self)
         wasSet = True
         return wasSet
@@ -40,11 +59,9 @@ class C():
     def delete(self):
         existingMyD = self._myD
         self._myD = None
-        if not(existingMyD is None) :
+        if not (existingMyD is None) :
             existingMyD.delete()
-
         placeholderB = self._b
         self._b = None
-        if not(placeholderB is None) :
+        if not (placeholderB is None) :
             placeholderB.removeMyC(self)
-
