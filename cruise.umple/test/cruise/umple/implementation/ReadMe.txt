@@ -19,3 +19,9 @@ Items in language subdirectories:
          - This is required to run the tests; any .java file in /implementation that is not inherited will not be run for this language.
          - Although discouraged, tests can be ignored for this language using the @Ignore tag (See Issue 757)
          - Tests can be added to this file with @Test in order to run them only for this language. 
+
+
+
+Note: 
+The Java subdirectory does not need to inherit from the /implementation .java files.
+This is because TemplateTest.java languagePath variable has "java" as a default value
