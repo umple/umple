@@ -78,12 +78,6 @@ public class PythonClassTemplateTest extends ClassTemplateTest
     SampleFileWriter.assertFileContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"), actual);
   }
 
-
-  @Test
-  public void immutableNotLazyAttributeConstructor(){
-	  assertUmpleTemplateFor("py/ImmutableNotLazyAttributeConstructor.ump","py/StudentImmutableNotLazyTest.py.txt","Student");
-  }
-
   @Test
   public void StateMachineImplementsInterface(){
     assertUmpleTemplateFor("py/ClassTemplateTest_StateMachineImplementsInterface.ump", 

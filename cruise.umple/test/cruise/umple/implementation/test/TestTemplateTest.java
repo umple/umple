@@ -53,6 +53,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 		SampleFileWriter.destroy(pathToInput + "/ClassTemplateTest_CodeInjectionsParametersUnspecified_ModelTest.umpt");
 		SampleFileWriter.destroy(pathToInput + "/ClassTemplateTest_CodeInjectionsSingleLine_ModelTest.umpt");
 		SampleFileWriter.destroy(pathToInput + "/ClassTemplateTest_NoNamespace_ModelTest.umpt");
+		SampleFileWriter.destroy(pathToInput + "/ClassTemplateTest_ImmutableNotLazyAttributeConstructor_ModelTest.umpt");
 		SampleFileWriter.destroy(pathToInput + "/FooTest.umpt");
 		SampleFileWriter.destroy(pathToInput + "/MethodCommentWithEmptyLines_ModelTest.umpt");
 		SampleFileWriter.destroy(pathToInput + "/MethodInlineComment_ModelTest.umpt");

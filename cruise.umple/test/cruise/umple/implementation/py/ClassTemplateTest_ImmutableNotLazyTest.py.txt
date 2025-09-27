@@ -1,5 +1,5 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
 class Student():
@@ -24,6 +24,8 @@ class Student():
     # Code from template attribute_SetImmutable 
     def setNumber2(self, aNumber2):
         wasSet = False
+        if not self._canSetNumber2 :
+            return False
         self._canSetNumber2 = False
         self._number2 = aNumber2
         wasSet = True
@@ -40,4 +42,3 @@ class Student():
 
     def __str__(self):
         return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "," + "number2" + ":" + str(self.getNumber2()) + "]"
-

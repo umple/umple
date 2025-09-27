@@ -421,5 +421,11 @@ public class ClassTemplateTest extends TemplateTest
 	  assertUmpleTemplateFor("ClassTemplateTest_LazyAttributeOnImmutableClass.ump",languagePath + "/ClassTemplateTest_LazyAttributeOnImmutableClass."+languagePath+".txt","Student");
   }
 
+@Test
+  public void ImmutableNotLazyAttributeConstructor()
+  {
+	  assertUmpleTemplateFor("ClassTemplateTest_ImmutableNotLazyAttributeConstructor.ump",languagePath + "/ClassTemplateTest_ImmutableNotLazyTest."+languagePath+".txt","Student");
+  }
+
 }
 
