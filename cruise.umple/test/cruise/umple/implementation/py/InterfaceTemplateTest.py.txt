@@ -3,16 +3,19 @@
 
 from abc import ABC, abstractmethod
 
-class ICodeTranslator(ABC):
+class ISomething(ABC):
     @abstractmethod
     def __init__(self):
         pass
 
+    MyConst = "aValue"
+    MAX = 3
+    # CONSTANT MEMBERS  
     # ABSTRACT METHODS 
     @abstractmethod
-    def translate(self, id, attribute):
+    def getCode(self, aParam, anotherParam):
         pass
 
     @abstractmethod
-    def translate(self, id, associationVariable):
+    def isValid(self):
         pass
