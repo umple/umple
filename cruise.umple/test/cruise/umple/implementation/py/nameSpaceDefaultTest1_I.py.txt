@@ -1,7 +1,11 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# line 2 "nameSpaceDefaultTest1.ump"
+# line 5 "nameSpaceDefaultTest1.ump"
+# line 1 "nameSpaceDefaultTest1.ump"
 from abc import ABC, abstractmethod
 
-class I(ABC,):
+class I(ABC):
     @abstractmethod
     def __init__(self):
         pass
-

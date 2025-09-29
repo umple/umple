@@ -93,6 +93,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Window.java");    
     SampleFileWriter.destroy(pathToInput + "/A_Guard.php");
     SampleFileWriter.destroy(pathToInput + "/B.php");
+    SampleFileWriter.destroy(pathToInput + "/B.py");
     SampleFileWriter.destroy(pathToInput + "/py/example");
     SampleFileWriter.destroy(pathToInput + "/Token.py");
     SampleFileWriter.destroy(pathToInput + "/py/Student.py");
@@ -265,6 +266,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Game.php");
     
     SampleFileWriter.destroy(pathToInput + "/A.java");
+    SampleFileWriter.destroy(pathToInput + "/A.py");
     SampleFileWriter.destroy(pathToInput + "/A.php");
     SampleFileWriter.destroy(pathToInput + "/a.rb");
     
@@ -346,6 +348,14 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/z.rb");
     SampleFileWriter.destroy(pathToInput + "/m/");
     SampleFileWriter.destroy(pathToInput + "/n/");
+    SampleFileWriter.destroy(pathToInput + "/C.py");
+    SampleFileWriter.destroy(pathToInput + "/Y.py");
+    SampleFileWriter.destroy(pathToInput + "/J.py");
+    SampleFileWriter.destroy(pathToInput + "/J.php");
+    SampleFileWriter.destroy(pathToInput + "/C.php");
+    SampleFileWriter.destroy(pathToInput + "/Y.php");
+    SampleFileWriter.destroy(pathToInput + "/Z.php");
+
     
     // Tear down issue 834 tests
     SampleFileWriter.destroy(pathToInput + "/First.java");
@@ -358,6 +368,7 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Second.php");
     SampleFileWriter.destroy(pathToInput + "/I.php");
 
+    SampleFileWriter.destroy(pathToInput + "/I.py");
 
     // Tear down issue 1521 tests
     SampleFileWriter.destroy(pathToInput + "/Student10.java");
