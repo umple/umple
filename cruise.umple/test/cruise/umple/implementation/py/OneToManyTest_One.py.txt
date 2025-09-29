@@ -57,7 +57,7 @@ class Mentor():
 
     # Code from template association_AddManyToOne 
     def addStudent1(self, aNumber):
-        from Student import Student
+        from example.Student import Student
         return Student(aNumber, self)
 
     def addStudent2(self, aStudent):
@@ -119,7 +119,7 @@ class Mentor():
         return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
 
     def addStudent(self, *argv):
-        from Student import Student
+        from example.Student import Student
         if len(argv) == 1 and isinstance(argv[0], str) :
             return self.addStudent1(argv[0])
         if len(argv) == 1 and isinstance(argv[0], Student) :

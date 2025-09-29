@@ -15,18 +15,19 @@ include "CommentTranslation.txl"
 function main
     replace [program]
     Jcomment1 [repeat comment_NL]
-	 _[repeat package_statement]
+     Package [repeat package_statement]
     Jcomment2 [repeat comment_NL]
      Imports [repeat import_statement]
     Jcomment3 [repeat comment_NL]
      classes [repeat class_declaration]
 
     export Imports
+    export Package
     by
     Jcomment1[pycomments]
     Jcomment2[pycomments]
     Jcomment3[pycomments]
-	classes
+    classes
         [replaceInnerClasses]
         [replaceConcreteClasses]
         [replaceInterfaces]

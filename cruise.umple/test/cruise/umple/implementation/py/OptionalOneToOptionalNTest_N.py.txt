@@ -39,7 +39,7 @@ class Student():
 
     # Code from template association_SetOptionalOneToOptionalN 
     def setMentor(self, aMentor):
-        from Mentor import Mentor
+        from example.Mentor import Mentor
         wasSet = False
         if not (aMentor is None) and aMentor.numberOfStudents() >= Mentor.maximumNumberOfStudents() :
             return wasSet

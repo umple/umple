@@ -22,8 +22,8 @@ class Mentor():
     # CONSTRUCTOR
     #------------------------
     def __init__(self, aStr, aD, aI, aId):
-        from Time import Time
-        from Date import Date
+        from example.Time import Time
+        from example.Date import Date
         self._canSetStr2 = None
         self._x = None
         self._w = None
@@ -269,7 +269,7 @@ class Mentor():
 
     # Code from template attribute_GetDefaulted 
     def getDefaultV(self):
-        from Date import Date
+        from example.Date import Date
         return Date.valueOf("1978-12-26")
 
     def getW(self):
@@ -277,7 +277,7 @@ class Mentor():
 
     # Code from template attribute_GetDefaulted 
     def getDefaultW(self):
-        from Time import Time
+        from example.Time import Time
         return Time.valueOf("12:59:59")
 
     def getX(self):
