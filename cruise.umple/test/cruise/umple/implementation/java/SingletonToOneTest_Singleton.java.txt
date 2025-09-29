@@ -3,6 +3,7 @@
 
 package example;
 
+
 public class Mentor
 {
 
@@ -56,24 +57,40 @@ public class Mentor
   {
     return name;
   }
-
+  /* Code from template association_GetOne */
   public Student getStudent()
   {
     return student;
   }
 
-  public boolean setStudent(Student aStudent)
+  public boolean hasStudent()
+  {
+    boolean has = student != null;
+    return has;
+  }
+  /* Code from template association_SetOptionalOneToOne */
+  public boolean setStudent(Student aNewStudent)
   {
     boolean wasSet = false;
-    Student existingStudent = student;
-    student = aStudent;
-    if (existingStudent != null && !existingStudent.equals(aStudent))
+    if (student != null && !student.equals(aNewStudent) && equals(student.getMentor()))
     {
-      existingStudent.removeMentor(this);
+      //Unable to setStudent, as existing student would become an orphan
+      return wasSet;
     }
-    if (aStudent != null)
+
+    student = aNewStudent;
+    Mentor anOldMentor = aNewStudent != null ? aNewStudent.getMentor() : null;
+
+    if (!this.equals(anOldMentor))
     {
-      aStudent.addMentor(this);
+      if (anOldMentor != null)
+      {
+        anOldMentor.student = null;
+      }
+      if (student != null)
+      {
+        student.setMentor(this);
+      }
     }
     wasSet = true;
     return wasSet;
@@ -81,11 +98,11 @@ public class Mentor
 
   public void delete()
   {
-    if (student != null)
+    Student existingStudent = student;
+    student = null;
+    if (existingStudent != null)
     {
-      Student placeholderStudent = student;
-      this.student = null;
-      placeholderStudent.removeMentor(this);
+      existingStudent.delete();
     }
   }
 
