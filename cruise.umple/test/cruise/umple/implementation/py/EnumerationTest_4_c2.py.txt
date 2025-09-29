@@ -1,7 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+
 import os
 from enum import Enum, auto
 
 class C2():
+    #------------------------
+    # ENUMERATIONS
+    #------------------------
     class Status(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -19,10 +25,22 @@ class C2():
         Male = auto()
         Female = auto()
 
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #C2 Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aGender, aStatus):
+        self._status = None
+        self._gender = None
         self._gender = aGender
         self._status = aStatus
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setGender(self, aGender):
         wasSet = False
         self._gender = aGender
@@ -45,5 +63,4 @@ class C2():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "]" + os.linesep + "  " + "gender" + "=" + (self.getGender() != ((str(self.getGender()).replaceAll("  ", "    ")) if not self.getGender().equals(self) else "this") if None else "null") + os.linesep + "  " + "status" + "=" + (self.getStatus() != ((str(self.getStatus()).replaceAll("  ", "    ")) if not self.getStatus().equals(self) else "this") if None else "null")
-
+        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "gender" + "=" + str((((self.getGender().__str__().replaceAll("  ", "    ")) if not self.getGender() == self else "this") if not (self.getGender() is None) else "null")) + str(os.linesep) + "  " + "status" + "=" + (((self.getStatus().__str__().replaceAll("  ", "    ")) if not self.getStatus() == self else "this") if not (self.getStatus() is None) else "null")

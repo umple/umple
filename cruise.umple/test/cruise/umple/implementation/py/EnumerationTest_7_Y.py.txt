@@ -1,6 +1,12 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+
 from enum import Enum, auto
 
 class Y():
+    #------------------------
+    # ENUMERATIONS
+    #------------------------
     class Month(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -10,6 +16,10 @@ class Y():
         Feb = auto()
         Mar = auto()
 
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Y State Machines
     class Sm(Enum):
         def _generate_next_value_(name, start, count, last_values):
             return name
@@ -18,11 +28,18 @@ class Y():
         s1 = auto()
         s2 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
+        self._sm = None
         self.setSm(Y.Sm.s1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getSmFullName(self):
-        answer = str(self._sm)
+        answer = self._sm.__str__()
         return answer
 
     def getSm(self):
@@ -31,13 +48,14 @@ class Y():
     def goToS2(self, m):
         wasEventProcessed = False
         aSm = self._sm
-        match aSm :
-            case Y.Sm.s1 :
-                System.out.println(m)
-                self.setSm(Y.Sm.s2)
-                wasEventProcessed = True
-            case default :
-                pass
+        if aSm == Y.Sm.s1 :
+            # line 12 "../mydoc.ump"
+            print(m)
+            self.setSm(Y.Sm.s2)
+            wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def setSm(self, aSm):
@@ -45,4 +63,3 @@ class Y():
 
     def delete(self):
         pass
-

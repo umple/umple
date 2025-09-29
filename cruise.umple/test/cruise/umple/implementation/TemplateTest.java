@@ -171,6 +171,11 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/one.rb");
     SampleFileWriter.destroy(pathToInput + "/two.rb");
 
+    SampleFileWriter.destroy(pathToInput + "/enumerations/Driver.java");
+    SampleFileWriter.destroy(pathToInput + "/enumerations/DriverSchedule.java");
+    SampleFileWriter.destroy(pathToInput + "/enumerations/Driver.py");
+    SampleFileWriter.destroy(pathToInput + "/enumerations/DriverSchedule.py");
+
     SampleFileWriter.destroy(pathToInput + "/i_code_translator.rb");
     SampleFileWriter.destroy(pathToInput + "/i_first_child.rb");
     SampleFileWriter.destroy(pathToInput + "/code_translator.rb");

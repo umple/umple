@@ -45,7 +45,7 @@ class B():
 
     # Code from template association_AddManyToOne 
     def addMyC1(self, aMyD):
-        from C import C
+        from example.C import C
         return C(aMyD, self)
 
     def addMyC2(self, aMyC):
@@ -111,7 +111,7 @@ class B():
         raise TypeError("No method matches provided parameters")
 
     def addMyC(self, *argv):
-        from C import C
+        from example.C import C
         if len(argv) == 1 and isinstance(argv[0], D) :
             return self.addMyC1(argv[0])
         if len(argv) == 1 and isinstance(argv[0], C) :

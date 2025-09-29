@@ -24,7 +24,7 @@ class C():
         return self
 
     def __init__(self, aB):
-        from D import D
+        from example.D import D
         self._b = None
         self._myD = None
         self._myD = D.alternateConstructor(self)

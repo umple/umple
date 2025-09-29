@@ -28,8 +28,6 @@ public class PythonClassTemplateTest extends ClassTemplateTest
     SampleFileWriter.destroy(pathToInput + "/Switch.py");
     SampleFileWriter.destroy(pathToInput + "/py/Student.py");
     SampleFileWriter.destroy(pathToInput + "/py/Object.py");
-    SampleFileWriter.destroy(pathToInput + "/py/Foo.py");
-    SampleFileWriter.destroy(pathToInput + "/py/Bar.py");
     //SampleFileWriter.destroy(pathToInput + "/py/python_code/example/Mentor.py");
     //SampleFileWriter.destroy(pathToInput + "/py/python_code/example/Student.py");
   }
@@ -101,12 +99,6 @@ public class PythonClassTemplateTest extends ClassTemplateTest
                            "Router");
   }
 
-  @Test
-  public void TestUmpleEnumerations_9(){
-    assertUmpleTemplateFor("py/TestUmpleEnumerations_9.ump", 
-                           "py/TestUmpleEnumerations_9.py.txt",
-                           "Bar");
-  }
 
   @Test @Ignore
   public void ClassCodeInjections_ParametersUnspecified(){

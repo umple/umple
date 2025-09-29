@@ -20,7 +20,7 @@ class D():
         return self
 
     def __init__(self, aBForC):
-        from C import C
+        from example.C import C
         self._c = None
         self._c = C.alternateConstructor(self, aBForC)
 
