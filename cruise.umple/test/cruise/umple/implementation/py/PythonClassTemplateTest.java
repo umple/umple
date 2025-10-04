@@ -92,6 +92,10 @@ public class PythonClassTemplateTest extends ClassTemplateTest
                            "Router");
   }
 
+  @Test
+  public void InternalConstant(){
+        assertUmpleTemplateFor("ClassTemplateTest_InternalConstant.ump",languagePath+"/ClassTemplateTest_InternalConstant."+ languagePath + ".txt","Student");
+  }
 
   @Test @Ignore
   public void ClassCodeInjections_ParametersUnspecified(){
