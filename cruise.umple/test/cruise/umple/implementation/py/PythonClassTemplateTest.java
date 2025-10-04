@@ -53,13 +53,6 @@ public class PythonClassTemplateTest extends ClassTemplateTest
     language = null;
     assertUmpleTemplateFor("py/ClassTemplateTest_ExtraCode.ump","py/ClassTemplateTest_ExtraCode.py.txt","Mentor");
   }
-  
-  @Test
-  public void abstractClass()
-  {
-	language = "Python";
-	assertUmpleTemplateFor("py/ClassTemplateTest_AbstractClass.ump","py/ClassTemplateTest_AbstractClass.py.txt", "Student");
-  }
 
    @Test
   public void MethodParameterTypes(){

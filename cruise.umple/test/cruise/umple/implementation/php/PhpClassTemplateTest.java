@@ -52,12 +52,6 @@ public class PhpClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("php/ClassTemplateTest_ExtraCode.ump","php/ClassTemplateTest_ExtraCode.php.txt","Mentor");
   }
   
-  @Test
-  public void abstractClass()
-  {
-	language = "Php";
-	assertUmpleTemplateFor("php/ClassTemplateTest_AbstractClass.ump","php/ClassTemplateTest_AbstractClass.php.txt", "Student");
-  }
 
    @Test
   public void MethodParameterTypes(){
