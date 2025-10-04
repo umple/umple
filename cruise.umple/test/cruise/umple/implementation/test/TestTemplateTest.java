@@ -107,7 +107,8 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/test/ClassTemplateTest_CodeInjectionsParametersUnspecified_ModelTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/ClassTemplateTest_CodeInjectionsSingleLine_ModelTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/ClassTemplateTest_NoNamespace_ModelTest.umpt");
-	    SampleFileWriter.destroy(pathToInput + "/test/MethodCommentWithEmptyLines_ModelTest.umpt");
+	    SampleFileWriter.destroy(pathToInput + "/ClassTemplateTest_AbstractClass_ModelTest.umpt");
+		SampleFileWriter.destroy(pathToInput + "/test/MethodCommentWithEmptyLines_ModelTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/MethodInlineComment_ModelTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/MethodMultilineComment_ModelTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/MultipleAssociationComments_ModelTest.umpt");
@@ -115,7 +116,6 @@ public class TestTemplateTest extends ClassTemplateTest{
 	    SampleFileWriter.destroy(pathToInput + "/test/MultipleMethodComments_ModelTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/StudentTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/test/TokenTest.umpt");
-	    
 	    
 	    
 	  }

@@ -65,4 +65,11 @@ public class RubyClassTemplateTest extends ClassTemplateTest
 	  
 	  SampleFileWriter.assertFileContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"), actual);
   }
+
+  // 2025-10: Ruby does not have abstract classes
+  @Test @Ignore
+  public void AbstractClass()
+  {
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClass.ump",languagePath + "/ClassTemplateTest_AbstractClass."+languagePath+".txt","Foo");
+  }
 }

@@ -362,11 +362,7 @@ public class ClassTemplateTest extends TemplateTest
   @Test
   public void AbstractClass()
   {
-	  // Just test Java for now.
-	  if (languagePath.equals("java"))
-	  {
-		  assertUmpleTemplateFor("ClassTemplateTest_AbstractClass.ump",languagePath + "/ClassTemplateTest_AbstractClass."+languagePath+".txt","Foo");
-	  }
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClass.ump",languagePath + "/ClassTemplateTest_AbstractClass."+languagePath+".txt","Foo");
   }
   
   @Test
