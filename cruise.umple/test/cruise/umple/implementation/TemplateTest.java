@@ -166,6 +166,10 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/my_exception.rb");
     SampleFileWriter.destroy(pathToInput + "/exception.rb");
     SampleFileWriter.destroy(pathToInput + "/course.rb");
+    SampleFileWriter.destroy(pathToInput + "/course_section.rb");
+    SampleFileWriter.destroy(pathToInput + "/CourseSection.php");
+    SampleFileWriter.destroy(pathToInput + "/registration.rb");
+    SampleFileWriter.destroy(pathToInput + "/Registration.php");
     SampleFileWriter.destroy(pathToInput + "/light.rb");
     SampleFileWriter.destroy(pathToInput + "/x.rb");
     SampleFileWriter.destroy(pathToInput + "/one.rb");
