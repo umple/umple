@@ -1,14 +1,29 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
 class Application():
+    theInstance = None
+    #------------------------
+    # STATIC VARIABLES
+    #------------------------
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         pass
 
     @staticmethod
     def getInstance():
-        if theInstance is None :
-            theInstance = Application()
+        if Application.theInstance is None :
+            Application.theInstance = Application()
+        return Application.theInstance
 
-        return theInstance
-
+    #------------------------
+    # INTERFACE
+    #------------------------
     def delete(self):
         pass
-

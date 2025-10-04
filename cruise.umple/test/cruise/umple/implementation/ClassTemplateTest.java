@@ -158,14 +158,9 @@ public class ClassTemplateTest extends TemplateTest
   }
 
   @Test
-
   public void Singleton()
-
   {
-    // TODO: Sultan please fix  
-
-    // assertUmpleTemplateFor("ClassTemplateTest_Singleton.ump",languagePath + "/ClassTemplateTest_Singleton."+ languagePath +".txt","Application");
-
+    assertUmpleTemplateFor("ClassTemplateTest_Singleton.ump",languagePath + "/ClassTemplateTest_Singleton."+ languagePath +".txt","Application");
   }   
 
   
