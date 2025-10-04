@@ -295,6 +295,12 @@ public class ClassTemplateTest extends TemplateTest
   {
 	  assertUmpleTemplateFor("MultipleAttributeComments.ump",languagePath + "/ClassTemplateTest_MultipleAttributeComments."+languagePath+".txt","Foo");
   }
+
+  @Test
+  public void InternalAndConstantAndDerivedAttributeComments()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_AttributeComments.ump",languagePath+"/ClassTemplateTest_AttributeComments." + languagePath + ".txt","Student");
+  }
   
   @Test
   public void AssociationInlineComment()

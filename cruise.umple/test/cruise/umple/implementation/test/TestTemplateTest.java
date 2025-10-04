@@ -60,6 +60,7 @@ public class TestTemplateTest extends ClassTemplateTest{
 		SampleFileWriter.destroy(pathToInput + "/ClassTemplateTest_AbstractClassAvoidingInstantiation_ModelTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/ClassTemplateTest_AbstractClassAvoidingInstantiation2_ModelTest.umpt");
 	    SampleFileWriter.destroy(pathToInput + "/ClassTemplateTest_AbstractClassInheritance_ModelTest.umpt");
+		SampleFileWriter.destroy(pathToInput + "/ClassTemplateTest_AttributeComments_ModelTest.umpt");
 		SampleFileWriter.destroy(pathToInput + "/FooTest.umpt");
 		SampleFileWriter.destroy(pathToInput + "/MethodCommentWithEmptyLines_ModelTest.umpt");
 		SampleFileWriter.destroy(pathToInput + "/MethodInlineComment_ModelTest.umpt");
