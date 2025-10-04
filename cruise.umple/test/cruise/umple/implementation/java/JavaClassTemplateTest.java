@@ -112,15 +112,6 @@ public class JavaClassTemplateTest extends ClassTemplateTest
   }
   
   @Test
-  public void ImportAssociations()
-  {
-    language = null;
-    assertUmpleTemplateFor("java/ClassTemplateTest_Import.ump","java/ClassTemplateTest_Import.java.txt","Mentor");
-    assertUmpleTemplateFor("java/ClassTemplateTest_Import.ump","java/ClassTemplateTest_Import2.java.txt","Student");
-    assertUmpleTemplateFor("java/ClassTemplateTest_Import.ump","java/ClassTemplateTest_Import3.java.txt","Course");
-  }  
-  
-  @Test
   public void StateMachineImplementsInterface(){
       assertUmpleTemplateFor("java/ClassTemplateTest_StateMachineImplementsInterface.ump",
                              "java/ClassTemplateTest_StateMachineImplementsInterface.java.txt",

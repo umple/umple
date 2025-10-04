@@ -417,5 +417,13 @@ public class ClassTemplateTest extends TemplateTest
 	  assertUmpleTemplateFor("ClassTemplateTest_ImmutableNotLazyAttributeConstructor.ump",languagePath + "/ClassTemplateTest_ImmutableNotLazyTest."+languagePath+".txt","Student");
   }
 
+  @Test
+  public void ImportAssociations()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_Import.ump", languagePath + "/ClassTemplateTest_Import."+languagePath+".txt","Mentor");
+    assertUmpleTemplateFor("ClassTemplateTest_Import.ump", languagePath + "/ClassTemplateTest_Import2."+languagePath+".txt","Student");
+    assertUmpleTemplateFor("ClassTemplateTest_Import.ump", languagePath + "/ClassTemplateTest_Import3."+languagePath+".txt","Course");
+  }  
+
 }
 

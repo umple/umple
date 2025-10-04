@@ -91,4 +91,11 @@ public class PhpClassTemplateTest extends ClassTemplateTest
                            "Router");
   }
 
+  // 2025-10: Namespaces seem to have no effect on the Php generated code.
+  @Test @Ignore
+  public void ImportAssociations()
+  {
+    super.ImportAssociations();
+  }  
+
 }

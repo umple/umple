@@ -44,15 +44,6 @@ public class RubyClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("ruby/ClassTemplateTest_Generated.ump","ruby/ClassTemplateTest_Generated.ruby.txt","Mentor");
     
   }
-  
-  @Test
-  public void ImportAssociations()
-  {
-    language = null;
-    assertUmpleTemplateFor("ruby/ClassTemplateTest_Import.ump","ruby/ClassTemplateTest_Import.ruby.txt","Mentor");
-    assertUmpleTemplateFor("ruby/ClassTemplateTest_Import.ump","ruby/ClassTemplateTest_Import2.ruby.txt","Student");
-    assertUmpleTemplateFor("ruby/ClassTemplateTest_Import.ump","ruby/ClassTemplateTest_Import3.ruby.txt","Course");
-  }  
 
   @Test
   public void GeneratePathTest()
