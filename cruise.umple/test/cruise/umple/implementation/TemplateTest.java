@@ -293,6 +293,11 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Teacher.java");
     SampleFileWriter.destroy(pathToInput + "/Mentor.java");
 
+    SampleFileWriter.destroy(pathToInput + "/Teacher.py");
+    SampleFileWriter.destroy(pathToInput + "/Person.py");
+
+    SampleFileWriter.destroy(pathToInput + "/Teacher.php");
+
     // Tear down Client
     
     SampleFileWriter.destroy(pathToInput + "/Client.java");

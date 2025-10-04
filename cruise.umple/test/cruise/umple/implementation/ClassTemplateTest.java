@@ -368,29 +368,19 @@ public class ClassTemplateTest extends TemplateTest
   @Test
   public void AbstractClassInheritance()
   {
-	  // Just test Java for now.
-	  if (languagePath.equals("java"))
-	  {
-		  assertUmpleTemplateFor("ClassTemplateTest_AbstractClassInheritance.ump",languagePath + "/ClassTemplateTest_AbstractClassInheritance."+languagePath+".txt","Teacher");
-	  }
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClassInheritance.ump",languagePath + "/ClassTemplateTest_AbstractClassInheritance."+languagePath+".txt","Teacher");
   }
 
-@Test
+  @Test
   public void AbstractClassAvoidingInstantiation()
   {
-	  if (languagePath.equals("java"))
-	  {
-		  assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation."+languagePath+".txt","Teacher");
-	  }
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation."+languagePath+".txt","Teacher");
   }
 
-@Test
+  @Test
   public void AbstractClassAvoidingInstantiationMN()
   {
-	  if (languagePath.equals("java"))
-	  {
-		  assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation2.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation2."+languagePath+".txt","Teacher");
-	  }
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation2.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation2."+languagePath+".txt","Teacher");
   }
   
 @Test

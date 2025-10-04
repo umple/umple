@@ -72,4 +72,25 @@ public class RubyClassTemplateTest extends ClassTemplateTest
   {
 		assertUmpleTemplateFor("ClassTemplateTest_AbstractClass.ump",languagePath + "/ClassTemplateTest_AbstractClass."+languagePath+".txt","Foo");
   }
+
+  // 2025-10: Ruby does not have abstract classes
+  @Test @Ignore
+  public void AbstractClassInheritance()
+  {
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClassInheritance.ump",languagePath + "/ClassTemplateTest_AbstractClassInheritance."+languagePath+".txt","Teacher");
+  }
+
+  // 2025-10: Ruby does not have abstract classes
+  @Test @Ignore
+  public void AbstractClassAvoidingInstantiation()
+  {
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation."+languagePath+".txt","Teacher");
+  }
+
+  // 2025-10: Ruby does not have abstract classes
+  @Test @Ignore
+  public void AbstractClassAvoidingInstantiationMN()
+  {
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation2.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation2."+languagePath+".txt","Teacher");
+  }
 }
