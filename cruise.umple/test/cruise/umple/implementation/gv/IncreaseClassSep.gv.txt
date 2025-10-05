@@ -1,88 +1,92 @@
 digraph "IncreaseClassSep" {
   rankdir="BT"
-  node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
-nodesep =2.0;ranksep =2.0;
+    node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+    nodesep =2.0;
+    ranksep =2.0;
+    sep =1.0;
+     edge [minlen=1 headclip="true"];
+
   // Class: CanalNetwork
-  "CanalNetwork" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    CanalNetwork    </td></tr><hr/><tr><td align="left" href="" title="String name&#13;">  name : String  </td></tr></table>>,
+  "CanalNetwork" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="20">    CanalNetwork </td></tr><hr/><tr><td align="left" href="" title="String name&#13;">  name : String  </td></tr></table>>,
    tooltip="class CanalNetwork
 "];
 
   // Class: SegEnd
-  "SegEnd" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    SegEnd    </td></tr><hr/><tr><td align="left" href="" title="String name&#13;">  name : String  </td></tr><tr><td align="left" href="" title="GPSCoord location&#13;">  location : GPSCoord  </td></tr></table>>,
+  "SegEnd" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="35">    SegEnd </td></tr><hr/><tr><td align="left" href="" title="String name&#13;">  name : String  </td></tr><tr><td align="left" href="" title="GPSCoord location&#13;">  location : GPSCoord  </td></tr></table>>,
    tooltip="class SegEnd
 "];
 
   // Class: Segment
-  "Segment" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    Segment    </td></tr><hr/><tr><td align="left" href="" title="Float waterLevel&#13;m above sea level&#13;">  waterLevel : Float  </td></tr></table>>,
+  "Segment" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    Segment </td></tr><hr/><tr><td align="left" href="" title="Float waterLevel&#13;m above sea level&#13;">  waterLevel : Float  </td></tr></table>>,
    tooltip="class Segment
 "];
 
   // Class: Lock
-  "Lock" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    Lock    </td></tr><hr/><tr><td align="left" href="" title="Float maxLevel&#13;">  maxLevel : Float  </td></tr><tr><td align="left" href="" title="Float minLevel&#13;">  minLevel : Float  </td></tr></table>>,
+  "Lock" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    Lock </td></tr><hr/><tr><td align="left" href="" title="Float maxLevel&#13;">  maxLevel : Float  </td></tr><tr><td align="left" href="" title="Float minLevel&#13;">  minLevel : Float  </td></tr></table>>,
    tooltip="class Lock
 "];
-  "Lock" -> "Segment" [arrowhead="empty"; samehead="gen"];
+  "Lock" -> "Segment" [arrowhead="empty"; samehead="";];
 
 
   // Class: Bend
-  "Bend" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    Bend    </td></tr></table>>,
+  "Bend" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    Bend </td></tr></table>>,
    tooltip="class Bend
 "];
-  "Bend" -> "SegEnd" [arrowhead="empty"; samehead="gen"];
+  "Bend" -> "SegEnd" [arrowhead="empty"; samehead="";];
 
 
   // Class: EntryAndExitPoint
-  "EntryAndExitPoint" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    EntryAndExitPoint    </td></tr></table>>,
+  "EntryAndExitPoint" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    EntryAndExitPoint </td></tr></table>>,
    tooltip="class EntryAndExitPoint
 "];
-  "EntryAndExitPoint" -> "SegEnd" [arrowhead="empty"; samehead="gen"];
+  "EntryAndExitPoint" -> "SegEnd" [arrowhead="empty"; samehead="";];
 
 
   // Class: MooringPoint
-  "MooringPoint" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    MooringPoint    </td></tr></table>>,
+  "MooringPoint" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    MooringPoint </td></tr></table>>,
    tooltip="class MooringPoint
 "];
-  "MooringPoint" -> "SegEnd" [arrowhead="empty"; samehead="gen"];
+  "MooringPoint" -> "SegEnd" [arrowhead="empty"; samehead="";];
 
 
   // Class: Obstacle
-  "Obstacle" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    Obstacle    </td></tr></table>>,
+  "Obstacle" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="20"><tr><td>    Obstacle </td></tr></table>>,
    tooltip="class Obstacle
 "];
-  "Obstacle" -> "SegEnd" [arrowhead="empty"; samehead="gen"];
+  "Obstacle" -> "SegEnd" [arrowhead="empty"; samehead="";];
 
 
   // Class: LowBridge
-  "LowBridge" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    LowBridge    </td></tr></table>>,
+  "LowBridge" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    LowBridge </td></tr></table>>,
    tooltip="class LowBridge
 "];
-  "LowBridge" -> "Obstacle" [arrowhead="empty"; samehead="gen"];
+  "LowBridge" -> "Obstacle" [arrowhead="empty"; samehead="";];
 
 
   // Class: LockGate
-  "LockGate" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    LockGate    </td></tr></table>>,
+  "LockGate" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    LockGate </td></tr></table>>,
    tooltip="class LockGate
 "];
-  "LockGate" -> "Obstacle" [arrowhead="empty"; samehead="gen"];
+  "LockGate" -> "Obstacle" [arrowhead="empty"; samehead="";];
 
 
   // Class: Craft
-  "Craft" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    Craft    </td></tr><hr/><tr><td align="left" href="" title="GPSCoord location&#13;">  location : GPSCoord  </td></tr></table>>,
+  "Craft" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="25">    Craft </td></tr><hr/><tr><td align="left" href="" title="GPSCoord location&#13;">  location : GPSCoord  </td></tr></table>>,
    tooltip="class Craft
 "];
 
   // Class: Trip
-  "Trip" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    Trip    </td></tr></table>>,
+  "Trip" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    Trip </td></tr></table>>,
    tooltip="class Trip
 "];
 
   // Class: Transponder
-  "Transponder" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    Transponder    </td></tr><hr/><tr><td align="left" href="" title="String id&#13;">  id : String  </td></tr></table>>,
+  "Transponder" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    Transponder </td></tr><hr/><tr><td align="left" href="" title="String id&#13;">  id : String  </td></tr></table>>,
    tooltip="class Transponder
 "];
 
   // Class: GPSCoord
-  "GPSCoord" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="4">    GPSCoord    </td></tr><hr/><tr><td align="left" href="" title="Float lattitide&#13;">  lattitide : Float  </td></tr><tr><td align="left" href="" title="Float longitude&#13;">  longitude : Float  </td></tr></table>>,
+  "GPSCoord" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    GPSCoord </td></tr><hr/><tr><td align="left" href="" title="Float lattitide&#13;">  lattitide : Float  </td></tr><tr><td align="left" href="" title="Float longitude&#13;">  longitude : Float  </td></tr></table>>,
    tooltip="class GPSCoord
 "];
 

@@ -1,24 +1,25 @@
 digraph "Associations" {
   rankdir="BT"
-  node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+    node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+     edge [minlen=1 headclip="true"];
 
   // Class: A
-  "A" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    A    </td></tr></table>>,
+  "A" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    A </td></tr></table>>,
    tooltip="class A
 Example code illustrating various&#13;kinds of associations&#13;"];
 
   // Class: B
-  "B" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    B    </td></tr></table>>,
+  "B" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    B </td></tr></table>>,
    tooltip="class B
 Class with inline association having role name&#13;"];
 
   // Class: C
-  "C" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    C    </td></tr></table>>,
+  "C" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="20"><tr><td>    C </td></tr></table>>,
    tooltip="class C
 Class with reflexive association&#13;"];
 
   // Class: D
-  "D" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    D    </td></tr></table>>,
+  "D" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    D </td></tr></table>>,
    tooltip="class D
 Reference to a class defined elsewhere&#13;"];
 
@@ -88,7 +89,7 @@ A C may have a C. It can have none or just 1.
 
 A C has some Cs. It can have none, and there is no upper bound defined.
 
-" URL="javascript:Action.selectAssociation('C,C,* ,0..1 ')" ]; 
+" URL="javascript:Action.selectAssociation('C,C,* ,0..1 ')" ];
   "C" -> "D" [dir="none", taillabel="1 ", headlabel="0..1 ", tooltip="C 1  -- 0..1  D
 
 A D has A C. It must always have exactly, one, and can never have none. And there is an upper bound of at most one C.
@@ -108,3 +109,4 @@ A D has A C. It must always have exactly, one, and can never have none. And ther
 A C may have a D. It can have none or just 1. 
 
 " URL="javascript:Action.selectAssociation('C,D,0..1 ,1 ')" ];
+}
