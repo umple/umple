@@ -1,0 +1,45 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+////---- Tests for  ClassTemplateTest_AbstractClassInheritance ----/////
+
+test Teacher {
+
+ generate JUnit ;
+ 
+ depend  Person,Student,Teacher ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_AbstractClassInheritance.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :position
+
+      test attribute_position {
+    
+      
+        Teacher aTeacher("RandomString1");
+        
+        
+    assertTrue( aTeacher.setPosition("RandomString1"));
+    assertTrue( aTeacher.getPosition() =="RandomString1");
+    assertTrue( aTeacher.setPosition("RandomString2"));
+    assertTrue( aTeacher.getPosition()=="RandomString2");
+    assertFalse( aTeacher.getPosition() =="RandomString1");
+             
+          
+        	}
+
+
+  
+ 
+   
+
+}

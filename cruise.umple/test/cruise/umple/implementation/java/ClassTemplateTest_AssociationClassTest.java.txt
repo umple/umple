@@ -3,6 +3,7 @@
 
 package example;
 
+
 public class Registration
 {
 
@@ -17,22 +18,30 @@ public class Registration
   private Student student;
   private CourseSection courseSection;
 
+  //Helper Variables
+  private int cachedHashCode;
+  private boolean canSetStudent;
+  private boolean canSetCourseSection;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
   public Registration(String aGrade, Student aStudent, CourseSection aCourseSection)
   {
+    cachedHashCode = -1;
+    canSetStudent = true;
+    canSetCourseSection = true;
     grade = aGrade;
     boolean didAddStudent = setStudent(aStudent);
     if (!didAddStudent)
     {
-      throw new RuntimeException("Unable to create registration due to student");
+      throw new RuntimeException("Unable to create registration due to student. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     boolean didAddCourseSection = setCourseSection(aCourseSection);
     if (!didAddCourseSection)
     {
-      throw new RuntimeException("Unable to create registration due to courseSection");
+      throw new RuntimeException("Unable to create registration due to courseSection. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
   }
 
@@ -52,20 +61,21 @@ public class Registration
   {
     return grade;
   }
-
+  /* Code from template association_GetOne */
   public Student getStudent()
   {
     return student;
   }
-
+  /* Code from template association_GetOne */
   public CourseSection getCourseSection()
   {
     return courseSection;
   }
-
+  /* Code from template association_SetOneToManyAssociationClass */
   public boolean setStudent(Student aStudent)
   {
     boolean wasSet = false;
+    if (!canSetStudent) { return false; }
     if (aStudent == null)
     {
       return wasSet;
@@ -77,14 +87,22 @@ public class Registration
     {
       existingStudent.removeRegistration(this);
     }
-    student.addRegistration(this);
-    wasSet = true;
+    if (!student.addRegistration(this))
+    {
+      student = existingStudent;
+      wasSet = false;
+    }
+    else
+    {
+      wasSet = true;
+    }
     return wasSet;
   }
-
+  /* Code from template association_SetOneToManyAssociationClass */
   public boolean setCourseSection(CourseSection aCourseSection)
   {
     boolean wasSet = false;
+    if (!canSetCourseSection) { return false; }
     if (aCourseSection == null)
     {
       return wasSet;
@@ -96,19 +114,89 @@ public class Registration
     {
       existingCourseSection.removeRegistration(this);
     }
-    courseSection.addRegistration(this);
-    wasSet = true;
+    if (!courseSection.addRegistration(this))
+    {
+      courseSection = existingCourseSection;
+      wasSet = false;
+    }
+    else
+    {
+      wasSet = true;
+    }
     return wasSet;
+  }
+
+  public boolean equals(Object obj)
+  {
+    if (obj == null) { return false; }
+    if (!getClass().equals(obj.getClass())) { return false; }
+
+    Registration compareTo = (Registration)obj;
+  
+    if (getStudent() == null && compareTo.getStudent() != null)
+    {
+      return false;
+    }
+    else if (getStudent() != null && !getStudent().equals(compareTo.getStudent()))
+    {
+      return false;
+    }
+
+    if (getCourseSection() == null && compareTo.getCourseSection() != null)
+    {
+      return false;
+    }
+    else if (getCourseSection() != null && !getCourseSection().equals(compareTo.getCourseSection()))
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public int hashCode()
+  {
+    if (cachedHashCode != -1)
+    {
+      return cachedHashCode;
+    }
+    cachedHashCode = 17;
+    if (getStudent() != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + getStudent().hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+    if (getCourseSection() != null)
+    {
+      cachedHashCode = cachedHashCode * 23 + getCourseSection().hashCode();
+    }
+    else
+    {
+      cachedHashCode = cachedHashCode * 23;
+    }
+
+    canSetStudent = false;
+    canSetCourseSection = false;
+    return cachedHashCode;
   }
 
   public void delete()
   {
     Student placeholderStudent = student;
     this.student = null;
-    placeholderStudent.removeRegistration(this);
+    if(placeholderStudent != null)
+    {
+      placeholderStudent.removeRegistration(this);
+    }
     CourseSection placeholderCourseSection = courseSection;
     this.courseSection = null;
-    placeholderCourseSection.removeRegistration(this);
+    if(placeholderCourseSection != null)
+    {
+      placeholderCourseSection.removeRegistration(this);
+    }
   }
 
 

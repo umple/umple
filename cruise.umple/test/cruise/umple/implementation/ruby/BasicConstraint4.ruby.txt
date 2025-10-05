@@ -6,14 +6,14 @@
 
 
 # constant on the left side of the constraint
-class student
+class Student
 
 
   #------------------------
   # MEMBER VARIABLES
   #------------------------
 
-  #student Attributes - for documentation purposes
+  #Student Attributes - for documentation purposes
   #attr_reader :age
 
   #------------------------
