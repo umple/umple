@@ -1,0 +1,46 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+////---- Tests for  ClassTemplateTest_Import ----/////
+
+test Student {
+
+ generate JUnit ;
+ 
+ depend  Mentor,Student,Course ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_Import.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :number
+
+      test attribute_number {
+    
+      Mentor aMentor("RandomString1");
+
+        Student aStudent("RandomString1",aMentor);
+        
+        
+    assertTrue( aStudent.setNumber("RandomString1"));
+    assertTrue( aStudent.getNumber() =="RandomString1");
+    assertTrue( aStudent.setNumber("RandomString2"));
+    assertTrue( aStudent.getNumber()=="RandomString2");
+    assertFalse( aStudent.getNumber() =="RandomString1");
+             
+          
+        	}
+
+
+  
+ 
+   
+
+}

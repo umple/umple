@@ -74,56 +74,9 @@ public class JavaClassTemplateTest extends ClassTemplateTest
   }
 
   @Test
-  public void ClassCodeInjections_Basic()
-  {
-    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsBasic.ump", languagePath + "/ClassTemplateTest_CodeInjectionsBasic." + languagePath + ".txt", "Student", true, false);
-  }
-  
-  @Test
   public void ClassCodeInjections_BasicOnOneLine()
   {
     assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsBasicOnOneLine.ump", languagePath + "/ClassTemplateTest_CodeInjectionsBasicOnOneLine." + languagePath + ".txt", "Student", true, false);
-  }
-
-  @Test
-  public void ClassCodeInjections_NoBraces()
-  {
-    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsNoBraces.ump", languagePath + "/ClassTemplateTest_CodeInjectionsNoBraces." + languagePath + ".txt", "Student");
-  }
-
-  @Test
-  public void ClassCodeInjections_Comments()
-  {
-    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsComments.ump", languagePath + "/ClassTemplateTest_CodeInjectionsComments." + languagePath + ".txt", "Student");
-  }
-
-  @Test
-  public void ClassCodeInjections_SingleLine()
-  {
-    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsSingleLine.ump", languagePath + "/ClassTemplateTest_CodeInjectionsSingleLine." + languagePath + ".txt", "Student");
-  }
-
-  public void ClassCodeInjections_ParametersBasic()
-  {
-    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsParametersBasic.ump", languagePath + "/ClassTemplateTest_CodeInjectionsParametersBasic." + languagePath + ".txt", "Student");
-  }
-
-  @Test
-  public void ClassCodeInjections_ParametersUnspecified()
-  {
-    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsParametersUnspecified.ump", languagePath + "/ClassTemplateTest_CodeInjectionsParametersUnspecified." + languagePath + ".txt", "Student");
-  }
-
-  @Test
-  public void ClassCodeInjections_ParametersMulti()
-  {
-    assertUmpleTemplateFor("ClassTemplateTest_CodeInjectionsParametersMulti.ump", languagePath + "/ClassTemplateTest_CodeInjectionsParametersMulti." + languagePath + ".txt", "Student", true, false);
-  }
-
-  @Test
-  public void InternalAndConstantAndDerivedAttributeComments()
-  {
-        assertUmpleTemplateFor("ClassTemplateTest_AttributeComments.ump",languagePath+"/ClassTemplateTest_AttributeComments." + languagePath + ".txt","Student");
   }
 
   @Test
@@ -159,20 +112,6 @@ public class JavaClassTemplateTest extends ClassTemplateTest
   }
   
   @Test
-  public void ImportAssociations()
-  {
-    language = null;
-    assertUmpleTemplateFor("java/ClassTemplateTest_Import.ump","java/ClassTemplateTest_Import.java.txt","Mentor");
-    assertUmpleTemplateFor("java/ClassTemplateTest_Import.ump","java/ClassTemplateTest_Import2.java.txt","Student");
-    assertUmpleTemplateFor("java/ClassTemplateTest_Import.ump","java/ClassTemplateTest_Import3.java.txt","Course");
-  }  
-  
-  @Test 
-  public void immutableNotLazyAttributeConstructor(){
-	  assertUmpleTemplateFor("java/ImmutableNotLazyAttributeConstructor.ump","java/StudentImmutableNotLazyTest.java.txt","Student");
-  }
-  
-  @Test
   public void StateMachineImplementsInterface(){
       assertUmpleTemplateFor("java/ClassTemplateTest_StateMachineImplementsInterface.ump",
                              "java/ClassTemplateTest_StateMachineImplementsInterface.java.txt",
@@ -191,95 +130,6 @@ public class JavaClassTemplateTest extends ClassTemplateTest
 	  assertUmpleTemplateFor("java/ClassTemplateTest_StateMachineDoesNotImplementInterface.ump",
 				 			 "java/ClassTemplateTest_StateMachineDoesNotImplementInterface.java.txt",
 				 			 "FileLogger");
-  }
-  
-  @Test
-  public void TestUmpleEnumerations(){
-    assertUmpleTemplateFor("java/TestUmpleEnumerations.ump",
-        "java/TestUmpleEnumerations.java.txt",
-        "Student");
-  }
-  
-  @Test
-  public void TestUmpleEnumerations_2(){
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_2.ump",
-        "java/TestUmpleEnumerations_2.java.txt",
-        "X");
-  }
-  
-  @Test
-  public void TestUmpleEnumerations_3(){
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_3.ump",
-        "java/TestUmpleEnumerations_3_c1.java.txt",
-        "C1");
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_3.ump",
-        "java/TestUmpleEnumerations_3_c2.java.txt",
-        "C2");
-  }
-  
-  @Test
-  public void TestUmpleEnumerations_4(){
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_4.ump",
-        "java/TestUmpleEnumerations_4_c1.java.txt",
-        "C1");
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_4.ump",
-        "java/TestUmpleEnumerations_4_c2.java.txt",
-        "C2");
-  }
-  
-  @Test
-  public void TestUmpleEnumerations_5(){
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_5.ump",
-        "java/TestUmpleEnumerations_5_X1.java.txt",
-        "X1");
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_5.ump",
-        "java/TestUmpleEnumerations_5_X2.java.txt",
-        "X2");
-  }
-  
-  @Test
-  public void TestUmpleEnumerations_6(){
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_6.ump",
-        "java/TestUmpleEnumerations_6_X.java.txt",
-        "X");
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_6.ump",
-        "java/TestUmpleEnumerations_6_X2.java.txt",
-        "X2");
-  }
-  
-  @Test
-  public void TestUmpleEnumerations_7(){
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_7.ump",
-        "java/TestUmpleEnumerations_7_X.java.txt",
-        "X");
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_7.ump",
-        "java/TestUmpleEnumerations_7_Y.java.txt",
-        "Y");
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_7.ump",
-        "java/TestUmpleEnumerations_7_Z.java.txt",
-        "Z");
-  }
-  
-  @Test
-  public void TestUmpleEnumerations_8(){
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_8.ump",
-        "java/TestUmpleEnumerations_8.java.txt",
-        "A");
-  }
-  @Test
-  public void TestUmpleEnumerations_innerQualified(){
-    assertUmpleTemplateFor("java/TestUmpleEnumerations_innerQualified_1.ump",
-        "java/TestUmpleEnumerations_innerQualified_1.java.txt",
-        "Driver");
-  }
-
-
-  @Test
-  public void CascadeDelete()
-  {
-    assertUmpleTemplateFor("CascadeDelete.ump","java/CascadeDeleteB.java.txt","B");
-    assertUmpleTemplateFor("CascadeDelete.ump","java/CascadeDeleteC.java.txt","C");
-    assertUmpleTemplateFor("CascadeDelete.ump","java/CascadeDeleteD.java.txt","D");    
   }
   
 }

@@ -1,10 +1,14 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 from abc import ABC, abstractmethod
 
-class ICodeTranslator(ABC,):
+class ICodeTranslator(ABC):
     @abstractmethod
     def __init__(self):
         pass
 
+    # ABSTRACT METHODS 
     @abstractmethod
     def translate(self, id, attribute):
         pass
@@ -12,4 +16,3 @@ class ICodeTranslator(ABC,):
     @abstractmethod
     def translate(self, id, associationVariable):
         pass
-

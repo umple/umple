@@ -1,35 +1,64 @@
-from X import X
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#*
+
+#   * This is class Y
+
+#   * R3: There must be a class called Y
+
+#   
+
 import os
 
 class Y():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Y Attributes
+    #Y Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aC, aX):
+        self._x = None
+        self._c = None
         self._c = aC
         didAddX = self.setX(aX)
         if not didAddX :
             raise RuntimeError ("Unable to create y due to x. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setC(self, aC):
         wasSet = False
         self._c = aC
         wasSet = True
         return wasSet
 
+    #*
+    
+    #   * This is an important attribute
+    
+    #   * R5: A Y should have a c
+    
+    #   
     def getC(self):
         return self._c
 
+    # Code from template association_GetOne 
     def getX(self):
         return self._x
 
+    # Code from template association_SetOneToMany 
     def setX(self, aX):
         wasSet = False
         if aX is None :
             return wasSet
-
         existingX = self._x
         self._x = aX
-        if existingX != None and not existingX.equals(aX) :
+        if not (existingX is None) and not existingX == aX :
             existingX.removeY(self)
-
         self._x.addY(self)
         wasSet = True
         return wasSet
@@ -37,9 +66,8 @@ class Y():
     def delete(self):
         placeholderX = self._x
         self._x = None
-        if not(placeholderX is None) :
+        if not (placeholderX is None) :
             placeholderX.removeY(self)
 
     def __str__(self):
-        return str(super()) + "[" + "c" + ":" + self.getC() + "]" + os.linesep + "  " + "x = " + (self.getX() != (format(id(self.getX()), "x")) if None else "null")
-
+        return str(super().__str__()) + "[" + "c" + ":" + str(self.getC()) + "]" + str(os.linesep) + "  " + "x = " + ((format(id(self.getX()), "x")) if not (self.getX() is None) else "null")

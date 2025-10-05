@@ -1,8 +1,8 @@
 <?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.25.0-9e8af9e modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
-abstract class Student
+abstract class Foo
 {
 
   //------------------------

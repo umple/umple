@@ -1,14 +1,28 @@
-from Foo import Foo
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 
 class Teacher():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Teacher Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
+        self._myFooss = None
         self._myFooss = []
 
-    def getMyFooss(self, index):
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetMany 
+    def getMyFooss1(self, index):
         aMyFooss = self._myFooss[index]
         return aMyFooss
 
-    def getMyFooss(self):
+    def getMyFooss2(self):
         newMyFooss = tuple(self._myFooss)
         return newMyFooss
 
@@ -21,75 +35,68 @@ class Teacher():
         return has
 
     def indexOfMyFooss(self, aMyFooss):
-        index = self._myFooss.index(aMyFooss)
+        index = (-1 if not aMyFooss in self._myFooss else self._myFooss.index(aMyFooss))
         return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMyFooss():
         return 0
 
+    # Code from template association_MaximumNumberOfMethod 
     @staticmethod
     def maximumNumberOfMyFooss():
         return 2
 
+    # Code from template association_AddOptionalNToOne 
     def addMyFooss(self, aMyFooss):
         wasAdded = False
-        if aMyFooss in self._myFooss :
+        if (aMyFooss) in self._myFooss :
             return False
-
-        if self.numberOfMyFooss() > = self.maximumNumberOfMyFooss() :
+        if self.numberOfMyFooss() >= Teacher.maximumNumberOfMyFooss() :
             return wasAdded
-
         existingTeacher = aMyFooss.getTeacher()
-        isNewTeacher = existingTeacher != None and not self.equals(existingTeacher)
+        isNewTeacher = not (existingTeacher is None) and not self == existingTeacher
         if isNewTeacher :
             aMyFooss.setTeacher(self)
-
         else :
             self._myFooss.append(aMyFooss)
-
         wasAdded = True
         return wasAdded
 
     def removeMyFooss(self, aMyFooss):
         wasRemoved = False
-        if not self.equals(aMyFooss.getTeacher()) :
+        #Unable to remove aMyFooss, as it must always have a teacher
+        if not self == aMyFooss.getTeacher() :
             self._myFooss.remove(aMyFooss)
             wasRemoved = True
-
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addMyFoossAt(self, aMyFooss, index):
         wasAdded = False
         if self.addMyFooss(aMyFooss) :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfMyFooss() :
                 index = self.numberOfMyFooss() - 1
-
             self._myFooss.remove(aMyFooss)
             self._myFooss.insert(index, aMyFooss)
             wasAdded = True
-
         return wasAdded
 
     def addOrMoveMyFoossAt(self, aMyFooss, index):
         wasAdded = False
-        if aMyFooss in self._myFooss :
+        if (aMyFooss) in self._myFooss :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfMyFooss() :
                 index = self.numberOfMyFooss() - 1
-
             self._myFooss.remove(aMyFooss)
             self._myFooss.insert(index, aMyFooss)
             wasAdded = True
-
         else :
             wasAdded = self.addMyFoossAt(aMyFooss, index)
-
         return wasAdded
 
     def delete(self):
@@ -97,5 +104,11 @@ class Teacher():
         while i > 0 :
             aMyFooss = self._myFooss[i - 1]
             aMyFooss.delete()
-            i = i - 1
+            i -= 1
 
+    def getMyFooss(self, *argv):
+        if len(argv) == 1 and isinstance(argv[0], int) :
+            return self.getMyFooss1(argv[0])
+        if len(argv) == 0 :
+            return self.getMyFooss2()
+        raise TypeError("No method matches provided parameters")

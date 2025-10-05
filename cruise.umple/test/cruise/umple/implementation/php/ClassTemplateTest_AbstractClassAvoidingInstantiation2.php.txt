@@ -1,0 +1,173 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Teacher
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Teacher Associations
+  private $myFooss;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->myFooss = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getMyFooss_index($index)
+  {
+    $aMyFooss = $this->myFooss[$index];
+    return $aMyFooss;
+  }
+
+  public function getMyFooss()
+  {
+    $newMyFooss = $this->myFooss;
+    return $newMyFooss;
+  }
+
+  public function numberOfMyFooss()
+  {
+    $number = count($this->myFooss);
+    return $number;
+  }
+
+  public function hasMyFooss()
+  {
+    $has = $this->numberOfMyFooss() > 0;
+    return $has;
+  }
+
+  public function indexOfMyFooss($aMyFooss)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->myFooss as $myFooss)
+    {
+      if ($myFooss->equals($aMyFooss))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfMyFooss()
+  {
+    return 0;
+  }
+
+  public static function maximumNumberOfMyFooss()
+  {
+    return 2;
+  }
+
+  public function addMyFoossVia()
+  {
+    if ($this->numberOfMyFooss() >= self::maximumNumberOfMyFooss())
+    {
+      return null;
+    }
+    else
+    {
+      return new Foo($this);
+    }
+  }
+
+  public function addMyFooss($aMyFooss)
+  {
+    $wasAdded = false;
+    if ($this->indexOfMyFooss($aMyFooss) !== -1) { return false; }
+    if ($this->numberOfMyFooss() >= self::maximumNumberOfMyFooss())
+    {
+      return $wasAdded;
+    }
+
+    $existingTeacher = $aMyFooss->getTeacher();
+    $isNewTeacher = $existingTeacher != null && $this !== $existingTeacher;
+    if ($isNewTeacher)
+    {
+      $aMyFooss->setTeacher($this);
+    }
+    else
+    {
+      $this->myFooss[] = $aMyFooss;
+    }
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeMyFooss($aMyFooss)
+  {
+    $wasRemoved = false;
+    //Unable to remove aMyFooss, as it must always have a teacher
+    if ($this !== $aMyFooss->getTeacher())
+    {
+      unset($this->myFooss[$this->indexOfMyFooss($aMyFooss)]);
+      $this->myFooss = array_values($this->myFooss);
+      $wasRemoved = true;
+    }
+    return $wasRemoved;
+  }
+
+  public function addMyFoossAt($aMyFooss, $index)
+  {  
+    $wasAdded = false;
+    if($this->addMyFooss($aMyFooss))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfMyFooss()) { $index = $this->numberOfMyFooss() - 1; }
+      array_splice($this->myFooss, $this->indexOfMyFooss($aMyFooss), 1);
+      array_splice($this->myFooss, $index, 0, array($aMyFooss));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveMyFoossAt($aMyFooss, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfMyFooss($aMyFooss) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfMyFooss()) { $index = $this->numberOfMyFooss() - 1; }
+      array_splice($this->myFooss, $this->indexOfMyFooss($aMyFooss), 1);
+      array_splice($this->myFooss, $index, 0, array($aMyFooss));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addMyFoossAt($aMyFooss, $index);
+    }
+    return $wasAdded;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    foreach ($this->myFooss as $aMyFooss)
+    {
+      $aMyFooss->delete();
+    }
+  }
+
+}
+?>

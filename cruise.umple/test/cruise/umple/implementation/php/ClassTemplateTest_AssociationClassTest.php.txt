@@ -16,13 +16,31 @@ class Registration
   private $student;
   private $courseSection;
 
+  //Helper Variables
+  private $cachedHashCode;
+  private $canSetStudent;
+  private $canSetCourseSection;
+
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aGrade)
+  public function __construct($aGrade, $aStudent, $aCourseSection)
   {
+    $this->cachedHashCode = -1;
+    $this->canSetStudent = true;
+    $this->canSetCourseSection = true;
     $this->grade = $aGrade;
+    $didAddStudent = $this->setStudent($aStudent);
+    if (!$didAddStudent)
+    {
+      throw new Exception("Unable to create registration due to student. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    $didAddCourseSection = $this->setCourseSection($aCourseSection);
+    if (!$didAddCourseSection)
+    {
+      throw new Exception("Unable to create registration due to courseSection. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
 
   //------------------------
@@ -55,52 +73,112 @@ class Registration
   public function setStudent($aStudent)
   {
     $wasSet = false;
+    if (!$this->canSetStudent) { return false; }
+    if ($aStudent === NULL)
+    {
+      return wasSet;
+    }
+
     $existingStudent = $this->student;
     $this->student = $aStudent;
-    if ($existingStudent != null && $existingStudent !== $aStudent)
+    if (!$existingStudent->is_null() && !$existingStudent->equals($aStudent))
     {
       $existingStudent->removeRegistration($this);
     }
-    if ($aStudent != null && $aStudent !== $existingStudent)
+    if (!$this->student->addRegistration($this))
     {
-      $aStudent->addRegistration($this);
+      $this->student = $existingStudent;
+      $wasSet = false;
     }
-    $wasSet = true;
+    else
+    {
+      $wasSet = true;
+    }
     return $wasSet;
   }
 
   public function setCourseSection($aCourseSection)
   {
     $wasSet = false;
+    if (!$this->canSetCourseSection) { return false; }
+    if ($aCourseSection === NULL)
+    {
+      return wasSet;
+    }
+
     $existingCourseSection = $this->courseSection;
     $this->courseSection = $aCourseSection;
-    if ($existingCourseSection != null && $existingCourseSection !== $aCourseSection)
+    if (!$existingCourseSection->is_null() && !$existingCourseSection->equals($aCourseSection))
     {
       $existingCourseSection->removeRegistration($this);
     }
-    if ($aCourseSection != null && $aCourseSection !== $existingCourseSection)
+    if (!$this->courseSection->addRegistration($this))
     {
-      $aCourseSection->addRegistration($this);
+      $this->courseSection = $existingCourseSection;
+      $wasSet = false;
     }
-    $wasSet = true;
+    else
+    {
+      $wasSet = true;
+    }
     return $wasSet;
   }
 
   public function equals($compareTo)
   {
-    return $this == $compareTo;
+    if ($compareTo == null) { return false; }
+    if (get_class($this) != get_class($compareTo)) { return false; }
+
+    if ($this->student != $compareTo->student)
+    {
+      return false;
+    }
+
+    if ($this->courseSection != $compareTo->courseSection)
+    {
+      return false;
+    }
+
+    return true;
+  }
+
+  public function hashCode()
+  {
+    if ($this->cachedHashCode != -1)
+    {
+      return $this->cachedHashCode;
+    }
+    $this->cachedHashCode = 17;
+    if ($this->student != null)
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->student);
+    }
+    else
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23;
+    }
+    if ($this->courseSection != null)
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23 + spl_object_hash($this->courseSection);
+    }
+    else
+    {
+      $this->cachedHashCode = $this->cachedHashCode * 23;
+    }
+
+    $this->canSetStudent = false;
+    $this->canSetCourseSection = false;
+    return $this->cachedHashCode;
   }
 
   public function delete()
   {
-    if ($this->student != null)
-    {
-      $this->student->removeRegistration($this);
-    }
-    if ($this->courseSection != null)
-    {
-      $this->courseSection->removeRegistration($this);
-    }
+    $placeholderStudent = $this->student;
+    $this->student = null;
+    $placeholderStudent->removeRegistration($this);
+    $placeholderCourseSection = $this->courseSection;
+    $this->courseSection = null;
+    $placeholderCourseSection->removeRegistration($this);
   }
 
 }
