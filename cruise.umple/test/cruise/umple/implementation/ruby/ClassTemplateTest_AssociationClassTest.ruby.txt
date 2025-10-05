@@ -22,12 +22,19 @@ class Registration
   # CONSTRUCTOR
   #------------------------
 
-  def initialize(a_grade)
+  def initialize(a_grade, a_student, a_courseSection)
     @initialized = false
     @deleted = false
+    @cachedHashCode = -1
+    @can_set_student = true
+    @can_set_courseSection = true
     @grade = a_grade
     @student = nil
+    did_add_student = set_student(a_student)
+    raise "Unable to create registration due to @student. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless did_add_student
     @courseSection = nil
+    did_add_courseSection = set_courseSection(a_courseSection)
+    raise "Unable to create registration due to @courseSection. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless did_add_courseSection
     @initialized = true
   end
 
@@ -56,40 +63,91 @@ class Registration
 
   def set_student(a_student)
     was_set = false
-    existing_student = @student
+    return false unless @can_set_student
+    if a_student.nil?
+      return was_set
+    end
+
+    existing_student = student
     @student = a_student
     if !existing_student.nil? and !existing_student.eql?(a_student)
-      existing_student.remove_registration(self)
+      existing_student.remove_registration(this)
     end
-    unless a_student.nil?
-      a_student.add_registration(self)
-    end
-    was_set = true
+    if !@student.add_registration(self)
+    {
+      @student = existing_student
+      was_set = false
+    }
+    else
+    {
+      was_set = true
+    }
     was_set
   end
 
   def set_courseSection(a_courseSection)
     was_set = false
-    existing_courseSection = @courseSection
+    return false unless @can_set_courseSection
+    if a_courseSection.nil?
+      return was_set
+    end
+
+    existing_courseSection = courseSection
     @courseSection = a_courseSection
     if !existing_courseSection.nil? and !existing_courseSection.eql?(a_courseSection)
-      existing_courseSection.remove_registration(self)
+      existing_courseSection.remove_registration(this)
     end
-    unless a_courseSection.nil?
-      a_courseSection.add_registration(self)
-    end
-    was_set = true
+    if !@courseSection.add_registration(self)
+    {
+      @courseSection = existing_courseSection
+      was_set = false
+    }
+    else
+    {
+      was_set = true
+    }
     was_set
+  end
+
+  def eql?(obj)
+    return false if obj.nil?
+    return false unless self.class == obj.class
+
+    compareTo = obj
+    return false if (@student.nil? and !compareTo.instance_variable_get("@student").nil?)
+    return false if (!@student.nil? and !@student.eql?(compareTo.instance_variable_get("@student")))
+
+    return false if (@courseSection.nil? and !compareTo.instance_variable_get("@courseSection").nil?)
+    return false if (!@courseSection.nil? and !@courseSection.eql?(compareTo.instance_variable_get("@courseSection")))
+    true
+  end
+
+  def hash
+    return @cachedHashCode unless @cachedHashCode == -1
+    @cachedHashCode = 17
+    if (!@student.nil?)
+      @cachedHashCode = @cachedHashCode * 23 + @student.hash
+    else
+      @cachedHashCode = @cachedHashCode * 23
+    end
+    if (!@courseSection.nil?)
+      @cachedHashCode = @cachedHashCode * 23 + @courseSection.hash
+    else
+      @cachedHashCode = @cachedHashCode * 23
+    end
+    @can_set_student = false
+    @can_set_courseSection = false
+    @cachedHashCode
   end
 
   def delete
     @deleted = true
-    unless @student.nil?
-      @student.remove_registration(self)
-    end
-    unless @courseSection.nil?
-      @courseSection.remove_registration(self)
-    end
+    @placeholder_student = @student
+    @student = nil
+    @placeholder_student.remove_registration(self)
+    @placeholder_courseSection = @courseSection
+    @courseSection = nil
+    @placeholder_courseSection.remove_registration(self)
   end
 
 end

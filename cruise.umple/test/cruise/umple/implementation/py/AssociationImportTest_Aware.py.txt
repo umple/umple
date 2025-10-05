@@ -1,21 +1,34 @@
-from Student import Student
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+
 
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aStudent):
+        self._student = None
         if not self.setStudent(aStudent) :
             raise RuntimeError ("Unable to create Mentor due to aStudent. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetOne 
     def getStudent(self):
         return self._student
 
+    # Code from template association_SetUnidirectionalOne 
     def setStudent(self, aNewStudent):
         wasSet = False
-        if not(aNewStudent is None) :
+        if not (aNewStudent is None) :
             self._student = aNewStudent
             wasSet = True
-
         return wasSet
 
     def delete(self):
         self._student = None
-

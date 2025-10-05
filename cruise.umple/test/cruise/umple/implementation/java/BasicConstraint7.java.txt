@@ -3,14 +3,14 @@
 
 
 
-public class student
+public class Student
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //student Attributes
+  //Student Attributes
   private int age;
   private int weight;
 
@@ -18,7 +18,7 @@ public class student
   // CONSTRUCTOR
   //------------------------
 
-  public student(int aAge, int aWeight)
+  public Student(int aAge, int aWeight)
   {
     age = aAge;
     weight = aWeight;

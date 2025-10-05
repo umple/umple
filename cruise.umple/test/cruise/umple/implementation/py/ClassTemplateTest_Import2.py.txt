@@ -1,0 +1,250 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Student Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self, aNumber, *allMentors):
+        allMentors = list(allMentors)
+        self._courses = None
+        self._mentors = None
+        self._number = None
+        self._number = aNumber
+        self._mentors = []
+        didAddMentors = self.setMentors(*allMentors)
+        if not didAddMentors :
+            raise RuntimeError ("Unable to create Student, must have at least 1 mentors. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        self._courses = []
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setNumber(self, aNumber):
+        wasSet = False
+        self._number = aNumber
+        wasSet = True
+        return wasSet
+
+    def getNumber(self):
+        return self._number
+
+    # Code from template association_GetMany 
+    def getMentor(self, index):
+        aMentor = self._mentors[index]
+        return aMentor
+
+    def getMentors(self):
+        newMentors = tuple(self._mentors)
+        return newMentors
+
+    def numberOfMentors(self):
+        self._number = len(self._mentors)
+        return self._number
+
+    def hasMentors(self):
+        has = len(self._mentors) > 0
+        return has
+
+    def indexOfMentor(self, aMentor):
+        index = (-1 if not aMentor in self._mentors else self._mentors.index(aMentor))
+        return index
+
+    # Code from template association_GetMany 
+    def getCourse(self, index):
+        aCourse = self._courses[index]
+        return aCourse
+
+    def getCourses(self):
+        newCourses = tuple(self._courses)
+        return newCourses
+
+    def numberOfCourses(self):
+        self._number = len(self._courses)
+        return self._number
+
+    def hasCourses(self):
+        has = len(self._courses) > 0
+        return has
+
+    def indexOfCourse(self, aCourse):
+        index = (-1 if not aCourse in self._courses else self._courses.index(aCourse))
+        return index
+
+    # Code from template association_MinimumNumberOfMethod 
+    @staticmethod
+    def minimumNumberOfMentors():
+        return 1
+
+    # Code from template association_AddMNToOptionalOne 
+    def addMentor(self, aMentor):
+        wasAdded = False
+        if (aMentor) in self._mentors :
+            return False
+        existingStudent = aMentor.getStudent()
+        if not (existingStudent is None) and existingStudent.numberOfMentors() <= Student.minimumNumberOfMentors() :
+            return wasAdded
+        elif not (existingStudent is None) :
+            existingStudent.mentors.remove(aMentor)
+        self._mentors.append(aMentor)
+        self.setStudent(aMentor, self)
+        wasAdded = True
+        return wasAdded
+
+    def removeMentor(self, aMentor):
+        wasRemoved = False
+        if (aMentor) in self._mentors and self.numberOfMentors() > Student.minimumNumberOfMentors() :
+            self._mentors.remove(aMentor)
+            self.setStudent(aMentor, None)
+            wasRemoved = True
+        return wasRemoved
+
+    # Code from template association_SetMNToOptionalOne 
+    def setMentors(self, *newMentors):
+        newMentors = list(newMentors)
+        wasSet = False
+        if len(newMentors) < Student.minimumNumberOfMentors() :
+            return wasSet
+        checkNewMentors = []
+        studentToNewMentors = dict()
+        for aMentor in newMentors:
+            if (aMentor) in checkNewMentors :
+                return wasSet
+            elif not (aMentor.getStudent() is None) and not self == aMentor.getStudent() :
+                existingStudent = aMentor.getStudent()
+                if not (existingStudent) in studentToNewMentors :
+                    studentToNewMentors[existingStudent] = int(existingStudent.numberOfMentors())
+                currentCount = studentToNewMentors.get(existingStudent)
+                nextCount = currentCount - 1
+                if nextCount < 1 :
+                    return wasSet
+                studentToNewMentors[existingStudent] = int(nextCount)
+            checkNewMentors.append(aMentor)
+
+        self._mentors = list(filter(lambda a : not a in checkNewMentors, self._mentors))
+        for orphan in self._mentors:
+            self.setStudent(orphan, None)
+
+        self._mentors.clear()
+        for aMentor in newMentors:
+            if not (aMentor.getStudent() is None) :
+                aMentor.getStudent().mentors.remove(aMentor)
+            self.setStudent(aMentor, self)
+            self._mentors.append(aMentor)
+
+        wasSet = True
+        return wasSet
+
+    # Code from template association_GetPrivate 
+    def setStudent(self, aMentor, aStudent):
+        try :
+            aMentor._student = aStudent
+        except :
+            raise RuntimeError ("Issue internally setting aStudent to aMentor")
+
+    # Code from template association_AddIndexControlFunctions 
+    def addMentorAt(self, aMentor, index):
+        wasAdded = False
+        if self.addMentor(aMentor) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfMentors() :
+                index = self.numberOfMentors() - 1
+            self._mentors.remove(aMentor)
+            self._mentors.insert(index, aMentor)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveMentorAt(self, aMentor, index):
+        wasAdded = False
+        if (aMentor) in self._mentors :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfMentors() :
+                index = self.numberOfMentors() - 1
+            self._mentors.remove(aMentor)
+            self._mentors.insert(index, aMentor)
+            wasAdded = True
+        else :
+            wasAdded = self.addMentorAt(aMentor, index)
+        return wasAdded
+
+    # Code from template association_MinimumNumberOfMethod 
+    @staticmethod
+    def minimumNumberOfCourses():
+        return 0
+
+    # Code from template association_AddManyToManyMethod 
+    def addCourse(self, aCourse):
+        wasAdded = False
+        if (aCourse) in self._courses :
+            return False
+        self._courses.append(aCourse)
+        if aCourse.indexOfStudent(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aCourse.addStudent(self)
+            if not wasAdded :
+                self._courses.remove(aCourse)
+        return wasAdded
+
+    # Code from template association_RemoveMany 
+    def removeCourse(self, aCourse):
+        wasRemoved = False
+        if not (aCourse) in self._courses :
+            return wasRemoved
+        oldIndex = (-1 if not aCourse in self._courses else self._courses.index(aCourse))
+        self._courses.remove(oldIndex)
+        if aCourse.indexOfStudent(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aCourse.removeStudent(self)
+            if not wasRemoved :
+                self._courses.insert(oldIndex, aCourse)
+        return wasRemoved
+
+    # Code from template association_AddIndexControlFunctions 
+    def addCourseAt(self, aCourse, index):
+        wasAdded = False
+        if self.addCourse(aCourse) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfCourses() :
+                index = self.numberOfCourses() - 1
+            self._courses.remove(aCourse)
+            self._courses.insert(index, aCourse)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveCourseAt(self, aCourse, index):
+        wasAdded = False
+        if (aCourse) in self._courses :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfCourses() :
+                index = self.numberOfCourses() - 1
+            self._courses.remove(aCourse)
+            self._courses.insert(index, aCourse)
+            wasAdded = True
+        else :
+            wasAdded = self.addCourseAt(aCourse, index)
+        return wasAdded
+
+    def delete(self):
+        for aMentor in self._mentors:
+            self.setStudent(aMentor, None)
+
+        self._mentors.clear()
+        copyOfCourses = self._courses.copy()
+        self._courses.clear()
+        for aCourse in copyOfCourses:
+            aCourse.removeStudent(self)
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"

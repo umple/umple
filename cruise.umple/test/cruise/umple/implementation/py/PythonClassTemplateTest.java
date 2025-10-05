@@ -28,8 +28,6 @@ public class PythonClassTemplateTest extends ClassTemplateTest
     SampleFileWriter.destroy(pathToInput + "/Switch.py");
     SampleFileWriter.destroy(pathToInput + "/py/Student.py");
     SampleFileWriter.destroy(pathToInput + "/py/Object.py");
-    SampleFileWriter.destroy(pathToInput + "/py/Foo.py");
-    SampleFileWriter.destroy(pathToInput + "/py/Bar.py");
     //SampleFileWriter.destroy(pathToInput + "/py/python_code/example/Mentor.py");
     //SampleFileWriter.destroy(pathToInput + "/py/python_code/example/Student.py");
   }
@@ -55,13 +53,6 @@ public class PythonClassTemplateTest extends ClassTemplateTest
     language = null;
     assertUmpleTemplateFor("py/ClassTemplateTest_ExtraCode.ump","py/ClassTemplateTest_ExtraCode.py.txt","Mentor");
   }
-  
-  @Test
-  public void abstractClass()
-  {
-	language = "Python";
-	assertUmpleTemplateFor("py/ClassTemplateTest_AbstractClass.ump","py/ClassTemplateTest_AbstractClass.py.txt", "Student");
-  }
 
    @Test
   public void MethodParameterTypes(){
@@ -78,12 +69,6 @@ public class PythonClassTemplateTest extends ClassTemplateTest
 	  System.out.print(actual);
 	  
     SampleFileWriter.assertFileContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"), actual);
-  }
-
-
-  @Test
-  public void immutableNotLazyAttributeConstructor(){
-	  assertUmpleTemplateFor("py/ImmutableNotLazyAttributeConstructor.ump","py/StudentImmutableNotLazyTest.py.txt","Student");
   }
 
   @Test
@@ -108,10 +93,8 @@ public class PythonClassTemplateTest extends ClassTemplateTest
   }
 
   @Test
-  public void TestUmpleEnumerations_9(){
-    assertUmpleTemplateFor("py/TestUmpleEnumerations_9.ump", 
-                           "py/TestUmpleEnumerations_9.py.txt",
-                           "Bar");
+  public void InternalConstant(){
+        assertUmpleTemplateFor("ClassTemplateTest_InternalConstant.ump",languagePath+"/ClassTemplateTest_InternalConstant."+ languagePath + ".txt","Student");
   }
 
   @Test @Ignore

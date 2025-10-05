@@ -1,7 +1,0 @@
-generate Python;
-namespace example;
-
-interface IMentor 
-{
-String getCode(String aParam);
-}

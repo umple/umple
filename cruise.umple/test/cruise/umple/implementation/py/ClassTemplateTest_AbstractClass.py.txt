@@ -1,8 +1,9 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+
 from abc import ABC, abstractmethod
 
-class Student(ABC):
+class Foo(ABC):
     #------------------------
     # MEMBER VARIABLES
     #------------------------
@@ -17,4 +18,3 @@ class Student(ABC):
     #------------------------
     def delete(self):
         pass
-
