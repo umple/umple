@@ -45,13 +45,31 @@ rule replaceConcreteMethod
         _ [getPythonParams params possibleStatic]
     construct possibleStaticDecorator [repeat decorator]
         _ [createStaticDecorator possibleStatic]
+    construct localVars [repeat id]
+            'number
+        %_ [findLocalVars each statements]
     by
         possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  statements 
             [manageSpecialTypes params] 
-            [replaceStatements] 
+            [replaceStatements localVars]
             [changeKeyArgumentNameInNestedIdentifier] 
             [addFunctionImports]
             [addStrIfNeeded methodName]
+end rule
+
+rule findLocalVars singleStament [statement]
+    replace [repeat id]
+        sequenceSoFar [repeat id]
+    deconstruct singleStament
+        discard [nested_identifier] assignment [value]';
+    deconstruct assignment
+        head [base_value] tail [opt value_continuation]
+    deconstruct head
+        name [nested_identifier]
+    deconstruct name
+        idName [id] rest [repeat attribute_access]
+    by
+        sequenceSoFar [. idName]
 end rule
 
 %Creates a static decorator if needed. Otherwise returns empty
@@ -163,6 +181,8 @@ rule replaceConstructor memberVariables [repeat id]
          mod [acess_modifier] className [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement]  '}
     construct selfParam [list method_parameter]
         'self
+    construct randomId [repeat id]
+        'Jacques
     construct modifiedParams [list method_parameter]
         _ [translateParam each params]
     construct newParams [list method_parameter]
@@ -172,7 +192,7 @@ rule replaceConstructor memberVariables [repeat id]
             statements 
                 [addNoneAssignments each memberVariables] 
                 [manageSpecialTypes params] 
-                [replaceStatements] 
+                [replaceStatements randomId] 
                 [changeKeyArgumentNameInNestedIdentifier]
                 [addFunctionImports]
 end rule

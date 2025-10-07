@@ -4,7 +4,7 @@
 %This file contains logic related to translating code at the statement level (ie code unside methods)
 
 %Main function that calls most others
-function replaceStatements
+function replaceStatements localVars [repeat id]
     replace [any]
         statements [any]
     by 
@@ -32,6 +32,8 @@ function replaceStatements
             [replaceThisFunctionCall]
             [replaceNestedStatement]
             [replaceDecleration]
+            [replaceAllMemberVariableNames localVars]
+            
             [replaceTernary]
             [replaceAllBoolean]
             [replaceTryCatch]
@@ -70,7 +72,7 @@ function replaceStatements
             [replaceIntegerValueOf]
             [replaceDoubleValueOf]
             [replaceFloatF]
-            [replaceAllMemberVariableNames]
+           % [replaceAllMemberVariableNames]
             [removeSemiColonFromValues]
             [replaceThreadSleep]
 
@@ -187,8 +189,8 @@ end rule
 rule replaceDecleration
     replace [statement]
         _[nested_identifier] assignment [value]';
-    by 
-        assignment 
+    by
+        assignment
 end rule
 
 rule replaceTryCatch
@@ -928,29 +930,34 @@ end rule
 %We also have to add self. to access them
 % personName -> self._personName
 
-function replaceAllMemberVariableNames
+function replaceAllMemberVariableNames localVars [repeat id]
     replace [any]
         any [any]
     import memberVariables [repeat id]
     by 
         any 
-            [replaceMemberVariableNames memberVariables] 
+            [replaceMemberVariableNames memberVariables localVars] 
             [replaceMemberVariableNamesWithThis memberVariables]
             [replaceMemberVariableNamesBrackets memberVariables]
             [replaceStaticMemberVariableNames]
 end function
 
-rule replaceMemberVariableNames memberVariables [repeat id]
+rule replaceMemberVariableNames memberVariables [repeat id] localVariables [repeat id]
     replace [nested_identifier]
          name [id] rep  [repeat attribute_access]
     where 
         memberVariables [containsId name]
+    %where not
+    %    localVars [containsId name]
+    deconstruct localVariables
+        head [id] rest [repeat id]
     construct underscore [id]
         '_
     construct newName [id]
         underscore [+ name] 
     by
-        'self '. newName rep
+        %'self '. newName rep
+        head
 end rule
 
 rule replaceStaticMemberVariableNames
