@@ -19,7 +19,7 @@ class Mentor
   private $name;
 
   //Mentor Associations
-  private $student;
+  public $student; //until PHP 5.3 (setAccessible)
 
   //------------------------
   // CONSTRUCTOR
@@ -61,18 +61,34 @@ class Mentor
     return $this->student;
   }
 
-  public function setStudent($aStudent)
+  public function hasStudent()
+  {
+    $has = $this->student != null;
+    return $has;
+  }
+
+  public function setStudent($aNewStudent)
   {
     $wasSet = false;
-    $existingStudent = $this->student;
-    $this->student = $aStudent;
-    if ($existingStudent != null && $existingStudent !== $aStudent)
+    if ($this->student != null && $this->student != $aNewStudent && $this == $this->student->getMentor())
     {
-      $existingStudent->removeMentor($this);
+      //Unable to setStudent, as existing student would become an orphan
+      return $wasSet;
     }
-    if ($aStudent != null && $aStudent !== $existingStudent)
+    
+    $this->student = $aNewStudent;
+    $anOldMentor = $aNewStudent != null ? $aNewStudent->getMentor() : null;
+    
+    if ($this != $anOldMentor)
     {
-      $aStudent->addMentor($this);
+      if ($anOldMentor != null)
+      {
+        $anOldMentor->student = null;
+      }
+      if ($this->student != null)
+      {
+        $this->student->setMentor($this);
+      }
     }
     $wasSet = true;
     return $wasSet;
@@ -85,9 +101,11 @@ class Mentor
 
   public function delete()
   {
-    if ($this->student != null)
+    $existingStudent = $this->student;
+    $this->student = null;
+    if ($existingStudent != null)
     {
-      $this->student->removeMentor($this);
+      $existingStudent->delete();
     }
   }
 

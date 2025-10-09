@@ -7,11 +7,11 @@
 #   
 
 
-class student():
+class Student():
     #------------------------
     # MEMBER VARIABLES
     #------------------------
-    #student Attributes
+    #Student Attributes
     #------------------------
     # CONSTRUCTOR
     #------------------------
