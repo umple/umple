@@ -253,12 +253,11 @@ function addTranslatedStaticMember elem [class_body_element]
         keepers [repeat class_body_element]
     construct declerations [repeat member_variable_declaration]
         _ [^ elem]
-    construct randomId [repeat id]
-        'Henry
+    construct emptyRepeatId [repeat id] %this is a list of local variables. not needed here so empty. Issue 2249
     deconstruct declerations
         _[opt acess_modifier] _[opt transient] 'static  _[opt final] _[opt volatile] _ [nested_identifier] staticMemberName [id] '= val [value] ';
     construct elemToAdd [class_body_element]
-        staticMemberName '= val [replaceStatements randomId]
+        staticMemberName '= val [replaceStatements emptyRepeatId]
     by
         keepers [. elemToAdd]
 end function

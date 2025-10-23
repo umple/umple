@@ -45,11 +45,10 @@ rule replaceConcreteMethod
         _ [getPythonParams params possibleStatic]
     construct possibleStaticDecorator [repeat decorator]
         _ [createStaticDecorator possibleStatic]
-    construct localVars [repeat id]
-            'number
-        %_ [findLocalVars each statements]
+    construct localVars [repeat id] %this is a list of local variables. needed for issue 2249
+        _ [findLocalVars each statements]
     by
-        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  statements 
+        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  statements
             [manageSpecialTypes params] 
             [replaceStatements localVars]
             [changeKeyArgumentNameInNestedIdentifier] 
@@ -57,7 +56,9 @@ rule replaceConcreteMethod
             [addStrIfNeeded methodName]
 end rule
 
-rule findLocalVars singleStament [statement]
+% goes through the method body and makes a list of local variables
+% added for Issue 2249
+function findLocalVars singleStament [statement]
     replace [repeat id]
         sequenceSoFar [repeat id]
     deconstruct singleStament
@@ -70,7 +71,7 @@ rule findLocalVars singleStament [statement]
         idName [id] rest [repeat attribute_access]
     by
         sequenceSoFar [. idName]
-end rule
+end function
 
 %Creates a static decorator if needed. Otherwise returns empty
 function createStaticDecorator possibleStatic [opt static]
@@ -181,10 +182,9 @@ rule replaceConstructor memberVariables [repeat id]
          mod [acess_modifier] className [id]'( params [list method_parameter] ') _ [opt throws] '{ statements [repeat statement]  '}
     construct selfParam [list method_parameter]
         'self
-    construct randomId [repeat id]
-        'Jacques
     construct modifiedParams [list method_parameter]
         _ [translateParam each params]
+    construct emptyRepeatId [repeat id] %this is a list of local variables. not needed here so empty. Issue 2249
     construct newParams [list method_parameter]
         selfParam [, modifiedParams] [changeKeyArgumentNames]
     by
@@ -192,7 +192,7 @@ rule replaceConstructor memberVariables [repeat id]
             statements 
                 [addNoneAssignments each memberVariables] 
                 [manageSpecialTypes params] 
-                [replaceStatements randomId] 
+                [replaceStatements emptyRepeatId] 
                 [changeKeyArgumentNameInNestedIdentifier]
                 [addFunctionImports]
 end rule

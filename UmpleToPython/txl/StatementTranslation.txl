@@ -32,8 +32,6 @@ function replaceStatements localVars [repeat id]
             [replaceThisFunctionCall]
             [replaceNestedStatement]
             [replaceDecleration]
-            [replaceAllMemberVariableNames localVars]
-            
             [replaceTernary]
             [replaceAllBoolean]
             [replaceTryCatch]
@@ -72,7 +70,7 @@ function replaceStatements localVars [repeat id]
             [replaceIntegerValueOf]
             [replaceDoubleValueOf]
             [replaceFloatF]
-           % [replaceAllMemberVariableNames]
+            [replaceAllMemberVariableNames localVars]
             [removeSemiColonFromValues]
             [replaceThreadSleep]
 
@@ -936,28 +934,25 @@ function replaceAllMemberVariableNames localVars [repeat id]
     import memberVariables [repeat id]
     by 
         any 
-            [replaceMemberVariableNames memberVariables localVars] 
+            [replaceMemberVariableNames memberVariables localVars]
             [replaceMemberVariableNamesWithThis memberVariables]
             [replaceMemberVariableNamesBrackets memberVariables]
             [replaceStaticMemberVariableNames]
 end function
 
-rule replaceMemberVariableNames memberVariables [repeat id] localVariables [repeat id]
+rule replaceMemberVariableNames memberVariables [repeat id] localVars [repeat id]
     replace [nested_identifier]
          name [id] rep  [repeat attribute_access]
     where 
         memberVariables [containsId name]
-    %where not
-    %    localVars [containsId name]
-    deconstruct localVariables
-        head [id] rest [repeat id]
+    where not
+        localVars [containsId name]
     construct underscore [id]
         '_
     construct newName [id]
         underscore [+ name] 
     by
-        %'self '. newName rep
-        head
+        'self '. newName rep
 end rule
 
 rule replaceStaticMemberVariableNames
