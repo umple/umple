@@ -1,17 +1,35 @@
-from Student import Student
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 import os
 
 class Mentor():
+    theInstance = None
+    #------------------------
+    # STATIC VARIABLES
+    #------------------------
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
+        self._student = None
+        self._name = None
         self._name = None
 
     @staticmethod
     def getInstance():
-        if theInstance is None :
-            theInstance = Mentor()
+        if Mentor.theInstance is None :
+            Mentor.theInstance = Mentor()
+        return Mentor.theInstance
 
-        return theInstance
-
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
         wasSet = False
         self._name = aName
@@ -21,28 +39,35 @@ class Mentor():
     def getName(self):
         return self._name
 
+    # Code from template association_GetOne 
     def getStudent(self):
         return self._student
 
-    def setStudent(self, aStudent):
+    def hasStudent(self):
+        has = not (self._student is None)
+        return has
+
+    # Code from template association_SetOptionalOneToOne 
+    def setStudent(self, aNewStudent):
         wasSet = False
-        existingStudent = self._student
-        self._student = aStudent
-        if existingStudent != None and not existingStudent.equals(aStudent) :
-            existingStudent.removeMentor(self)
-
-        if not(aStudent is None) :
-            aStudent.addMentor(self)
-
+        if not (self._student is None) and not self._student == aNewStudent and self == self._student.getMentor() :
+            #Unable to setStudent, as existing student would become an orphan
+            return wasSet
+        self._student = aNewStudent
+        anOldMentor = (aNewStudent.getMentor()) if not (aNewStudent is None) else None
+        if not self == anOldMentor :
+            if not (anOldMentor is None) :
+                anOldMentor.student = None
+            if not (self._student is None) :
+                self._student.setMentor(self)
         wasSet = True
         return wasSet
 
     def delete(self):
-        if not(self._student is None) :
-            placeholderStudent = self._student
-            self._student = None
-            placeholderStudent.removeMentor(self)
+        existingStudent = self._student
+        self._student = None
+        if not (existingStudent is None) :
+            existingStudent.delete()
 
     def __str__(self):
-        return str(super()) + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "student = " + (self.getStudent() != (format(id(self.getStudent()), "x")) if None else "null")
-
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "student = " + ((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null")

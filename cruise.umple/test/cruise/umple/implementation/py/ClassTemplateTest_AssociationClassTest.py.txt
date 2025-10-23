@@ -1,18 +1,39 @@
-from Student import Student
-from CourseSection import CourseSection
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 import os
 
 class Registration():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Registration Attributes
+    #Registration Associations
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aGrade, aStudent, aCourseSection):
+        self._canSetCourseSection = None
+        self._canSetStudent = None
+        self._cachedHashCode = None
+        self._courseSection = None
+        self._student = None
+        self._grade = None
+        self._cachedHashCode = -1
+        self._canSetStudent = True
+        self._canSetCourseSection = True
         self._grade = aGrade
         didAddStudent = self.setStudent(aStudent)
         if not didAddStudent :
-            raise RuntimeError ("Unable to create registration due to student")
-
+            raise RuntimeError ("Unable to create registration due to student. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
         didAddCourseSection = self.setCourseSection(aCourseSection)
         if not didAddCourseSection :
-            raise RuntimeError ("Unable to create registration due to courseSection")
+            raise RuntimeError ("Unable to create registration due to courseSection. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setGrade(self, aGrade):
         wasSet = False
         self._grade = aGrade
@@ -22,48 +43,91 @@ class Registration():
     def getGrade(self):
         return self._grade
 
+    # Code from template association_GetOne 
     def getStudent(self):
         return self._student
 
+    # Code from template association_GetOne 
     def getCourseSection(self):
         return self._courseSection
 
+    # Code from template association_SetOneToManyAssociationClass 
     def setStudent(self, aStudent):
         wasSet = False
+        if not self._canSetStudent :
+            return False
         if aStudent is None :
             return wasSet
-
         existingStudent = self._student
         self._student = aStudent
-        if existingStudent != None and not existingStudent.equals(aStudent) :
+        if not (existingStudent is None) and not existingStudent == aStudent :
             existingStudent.removeRegistration(self)
-
-        self._student.addRegistration(self)
-        wasSet = True
+        if not self._student.addRegistration(self) :
+            self._student = existingStudent
+            wasSet = False
+        else :
+            wasSet = True
         return wasSet
 
+    # Code from template association_SetOneToManyAssociationClass 
     def setCourseSection(self, aCourseSection):
         wasSet = False
+        if not self._canSetCourseSection :
+            return False
         if aCourseSection is None :
             return wasSet
-
         existingCourseSection = self._courseSection
         self._courseSection = aCourseSection
-        if existingCourseSection != None and not existingCourseSection.equals(aCourseSection) :
+        if not (existingCourseSection is None) and not existingCourseSection == aCourseSection :
             existingCourseSection.removeRegistration(self)
-
-        self._courseSection.addRegistration(self)
-        wasSet = True
+        if not self._courseSection.addRegistration(self) :
+            self._courseSection = existingCourseSection
+            wasSet = False
+        else :
+            wasSet = True
         return wasSet
+
+    def equals(self, obj):
+        if obj is None :
+            return False
+        if not type(self) is type(obj) :
+            return False
+        compareTo = obj
+        if self.getStudent() is None and not (compareTo.getStudent() is None) :
+            return False
+        elif not (self.getStudent() is None) and not self.getStudent() == compareTo.getStudent() :
+            return False
+        if self.getCourseSection() is None and not (compareTo.getCourseSection() is None) :
+            return False
+        elif not (self.getCourseSection() is None) and not self.getCourseSection() == compareTo.getCourseSection() :
+            return False
+        return True
+
+    def __hash__(self):
+        if self._cachedHashCode != -1 :
+            return self._cachedHashCode
+        self._cachedHashCode = 17
+        if not (self.getStudent() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getStudent().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        if not (self.getCourseSection() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getCourseSection().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        self._canSetStudent = False
+        self._canSetCourseSection = False
+        return self._cachedHashCode
 
     def delete(self):
         placeholderStudent = self._student
         self._student = None
-        placeholderStudent.removeRegistration(self)
+        if not (placeholderStudent is None) :
+            placeholderStudent.removeRegistration(self)
         placeholderCourseSection = self._courseSection
         self._courseSection = None
-        placeholderCourseSection.removeRegistration(self)
+        if not (placeholderCourseSection is None) :
+            placeholderCourseSection.removeRegistration(self)
 
     def __str__(self):
-        return str(super()) + "[" + "grade" + ":" + self.getGrade() + "]" + os.linesep + "  " + "student = " + (self.getStudent() != (format(id(self.getStudent()), "x")) if None else "null") + os.linesep + "  " + "courseSection = " + (self.getCourseSection() != (format(id(self.getCourseSection()), "x")) if None else "null")
-
+        return str(super().__str__()) + "[" + "grade" + ":" + str(self.getGrade()) + "]" + str(os.linesep) + "  " + "student = " + str(((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null")) + str(os.linesep) + "  " + "courseSection = " + ((format(id(self.getCourseSection()), "x")) if not (self.getCourseSection() is None) else "null")

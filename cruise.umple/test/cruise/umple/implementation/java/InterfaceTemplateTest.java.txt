@@ -7,7 +7,7 @@ public interface ISomething
   
   // CONSTANT MEMBERS  
 
- public static final String aVariable = aValue;
+ public static final String MyConst = "aValue";
  public static final int MAX = 3;
   // ABSTRACT METHODS 
 

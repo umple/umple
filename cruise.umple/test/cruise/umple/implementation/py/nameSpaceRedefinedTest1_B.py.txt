@@ -1,7 +1,23 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# line 5 "../nameSpaceRedefinedTest1.ump"
+# line 1 "../nameSpaceRedefinedTest1.ump"
+
 class B():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #B Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aX):
+        self._x = None
         self._x = aX
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setX(self, aX):
         wasSet = False
         self._x = aX
@@ -15,5 +31,4 @@ class B():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "x" + ":" + self.getX() + "]"
-
+        return str(super().__str__()) + "[" + "x" + ":" + str(self.getX()) + "]"

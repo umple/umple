@@ -1,5 +1,5 @@
 //constant on the left side of the constraint
-class student
+class Student
 {
   Integer age;
   [age > 18]

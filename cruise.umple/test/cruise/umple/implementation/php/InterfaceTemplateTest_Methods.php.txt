@@ -1,0 +1,13 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+interface ICodeTranslator
+{
+  // ABSTRACT METHODS 
+
+ public function translate ($id,$attribute);
+ public function translate ($id,$associationVariable);
+  
+}
+?>

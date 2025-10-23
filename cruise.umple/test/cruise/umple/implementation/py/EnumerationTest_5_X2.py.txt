@@ -1,0 +1,46 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+
+import os
+from enum import Enum, auto
+
+class X2():
+    #------------------------
+    # ENUMERATIONS
+    #------------------------
+    class Fruit(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Apple = auto()
+        Orange = auto()
+
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X2 Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self, aT):
+        self._t = None
+        self._t = aT
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setT(self, aT):
+        wasSet = False
+        self._t = aT
+        wasSet = True
+        return wasSet
+
+    def getT(self):
+        return self._t
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "t" + "=" + (((self.getT().__str__().replaceAll("  ", "    ")) if not self.getT() == self else "this") if not (self.getT() is None) else "null")

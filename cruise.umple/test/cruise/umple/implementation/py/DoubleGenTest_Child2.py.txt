@@ -1,10 +1,24 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 from Person import Person
 
 class Student(Person):
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName, aAge, aLocker):
+        self._locker = None
         super().__init__(aName, aAge)
         self._locker = aLocker
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setLocker(self, aLocker):
         wasSet = False
         self._locker = aLocker
@@ -18,5 +32,4 @@ class Student(Person):
         super().delete()
 
     def __str__(self):
-        return str(super()) + "[" + "locker" + ":" + self.getLocker() + "]"
-
+        return str(super().__str__()) + "[" + "locker" + ":" + str(self.getLocker()) + "]"

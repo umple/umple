@@ -1,0 +1,29 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+////---- Tests for  ClassTemplateTest_AbstractClassAvoidingInstantiation ----/////
+
+test Teacher {
+
+ generate JUnit ;
+ 
+ depend  Teacher,Person ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_AbstractClassAvoidingInstantiation.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
+
+}
