@@ -49,7 +49,7 @@ rule replaceConcreteMethod
         _ [findLocalVars each statements]
     by
         possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  statements
-            [manageSpecialTypes params] 
+            [manageSpecialTypes params]
             [replaceStatements localVars]
             [changeKeyArgumentNameInNestedIdentifier] 
             [addFunctionImports]
@@ -57,7 +57,7 @@ rule replaceConcreteMethod
 end rule
 
 % goes through the method body and makes a list of local variables
-% added for Issue 2249
+% added for issue 2249
 function findLocalVars singleStament [statement]
     replace [repeat id]
         sequenceSoFar [repeat id]
