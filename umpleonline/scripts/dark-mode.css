@@ -1,0 +1,493 @@
+body {
+  background-color: #222;
+  color: #ddd;
+  color-scheme: dark;
+}
+
+.inRow.logo,
+#mainApplication,
+#paletteColumn,
+#topLine,
+#generatedCodeRow,
+#tabRow,
+#tabControl,
+#taskArea {
+  background-color: #222;
+  color: #ddd;
+}
+
+#header.row {
+  background-color: #333;
+}
+
+.pagedescription,
+.pagedescription a {
+  color: #ccc;
+}
+
+.button2 {
+  background: linear-gradient(180deg, #4f4f4f 0%, #3a3a3a 100%);
+  border: 1px solid #5a5a5a;
+  border-top-color: #707070;
+  color: #ffffff;
+  text-shadow: none;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.button2:hover {
+  background: linear-gradient(180deg, #626262 0%, #4e4e4e 100%);
+  border-color: #7a7a7a;
+  color: #ffffff;
+}
+
+.active {
+  background: linear-gradient(180deg, #3a639b 0%, #2c4a75 100%);
+  border-color: #456da5;
+  color: #ffffff;
+}
+
+.section {
+  background-color: #333;
+  border-color: #555;
+}
+
+h3 a,
+h3 a:link {
+  background: none;
+  box-shadow: none;
+  color: #eee;
+}
+
+a {
+  color: #8af;
+}
+
+.visitors-count {
+  color: #ccc;
+}
+
+.visitors-count a {
+  color: #9cc7ff;
+}
+
+img[src="scripts/uottawa_ver_black.png"],
+img[src="scripts/delete2.jpg"] {
+  filter: invert(1);
+}
+
+img[src="scripts/umpleonline_title.jpg"] {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+ul.tabrow li,
+ul.tabrow li.selected {
+  background: #444;
+  border-color: #555;
+}
+
+ul.tabrow li.selected,
+.tabrow li.selected {
+  background: #222;
+  border-bottom-color: #222;
+}
+
+ul.tabrow li a {
+  background: transparent;
+  border-color: inherit;
+  color: #fff;
+  text-shadow: none;
+}
+
+ul.tabrow li::before,
+ul.tabrow li::after,
+ul.tabrow li.selected::before,
+ul.tabrow li.selected::after {
+  content: none;
+  box-shadow: none;
+}
+
+.tabrow::before {
+  border-bottom: none;
+}
+
+.tabrow li {
+  box-shadow: none;
+  text-shadow: none;
+}
+
+#paletteColumn {
+  background-color: #2b2b2b;
+  border-color: #444;
+  color: #e6e6e6;
+}
+
+div.paletteWrapper,
+div.palette ul {
+  background-color: #2b2b2b;
+  border-color: #444;
+  color: inherit;
+}
+
+div.palette ul.first,
+div.palette ul.second {
+  border-top-color: #444;
+}
+
+div.palette ul {
+  box-shadow: none;
+}
+
+div.palette li {
+  border-color: #2b2b2b;
+  color: #e6e6e6;
+  background-color: transparent;
+}
+
+div.palette li.subtitle {
+  color: #f0f0f0;
+  border-bottom-color: #555;
+  text-shadow: none;
+}
+
+div.palette li.selected,
+div.palette li.highlight {
+  background-color: #3a3a3a;
+  border-color: #666;
+  color: #ffffff;
+}
+
+div.palette li.disabled {
+  background-color: #333;
+  color: #777;
+}
+
+div.palette li.disabled img {
+  opacity: 0.35;
+}
+
+#paletteColumn h3.ui-accordion-header>a:link,
+#paletteColumn h3.ui-accordion-header>a:visited {
+  color: #9cc7ff !important;
+}
+
+#paletteColumn h3.ui-accordion-header:hover>a:link,
+#paletteColumn h3.ui-accordion-header:hover>a:visited {
+  color: #c0ddff !important;
+}
+
+#paletteColumn .ui-state-default,
+#paletteColumn .ui-widget-content {
+  background: #333;
+  color: #e6e6e6;
+  border-color: #444;
+}
+
+#paletteColumn .ui-state-hover {
+  background: #3f3f3f;
+}
+
+#paletteColumn .ui-state-default .ui-icon,
+#paletteColumn .ui-state-active .ui-icon,
+#paletteColumn .ui-state-hover .ui-icon {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+#paletteColumn div.jQuery-palette-button {
+  background: #2f2f2f;
+  border: 1px solid #4a4a4a;
+  color: #9cc7ff;
+}
+
+#paletteColumn div.jQuery-palette-button.ui-state-hover {
+  background: #3a3a3a;
+}
+
+div.palette a.buttonExtend {
+  color: #ffffff;
+}
+
+div.palette li.disabled a.buttonExtend {
+  color: #777;
+}
+
+#buttonAddAssociation img,
+#buttonAddGeneralization img {
+  filter: invert(1) brightness(1.1);
+}
+
+#umpleCanvas {
+  background-color: #262525;
+  border-color: #40485a;
+  color: #eef1ff;
+}
+
+#umpleCanvasColumn,
+div.surface,
+.structureInCanvas {
+  background-color: #1c1f2a;
+  border-color: #40485a;
+  color: #eef1ff;
+}
+
+div.surface.photoReady {
+  background-color: #181b25;
+}
+
+div.syncNeededMessage {
+  color: #a7b4d6;
+}
+
+#umpleCanvas svg,
+#generatedSVGCanvas,
+.generatedDiagram svg {
+  background-color: #262525;
+}
+
+/*
+ * Graphviz adds transparent-stroked polygons as clickable overlays
+ * around clusters/states when linking to javascript:Action.stateClicked(...).
+ * In dark mode these become invisible, so give them a visible border.
+ */
+#umpleCanvas svg polygon[stroke="transparent"],
+#generatedSVGCanvas polygon[stroke="transparent"],
+.generatedDiagram svg polygon[stroke="transparent"],
+#umpleCanvas svg polygon[stroke="none"][fill="white"],
+#umpleCanvas svg polygon[stroke="none"][fill="#ffffff"],
+#generatedSVGCanvas polygon[stroke="none"][fill="white"],
+#generatedSVGCanvas polygon[stroke="none"][fill="#ffffff"],
+.generatedDiagram svg polygon[stroke="none"][fill="white"],
+.generatedDiagram svg polygon[stroke="none"][fill="#ffffff"] {
+  fill: #262525 !important;
+  stroke: #211c5a !important;
+  stroke-width: 1.4px;
+}
+
+#umpleCanvas svg g.node polygon,
+#umpleCanvas svg g.node rect,
+#umpleCanvas svg g.node ellipse,
+#umpleCanvas svg g.node path,
+#generatedSVGCanvas g.node polygon,
+#generatedSVGCanvas g.node rect,
+#generatedSVGCanvas g.node ellipse,
+#generatedSVGCanvas g.node path,
+.generatedDiagram svg g.node polygon,
+.generatedDiagram svg g.node rect,
+.generatedDiagram svg g.node ellipse,
+.generatedDiagram svg g.node path {
+  fill: #2a2f3d;
+  stroke: #8fa4d9;
+  stroke-width: 1.6px;
+}
+
+#umpleCanvas svg g.cluster polygon,
+#generatedSVGCanvas g.cluster polygon,
+.generatedDiagram svg g.cluster polygon,
+#umpleCanvas svg g.cluster path,
+#generatedSVGCanvas g.cluster path,
+.generatedDiagram svg g.cluster path {
+  fill: none;
+  stroke: #8fa4d9;
+  stroke-width: 1.4px;
+}
+
+#umpleCanvas svg g.edge path,
+#generatedSVGCanvas g.edge path,
+.generatedDiagram svg g.edge path {
+  stroke: #8fa4d9;
+  fill: none;
+  stroke-width: 1.6px;
+}
+
+#umpleCanvas svg g.edge polygon,
+#generatedSVGCanvas g.edge polygon,
+.generatedDiagram svg g.edge polygon {
+  fill: #8fa4d9;
+  stroke: #8fa4d9;
+}
+
+#umpleCanvas svg text,
+#generatedSVGCanvas text,
+.generatedDiagram svg text {
+  fill: #eef1ff;
+}
+
+#umpleCanvas svg rect:not([fill="none"]),
+#generatedSVGCanvas rect:not([fill="none"]),
+.generatedDiagram svg rect:not([fill="none"]),
+#umpleCanvas svg ellipse:not([fill="none"]),
+#generatedSVGCanvas ellipse:not([fill="none"]),
+.generatedDiagram svg ellipse:not([fill="none"]) {
+  fill: #2a2f3d;
+  stroke: #565f77;
+}
+
+.joint-paper {
+  background-color: #000000 !important;
+}
+
+.joint-paper .joint-element rect,
+.joint-paper .uml-class-name-rect,
+.joint-paper .uml-class-attrs-rect,
+.joint-paper .uml-class-methods-rect,
+.joint-paper .state-name-rect {
+  fill: #2a2f3d;
+  stroke: #565f77;
+}
+
+.joint-paper .state-actions-separator,
+.joint-paper .state-internals-separator {
+  stroke: #565f77;
+}
+
+.joint-paper .joint-element text,
+.joint-paper text,
+.joint-paper .uml-class-name-text,
+.joint-paper .uml-class-attrs-text,
+.joint-paper .uml-class-methods-text,
+.joint-paper .state-name-text,
+.joint-paper .state-actions-text,
+.joint-paper .state-internals-text {
+  fill: #eef1ff;
+}
+
+.joint-paper .joint-link .connection {
+  stroke: #8fa4d9;
+}
+
+.joint-paper .joint-link .marker-arrowhead,
+.joint-paper .joint-link .marker-vertex {
+  fill: #8fa4d9;
+  stroke: #8fa4d9;
+}
+
+.joint-paper .joint-element .fobj body,
+.joint-paper .joint-element .fobj div {
+  background-color: #2a2f3d;
+  color: #eef1ff;
+}
+
+.joint-paper .html-element[style*="background: #ffffff"],
+.joint-paper .html-element[style*="background:#ffffff"],
+.joint-paper .html-element[style*="background: white"],
+.joint-paper .html-element[style*="background:white"],
+.joint-paper .html-element[style="text-align: center"] {
+  background: #2a2f3d !important;
+  border-color: #565f77 !important;
+  color: #eef1ff;
+}
+
+.joint-paper .html-element input,
+.joint-paper .html-element .classAttributes,
+.joint-paper .html-element .classMethods {
+  background: transparent;
+  color: inherit;
+}
+
+.html-element {
+  background-color: #2a2f3d !important;
+  border-color: #565f77 !important;
+  box-shadow: inset 0 0 1px #0f121a, 1px 1px 1px #10131c !important;
+  color: #eef1ff !important;
+}
+
+.html-element input {
+  color: #eef1ff !important;
+}
+
+.html-element label {
+  color: #eef1ff !important;
+  text-shadow: none !important;
+}
+
+.html-element span {
+  color: #a4afd4 !important;
+}
+
+.className .edit {
+  filter: invert(0.85) !important;
+}
+
+.html-element button.delete {
+  background-color: #2a2f3d !important;
+  border: 1px solid #f48b8b !important;
+  color: #f48b8b !important;
+}
+
+.html-element button.delete:hover {
+  background-color: #f48b8b !important;
+  color: #1c1f2a !important;
+}
+
+div.umpleClass {
+  background-color: #2a2f3d !important;
+  color: #eef1ff !important;
+  border-color: #565f77 !important;
+}
+
+div.umpleClass td {
+  border-color: #565f77 !important;
+}
+
+div.umpleAttribute span,
+div.umpleMethod span {
+  color: #eef1ff !important;
+}
+
+div.umpleAttributeNew span,
+div.umpleMethodNew span {
+  color: #9caad9 !important;
+}
+
+div.umpleLine {
+  background-color: #8fa4d9 !important;
+}
+
+div.umpleAssociationTemp,
+div.umpleGeneralization {
+  background-color: #8fa4d9 !important;
+}
+
+div.umpleAssociation,
+div.umpleGeneralization,
+div.umpleAssociation span,
+div.umpleGeneralization span {
+  color: #eef1ff !important;
+}
+
+div.untracedAssociation,
+div.redTracedAssociation {
+  background-color: transparent !important;
+}
+
+div.multiplicity,
+div.role {
+  color: #eef1ff !important;
+}
+
+select.button {
+  background-color: #2e2e2e;
+  border-color: #555;
+  color: #e6e6e6;
+}
+
+.bookmarkableUrl,
+.bookmarkableUrl a {
+  color: #9cc7ff;
+}
+
+a.button:link,
+a.button:visited,
+a.button:hover,
+a.button:active {
+  color: #f0f0f0;
+}
+
+.theme-mode-toggle {
+  color: #ddd;
+}
+
+.theme-mode-select {
+  background-color: #2f2f2f;
+  border-color: #565f77;
+  color: #f0f0f0;
+}

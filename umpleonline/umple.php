@@ -315,6 +315,7 @@ $output = $dataHandle->readData('model.ump');
 
 
 </style>
+<link id="theme-dark-css" rel="stylesheet" href="scripts/dark-mode.css" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="scripts/styleSurvey.css"> 
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.umple.org/apple-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="https://cruise.umple.org/apple-icon-60x60.png">
@@ -367,7 +368,7 @@ $output = $dataHandle->readData('model.ump');
     <div id="header" class="row">
         <span style="float: right">
           <a href="https://www.uottawa.ca" target="uottawatab"><img height="33px" src="scripts/uottawa_ver_black.png" alt="University of Ottawa logo / Université d'Ottawa" /></a>        
-        </span>       
+        </span>
       <div class="inRow logo">
         <a href="https://cruise.umple.org/umple"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>     
       </div>
@@ -433,7 +434,7 @@ $output = $dataHandle->readData('model.ump');
         </span>
         <span id="gdprtext" class="pretext">        
           This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="https://umple.org/privacy" target="privacy">Click to learn about privacy.</a>
-        <br/></span>
+        <br/></span>  
 
         
         
@@ -619,6 +620,15 @@ $output = $dataHandle->readData('model.ump');
     <span style="font-size: 30%; white-space:nowrap; display:none;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
     </span>
+
+        <span class="theme-mode-toggle" style="float: right; margin-right: 8px;">
+          <label for="themeModeSelect">Theme:</label>
+          <select id="themeModeSelect" class="theme-mode-select" aria-label="Select theme">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </span>  
 
     <span id="restorecode" > &nbsp; <a href="#"> Restore Saved State</a></span>
 
@@ -1063,6 +1073,8 @@ $output = $dataHandle->readData('model.ump');
   <?php } ?>
 
   <script src="scripts/pinch.js" type="text/javascript"></script>
+
+  <script src="scripts/theme-toggle.js"></script>
 
   <script>
     Page.init(
