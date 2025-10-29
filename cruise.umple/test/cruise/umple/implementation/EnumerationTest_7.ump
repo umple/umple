@@ -17,5 +17,5 @@ class Y {
 
 class Z {
   Month getBirthMonth() Java { return Month.Jan; }
-  Month getBirthMonth() Python { return sefl.Month.Jan } 
+  Month getBirthMonth() Python { return self.Month.Jan } 
 }

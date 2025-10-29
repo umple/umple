@@ -3,6 +3,8 @@
 
 
 
+// line 2 "model.ump"
+// line 50 "model.ump"
 public class Student
 {
 
@@ -24,29 +26,60 @@ public class Student
   public void delete()
   {}
 
+  // line 4 "model.ump"
   public String foo(int a){
+    // line 30 "model.ump"
     System.out.println("Starting foo with argument: " + a);
+    // END OF UMPLE BEFORE INJECTION
+    // line 33 "model.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
     if(a < 0) {      
+      // line 38 "model.ump"
       System.out.println("Returning from foo!");
+      // END OF UMPLE AFTER INJECTION
+      // line 41 "model.ump"
+      
+      // END OF UMPLE AFTER INJECTION
       return 0;
     }
     else if(a == 1) {      
+      // line 38 "model.ump"
       System.out.println("Returning from foo!");
+      // END OF UMPLE AFTER INJECTION
+      // line 41 "model.ump"
+      
+      // END OF UMPLE AFTER INJECTION
       return -1;
     }
     else {      
+      // line 38 "model.ump"
       System.out.println("Returning from foo!");
+      // END OF UMPLE AFTER INJECTION
+      // line 41 "model.ump"
+      
+      // END OF UMPLE AFTER INJECTION
       return 4;
     }
 
     for(int i = 0; i < a; i++) {
       // TODO: call foo()
       if(i == a/4) {        
+        // line 38 "model.ump"
         System.out.println("Returning from foo!");
+        // END OF UMPLE AFTER INJECTION
+        // line 41 "model.ump"
+        
+        // END OF UMPLE AFTER INJECTION
         return a;
       }
     }    
+    // line 38 "model.ump"
     System.out.println("Returning from foo!");
+    // END OF UMPLE AFTER INJECTION
+    // line 41 "model.ump"
+    
+    // END OF UMPLE AFTER INJECTION
     return 4;
   }
 
