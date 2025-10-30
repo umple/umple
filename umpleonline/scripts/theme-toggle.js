@@ -80,6 +80,15 @@
 
   select.addEventListener("change", function () {
     applyTheme(select.value);
+
+    // Refresh in-canvas Graphviz diagram
+    try {
+      if (window.Page && window.Action) {
+        if (Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram) {
+          setTimeout(function(){ Action.redrawDiagram(); }, 0);
+        }
+      }
+    } catch (e) { /* ignore */ }
   });
 
   function handleSystemChange() {

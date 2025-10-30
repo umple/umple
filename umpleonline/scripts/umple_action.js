@@ -5923,6 +5923,24 @@ Action.getLanguage = function()
     language="language=featureDiagram";
     if(Page.showFeatureDependency) language=language+".showFeatureDependency";
   }
+
+  // Append Graphviz dark theme suboption when UI is in dark mode
+  try {
+    var themeSelect = document.getElementById("themeModeSelect");
+    var mode = themeSelect ? themeSelect.value : (document.body && document.body.dataset && document.body.dataset.theme) ? document.body.dataset.theme : "system";
+    var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    var isDark = (mode === "dark") || (mode === "system" && prefersDark);
+    if (isDark) {
+      // Only add to Graphviz-generated languages
+      if (language.indexOf("language=classDiagram") === 0 ||
+          language.indexOf("language=traitDiagram") === 0 ||
+          language.indexOf("language=stateDiagram") === 0 ||
+          language.indexOf("language=featureDiagram") === 0 ||
+          language.indexOf("language=entityRelationshipDiagram") === 0) {
+        language = language + ".gvdark";
+      }
+    }
+  } catch (e) { /* no-op */ }
   return language;
 }
 

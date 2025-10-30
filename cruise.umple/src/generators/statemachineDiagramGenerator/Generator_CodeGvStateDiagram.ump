@@ -81,6 +81,15 @@ digraph "<<=filename>>" {
     // Output basic gv file header
     _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
 
+    // Apply dark theme conditionally based on suboption
+    if (hasSuboption("gvdark")) {
+      code.append("bgcolor=\"#181818\";");
+      code.append("fontcolor=\"#e6e6e6\";");
+      code.append("color=\"#565f77\";");
+      code.append("node [ fontcolor = \"#e6e6e6\", style = filled, color = \"#e6e6e6\", fillcolor = \"#333333\" ];");
+      code.append("edge [ color = \"#e6e6e6\", fontcolor = \"#e6e6e6\" ];");
+    }
+
     // Determine if there are multiple classes with state machines
     // or multiple state machines in any class
     // If so, we will need to put boxes around the state machines
@@ -310,6 +319,12 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
     if(smCount > 1 && isTopLevel) 
     {
       _topLevelBorder(indentLevel, code, clSmName, className, smName);
+      if (hasSuboption("gvdark")) {
+        appendSpaces(code,  indentLevel+1);
+        code.append("fontcolor=\"#e6e6e6\";\n");
+        appendSpaces(code,  indentLevel+1);
+        code.append("color=\"#565f77\";\n");
+      }
     }
 
     // Every state machine has a start state
@@ -426,6 +441,12 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         code.append("subgraph "+sName+" {\n");
         appendSpaces(code,  indentLevel+2);
         code.append("label = \""+sLabel+"\";\n");
+        if (hasSuboption("gvdark")) {
+          appendSpaces(code,  indentLevel+2);
+          code.append("fontcolor=\"#e6e6e6\";\n");
+          appendSpaces(code,  indentLevel+2);
+          code.append("color=\"#565f77\";\n");
+        }
         appendSpaces(code,  indentLevel+2);
         code.append(bgroundColor + " \n");
         appendSpaces(code,  indentLevel+2);

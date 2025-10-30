@@ -216,17 +216,17 @@ div.palette li.disabled a.buttonExtend {
 }
 
 #umpleCanvas {
-  background-color: #262525;
-  border-color: #40485a;
-  color: #eef1ff;
+  background-color: #181818;
+  border-color: #333333;
+  color: #e6e6e6;
 }
 
 #umpleCanvasColumn,
 div.surface,
 .structureInCanvas {
-  background-color: #1c1f2a;
-  border-color: #40485a;
-  color: #eef1ff;
+  background-color: #181818;
+  border-color: #333333;
+  color: #e6e6e6;
 }
 
 div.surface.photoReady {
@@ -237,92 +237,24 @@ div.syncNeededMessage {
   color: #a7b4d6;
 }
 
-#umpleCanvas svg,
-#generatedSVGCanvas,
-.generatedDiagram svg {
-  background-color: #262525;
-}
+/* Reverted: let Graphviz DOT control background via bgcolor */
 
-/*
- * Graphviz adds transparent-stroked polygons as clickable overlays
- * around clusters/states when linking to javascript:Action.stateClicked(...).
- * In dark mode these become invisible, so give them a visible border.
- */
-#umpleCanvas svg polygon[stroke="transparent"],
-#generatedSVGCanvas polygon[stroke="transparent"],
-.generatedDiagram svg polygon[stroke="transparent"],
-#umpleCanvas svg polygon[stroke="none"][fill="white"],
-#umpleCanvas svg polygon[stroke="none"][fill="#ffffff"],
-#generatedSVGCanvas polygon[stroke="none"][fill="white"],
-#generatedSVGCanvas polygon[stroke="none"][fill="#ffffff"],
-.generatedDiagram svg polygon[stroke="none"][fill="white"],
-.generatedDiagram svg polygon[stroke="none"][fill="#ffffff"] {
-  fill: #262525 !important;
-  stroke: #211c5a !important;
-  stroke-width: 1.4px;
-}
+/* Reverted SVG overlay polygon styling to defer to DOT output */
 
-#umpleCanvas svg g.node polygon,
-#umpleCanvas svg g.node rect,
-#umpleCanvas svg g.node ellipse,
-#umpleCanvas svg g.node path,
-#generatedSVGCanvas g.node polygon,
-#generatedSVGCanvas g.node rect,
-#generatedSVGCanvas g.node ellipse,
-#generatedSVGCanvas g.node path,
-.generatedDiagram svg g.node polygon,
-.generatedDiagram svg g.node rect,
-.generatedDiagram svg g.node ellipse,
-.generatedDiagram svg g.node path {
-  fill: #2a2f3d;
-  stroke: #8fa4d9;
-  stroke-width: 1.6px;
-}
+/* Reverted node shape fill/stroke overrides to use DOT theme */
 
-#umpleCanvas svg g.cluster polygon,
-#generatedSVGCanvas g.cluster polygon,
-.generatedDiagram svg g.cluster polygon,
-#umpleCanvas svg g.cluster path,
-#generatedSVGCanvas g.cluster path,
-.generatedDiagram svg g.cluster path {
-  fill: none;
-  stroke: #8fa4d9;
-  stroke-width: 1.4px;
-}
+/* Reverted cluster styling to use DOT theme */
 
-#umpleCanvas svg g.edge path,
-#generatedSVGCanvas g.edge path,
-.generatedDiagram svg g.edge path {
-  stroke: #8fa4d9;
-  fill: none;
-  stroke-width: 1.6px;
-}
+/* Reverted edge path styling to use DOT theme */
 
-#umpleCanvas svg g.edge polygon,
-#generatedSVGCanvas g.edge polygon,
-.generatedDiagram svg g.edge polygon {
-  fill: #8fa4d9;
-  stroke: #8fa4d9;
-}
+/* Reverted arrowhead styling to use DOT theme */
 
-#umpleCanvas svg text,
-#generatedSVGCanvas text,
-.generatedDiagram svg text {
-  fill: #eef1ff;
-}
+/* Reverted text fill override to use DOT theme */
 
-#umpleCanvas svg rect:not([fill="none"]),
-#generatedSVGCanvas rect:not([fill="none"]),
-.generatedDiagram svg rect:not([fill="none"]),
-#umpleCanvas svg ellipse:not([fill="none"]),
-#generatedSVGCanvas ellipse:not([fill="none"]),
-.generatedDiagram svg ellipse:not([fill="none"]) {
-  fill: #2a2f3d;
-  stroke: #565f77;
-}
+/* Reverted primitive fill/stroke overrides to use DOT theme */
 
 .joint-paper {
-  background-color: #000000 !important;
+  background-color: #181818 !important;
 }
 
 .joint-paper .joint-element rect,
@@ -330,13 +262,13 @@ div.syncNeededMessage {
 .joint-paper .uml-class-attrs-rect,
 .joint-paper .uml-class-methods-rect,
 .joint-paper .state-name-rect {
-  fill: #2a2f3d;
-  stroke: #565f77;
+  fill: #333333;
+  stroke: #e6e6e6;
 }
 
 .joint-paper .state-actions-separator,
 .joint-paper .state-internals-separator {
-  stroke: #565f77;
+  stroke: #e6e6e6;
 }
 
 .joint-paper .joint-element text,
@@ -347,23 +279,23 @@ div.syncNeededMessage {
 .joint-paper .state-name-text,
 .joint-paper .state-actions-text,
 .joint-paper .state-internals-text {
-  fill: #eef1ff;
+  fill: #e6e6e6;
 }
 
 .joint-paper .joint-link .connection {
-  stroke: #8fa4d9;
+  stroke: #e6e6e6;
 }
 
 .joint-paper .joint-link .marker-arrowhead,
 .joint-paper .joint-link .marker-vertex {
-  fill: #8fa4d9;
-  stroke: #8fa4d9;
+  fill: #e6e6e6;
+  stroke: #e6e6e6;
 }
 
 .joint-paper .joint-element .fobj body,
 .joint-paper .joint-element .fobj div {
-  background-color: #2a2f3d;
-  color: #eef1ff;
+  background-color: #333333;
+  color: #e6e6e6;
 }
 
 .joint-paper .html-element[style*="background: #ffffff"],
@@ -384,23 +316,23 @@ div.syncNeededMessage {
 }
 
 .html-element {
-  background-color: #2a2f3d !important;
-  border-color: #565f77 !important;
-  box-shadow: inset 0 0 1px #0f121a, 1px 1px 1px #10131c !important;
-  color: #eef1ff !important;
+  background-color: #333333 !important;
+  border-color: #e6e6e6 !important;
+  box-shadow: none !important;
+  color: #e6e6e6 !important;
 }
 
 .html-element input {
-  color: #eef1ff !important;
+  color: #e6e6e6 !important;
 }
 
 .html-element label {
-  color: #eef1ff !important;
+  color: #e6e6e6 !important;
   text-shadow: none !important;
 }
 
 .html-element span {
-  color: #a4afd4 !important;
+  color: #e6e6e6 !important;
 }
 
 .className .edit {
@@ -419,39 +351,39 @@ div.syncNeededMessage {
 }
 
 div.umpleClass {
-  background-color: #2a2f3d !important;
-  color: #eef1ff !important;
-  border-color: #565f77 !important;
+  background-color: #333333 !important;
+  color: #e6e6e6 !important;
+  border-color: #e6e6e6 !important;
 }
 
 div.umpleClass td {
-  border-color: #565f77 !important;
+  border-color: #e6e6e6 !important;
 }
 
 div.umpleAttribute span,
 div.umpleMethod span {
-  color: #eef1ff !important;
+  color: #e6e6e6 !important;
 }
 
 div.umpleAttributeNew span,
 div.umpleMethodNew span {
-  color: #9caad9 !important;
+  color: #e6e6e6 !important;
 }
 
 div.umpleLine {
-  background-color: #8fa4d9 !important;
+  background-color: #e6e6e6 !important;
 }
 
 div.umpleAssociationTemp,
 div.umpleGeneralization {
-  background-color: #8fa4d9 !important;
+  background-color: #e6e6e6 !important;
 }
 
 div.umpleAssociation,
 div.umpleGeneralization,
 div.umpleAssociation span,
 div.umpleGeneralization span {
-  color: #eef1ff !important;
+  color: #e6e6e6 !important;
 }
 
 div.untracedAssociation,
@@ -461,7 +393,7 @@ div.redTracedAssociation {
 
 div.multiplicity,
 div.role {
-  color: #eef1ff !important;
+  color: #e6e6e6 !important;
 }
 
 select.button {
