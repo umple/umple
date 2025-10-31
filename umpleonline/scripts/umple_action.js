@@ -3604,11 +3604,26 @@ Action.generateCode = function(languageStyle, languageName)
   }
   
   jQuery(generateCodeSelector).showLoading();
+  
+  // Get theme preference (applies to all language generations)
+  var theme = "system";
+  try {
+    var sel = document.getElementById("themeModeSelect");
+    if (sel && (sel.value === "light" || sel.value === "dark" || sel.value === "system")) {
+      theme = sel.value;
+    } else {
+      var stored = localStorage.getItem("umple-theme");
+      if (stored === "light" || stored === "dark" || stored === "system") {
+        theme = stored;
+      }
+    }
+  } catch (e) {}
+  
   Action.ajax(
     function(response) { 
       Action.generateCodeCallback(response, languageStyle, additionalCallback); 
     },
-    format("language={0}&languageStyle={1}", actualLanguage, languageStyle),
+    format("language={0}&languageStyle={1}&theme={2}", actualLanguage, languageStyle, theme),
     "true"
   );
 }

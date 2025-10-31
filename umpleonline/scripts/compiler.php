@@ -455,15 +455,77 @@ else if (isset($_REQUEST["umpleCode"]))
            if($foundresult != FALSE) $html = $html . "<br/><b>".$foundresult."</b>\n";
          }
        }
-       else {
-         exec("cd $thedir; rm javadocFromUmple.zip; zip -r javadocFromUmple javadoc");
-       
+      else {
+        // Append unified theme stylesheet; optionally add :root override for explicit modes
+        $themeMode = isset($_REQUEST['theme']) ? $_REQUEST['theme'] : null; // 'light' | 'dark' | 'system'
+        $themeCssPath = __DIR__ . "/javadoc-theme.css";
+        $appendCss = '';
+        $rootOverride = '';
+        
+        if (file_exists($themeCssPath)) {
+          $themeCssContent = file_get_contents($themeCssPath);
+          $appendCss = $themeCssContent;
+          
+          // Extract CSS from javadoc-theme.css for :root override (convert html[data-theme] to :root)
+          if ($themeMode === 'dark') {
+            // Extract html[data-theme="dark"] block content
+            if (preg_match('/html\[data-theme="dark"\]\s*\{([^}]+)\}/s', $themeCssContent, $matches)) {
+              $rootOverride = ":root {\n" . trim($matches[1]) . "\n}\n";
+            }
+            // Extract legacy tweaks for dark - get everything until next comment or section
+            $startPos = strpos($themeCssContent, '/* Legacy tweaks for explicit dark */');
+            if ($startPos !== false) {
+              $startPos += strlen('/* Legacy tweaks for explicit dark */');
+              $endPos = strpos($themeCssContent, '/*', $startPos + 1);
+              if ($endPos === false) {
+                $endPos = strpos($themeCssContent, 'html[data-theme="light"]');
+                if ($endPos === false) {
+                  $endPos = strlen($themeCssContent);
+                }
+              }
+              $legacyCss = substr($themeCssContent, $startPos, $endPos - $startPos);
+              $rootOverride .= "\n" . trim($legacyCss);
+            }
+          } else if ($themeMode === 'light') {
+            // Extract html[data-theme="light"] block content
+            if (preg_match('/html\[data-theme="light"\]\s*\{([^}]+)\}/s', $themeCssContent, $matches)) {
+              $rootOverride = ":root {\n" . trim($matches[1]) . "\n}\n";
+            }
+          }
+        }
+        if (is_string($appendCss) && strlen($appendCss) > 0) {
+          $candidateStylesheets = array(
+            $thedir . "/javadoc/stylesheet.css",
+            $thedir . "/javadoc/resources/stylesheet.css",
+            $thedir . "/javadoc/resource-files/stylesheet.css"
+          );
+          foreach ($candidateStylesheets as $generatedStylesheet) {
+            if (file_exists($generatedStylesheet) && is_writable($generatedStylesheet)) {
+              $existing = file_get_contents($generatedStylesheet);
+              if ($existing !== false) {
+                $marker = '/* --- UmpleOnline dark mode overrides --- */';
+                $pos = strpos($existing, $marker);
+                if ($pos !== false) {
+                  // Remove previous appended block starting at marker
+                  $existing = substr($existing, 0, $pos);
+                  file_put_contents($generatedStylesheet, $existing);
+                }
+                // Append the current CSS block(s)
+                $finalCss = $appendCss . (strlen($rootOverride) ? "\n/* --- UmpleOnline: :root override for compatibility --- */\n" . $rootOverride : "");
+                file_put_contents($generatedStylesheet, "\n" . $marker . "\n/* --- UmpleOnline: theme overrides --- */\n" . $finalCss . "\n", FILE_APPEND);
+              }
+            }
+          }
+        }
+        
+        exec("cd $thedir; rm javadocFromUmple.zip; zip -r javadocFromUmple javadoc");
+      
          $javadocdir = $workDir->makePermalink('javadoc/');
          $javadoczip = $workDir->makePermalink('javadocFromUmple.zip');
          $html = "<a href=\"{$javadoczip}\" title=\"Download the Javadoc website as a Zip file if you would like to be able to install it locally\">Download the following as a zip file</a>&nbsp;{$errhtml}
-         <iframe width=100% height=1000 src=\"" . $javadocdir . "\">This browser does not
-         support iframes, so the javadoc cannot be displayed</iframe> 
-         ";
+        <iframe width=100% height=1000 src=\"" . $javadocdir . "\">This browser does not
+        support iframes, so the javadoc cannot be displayed</iframe> 
+        ";
        }
        echo $html;
     }  // end javadoc
