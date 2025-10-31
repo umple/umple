@@ -1,0 +1,412 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+This file generates a randomized instance diagram and the resulting objects
+for every class in the model. The results of these instances is output
+to JSON.
+
+Command line action for this is
+  -g InstanceDiagram
+
+ */
+namespace cruise.umple.compiler;
+
+class InstanceDiagramGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String outputCode = "";
+
+
+  public void generate()
+  {
+
+    // TO BE IMPLEMENTED: Split model (forest) into connected trees and run the algorithm multiple times.
+    // The above may not be necessary
+
+    // TO BE IMPLEMENTED: Allow variable (2..6) associations in the matrix
+
+    // TO BE IMPLEMENTED: Solve for class instance counts
+    // Take row of free variable -> find LCM -> LCM is the free value, calculate the rest
+
+    // TO BE IMPLEMENTED: Convert class counts to a json file of class instances
+
+    // NOTE: The below code is temporary; it is being used to test the output of the model
+
+    AssociationMatrix modelMatrix = createMinMatrixFromModel(model);
+    outputCode += modelMatrix.toString();
+
+    outputCode += "\n";
+
+    modelMatrix.toRREF();
+    outputCode += modelMatrix.toString();
+    
+    ArrayList<String> freeVars = modelMatrix.getFreeVariables();
+    for (String var : freeVars) {
+      outputCode += "\n" + var;
+    }
+
+    model.setCode(outputCode);
+
+
+    writeModelToFile();
+  }
+
+  /*
+    Create the association matrix (system of linear equations) from the model.
+
+    See class AssociationMatrix for explanation as to the convention
+  */
+  private AssociationMatrix createMinMatrixFromModel(UmpleModel umpleModel) {
+    
+    AssociationMatrix resultMatrix = new AssociationMatrix();
+    // Since colClasses isnt immutable, we need to add classes one-by-one
+    for (UmpleClass umpClass : umpleModel.getUmpleClasses()) {
+      resultMatrix.addColClass(umpClass.getName());
+    }
+    
+    // Loop through every association and add it as a row to the matrix
+    for (Association assoc : umpleModel.getAssociations()) {
+      
+      //Create row
+      AssociationRow newAssocRow = new AssociationRow();
+
+      // Initialize array with 0
+      int[] multiplicityArray = new int[resultMatrix.numberOfColClasses()];
+      
+      // Since reflexive associations must have a 0 lower bound, they will always use the minimum value.
+      // No need for additional code, the code for regular associations will work
+
+      // Find the desired index, and the value
+      int indexLeft = resultMatrix.indexOfColClass(assoc.getEnd(0).getClassName());
+      int lowLeft = assoc.getEnd(0).getMultiplicity().getLowerBound();
+      int indexRight = resultMatrix.indexOfColClass(assoc.getEnd(1).getClassName());
+      int lowRight = assoc.getEnd(1).getMultiplicity().getLowerBound();
+      
+      // We need to reverse the association and inverse one of the signs - See class AssociationMatrix
+      multiplicityArray[indexLeft] = lowRight;
+      multiplicityArray[indexRight] = -lowLeft;
+
+      // Add the values to the row
+      for (double value : multiplicityArray) {
+        newAssocRow.addMatrixEntry(value);
+      }
+
+      // Add row to matrix
+      resultMatrix.addMatrixRow(newAssocRow);
+    }
+
+    return resultMatrix;
+  }
+
+  // Output the instance diagram to a file
+  private void writeModelToFile()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + 
+        model.getUmpleFile().getSimpleFileName() + ".txt";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException(
+        "There was a problem generating the Instance Diagram." + e, e);
+    }
+  }
+
+}
+
+
+
+/*
+ Represents the model as a matrix/System-of-linear-equations
+ Each column represents a class, and each row represents an association
+
+ The linear equations in the system represent sums of instances of classes.
+  If class Alpha has a 1--2 association with class Beta, then: 
+      - NumOfAlpha*2 = NumOfBeta.
+      - NumOfAlpha*2 - NumOfBeta = 0
+      - NumOfAlpha*2 - NumOfBeta + 0*NumOfCharlie + 0*NumOfDelta + ... = 0
+  Each association adds a linear equation where only 2 of the values are non-zero.
+*/
+class AssociationMatrix
+{
+  // THIS SHOULD BE IMMUTABLE. See Issue #173 on Github... 
+  // If not immutable - then there should be overrides to resize the matrix's columns
+  // List of classes in the model, their index corresponds to the column number
+  String[] colClasses;
+
+  // Rows representing associations in the model
+  0..1 -> * AssociationRow matrixRows;
+
+
+  // Perform gauss-jordan elimination to reduce matrix (using partial pivoting)
+  public void toRREF() 
+  {
+    int cols = numberOfColClasses();
+    int rows = numberOfMatrixRows();
+
+    // Loop through the pivot diagonal
+    for (int pivotCol=0, pivotRow=0; pivotCol < cols && pivotRow < rows; pivotCol++) {
+
+      // Step 1: Find the largest element in the pivot column (only check rows after the pivotRow)
+      int maxRow = pivotRow;
+      for (int i = pivotRow+1; i<rows; i++) {
+        if ( Math.abs(getMatrixRow(i).getMatrixEntry(pivotCol)) > Math.abs(getMatrixRow(maxRow).getMatrixEntry(pivotCol)) ) {
+          maxRow = i;
+        }
+      }
+
+      // Step 2: Swapping the pivot row to the current/pivot row position
+      Collections.swap(matrixRows, maxRow, pivotRow);
+
+      // Step 3: Scale the pivot row
+      double pivotValue = getMatrixRow(pivotRow).getMatrixEntry(pivotCol);
+      
+      //EdgeCase: Pivot is 0
+      if (pivotValue == 0) {
+        continue;
+      } else {
+        getMatrixRow(pivotRow).multiplyRowByConstant(1/pivotValue);
+      }
+
+      // Step 4: Eliminate values in the other rows (make the pivot column full of 0s)
+      for (int k=0;k<rows;k++) {
+        if (k != pivotRow) {
+          double multiplier = getMatrixRow(k).getMatrixEntry(pivotCol);
+          Double[] subtractPattern = getMatrixRow(pivotRow).getMatrixEntries();
+          for (int l=0;l<subtractPattern.length;l++) {
+            subtractPattern[l] *= multiplier;
+          }
+          getMatrixRow(k).subtractRow(subtractPattern);
+        }
+      }
+
+      // Note that this line is not reached if pivot is 0; the next loop will increment column but not row
+      pivotRow++;
+    }
+  }
+
+  /*
+    This function returns the free variables of the matrix (assuming the matrix is in RREF).
+    It will return garbage if the matrix is not in RREF
+  */
+  public ArrayList<String> getFreeVariables(){
+    ArrayList<String> freeVars = new ArrayList<String>();
+    
+    // Go down the diagonal
+    for (int row=0, col=0 ; col<numberOfColClasses() ; col++) {
+
+      // If the diagonal does not exist, then the column is a free variable
+      if (row>=numberOfMatrixRows()) {
+        freeVars.add(getColClass(col));
+        continue;
+      }
+
+      // If the diagonal has 0, then the column is a free variable
+      if (getMatrixRow(row).getMatrixEntry(col) == 0)  {
+        freeVars.add(getColClass(col));
+        continue;
+      } 
+      
+      row++;
+    }
+    return freeVars;
+  }
+
+
+  public String toString() {
+    String output = "";
+    output += "[";
+    for (int i=0;i<numberOfMatrixRows()-1;i++) {
+      output += getMatrixRow(i) + ",";
+    }
+    output += getMatrixRow(numberOfMatrixRows()-1);
+    output += "]";
+    return output;
+  }
+}
+
+
+/*
+  Rows of the association matrix
+  Represents an association
+*/
+class AssociationRow
+{
+  Double[] matrixEntries;
+  
+  // Multiply this row by a constant
+  public void multiplyRowByConstant(double multiplyConstant)
+  {
+    for (int i = 0; i<matrixEntries.size() ;i++) {
+      matrixEntries.set(i, matrixEntries.get(i)*multiplyConstant);
+    }
+  }
+
+  //Subtract from each of the values in this row
+  public boolean subtractRow(Double[] subtractPattern)
+  {
+    if (subtractPattern.length != matrixEntries.size()) {
+      return false;
+    }
+
+    for (int i = 0; i<matrixEntries.size() ;i++) {
+      matrixEntries.set(i, matrixEntries.get(i) - subtractPattern[i]);
+    }
+
+    return true;
+  }
+
+  public String toString() {
+    String output = "";
+    output += "[";
+    for (double value : matrixEntries) {
+      output += " " + value;
+    }
+    output += "]";
+    return output;
+  }
+}
+
+
+
+/*
+  Entries of the association matrix
+  A series of linear terms, such as 2*A*B - 3*C + D/2
+*/
+class AssociationEntry {
+  LinearTerm[] terms;
+
+  public void multiply(LinearTerm multiplyTerm)
+  {
+    for (int i = 0; i<terms.size() ;i++) {
+      terms.get(i).multiply(multiplyTerm);
+    }
+  }
+
+  public void multiply(Double multiplyTerm)
+  {
+    for (int i = 0; i<terms.size() ;i++) {
+      terms.get(i).multiply(multiplyTerm);
+    }
+  }
+
+  public String toString() {
+    String output = "";
+    for (int i=0;i<terms.size()-1;i++) {
+      output += terms.get(i) + " + ";
+    }
+    output += terms.get(numberOfTerms()-1);
+    return output;
+  }
+}
+
+
+
+/*
+  Represents a linear term; a series of variable coefficients
+  LinearTerm = constantTerm*(multipliers^powers)
+*/
+class LinearTerm {
+  Double constantTerm;
+  internal MultiplicityVariable[] multipliers;
+  internal Double[] powers;
+
+  public int size() {
+    return multipliers.size();
+  }
+
+  public void multiply(MultiplicityVariable multiplier, Double power) {
+    multipliers.add(multiplier);
+    powers.add(power);
+    eliminateLikeTerms();
+  }
+
+  public void multiply(LinearTerm multiplyTerm)
+  {
+    if (constantTerm == 0) {
+      return;
+    }
+
+    constantTerm *= multiplyTerm.getConstantTerm();
+
+    // Update the list of powers and multipliers
+    for (int i=0;i<multiplyTerm.size();i++) {
+      int index = multipliers.indexOf(multiplyTerm.multipliers.get(i));
+      if (index == -1) {
+        multipliers.add(multiplyTerm.multipliers.get(i));
+        powers.add(multiplyTerm.powers.get(i));
+      } else {
+        powers.set(index, powers.get(index) + multiplyTerm.powers.get(i));
+      }
+    }
+
+    eliminateLikeTerms();
+  }
+
+  public void eliminateLikeTerms() {
+    // Iterate backwards removing anything with power==0
+    for (int i=size()-1; i>=0 ;i--) {
+      if (powers.get(i) == 0) {
+        multipliers.remove(i);
+        powers.remove(i);
+      }
+    }
+  }
+
+  public void multiply(Double multiplyTerm)
+  {
+    constantTerm *= multiplyTerm;
+  }
+
+  public LinearTerm getReciprocal() {
+    LinearTerm recTerm = new LinearTerm(1/constantTerm);
+    for (int i=0;i<size();i++) {
+      recTerm.multipliers.add(multipliers.get(i));
+      recTerm.powers.add(-powers.get(i));
+    }
+    return recTerm;
+  }
+
+  public String toString() {
+    String output = "";
+    output += constantTerm;
+    for (int i=0;i<size();i++) {
+      output += "*" + multipliers.get(i) + "^" + powers.get(i);
+    }
+    return output;
+  }
+}
+
+
+
+/*
+  Represents a multiplicity in the association matrix
+*/
+class MultiplicityVariable {
+  Multiplicity valueRange;
+
+  public String toString() {
+    String output = "";
+    output += "(" + valueRange.getParserable() + ")";
+    return output;
+  }
+}
