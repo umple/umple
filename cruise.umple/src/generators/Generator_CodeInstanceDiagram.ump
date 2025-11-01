@@ -34,8 +34,6 @@ class InstanceDiagramGenerator
     // TO BE IMPLEMENTED: Split model (forest) into connected trees and run the algorithm multiple times.
     // The above may not be necessary
 
-    // TO BE IMPLEMENTED: Allow variable (2..6) associations in the matrix
-
     // TO BE IMPLEMENTED: Solve for class instance counts
     // Take row of free variable -> find LCM -> LCM is the free value, calculate the rest
 
@@ -43,12 +41,12 @@ class InstanceDiagramGenerator
 
     // NOTE: The below code is temporary; it is being used to test the output of the model
 
-    AssociationMatrix modelMatrix = createMinMatrixFromModel(model);
+    AssociationMatrix modelMatrix = createMatrixFromModel(model);
     outputCode += modelMatrix.toString();
 
     outputCode += "\n";
 
-    modelMatrix.toRREF();
+    modelMatrix.toPartialRREF();
     outputCode += modelMatrix.toString();
     
     ArrayList<String> freeVars = modelMatrix.getFreeVariables();
@@ -64,10 +62,13 @@ class InstanceDiagramGenerator
 
   /*
     Create the association matrix (system of linear equations) from the model.
+    
+    Since reflexive associations must have a 0 lower bound, the minimum number of classes is always 0.
+    Reflexive associations can be safely ignored
 
     See class AssociationMatrix for explanation as to the convention
   */
-  private AssociationMatrix createMinMatrixFromModel(UmpleModel umpleModel) {
+  private AssociationMatrix createMatrixFromModel(UmpleModel umpleModel) {
     
     AssociationMatrix resultMatrix = new AssociationMatrix();
     // Since colClasses isnt immutable, we need to add classes one-by-one
@@ -78,28 +79,56 @@ class InstanceDiagramGenerator
     // Loop through every association and add it as a row to the matrix
     for (Association assoc : umpleModel.getAssociations()) {
       
-      //Create row
+      //Create the matrix row
       AssociationRow newAssocRow = new AssociationRow();
 
-      // Initialize array with 0
-      int[] multiplicityArray = new int[resultMatrix.numberOfColClasses()];
-      
-      // Since reflexive associations must have a 0 lower bound, they will always use the minimum value.
-      // No need for additional code, the code for regular associations will work
+      // Skip reflexive associations
+      if (assoc.getEnd(0).getClassName() == assoc.getEnd(1).getClassName()) {
+        continue;
+      }
 
-      // Find the desired index, and the value
+      // Step 1: Find the desired index, and the value
       int indexLeft = resultMatrix.indexOfColClass(assoc.getEnd(0).getClassName());
-      int lowLeft = assoc.getEnd(0).getMultiplicity().getLowerBound();
+      Multiplicity mulLeft = assoc.getEnd(0).getMultiplicity();
       int indexRight = resultMatrix.indexOfColClass(assoc.getEnd(1).getClassName());
-      int lowRight = assoc.getEnd(1).getMultiplicity().getLowerBound();
+      Multiplicity mulRight = assoc.getEnd(1).getMultiplicity();
       
-      // We need to reverse the association and inverse one of the signs - See class AssociationMatrix
-      multiplicityArray[indexLeft] = lowRight;
-      multiplicityArray[indexRight] = -lowLeft;
 
-      // Add the values to the row
-      for (double value : multiplicityArray) {
-        newAssocRow.addMatrixEntry(value);
+      // Step 2: Convert Multiplicity to the LinearExpression representation
+      LinearExpression leftExp = new LinearExpression();
+      LinearExpression rightExp = new LinearExpression();
+
+      // Check if the multiplicity is a constant
+      if (mulLeft.getBound() != null && !mulLeft.getBound().equals("*")) { 
+        leftExp.addTerm(new LinearTerm(Double.parseDouble(mulLeft.getBound())));
+      } else {
+        LinearTerm leftTerm = new LinearTerm(1);
+        //Add the multiplicity as a variable
+        leftTerm.addMultiplier(new MultiplicityVariable(mulLeft), 1.0);
+        leftExp.addTerm(leftTerm);
+      }
+
+      // Check if the multiplicity is a constant
+      // Note that we reverse the sign of one of the ends - See class AssociationMatrix
+      if (mulRight.getBound() != null && !mulRight.getBound().equals("*")) { 
+        rightExp.addTerm(new LinearTerm(-Double.parseDouble(mulRight.getBound())));
+      } else {
+        LinearTerm rightTerm = new LinearTerm(-1);
+        //Add the multiplicity as a variable
+        rightTerm.addMultiplier(new MultiplicityVariable(mulRight), 1.0);
+        rightExp.addTerm(rightTerm);
+      }   
+
+      // Step 3: Place the 2 object into the Matrix row
+      // Note that we swap the positions/indices of the ends - See class AssociationMatrix
+      for (int i=0;i<resultMatrix.numberOfColClasses(); i++) {
+        if (i == indexLeft) {
+          newAssocRow.addMatrixEntry(rightExp);
+        } else if (i == indexRight) {
+          newAssocRow.addMatrixEntry(leftExp);
+        } else {
+          newAssocRow.addMatrixEntry(new LinearExpression());
+        }
       }
 
       // Add row to matrix
@@ -154,11 +183,31 @@ class AssociationMatrix
   String[] colClasses;
 
   // Rows representing associations in the model
-  0..1 -> * AssociationRow matrixRows;
+  AssociationRow[] matrixRows;
 
+  /*
+    Perform gauss-jordan elimination to reduce the matrix.
+    The standard algorithm has been modified to account for variables in place of concrete values.
+    These variable/LinearTerm cells can still act as pivots by dividing by the LinearTerm
+    Example Row: [2*A, C, 0, 0] can be converted to [1, C/(2*A), 0, 0]
+    
 
-  // Perform gauss-jordan elimination to reduce matrix (using partial pivoting)
-  public void toRREF() 
+    IMPORTANT NOTE: 
+    Since each row can only contain 2 entries (LinearTerms), 
+        there could be rows simplified to 1 entry - a LinearExpression (2 LinearTerms in the same cell)
+    These LinearExpressions will NOT be used as pivots, they will be skipped (similarly to a 0 pivot)
+    
+    Rationale:
+    As mentioned above, every other entry in the row must be 0.
+    There are 2 situations:
+    - Other values in the column are chosen as the pivot: 
+          This linear expression is reduced to 0 through subtraction by the pivot
+    - There are no other values in the column:
+      - The LinearExpression != 0: We divide it by itself, and it becomes a pivot in an empty column (ie. not required to solve the system)
+      - The LinearExpression == 0: The column is fully 0, resulting in a free variable column (useful for solving the system)
+    The only situation where a LinearExpression becomes a non-zero pivot is not necessary to solve the system
+  */
+  public void toPartialRREF() 
   {
     int cols = numberOfColClasses();
     int rows = numberOfMatrixRows();
@@ -166,36 +215,42 @@ class AssociationMatrix
     // Loop through the pivot diagonal
     for (int pivotCol=0, pivotRow=0; pivotCol < cols && pivotRow < rows; pivotCol++) {
 
-      // Step 1: Find the largest element in the pivot column (only check rows after the pivotRow)
-      int maxRow = pivotRow;
-      for (int i = pivotRow+1; i<rows; i++) {
-        if ( Math.abs(getMatrixRow(i).getMatrixEntry(pivotCol)) > Math.abs(getMatrixRow(maxRow).getMatrixEntry(pivotCol)) ) {
-          maxRow = i;
+      // Step 1: Find the first non-zero element in the pivot column
+      int nonZeroRow = -1;
+      for (int i = pivotRow; i<rows; i++) {
+        // Check for non-zero (term>0), non-LinearExpression value (term<2)
+        if (getMatrixRow(i).getMatrixEntry(pivotCol).numberOfTerms() == 1) {
+          nonZeroRow = i;
+          break;
         }
       }
 
-      // Step 2: Swapping the pivot row to the current/pivot row position
-      Collections.swap(matrixRows, maxRow, pivotRow);
-
-      // Step 3: Scale the pivot row
-      double pivotValue = getMatrixRow(pivotRow).getMatrixEntry(pivotCol);
-      
-      //EdgeCase: Pivot is 0
-      if (pivotValue == 0) {
+      //If there was no non-zero value, skip this column
+      if (nonZeroRow == -1) {
         continue;
-      } else {
-        getMatrixRow(pivotRow).multiplyRowByConstant(1/pivotValue);
       }
+
+      // Step 2: Swapping the non-zero pivot to the current/pivot row position
+      Collections.swap(matrixRows, nonZeroRow, pivotRow);
+
+
+      // Step 3: Scale the pivot row (make the pivot 1)
+      // Since we know there is only 1 LinearTerm we can do getTerm(0)
+      LinearTerm pivotValue = getMatrixRow(pivotRow).getMatrixEntry(pivotCol).getTerm(0);
+      getMatrixRow(pivotRow).multiplyRowInplace(pivotValue.getReciprocal());
+      
 
       // Step 4: Eliminate values in the other rows (make the pivot column full of 0s)
       for (int k=0;k<rows;k++) {
         if (k != pivotRow) {
-          double multiplier = getMatrixRow(k).getMatrixEntry(pivotCol);
-          Double[] subtractPattern = getMatrixRow(pivotRow).getMatrixEntries();
-          for (int l=0;l<subtractPattern.length;l++) {
-            subtractPattern[l] *= multiplier;
-          }
-          getMatrixRow(k).subtractRow(subtractPattern);
+          // Get scaling factor
+          LinearExpression multiplier = getMatrixRow(k).getMatrixEntry(pivotCol);
+          // Copy pivot row
+          AssociationRow subtractPattern = getMatrixRow(pivotRow).copy();
+          //Scale pivot row
+          subtractPattern.multiplyRowInplace(multiplier);
+          //Perform Row Subtraction
+          getMatrixRow(k).subtractRowInplace(subtractPattern);
         }
       }
 
@@ -221,7 +276,7 @@ class AssociationMatrix
       }
 
       // If the diagonal has 0, then the column is a free variable
-      if (getMatrixRow(row).getMatrixEntry(col) == 0)  {
+      if (getMatrixRow(row).getMatrixEntry(col).numberOfTerms() != 1)  {
         freeVars.add(getColClass(col));
         continue;
       } 
@@ -235,10 +290,12 @@ class AssociationMatrix
   public String toString() {
     String output = "";
     output += "[";
-    for (int i=0;i<numberOfMatrixRows()-1;i++) {
-      output += getMatrixRow(i) + ",";
+    for (int i=0;i<numberOfMatrixRows();i++) {
+      output += getMatrixRow(i);
+      if (i != numberOfMatrixRows()-1) {
+        output += "," + "\n";
+      }
     }
-    output += getMatrixRow(numberOfMatrixRows()-1);
     output += "]";
     return output;
   }
@@ -251,35 +308,48 @@ class AssociationMatrix
 */
 class AssociationRow
 {
-  Double[] matrixEntries;
+  LinearExpression[] matrixEntries;
   
-  // Multiply this row by a constant
-  public void multiplyRowByConstant(double multiplyConstant)
+  // Multiply this row inplace by a LinearExpression
+  public void multiplyRowInplace(LinearExpression linExp)
   {
     for (int i = 0; i<matrixEntries.size() ;i++) {
-      matrixEntries.set(i, matrixEntries.get(i)*multiplyConstant);
+      matrixEntries.set(i, matrixEntries.get(i).multiply(linExp));
     }
   }
 
-  //Subtract from each of the values in this row
-  public boolean subtractRow(Double[] subtractPattern)
+  //Subtract the values in this row by the values in another row
+  public void subtractRowInplace(AssociationRow other)
   {
-    if (subtractPattern.length != matrixEntries.size()) {
-      return false;
-    }
-
     for (int i = 0; i<matrixEntries.size() ;i++) {
-      matrixEntries.set(i, matrixEntries.get(i) - subtractPattern[i]);
+      // Subtract by adding the negative of the other expression
+      matrixEntries.set(i, matrixEntries.get(i).addition(other.matrixEntries.get(i).multiply(-1.0)));
     }
+  }
 
-    return true;
+  // Multiply this row inplace by a LinearTerm
+  public void multiplyRowInplace(LinearTerm linTerm){
+    for (int i = 0; i<matrixEntries.size() ;i++) {
+      matrixEntries.set(i, matrixEntries.get(i).multiply(linTerm));
+    }
+  }
+
+  public AssociationRow copy() {
+    AssociationRow newAssocRow = new AssociationRow();
+    for (int i=0;i<this.matrixEntries.size();i++) {
+      newAssocRow.addMatrixEntry(this.matrixEntries.get(i).copy());
+    }
+    return newAssocRow;
   }
 
   public String toString() {
     String output = "";
     output += "[";
-    for (double value : matrixEntries) {
-      output += " " + value;
+    for (int i=0;i<matrixEntries.size();i++) {
+      output += matrixEntries.get(i);
+      if (i != matrixEntries.size()-1) {
+        output += " | ";
+      }
     }
     output += "]";
     return output;
@@ -289,32 +359,104 @@ class AssociationRow
 
 
 /*
-  Entries of the association matrix
-  A series of linear terms, such as 2*A*B - 3*C + D/2
+  Entries in the association matrix are linear expressions
+  A series of linear terms, such as 2*A*B + (-3)*C + D/2
 */
-class AssociationEntry {
+class LinearExpression {
   LinearTerm[] terms;
 
-  public void multiply(LinearTerm multiplyTerm)
+  public LinearExpression multiply(LinearExpression multiplyTerm)
   {
-    for (int i = 0; i<terms.size() ;i++) {
-      terms.get(i).multiply(multiplyTerm);
+    LinearExpression result = new LinearExpression();
+
+    for (int i = 0; i<this.terms.size() ;i++) {
+      for (int j = 0; j<multiplyTerm.terms.size() ;j++) {
+        result.terms.add(
+          this.terms.get(i).multiply(multiplyTerm.terms.get(j))
+          );
+      }
     }
+
+    result.eliminateTerms();
+    return result;
   }
 
-  public void multiply(Double multiplyTerm)
+  public LinearExpression multiply(LinearTerm multiplyTerm)
   {
-    for (int i = 0; i<terms.size() ;i++) {
-      terms.get(i).multiply(multiplyTerm);
+    LinearExpression result = new LinearExpression();
+
+    for (int i = 0; i<this.terms.size() ;i++) {
+      result.terms.add(this.terms.get(i).multiply(multiplyTerm));
     }
+
+    result.eliminateTerms();
+    return result;
+  }
+
+  public LinearExpression multiply(Double multiplyTerm)
+  {
+    LinearExpression result = new LinearExpression();
+
+    for (int i = 0; i<this.terms.size() ;i++) {
+      result.terms.add(this.terms.get(i).multiply(multiplyTerm));
+    }
+
+    // Elimination of terms is unnecessary here
+    return result;
+  }
+
+  public LinearExpression addition(LinearExpression addTerm) {
+    LinearExpression result = copy();
+
+    for (int i=0;i<addTerm.terms.size();i++) {
+      result.terms.add(addTerm.terms.get(i));
+    }
+
+    result.eliminateTerms();
+    return result;
+  }
+
+  public void eliminateTerms() {
+
+    // Loop through and group any terms that have the same variables
+    // Example: 2*A*B + 1*A*B = 3*A*B + 0*A*B
+    for (int i=0;i<terms.size();i++) {
+      for (int j=i+1;j<terms.size();j++) {
+        if (terms.get(i).sameMultipliers(terms.get(j))) {
+          terms.get(i).setConstantTerm(terms.get(i).getConstantTerm() + terms.get(j).getConstantTerm());
+          terms.get(j).setConstantTerm(0);
+        } 
+      }
+    }
+
+    // Iterate backwards through items, removing items if they have a constant term of 0.
+    for (int i=terms.size()-1; i>=0 ;i--) {
+      if (terms.get(i).getConstantTerm() == 0.0) {
+        terms.remove(i);
+      }
+    }
+
+  }
+
+  public LinearExpression copy() {
+    LinearExpression newExp = new LinearExpression();
+    for (int i=0;i<this.terms.size();i++) {
+      newExp.addTerm(this.terms.get(i).copy());
+    }
+    return newExp;
   }
 
   public String toString() {
     String output = "";
-    for (int i=0;i<terms.size()-1;i++) {
-      output += terms.get(i) + " + ";
+    for (int i=0;i<terms.size();i++) {
+      output += terms.get(i);
+      if (i != terms.size()-1) {
+        output += "+";
+      }
     }
-    output += terms.get(numberOfTerms()-1);
+    if (terms.size()==0) {
+      output += "0.0";
+    }
     return output;
   }
 }
@@ -324,6 +466,9 @@ class AssociationEntry {
 /*
   Represents a linear term; a series of variable coefficients
   LinearTerm = constantTerm*(multipliers^powers)
+  The multipliers are the MultiplicityVariables in this case
+
+  NOTE: The power of the multiplier should be 1 or -1, but it's possible to go higher
 */
 class LinearTerm {
   Double constantTerm;
@@ -334,35 +479,61 @@ class LinearTerm {
     return multipliers.size();
   }
 
-  public void multiply(MultiplicityVariable multiplier, Double power) {
-    multipliers.add(multiplier);
-    powers.add(power);
-    eliminateLikeTerms();
-  }
-
-  public void multiply(LinearTerm multiplyTerm)
-  {
-    if (constantTerm == 0) {
-      return;
+  // Returns true if all multipliers and powers are equal. (Everything is equal except constant)
+  public boolean sameMultipliers(LinearTerm other) {
+    if (other.multipliers.size() != this.multipliers.size()) {
+      return false;
     }
 
-    constantTerm *= multiplyTerm.getConstantTerm();
-
-    // Update the list of powers and multipliers
-    for (int i=0;i<multiplyTerm.size();i++) {
-      int index = multipliers.indexOf(multiplyTerm.multipliers.get(i));
-      if (index == -1) {
-        multipliers.add(multiplyTerm.multipliers.get(i));
-        powers.add(multiplyTerm.powers.get(i));
-      } else {
-        powers.set(index, powers.get(index) + multiplyTerm.powers.get(i));
+    for (int i=0;i<multipliers.size();i++) {
+      if (this.multipliers.get(i) != other.multipliers.get(i)
+        || this.powers.get(i) != other.powers.get(i)) {
+        return false;
       }
     }
 
-    eliminateLikeTerms();
+    return true;
   }
 
-  public void eliminateLikeTerms() {
+  // Add a new multiplier to this term
+  public void addMultiplier(MultiplicityVariable newMultiplier, Double newPower) {
+    multipliers.add(newMultiplier);
+    powers.add(newPower);
+    eliminateTerms();
+  }
+
+  // Get a copy of this term multiplied by another LinearTerm
+  public LinearTerm multiply(LinearTerm multiplyTerm)
+  {
+    LinearTerm result = copy();
+
+    // If the constant term is 0, then multiplication is pointless
+    if (constantTerm == 0) {
+      return result;
+    }
+
+    result.constantTerm *= multiplyTerm.constantTerm;
+
+    // Update the list of powers and multipliers
+    for (int i=0;i<multiplyTerm.size();i++) {
+      // Check if any variable in "multiplyTerm" is also here
+      int index = result.multipliers.indexOf(multiplyTerm.multipliers.get(i));
+
+      // If variable is not already in the list, add it
+      if (index == -1) {
+        result.multipliers.add(multiplyTerm.multipliers.get(i));
+        result.powers.add(multiplyTerm.powers.get(i));
+      } else { 
+        result.powers.set(index, result.powers.get(index) + multiplyTerm.powers.get(i));
+      }
+    }
+
+    result.eliminateTerms();
+    return result;
+  }
+
+  // Remove any variable who's power is 0
+  public void eliminateTerms() {
     // Iterate backwards removing anything with power==0
     for (int i=size()-1; i>=0 ;i--) {
       if (powers.get(i) == 0) {
@@ -372,11 +543,15 @@ class LinearTerm {
     }
   }
 
-  public void multiply(Double multiplyTerm)
+  // Get a copy of this term multiplied by a constant
+  public LinearTerm multiply(Double multiplyTerm)
   {
-    constantTerm *= multiplyTerm;
+    LinearTerm result = copy();
+    result.constantTerm *= multiplyTerm;
+    return result;
   }
 
+  // Get a copy of this LinearTerm's reciprocal
   public LinearTerm getReciprocal() {
     LinearTerm recTerm = new LinearTerm(1/constantTerm);
     for (int i=0;i<size();i++) {
@@ -386,11 +561,21 @@ class LinearTerm {
     return recTerm;
   }
 
+  // Get a copy
+  public LinearTerm copy() {
+    LinearTerm newTerm = new LinearTerm(constantTerm);
+    // Pass references of multipliers, not copies
+    newTerm.multipliers = new ArrayList<MultiplicityVariable>(multipliers);
+    // This should deep copy the Doubles
+    newTerm.powers = new ArrayList<Double>(powers);
+    return newTerm;
+  }
+
   public String toString() {
     String output = "";
     output += constantTerm;
     for (int i=0;i<size();i++) {
-      output += "*" + multipliers.get(i) + "^" + powers.get(i);
+      output += "*" + "(" + multipliers.get(i) + "^" + powers.get(i) + ")";
     }
     return output;
   }
@@ -399,7 +584,10 @@ class LinearTerm {
 
 
 /*
-  Represents a multiplicity in the association matrix
+  Represents a variable multiplicity (1..3) in the association matrix
+  
+  Each MultiplicityVariable is a separate variable in the system.
+  Even if 2 MultiplicityVariables share the same bounds, they are not equal
 */
 class MultiplicityVariable {
   Multiplicity valueRange;
