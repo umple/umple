@@ -48,6 +48,10 @@ public class Client
     {
         throw new RuntimeException("Please provide a valid arg");
     }
+    if (arg<=5)
+    {
+        throw new RuntimeException("Please provide a valid arg");
+    }
     return result;
   }
 
