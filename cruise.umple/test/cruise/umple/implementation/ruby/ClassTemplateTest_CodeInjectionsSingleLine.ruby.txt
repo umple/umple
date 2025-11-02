@@ -27,28 +27,19 @@ class Student
   end
 
   def foo (a)
-    System.out.println("Starting foo with argument: " + a);
-    if(a < 0)      
-      System.out.println("Returning from foo!");
-      return 0;
-    else if(a == 1) {      
-      System.out.println("Returning from foo!");
-      return -1;
-    }
-    else      
-      System.out.println("Returning from foo!");
-      return 4;
-
-    for(int i = 0; i < a; i++) {
-      // TODO: call foo()
-      if(i == a/4) {        
-        System.out.println("Returning from foo!");
-        return a;
-      }
-    }    
-    System.out.println("Returning from foo!");
-    return 4;
-
+    // line 35 "ClassTemplateTest_CodeInjectionsSingleLine.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    // line 38 "ClassTemplateTest_CodeInjectionsSingleLine.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    
+    // line 43 "ClassTemplateTest_CodeInjectionsSingleLine.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+    // line 46 "ClassTemplateTest_CodeInjectionsSingleLine.ump"
+    
+    // END OF UMPLE AFTER INJECTION
   end
 
 
