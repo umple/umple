@@ -95,6 +95,10 @@ Action.clicked = function(event)
   {
     Action.generateCode("classDiagram","classDiagram");
   }
+  else if (action == "instanceDiagram")
+  {
+    Action.generateCode("instanceDiagram","instanceDiagram");
+  }
   else if (action == "entityRelationshipDiagram")
   {
     Action.generateCode("entityRelationshipDiagram","entityRelationshipDiagram");

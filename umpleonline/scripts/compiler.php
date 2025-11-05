@@ -160,6 +160,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $stateDiagram = false;
   $featureDiagram = false;
   $classDiagram = false;
+  $instanceDiagram = false;
   $entityRelationshipDiagram = false;
   $yumlDiagram = false;
   $uigu = false;
@@ -195,6 +196,12 @@ else if (isset($_REQUEST["umpleCode"]))
      $language = "GvClassDiagram";
      $generatorType = "cd";     
      $classDiagram = True;
+  }
+    else if ($language == "instanceDiagram")
+  {
+     $language = "GvInstanceDiagram";  // To be changed .....
+     $generatorType = "cid";           // generatorType needs to be this ....
+     $instanceDiagram = True;
   }
   else if ($language == "traitDiagram")
   {
@@ -293,7 +300,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;      
   } // end html content      
 
-  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","GvInstanceDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     $dataHandle->writeData($dataname, $input);
@@ -378,7 +385,7 @@ else if (isset($_REQUEST["umpleCode"]))
     }
     return;
   } // The following is a hack. The arguments to umplesync need fixing
-  else if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {  
+  else if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {  //should instance diagram be here?
     $command = "java -jar umplesync.jar -source {$filename} 2> {$errorFilename}";
   }
   else {
@@ -534,6 +541,27 @@ else if (isset($_REQUEST["umpleCode"]))
       echo $shrunksvgcode;
       echo "</svg>";      
     } // end graphViz class diagram
+
+    else if ($instanceDiagram) {
+      $thedir = dirname($outputFilename);
+      exec("rm -rf " . $thedir . "/instanceDiagram.svg");
+      $command = "dot -Tsvg " . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/instanceDiagram.svg";
+      exec($command);
+            if (!file_exists($thedir . "/instanceDiagram.svg") && file_exists("doterr.svg"))
+            {
+                exec("cp " . "./doterr.svg " . $thedir . "/instanceDiagram.svg");
+            }
+      $svgcode = readTemporaryFile("{$thedir}/instanceDiagram.svg");
+      $gvlink = $workDir->makePermalink('model'.$generatorType.'.gv');
+      $svglink = $workDir->makePermalink('instanceDiagram.svg');
+      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
+      echo $html;
+      $changesToMake = 1;
+      $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
+      echo $shrunksvgcode;
+      echo "</svg>";      
+    } // end graphViz instance diagram
 
     else if ($entityRelationshipDiagram) {
       $thedir = dirname($outputFilename);
