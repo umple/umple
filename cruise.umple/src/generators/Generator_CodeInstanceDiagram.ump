@@ -31,111 +31,132 @@ class InstanceDiagramGenerator
   public void generate()
   {
 
-    // TO BE IMPLEMENTED: Split model (forest) into connected trees and run the algorithm multiple times.
-    // The above may not be necessary
+    // TO BE IMPLEMENTED: Output error when reaching max iterations
 
-    // TO BE IMPLEMENTED: Solve for class instance counts
-    // Take row of free variable -> find LCM -> LCM is the free value, calculate the rest
+    // TO BE IMPLEMENTED: Output error when hitting a max class count...
 
-    // TO BE IMPLEMENTED: Convert class counts to a json file of class instances
+    // TO BE IMPLEMENTED: 
+    // the minimum is not a satisfying model
+    // All the 0..? associations are never used
+    // Also create a random version? where its not always minimum bound, but a random bound
 
-    // NOTE: The below code is temporary; it is being used to test the output of the model
+    // TO BE IMPLEMENTED: Handling inheritance
+    // Superclasses are sums of a dummy (if non abstract) and its children
+    // and if we have to update the value max() how do we decide which to increase?
+    // Choosing it at random is an option... But there could be a better way
+    // Maybe since i am going to make a minimal version and a random version; inheritance forces the random one to be used
 
-    AssociationMatrix modelMatrix = createMatrixFromModel(model);
-    outputCode += modelMatrix.toString();
+    Map<String, Integer> minInstance = getMinInstances(100);
 
-    outputCode += "\n";
+    for (Map.Entry<String, Integer> entry : minInstance.entrySet()) {
+      outputCode += entry.getKey() + " - " + entry.getValue() + "\n";
+    }
 
-    modelMatrix.toPartialRREF();
-    outputCode += modelMatrix.toString();
-    
-    ArrayList<String> freeVars = modelMatrix.getFreeVariables();
-    for (String var : freeVars) {
-      outputCode += "\n" + var;
+    ArrayList<ClassAssociationLinkSet> actualLinks = distributeAssociations(minInstance);
+    for (ClassAssociationLinkSet link : actualLinks) {
+      outputCode += "\n" + link.toString();
     }
 
     model.setCode(outputCode);
-
 
     writeModelToFile();
   }
 
   /*
-    Create the association matrix (system of linear equations) from the model.
+    We can represent the system as a graph problem. 
+    Each class is a node, and each association is 2 directed links between the nodes.
+    For every link, the class count at the start multiplied by the multiplicity must be smaller/equal to the class count at the end.
     
-    Since reflexive associations must have a 0 lower bound, the minimum number of classes is always 0.
-    Reflexive associations can be safely ignored
-
-    See class AssociationMatrix for explanation as to the convention
+    If you have the link A 2..4 -> 3..6 B, for every 2..4 As, there must be 3..6 Bs.
+    Thus, we have the following tightest inequality; for every 4 or less As, there must be at at least 3 Bs
+    There can be less As, or more Bs, but this equality must hold true.
+    So for A = 1-4 there are >3 Bs, for A = 5-8 there are >6 Bs
+    
+    Algorithm:
+    Initialize all class counts to 1
+    Loop through every association
+      End = max(End, lowerEnd*ceil(Start/UpperStart))
+    Repeat until no more changes appear
+  
+    Returns a map of classnames and their minimum class counts
   */
-  private AssociationMatrix createMatrixFromModel(UmpleModel umpleModel) {
+  private Map<String, Integer> getMinInstances(int maxIter) {
+    Map<String, Integer> result = new HashMap<String, Integer>();
     
-    AssociationMatrix resultMatrix = new AssociationMatrix();
-    // Since colClasses isnt immutable, we need to add classes one-by-one
-    for (UmpleClass umpClass : umpleModel.getUmpleClasses()) {
-      resultMatrix.addColClass(umpClass.getName());
+    // Initialize every class to 1. 
+    for (UmpleClass umpClass : model.getUmpleClasses()) {
+      result.put(umpClass.getName(), 1);
     }
-    
-    // Loop through every association and add it as a row to the matrix
-    for (Association assoc : umpleModel.getAssociations()) {
-      
-      //Create the matrix row
-      AssociationRow newAssocRow = new AssociationRow();
 
-      // Skip reflexive associations
-      if (assoc.getEnd(0).getClassName() == assoc.getEnd(1).getClassName()) {
-        continue;
+    // Begin algorithm
+    boolean noChange = false;
+    for (int iter=0;iter<maxIter;iter++) {
+      if (noChange) {
+        break;
       }
+      noChange = true;
 
-      // Step 1: Find the desired index, and the value
-      int indexLeft = resultMatrix.indexOfColClass(assoc.getEnd(0).getClassName());
-      Multiplicity mulLeft = assoc.getEnd(0).getMultiplicity();
-      int indexRight = resultMatrix.indexOfColClass(assoc.getEnd(1).getClassName());
-      Multiplicity mulRight = assoc.getEnd(1).getMultiplicity();
-      
+      for (Association assoc : model.getAssociations()) {
+        int lowerLeft = assoc.getEnd(0).getMultiplicity().getLowerBound();
+        int upperLeft = assoc.getEnd(0).getMultiplicity().getUpperBound();
+        int lowerRight = assoc.getEnd(1).getMultiplicity().getLowerBound();
+        int upperRight = assoc.getEnd(1).getMultiplicity().getUpperBound();
 
-      // Step 2: Convert Multiplicity to the LinearExpression representation
-      LinearExpression leftExp = new LinearExpression();
-      LinearExpression rightExp = new LinearExpression();
-
-      // Check if the multiplicity is a constant
-      if (mulLeft.getBound() != null && !mulLeft.getBound().equals("*")) { 
-        leftExp.addTerm(new LinearTerm(Double.parseDouble(mulLeft.getBound())));
-      } else {
-        LinearTerm leftTerm = new LinearTerm(1);
-        //Add the multiplicity as a variable
-        leftTerm.addMultiplier(new MultiplicityVariable(mulLeft), 1.0);
-        leftExp.addTerm(leftTerm);
-      }
-
-      // Check if the multiplicity is a constant
-      // Note that we reverse the sign of one of the ends - See class AssociationMatrix
-      if (mulRight.getBound() != null && !mulRight.getBound().equals("*")) { 
-        rightExp.addTerm(new LinearTerm(-Double.parseDouble(mulRight.getBound())));
-      } else {
-        LinearTerm rightTerm = new LinearTerm(-1);
-        //Add the multiplicity as a variable
-        rightTerm.addMultiplier(new MultiplicityVariable(mulRight), 1.0);
-        rightExp.addTerm(rightTerm);
-      }   
-
-      // Step 3: Place the 2 object into the Matrix row
-      // Note that we swap the positions/indices of the ends - See class AssociationMatrix
-      for (int i=0;i<resultMatrix.numberOfColClasses(); i++) {
-        if (i == indexLeft) {
-          newAssocRow.addMatrixEntry(rightExp);
-        } else if (i == indexRight) {
-          newAssocRow.addMatrixEntry(leftExp);
-        } else {
-          newAssocRow.addMatrixEntry(new LinearExpression());
+        // For directional associations, there are 3 situations for the multiplicity on the unmanaged side:
+        // - 0..1: We will treat it as bidirectional with 1 in the direction, and 0 against the direction... no changes required
+        // - *: We will treat it as bidirectional with 1 in the direction, and 0 against the direction... convert it to 0..1
+        // - 2, 2..4, anything: The user has ignored Warning036...
+        //                      We will assume the user wishes to enforce that multiplicity so pretend its bidirectional... no changes required
+        if (!assoc.getIsLeftNavigable() && upperLeft==-1) {
+          lowerLeft = 0;
+          upperLeft = 1;
         }
-      }
+        if (!assoc.getIsRightNavigable() && upperRight==-1) {
+          lowerRight = 0;
+          upperRight = 1;
+        }
 
-      // Add row to matrix
-      resultMatrix.addMatrixRow(newAssocRow);
+        // TO BE IMPLEMENTED: Treat * as a very large number
+        // It would have a -1 as the value
+        // This code needs to be after the directional association detection above
+
+        // Going towards the right
+        Integer newInstanceLeft = Integer.valueOf((int)(lowerRight*Math.ceil(result.get(assoc.getEnd(0).getClassName())/upperLeft)));
+        Integer oldIstanceleft = result.get(assoc.getEnd(1).getClassName());
+        // If the new required instance is higher, replace the old instance count
+        if (newInstanceLeft > oldIstanceleft) {
+          noChange = false;
+          result.put(assoc.getEnd(1).getClassName(), newInstanceLeft);
+        }
+
+        // Going towards the left
+        Integer newInstanceRight = Integer.valueOf((int)(lowerLeft*Math.ceil(result.get(assoc.getEnd(1).getClassName())/upperRight)));
+        Integer oldIstanceRight = result.get(assoc.getEnd(0).getClassName());
+        // If the new required instance is higher, replace the old instance count
+        if (newInstanceRight > oldIstanceRight) {
+          noChange = false;
+          result.put(assoc.getEnd(0).getClassName(), newInstanceRight);
+        }
+
+      }
+    }
+    return result;
+  }
+
+  /*
+    Given the number of instance of each class, get the associations between the instances.
+
+    Returns an arraylist of ClassAssociationLinkSet, which is a data class
+  */
+  private ArrayList<ClassAssociationLinkSet> distributeAssociations(Map<String, Integer> minimumInstances) {
+    ArrayList<ClassAssociationLinkSet> result = new ArrayList<ClassAssociationLinkSet>();
+    
+    // Loop through associations
+    for (Association assoc : model.getAssociations()) {
+      result.add(new ClassAssociationLinkSet(assoc, minimumInstances.get(assoc.getEnd(0).getClassName()), minimumInstances.get(assoc.getEnd(1).getClassName())));
     }
 
-    return resultMatrix;
+    return result;
   }
 
   // Output the instance diagram to a file
@@ -162,439 +183,98 @@ class InstanceDiagramGenerator
 
 }
 
-
-
 /*
- Represents the model as a matrix/System-of-linear-equations
- Each column represents a class, and each row represents an association
+ Data class to hold a 2D matrix
 
- The linear equations in the system represent sums of instances of classes.
-  If class Alpha has a 1--2 association with class Beta, then: 
-      - NumOfAlpha*2 = NumOfBeta.
-      - NumOfAlpha*2 - NumOfBeta = 0
-      - NumOfAlpha*2 - NumOfBeta + 0*NumOfCharlie + 0*NumOfDelta + ... = 0
-  Each association adds a linear equation where only 2 of the values are non-zero.
+ Automatically calculates the links in the constructor
 */
-class AssociationMatrix
-{
-  // THIS SHOULD BE IMMUTABLE. See Issue #173 on Github... 
-  // If not immutable - then there should be overrides to resize the matrix's columns
-  // List of classes in the model, their index corresponds to the column number
-  String[] colClasses;
+class ClassAssociationLinkSet {
+  private boolean[][] links;
+  internal Association association;
+  internal Integer classCountStart;
+  internal Integer classCountEnd;
 
-  // Rows representing associations in the model
-  AssociationRow[] matrixRows;
-
-  /*
-    Perform gauss-jordan elimination to reduce the matrix.
-    The standard algorithm has been modified to account for variables in place of concrete values.
-    These variable/LinearTerm cells can still act as pivots by dividing by the LinearTerm
-    Example Row: [2*A, C, 0, 0] can be converted to [1, C/(2*A), 0, 0]
-    
-
-    IMPORTANT NOTE: 
-    Since each row can only contain 2 entries (LinearTerms), 
-        there could be rows simplified to 1 entry - a LinearExpression (2 LinearTerms in the same cell)
-    These LinearExpressions will NOT be used as pivots, they will be skipped (similarly to a 0 pivot)
-    
-    Rationale:
-    As mentioned above, every other entry in the row must be 0.
-    There are 2 situations:
-    - Other values in the column are chosen as the pivot: 
-          This linear expression is reduced to 0 through subtraction by the pivot
-    - There are no other values in the column:
-      - The LinearExpression != 0: We divide it by itself, and it becomes a pivot in an empty column (ie. not required to solve the system)
-      - The LinearExpression == 0: The column is fully 0, resulting in a free variable column (useful for solving the system)
-    The only situation where a LinearExpression becomes a non-zero pivot is not necessary to solve the system
-  */
-  public void toPartialRREF() 
-  {
-    int cols = numberOfColClasses();
-    int rows = numberOfMatrixRows();
-
-    // Loop through the pivot diagonal
-    for (int pivotCol=0, pivotRow=0; pivotCol < cols && pivotRow < rows; pivotCol++) {
-
-      // Step 1: Find the first non-zero element in the pivot column
-      int nonZeroRow = -1;
-      for (int i = pivotRow; i<rows; i++) {
-        // Check for non-zero (term>0), non-LinearExpression value (term<2)
-        if (getMatrixRow(i).getMatrixEntry(pivotCol).numberOfTerms() == 1) {
-          nonZeroRow = i;
-          break;
-        }
-      }
-
-      //If there was no non-zero value, skip this column
-      if (nonZeroRow == -1) {
-        continue;
-      }
-
-      // Step 2: Swapping the non-zero pivot to the current/pivot row position
-      Collections.swap(matrixRows, nonZeroRow, pivotRow);
-
-
-      // Step 3: Scale the pivot row (make the pivot 1)
-      // Since we know there is only 1 LinearTerm we can do getTerm(0)
-      LinearTerm pivotValue = getMatrixRow(pivotRow).getMatrixEntry(pivotCol).getTerm(0);
-      getMatrixRow(pivotRow).multiplyRowInplace(pivotValue.getReciprocal());
-      
-
-      // Step 4: Eliminate values in the other rows (make the pivot column full of 0s)
-      for (int k=0;k<rows;k++) {
-        if (k != pivotRow) {
-          // Get scaling factor
-          LinearExpression multiplier = getMatrixRow(k).getMatrixEntry(pivotCol);
-          // Copy pivot row
-          AssociationRow subtractPattern = getMatrixRow(pivotRow).copy();
-          //Scale pivot row
-          subtractPattern.multiplyRowInplace(multiplier);
-          //Perform Row Subtraction
-          getMatrixRow(k).subtractRowInplace(subtractPattern);
-        }
-      }
-
-      // Note that this line is not reached if pivot is 0; the next loop will increment column but not row
-      pivotRow++;
-    }
+  after constructor {
+    this.links = getLinksFromAssociation(classCountStart, classCountEnd, association);
   }
 
   /*
-    This function returns the free variables of the matrix (assuming the matrix is in RREF).
-    It will return garbage if the matrix is not in RREF
-  */
-  public ArrayList<String> getFreeVariables(){
-    ArrayList<String> freeVars = new ArrayList<String>();
+    Given the num of instances of each class, get the associations between each instance.
+    Returns a reference to a matrix of the minimum links between classes for a given association
+    The matrix is startClassCount by endClassCount, and the boolean entries represent if there is a link between class instances
+
+    TO BE IMPLEMENTED: return maximum links between classes when passed a flag
+
+    Algorithm:
+    Check which minimum is larger: A*Bmin or B*Amin. 
+    If they !=, It will be impossible to satisfy one min with the min of the other, we have to add some extra connections
+    Take the largest minimum (lets say B), begin assigning As round-robin until B min is satisfied
     
-    // Go down the diagonal
-    for (int row=0, col=0 ; col<numberOfColClasses() ; col++) {
+    Example: For A 2..3 -- 2..7 B with 7 As and 10 Bs
+    B1 = A1, A2
+    B2 = A3, A4
+    B3 = A5, A6
+    B4 = A7, A1
+    B5 = A2, A3
+    ...
+    Each A should have its minimums
+    A1 = B1, B4, B8
+    A2 = B1, B5, B8
+    ...
+    A6 = B3, B7, B10
+    A7 = B4, B7
 
-      // If the diagonal does not exist, then the column is a free variable
-      if (row>=numberOfMatrixRows()) {
-        freeVars.add(getColClass(col));
-        continue;
-      }
+  */
+  private boolean[][] getLinksFromAssociation(Integer startClassCount, Integer endClassCount, Association assoc){
+    boolean[][] result = new boolean[startClassCount][endClassCount];
 
-      // If the diagonal has 0, then the column is a free variable
-      if (getMatrixRow(row).getMatrixEntry(col).numberOfTerms() != 1)  {
-        freeVars.add(getColClass(col));
-        continue;
-      } 
+    // Minimum links is the number of classes multiplied by the lower bound on the other end
+    int endLower = assoc.getEnd(1).getMultiplicity().getLowerBound();
+    int startLower = assoc.getEnd(0).getMultiplicity().getLowerBound();
+    int minimumLinksStart = startClassCount*endLower;
+    int minimumLinksEnd = endClassCount*startLower;
+
+    if (minimumLinksStart > minimumLinksEnd) {
       
-      row++;
-    }
-    return freeVars;
-  }
-
-
-  public String toString() {
-    String output = "";
-    output += "[";
-    for (int i=0;i<numberOfMatrixRows();i++) {
-      output += getMatrixRow(i);
-      if (i != numberOfMatrixRows()-1) {
-        output += "," + "\n";
+      int roundRobinCount = 0;
+      for (int i=0;i<startClassCount;i++) {
+        for (int min=0;min<endLower;min++) {
+          result[i][roundRobinCount] = true;
+          roundRobinCount = (roundRobinCount+1)%endClassCount;
+        }
       }
-    }
-    output += "]";
-    return output;
-  }
-}
 
+    } else {
 
-/*
-  Rows of the association matrix
-  Represents an association
-*/
-class AssociationRow
-{
-  LinearExpression[] matrixEntries;
-  
-  // Multiply this row inplace by a LinearExpression
-  public void multiplyRowInplace(LinearExpression linExp)
-  {
-    for (int i = 0; i<matrixEntries.size() ;i++) {
-      matrixEntries.set(i, matrixEntries.get(i).multiply(linExp));
-    }
-  }
+      int roundRobinCount = 0;
+      for (int i=0;i<endClassCount;i++) {
+        for (int min=0;min<startLower;min++) {
+          result[roundRobinCount][i] = true;
+          roundRobinCount = (roundRobinCount+1)%startClassCount;
+        }
+      }
 
-  //Subtract the values in this row by the values in another row
-  public void subtractRowInplace(AssociationRow other)
-  {
-    for (int i = 0; i<matrixEntries.size() ;i++) {
-      // Subtract by adding the negative of the other expression
-      matrixEntries.set(i, matrixEntries.get(i).addition(other.matrixEntries.get(i).multiply(-1.0)));
     }
-  }
 
-  // Multiply this row inplace by a LinearTerm
-  public void multiplyRowInplace(LinearTerm linTerm){
-    for (int i = 0; i<matrixEntries.size() ;i++) {
-      matrixEntries.set(i, matrixEntries.get(i).multiply(linTerm));
-    }
-  }
-
-  public AssociationRow copy() {
-    AssociationRow newAssocRow = new AssociationRow();
-    for (int i=0;i<this.matrixEntries.size();i++) {
-      newAssocRow.addMatrixEntry(this.matrixEntries.get(i).copy());
-    }
-    return newAssocRow;
+    return result;
   }
 
   public String toString() {
-    String output = "";
-    output += "[";
-    for (int i=0;i<matrixEntries.size();i++) {
-      output += matrixEntries.get(i);
-      if (i != matrixEntries.size()-1) {
-        output += " | ";
+    String result = "";
+    
+    result += "("+classCountStart+")"+this.association.getEnd(0).getClassName();
+    result += " X ";
+    result += "("+classCountEnd+")"+this.association.getEnd(1).getClassName();
+    result += "\n";
+    for (int i=0;i<links.length;i++) {
+      result += "|";
+      for (int j=0;j<links[i].length;j++) {
+        result += " " + (links[i][j] ? "1" : "0") + " ";
       }
-    }
-    output += "]";
-    return output;
-  }
-}
-
-
-
-/*
-  Entries in the association matrix are linear expressions
-  A series of linear terms, such as 2*A*B + (-3)*C + D/2
-*/
-class LinearExpression {
-  LinearTerm[] terms;
-
-  public LinearExpression multiply(LinearExpression multiplyTerm)
-  {
-    LinearExpression result = new LinearExpression();
-
-    for (int i = 0; i<this.terms.size() ;i++) {
-      for (int j = 0; j<multiplyTerm.terms.size() ;j++) {
-        result.terms.add(
-          this.terms.get(i).multiply(multiplyTerm.terms.get(j))
-          );
-      }
+      result += "|\n";
     }
 
-    result.eliminateTerms();
     return result;
   }
 
-  public LinearExpression multiply(LinearTerm multiplyTerm)
-  {
-    LinearExpression result = new LinearExpression();
-
-    for (int i = 0; i<this.terms.size() ;i++) {
-      result.terms.add(this.terms.get(i).multiply(multiplyTerm));
-    }
-
-    result.eliminateTerms();
-    return result;
-  }
-
-  public LinearExpression multiply(Double multiplyTerm)
-  {
-    LinearExpression result = new LinearExpression();
-
-    for (int i = 0; i<this.terms.size() ;i++) {
-      result.terms.add(this.terms.get(i).multiply(multiplyTerm));
-    }
-
-    // Elimination of terms is unnecessary here
-    return result;
-  }
-
-  public LinearExpression addition(LinearExpression addTerm) {
-    LinearExpression result = copy();
-
-    for (int i=0;i<addTerm.terms.size();i++) {
-      result.terms.add(addTerm.terms.get(i));
-    }
-
-    result.eliminateTerms();
-    return result;
-  }
-
-  public void eliminateTerms() {
-
-    // Loop through and group any terms that have the same variables
-    // Example: 2*A*B + 1*A*B = 3*A*B + 0*A*B
-    for (int i=0;i<terms.size();i++) {
-      for (int j=i+1;j<terms.size();j++) {
-        if (terms.get(i).sameMultipliers(terms.get(j))) {
-          terms.get(i).setConstantTerm(terms.get(i).getConstantTerm() + terms.get(j).getConstantTerm());
-          terms.get(j).setConstantTerm(0);
-        } 
-      }
-    }
-
-    // Iterate backwards through items, removing items if they have a constant term of 0.
-    for (int i=terms.size()-1; i>=0 ;i--) {
-      if (terms.get(i).getConstantTerm() == 0.0) {
-        terms.remove(i);
-      }
-    }
-
-  }
-
-  public LinearExpression copy() {
-    LinearExpression newExp = new LinearExpression();
-    for (int i=0;i<this.terms.size();i++) {
-      newExp.addTerm(this.terms.get(i).copy());
-    }
-    return newExp;
-  }
-
-  public String toString() {
-    String output = "";
-    for (int i=0;i<terms.size();i++) {
-      output += terms.get(i);
-      if (i != terms.size()-1) {
-        output += "+";
-      }
-    }
-    if (terms.size()==0) {
-      output += "0.0";
-    }
-    return output;
-  }
-}
-
-
-
-/*
-  Represents a linear term; a series of variable coefficients
-  LinearTerm = constantTerm*(multipliers^powers)
-  The multipliers are the MultiplicityVariables in this case
-
-  NOTE: The power of the multiplier should be 1 or -1, but it's possible to go higher
-*/
-class LinearTerm {
-  Double constantTerm;
-  internal MultiplicityVariable[] multipliers;
-  internal Double[] powers;
-
-  public int size() {
-    return multipliers.size();
-  }
-
-  // Returns true if all multipliers and powers are equal. (Everything is equal except constant)
-  public boolean sameMultipliers(LinearTerm other) {
-    if (other.multipliers.size() != this.multipliers.size()) {
-      return false;
-    }
-
-    for (int i=0;i<multipliers.size();i++) {
-      if (this.multipliers.get(i) != other.multipliers.get(i)
-        || this.powers.get(i) != other.powers.get(i)) {
-        return false;
-      }
-    }
-
-    return true;
-  }
-
-  // Add a new multiplier to this term
-  public void addMultiplier(MultiplicityVariable newMultiplier, Double newPower) {
-    multipliers.add(newMultiplier);
-    powers.add(newPower);
-    eliminateTerms();
-  }
-
-  // Get a copy of this term multiplied by another LinearTerm
-  public LinearTerm multiply(LinearTerm multiplyTerm)
-  {
-    LinearTerm result = copy();
-
-    // If the constant term is 0, then multiplication is pointless
-    if (constantTerm == 0) {
-      return result;
-    }
-
-    result.constantTerm *= multiplyTerm.constantTerm;
-
-    // Update the list of powers and multipliers
-    for (int i=0;i<multiplyTerm.size();i++) {
-      // Check if any variable in "multiplyTerm" is also here
-      int index = result.multipliers.indexOf(multiplyTerm.multipliers.get(i));
-
-      // If variable is not already in the list, add it
-      if (index == -1) {
-        result.multipliers.add(multiplyTerm.multipliers.get(i));
-        result.powers.add(multiplyTerm.powers.get(i));
-      } else { 
-        result.powers.set(index, result.powers.get(index) + multiplyTerm.powers.get(i));
-      }
-    }
-
-    result.eliminateTerms();
-    return result;
-  }
-
-  // Remove any variable who's power is 0
-  public void eliminateTerms() {
-    // Iterate backwards removing anything with power==0
-    for (int i=size()-1; i>=0 ;i--) {
-      if (powers.get(i) == 0) {
-        multipliers.remove(i);
-        powers.remove(i);
-      }
-    }
-  }
-
-  // Get a copy of this term multiplied by a constant
-  public LinearTerm multiply(Double multiplyTerm)
-  {
-    LinearTerm result = copy();
-    result.constantTerm *= multiplyTerm;
-    return result;
-  }
-
-  // Get a copy of this LinearTerm's reciprocal
-  public LinearTerm getReciprocal() {
-    LinearTerm recTerm = new LinearTerm(1/constantTerm);
-    for (int i=0;i<size();i++) {
-      recTerm.multipliers.add(multipliers.get(i));
-      recTerm.powers.add(-powers.get(i));
-    }
-    return recTerm;
-  }
-
-  // Get a copy
-  public LinearTerm copy() {
-    LinearTerm newTerm = new LinearTerm(constantTerm);
-    // Pass references of multipliers, not copies
-    newTerm.multipliers = new ArrayList<MultiplicityVariable>(multipliers);
-    // This should deep copy the Doubles
-    newTerm.powers = new ArrayList<Double>(powers);
-    return newTerm;
-  }
-
-  public String toString() {
-    String output = "";
-    output += constantTerm;
-    for (int i=0;i<size();i++) {
-      output += "*" + "(" + multipliers.get(i) + "^" + powers.get(i) + ")";
-    }
-    return output;
-  }
-}
-
-
-
-/*
-  Represents a variable multiplicity (1..3) in the association matrix
-  
-  Each MultiplicityVariable is a separate variable in the system.
-  Even if 2 MultiplicityVariables share the same bounds, they are not equal
-*/
-class MultiplicityVariable {
-  Multiplicity valueRange;
-
-  public String toString() {
-    String output = "";
-    output += "(" + valueRange.getParserable() + ")";
-    return output;
-  }
 }
