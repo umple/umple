@@ -17,10 +17,15 @@ namespace cruise.umple.compiler;
 
 class InstanceDiagramGenerator
 {
-  isA CodeGeneratorWithSubptions;
+  isA SuperGvGenerator;
   depend java.io.*;
   depend java.util.*;
   depend cruise.umple.compiler.exceptions.*;
+
+    protected String generatorType()
+  {
+    return "cid";
+  }
 
   // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
   // off of what's contained in here.
@@ -47,12 +52,48 @@ class InstanceDiagramGenerator
     // Maybe since i am going to make a minimal version and a random version; inheritance forces the random one to be used
 
     Map<String, Integer> minInstance = getMinInstances(100);
+    ArrayList<ClassAssociationLinkSet> actualLinks = distributeAssociations(minInstance);
+
+    StringBuilder code = new StringBuilder();           // part of the gv file with the node/classes
+    StringBuilder associations = new StringBuilder();   // part of the gv file with all the associations
+
+    // Output basic gv file header
+    _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
+
+    //gets the desired separator value. Graphviz default is 0.5 but for Umple we use 1.0 for 'normal'
+    double sepVal = getSuboptionValue("gvseparator", 1.0); 
+    //checks if the separator value is not 1.0 (Umple default which will be 0.5 in Graphviz).
+    // If it isn't it applies the desired separator value to nodesep and ranksep
+    if (sepVal != 1.0){
+      Double graphVizSepVal = sepVal/2.0;
+      code.append("nodesep =" + graphVizSepVal +";"); //injects sepVal(desired separator value) into nodesep
+      code.append("ranksep =" + graphVizSepVal +";"); //injects sepVal(desired separator value) into ranksep
+    }
+
+    Set processedAssociations = new HashSet(); // needed to prevent reflexive double count
+
+    for (UmpleClass umpClass : model.getUmpleClasses()) { // looping through the model. need to extract the attribute information.
+
+      for(Association uAssoc : uClass.getAssociations()) { // Prevent double-counting of reflexive associations
+      if(processedAssociations.contains(uAssoc)) continue;
+      processedAssociations.add(uAssoc);
+      }
+
+      String currentInstanceName = umpClass.getName();
+      Integer numberOfInstaces = minInstance.get(currentInstanceName);    // minInstance may change at a later date
+      for (int i = 0; i < numberOfInstaces; i++) {
+      // Call the helper funciton that ClassCreate()  // TODO make the helper function that makes all the instances.
+      }
+    }
+
+    // AssociationCreate(); TODO make the helper function that makes all the associations
+    // terminateCode(code, associations);
 
     for (Map.Entry<String, Integer> entry : minInstance.entrySet()) {
       outputCode += entry.getKey() + " - " + entry.getValue() + "\n";
     }
 
-    ArrayList<ClassAssociationLinkSet> actualLinks = distributeAssociations(minInstance);
+   
     for (ClassAssociationLinkSet link : actualLinks) {
       outputCode += "\n" + link.toString();
     }
