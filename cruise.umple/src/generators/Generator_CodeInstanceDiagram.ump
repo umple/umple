@@ -70,15 +70,7 @@ class InstanceDiagramGenerator
       code.append("ranksep =" + graphVizSepVal +";"); //injects sepVal(desired separator value) into ranksep
     }
 
-    Set processedAssociations = new HashSet(); // needed to prevent reflexive double count
-
     for (UmpleClass umpClass : model.getUmpleClasses()) { // looping through the model. need to extract the attribute information.
-
-      for(Association uAssoc : uClass.getAssociations()) { // Prevent double-counting of reflexive associations
-      if(processedAssociations.contains(uAssoc)) continue;
-      processedAssociations.add(uAssoc);
-      }
-
       String currentInstanceName = umpClass.getName();
       Integer numberOfInstaces = minInstance.get(currentInstanceName);    // minInstance may change at a later date
       for (int i = 0; i < numberOfInstaces; i++) {
