@@ -43,7 +43,7 @@ class InstanceDiagramGenerator
     // TO BE IMPLEMENTED: 
     // the minimum is not a satisfying model
     // All the 0..? associations are never used
-    // Also create a random version? where its not always minimum bound, but a random bound
+    // I should also create a random version where its not always minimum bound, but a random bound
 
     // TO BE IMPLEMENTED: Handling inheritance
     // Superclasses are sums of a dummy (if non abstract) and its children
@@ -52,7 +52,7 @@ class InstanceDiagramGenerator
     // Maybe since i am going to make a minimal version and a random version; inheritance forces the random one to be used
 
     Map<String, Integer> minInstance = getMinInstances(100);
-    ArrayList<ClassAssociationLinkSet> actualLinks = distributeAssociations(minInstance);
+    ArrayList<ClassAssociationLinkSet> actualLinks = distributeAssociations(minInstance, true);
 
     StringBuilder code = new StringBuilder();           // part of the gv file with the node/classes
     StringBuilder associations = new StringBuilder();   // part of the gv file with all the associations
@@ -81,17 +81,15 @@ class InstanceDiagramGenerator
     // AssociationCreate(); TODO make the helper function that makes all the associations
     // terminateCode(code, associations);
 
+
+    // TEMPORARY CODE: Printing the output to a text file
     for (Map.Entry<String, Integer> entry : minInstance.entrySet()) {
       outputCode += entry.getKey() + " - " + entry.getValue() + "\n";
     }
-
-   
     for (ClassAssociationLinkSet link : actualLinks) {
       outputCode += "\n" + link.toString();
     }
-
     model.setCode(outputCode);
-
     writeModelToFile();
   }
 
@@ -178,15 +176,16 @@ class InstanceDiagramGenerator
 
   /*
     Given the number of instance of each class, get the associations between the instances.
+    The maxLinks boolean determines if you max or min number of links between the sets of instances
 
     Returns an arraylist of ClassAssociationLinkSet, which is a data class
   */
-  private ArrayList<ClassAssociationLinkSet> distributeAssociations(Map<String, Integer> minimumInstances) {
+  private ArrayList<ClassAssociationLinkSet> distributeAssociations(Map<String, Integer> minimumInstances, boolean maxLinks) {
     ArrayList<ClassAssociationLinkSet> result = new ArrayList<ClassAssociationLinkSet>();
     
     // Loop through associations
     for (Association assoc : model.getAssociations()) {
-      result.add(new ClassAssociationLinkSet(assoc, minimumInstances.get(assoc.getEnd(0).getClassName()), minimumInstances.get(assoc.getEnd(1).getClassName())));
+      result.add(new ClassAssociationLinkSet(assoc, minimumInstances.get(assoc.getEnd(0).getClassName()), minimumInstances.get(assoc.getEnd(1).getClassName()), maxLinks));
     }
 
     return result;
@@ -222,56 +221,73 @@ class InstanceDiagramGenerator
  Automatically calculates the links in the constructor
 */
 class ClassAssociationLinkSet {
-  private boolean[][] links;
+  public boolean[][] links;
   internal Association association;
   internal Integer classCountStart;
   internal Integer classCountEnd;
+  internal boolean maxLinks;
 
   after constructor {
-    this.links = getLinksFromAssociation(classCountStart, classCountEnd, association);
+    this.links = getLinksFromAssociation(classCountStart, classCountEnd, association, maxLinks);
   }
 
   /*
     Given the num of instances of each class, get the associations between each instance.
-    Returns a reference to a matrix of the minimum links between classes for a given association
+    Returns a reference to a matrix of the links between classes for a given association
     The matrix is startClassCount by endClassCount, and the boolean entries represent if there is a link between class instances
 
-    TO BE IMPLEMENTED: return maximum links between classes when passed a flag
-
     Algorithm:
-    Check which minimum is larger: A*Bmin or B*Amin. 
-    If they !=, It will be impossible to satisfy one min with the min of the other, we have to add some extra connections
-    Take the largest minimum (lets say B), begin assigning As round-robin until B min is satisfied
+    Check which class is the limiting factor
+    Take the limiting class (lets say B), begin assigning As round-robin until B links are satisfied
     
-    Example: For A 2..3 -- 2..7 B with 7 As and 10 Bs
+    Example: For A 2..3 -- 2..7 B with 7 As and 10 Bs (getting the minimum links)
     B1 = A1, A2
     B2 = A3, A4
     B3 = A5, A6
     B4 = A7, A1
     B5 = A2, A3
     ...
-    Each A should have its minimums
+    Each A should have at least its minimums (since B was the limiting class)
     A1 = B1, B4, B8
     A2 = B1, B5, B8
     ...
     A6 = B3, B7, B10
     A7 = B4, B7
-
   */
-  private boolean[][] getLinksFromAssociation(Integer startClassCount, Integer endClassCount, Association assoc){
+  private boolean[][] getLinksFromAssociation(Integer startClassCount, Integer endClassCount, Association assoc, boolean getMaxLinks){
     boolean[][] result = new boolean[startClassCount][endClassCount];
 
     // Minimum links is the number of classes multiplied by the lower bound on the other end
+    // Maximum links is the number of classes multiplied by the upper bound on the other end
     int endLower = assoc.getEnd(1).getMultiplicity().getLowerBound();
+    int endUpper = assoc.getEnd(1).getMultiplicity().getUpperBound();
     int startLower = assoc.getEnd(0).getMultiplicity().getLowerBound();
+    int startUpper = assoc.getEnd(0).getMultiplicity().getUpperBound();
+    
+    // The maximum links for a * upper bound is #OfInstances of the other class (you cannot link to 11 Bs if there are only 10 Bs)
+    if (endUpper == -1) {endUpper = startClassCount;}
+    if (startUpper == -1) {startUpper = endClassCount;}
+
+    int maximumLinksStart = startClassCount*endUpper;
     int minimumLinksStart = startClassCount*endLower;
+    int maximumLinksEnd = endClassCount*startUpper;
     int minimumLinksEnd = endClassCount*startLower;
 
-    if (minimumLinksStart > minimumLinksEnd) {
+    boolean startLimiting;
+    if (getMaxLinks) {
+      startLimiting = (maximumLinksStart < maximumLinksEnd)? true : false;
+    } else {
+      startLimiting = (minimumLinksStart > minimumLinksEnd)? true : false;
+    }
+
+    // Loop through whichever end is the limiting factor
+    if (startLimiting) {
       
       int roundRobinCount = 0;
+      // For each class in set "start"
       for (int i=0;i<startClassCount;i++) {
-        for (int min=0;min<endLower;min++) {
+        // Loop through either max or min links - creating links
+        for (int min=0; min<(getMaxLinks? endUpper : endLower) ;min++) { 
           result[i][roundRobinCount] = true;
           roundRobinCount = (roundRobinCount+1)%endClassCount;
         }
@@ -280,8 +296,10 @@ class ClassAssociationLinkSet {
     } else {
 
       int roundRobinCount = 0;
+      // For each class in set "end"
       for (int i=0;i<endClassCount;i++) {
-        for (int min=0;min<startLower;min++) {
+        // Loop through either max or min links - creating links
+        for (int min=0; min<(getMaxLinks? startUpper : startLower) ;min++) {
           result[roundRobinCount][i] = true;
           roundRobinCount = (roundRobinCount+1)%startClassCount;
         }
