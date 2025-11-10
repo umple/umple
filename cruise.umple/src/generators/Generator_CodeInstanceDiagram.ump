@@ -71,10 +71,13 @@ class InstanceDiagramGenerator
     }
 
     for (UmpleClass umpClass : model.getUmpleClasses()) { // looping through the model. need to extract the attribute information.
+      if (umpClass.getIsAbstract()){                      // we do not consider abstract classes in instance diagrams
+          continue;
+      }
       String currentInstanceName = umpClass.getName();
       Integer numberOfInstaces = minInstance.get(currentInstanceName);    // minInstance may change at a later date
       for (int i = 0; i < numberOfInstaces; i++) {
-      // Call the helper funciton that ClassCreate()  // TODO make the helper function that makes all the instances.
+        createClass(code, umpClass, i + 1);
       }
     }
 
@@ -91,6 +94,98 @@ class InstanceDiagramGenerator
     }
     model.setCode(outputCode);
     writeModelToFile();
+  }
+
+  public void createClass(UmpleClass umpClass, StringBuilder code, int iteration){
+
+    boolean manyClass = getModel().getUmpleClasses().size() >= 200 ? true : false;
+
+    String className = umpClass.getName();
+    String instanceName = className + iteration + ": " + className;
+    String classColor = umpClass.getDisplayColor();
+    if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
+    code.append("\n  // Class: "+className+"\n");
+    
+    if (manyClass) {
+      code.append("  \""+className + iteration+"\" ["+classColor+"shape=record, label=\"{"+instanceName);
+    } 
+    else {
+      code.append("  \""+className + iteration+"\" ["+classColor+"shape=plaintext margin=0 label=");
+	    
+      // Different cellpadding for if the class has nothing but the
+      // name because of a glitch in graphviz's graphics
+      if (umpClass.getAttributes().size() == 0 || hasSuboption("hideattributes")) {
+	    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
+		   			+"<tr><td>    "+instanceName+"    </td></tr>");
+      }
+      else {
+        code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"2\">"
+                    +"<tr><td cellpadding=\"4\">    "+instanceName+"    </td></tr>");
+		  }
+    }
+
+    attributeCreation(umpClass, code, manyClass);  // creates the attributes for the partcular instance
+
+    // Terminate outputting the class attributes
+    if(manyClass) code.append("}\"");
+   	else code.append("</table>>"); 
+    
+    
+    // Output the tooltip : Class name followed by any comment
+    code.append(",\n   tooltip=\"instance "+className + iteration+"\n");
+    code.append(appendTooltipComment(umpClass.getComments(), false));
+    code.append("\"");
+
+    // Terminate the class as a whole
+    code.append("];\n");
+  }
+
+  private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass){
+    // Iterate through attributes of the class
+    boolean isFirst = true;
+
+    if (!hasSuboption("hideattributes")) { 
+      for (Attribute uAttribute : uClass.getAttributes()) {
+        if (!uAttribute.isConstant()) 
+        {
+          String instanceAttribute = createRandomAttributeValue(uAttribute);  // this will take into account if the attribute is a list or not
+          
+          if (manyClass) {
+            if (isFirst) code.append("|"); // attribute block starter
+            else code.append("\\\n"); // separator between attributes
+          }
+          else {
+            if (isFirst) code.append("<hr/>"); // attribute block starter
+          }
+
+          String isList = uAttribute.getIsList() ? "[]" : "";
+          String type = uAttribute.getType().replace("<","&lt;").replace(">","&gt;");
+          
+          if (manyClass) {
+            code.append(""+uAttribute.getName()+"\\:\\ "+instanceAttribute+"\\l");
+          }
+          else {
+            StringBuilder attrTooltip = new StringBuilder();
+            attrTooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
+            attrTooltip.append(appendTooltipComment(uAttribute.getComments(), true));        
+            code.append("<tr><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
+                +"  "+uAttribute.getName()+": "
+                +instanceAttribute+"  </td></tr>");
+          }
+        } else { //attribute is constant
+          // Not sure if this is needed. in the Class diagram constant variables are ignored.
+          // could just leave this empty
+        }
+          isFirst = false;
+      }
+    }
+  }
+
+  private String createRandomAttributeValue(Attribute uAttribute){ //TODO Make this function better
+    if (uAttribute.getIsList()){
+      return "[A,B,C]";
+    }
+    return "A";
   }
 
   /*
