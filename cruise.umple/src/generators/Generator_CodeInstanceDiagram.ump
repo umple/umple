@@ -31,10 +31,10 @@ class InstanceDiagramGenerator
   // Template for what will appear at the start of each graphviz file
   graphStart(umpleVersion) <<! /*This code was generated using the UMPLE <<=umpleVersion>> modeling language! */
   
-digraph FeatureModel { 
-  node [shape=rectangle]  
-  edge [arrowhead=none] 
-!>>
+  digraph FeatureModel { 
+    node [shape=rectangle]  
+    edge [arrowhead=none] 
+  !>>
 
   emit graphStart()(graphStart(UmpleModel.VERSION_NUMBER));
 
@@ -80,23 +80,42 @@ digraph FeatureModel {
   public void generate()
   {
 
-    // TO BE IMPLEMENTED: Output error when reaching max iterations
-
-    // TO BE IMPLEMENTED: Output error when hitting a max class count...
-
-    // TO BE IMPLEMENTED: 
+    // TODO: 
     // the minimum is not a satisfying model
     // All the 0..? associations are never used
     // I should also create a random version where its not always minimum bound, but a random bound
 
-    // TO BE IMPLEMENTED: Handling inheritance
+    // TODO: Handling inheritance
     // Superclasses are sums of a dummy (if non abstract) and its children
-    // and if we have to update the value max() how do we decide which to increase?
-    // Choosing it at random is an option... But there could be a better way
-    // Maybe since i am going to make a minimal version and a random version; inheritance forces the random one to be used
+    // and if we have to update the value how do we decide which to increase?
+    // extendsClass (single), parentInterface (list), subclasses (list); are relevant UmpleClass attributes
+    // Side Note: Verify if chain inheritances subclasses are in the list, or if they are chained...
+    // Potential Algorithm when you need more instances of abstract/interface:
+    // How many more do you need?: sum of subclass - total need
+    // Take all concrete subclasses, give them a score based on connectedness, pick the best score (the least connected)
 
-    Map<String, Integer> minInstance = getMinInstances(100);
-    ArrayList<ClassAssociationLinkSet> actualLinks = distributeAssociations(minInstance, true);
+    // Run class count algorithm
+    ClassInstanceCountSet classInstanceResult = new ClassInstanceCountSet(model);
+    classInstanceResult.getInstanceCounts(100, 100);
+    
+    // TODO: Output errors
+    if (classInstanceResult.statusCode == 1) {
+      outputCode += "Reached maximum iterations. Ensure that the system is instantiable and non-infinite";
+      model.setCode(outputCode);
+      writeModelToFile();
+      return;
+    } else if (classInstanceResult.statusCode == 2) {
+      outputCode += "Reached maximum class count. Ensure that the system is instantiable and non-infinite";
+      model.setCode(outputCode);
+      writeModelToFile();
+      return;
+    }
+    
+    // Get class count result
+    Map<String, Integer> minInstance = classInstanceResult.minimumInstances;
+    // Get associations from the class count
+    ArrayList<AssociationLinkSet> actualLinks = classInstanceResult.distributeAssociations(true);
+
 
     StringBuilder code = new StringBuilder();           // part of the gv file with the node/classes
     StringBuilder associations = new StringBuilder();   // part of the gv file with all the associations
@@ -129,15 +148,17 @@ digraph FeatureModel {
     terminateCode(code, associations);
 
 
-    // TEMPORARY CODE: Printing the output to a text file
+    // TODO: Remove printing the output to a text file
+    /*
     for (Map.Entry<String, Integer> entry : minInstance.entrySet()) {
       outputCode += entry.getKey() + " - " + entry.getValue() + "\n";
     }
-    for (ClassAssociationLinkSet link : actualLinks) {
+    for (AssociationLinkSet link : actualLinks) {
       outputCode += "\n" + link.toString();
     }
-    //model.setCode(outputCode);
-    //writeModelToFile();
+    model.setCode(outputCode);
+    writeModelToFile();
+    */
   }
 
   public void createInstance(UmpleClass umpClass, StringBuilder code, int iteration){
@@ -168,7 +189,7 @@ digraph FeatureModel {
 		  }
     }
 
-    attributeCreation(umpClass, code, manyClass);  // creates the attributes for the partcular instance
+    attributeCreation(umpClass, code, manyClass);  // creates the attributes for the particular instance
 
     // Terminate outputting the class attributes
     if(manyClass) code.append("}\"");
@@ -232,105 +253,7 @@ digraph FeatureModel {
     return "A";
   }
 
-  /*
-    We can represent the system as a graph problem. 
-    Each class is a node, and each association is 2 directed links between the nodes.
-    For every link, the class count at the start multiplied by the multiplicity must be smaller/equal to the class count at the end.
-    
-    If you have the link A 2..4 -> 3..6 B, for every 2..4 As, there must be 3..6 Bs.
-    Thus, we have the following tightest inequality; for every 4 or less As, there must be at at least 3 Bs
-    There can be less As, or more Bs, but this equality must hold true.
-    So for A = 1-4 there are >3 Bs, for A = 5-8 there are >6 Bs
-    
-    Algorithm:
-    Initialize all class counts to 1
-    Loop through every association
-      End = max(End, lowerEnd*ceil(Start/UpperStart))
-    Repeat until no more changes appear
-  
-    Returns a map of classnames and their minimum class counts
-  */
-  private Map<String, Integer> getMinInstances(int maxIter) {
-    Map<String, Integer> result = new HashMap<String, Integer>();
-    
-    // Initialize every class to 1. 
-    for (UmpleClass umpClass : model.getUmpleClasses()) {
-      result.put(umpClass.getName(), 1);
-    }
-
-    // Begin algorithm
-    boolean noChange = false;
-    for (int iter=0;iter<maxIter;iter++) {
-      if (noChange) {
-        break;
-      }
-      noChange = true;
-
-      for (Association assoc : model.getAssociations()) {
-        int lowerLeft = assoc.getEnd(0).getMultiplicity().getLowerBound();
-        int upperLeft = assoc.getEnd(0).getMultiplicity().getUpperBound();
-        int lowerRight = assoc.getEnd(1).getMultiplicity().getLowerBound();
-        int upperRight = assoc.getEnd(1).getMultiplicity().getUpperBound();
-
-        // For directional associations, there are 3 situations for the multiplicity on the unmanaged side:
-        // - 0..1: We will treat it as bidirectional with 1 in the direction, and 0 against the direction... no changes required
-        // - *: We will treat it as bidirectional with 1 in the direction, and 0 against the direction... convert it to 0..1
-        // - 2, 2..4, anything: The user has ignored Warning036...
-        //                      We will assume the user wishes to enforce that multiplicity so pretend its bidirectional... no changes required
-        if (!assoc.getIsLeftNavigable() && upperLeft==-1) {
-          lowerLeft = 0;
-          upperLeft = 1;
-        }
-        if (!assoc.getIsRightNavigable() && upperRight==-1) {
-          lowerRight = 0;
-          upperRight = 1;
-        }
-
-        // TO BE IMPLEMENTED: Treat * as a very large number
-        // It would have a -1 as the value
-        // This code needs to be after the directional association detection above
-
-        // Going towards the right
-        Integer newInstanceLeft = Integer.valueOf((int)(lowerRight*Math.ceil(result.get(assoc.getEnd(0).getClassName())/upperLeft)));
-        Integer oldIstanceleft = result.get(assoc.getEnd(1).getClassName());
-        // If the new required instance is higher, replace the old instance count
-        if (newInstanceLeft > oldIstanceleft) {
-          noChange = false;
-          result.put(assoc.getEnd(1).getClassName(), newInstanceLeft);
-        }
-
-        // Going towards the left
-        Integer newInstanceRight = Integer.valueOf((int)(lowerLeft*Math.ceil(result.get(assoc.getEnd(1).getClassName())/upperRight)));
-        Integer oldIstanceRight = result.get(assoc.getEnd(0).getClassName());
-        // If the new required instance is higher, replace the old instance count
-        if (newInstanceRight > oldIstanceRight) {
-          noChange = false;
-          result.put(assoc.getEnd(0).getClassName(), newInstanceRight);
-        }
-
-      }
-    }
-    return result;
-  }
-
-  /*
-    Given the number of instance of each class, get the associations between the instances.
-    The maxLinks boolean determines if you max or min number of links between the sets of instances
-
-    Returns an arraylist of ClassAssociationLinkSet, which is a data class
-  */
-  private ArrayList<ClassAssociationLinkSet> distributeAssociations(Map<String, Integer> minimumInstances, boolean maxLinks) {
-    ArrayList<ClassAssociationLinkSet> result = new ArrayList<ClassAssociationLinkSet>();
-    
-    // Loop through associations
-    for (Association assoc : model.getAssociations()) {
-      result.add(new ClassAssociationLinkSet(assoc, minimumInstances.get(assoc.getEnd(0).getClassName()), minimumInstances.get(assoc.getEnd(1).getClassName()), maxLinks));
-    }
-
-    return result;
-  }
-
-  // Output the instance diagram to a file
+  // Output the instance diagram to a text file
   private void writeModelToFile()
   {
     try
@@ -355,31 +278,171 @@ digraph FeatureModel {
 }
 
 /*
- Data class to hold a 2D matrix
+ Data class to hold the number of class instances for a given umple model
 
- Automatically calculates the links in the constructor
+ Call getInstanceCounts() in order to populate the "minimumInstances" and "statusCode" attribute
 */
-class ClassAssociationLinkSet {
+class ClassInstanceCountSet {
+  depend java.util.*;
+
+  public Map<String, Integer> minimumInstances;
+
+  // Status of the minimumInstances variable 
+  // -1 is uninitialized, 0 is valid, 1 is maxIter reached, 2 is maxInstances reached
+  public int statusCode;
+
+  internal UmpleModel umpleModel;
+
+  /*
+    We can represent the system as a graph problem. 
+    Each class is a node, and each association is 2 directed links between the nodes.
+    For every link, the class count at the start multiplied by the multiplicity must be smaller/equal to the class count at the end.
+    
+    If you have the link A 2..4 -> 3..6 B, for every 2..4 As, there must be 3..6 Bs.
+    Thus, we have the following tightest inequality; for every 4 or less As, there must be at at least 3 Bs
+    There can be less As, or more Bs, but this equality must hold true.
+    So for A = 1-4 there are >3 Bs, for A = 5-8 there are >6 Bs
+    
+    Algorithm:
+    Initialize all class counts to 1
+    Loop through every association
+      End = max(End, lowerEnd*ceil(Start/UpperStart))
+    Repeat until no more changes appear
+  
+    Creates a Map of classnames and their minimum class counts
+  */
+  public void getInstanceCounts(int maxIter, int maxClasses) {
+    Map<String, Integer> result = new HashMap<String, Integer>();
+    
+    // Initialize every class to 1. 
+    for (UmpleClass umpClass : umpleModel.getUmpleClasses()) {
+      result.put(umpClass.getName(), 1);
+    }
+
+    int loopStatus = -1;
+    boolean noChange = false;
+    int iteration = -1;
+    // Run infinite loop
+    while (true) {
+      iteration++;
+
+      // Check if the system has stabilized (all associations are satisfied)
+      if (noChange) {
+        loopStatus = 0;
+        break;
+      }
+      noChange = true;
+
+      // Check if we've reached max iterations
+      if (iteration >= maxIter) {
+        loopStatus = 1;
+        break;
+      }
+
+      // Check if we've reached max class counts
+      int sum = 0;
+      for (int n: result.values()) {
+        sum += n;
+      }
+      if (sum > maxClasses) {
+        loopStatus = 2;
+        break;
+      }
+
+      for (Association assoc : umpleModel.getAssociations()) {
+        int lowerLeft = assoc.getEnd(0).getMultiplicity().getLowerBound();
+        int upperLeft = assoc.getEnd(0).getMultiplicity().getUpperBound();
+        int lowerRight = assoc.getEnd(1).getMultiplicity().getLowerBound();
+        int upperRight = assoc.getEnd(1).getMultiplicity().getUpperBound();
+
+        // For directional associations, there are 3 situations for the multiplicity on the unmanaged side:
+        // - 0..1: We will treat it as bidirectional with 1 in the direction, and 0 against the direction... no changes required
+        // - *: We will treat it as bidirectional with 1 in the direction, and 0 against the direction... convert it to 0..1
+        // - 2, 2..4, anything: The user has ignored Warning036...
+        //                      We will assume the user wishes to enforce that multiplicity so pretend its bidirectional... no changes required
+        if (!assoc.getIsLeftNavigable() && upperLeft==-1) {
+          lowerLeft = 0;
+          upperLeft = 1;
+        }
+        if (!assoc.getIsRightNavigable() && upperRight==-1) {
+          lowerRight = 0;
+          upperRight = 1;
+        }
+
+        // TODO: Treat * as a very large number (the maxInstanceCount?)
+        // Currently, it would have a -1 as the value
+        // This code needs to be after the directional association detection above
+
+        // Going towards the right
+        Integer newInstanceLeft = Integer.valueOf((int)(lowerRight*Math.ceil(result.get(assoc.getEnd(0).getClassName())/upperLeft)));
+        Integer oldIstanceleft = result.get(assoc.getEnd(1).getClassName());
+        // If the new required instance is higher, replace the old instance count
+        if (newInstanceLeft > oldIstanceleft) {
+          noChange = false;
+          result.put(assoc.getEnd(1).getClassName(), newInstanceLeft);
+        }
+
+        // Going towards the left
+        Integer newInstanceRight = Integer.valueOf((int)(lowerLeft*Math.ceil(result.get(assoc.getEnd(1).getClassName())/upperRight)));
+        Integer oldIstanceRight = result.get(assoc.getEnd(0).getClassName());
+        // If the new required instance is higher, replace the old instance count
+        if (newInstanceRight > oldIstanceRight) {
+          noChange = false;
+          result.put(assoc.getEnd(0).getClassName(), newInstanceRight);
+        }
+
+      }
+    }
+
+    // Set the result map
+    this.statusCode = loopStatus;
+    this.minimumInstances = result;
+    return;
+  }
+
+  /*
+    Using the number of instance of each class, get the associations between the instances.
+    The maxLinks boolean determines if you max or min number of links between the sets of instances
+
+    Returns an arraylist of AssociationLinkSet, which is a data class
+  */
+  public ArrayList<AssociationLinkSet> distributeAssociations(boolean maxLinks) {
+    ArrayList<AssociationLinkSet> result = new ArrayList<AssociationLinkSet>();
+    
+    // Loop through associations
+    for (Association assoc : umpleModel.getAssociations()) {
+      AssociationLinkSet nextAssoc = new AssociationLinkSet(assoc, this.minimumInstances.get(assoc.getEnd(0).getClassName()), this.minimumInstances.get(assoc.getEnd(1).getClassName()));
+      nextAssoc.getLinksFromAssociation(maxLinks);
+      result.add(nextAssoc);
+    }
+
+    return result;
+  }
+
+}
+
+/*
+ Data class to hold a 2D matrix of links between 2 classes (for 1 association)
+
+ Call getLinksFromAssociation() in order to populate the "links" attribute
+*/
+class AssociationLinkSet {
   public boolean[][] links;
   internal Association association;
   internal Integer classCountStart;
   internal Integer classCountEnd;
-  internal boolean maxLinks;
-
-  after constructor {
-    this.links = getLinksFromAssociation(classCountStart, classCountEnd, association, maxLinks);
-  }
 
   /*
-    Given the num of instances of each class, get the associations between each instance.
-    Returns a reference to a matrix of the links between classes for a given association
-    The matrix is startClassCount by endClassCount, and the boolean entries represent if there is a link between class instances
+    Given the num of instances of each class, get the associations/links between each instance.
+    Creates a matrix of the links between classes for a given association
+    The matrix is classCountStart by classCountEnd, and the boolean entries represent if there is a link between class instances
 
     Algorithm:
     Check which class is the limiting factor
     Take the limiting class (lets say B), begin assigning As round-robin until B links are satisfied
     
-    Example: For A 2..3 -- 2..7 B with 7 As and 10 Bs (getting the minimum links)
+    Example: 
+    For A 2..3 -- 2..7 B with 7 As and 10 Bs (getting the minimum links)
     B1 = A1, A2
     B2 = A3, A4
     B3 = A5, A6
@@ -393,24 +456,24 @@ class ClassAssociationLinkSet {
     A6 = B3, B7, B10
     A7 = B4, B7
   */
-  private boolean[][] getLinksFromAssociation(Integer startClassCount, Integer endClassCount, Association assoc, boolean getMaxLinks){
-    boolean[][] result = new boolean[startClassCount][endClassCount];
+  public void getLinksFromAssociation(boolean getMaxLinks){
+    boolean[][] result = new boolean[classCountStart][classCountEnd];
 
     // Minimum links is the number of classes multiplied by the lower bound on the other end
     // Maximum links is the number of classes multiplied by the upper bound on the other end
-    int endLower = assoc.getEnd(1).getMultiplicity().getLowerBound();
-    int endUpper = assoc.getEnd(1).getMultiplicity().getUpperBound();
-    int startLower = assoc.getEnd(0).getMultiplicity().getLowerBound();
-    int startUpper = assoc.getEnd(0).getMultiplicity().getUpperBound();
+    int endLower = association.getEnd(1).getMultiplicity().getLowerBound();
+    int endUpper = association.getEnd(1).getMultiplicity().getUpperBound();
+    int startLower = association.getEnd(0).getMultiplicity().getLowerBound();
+    int startUpper = association.getEnd(0).getMultiplicity().getUpperBound();
     
     // The maximum links for a * upper bound is #OfInstances of the other class (you cannot link to 11 Bs if there are only 10 Bs)
-    if (endUpper == -1) {endUpper = startClassCount;}
-    if (startUpper == -1) {startUpper = endClassCount;}
+    if (endUpper == -1) {endUpper = classCountStart;}
+    if (startUpper == -1) {startUpper = classCountEnd;}
 
-    int maximumLinksStart = startClassCount*endUpper;
-    int minimumLinksStart = startClassCount*endLower;
-    int maximumLinksEnd = endClassCount*startUpper;
-    int minimumLinksEnd = endClassCount*startLower;
+    int maximumLinksStart = classCountStart*endUpper;
+    int minimumLinksStart = classCountStart*endLower;
+    int maximumLinksEnd = classCountEnd*startUpper;
+    int minimumLinksEnd = classCountEnd*startLower;
 
     boolean startLimiting;
     if (getMaxLinks) {
@@ -424,11 +487,11 @@ class ClassAssociationLinkSet {
       
       int roundRobinCount = 0;
       // For each class in set "start"
-      for (int i=0;i<startClassCount;i++) {
+      for (int i=0;i<classCountStart;i++) {
         // Loop through either max or min links - creating links
         for (int min=0; min<(getMaxLinks? endUpper : endLower) ;min++) { 
           result[i][roundRobinCount] = true;
-          roundRobinCount = (roundRobinCount+1)%endClassCount;
+          roundRobinCount = (roundRobinCount+1)%classCountEnd;
         }
       }
 
@@ -436,17 +499,18 @@ class ClassAssociationLinkSet {
 
       int roundRobinCount = 0;
       // For each class in set "end"
-      for (int i=0;i<endClassCount;i++) {
+      for (int i=0;i<classCountEnd;i++) {
         // Loop through either max or min links - creating links
         for (int min=0; min<(getMaxLinks? startUpper : startLower) ;min++) {
           result[roundRobinCount][i] = true;
-          roundRobinCount = (roundRobinCount+1)%startClassCount;
+          roundRobinCount = (roundRobinCount+1)%classCountStart;
         }
       }
 
     }
 
-    return result;
+    this.links = result;
+    return;
   }
 
   public String toString() {
