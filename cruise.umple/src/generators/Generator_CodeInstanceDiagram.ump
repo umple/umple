@@ -17,15 +17,59 @@ namespace cruise.umple.compiler;
 
 class InstanceDiagramGenerator
 {
-  isA SuperGvGenerator;
+  isA CodeGeneratorWithSubptions;
   depend java.io.*;
   depend java.util.*;
+  depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
 
-    protected String generatorType()
+  protected String generatorType()
   {
     return "cid";
   }
+
+  // Template for what will appear at the start of each graphviz file
+  graphStart(umpleVersion) <<! /*This code was generated using the UMPLE <<=umpleVersion>> modeling language! */
+  
+digraph FeatureModel { 
+  node [shape=rectangle]  
+  edge [arrowhead=none] 
+!>>
+
+  emit graphStart()(graphStart(UmpleModel.VERSION_NUMBER));
+
+  protected void terminateCode(StringBuilder code, StringBuilder associations) {
+
+    code.append("\n  // All associations\n");
+    code.append(associations);
+
+    code.append("}\n");
+
+    model.setCode(code.toString());
+    writeModel();
+  }
+
+  // Output the graphviz file to a file with the .gv suffix
+  protected void writeModel()
+  {
+    try
+    {
+      String outputDir = getModel().getUmpleFile().getPath();
+      String path = StringFormatter.addPathOrAbsolute(outputDir, "");
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName()
+          + generatorType() + ".gv";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating GraphViz Diagram code." + e, e);
+    }
+  } 
 
   // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
   // off of what's contained in here.
@@ -58,7 +102,7 @@ class InstanceDiagramGenerator
     StringBuilder associations = new StringBuilder();   // part of the gv file with all the associations
 
     // Output basic gv file header
-    _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
+    _graphStart(0,code);
 
     //gets the desired separator value. Graphviz default is 0.5 but for Umple we use 1.0 for 'normal'
     double sepVal = getSuboptionValue("gvseparator", 1.0); 
@@ -77,12 +121,12 @@ class InstanceDiagramGenerator
       String currentInstanceName = umpClass.getName();
       Integer numberOfInstaces = minInstance.get(currentInstanceName);    // minInstance may change at a later date
       for (int i = 0; i < numberOfInstaces; i++) {
-        createClass(code, umpClass, i + 1);
+        createInstance(umpClass, code, i + 1);
       }
     }
 
     // AssociationCreate(); TODO make the helper function that makes all the associations
-    // terminateCode(code, associations);
+    terminateCode(code, associations);
 
 
     // TEMPORARY CODE: Printing the output to a text file
@@ -92,11 +136,11 @@ class InstanceDiagramGenerator
     for (ClassAssociationLinkSet link : actualLinks) {
       outputCode += "\n" + link.toString();
     }
-    model.setCode(outputCode);
-    writeModelToFile();
+    //model.setCode(outputCode);
+    //writeModelToFile();
   }
 
-  public void createClass(UmpleClass umpClass, StringBuilder code, int iteration){
+  public void createInstance(UmpleClass umpClass, StringBuilder code, int iteration){
 
     boolean manyClass = getModel().getUmpleClasses().size() >= 200 ? true : false;
 
@@ -104,7 +148,7 @@ class InstanceDiagramGenerator
     String instanceName = className + iteration + ": " + className;
     String classColor = umpClass.getDisplayColor();
     if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
-    code.append("\n  // Class: "+className+"\n");
+    code.append("\n  // Instance: "+className + iteration"\n");
     
     if (manyClass) {
       code.append("  \""+className + iteration+"\" ["+classColor+"shape=record, label=\"{"+instanceName);
@@ -133,7 +177,7 @@ class InstanceDiagramGenerator
     
     // Output the tooltip : Class name followed by any comment
     code.append(",\n   tooltip=\"instance "+className + iteration+"\n");
-    code.append(appendTooltipComment(umpClass.getComments(), false));
+    code.append(SuperGvGenerator.appendTooltipComment(umpClass.getComments(), false));
     code.append("\"");
 
     // Terminate the class as a whole
@@ -167,7 +211,7 @@ class InstanceDiagramGenerator
           else {
             StringBuilder attrTooltip = new StringBuilder();
             attrTooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
-            attrTooltip.append(appendTooltipComment(uAttribute.getComments(), true));        
+            attrTooltip.append(SuperGvGenerator.appendTooltipComment(uAttribute.getComments(), true));        
             code.append("<tr><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
                 +"  "+uAttribute.getName()+": "
                 +instanceAttribute+"  </td></tr>");
