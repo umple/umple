@@ -144,7 +144,27 @@ class InstanceDiagramGenerator
       }
     }
 
-    // AssociationCreate(); TODO make the helper function that makes all the associations
+    for (int k = 0; k < actualLinks.size(); k++) {
+      AssociationLinkSet assocLinkSet = actualLinks.get(k);
+
+      Association uAssoc = assocLinkSet.getAssociation();
+      AssociationEnd leftEnd = uAssoc.getEnd(0);
+      AssociationEnd rightEnd = uAssoc.getEnd(1);
+      String leftClass = leftEnd.getClassName();
+      String rightClass = rightEnd.getClassName();
+      for (int i = 0; i < assocLinkSet.links.length; i++) {
+        for (int j = 0; j < assocLinkSet.links[0].length; j++) {
+          if (assocLinkSet.links[i][j]){
+            int iplus1 = i + 1;
+            int jplus1 = j + 1;
+            String leftInstance = leftClass + iplus1;
+            String rightInstance = rightClass + jplus1;
+            AssociationCreate(uAssoc, associations, leftInstance, rightInstance);  // creates the association
+          }
+        }
+      }
+    }
+
     terminateCode(code, associations);
 
 
@@ -251,6 +271,12 @@ class InstanceDiagramGenerator
       return "[A,B,C]";
     }
     return "A";
+  }
+
+  public void AssociationCreate(Association uAssoc, StringBuilder associations, String left, String right){
+    String[] arrows = SuperGvGenerator.retArrows(uAssoc);
+    String toolTip = "testToolTip";
+    associations.append(SuperGvGenerator.twoLabelAssociation(left, right, arrows[0], "", "", toolTip));
   }
 
   // Output the instance diagram to a text file
@@ -529,6 +555,10 @@ class AssociationLinkSet {
     }
 
     return result;
+  }
+
+  public Association getAssociation(){
+    return this.association;
   }
 
 }
