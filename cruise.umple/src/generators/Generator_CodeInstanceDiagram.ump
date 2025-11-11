@@ -148,7 +148,7 @@ digraph FeatureModel {
     String instanceName = className + iteration + ": " + className;
     String classColor = umpClass.getDisplayColor();
     if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
-    code.append("\n  // Instance: "+className + iteration"\n");
+    code.append("\n  // Instance: "+className + iteration+"\n");
     
     if (manyClass) {
       code.append("  \""+className + iteration+"\" ["+classColor+"shape=record, label=\"{"+instanceName);
