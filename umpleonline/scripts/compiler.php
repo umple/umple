@@ -199,8 +199,8 @@ else if (isset($_REQUEST["umpleCode"]))
   }
     else if ($language == "instanceDiagram")
   {
-     $language = "InstanceDiagram";  // To be changed .....
-     $generatorType = "cid";           // generatorType needs to be this ....
+     $language = "InstanceDiagram";
+     $generatorType = "cid";
      $instanceDiagram = True;
   }
   else if ($language == "traitDiagram")
@@ -300,7 +300,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;      
   } // end html content      
 
-  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","GvInstanceDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","InstanceDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     $dataHandle->writeData($dataname, $input);
@@ -385,7 +385,7 @@ else if (isset($_REQUEST["umpleCode"]))
     }
     return;
   } // The following is a hack. The arguments to umplesync need fixing
-  else if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {  //should instance diagram be here?
+  else if (!$stateDiagram && !$instanceDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {
     $command = "java -jar umplesync.jar -source {$filename} 2> {$errorFilename}";
   }
   else {
