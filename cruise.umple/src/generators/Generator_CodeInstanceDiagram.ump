@@ -80,11 +80,6 @@ class InstanceDiagramGenerator
   public void generate()
   {
 
-    // TODO: 
-    // the minimum is not a satisfying model
-    // All the 0..? associations are never used
-    // I should also create a random version where its not always minimum bound, but a random bound
-
     // TODO: Handling inheritance
     // Superclasses are sums of a dummy (if non abstract) and its children
     // and if we have to update the value how do we decide which to increase?
@@ -94,9 +89,15 @@ class InstanceDiagramGenerator
     // How many more do you need?: sum of subclass - total need
     // Take all concrete subclasses, give them a score based on connectedness, pick the best score (the least connected)
 
-    // Run class count algorithm
+    
     ClassInstanceCountSet classInstanceResult = new ClassInstanceCountSet(model);
-    classInstanceResult.getInstanceCounts(100, 100);
+    // Chances of the minimum instance values
+    Map<Integer, Double> minimumInstanceProbabilities = new HashMap<>();
+    //minimumInstanceProbabilities.put(1, 0.33);
+    //minimumInstanceProbabilities.put(2, 0.33);
+    //minimumInstanceProbabilities.put(3, 0.33);
+    //classInstanceResult.getInstanceCounts(100, 500, classInstanceResult.getRandomInitialClassCounts(minimumInstanceProbabilities));
+    classInstanceResult.getInstanceCounts(100, 500);
     
     // TODO: Output errors
     if (classInstanceResult.statusCode == 1) {
@@ -330,20 +331,16 @@ class ClassInstanceCountSet {
     So for A = 1-4 there are >3 Bs, for A = 5-8 there are >6 Bs
     
     Algorithm:
-    Initialize all class counts to 1
+    Initialize all class counts to their initial value
     Loop through every association
       End = max(End, lowerEnd*ceil(Start/UpperStart))
     Repeat until no more changes appear
   
     Creates a Map of classnames and their minimum class counts
   */
-  public void getInstanceCounts(int maxIter, int maxClasses) {
-    Map<String, Integer> result = new HashMap<String, Integer>();
-    
-    // Initialize every class to 1. 
-    for (UmpleClass umpClass : umpleModel.getUmpleClasses()) {
-      result.put(umpClass.getName(), 1);
-    }
+  public void getInstanceCounts(int maxIter, int maxClasses, Map<String, Integer> initialClassCounts) {
+    // Shallow copy works here - String and Integer are immutable
+    Map<String, Integer> result = new HashMap<String, Integer>(initialClassCounts);
 
     int loopStatus = -1;
     boolean noChange = false;
@@ -424,6 +421,38 @@ class ClassInstanceCountSet {
     this.statusCode = loopStatus;
     this.minimumInstances = result;
     return;
+  }
+
+  // Perform getInstanceCounts with minimum 1 instance per class
+  public void getInstanceCounts(int maxIter, int maxClasses) {
+    Map<Integer, Double> minimumInstanceProbabilities = new HashMap<Integer, Double>();
+    minimumInstanceProbabilities.put(1, 1.0);
+    getInstanceCounts(maxIter, maxClasses, getRandomInitialClassCounts(minimumInstanceProbabilities));
+  }
+
+  /*
+    Generate the initial class counts randomly.
+    Parameter "minimumInstanceProbabilities" is a map of initial instance counts to their probabilities
+  */
+  public Map<String, Integer> getRandomInitialClassCounts(Map<Integer, Double> minimumInstanceProbabilities) {
+    Map<String, Integer> result = new HashMap<String, Integer>();
+
+    // Initialize instances of every class based on minimumInstanceProbabilities
+    Random randomNumGen = new Random();
+    for (UmpleClass umpClass : umpleModel.getUmpleClasses()) {
+      double randDouble = randomNumGen.nextDouble();
+      double cumulative = 0.0;
+      for (Map.Entry<Integer, Double> entry : minimumInstanceProbabilities.entrySet()) {
+        cumulative += entry.getValue();
+        if (randDouble <= cumulative) {
+          // Add the instances
+          result.put(umpClass.getName(), entry.getKey());
+          break;
+        }
+      }
+    }
+
+    return result;
   }
 
   /*
