@@ -45,8 +45,8 @@ class Student():
         return newMentors
 
     def numberOfMentors(self):
-        self._number = len(self._mentors)
-        return self._number
+        number = len(self._mentors)
+        return number
 
     def hasMentors(self):
         has = len(self._mentors) > 0
@@ -66,8 +66,8 @@ class Student():
         return newCourses
 
     def numberOfCourses(self):
-        self._number = len(self._courses)
-        return self._number
+        number = len(self._courses)
+        return number
 
     def hasCourses(self):
         has = len(self._courses) > 0
