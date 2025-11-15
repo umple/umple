@@ -80,6 +80,10 @@ class InstanceDiagramGenerator
   public void generate()
   {
 
+    // TODO: Handle * in ClassInstanceCountSet
+
+    // TODO: Handle reflexive associations with non-zero links
+
     // TODO: Handling inheritance
     // Superclasses are sums of a dummy (if non abstract) and its children
     // and if we have to update the value how do we decide which to increase?
@@ -91,8 +95,9 @@ class InstanceDiagramGenerator
 
     
     ClassInstanceCountSet classInstanceResult = new ClassInstanceCountSet(model);
+    classInstanceResult.initializeClassCountsConstant(1);
     // Chances of the minimum instance values
-    Map<Integer, Double> minimumInstanceProbabilities = new HashMap<>();
+    //Map<Integer, Double> minimumInstanceProbabilities = new HashMap<>();
     //minimumInstanceProbabilities.put(1, 0.33);
     //minimumInstanceProbabilities.put(2, 0.33);
     //minimumInstanceProbabilities.put(3, 0.33);
@@ -113,7 +118,7 @@ class InstanceDiagramGenerator
     }
     
     // Get class count result
-    Map<String, Integer> minInstance = classInstanceResult.minimumInstances;
+    Map<String, Integer> minInstance = classInstanceResult.getInstanceCountMap();
     // Get associations from the class count
     ArrayList<AssociationLinkSet> actualLinks = classInstanceResult.distributeAssociations(true);
 
@@ -305,20 +310,39 @@ class InstanceDiagramGenerator
 }
 
 /*
- Data class to hold the number of class instances for a given umple model
+ Data class to hold the number of class instances
+*/
+class ClassInstanceCount {
+  depend java.util.*;
 
- Call getInstanceCounts() in order to populate the "minimumInstances" and "statusCode" attribute
+  public Integer instanceCount;
+  // Set of subclasses (unordered and unique)
+  public Set<String> subClasses;
+  public Boolean instanceCountCanChange;
+}
+
+/*
+  Class to hold the number of class instances for a given umple model
 */
 class ClassInstanceCountSet {
   depend java.util.*;
 
-  public Map<String, Integer> minimumInstances;
-
-  // Status of the minimumInstances variable 
-  // -1 is uninitialized, 0 is valid, 1 is maxIter reached, 2 is maxInstances reached
-  public int statusCode;
+  // Status of the ClassInstanceCountSet object 
+  // -1 is invalid, 0 is valid, 1 is maxIter reached, 2 is maxInstances reached
+  public int statusCode = -1;
 
   internal UmpleModel umpleModel;
+
+  // Map with each class and it's instance counts (not an arraylist since classes are unordered and unique)
+  public Map<String, ClassInstanceCount> instances;
+
+  public Map<String, Integer> getInstanceCountMap() {
+    Map<String, Integer> result = new HashMap<>();
+    for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
+      result.put(entry.getKey(), entry.getValue().instanceCount);
+    }
+    return result;
+  }
 
   /*
     We can represent the system as a graph problem. 
@@ -338,10 +362,7 @@ class ClassInstanceCountSet {
   
     Creates a Map of classnames and their minimum class counts
   */
-  public void getInstanceCounts(int maxIter, int maxClasses, Map<String, Integer> initialClassCounts) {
-    // Shallow copy works here - String and Integer are immutable
-    Map<String, Integer> result = new HashMap<String, Integer>(initialClassCounts);
-
+  public void getInstanceCounts(int maxIter, int maxClasses) {
     int loopStatus = -1;
     boolean noChange = false;
     int iteration = -1;
@@ -364,8 +385,8 @@ class ClassInstanceCountSet {
 
       // Check if we've reached max class counts
       int sum = 0;
-      for (int n: result.values()) {
-        sum += n;
+      for (ClassInstanceCount n: this.instances.values()) {
+        sum += n.instanceCount;
       }
       if (sum > maxClasses) {
         loopStatus = 2;
@@ -396,63 +417,95 @@ class ClassInstanceCountSet {
         // Currently, it would have a -1 as the value
         // This code needs to be after the directional association detection above
 
-        // Going towards the right
-        Integer newInstanceLeft = Integer.valueOf((int)(lowerRight*Math.ceil(result.get(assoc.getEnd(0).getClassName())/upperLeft)));
-        Integer oldIstanceleft = result.get(assoc.getEnd(1).getClassName());
+        // Get the current count for the classes
+        Integer oldInstanceLeft = this.instances.get(assoc.getEnd(0).getClassName()).instanceCount;
+        Integer oldInstanceRight = this.instances.get(assoc.getEnd(1).getClassName()).instanceCount;
+
+        // How many left instances do we need? 
+        // LinksPerRight*ceil(Right/HowManyLinksCanEachLeftHold)
+        Integer newInstanceLeft = Integer.valueOf((int)(lowerLeft*Math.ceil(oldInstanceRight/upperRight)));
         // If the new required instance is higher, replace the old instance count
-        if (newInstanceLeft > oldIstanceleft) {
+        if (newInstanceLeft > oldInstanceLeft) {
           noChange = false;
-          result.put(assoc.getEnd(1).getClassName(), newInstanceLeft);
+          this.instances.get(assoc.getEnd(0).getClassName()).instanceCount = newInstanceLeft;
         }
 
-        // Going towards the left
-        Integer newInstanceRight = Integer.valueOf((int)(lowerLeft*Math.ceil(result.get(assoc.getEnd(1).getClassName())/upperRight)));
-        Integer oldIstanceRight = result.get(assoc.getEnd(0).getClassName());
+        // How many right instances do we need?
+        // LinksPerLeft*ceil(Left/HowManyLinksCanEachRightHold)
+        Integer newInstanceRight = Integer.valueOf((int)(lowerRight*Math.ceil(oldInstanceLeft/upperLeft)));
         // If the new required instance is higher, replace the old instance count
-        if (newInstanceRight > oldIstanceRight) {
+        if (newInstanceRight > oldInstanceRight) {
           noChange = false;
-          result.put(assoc.getEnd(0).getClassName(), newInstanceRight);
+          this.instances.get(assoc.getEnd(1).getClassName()).instanceCount = newInstanceRight;
         }
 
       }
     }
 
-    // Set the result map
+    // Set the resulting status code
     this.statusCode = loopStatus;
-    this.minimumInstances = result;
     return;
   }
 
-  // Perform getInstanceCounts with minimum 1 instance per class
-  public void getInstanceCounts(int maxIter, int maxClasses) {
-    Map<Integer, Double> minimumInstanceProbabilities = new HashMap<Integer, Double>();
-    minimumInstanceProbabilities.put(1, 1.0);
-    getInstanceCounts(maxIter, maxClasses, getRandomInitialClassCounts(minimumInstanceProbabilities));
+  private void initializeClassCount(UmpleClass umpleClass, Integer classCount) {
+    ClassInstanceCount newClassCount = new ClassInstanceCount();
+    
+    // Set subclasses
+    newClassCount.subClasses = new HashSet<String>();
+    for (UmpleClass subclass : umpleClass.getSubclasses()) {
+      newClassCount.subClasses.add(subclass.getName());
+    }
+    
+    // Set instance count and canChange flag
+    if (umpleClass.getIsAbstract()) {
+      newClassCount.instanceCount = 0;
+      newClassCount.instanceCountCanChange = false;
+    } else if (umpleClass.getIsSingleton()) {
+      newClassCount.instanceCount = 1;
+      newClassCount.instanceCountCanChange = false;
+    } else {
+      newClassCount.instanceCount = classCount;
+      newClassCount.instanceCountCanChange = true;
+    }
+    
+    // Add to the map
+    this.instances.put(umpleClass.getName(), newClassCount);
+  }
+
+  // Set each class initially to a constant amount of instances
+  public void initializeClassCountsConstant(Integer constInt) {
+    this.instances = new HashMap<>();
+
+    // For each class
+    for (UmpleClass umpleClass : umpleModel.getUmpleClasses()) {
+      initializeClassCount(umpleClass, constInt);
+    }
   }
 
   /*
     Generate the initial class counts randomly.
     Parameter "minimumInstanceProbabilities" is a map of initial instance counts to their probabilities
   */
-  public Map<String, Integer> getRandomInitialClassCounts(Map<Integer, Double> minimumInstanceProbabilities) {
-    Map<String, Integer> result = new HashMap<String, Integer>();
-
-    // Initialize instances of every class based on minimumInstanceProbabilities
+  public void initializeClassCountsRandom(Map<Integer, Double> minimumInstanceProbabilities) {    
+    this.instances = new HashMap<>();
+    
+    // Seed Random
     Random randomNumGen = new Random();
+    // For each class
     for (UmpleClass umpClass : umpleModel.getUmpleClasses()) {
       double randDouble = randomNumGen.nextDouble();
       double cumulative = 0.0;
+      // Loop through the probabilities to randomly select a value 
       for (Map.Entry<Integer, Double> entry : minimumInstanceProbabilities.entrySet()) {
         cumulative += entry.getValue();
         if (randDouble <= cumulative) {
-          // Add the instances
-          result.put(umpClass.getName(), entry.getKey());
+          // Initialize the class with the random value
+          initializeClassCount(umpClass, entry.getKey());
+          // Move on to next class
           break;
         }
       }
     }
-
-    return result;
   }
 
   /*
@@ -466,7 +519,11 @@ class ClassInstanceCountSet {
     
     // Loop through associations
     for (Association assoc : umpleModel.getAssociations()) {
-      AssociationLinkSet nextAssoc = new AssociationLinkSet(assoc, this.minimumInstances.get(assoc.getEnd(0).getClassName()), this.minimumInstances.get(assoc.getEnd(1).getClassName()));
+      AssociationLinkSet nextAssoc = new AssociationLinkSet(
+        assoc, 
+        this.instances.get(assoc.getEnd(0).getClassName()).instanceCount, 
+        this.instances.get(assoc.getEnd(1).getClassName()).instanceCount
+      );
       nextAssoc.getLinksFromAssociation(maxLinks);
       result.add(nextAssoc);
     }
@@ -514,6 +571,23 @@ class AssociationLinkSet {
   public void getLinksFromAssociation(boolean getMaxLinks){
     boolean[][] result = new boolean[classCountStart][classCountEnd];
 
+    // Reflexivity uses a different algorithm; Since there is only 1 set of instances instead of 2
+    boolean isReflexive = association.getEnd(0).getClassName().equals(association.getEnd(1).getClassName());
+    if (isReflexive) {
+      // There is always a 0 lower bound on both ends (umple would throw an error otherwise)
+      // So for minimum links we can simply return no links
+      if (!getMaxLinks) {
+        this.links = result;
+        return;
+      }
+
+      // TODO: Implement reflexive associations
+      // Symmetric, Asymmetric, Asymmetric hierarchy; all have different rules
+
+      this.links = result;
+      return;
+    }
+
     // Minimum links is the number of classes multiplied by the lower bound on the other end
     // Maximum links is the number of classes multiplied by the upper bound on the other end
     int endLower = association.getEnd(1).getMultiplicity().getLowerBound();
@@ -541,10 +615,10 @@ class AssociationLinkSet {
     if (startLimiting) {
       
       int roundRobinCount = 0;
-      // For each class in set "start"
+      // For each instance in set "start"
       for (int i=0;i<classCountStart;i++) {
         // Loop through either max or min links - creating links
-        for (int min=0; min<(getMaxLinks? endUpper : endLower) ;min++) { 
+        for (int linkCount=0; linkCount<(getMaxLinks? endUpper : endLower) ;linkCount++) { 
           result[i][roundRobinCount] = true;
           roundRobinCount = (roundRobinCount+1)%classCountEnd;
         }
@@ -556,7 +630,7 @@ class AssociationLinkSet {
       // For each class in set "end"
       for (int i=0;i<classCountEnd;i++) {
         // Loop through either max or min links - creating links
-        for (int min=0; min<(getMaxLinks? startUpper : startLower) ;min++) {
+        for (int linkCount=0; linkCount<(getMaxLinks? startUpper : startLower) ;linkCount++) {
           result[roundRobinCount][i] = true;
           roundRobinCount = (roundRobinCount+1)%classCountStart;
         }
