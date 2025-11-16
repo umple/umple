@@ -7,7 +7,7 @@ https://umple.org/license
 
 This file generates a randomized instance diagram and the resulting objects
 for every class in the model. The results of these instances is output
-to JSON.
+to a GV Diagram.
 
 Command line action for this is
   -g InstanceDiagram
@@ -80,18 +80,19 @@ class InstanceDiagramGenerator
   public void generate()
   {
 
-    // TODO: Handle * in ClassInstanceCountSet
-
     // TODO: Handle reflexive associations with non-zero links
 
-    // TODO: Handling inheritance
-    // Superclasses are sums of a dummy (if non abstract) and its children
-    // and if we have to update the value how do we decide which to increase?
-    // extendsClass (single), parentInterface (list), subclasses (list); are relevant UmpleClass attributes
-    // Side Note: Verify if chain inheritances subclasses are in the list, or if they are chained...
-    // Potential Algorithm when you need more instances of abstract/interface:
-    // How many more do you need?: sum of subclass - total need
-    // Take all concrete subclasses, give them a score based on connectedness, pick the best score (the least connected)
+    // TODO: Handling inheritance/polymorphism
+    // Superclasses are sums of instances itself and its children
+      // extendsClass (single), parentInterface (list), subclasses (list); are relevant UmpleClass attributes
+      // Side Note: Verify if chain inheritances subclasses are in the list, or if they are chained...
+    // Potential algorithm: 
+      // When you need more instances of superclass, increase their instance count (including abstract/interface)
+      // When you need more instances of subclass, try to "promote" instances of superclass, otherwise create new instances
+      // At the end of algorithm if abstract/interface have >0 instance count, forcefully distribute them among the subclasses, and continue algorithm
+        // How do I ensure this does not expand the model and create an infinite loop when not needed?
+        // If subclass has associations that eventually link back to the superclass with product multiplicity >1, then its an infinite loop...
+        // So in the last step we could create a function that searches each subclass for infinite loops and eliminates them from the options
 
     
     ClassInstanceCountSet classInstanceResult = new ClassInstanceCountSet(model);
@@ -403,7 +404,7 @@ class ClassInstanceCountSet {
         // - 0..1: We will treat it as bidirectional with 1 in the direction, and 0 against the direction... no changes required
         // - *: We will treat it as bidirectional with 1 in the direction, and 0 against the direction... convert it to 0..1
         // - 2, 2..4, anything: The user has ignored Warning036...
-        //                      We will assume the user wishes to enforce that multiplicity so pretend its bidirectional... no changes required
+        //                      We will assume the user wishes to enforce that multiplicity; so pretend its bidirectional... no changes required
         if (!assoc.getIsLeftNavigable() && upperLeft==-1) {
           lowerLeft = 0;
           upperLeft = 1;
@@ -413,17 +414,19 @@ class ClassInstanceCountSet {
           upperRight = 1;
         }
 
-        // TODO: Treat * as a very large number (the maxInstanceCount?)
-        // Currently, it would have a -1 as the value
-        // This code needs to be after the directional association detection above
-
         // Get the current count for the classes
         Integer oldInstanceLeft = this.instances.get(assoc.getEnd(0).getClassName()).instanceCount;
         Integer oldInstanceRight = this.instances.get(assoc.getEnd(1).getClassName()).instanceCount;
 
         // How many left instances do we need? 
         // LinksPerRight*ceil(Right/HowManyLinksCanEachLeftHold)
-        Integer newInstanceLeft = Integer.valueOf((int)(lowerLeft*Math.ceil(oldInstanceRight/upperRight)));
+        Integer newInstanceLeft;
+        if (upperRight!=-1) {
+          newInstanceLeft = Integer.valueOf((int)(lowerLeft*Math.ceil(oldInstanceRight/upperRight)));
+        } else {
+          // Ceiling of (?/*) will always be 1 since * is an extremely large constant
+          newInstanceLeft = Integer.valueOf((int)(lowerLeft));
+        }
         // If the new required instance is higher, replace the old instance count
         if (newInstanceLeft > oldInstanceLeft) {
           noChange = false;
@@ -432,7 +435,13 @@ class ClassInstanceCountSet {
 
         // How many right instances do we need?
         // LinksPerLeft*ceil(Left/HowManyLinksCanEachRightHold)
-        Integer newInstanceRight = Integer.valueOf((int)(lowerRight*Math.ceil(oldInstanceLeft/upperLeft)));
+        Integer newInstanceRight;
+        if (upperLeft!=-1) {
+          newInstanceRight = Integer.valueOf((int)(lowerRight*Math.ceil(oldInstanceLeft/upperLeft)));
+        } else {
+          // Ceiling of (?/*) will always be 1 since * is an extremely large constant
+          newInstanceRight = Integer.valueOf((int)(lowerRight));
+        }
         // If the new required instance is higher, replace the old instance count
         if (newInstanceRight > oldInstanceRight) {
           noChange = false;
