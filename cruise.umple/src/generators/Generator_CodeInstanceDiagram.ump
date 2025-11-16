@@ -88,12 +88,13 @@ class InstanceDiagramGenerator
       // Side Note: Verify if chain inheritances subclasses are in the list, or if they are chained...
     // Potential algorithm: 
       // When you need more instances of superclass, increase their instance count (including abstract/interface)
-      // When you need more instances of subclass, try to "promote" instances of superclass, otherwise create new instances
-      // At the end of algorithm if abstract/interface have >0 instance count, forcefully distribute them among the subclasses, and continue algorithm
+      // When you need more instances of subclass, increase their instance count 
+      // After system stabilizes, temporarily subtract the subclasses from the superclass counts (only to check the value, or to instantiate at the end)
+      // If abstract/interface have >0 instance count, forcefully distribute them among the subclasses, and continue algorithm
         // How do I ensure this does not expand the model and create an infinite loop when not needed?
-        // If subclass has associations that eventually link back to the superclass with product multiplicity >1, then its an infinite loop...
+        // If subclass has associations that eventually link back to the superclass with product multiplicity >=1, then its an infinite loop...
         // So in the last step we could create a function that searches each subclass for infinite loops and eliminates them from the options
-
+      // Once all abstract/interface == 0, permanently subtract the subclasses from the superclass count
     
     ClassInstanceCountSet classInstanceResult = new ClassInstanceCountSet(model);
     classInstanceResult.initializeClassCountsConstant(1);
@@ -316,10 +317,12 @@ class InstanceDiagramGenerator
 class ClassInstanceCount {
   depend java.util.*;
 
-  public Integer instanceCount;
+  // Number of instances required for this class (including polymorphed subclasses)
+  public Integer requiredInstances;
   // Set of subclasses (unordered and unique)
   public Set<String> subClasses;
-  public Boolean instanceCountCanChange;
+  // -1 means no limit, 0 (for abstract and interface), 1 (for singleton)
+  public Integer maximumInstanceCount;
 }
 
 /*
@@ -340,7 +343,7 @@ class ClassInstanceCountSet {
   public Map<String, Integer> getInstanceCountMap() {
     Map<String, Integer> result = new HashMap<>();
     for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
-      result.put(entry.getKey(), entry.getValue().instanceCount);
+      result.put(entry.getKey(), entry.getValue().requiredInstances);
     }
     return result;
   }
@@ -387,7 +390,7 @@ class ClassInstanceCountSet {
       // Check if we've reached max class counts
       int sum = 0;
       for (ClassInstanceCount n: this.instances.values()) {
-        sum += n.instanceCount;
+        sum += n.requiredInstances;
       }
       if (sum > maxClasses) {
         loopStatus = 2;
@@ -415,8 +418,8 @@ class ClassInstanceCountSet {
         }
 
         // Get the current count for the classes
-        Integer oldInstanceLeft = this.instances.get(assoc.getEnd(0).getClassName()).instanceCount;
-        Integer oldInstanceRight = this.instances.get(assoc.getEnd(1).getClassName()).instanceCount;
+        Integer oldInstanceLeft = this.instances.get(assoc.getEnd(0).getClassName()).requiredInstances;
+        Integer oldInstanceRight = this.instances.get(assoc.getEnd(1).getClassName()).requiredInstances;
 
         // How many left instances do we need? 
         // LinksPerRight*ceil(Right/HowManyLinksCanEachLeftHold)
@@ -430,7 +433,7 @@ class ClassInstanceCountSet {
         // If the new required instance is higher, replace the old instance count
         if (newInstanceLeft > oldInstanceLeft) {
           noChange = false;
-          this.instances.get(assoc.getEnd(0).getClassName()).instanceCount = newInstanceLeft;
+          this.instances.get(assoc.getEnd(0).getClassName()).requiredInstances = newInstanceLeft;
         }
 
         // How many right instances do we need?
@@ -445,7 +448,7 @@ class ClassInstanceCountSet {
         // If the new required instance is higher, replace the old instance count
         if (newInstanceRight > oldInstanceRight) {
           noChange = false;
-          this.instances.get(assoc.getEnd(1).getClassName()).instanceCount = newInstanceRight;
+          this.instances.get(assoc.getEnd(1).getClassName()).requiredInstances = newInstanceRight;
         }
 
       }
@@ -456,6 +459,9 @@ class ClassInstanceCountSet {
     return;
   }
 
+  /* 
+    Initialize the counting object for a Class.
+  */
   private void initializeClassCount(UmpleClass umpleClass, Integer classCount) {
     ClassInstanceCount newClassCount = new ClassInstanceCount();
     
@@ -465,20 +471,59 @@ class ClassInstanceCountSet {
       newClassCount.subClasses.add(subclass.getName());
     }
     
-    // Set instance count and canChange flag
+    // Set instance count and maximum instance count
     if (umpleClass.getIsAbstract()) {
-      newClassCount.instanceCount = 0;
-      newClassCount.instanceCountCanChange = false;
+      newClassCount.requiredInstances = 0;
+      newClassCount.maximumInstanceCount = 0;
     } else if (umpleClass.getIsSingleton()) {
-      newClassCount.instanceCount = 1;
-      newClassCount.instanceCountCanChange = false;
+      newClassCount.requiredInstances = 1;
+      newClassCount.maximumInstanceCount = 1;
     } else {
-      newClassCount.instanceCount = classCount;
-      newClassCount.instanceCountCanChange = true;
+      newClassCount.requiredInstances = classCount;
+      newClassCount.maximumInstanceCount = -1;
     }
     
     // Add to the map
     this.instances.put(umpleClass.getName(), newClassCount);
+  }
+
+  /* 
+    Initialize the counting object for an Interface.
+
+    This method is horribly inefficient since interfaces do not have a "subclass" property;
+    It has to search through every class and interface to check they "extend" this interface 
+  */ 
+  private void initializeInterfaceCount(UmpleInterface umpleInterface) {
+    ClassInstanceCount newClassCount = new ClassInstanceCount();
+
+    // Set subclasses 
+    // Horribly inefficient: We have to search every class and interface to see which ones inherit
+    newClassCount.subClasses = new HashSet<String>();
+    // Loop through all interfaces to see which ones extend this interface
+    for (UmpleInterface umpInt : umpleModel.getUmpleInterfaces()) {
+      for (UmpleInterface extendedInt : umpInt.getExtendsInterface()) {
+        // If the interface extends, add it to the subclass list
+        if (extendedInt.getName().equals(umpleInterface.getName())) {
+          newClassCount.subClasses.add(umpInt.getName());
+        }
+      }
+    }
+    // Loop through all classes to see which ones extend this interface
+    for (UmpleClass umpClass : umpleModel.getUmpleClasses()) {
+      for (UmpleInterface extendedInt : umpClass.getParentInterface()) {
+        // If the interface extends, add it to the subclass list
+        if (extendedInt.getName().equals(umpleInterface.getName())) {
+          newClassCount.subClasses.add(umpClass.getName());
+        }
+      }
+    }
+
+    // Set instance count and maximum instance count
+    newClassCount.requiredInstances = 0;
+    newClassCount.maximumInstanceCount = 0;
+
+    // Add to the map
+    this.instances.put(umpleInterface.getName(), newClassCount);
   }
 
   // Set each class initially to a constant amount of instances
@@ -488,6 +533,11 @@ class ClassInstanceCountSet {
     // For each class
     for (UmpleClass umpleClass : umpleModel.getUmpleClasses()) {
       initializeClassCount(umpleClass, constInt);
+    }
+
+    // For each interface
+    for (UmpleInterface umpInt : umpleModel.getUmpleInterfaces()) {
+      initializeInterfaceCount(umpInt);
     }
   }
 
@@ -515,6 +565,11 @@ class ClassInstanceCountSet {
         }
       }
     }
+
+    // For each interface
+    for (UmpleInterface umpInt : umpleModel.getUmpleInterfaces()) {
+      initializeInterfaceCount(umpInt);
+    }
   }
 
   /*
@@ -530,8 +585,8 @@ class ClassInstanceCountSet {
     for (Association assoc : umpleModel.getAssociations()) {
       AssociationLinkSet nextAssoc = new AssociationLinkSet(
         assoc, 
-        this.instances.get(assoc.getEnd(0).getClassName()).instanceCount, 
-        this.instances.get(assoc.getEnd(1).getClassName()).instanceCount
+        this.instances.get(assoc.getEnd(0).getClassName()).requiredInstances, 
+        this.instances.get(assoc.getEnd(1).getClassName()).requiredInstances
       );
       nextAssoc.getLinksFromAssociation(maxLinks);
       result.add(nextAssoc);
