@@ -82,20 +82,10 @@ class InstanceDiagramGenerator
 
     // TODO: Handle reflexive associations with non-zero links
 
-    // TODO: Handling inheritance/polymorphism
-    // Superclasses are sums of instances itself and its children
-      // extendsClass (single), parentInterface (list), subclasses (list); are relevant UmpleClass attributes
-      // Side Note: Verify if chain inheritances subclasses are in the list, or if they are chained...
-    // Potential algorithm: 
-      // When you need more instances of superclass, increase their instance count (including abstract/interface)
-      // When you need more instances of subclass, increase their instance count 
-      // After system stabilizes, temporarily subtract the subclasses from the superclass counts (only to check the value, or to instantiate at the end)
-      // If abstract/interface have >0 instance count, forcefully distribute them among the subclasses, and continue algorithm
-        // How do I ensure this does not expand the model and create an infinite loop when not needed?
-        // If subclass has associations that eventually link back to the superclass with product multiplicity >=1, then its an infinite loop...
-        // So in the last step we could create a function that searches each subclass for infinite loops and eliminates them from the options
-      // Once all abstract/interface == 0, permanently subtract the subclasses from the superclass count
-    
+    // TODO: Add random as a feature for generating association links
+
+    // TODO: Handle traits? (they act similarly to interfaces for our purposes)
+
     ClassInstanceCountSet classInstanceResult = new ClassInstanceCountSet(model);
     classInstanceResult.initializeClassCountsConstant(1);
     // Chances of the minimum instance values
@@ -117,8 +107,13 @@ class InstanceDiagramGenerator
       model.setCode(outputCode);
       writeModelToFile();
       return;
+    } else if (classInstanceResult.statusCode == 3) {
+      outputCode += "Inheritance unresolvable. Ensure that all abstract/interface classes have concrete implementations that can be instantiated";
+      model.setCode(outputCode);
+      writeModelToFile();
+      return;
     }
-    
+
     // Get class count result
     Map<String, Integer> minInstance = classInstanceResult.getInstanceCountMap();
     // Get associations from the class count
@@ -327,12 +322,14 @@ class ClassInstanceCount {
 
 /*
   Class to hold the number of class instances for a given umple model
+
+  Provides methods/algorithms to calculate the number of class instances
 */
 class ClassInstanceCountSet {
   depend java.util.*;
 
   // Status of the ClassInstanceCountSet object 
-  // -1 is invalid, 0 is valid, 1 is maxIter reached, 2 is maxInstances reached
+  // -1 is invalid, 0 is valid, 1 is maxIter reached, 2 is maxInstances reached, 3 is inheritance impossible
   public int statusCode = -1;
 
   internal UmpleModel umpleModel;
@@ -346,6 +343,139 @@ class ClassInstanceCountSet {
       result.put(entry.getKey(), entry.getValue().requiredInstances);
     }
     return result;
+  }
+
+  /* 
+    Recursive function to get the set of concrete instances of a class
+    Will add the concrete classes to the "subclassSet" parameter
+  */
+  private void getConcreteSubclasses(String className, Set<String> subclassSet) {
+    ClassInstanceCount topLevelInstance = this.instances.get(className);
+    
+    // If this instance is concrete, add it to the subclassSet
+    if (topLevelInstance.maximumInstanceCount == -1) {
+      subclassSet.add(className);
+    }
+    
+    // Check this class' subclasses
+    for (String subclassName : topLevelInstance.subClasses) {
+      getConcreteSubclasses(subclassName, subclassSet);
+    }
+  }
+
+  /* 
+    Recursive function to get the total number of concrete instances of a class and it's subclasses
+    Uses the "requiredInstances" attribute of concrete classes only
+    Uses a value of 1 for singletons
+  */
+  private Integer getNumberOfConcreteInstances(String className) {
+    ClassInstanceCount topLevelInstance = instances.get(className);
+    
+    Integer result = 0;
+    if (topLevelInstance.maximumInstanceCount == -1) {
+      result = topLevelInstance.requiredInstances;
+    } else if (topLevelInstance.maximumInstanceCount == 1) {
+      result = 1;
+    }
+    
+    for (String subclassName : topLevelInstance.subClasses) {
+      result += getNumberOfConcreteInstances(subclassName);
+    }
+
+    return result;
+  }
+
+  /*
+    This function handles the logic for inheritance.
+
+    For every abstract-class or interface, checks if there are enough concrete subclass instances to satisfy the required amount.
+    For each unsatisfied class, determines the set of concrete classes that can be increased to satisfy the required amount.
+    Ranks the concrete classes by how common they are in these "unsatisfied sets"
+        - The more common they are, the more unsatisfied superclasses they can satisfy by gaining more instances
+    Increases the concrete class counts by the required amount.
+  
+    Returns a status code as an integer
+      - 0 : No inheritance issues
+      - 1 : Inheritance issue detected, concrete class counts have been increased accordingly
+      - 2 : Inheritance issue detected, unresolvable
+  */
+  private int satisfyInheritance() {
+    // Map of each unsatisfied class to its concrete subclasses
+    Map<String, Set<String>> unsatisfiedInheritance = new HashMap<>();
+
+    for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
+      Integer instanceCountDifference = entry.getValue().requiredInstances - getNumberOfConcreteInstances(entry.getKey());
+
+      if (instanceCountDifference > 0) {
+        // Inheritance is not satisfied, we need more concrete instances
+        Set<String> concreteSubclasses = new HashSet<>();
+        getConcreteSubclasses(entry.getKey(), concreteSubclasses);
+        unsatisfiedInheritance.put(entry.getKey(), concreteSubclasses);
+      }
+    }
+
+    if (unsatisfiedInheritance.size() == 0) {
+      // Inheritance is satisfied
+      return 0;
+    }
+
+
+    // TODO: Prevent infinite loops
+    // For each concrete, perform a search of the diagram to see if increasing the instance count would increase a superclass
+    // Basically follow along the associations and generalizations looking for cycles. Calculate a set of multiplicities for the whole cycle
+    // If the cycle multiplicities are >=1, then eliminate it from the set (since it creates an infinite loop)
+
+
+    // Check if a concrete subclass set has size = 0; This means it is impossible to satisfy the system
+    // This couldve been caused by a bad diagram or an infinite loop detection removal
+    for (Set<String> entry : unsatisfiedInheritance.values()) {
+      if (entry.size() == 0) {
+        return 2;
+      }
+    }
+
+    // Rank the subclasses by most common among the sets 
+    // A common concrete subclass can satisfy multiple superclasses at once
+    Map<String, Integer> concreteSubclassFrequency = new HashMap<>();
+    for (Set<String> entry : unsatisfiedInheritance.values()) {
+      for (String subclassName : entry) {
+        int count = concreteSubclassFrequency.containsKey(subclassName) ? concreteSubclassFrequency.get(subclassName) : 0;
+        concreteSubclassFrequency.put(subclassName, count+1);
+      }
+    }
+
+    // Distribute required connections among the concrete subclasses
+    for (Map.Entry<String, Set<String>> entry : unsatisfiedInheritance.entrySet()) {
+      // Recalculate number of instances required (this is required since a previous iteration of this loop couldve changed it)
+      Integer instanceCountDifference = this.instances.get(entry.getKey()).requiredInstances - getNumberOfConcreteInstances(entry.getKey());
+      
+      // Get best concrete subclass
+      String best = "";
+      Integer bestFreq = 0;
+      for (String concreteSubclass : entry.getValue()) {
+        int frequency = concreteSubclassFrequency.get(concreteSubclass);
+        if (frequency > bestFreq) {
+          bestFreq = frequency;
+          best = concreteSubclass;
+        }
+      }
+
+      // Increase the best concrete subclass by the desired number of instances
+      this.instances.get(best).requiredInstances += instanceCountDifference;
+    }
+
+    return 1;
+  }
+
+  // Sets abstract, interface, singleton, etc... classes to their maximum values
+  private void enforceInstanceMaximums() {
+    for (ClassInstanceCount instanceCount  : this.instances.values()) {
+      if (instanceCount.maximumInstanceCount == 0) {
+        instanceCount.requiredInstances = 0;
+      } else if (instanceCount.maximumInstanceCount == 1) {
+        instanceCount.requiredInstances = 1;
+      }
+    }
   }
 
   /*
@@ -376,8 +506,22 @@ class ClassInstanceCountSet {
 
       // Check if the system has stabilized (all associations are satisfied)
       if (noChange) {
-        loopStatus = 0;
-        break;
+        // All associations are satisfied but inheritance may not be (abstract class count >= 1)
+
+        // Run the inheritance logic
+        int inheritanceStatus = satisfyInheritance();
+        if (inheritanceStatus == 0) {
+          // Everything is in order; associations satisfied, inheritance satisfied... End algorithm
+          enforceInstanceMaximums();
+          loopStatus = 0;
+          break;
+        } else if (inheritanceStatus == 1) {
+          // Inheritance was not satisfied (and the required instances have been changed), continue algorithm
+        } else if (inheritanceStatus == 2) {
+          // Inheritance was not satisfied and is impossible, return error
+          loopStatus = 3;
+          break;
+        }
       }
       noChange = true;
 
@@ -585,8 +729,8 @@ class ClassInstanceCountSet {
     for (Association assoc : umpleModel.getAssociations()) {
       AssociationLinkSet nextAssoc = new AssociationLinkSet(
         assoc, 
-        this.instances.get(assoc.getEnd(0).getClassName()).requiredInstances, 
-        this.instances.get(assoc.getEnd(1).getClassName()).requiredInstances
+        getNumberOfConcreteInstances(assoc.getEnd(0).getClassName()),
+        getNumberOfConcreteInstances(assoc.getEnd(1).getClassName())
       );
       nextAssoc.getLinksFromAssociation(maxLinks);
       result.add(nextAssoc);
