@@ -117,7 +117,7 @@ class InstanceDiagramGenerator
     // Get class count result
     Map<String, Integer> minInstance = classInstanceResult.getInstanceCountMap();
     // Get associations from the class count
-    ArrayList<AssociationLinkSet> actualLinks = classInstanceResult.distributeAssociations(true);
+    ArrayList<AssociationLinkSet> actualLinks = classInstanceResult.distributeAssociations();
 
 
     StringBuilder code = new StringBuilder();           // part of the gv file with the node/classes
@@ -470,11 +470,9 @@ class ClassInstanceCountSet {
   // Sets abstract, interface, singleton, etc... classes to their maximum values
   private void enforceInstanceMaximums() {
     for (ClassInstanceCount instanceCount  : this.instances.values()) {
-      if (instanceCount.maximumInstanceCount == 0) {
-        instanceCount.requiredInstances = 0;
-      } else if (instanceCount.maximumInstanceCount == 1) {
-        instanceCount.requiredInstances = 1;
-      }
+      if (instanceCount.maximumInstanceCount != -1) {
+        instanceCount.requiredInstances = instanceCount.maximumInstanceCount;
+      } 
     }
   }
 
@@ -569,7 +567,7 @@ class ClassInstanceCountSet {
         // LinksPerRight*ceil(Right/HowManyLinksCanEachLeftHold)
         Integer newInstanceLeft;
         if (upperRight!=-1) {
-          newInstanceLeft = Integer.valueOf((int)(lowerLeft*Math.ceil(oldInstanceRight/upperRight)));
+          newInstanceLeft = Integer.valueOf((int)(lowerLeft*Math.ceil((double)oldInstanceRight/(double)upperRight)));
         } else {
           // Ceiling of (?/*) will always be 1 since * is an extremely large constant
           newInstanceLeft = Integer.valueOf((int)(lowerLeft));
@@ -584,7 +582,7 @@ class ClassInstanceCountSet {
         // LinksPerLeft*ceil(Left/HowManyLinksCanEachRightHold)
         Integer newInstanceRight;
         if (upperLeft!=-1) {
-          newInstanceRight = Integer.valueOf((int)(lowerRight*Math.ceil(oldInstanceLeft/upperLeft)));
+          newInstanceRight = Integer.valueOf((int)(lowerRight*Math.ceil((double)oldInstanceLeft/(double)upperLeft)));
         } else {
           // Ceiling of (?/*) will always be 1 since * is an extremely large constant
           newInstanceRight = Integer.valueOf((int)(lowerRight));
@@ -722,7 +720,7 @@ class ClassInstanceCountSet {
 
     Returns an arraylist of AssociationLinkSet, which is a data class
   */
-  public ArrayList<AssociationLinkSet> distributeAssociations(boolean maxLinks) {
+  public ArrayList<AssociationLinkSet> distributeAssociations() {
     ArrayList<AssociationLinkSet> result = new ArrayList<AssociationLinkSet>();
     
     // Loop through associations
@@ -732,7 +730,7 @@ class ClassInstanceCountSet {
         getNumberOfConcreteInstances(assoc.getEnd(0).getClassName()),
         getNumberOfConcreteInstances(assoc.getEnd(1).getClassName())
       );
-      nextAssoc.getLinksFromAssociation(maxLinks);
+      nextAssoc.getRandomLinks();
       result.add(nextAssoc);
     }
 
@@ -747,6 +745,8 @@ class ClassInstanceCountSet {
  Call getLinksFromAssociation() in order to populate the "links" attribute
 */
 class AssociationLinkSet {
+  depend java.util.*;
+
   public boolean[][] links;
   internal Association association;
   internal Integer classCountStart;
@@ -776,7 +776,7 @@ class AssociationLinkSet {
     A6 = B3, B7, B10
     A7 = B4, B7
   */
-  public void getLinksFromAssociation(boolean getMaxLinks){
+  public void getLinksFromAssociation(int linkingFlag){
     boolean[][] result = new boolean[classCountStart][classCountEnd];
 
     // Reflexivity uses a different algorithm; Since there is only 1 set of instances instead of 2
@@ -784,7 +784,7 @@ class AssociationLinkSet {
     if (isReflexive) {
       // There is always a 0 lower bound on both ends (umple would throw an error otherwise)
       // So for minimum links we can simply return no links
-      if (!getMaxLinks) {
+      if (linkingFlag == 0) {
         this.links = result;
         return;
       }
@@ -812,42 +812,55 @@ class AssociationLinkSet {
     int maximumLinksEnd = classCountEnd*startUpper;
     int minimumLinksEnd = classCountEnd*startLower;
 
-    boolean startLimiting;
-    if (getMaxLinks) {
-      startLimiting = (maximumLinksStart < maximumLinksEnd)? true : false;
-    } else {
-      startLimiting = (minimumLinksStart > minimumLinksEnd)? true : false;
+    
+    // The smallest maximum bound determines the limiting class for max links
+    int smallestMaximum = (maximumLinksStart < maximumLinksEnd) ? maximumLinksStart : maximumLinksEnd;
+    
+    // The largest minimum bound determines the limiting class for min/random links
+    int largestMinimum = (minimumLinksStart > minimumLinksEnd) ? minimumLinksStart : minimumLinksEnd;
+
+    int totalLinkCount;
+    if (linkingFlag == 0) { // minimum
+      totalLinkCount = largestMinimum;
+    } else if (linkingFlag == 1) { // maximum
+      totalLinkCount = smallestMaximum;
+    } else { //random
+      Random random = new Random();
+      totalLinkCount = random.nextInt(smallestMaximum - largestMinimum + 1) + largestMinimum;
     }
 
-    // Loop through whichever end is the limiting factor
-    if (startLimiting) {
-      
-      int roundRobinCount = 0;
-      // For each instance in set "start"
-      for (int i=0;i<classCountStart;i++) {
-        // Loop through either max or min links - creating links
-        for (int linkCount=0; linkCount<(getMaxLinks? endUpper : endLower) ;linkCount++) { 
-          result[i][roundRobinCount] = true;
-          roundRobinCount = (roundRobinCount+1)%classCountEnd;
-        }
+    int linksPerStartInstance = (int)Math.floor((double)totalLinkCount / (double)classCountStart);
+    int extraInstanceCount = totalLinkCount % classCountStart;
+
+    // Loop through instances of the starting class
+    int roundRobinCount = 0;
+    for (int i=0;i<classCountStart;i++) {      
+
+      // Each instance has "linksPerStartInstance" links +1 if we need to get rid of an extra
+      int desiredLinks = linksPerStartInstance;
+      desiredLinks += (i < extraInstanceCount) ? 1 : 0;
+
+      // Loop through creating links
+      for (int linkCount=0; linkCount<desiredLinks ;linkCount++) { 
+        result[i][roundRobinCount] = true;
+        roundRobinCount = (roundRobinCount+1)%classCountEnd;
       }
-
-    } else {
-
-      int roundRobinCount = 0;
-      // For each class in set "end"
-      for (int i=0;i<classCountEnd;i++) {
-        // Loop through either max or min links - creating links
-        for (int linkCount=0; linkCount<(getMaxLinks? startUpper : startLower) ;linkCount++) {
-          result[roundRobinCount][i] = true;
-          roundRobinCount = (roundRobinCount+1)%classCountStart;
-        }
-      }
-
     }
 
     this.links = result;
     return;
+  }
+
+  public void getMinLinks() {
+    getLinksFromAssociation(0);
+  }
+
+  public void getMaxLinks() {
+    getLinksFromAssociation(1);
+  }
+
+  public void getRandomLinks() {
+    getLinksFromAssociation(2);
   }
 
   public String toString() {
