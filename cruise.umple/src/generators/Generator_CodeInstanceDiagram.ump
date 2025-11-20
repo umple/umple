@@ -85,9 +85,9 @@ class InstanceDiagramGenerator
 
     // TODO: Handle reflexive associations with non-zero links
 
-    // TODO: Add random as a feature for generating association links
-
-    // TODO: Handle traits? (they act similarly to interfaces for our purposes)
+    // Note: The odds of a superclass remaining in the diagram is low.
+    // If we start with 1 instance of superclass and 1 of subclass, the system will assume that its 1 polymorphic instance
+    // Should we prevent this?
 
     ClassInstanceCountSet classInstanceResult = new ClassInstanceCountSet(model);
     classInstanceResult.initializeClassCountsConstant(1);
@@ -99,7 +99,7 @@ class InstanceDiagramGenerator
     //classInstanceResult.getInstanceCounts(100, 500, classInstanceResult.getRandomInitialClassCounts(minimumInstanceProbabilities));
     classInstanceResult.getInstanceCounts(100, 500);
     
-    // TODO: Output errors
+    // TODO: Output errors properly
     if (classInstanceResult.statusCode == 1) {
       outputCode += "Reached maximum iterations. Ensure that the system is instantiable and non-infinite";
       model.setCode(outputCode);
@@ -196,7 +196,7 @@ class InstanceDiagramGenerator
 
     ClassInstanceCount currentClassInstanceCount = classInstanceCountMap.get(currentClassName);
     
-    for (int i = 1; i < currentClassInstanceCount.requiredInstances + 1; i++) {
+    for (int i = 1; i < currentClassInstanceCount.trueInstances + 1; i++) {
       instanceList.add(currentClassName + i);
     }
 
@@ -395,6 +395,8 @@ class ClassInstanceCount {
 
   // Number of instances required for this class (including polymorphed subclasses)
   public Integer requiredInstances;
+  // Number of concrete instances of this class required (does not include polymorphed subclasses)
+  public Integer trueInstances;
   // Set of subclasses (unordered and unique)
   public Set<String> subClasses;
   // -1 means no limit, 0 (for abstract and interface), 1 (for singleton)
@@ -418,10 +420,11 @@ class ClassInstanceCountSet {
   // Map with each class and it's instance counts (not an arraylist since classes are unordered and unique)
   public Map<String, ClassInstanceCount> instances;
 
+  // Get the number of instances for each class, interface, trait, etc...
   public Map<String, Integer> getInstanceCountMap() {
     Map<String, Integer> result = new HashMap<>();
     for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
-      result.put(entry.getKey(), entry.getValue().requiredInstances);
+      result.put(entry.getKey(), entry.getValue().trueInstances);
     }
     return result;
   }
@@ -446,23 +449,31 @@ class ClassInstanceCountSet {
 
   /* 
     Recursive function to get the total number of concrete instances of a class and it's subclasses
-    Uses the "requiredInstances" attribute of concrete classes only
-    Uses a value of 1 for singletons
   */
   private Integer getNumberOfConcreteInstances(String className) {
     ClassInstanceCount topLevelInstance = instances.get(className);
     
     Integer result = 0;
-    if (topLevelInstance.maximumInstanceCount == -1) {
-      result = topLevelInstance.requiredInstances;
-    } else if (topLevelInstance.maximumInstanceCount == 1) {
-      result = 1;
-    }
-    
+
+    // Get number of concrete subclasses (recursive)
     for (String subclassName : topLevelInstance.subClasses) {
       result += getNumberOfConcreteInstances(subclassName);
     }
 
+    // Now add the number for this class (base case)
+    if (topLevelInstance.maximumInstanceCount == 0) {
+      // For abstract/interface/etc... classes; add nothing
+    } else if (topLevelInstance.maximumInstanceCount == 1) {
+      // For singleton classes; add 1
+      result += 1;
+    } else if (topLevelInstance.maximumInstanceCount == -1) {
+      // For regular classes, add the difference between required instances and the calculated subclasses
+      int difference = topLevelInstance.requiredInstances - result;
+      if (difference > 0) {
+        result += difference;
+      }
+    }
+    
     return result;
   }
 
@@ -548,12 +559,29 @@ class ClassInstanceCountSet {
     return 1;
   }
 
-  // Sets abstract, interface, singleton, etc... classes to their maximum values
-  private void enforceInstanceMaximums() {
-    for (ClassInstanceCount instanceCount  : this.instances.values()) {
-      if (instanceCount.maximumInstanceCount != -1) {
-        instanceCount.requiredInstances = instanceCount.maximumInstanceCount;
-      } 
+  /* 
+    Set the non-polymorphic count of every class. 
+    This should only be run once the system is solved.
+
+    Assumes that superclasses are sums of their subclasses and themselves.
+    With this assumption we can simply subtract the counts of the DIRECT subclasses to get the number of non-polymorphic instances
+  */
+  private void setTrueInstanceCount() {
+    for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
+      int current = entry.getValue().requiredInstances;
+      // Loop through direct subclasses subtracting
+      for (String directSubclass : entry.getValue().subClasses) {
+        current -= this.instances.get(directSubclass).requiredInstances;
+      }
+      // Set number of non-polymorphic instances
+      entry.getValue().trueInstances = current;
+    }
+  }
+
+  // Make sure that the required instance count for superclasses is >= the number of concrete subclasses
+  private void updateSuperclassInstanceCounts() {
+    for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
+      entry.getValue().requiredInstances = Math.max(getNumberOfConcreteInstances(entry.getKey()), entry.getValue().requiredInstances);
     }
   }
 
@@ -583,6 +611,9 @@ class ClassInstanceCountSet {
     while (true) {
       iteration++;
 
+      // Ensure superclass counts are sums of their subclasses
+      updateSuperclassInstanceCounts();
+
       // Check if the system has stabilized (all associations are satisfied)
       if (noChange) {
         // All associations are satisfied but inheritance may not be (abstract class count >= 1)
@@ -591,7 +622,7 @@ class ClassInstanceCountSet {
         int inheritanceStatus = satisfyInheritance();
         if (inheritanceStatus == 0) {
           // Everything is in order; associations satisfied, inheritance satisfied... End algorithm
-          enforceInstanceMaximums();
+          setTrueInstanceCount();
           loopStatus = 0;
           break;
         } else if (inheritanceStatus == 1) {
@@ -749,6 +780,32 @@ class ClassInstanceCountSet {
     this.instances.put(umpleInterface.getName(), newClassCount);
   }
 
+  /* 
+    Initialize the counting object for an UmpleTrait.
+
+    They can be represented similarly to an abstract/interface; 
+      - They can be inherited but not instantiated
+  */
+  private void initializeTraitCount(UmpleTrait umpleTrait) {
+    ClassInstanceCount newClassCount = new ClassInstanceCount();
+    
+    // Set subclasses
+    newClassCount.subClasses = new HashSet<String>();
+    for (UmpleClass subclass : umpleTrait.getSubClasses()) {
+      newClassCount.subClasses.add(subclass.getName());
+    }
+    for (UmpleTrait subtrait : umpleTrait.getSubTraits()) {
+      newClassCount.subClasses.add(subtrait.getName());
+    }
+
+    // Set instance count and maximum instance count
+    newClassCount.requiredInstances = 0;
+    newClassCount.maximumInstanceCount = 0;
+   
+    // Add to the map
+    this.instances.put(umpleTrait.getName(), newClassCount);
+  }
+
   // Set each class initially to a constant amount of instances
   public void initializeClassCountsConstant(Integer constInt) {
     this.instances = new HashMap<>();
@@ -761,6 +818,11 @@ class ClassInstanceCountSet {
     // For each interface
     for (UmpleInterface umpInt : umpleModel.getUmpleInterfaces()) {
       initializeInterfaceCount(umpInt);
+    }
+
+    // For each trait
+    for (UmpleTrait umpTrait : umpleModel.getUmpleTraits()) {
+      initializeTraitCount(umpTrait);
     }
   }
 
@@ -792,6 +854,11 @@ class ClassInstanceCountSet {
     // For each interface
     for (UmpleInterface umpInt : umpleModel.getUmpleInterfaces()) {
       initializeInterfaceCount(umpInt);
+    }
+
+    // For each trait
+    for (UmpleTrait umpTrait : umpleModel.getUmpleTraits()) {
+      initializeTraitCount(umpTrait);
     }
   }
 
@@ -827,6 +894,7 @@ class ClassInstanceCountSet {
 */
 class AssociationLinkSet {
   depend java.util.*;
+  depend java.io.*;
 
   public boolean[][] links;
   internal Association association;
