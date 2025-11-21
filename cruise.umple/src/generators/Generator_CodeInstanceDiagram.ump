@@ -161,6 +161,9 @@ class InstanceDiagramGenerator
       String leftClass = leftEnd.getClassName();
       String rightClass = rightEnd.getClassName();
 
+      String leftRoleName = leftEnd.getDisplayRoleName();
+      String rightRoleName = rightEnd.getDisplayRoleName();
+
       ArrayList<String> leftInstanceList = new ArrayList<String>();
       ArrayList<String> rightInstanceList = new ArrayList<String>();
 
@@ -170,7 +173,8 @@ class InstanceDiagramGenerator
       for (int i = 0; i < assocLinkSet.links.length; i++) {
         for (int j = 0; j < assocLinkSet.links[0].length; j++) {
           if (assocLinkSet.links[i][j]){
-            AssociationCreate(uAssoc, associations, leftInstanceList.get(i), rightInstanceList.get(j));  // creates the association
+
+            AssociationCreate(uAssoc, associations, leftInstanceList.get(i), rightInstanceList.get(j), leftRoleName, rightRoleName);  // creates the association
           }
         }
       }
@@ -210,9 +214,44 @@ class InstanceDiagramGenerator
   public void createInstance(UmpleClass umpClass, StringBuilder code, int iteration){
 
     boolean manyClass = getModel().getUmpleClasses().size() >= 200 ? true : false;
-
+    boolean firstAttributeIsId = false;
+    String firstAttributeInstanceName = "";   // if the first attribute is "name" use as instance name. Do not use className
     String className = umpClass.getName();
-    String instanceName = className + iteration + ": " + className;
+    String instanceName = "";
+
+    if (umpClass.getAttributes().size() != 0){
+      Attribute firstAttribute = umpClass.getAttributes().get(0);
+      String firstAttributeName = firstAttribute.getName();
+      int attributeNameLength = firstAttributeName.length();
+
+
+
+      // If the first attribute is literally "id" case insensitive OR the last 2 characters are literally "Id" or "ID"
+      // and the type is String or Integer
+      if ( 
+        (firstAttributeName.toLowerCase().equals("id")  || 
+        (firstAttributeName.length() > 1 && 
+        (firstAttributeName.substring(firstAttributeName.length() - 2).equals("Id") ||
+        firstAttributeName.substring(firstAttributeName.length() - 2).equals("ID")))) &&
+        (firstAttribute.getType().equals("String") || firstAttribute.getType().equals("Integer"))
+        ) {
+        firstAttributeIsId = true;
+        instanceName = className + iteration + ": " + className;
+
+        // if the first attribute is called "name" and is type String
+      } else if (firstAttributeName.toLowerCase().equals("name") && firstAttribute.getType().equals("String")){
+        firstAttributeInstanceName = createRandomAttributeValue(firstAttribute);
+        instanceName = firstAttributeInstanceName + iteration + ": " + className;
+      } else{
+        instanceName = className + iteration + ": " + className;
+      }
+    
+    } else{
+      instanceName = className + iteration + ": " + className;
+    }
+
+
+    
     String classColor = umpClass.getDisplayColor();
     if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
     code.append("\n  // Instance: "+className + iteration+"\n");
@@ -235,7 +274,7 @@ class InstanceDiagramGenerator
 		  }
     }
 
-    attributeCreation(umpClass, code, manyClass);  // creates the attributes for the particular instance
+    attributeCreation(umpClass, code, manyClass, firstAttributeIsId, firstAttributeInstanceName, iteration);  // creates the attributes for the particular instance
 
     // Terminate outputting the class attributes
     if(manyClass) code.append("}\"");
@@ -251,15 +290,24 @@ class InstanceDiagramGenerator
     code.append("];\n");
   }
 
-  private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass){
+  private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass, boolean hasId, String instanceName, int idValue){
     // Iterate through attributes of the class
     boolean isFirst = true;
 
     if (!hasSuboption("hideattributes")) { 
       for (Attribute uAttribute : uClass.getAttributes()) {
         if (!uAttribute.isConstant()) 
-        {
-          String instanceAttribute = createRandomAttributeValue(uAttribute);  // this will take into account if the attribute is a list or not
+        { 
+          String instanceAttribute;
+
+          if (isFirst && (hasId)){
+            instanceAttribute = Integer.toString(idValue);
+          } else if (isFirst && instanceName.length() != 0){
+            instanceAttribute = instanceName;
+          } else {
+            instanceAttribute = createRandomAttributeValue(uAttribute);  // this will take into account if the attribute is a list or not
+          }
+          
           
           if (manyClass) {
             if (isFirst) code.append("|"); // attribute block starter
@@ -297,7 +345,7 @@ class InstanceDiagramGenerator
 
     if (uAttribute.getIsList()){
       String listString = "[";
-      listString = listString + ", " + randomAttributeTypeGen(type);
+      listString = listString + randomAttributeTypeGen(type);
       listString = listString + ", " + randomAttributeTypeGen(type);
       listString = listString + ", ... ]";
       return listString;
@@ -357,10 +405,15 @@ class InstanceDiagramGenerator
     return wordBank[randomInt];
   }
 
-  public void AssociationCreate(Association uAssoc, StringBuilder associations, String left, String right){
+  public void AssociationCreate(Association uAssoc, StringBuilder associations, String left, String right, String leftRoleName, String rightRoleName){
+    AssociationEnd leftEnd = uAssoc.getEnd(0);
+    AssociationEnd rightEnd = uAssoc.getEnd(1);
+    String leftClass = leftEnd.getClassName();
+    String rightClass = rightEnd.getClassName();
+
     String[] arrows = SuperGvGenerator.retArrows(uAssoc);
-    String toolTip = "testToolTip";
-    associations.append(SuperGvGenerator.twoLabelAssociation(left, right, arrows[0], "", "", toolTip));
+    String toolTip = leftClass + " " + leftRoleName + " " + arrows[1] + " " + rightRoleName + " " + rightClass;
+    associations.append(SuperGvGenerator.twoLabelAssociation(left, right, arrows[0], leftRoleName, rightRoleName, toolTip));
   }
 
   // Output the instance diagram to a text file
