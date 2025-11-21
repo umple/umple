@@ -5573,6 +5573,16 @@ Action.ajax = function(callback,post,target,errors,tabIndependent)
   var errors = "true";
   TabControl.useActiveTabTo(TabControl.saveTab)(umpleCode);
 
+  // Detect current theme mode
+  var themeParam = "";
+  try {
+    var themeSelect = document.getElementById("themeModeSelect");
+    var mode = themeSelect ? themeSelect.value : (document.body && document.body.dataset && document.body.dataset.theme) ? document.body.dataset.theme : "system";
+    if (mode && mode !== "system") {
+      themeParam = "&theme=" + mode;
+    }
+  } catch (e) { /* no-op */ }
+
   var tabContextOld = TabControl.getActiveTabId();
   var wrappedCallback = !tabIndependent? function(response){
     var tabContextNew = TabControl.getActiveTabId();
@@ -5582,7 +5592,7 @@ Action.ajax = function(callback,post,target,errors,tabIndependent)
     }
     callback(response);
   } : callback;
-  Ajax.sendRequest("scripts/compiler.php",wrappedCallback,format("{0}&error={3}&umpleCode={1}&filename={2}",post,umpleCode,filename,errors));
+  Ajax.sendRequest("scripts/compiler.php",wrappedCallback,format("{0}&error={3}&umpleCode={1}&filename={2}{4}",post,umpleCode,filename,errors,themeParam));
 }
 
 //Mac Keyboard Shortcut
@@ -5939,23 +5949,6 @@ Action.getLanguage = function()
     if(Page.showFeatureDependency) language=language+".showFeatureDependency";
   }
 
-  // Append Graphviz dark theme suboption when UI is in dark mode
-  try {
-    var themeSelect = document.getElementById("themeModeSelect");
-    var mode = themeSelect ? themeSelect.value : (document.body && document.body.dataset && document.body.dataset.theme) ? document.body.dataset.theme : "system";
-    var prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    var isDark = (mode === "dark") || (mode === "system" && prefersDark);
-    if (isDark) {
-      // Only add to Graphviz-generated languages
-      if (language.indexOf("language=classDiagram") === 0 ||
-          language.indexOf("language=traitDiagram") === 0 ||
-          language.indexOf("language=stateDiagram") === 0 ||
-          language.indexOf("language=featureDiagram") === 0 ||
-          language.indexOf("language=entityRelationshipDiagram") === 0) {
-        language = language + ".gvdark";
-      }
-    }
-  } catch (e) { /* no-op */ }
   return language;
 }
 

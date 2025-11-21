@@ -223,7 +223,14 @@ else if (isset($_REQUEST["umpleCode"]))
     $Uigu2 = True;
     $htmlContents = True;
   }
-  
+
+  // Handle dark theme for Graphviz generators (class, state, feature, entityRelationship diagrams)
+  // If theme parameter is 'dark' and it's a Graphviz generator (starts with "Gv"), add gvdark suboption
+  if (isset($_REQUEST['theme']) && $_REQUEST['theme'] === 'dark' && strpos($language, 'Gv') === 0)
+  {
+    $suboptions = $suboptions . " -s gvdark";
+  }
+
   if ($languageStyle == "html")
   {
      $htmlContents = true;
