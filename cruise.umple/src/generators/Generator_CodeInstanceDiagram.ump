@@ -953,8 +953,8 @@ class AssociationLinkSet {
     int startUpper = association.getEnd(0).getMultiplicity().getUpperBound();
     
     // The maximum links for a * upper bound is #OfInstances of the other class (you cannot link to 11 Bs if there are only 10 Bs)
-    if (endUpper == -1) {endUpper = classCountStart;}
-    if (startUpper == -1) {startUpper = classCountEnd;}
+    if (endUpper == -1) {endUpper = classCountEnd;}
+    if (startUpper == -1) {startUpper = classCountStart;}
 
     int maximumLinksStart = classCountStart*endUpper;
     int minimumLinksStart = classCountStart*endLower;
