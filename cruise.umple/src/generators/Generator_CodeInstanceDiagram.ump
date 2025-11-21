@@ -413,7 +413,7 @@ class InstanceDiagramGenerator
 
     String[] arrows = SuperGvGenerator.retArrows(uAssoc);
     String toolTip = leftClass + " " + leftRoleName + " " + arrows[1] + " " + rightRoleName + " " + rightClass;
-    associations.append(SuperGvGenerator.twoLabelAssociation(left, right, arrows[0], leftRoleName, rightRoleName, toolTip));
+    associations.append(SuperGvGenerator.twoLabelAssociation(left, right, arrows[0], rightRoleName, leftRoleName, toolTip));
   }
 
   // Output the instance diagram to a text file
