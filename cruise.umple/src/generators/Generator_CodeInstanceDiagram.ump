@@ -77,11 +77,17 @@ class InstanceDiagramGenerator
   // off of what's contained in here.
   UmpleModel model = null;
   String outputCode = "";
-  Random attributeRandomGen = new Random(67); // used for the generation of random attirbutes
-
+  Random attributeRandomGen = new Random(67); // Set the seed used for the generation of random attributes
+  
+  // Meta variables - These should be passed as suboptions
+  int suboptionLinkingFlag = 2; // 2 is Random
+  int suboptionInitialClassCountFlag = -1; // -1 is Random
+  int suboptionMaxIterations = 100;
+  int suboptionMaxClassCount = 500;
 
   public void generate()
   {
+
 
     // TODO: Handle reflexive associations with non-zero links
 
@@ -89,15 +95,22 @@ class InstanceDiagramGenerator
     // If we start with 1 instance of superclass and 1 of subclass, the system will assume that its 1 polymorphic instance
     // Should we prevent this?
 
+    // Create class instance object
     ClassInstanceCountSet classInstanceResult = new ClassInstanceCountSet(model);
-    classInstanceResult.initializeClassCountsConstant(1);
-    // Chances of the minimum instance values
-    //Map<Integer, Double> minimumInstanceProbabilities = new HashMap<>();
-    //minimumInstanceProbabilities.put(1, 0.33);
-    //minimumInstanceProbabilities.put(2, 0.33);
-    //minimumInstanceProbabilities.put(3, 0.33);
-    //classInstanceResult.getInstanceCounts(100, 500, classInstanceResult.getRandomInitialClassCounts(minimumInstanceProbabilities));
-    classInstanceResult.getInstanceCounts(100, 500);
+
+    // Initialize class counts
+    if (suboptionInitialClassCountFlag == -1) {
+      Map<Integer, Double> minimumInstanceProbabilities = new HashMap<>();
+      minimumInstanceProbabilities.put(1, 0.33);
+      minimumInstanceProbabilities.put(2, 0.33);
+      minimumInstanceProbabilities.put(3, 0.33);
+      classInstanceResult.initializeClassCountsRandom(minimumInstanceProbabilities);
+    } else {
+      classInstanceResult.initializeClassCountsConstant(suboptionInitialClassCountFlag);
+    }
+    
+    // Run the instance count algorithm
+    classInstanceResult.getInstanceCounts(suboptionMaxIterations, suboptionMaxClassCount);
     
     // TODO: Output errors properly
     if (classInstanceResult.statusCode == 1) {
@@ -120,7 +133,7 @@ class InstanceDiagramGenerator
     // Get class count result
     Map<String, Integer> minInstance = classInstanceResult.getInstanceCountMap();
     // Get associations from the class count
-    ArrayList<AssociationLinkSet> actualLinks = classInstanceResult.distributeAssociations();
+    ArrayList<AssociationLinkSet> actualLinks = classInstanceResult.distributeAssociations(suboptionLinkingFlag);
 
 
     StringBuilder code = new StringBuilder();           // part of the gv file with the node/classes
@@ -917,11 +930,15 @@ class ClassInstanceCountSet {
 
   /*
     Using the number of instance of each class, get the associations between the instances.
-    The maxLinks boolean determines if you max or min number of links between the sets of instances
+
+    The linkingFlag parameter determines the number of links to create:
+    - 0 Minimum
+    - 1 Maximum
+    - 2 Random
 
     Returns an arraylist of AssociationLinkSet, which is a data class
   */
-  public ArrayList<AssociationLinkSet> distributeAssociations() {
+  public ArrayList<AssociationLinkSet> distributeAssociations(int linkingFlag) {
     ArrayList<AssociationLinkSet> result = new ArrayList<AssociationLinkSet>();
     
     // Loop through associations
@@ -931,7 +948,7 @@ class ClassInstanceCountSet {
         getNumberOfConcreteInstances(assoc.getEnd(0).getClassName()),
         getNumberOfConcreteInstances(assoc.getEnd(1).getClassName())
       );
-      nextAssoc.getRandomLinks();
+      nextAssoc.getLinksFromAssociation(linkingFlag);
       result.add(nextAssoc);
     }
 
@@ -958,6 +975,11 @@ class AssociationLinkSet {
     Given the num of instances of each class, get the associations/links between each instance.
     Creates a matrix of the links between classes for a given association
     The matrix is classCountStart by classCountEnd, and the boolean entries represent if there is a link between class instances
+
+    The linkingFlag parameter determines the number of links to create:
+      - 0 Minimum
+      - 1 Maximum
+      - 2 Random
 
     Algorithm:
     Check which class is the limiting factor
@@ -1051,18 +1073,6 @@ class AssociationLinkSet {
 
     this.links = result;
     return;
-  }
-
-  public void getMinLinks() {
-    getLinksFromAssociation(0);
-  }
-
-  public void getMaxLinks() {
-    getLinksFromAssociation(1);
-  }
-
-  public void getRandomLinks() {
-    getLinksFromAssociation(2);
   }
 
   public String toString() {
