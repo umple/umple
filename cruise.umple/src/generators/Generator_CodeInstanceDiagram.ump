@@ -101,9 +101,9 @@ class InstanceDiagramGenerator
     // Initialize class counts
     if (suboptionInitialClassCountFlag == -1) {
       Map<Integer, Double> minimumInstanceProbabilities = new HashMap<>();
-      minimumInstanceProbabilities.put(1, 0.33);
-      minimumInstanceProbabilities.put(2, 0.33);
-      minimumInstanceProbabilities.put(3, 0.33);
+      minimumInstanceProbabilities.put(0, 0.25);
+      minimumInstanceProbabilities.put(1, 0.50);
+      minimumInstanceProbabilities.put(2, 0.25);
       classInstanceResult.initializeClassCountsRandom(minimumInstanceProbabilities);
     } else {
       classInstanceResult.initializeClassCountsConstant(suboptionInitialClassCountFlag);
@@ -486,7 +486,12 @@ class ClassInstanceCountSet {
   // Map with each class and it's instance counts (not an arraylist since classes are unordered and unique)
   public Map<String, ClassInstanceCount> instances;
 
-  // Get the number of instances for each class, interface, trait, etc...
+  // Set of the classnames for traits. We need to ignore any associations to/from these
+  //  (their associations are copied to their subclasses, but the original remains in the model)
+  private Set<String> traitSet;
+
+
+  // Get the number of instances for each class, interface, etc...
   public Map<String, Integer> getInstanceCountMap() {
     Map<String, Integer> result = new HashMap<>();
     for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
@@ -517,7 +522,7 @@ class ClassInstanceCountSet {
     Recursive function to get the total number of concrete instances of a class and it's subclasses
   */
   private Integer getNumberOfConcreteInstances(String className) {
-    ClassInstanceCount topLevelInstance = instances.get(className);
+    ClassInstanceCount topLevelInstance = this.instances.get(className);
     
     Integer result = 0;
 
@@ -718,6 +723,12 @@ class ClassInstanceCountSet {
       }
 
       for (Association assoc : umpleModel.getAssociations()) {
+        // Traits will copy their associations to their children
+        // But the original trait association remains in the model, so we need to ignore it.
+        if (traitSet.contains(assoc.getEnd(0).getClassName()) || traitSet.contains(assoc.getEnd(1).getClassName())) {
+          continue;
+        }
+
         int lowerLeft = assoc.getEnd(0).getMultiplicity().getLowerBound();
         int upperLeft = assoc.getEnd(0).getMultiplicity().getUpperBound();
         int lowerRight = assoc.getEnd(1).getMultiplicity().getLowerBound();
@@ -847,11 +858,8 @@ class ClassInstanceCountSet {
   }
 
   /* 
-    Initialize the counting object for an UmpleTrait.
-
-    They can be represented similarly to an abstract/interface; 
-      - They can be inherited but not instantiated
-  */
+  // Initialize the counting object for an UmpleTrait.
+  // Use this if we are representing UmpleTraits as an abstract class
   private void initializeTraitCount(UmpleTrait umpleTrait) {
     ClassInstanceCount newClassCount = new ClassInstanceCount();
     
@@ -871,6 +879,7 @@ class ClassInstanceCountSet {
     // Add to the map
     this.instances.put(umpleTrait.getName(), newClassCount);
   }
+  */
 
   // Set each class initially to a constant amount of instances
   public void initializeClassCountsConstant(Integer constInt) {
@@ -887,8 +896,10 @@ class ClassInstanceCountSet {
     }
 
     // For each trait
+    this.traitSet = new HashSet<>();
     for (UmpleTrait umpTrait : umpleModel.getUmpleTraits()) {
-      initializeTraitCount(umpTrait);
+      // initializeTraitCount(umpTrait);
+      this.traitSet.add(umpTrait.getName());
     }
   }
 
@@ -903,9 +914,15 @@ class ClassInstanceCountSet {
     Random randomNumGen = new Random();
     // For each class
     for (UmpleClass umpClass : umpleModel.getUmpleClasses()) {
-      double randDouble = randomNumGen.nextDouble();
-      double cumulative = 0.0;
+      // Roll a random value between 0 and the sum of all probabilities
+      double totalOdds = 0;
+      for (Double odds : minimumInstanceProbabilities.values()) {
+        totalOdds += odds;
+      }
+      double randDouble = randomNumGen.nextDouble() * totalOdds;
+
       // Loop through the probabilities to randomly select a value 
+      double cumulative = 0.0;
       for (Map.Entry<Integer, Double> entry : minimumInstanceProbabilities.entrySet()) {
         cumulative += entry.getValue();
         if (randDouble <= cumulative) {
@@ -923,8 +940,10 @@ class ClassInstanceCountSet {
     }
 
     // For each trait
+    this.traitSet = new HashSet<>();
     for (UmpleTrait umpTrait : umpleModel.getUmpleTraits()) {
-      initializeTraitCount(umpTrait);
+      // initializeTraitCount(umpTrait);
+      this.traitSet.add(umpTrait.getName());
     }
   }
 
@@ -943,6 +962,12 @@ class ClassInstanceCountSet {
     
     // Loop through associations
     for (Association assoc : umpleModel.getAssociations()) {
+      // Traits will copy their associations to their children
+      // But the original trait association remains in the model, so we need to ignore it.
+      if (traitSet.contains(assoc.getEnd(0).getClassName()) || traitSet.contains(assoc.getEnd(1).getClassName())) {
+        continue;
+      }
+
       AssociationLinkSet nextAssoc = new AssociationLinkSet(
         assoc, 
         getNumberOfConcreteInstances(assoc.getEnd(0).getClassName()),
@@ -964,7 +989,6 @@ class ClassInstanceCountSet {
 */
 class AssociationLinkSet {
   depend java.util.*;
-  depend java.io.*;
 
   public boolean[][] links;
   internal Association association;
