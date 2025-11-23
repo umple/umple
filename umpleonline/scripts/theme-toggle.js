@@ -20,12 +20,33 @@
     }
   }
 
+  function setSyntaxHighlighterTheme(mode) {
+    const shThemeDefault = document.getElementById("shThemeDefault");
+    const shThemeMidnight = document.getElementById("shThemeMidnight");
+    if (!shThemeDefault || !shThemeMidnight) return;
+
+    const isDark = mode === "dark" || (mode === "system" && prefersDark.matches);
+
+    shThemeDefault.disabled = isDark;
+    shThemeMidnight.disabled = !isDark;
+
+    // Re-highlight any existing SyntaxHighlighter code blocks to apply new theme
+    if (typeof SyntaxHighlighter !== "undefined" && typeof SyntaxHighlighter.highlight === "function") {
+      try {
+        SyntaxHighlighter.highlight();
+      } catch (err) {
+        console.warn("Unable to re-highlight code", err);
+      }
+    }
+  }
+
   function applyTheme(mode, persist = true) {
     if (!validModes.has(mode)) {
       mode = "system";
     }
 
     setMedia(mode);
+    setSyntaxHighlighterTheme(mode);
 
     if (mode === "dark") {
       document.body.dataset.theme = "dark";
