@@ -370,7 +370,7 @@ $output = $dataHandle->readData('model.ump');
           <a href="https://www.uottawa.ca" target="uottawatab"><img height="33px" src="scripts/uottawa_ver_black.png" alt="University of Ottawa logo / Université d'Ottawa" /></a>        
         </span>
       <div class="inRow logo">
-        <a href="https://cruise.umple.org/umple"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>     
+        <a href="https://cruise.umple.org/umple"><img src="scripts/umpleonline_title.svg" alt="UmpleOnline logo" /></a>     
       </div>
 
       <div class="inRow" style = "width: 77%">

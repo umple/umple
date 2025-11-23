@@ -4,7 +4,11 @@ body {
   color-scheme: dark;
 }
 
-.inRow.logo,
+/* Logo container should be transparent so SVG shows without background box */
+.inRow.logo {
+  background-color: transparent !important;
+}
+
 #mainApplication,
 #paletteColumn,
 #topLine,
@@ -73,10 +77,6 @@ a {
 img[src="scripts/uottawa_ver_black.png"],
 img[src="scripts/delete2.jpg"] {
   filter: invert(1);
-}
-
-img[src="scripts/umpleonline_title.jpg"] {
-  filter: invert(1) hue-rotate(180deg);
 }
 
 ul.tabrow li,
