@@ -124,6 +124,14 @@ class InstanceDiagramGenerator
       model.setCode(outputCode);
       writeModelToFile();
       return;
+    } else if (classInstanceResult.statusCode == 4) {
+      outputCode += "Infinite loop detected. Instantiating the following classes will lead to an infinite number of instances: ";
+      for (String classname : classInstanceResult.loopScores.keySet()) {
+        outputCode += "\n" + classname;
+      }
+      model.setCode(outputCode);
+      writeModelToFile();
+      return;
     }
 
     // Get class count result
@@ -213,7 +221,7 @@ class InstanceDiagramGenerator
       instanceList.add(currentClassName + i);
     }
 
-    Iterator value = currentClassInstanceCount.subClasses.iterator();
+    Iterator value = currentClassInstanceCount.directSubclasses.iterator();
     
     while (value.hasNext()) {
       PopulateInstanceList(value.next().toString(), classInstanceCountMap, instanceList);
@@ -460,7 +468,9 @@ class ClassInstanceCount {
   // Number of concrete instances of this class required (does not include polymorphed subclasses)
   public Integer trueInstances;
   // Set of subclasses (unordered and unique)
-  public Set<String> subClasses;
+  public Set<String> directSubclasses;
+  // Set of superclasses (unordered and unique)
+  public Set<String> directSuperclasses;
   // -1 means no limit, 0 (for abstract and interface), 1 (for singleton)
   public Integer maximumInstanceCount;
 }
@@ -473,8 +483,15 @@ class ClassInstanceCount {
 class ClassInstanceCountSet {
   depend java.util.*;
 
-  // Status of the ClassInstanceCountSet object 
-  // -1 is invalid, 0 is valid, 1 is maxIter reached, 2 is maxInstances reached, 3 is inheritance impossible
+  /* 
+    Status of the ClassInstanceCountSet object 
+    -1 is invalid
+    0 is valid, 
+    1 is maxIter reached
+    2 is maxInstances reached
+    3 is inheritance impossible
+    4 is infinite loop detected
+  */
   public int statusCode = -1;
 
   internal UmpleModel umpleModel;
@@ -486,6 +503,8 @@ class ClassInstanceCountSet {
   //  (their associations are copied to their subclasses, but the original remains in the model)
   private Set<String> traitSet;
 
+  // Map of any potential infinite loops in the model
+  public Map<String, Integer> loopScores;
 
   // Get the number of instances for each class, interface, etc...
   public Map<String, Integer> getInstanceCountMap() {
@@ -497,20 +516,26 @@ class ClassInstanceCountSet {
   }
 
   /* 
-    Recursive function to get the set of concrete instances of a class
-    Will add the concrete classes to the "subclassSet" parameter
+    Recursive function to get the set of subclasses of a class in an inheritance tree
+    Will add the classes to the "subclassSet" parameter
+
+    Note: Will include itself
   */
-  private void getConcreteSubclasses(String className, Set<String> subclassSet) {
+  private void getAllSubclassesTree(String className, Set<String> subclassSet, boolean excludeSingleton, boolean excludeAbstract) {
     ClassInstanceCount topLevelInstance = this.instances.get(className);
     
     // If this instance is concrete, add it to the subclassSet
     if (topLevelInstance.maximumInstanceCount == -1) {
       subclassSet.add(className);
+    } else if (topLevelInstance.maximumInstanceCount == 1 && !excludeSingleton) {
+      subclassSet.add(className);
+    } else if (topLevelInstance.maximumInstanceCount == 0 && !excludeAbstract) {
+      subclassSet.add(className);
     }
     
     // Check this class' subclasses
-    for (String subclassName : topLevelInstance.subClasses) {
-      getConcreteSubclasses(subclassName, subclassSet);
+    for (String subclassName : topLevelInstance.directSubclasses) {
+      getAllSubclassesTree(subclassName, subclassSet, excludeSingleton, excludeAbstract);
     }
   }
 
@@ -523,7 +548,7 @@ class ClassInstanceCountSet {
     Integer result = 0;
 
     // Get number of concrete subclasses (recursive)
-    for (String subclassName : topLevelInstance.subClasses) {
+    for (String subclassName : topLevelInstance.directSubclasses) {
       result += getNumberOfConcreteInstances(subclassName);
     }
 
@@ -542,6 +567,131 @@ class ClassInstanceCountSet {
     }
     
     return result;
+  }
+
+  /*
+    Wrapper for getAllSuperclassesRecursive
+    Will return a Set instead of modifying one
+    Will remove the current class from the superclass tree
+  */
+  public Set<String> getAllSuperclasses(String classname) {
+    Set<String> superclasses = new HashSet<>();
+    getAllSuperclassesRecursive(classname, superclasses);
+
+    // Remove the current class
+    superclasses.remove(classname);
+
+    return superclasses;
+  }
+
+  // Recursive function to get all superclasses for a given identifier including itself
+  private void getAllSuperclassesRecursive(String className, Set<String> superclassSet) {
+    ClassInstanceCount topLevelInstance = this.instances.get(className);
+    
+    superclassSet.add(className);
+    
+    // Check this class' superclasses
+    for (String superclassName : topLevelInstance.directSuperclasses) {
+      getAllSuperclassesRecursive(superclassName, superclassSet);
+    }
+  }
+
+  // Calculate which classes are potentially infinite looping classes.
+  // See traverseClassAssociations()
+  public Map<String, Integer> getClassLoopScores() {
+    Map<String, Integer> result = new HashMap<String, Integer>();
+    for (Map.Entry<String, ClassInstanceCount> classname : this.instances.entrySet()) {
+      // Run looping class search for concrete classes
+      if (classname.getValue().maximumInstanceCount == -1) {
+        result.put(classname.getKey(), traverseClassAssociations(getAllSuperclasses(classname.getKey()), classname.getKey(), classname.getKey(), 1, new HashSet<>()));
+      } else {
+        result.put(classname.getKey(), 0);
+      }
+      
+    }
+    return result;
+  }
+
+  /*
+    Perform DFS to determine if a class is a looping class.
+    Recursive function to traverse across associations looking for >=1 multiplicity cycles on a given class
+
+    A cycle >=1 that links back to the original class will by definition create an infinite loop.
+    A cycle >=1 that links back to the superclass might create an infinite loop (but not guaranteed since a different subclass can be instantiated instead)
+
+    "stopSuperclasses" and "stopClassname" are the base cases which never change between branches of the search.
+    "thisClassname", "multiplicityProduct", and "visited" will change between branches of the search.
+  
+    Returns 0 (if there are no >= 1 cycles associated with this class)
+    Returns 1 (if there is a >=1 cycle associated with any superclass)
+    Returns 2 (if there is a >=1 cycle associated with this class)
+  */
+  private int traverseClassAssociations(Set<String> stopSuperclasses, String stopClassname, String thisClassname, double multiplicityProduct, Set<String> visitedAssociations) {    
+    // Base case 1: There is a cycle to this class
+    if (thisClassname.equals(stopClassname) && visitedAssociations.size() > 0) {
+      if (multiplicityProduct >= 1) {
+        return 2;
+      } else {
+        return 0;
+      }
+    }
+
+    // Base case 2: There is a cycle to a superclass
+    if (stopSuperclasses.contains(thisClassname)) {
+
+      if (multiplicityProduct >= 1) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+    
+    // Run recursion - saving the worst case scenario
+    int worstCase = 0;
+    for (Association assoc : umpleModel.getUmpleClass(thisClassname).getAssociations()) {
+      // Copy the visited list (otherwise it passes by reference across all branches of the search)
+      Set<String> newVisited = new HashSet<>(visitedAssociations);
+      
+      // If the association has already been visited, skip it
+      if (newVisited.contains(assoc.deriveName())) {
+        continue;
+      } else {
+        // Add it to the visited list
+        newVisited.add(assoc.deriveName());
+      }
+
+      // Get the ends of the association
+      AssociationEnd otherEnd;
+      AssociationEnd thisEnd;
+      if (assoc.getEnd(0).getClassName().equals(thisClassname)) {
+        otherEnd = assoc.getEnd(1);
+        thisEnd = assoc.getEnd(0);
+      } else {
+        otherEnd = assoc.getEnd(0);
+        thisEnd = assoc.getEnd(1);
+      }
+
+      // Calculate the new multiplicityProduct
+      double otherLower = otherEnd.getMultiplicity().getLowerBound();
+      double thisUpper = thisEnd.getMultiplicity().getUpperBound();
+      // If thisUpper is *, we will be effectively dividing infinity (~0) - so we can skip this branch entirely
+      if (thisUpper == -1) {
+        continue;
+      }
+      double newMultiplicityProduct = multiplicityProduct * otherLower / thisUpper;
+
+      // If the other end is an interface - than it must be a directed association - which also means * upper bound - so we skip it
+      if (umpleModel.getUmpleInterface(otherEnd.getClassName()) != null) {
+        continue;
+      }
+
+      // Get the recursive result
+      int recursiveResult = traverseClassAssociations(stopSuperclasses, stopClassname, otherEnd.getClassName(), newMultiplicityProduct, newVisited);
+      if (recursiveResult > worstCase) {
+        worstCase = recursiveResult;
+      }
+    }
+    return worstCase;
   }
 
   /*
@@ -568,7 +718,9 @@ class ClassInstanceCountSet {
       if (instanceCountDifference > 0) {
         // Inheritance is not satisfied, we need more concrete instances
         Set<String> concreteSubclasses = new HashSet<>();
-        getConcreteSubclasses(entry.getKey(), concreteSubclasses);
+        // Get set of all non-singleton non-abstract subclasses
+        getAllSubclassesTree(entry.getKey(), concreteSubclasses, true, true);
+        // Put the result in the map
         unsatisfiedInheritance.put(entry.getKey(), concreteSubclasses);
       }
     }
@@ -578,12 +730,19 @@ class ClassInstanceCountSet {
       return 0;
     }
 
-
-    // TODO: Prevent infinite loops
-    // For each concrete, perform a search of the diagram to see if increasing the instance count would increase a superclass
-    // Basically follow along the associations and generalizations looking for cycles. Calculate a set of multiplicities for the whole cycle
-    // If the cycle multiplicities are >=1, then eliminate it from the set (since it creates an infinite loop)
-
+    // In order to prevent infinite instantiation loops, we will only take the "safe" subclasses
+    // "Safe" subclasses do not have associations that cycle back to themselves or their superclasses with a multiplicity >=1
+    // This ensures that if they are instantiated, they cannot create more than 1 instance of themselves
+    Set<String> unsafeClasses = new HashSet<>();
+    for (Map.Entry<String, Integer> loopScore : loopScores.entrySet()) {
+      if (loopScore.getValue() == 1) {
+        unsafeClasses.add(loopScore.getKey());
+      }
+    }
+    // Remove unsafe classes from the sets
+    for (Set<String> concreteSubclasses : unsatisfiedInheritance.values()) {
+      concreteSubclasses.removeIf(unsafeClasses::contains);
+    }
 
     // Check if a concrete subclass set has size = 0; This means it is impossible to satisfy the system
     // This couldve been caused by a bad diagram or an infinite loop detection removal
@@ -637,7 +796,7 @@ class ClassInstanceCountSet {
     for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
       int current = entry.getValue().requiredInstances;
       // Loop through direct subclasses subtracting
-      for (String directSubclass : entry.getValue().subClasses) {
+      for (String directSubclass : entry.getValue().directSubclasses) {
         current -= this.instances.get(directSubclass).requiredInstances;
       }
       // Set number of non-polymorphic instances
@@ -671,7 +830,15 @@ class ClassInstanceCountSet {
     Creates a Map of classnames and their minimum class counts
   */
   public void getInstanceCounts(int maxIter, int maxClasses) {
-    int loopStatus = -1;
+    this.statusCode = -1;
+
+    // First, check for any infinite loops
+    this.loopScores = getClassLoopScores();
+    if (loopScores.values().contains(2)) {
+      this.statusCode = 4;
+      return;
+    } 
+
     boolean noChange = false;
     int iteration = -1;
     // Run infinite loop
@@ -690,22 +857,22 @@ class ClassInstanceCountSet {
         if (inheritanceStatus == 0) {
           // Everything is in order; associations satisfied, inheritance satisfied... End algorithm
           setTrueInstanceCount();
-          loopStatus = 0;
-          break;
+          this.statusCode = 0;
+          return;
         } else if (inheritanceStatus == 1) {
           // Inheritance was not satisfied (and the required instances have been changed), continue algorithm
         } else if (inheritanceStatus == 2) {
           // Inheritance was not satisfied and is impossible, return error
-          loopStatus = 3;
-          break;
+          this.statusCode = 3;
+          return;
         }
       }
       noChange = true;
 
       // Check if we've reached max iterations
       if (iteration >= maxIter) {
-        loopStatus = 1;
-        break;
+        this.statusCode = 1;
+        return;
       }
 
       // Check if we've reached max class counts
@@ -714,8 +881,8 @@ class ClassInstanceCountSet {
         sum += n.requiredInstances;
       }
       if (sum > maxClasses) {
-        loopStatus = 2;
-        break;
+        this.statusCode = 2;
+        return;
       }
 
       for (Association assoc : umpleModel.getAssociations()) {
@@ -781,9 +948,8 @@ class ClassInstanceCountSet {
       }
     }
 
-    // Set the resulting status code
-    this.statusCode = loopStatus;
-    return;
+    // This is now unreachable - kept in case further changes are made to this function
+    // return;
   }
 
   /* 
@@ -793,9 +959,18 @@ class ClassInstanceCountSet {
     ClassInstanceCount newClassCount = new ClassInstanceCount();
     
     // Set subclasses
-    newClassCount.subClasses = new HashSet<String>();
+    newClassCount.directSubclasses = new HashSet<String>();
     for (UmpleClass subclass : umpleClass.getSubclasses()) {
-      newClassCount.subClasses.add(subclass.getName());
+      newClassCount.directSubclasses.add(subclass.getName());
+    }
+
+    // Set superclasses
+    newClassCount.directSuperclasses = new HashSet<String>();
+    for (UmpleInterface superinterface : umpleClass.getParentInterface()) {
+      newClassCount.directSuperclasses.add(superinterface.getName());
+    }
+    if (umpleClass.getExtendsClass() != null) {
+      newClassCount.directSuperclasses.add(umpleClass.getExtendsClass().getName());
     }
     
     // Set instance count and maximum instance count
@@ -824,14 +999,14 @@ class ClassInstanceCountSet {
     ClassInstanceCount newClassCount = new ClassInstanceCount();
 
     // Set subclasses 
-    // Horribly inefficient: We have to search every class and interface to see which ones inherit
-    newClassCount.subClasses = new HashSet<String>();
+    // Horribly inefficient: We are searching every class and interface to see which ones inherit
+    newClassCount.directSubclasses = new HashSet<String>();
     // Loop through all interfaces to see which ones extend this interface
     for (UmpleInterface umpInt : umpleModel.getUmpleInterfaces()) {
       for (UmpleInterface extendedInt : umpInt.getExtendsInterface()) {
         // If the interface extends, add it to the subclass list
         if (extendedInt.getName().equals(umpleInterface.getName())) {
-          newClassCount.subClasses.add(umpInt.getName());
+          newClassCount.directSubclasses.add(umpInt.getName());
         }
       }
     }
@@ -840,9 +1015,15 @@ class ClassInstanceCountSet {
       for (UmpleInterface extendedInt : umpClass.getParentInterface()) {
         // If the interface extends, add it to the subclass list
         if (extendedInt.getName().equals(umpleInterface.getName())) {
-          newClassCount.subClasses.add(umpClass.getName());
+          newClassCount.directSubclasses.add(umpClass.getName());
         }
       }
+    }
+
+    // Set superclasses
+    newClassCount.directSuperclasses = new HashSet<String>();
+    for (UmpleInterface superinterface : umpleInterface.getExtendsInterface()) {
+      newClassCount.directSuperclasses.add(superinterface.getName());
     }
 
     // Set instance count and maximum instance count
@@ -852,30 +1033,6 @@ class ClassInstanceCountSet {
     // Add to the map
     this.instances.put(umpleInterface.getName(), newClassCount);
   }
-
-  /* 
-  // Initialize the counting object for an UmpleTrait.
-  // Use this if we are representing UmpleTraits as an abstract class
-  private void initializeTraitCount(UmpleTrait umpleTrait) {
-    ClassInstanceCount newClassCount = new ClassInstanceCount();
-    
-    // Set subclasses
-    newClassCount.subClasses = new HashSet<String>();
-    for (UmpleClass subclass : umpleTrait.getSubClasses()) {
-      newClassCount.subClasses.add(subclass.getName());
-    }
-    for (UmpleTrait subtrait : umpleTrait.getSubTraits()) {
-      newClassCount.subClasses.add(subtrait.getName());
-    }
-
-    // Set instance count and maximum instance count
-    newClassCount.requiredInstances = 0;
-    newClassCount.maximumInstanceCount = 0;
-   
-    // Add to the map
-    this.instances.put(umpleTrait.getName(), newClassCount);
-  }
-  */
 
   // Set each class initially to a constant amount of instances
   public void initializeClassCountsConstant(Integer constInt) {
