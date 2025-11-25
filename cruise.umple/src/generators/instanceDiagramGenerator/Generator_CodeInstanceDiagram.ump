@@ -107,32 +107,6 @@ class InstanceDiagramGenerator
     
     // Run the instance count algorithm
     classInstanceResult.getInstanceCounts(suboptionMaxIterations, suboptionMaxClassCount);
-    
-    // TODO: Output errors properly
-    if (classInstanceResult.statusCode == 1) {
-      outputCode += "Reached maximum iterations. Ensure that the system is instantiable and non-infinite";
-      model.setCode(outputCode);
-      writeModelToFile();
-      return;
-    } else if (classInstanceResult.statusCode == 2) {
-      outputCode += "Reached maximum class count. Ensure that the system is instantiable and non-infinite";
-      model.setCode(outputCode);
-      writeModelToFile();
-      return;
-    } else if (classInstanceResult.statusCode == 3) {
-      outputCode += "Inheritance unresolvable. Ensure that all abstract/interface classes have concrete implementations that can be instantiated";
-      model.setCode(outputCode);
-      writeModelToFile();
-      return;
-    } else if (classInstanceResult.statusCode == 4) {
-      outputCode += "Infinite loop detected. Instantiating the following classes will lead to an infinite number of instances: ";
-      for (String classname : classInstanceResult.loopScores.keySet()) {
-        outputCode += "\n" + classname;
-      }
-      model.setCode(outputCode);
-      writeModelToFile();
-      return;
-    }
 
     // Get class count result
     Map<String, Integer> minInstance = classInstanceResult.getInstanceCountMap();
@@ -145,6 +119,36 @@ class InstanceDiagramGenerator
 
     // Output basic gv file header
     _graphStart(0,code);
+
+    // TODO: Output errors properly
+    if (classInstanceResult.statusCode != 0){
+      outputCode += "message [label =\"";
+      if (classInstanceResult.statusCode == 1) {
+        outputCode += "Reached maximum iterations. Ensure that the system is instantiable and non-infinite";
+
+      } else if (classInstanceResult.statusCode == 2) {
+        outputCode += "Reached maximum class count. Ensure that the system is instantiable and non-infinite";
+
+      } else if (classInstanceResult.statusCode == 3) {
+        outputCode += "Inheritance unresolvable. Ensure that all abstract/interface classes have concrete implementations that can be instantiated";
+
+      } else if (classInstanceResult.statusCode == 4) {
+        outputCode += "Infinite loop detected. Instantiating the following classes will lead to an infinite number of instances: ";
+        for (String classname : classInstanceResult.loopScores.keySet()) {
+          outputCode += "\n" + classname;
+        }
+
+      }
+
+      outputCode += "\"];";
+
+      code.append(outputCode);
+
+      terminateCode(code, associations);
+      return;
+    }
+   
+
 
     //gets the desired separator value. Graphviz default is 0.5 but for Umple we use 1.0 for 'normal'
     double sepVal = getSuboptionValue("gvseparator", 1.0); 
