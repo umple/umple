@@ -1,0 +1,9 @@
+generate InstanceDiagram;
+
+class A{
+  1 -- 1000 B;
+}
+
+class B{
+
+}
