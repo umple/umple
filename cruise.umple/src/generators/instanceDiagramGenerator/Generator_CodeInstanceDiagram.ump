@@ -78,6 +78,7 @@ class InstanceDiagramGenerator
   UmpleModel model = null;
   String outputCode = "";
   Random attributeRandomGen = new Random(67); // Set the seed used for the generation of random attributes
+  Map<String, String> instanceIdtoInstanceName = new HashMap<String, String>();
   
   // Meta variables - These should be passed as suboptions
   int suboptionLinkingFlag = 2; // 2 is Random
@@ -108,19 +109,13 @@ class InstanceDiagramGenerator
     // Run the instance count algorithm
     classInstanceResult.getInstanceCounts(suboptionMaxIterations, suboptionMaxClassCount);
 
-    // Get class count result
-    Map<String, Integer> minInstance = classInstanceResult.getInstanceCountMap();
-    // Get associations from the class count
-    ArrayList<AssociationLinkSet> actualLinks = classInstanceResult.distributeAssociations(suboptionLinkingFlag);
-
-
     StringBuilder code = new StringBuilder();           // part of the gv file with the node/classes
     StringBuilder associations = new StringBuilder();   // part of the gv file with all the associations
 
     // Output basic gv file header
     _graphStart(0,code);
 
-    // TODO: Output errors properly
+
     if (classInstanceResult.statusCode != 0){
       outputCode += "message [label =\"";
       if (classInstanceResult.statusCode == 1) {
@@ -147,7 +142,12 @@ class InstanceDiagramGenerator
       terminateCode(code, associations);
       return;
     }
-   
+
+
+    // Get class count result
+    Map<String, Integer> minInstance = classInstanceResult.getInstanceCountMap();
+    // Get associations from the class count
+    ArrayList<AssociationLinkSet> actualLinks = classInstanceResult.distributeAssociations(suboptionLinkingFlag);
 
 
     //gets the desired separator value. Graphviz default is 0.5 but for Umple we use 1.0 for 'normal'
@@ -262,6 +262,9 @@ class InstanceDiagramGenerator
         // if the first attribute is called "name" and is type String
       } else if (firstAttributeName.toLowerCase().equals("name") && firstAttribute.getType().equals("String")){
         firstAttributeInstanceName = createRandomAttributeValue(firstAttribute);
+
+        instanceIdtoInstanceName.put(className + iteration, firstAttributeInstanceName);
+
         instanceName = firstAttributeInstanceName + ": " + className;
       } else{
         instanceName = className + iteration + ": " + className;
@@ -435,13 +438,19 @@ public String randomStringGen(){
   }
 
   public void AssociationCreate(Association uAssoc, StringBuilder associations, String left, String right, String leftRoleName, String rightRoleName){
-    AssociationEnd leftEnd = uAssoc.getEnd(0);
-    AssociationEnd rightEnd = uAssoc.getEnd(1);
-    String leftClass = leftEnd.getClassName();
-    String rightClass = rightEnd.getClassName();
+    
+    String leftName = left;
+    String rightName = right;
+
+    if (instanceIdtoInstanceName.containsKey(left)){
+      leftName = instanceIdtoInstanceName.get(left);
+    }
+    if (instanceIdtoInstanceName.containsKey(right)){
+      rightName = instanceIdtoInstanceName.get(right);
+    }
 
     String[] arrows = SuperGvGenerator.retArrows(uAssoc);
-    String toolTip = leftClass + " " + leftRoleName + " " + arrows[1] + " " + rightRoleName + " " + rightClass;
+    String toolTip = leftName + " " + leftRoleName + " " + arrows[1] + " " + rightRoleName + " " + rightName;
     associations.append(SuperGvGenerator.twoLabelAssociation(left, right, arrows[0], rightRoleName, leftRoleName, toolTip));
   }
 
