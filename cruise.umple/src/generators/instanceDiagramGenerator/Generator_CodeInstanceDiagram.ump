@@ -635,23 +635,26 @@ class ClassInstanceCountSet {
 
   /*
     Perform DFS to determine if a class is a looping class.
-    Recursive function to traverse across associations looking for >=1 multiplicity cycles on a given class
+    Recursive function to traverse across associations looking for >1 multiplicity cycles on a given class
 
-    A cycle >=1 that links back to the original class will by definition create an infinite loop.
-    A cycle >=1 that links back to the superclass might create an infinite loop (but not guaranteed since a different subclass can be instantiated instead)
+    A cycle >1 that links back to the original class will by definition create an infinite loop.
+    A cycle >=1 that links back to the superclass or the original class might create an infinite loop (but not guaranteed)
+        - Note: This is because if an abstract class doesnt have enough instances, it will try to increase any subclasses.
 
     "stopSuperclasses" and "stopClassname" are the base cases which never change between branches of the search.
     "thisClassname", "multiplicityProduct", and "visited" will change between branches of the search.
   
-    Returns 0 (if there are no >= 1 cycles associated with this class)
-    Returns 1 (if there is a >=1 cycle associated with any superclass)
-    Returns 2 (if there is a >=1 cycle associated with this class)
+    Returns 0 if the class is safe - (if there are no >= 1 cycles associated with this class or superclasses)
+    Returns 1 if the class is unsafe - (if there is a >=1 cycle associated with any superclass or itself)
+    Returns 2 if the class is infinite - (if there is a >1 cycle associated with this class)
   */
   private int traverseClassAssociations(Set<String> stopSuperclasses, String stopClassname, String thisClassname, double multiplicityProduct, Set<String> visitedAssociations) {    
     // Base case 1: There is a cycle to this class
     if (thisClassname.equals(stopClassname) && visitedAssociations.size() > 0) {
-      if (multiplicityProduct >= 1) {
+      if (multiplicityProduct > 1) {
         return 2;
+      } else if (multiplicityProduct == 1) {
+        return 1;
       } else {
         return 0;
       }
@@ -753,7 +756,7 @@ class ClassInstanceCountSet {
 
     // In order to prevent infinite instantiation loops, we will only take the "safe" subclasses
     // "Safe" subclasses do not have associations that cycle back to themselves or their superclasses with a multiplicity >=1
-    // This ensures that if they are instantiated, they cannot create more than 1 instance of themselves
+    // This ensures that if they are instantiated, it will not loop back and require even more instances
     Set<String> unsafeClasses = new HashSet<>();
     for (Map.Entry<String, Integer> loopScore : loopScores.entrySet()) {
       if (loopScore.getValue() == 1) {
