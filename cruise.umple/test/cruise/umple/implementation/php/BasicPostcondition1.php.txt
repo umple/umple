@@ -46,21 +46,5 @@ class Client
   public function delete()
   {}
 
-  public function someMethod($arg)
-  {
-    $result = someMethodOriginal($arg);
-    if ($this->arg<=5)
-    {
-        throw new RuntimeException("Please provide a valid arg");
-    }
-    return $result;
-  }
-
-  public function someMethodOriginal($arg)
-  {
-    // rest of stuff that we don't interpret
-   return 0;
-  }
-
 }
 ?>
