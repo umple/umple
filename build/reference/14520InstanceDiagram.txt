@@ -1,0 +1,22 @@
+Instance Diagram
+Generators
+noreferences
+@@description
+<p>
+Given a class diagram described in umple the instance diagram generator will create a valid random instance diagram from the class diagram.</p>
+
+<br/>
+
+<p><b> Instance names and ids</b></p>
+
+<p>If the first attribute of a class is a String name then the name of the instance will be match the randomly generated attribute value.</p>
+<p>If the first attribute of a class is id or ends in Id (case sensitive such as productId and not cupid) the instance name will be className + id</p>
+
+<p><b> Possible Errors</b></p>
+
+ <ul>
+  <li>1. Reached maximum iterations. Ensure that the system is instantiable and non-infinite</li>
+  <li>2. Reached maximum class count. Ensure that the system is instantiable and non-infinite</li>
+  <li>3. Inheritance unresolvable. Ensure that all abstract/interface classes have concrete implementations that can be instantiated</li>
+  <li>4. Infinite loop detected. Instantiating the following classes will lead to an infinite number of instances: (list of classes)</li>
+</ul> 
