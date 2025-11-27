@@ -1,8 +1,0 @@
- /*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language! */
-  
-  digraph InstanceDiagram {
-    node [shape=rectangle]
-    edge [arrowhead=none]
-  
-  // All associations
-}

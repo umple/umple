@@ -23,17 +23,23 @@ public class GvInstanceDiagramGeneratorTest extends TemplateTest
   public void tearDown()
   {
     super.tearDown();
-    //SampleFileWriter.destroy(pathToInput + "/gv/TooManyAssociationscid.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/TooManyAssociationscid.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/InheritanceErrorOnecid.gv");
   }
 
-  /*
 
   @Test
-  public void tooltips_for_attributes()
+  public void max_Class_Count_Error()
   {
-    language = null;
     assertUmplePartialTemplateFor("gv/TooManyAssociations.ump","gv/TooManyAssociations.gv.txt");
-    
-  }*/
-  
+
+  }
+
+  @Test
+  public void inheritance_Error_one()
+  {
+    assertUmplePartialTemplateFor("gv/InheritanceErrorOne.ump","gv/InheritanceErrorOne.gv.txt");
+
+  }
+
 }

@@ -3,6 +3,6 @@
   digraph InstanceDiagram {
     node [shape=rectangle]
     edge [arrowhead=none]
-  message [label ="Reached maximum class count. Ensure that the system is instantiable and non-infinite"];
+  message [label ="Inheritance unresolvable. Ensure that all abstract/interface classes have concrete implementations that can be instantiated"];
   // All associations
 }
