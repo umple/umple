@@ -92,7 +92,7 @@ class SampleFileWriter
           foundMatch = true;
         }
       } 
-      while (expectedLine != null);
+      while (expectedLine != null && actualLine != null);
     }
     catch (Exception e)
     {
