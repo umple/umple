@@ -1,6 +1,7 @@
 generate InstanceDiagram;
 
 class A{
+  singleton;
   1 -- 1000 B;
 }
 
