@@ -31,7 +31,7 @@ class InstanceDiagramGenerator
   }
 
   // Template for what will appear at the start of each graphviz file
-  graphStart(umpleVersion) <<! //This code was generated using the UMPLE <<=umpleVersion>> modeling language!
+  graphStart(umpleVersion) <<!//This code was generated using the UMPLE <<=umpleVersion>> modeling language!
   
   digraph InstanceDiagram {
     node [shape=rectangle]
