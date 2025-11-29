@@ -4,6 +4,9 @@
   digraph InstanceDiagram {
     node [shape=rectangle]
     edge [arrowhead=none]
-  message [label ="Inheritance unresolvable. Ensure that all abstract/interface classes have concrete implementations that can be instantiated"];
+  message [label ="Inheritance unresolvable. Ensure that abstract/interface classes with associations have concrete implementations that can be instantiated without creating an infinite loop
+ The following classes have no valid inheritors and could be the source of this error:
+A
+B"];
   // All associations
 }

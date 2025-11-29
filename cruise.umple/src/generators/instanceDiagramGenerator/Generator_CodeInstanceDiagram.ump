@@ -116,8 +116,9 @@ class InstanceDiagramGenerator
     // Output basic gv file header
     _graphStart(0,code);
 
+    if (classInstanceResult.statusCode != 0 || classInstanceResult.diagramIsEmpty()) {
+      // Error code outputs
 
-    if (classInstanceResult.statusCode != 0){
       outputCode += "message [label =\"";
       if (classInstanceResult.statusCode == 1) {
         outputCode += "Reached maximum iterations. Ensure that the system is instantiable and non-infinite";
@@ -126,20 +127,26 @@ class InstanceDiagramGenerator
         outputCode += "Reached maximum class count. Ensure that the system is instantiable and non-infinite";
 
       } else if (classInstanceResult.statusCode == 3) {
-        outputCode += "Inheritance unresolvable. Ensure that all abstract/interface classes have concrete implementations that can be instantiated";
-
+        outputCode += "Inheritance unresolvable. ";
+        outputCode += "Ensure that abstract/interface classes with associations have concrete implementations that can be instantiated without creating an infinite loop";
+        outputCode += "\n The following classes have no valid inheritors and could be the source of this error:";
+        for (String classname : classInstanceResult.getNoPossibleInheritance()) {
+          outputCode += "\n" + classname;
+        }
+        
       } else if (classInstanceResult.statusCode == 4) {
         outputCode += "Infinite loop detected. Instantiating the following classes will lead to an infinite number of instances: ";
         for (String classname : classInstanceResult.loopScores.keySet()) {
           outputCode += "\n" + classname;
         }
 
-      }
-
+      } else if (classInstanceResult.diagramIsEmpty()) {
+        outputCode += "Generated InstanceDiagram is empty. For random diagrams, consider trying again or setting the initial class counts to a constant";
+      
+      } 
       outputCode += "\"];";
 
       code.append(outputCode);
-
       terminateCode(code, associations);
       return;
     }
@@ -537,6 +544,16 @@ class ClassInstanceCountSet {
     return result;
   }
 
+  // Returns true if the diagram has no class instances
+  public boolean diagramIsEmpty() {
+    for (ClassInstanceCount count : instances.values()) {
+      if (count.trueInstances != 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /* 
     Recursive function to get the set of subclasses of a class in an inheritance tree
     Will add the classes to the "subclassSet" parameter
@@ -618,8 +635,12 @@ class ClassInstanceCountSet {
     }
   }
 
-  // Calculate which classes are potentially infinite looping classes.
-  // See traverseClassAssociations()
+  /* 
+    Calculate which classes are potentially infinite looping classes.
+    
+    Returns a map of class names and their looping score
+    See traverseClassAssociations() for the logic...
+  */
   public Map<String, Integer> getClassLoopScores() {
     Map<String, Integer> result = new HashMap<String, Integer>();
     for (Map.Entry<String, ClassInstanceCount> classname : this.instances.entrySet()) {
@@ -629,7 +650,6 @@ class ClassInstanceCountSet {
       } else {
         result.put(classname.getKey(), 0);
       }
-      
     }
     return result;
   }
@@ -720,6 +740,51 @@ class ClassInstanceCountSet {
   }
 
   /*
+   Get a set of abstract/interface/singleton/etc... classes that have no possible concrete subclasses for inheritance.
+
+   These classes are not necessarily errors on their own; but they can become errors.
+   Example: An abstract class with no possible inheritors, but with 0 required instances is valid.
+  */
+  public Set<String> getNoPossibleInheritance() {
+    // Create result set
+    Set<String> noPossibleInheritance = new HashSet<>();
+
+    // Get loop scores if they do not already exist
+    if (this.loopScores == null) {
+      this.loopScores = getClassLoopScores();
+    }
+    // Get the unsafe looping classes (they cannot be used for inheritance resolution)
+    Set<String> unsafeClasses = new HashSet<>();
+    for (Map.Entry<String, Integer> loopScore : loopScores.entrySet()) {
+      if (loopScore.getValue() == 1) {
+        unsafeClasses.add(loopScore.getKey());
+      }
+    }
+
+    // For each class in the model
+    for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
+      // If it has a maximum instance count
+      if (entry.getValue().maximumInstanceCount != -1) {
+
+        // Get concrete subclasses
+        Set<String> concreteSubclasses = new HashSet<>();
+        getAllSubclassesTree(entry.getKey(), concreteSubclasses, true, true);
+
+        // Remove looping subclasses
+        concreteSubclasses.removeIf(unsafeClasses::contains);
+
+        // Check if it has any subclasses remaining
+        if (concreteSubclasses.size() == 0) {
+          // Add it to the result set
+          noPossibleInheritance.add(entry.getKey());
+        }
+      }
+    }
+
+    return noPossibleInheritance;
+  }
+
+  /*
     This function handles the logic for inheritance.
 
     For every abstract-class or interface, checks if there are enough concrete subclass instances to satisfy the required amount.
@@ -758,6 +823,12 @@ class ClassInstanceCountSet {
     // In order to prevent infinite instantiation loops, we will only take the "safe" subclasses
     // "Safe" subclasses do not have associations that cycle back to themselves or their superclasses with a multiplicity >=1
     // This ensures that if they are instantiated, it will not loop back and require even more instances
+    
+    // Get loop scores if they do not already exist
+    if (this.loopScores == null) {
+      this.loopScores = getClassLoopScores();
+    }
+    // Get the unsafe classes from the loop scores
     Set<String> unsafeClasses = new HashSet<>();
     for (Map.Entry<String, Integer> loopScore : loopScores.entrySet()) {
       if (loopScore.getValue() == 1) {
@@ -857,8 +928,11 @@ class ClassInstanceCountSet {
   public void getInstanceCounts(int maxIter, int maxClasses) {
     this.statusCode = -1;
 
-    // First, check for any infinite loops
-    this.loopScores = getClassLoopScores();
+    // Get loop scores if they do not already exist
+    if (this.loopScores == null) {
+      this.loopScores = getClassLoopScores();
+    }
+    // Now check for any infinite loops using loop scores
     if (loopScores.values().contains(2)) {
       this.statusCode = 4;
       return;
