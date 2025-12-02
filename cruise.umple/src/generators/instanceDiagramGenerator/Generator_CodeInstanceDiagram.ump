@@ -81,17 +81,30 @@ class InstanceDiagramGenerator
   Random attributeRandomGen = new Random(67); // Set the seed used for the generation of random attributes
   Map<String, String> instanceIdtoInstanceName = new HashMap<String, String>();
   
-  // Meta variables - These should be passed as suboptions
+  // Meta variables - These should only be updated by suboptions
   int suboptionLinkingFlag = 2; // 2 is Random
   int suboptionInitialClassCountFlag = -1; // -1 is Random
   int suboptionMaxIterations = 100;
-  int suboptionMaxClassCount = 500;
+  int suboptionMaxClassCount = 200;
+
+  public void useSuboptions() {
+    // Set the linking mode
+    if (hasSuboption("minInstLinks")) {this.suboptionLinkingFlag = 0;}
+    if (hasSuboption("maxInstLinks")) {this.suboptionLinkingFlag = 1;}
+    if (hasSuboption("randomInstLinks")) {this.suboptionLinkingFlag = 2;}
+    // Set the initial instance count mode
+    this.suboptionInitialClassCountFlag = (int)getSuboptionValue("initialInstCount", -1.0);
+    if (hasSuboption("randomInitialInstCount")) {this.suboptionInitialClassCountFlag = -1;}
+    // Set the max iterations
+    this.suboptionMaxIterations = (int)getSuboptionValue("maxInstIterations", 100.0);
+    // Set the max instance counts
+    this.suboptionMaxClassCount = (int)getSuboptionValue("maxInstClassCount", 200.0);
+  }
 
   public void generate()
   {
-
-    // Note: The odds of a superclass remaining in the diagram is low.
-    // If we start with 1 instance of superclass and 1 of subclass, the system will assume that its 1 polymorphic instance
+    // Update meta variables based on suboptions
+    useSuboptions();
 
     // Create class instance object
     ClassInstanceCountSet classInstanceResult = new ClassInstanceCountSet(model);
