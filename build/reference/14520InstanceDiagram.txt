@@ -51,7 +51,7 @@ Given a class diagram described in umple the instance diagram generator will cre
   </li></ul>
   </li>
   <li>Infinite loop detected. Instantiating the following classes will lead to an infinite number of instances: (list of classes)<br />
-  <ul><li>The given system has multiplicities which lead to an infinite number of classes. Check the associations between the listed classes.
+  <ul><li>The given system has multiplicities which lead to an infinite number of class instances. Check the associations between the listed classes.
   </li></ul>
   </li>
   <li>Generated InstanceDiagram is empty. For random diagrams, consider trying again or setting the initial class counts to a constant<br />
