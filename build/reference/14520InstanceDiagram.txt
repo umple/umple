@@ -1,0 +1,61 @@
+Instance Diagram
+Generators
+noreferences
+@@description
+<p>
+Given a class diagram described in umple the instance diagram generator will create a valid random instance diagram from the class diagram.</p>
+
+<br/>
+
+<p><b> Instance names and ids</b></p>
+
+<p>If the first attribute of a class is a String name then the name of the instance will match the randomly generated attribute value.</p>
+<p>If the first attribute of a class is id or ends in Id (case sensitive such as productId and not cupid) the instance name will be className + id.</p>
+
+<br/>
+
+<p><b> Suboptions</b></p>
+
+ <ul>
+  <li>Instance Links: Determines the amount of links between created instances for any associations with variable multiplicities.<br />
+  <ul>
+    <li>randomInstLinks (default): Creates a random valid number of links between generated instances.</li>
+    <li>minInstLinks: Creates the minimum required number of links between generated instances based on their associations.</li>
+    <li>maxInstLinks: Creates the maximum valid number of links between generated instances.</li>
+  </ul>
+  </li>
+  <li>Initial Instance Count: Determines the number of instances to create for each concrete class.<br />
+  <ul>
+    <li>randomInitialInstCount (default): Creates a random number of initial instances for each concrete class. Instances required by associations will still be created.</li>
+    <li>initialInstCount (integer): Creates a minimum number of initial instances for each concrete class based on the passed value.</li>
+  </ul>
+  <li>maxInstIterations (integer, default: 100): Acts as a timeout for creating many instances dependent on one another. If the diagram is very large with long chains of associations, increase this suboption accordingly.</li>
+  <li>maxInstClassCount (integer, default: 200): Determines the maximum number of instances in the generated diagram.</li>
+</ul> 
+
+<br />
+
+<p><b> Possible Errors</b></p>
+
+ <ol>
+  <li>Reached maximum iterations. Ensure that the system is instantiable and non-infinite<br />
+  <ul><li>If this error occurs it is likely that the given system is too large for the given iterations. Increase the maxInstIterations if a large diagram is needed.
+  </li></ul>
+  </li>
+  <li>Reached maximum class count. Ensure that the system is instantiable and non-infinite<br />
+  <ul><li>If this error occurs the generator attempted to generate more instances than the maxInstClassCount suboption. Either decrease the size of the multiplicities or increase the suboption as needed.
+  </li></ul>
+  </li>
+  <li>Inheritance unresolvable. Ensure that all abstract/interface classes have concrete implementations that can be instantiated<br />
+  <ul><li>The given system has invalid inheritance from associations to abstract classes or interfaces which can't be instantiated.
+  </li></ul>
+  </li>
+  <li>Infinite loop detected. Instantiating the following classes will lead to an infinite number of instances: (list of classes)<br />
+  <ul><li>The given system has multiplicities which lead to an infinite number of class instances. Check the associations between the listed classes.
+  </li></ul>
+  </li>
+  <li>Generated InstanceDiagram is empty. For random diagrams, consider trying again or setting the initial class counts to a constant<br />
+  <ul><li>This occurs when randomInitialInstCount generates no instances at all, and occurs more often with small systems. Set an initialInstCount suboption or try again.
+  </ul></li>
+  </li>
+</ol> 
