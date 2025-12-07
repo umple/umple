@@ -41,10 +41,6 @@ p.pagedescription { margin-left:5px; margin-top: 10px;}
 
 /* HEADER */
 .logo { margin-top: 10px; }
-.logo img {
-  height: 64px;
-  width: auto;
-}
 .pretext { line-height: normal;}
 
 /* MAIN APPLICATION CONTAINER */
