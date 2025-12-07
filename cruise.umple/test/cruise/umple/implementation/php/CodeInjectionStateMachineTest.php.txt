@@ -60,9 +60,19 @@ class Example
 
   private function setLight($aLight)
   {
-    System.out.println("About to flip");
+    // line 14 "CodeInjectionStateMachineTest.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
+    // line 21 "CodeInjectionStateMachineTest.ump"
+    
+    // END OF UMPLE BEFORE INJECTION
     $this->light = $aLight;
-    System.out.println("Just flipped");
+    // line 10 "CodeInjectionStateMachineTest.ump"
+    
+    // END OF UMPLE AFTER INJECTION
+    // line 17 "CodeInjectionStateMachineTest.ump"
+    
+    // END OF UMPLE AFTER INJECTION
   }
 
   public function equals($compareTo)

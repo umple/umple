@@ -35,11 +35,13 @@ class Client():
         result = self.someMethod_Original(arg)
         if arg <= 5 :
             raise RuntimeError ("Please provide a valid arg")
+        if arg <= 5 :
+            raise RuntimeError ("Please provide a valid arg")
         return result
 
     def someMethod_Original(self, arg):
-        // rest of stuff that we don't interpret
-       return 0;
+        # rest of stuff that we don\'t interpret
+       return 0
 
     def __str__(self):
         return str(super().__str__()) + "[" + "minAge" + ":" + str(self.getMinAge()) + "]"

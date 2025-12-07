@@ -45,14 +45,33 @@ rule replaceConcreteMethod
         _ [getPythonParams params possibleStatic]
     construct possibleStaticDecorator [repeat decorator]
         _ [createStaticDecorator possibleStatic]
+    construct localVars [repeat id] %this is a list of local variables. needed for issue 2249
+        _ [findLocalVars each statements]
     by
-        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  statements 
-            [manageSpecialTypes params] 
-            [replaceStatements] 
+        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  statements
+            [manageSpecialTypes params]
+            [replaceStatements localVars]
             [changeKeyArgumentNameInNestedIdentifier] 
             [addFunctionImports]
             [addStrIfNeeded methodName]
 end rule
+
+% goes through the method body and makes a list of local variables
+% added for issue 2249
+function findLocalVars singleStament [statement]
+    replace [repeat id]
+        sequenceSoFar [repeat id]
+    deconstruct singleStament
+        discard [nested_identifier] assignment [value]';
+    deconstruct assignment
+        head [base_value] tail [opt value_continuation]
+    deconstruct head
+        name [nested_identifier]
+    deconstruct name
+        idName [id] rest [repeat attribute_access]
+    by
+        sequenceSoFar [. idName]
+end function
 
 %Creates a static decorator if needed. Otherwise returns empty
 function createStaticDecorator possibleStatic [opt static]
@@ -165,6 +184,7 @@ rule replaceConstructor memberVariables [repeat id]
         'self
     construct modifiedParams [list method_parameter]
         _ [translateParam each params]
+    construct emptyRepeatId [repeat id] %this is a list of local variables. not needed here so empty. Issue 2249
     construct newParams [list method_parameter]
         selfParam [, modifiedParams] [changeKeyArgumentNames]
     by
@@ -172,7 +192,7 @@ rule replaceConstructor memberVariables [repeat id]
             statements 
                 [addNoneAssignments each memberVariables] 
                 [manageSpecialTypes params] 
-                [replaceStatements] 
+                [replaceStatements emptyRepeatId] 
                 [changeKeyArgumentNameInNestedIdentifier]
                 [addFunctionImports]
 end rule
