@@ -1,9 +1,32 @@
 body { 
   background-color:White; overflow: auto; overflow-y: scroll; margin-left: 10px;
   margin-top: 10px; margin-right: 9px; margin-bottom: 10px; font-family: Verdana, Arial, Helvetica, sans-serif;
+  color-scheme: light;
 }
 p, ol, ul, div, h1, h2, h3, h4, b { 
    font-size: 10pt; color: #000000; 
+}
+
+.theme-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 9pt;
+  color: #000;
+}
+
+.theme-mode-toggle label {
+  font-weight: bold;
+}
+
+.theme-mode-select {
+  font-size: 9pt;
+  padding: 2px 6px;
+  border: 1px solid #777;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #000;
+  cursor: pointer;
 }
 
 .ui-tooltip {

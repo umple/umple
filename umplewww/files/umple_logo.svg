@@ -1,0 +1,12 @@
+<svg width="313" height="169" viewBox="0 0 504 200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" overflow="hidden">
+  <g transform="translate(-495 -692)">
+    <g>
+      <text fill="#6D7983" fill-opacity="1" font-family="Abadi MT Condensed Light,Abadi MT Condensed Light_MSFontService,sans-serif" font-style="normal" font-variant="normal" font-weight="300" font-stretch="condensed" font-size="110" text-anchor="start" direction="ltr" writing-mode="lr-tb" unicode-bidi="normal" text-decoration="none" transform="matrix(1 0 0 1 721.875 887)">MPLE</text>
+      <path d="M502.917 889C499.097 889 496 885.903 496 882.083L496 859.917C496 856.097 499.097 853 502.917 853L686.083 853C689.903 853 693 856.097 693 859.917L693 882.083C693 885.903 689.903 889 686.083 889Z" fill="#636D77" fill-rule="evenodd" fill-opacity="1"/>
+      <path d="M495 704.184C495 698.56 499.56 694 505.184 694L537.816 694C543.441 694 548 698.56 548 704.184L548 878.816C548 884.44 543.441 889 537.816 889L505.184 889C499.56 889 495 884.44 495 878.816Z" fill="#8F001A" fill-rule="evenodd" fill-opacity="1"/>
+      <path d="M639 704.376C639 698.646 643.646 694 649.376 694L682.624 694C688.354 694 693 698.646 693 704.376L693 878.624C693 884.354 688.354 889 682.624 889L649.376 889C643.646 889 639 884.354 639 878.624Z" fill="#636D77" fill-rule="evenodd" fill-opacity="1"/>
+      <path d="M639 853 649.376 853 662.271 853 669.73 853 682.624 853 693 853 693 859.917 693 871.585 693 882.083C693 885.903 688.354 889 682.624 889L669.73 889 649.376 889 639 889 639 882.083 639 859.917Z" fill="#8F001A" fill-rule="evenodd" fill-opacity="1"/>
+      <path d="M548 836 548 846.184 548 858.84 548 866.16 548 878.816 548 889 537.816 889 520.638 889 505.184 889C499.56 889 495 884.44 495 878.816L495 866.16 495 846.184 495 836 505.184 836 537.816 836Z" fill="#8F001A" fill-rule="evenodd" fill-opacity="1"/>
+    </g>
+  </g>
+</svg>

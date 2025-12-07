@@ -37,6 +37,13 @@ digraph "<<=filename>>" {
     // Output basic gv file header
     _graphStart(0,code,model.getUmpleFile().getSimpleFileName());
 
+    // Apply dark theme conditionally based on suboption
+    if (hasSuboption("gvdark")) {
+      code.append("bgcolor=\"#181818\";");
+      code.append("node [ fontcolor = \"#e6e6e6\", style = filled, color = \"#e6e6e6\", fillcolor = \"#333333\" ];");
+      code.append("edge [ color = \"#e6e6e6\", fontcolor = \"#e6e6e6\" ];");
+    }
+
     // Set of classes we are visiting
     // We always visit from the top of the hierarchy first
     // This set ensures we track what we have visited
