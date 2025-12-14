@@ -987,6 +987,23 @@ $output = $dataHandle->readData('model.ump');
             <li id="ttAllowPinch">
               <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
               <a id="labelAllowPinch" class="buttonExtend">Pinch to Zoom</a>               
+            </li>
+            <li id="ttAiApiKey" style="margin-top: 10px; padding: 5px 0;">
+              <label for="selectAiProvider">AI Provider:</label>
+              <select id="selectAiProvider" class="button">
+                <option value="openai">OpenAI</option>
+                <option value="anthropic">Anthropic</option>
+                <option value="google">Google</option>
+                <option value="openrouter">OpenRouter</option>
+              </select>
+              <label for="inputAiApiKey" style="margin-top: 8px; display: block;">API Key:</label>
+              <input id="inputAiApiKey" type="password" placeholder="Enter your API key" style="width: 134px; margin-bottom: 5px; display: block;"/>
+              <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" value="Verify API Key" role="button">Verify API Key</div>
+              <div id="apiKeyStatus" style="margin-top: 5px; min-height: 15px;"></div>
+              <label for="selectAiModel" style="display: none; margin-top: 8px;" id="labelAiModel">Model:</label>
+              <select id="selectAiModel" class="button" style="display: none;">
+                <option value="">Loading models...</option>
+              </select>
             </li> 
           </ul>
          </div>
