@@ -13,6 +13,11 @@ cat \
  inlineeditor.js \
  dropbox/*.js \
  umple_*.js \
+ ai/core/umple_ai_*.js \
+ ai/providers/umple_ai_*.js \
+ ai/ui/umple_*.js \
+ ai/features/umple_ai_*.js \
+ ai/features/requirements/umple_ai_*.js \
  structureDiagram.js \
  statetable/state_table_colourer.js \
  | yuicompressor --type js --line-break 132 > allumple-min.js

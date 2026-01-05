@@ -582,6 +582,7 @@ $output = $dataHandle->readData('model.ump');
     <a id="GenJavaButton" class="button2" href="javascript:Action.generateCode('java','Java');">Generate Java</a>&nbsp;
     </span>    
 
+
     <!-- disabling the save as URL feature and activating collaboration feature-->
     <!--
     <span style="font-size: 30%; white-space:nowrap;">
@@ -988,23 +989,6 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
               <a id="labelAllowPinch" class="buttonExtend">Pinch to Zoom</a>               
             </li>
-            <li id="ttAiApiKey" style="margin-top: 10px; padding: 5px 0;">
-              <label for="selectAiProvider">AI Provider:</label>
-              <select id="selectAiProvider" class="button">
-                <option value="openai">OpenAI</option>
-                <option value="anthropic">Anthropic</option>
-                <option value="google">Google</option>
-                <option value="openrouter">OpenRouter</option>
-              </select>
-              <label for="inputAiApiKey" style="margin-top: 8px; display: block;">API Key:</label>
-              <input id="inputAiApiKey" type="password" placeholder="Enter your API key" style="width: 134px; margin-bottom: 5px; display: block;"/>
-              <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" value="Verify API Key" role="button">Verify API Key</div>
-              <div id="apiKeyStatus" style="margin-top: 5px; min-height: 15px;"></div>
-              <label for="selectAiModel" style="display: none; margin-top: 8px;" id="labelAiModel">Model:</label>
-              <select id="selectAiModel" class="button" style="display: none;">
-                <option value="">Loading models...</option>
-              </select>
-            </li> 
           </ul>
          </div>
 
@@ -1045,6 +1029,34 @@ $output = $dataHandle->readData('model.ump');
           </ul>
 
 
+      </div>
+
+      <!-- AI SECTION -->
+      <h3><a href="#ai">AI</a></h3>
+      
+      <div class="section">
+        <ul class="first center-children">
+          <li id="ttAiStatus">
+            <div class="ai-status-row" id="buttonAiSettings" role="button" tabindex="0" title="Configure AI Settings">
+              <svg class="ai-settings-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <span id="aiStatusText" class="ai-status-text">Not configured</span>
+              <span id="aiStatusIndicator" class="ai-status-indicator not-ready" title="AI not configured">●</span>
+            </div>
+          </li>
+        </ul>
+        
+        <ul class="second center-children">
+          <li class="subtitle">Generate</li>
+          <li id="ttGenerateFromReq">
+            <div id="buttonGenerateFromReq" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button" onclick="AiRequirements.showDialog()">By Requirements</div>
+          </li>
+          <li id="ttExplain">
+            <div id="buttonExplain" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button" onclick="AiExplain.showDialog()">Explain</div>
+          </li>
+        </ul>
       </div>
 
       </div> 
@@ -1127,6 +1139,49 @@ $output = $dataHandle->readData('model.ump');
     </div>
   <?php } ?>
 
+  <!-- AI Settings Modal (hidden by default) -->
+  <div id="aiSettingsModal" class="ai-settings-modal" style="display: none;">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3>AI Settings</h3>
+      <div class="ai-settings-form">
+        <div class="setting-row">
+          <label for="selectAiProvider">Provider:</label>
+          <select id="selectAiProvider" class="button">
+            <option value="" selected>Select provider...</option>
+            <option value="openai">OpenAI</option>
+            <option value="anthropic">Anthropic</option>
+            <option value="google">Google</option>
+            <option value="openrouter">OpenRouter</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <label for="inputAiApiKey">API Key:</label>
+          <!-- Hidden dummy field to prevent browser password autofill -->
+          <input type="password" style="position: absolute; left: -9999px; opacity: 0;" tabindex="-1" autocomplete="new-password"/>
+          <div class="api-key-input-wrapper">
+            <input id="inputAiApiKey" type="password" placeholder="Enter API key" autocomplete="new-password" data-form-type="other" class="button api-key-input"/>
+            <button type="button" id="toggleApiKeyVisibility" class="api-key-toggle" tabindex="0">
+              <span class="eye-icon">👁</span>
+            </button>
+          </div>
+        </div>
+        <div class="setting-row setting-row-button">
+          <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Verify Key</div>
+          <div id="apiKeyStatus" style="margin-top: 3px; font-size: 9pt;"></div>
+        </div>
+        <div id="ttAiModel" class="setting-row" style="display: none;">
+          <label for="selectAiModel">Model:</label>
+          <select id="selectAiModel" class="button">
+            <option value="">Select model...</option>
+          </select>
+        </div>
+      </div>
+      <div class="dialog-buttons">
+        <div id="btnCloseAiSettings" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Close</div>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

@@ -98,6 +98,20 @@ document.write('<script type="text/javascript" src="scripts/dropbox/dropbox.js">
 document.write('<script type="text/javascript" src="scripts/dropbox/chooser.js"></script>');
 document.write('<script type="text/javascript" src="scripts/dropbox/saver.js"></script>');
 
+// AI modules
+document.write('<script type="text/javascript" src="scripts/ai/config/umple_ai_config.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_errors.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_storage.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_providers.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_key_manager.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/ui/umple_dialog.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/ui/umple_ai_ui.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements_parser.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_prompt_builder.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/explain/umple_ai_prompt_builder.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/explain/umple_ai_explain.js"></script>');
+
 //Umple System
 document.write('<script type="text/javascript" src="scripts/umple_page.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_layout.js"></script>');
@@ -116,7 +130,6 @@ document.write('<script type="text/javascript" src="scripts/umple_restore.js"></
 document.write('<script type="text/javascript" src="scripts/umple_action_diagram.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tooltips.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tab_control.js"></script>');
-document.write('<script type="text/javascript" src="scripts/umple_ai_key_manager.js"></script>');
 // The following script includes configuration file for collab_server
 // where serverURL and path have to be set to connect specific instance of a collaboration server
 document.write('<script type="text/javascript" src="scripts/collab-server-config.js"></script>')
