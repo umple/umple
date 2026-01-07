@@ -12,7 +12,8 @@ document.write('<link href="scripts/jquery/jquery-ui-1.13.2.min.css" rel="styles
 
 // Syntax highlighter
 document.write('<link href="scripts/shCore.css" rel="stylesheet" type="text/css" />');
-document.write('<link href="scripts/shThemeDefault.css" rel="stylesheet" type="text/css" />');
+document.write('<link href="scripts/shThemeDefault.css" rel="stylesheet" type="text/css" id="shThemeDefault" />');
+document.write('<link href="scripts/shThemeMidnight.css" rel="stylesheet" type="text/css" id="shThemeMidnight" disabled />');
 
 // Code mirror
 document.write('<link href="scripts/CodeMirror/lib/codemirror.css" rel="stylesheet" type="text/css" />');

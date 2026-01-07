@@ -1,0 +1,149 @@
+/* Unified Javadoc theme: supports system, dark and light modes.
+   - System: via @media (prefers-color-scheme: dark)
+   - Explicit dark: via html[data-theme="dark"] variable set and tweaks
+   - Explicit light: via html[data-theme="light"] variable set
+*/
+
+/* Explicit DARK selection (via data-theme) */
+html[data-theme="dark"] {
+  --body-text-color: #e5e7eb;
+  --block-text-color: #d1d5db;
+  --body-background-color: #0b0f14;
+  --section-background-color: #0f141a;
+  --detail-background-color: #0b0f14;
+  --navbar-background-color: #111827;
+  --navbar-text-color: #e5e7eb;
+  --subnav-background-color: #1f2937;
+  --selected-background-color: #2563eb;
+  --selected-text-color: #e5e7eb;
+  --selected-link-color: #93c5fd;
+  --even-row-color: #0e141a;
+  --odd-row-color: #111821;
+  --title-color: #cbd5e1;
+  --link-color: #8ab4f8;
+  --link-color-active: #b3d4ff;
+  --snippet-background-color: #0f1115;
+  --snippet-text-color: #e5e7eb;
+  --snippet-highlight-color: #3b82f6;
+  --border-color: #263241;
+  --table-border-color: #334155;
+  --search-input-background-color: #0b0f14;
+  --search-input-text-color: #e5e7eb;
+  --search-input-placeholder-color: #94a3b8;
+  --search-tag-highlight-color: #3f6212;
+  --copy-icon-brightness: 200%;
+  --copy-button-background-color-active: rgba(255, 255, 255, 0.08);
+}
+
+/* Legacy tweaks for explicit dark */
+html[data-theme="dark"] body,
+html[data-theme="dark"] .top-nav,
+html[data-theme="dark"] .sub-nav,
+html[data-theme="dark"] .summary,
+html[data-theme="dark"] .details,
+html[data-theme="dark"] .indexContainer,
+html[data-theme="dark"] .contentContainer,
+html[data-theme="dark"] .memberSummary,
+html[data-theme="dark"] .overviewSummary,
+html[data-theme="dark"] .serializedFormContainer {
+  background-color: var(--body-background-color) !important;
+  color: var(--body-text-color) !important;
+}
+html[data-theme="dark"] a { color: var(--link-color); }
+html[data-theme="dark"] a:hover { color: var(--link-color-active); }
+html[data-theme="dark"] pre,
+html[data-theme="dark"] code,
+html[data-theme="dark"] .member-signature {
+  background-color: #0f1115 !important;
+  color: var(--snippet-text-color) !important;
+  border-color: var(--border-color) !important;
+}
+html[data-theme="dark"] hr,
+html[data-theme="dark"] .horizontal,
+html[data-theme="dark"] .inherited-list {
+  border-color: var(--border-color) !important;
+}
+
+/* Explicit LIGHT selection (via data-theme) */
+html[data-theme="light"] {
+  --body-text-color: #353833;
+  --block-text-color: #474747;
+  --body-background-color: #ffffff;
+  --section-background-color: #f8f8f8;
+  --detail-background-color: #ffffff;
+  --navbar-background-color: #4D7A97;
+  --navbar-text-color: #ffffff;
+  --subnav-background-color: #dee3e9;
+  --selected-background-color: #f8981d;
+  --selected-text-color: #253441;
+  --selected-link-color: #1f389c;
+  --even-row-color: #ffffff;
+  --odd-row-color: #eeeeef;
+  --title-color: #2c4557;
+  --link-color: #4A6782;
+  --link-color-active: #bb7a2a;
+  --snippet-background-color: #ebecee;
+  --snippet-text-color: var(--block-text-color);
+  --snippet-highlight-color: #f7c590;
+  --border-color: #ededed;
+  --table-border-color: #000000;
+  --search-input-background-color: #ffffff;
+  --search-input-text-color: #000000;
+  --search-input-placeholder-color: #909090;
+  --search-tag-highlight-color: #ffff00;
+  --copy-icon-brightness: 100%;
+  --copy-button-background-color-active: rgba(168, 168, 176, 0.3);
+}
+
+/* System preference: apply dark variables when system is dark */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --body-text-color: #e5e7eb;
+    --block-text-color: #d1d5db;
+    --body-background-color: #0b0f14;
+    --section-background-color: #0f141a;
+    --detail-background-color: #0b0f14;
+    --navbar-background-color: #111827;
+    --navbar-text-color: #e5e7eb;
+    --subnav-background-color: #1f2937;
+    --selected-background-color: #2563eb;
+    --selected-text-color: #e5e7eb;
+    --selected-link-color: #93c5fd;
+    --even-row-color: #0e141a;
+    --odd-row-color: #111821;
+    --title-color: #cbd5e1;
+    --link-color: #8ab4f8;
+    --link-color-active: #b3d4ff;
+    --snippet-background-color: #0f1115;
+    --snippet-text-color: #e5e7eb;
+    --snippet-highlight-color: #3b82f6;
+    --border-color: #263241;
+    --table-border-color: #334155;
+    --search-input-background-color: #0b0f14;
+    --search-input-text-color: #e5e7eb;
+    --search-input-placeholder-color: #94a3b8;
+    --search-tag-highlight-color: #3f6212;
+    --copy-icon-brightness: 200%;
+    --copy-button-background-color-active: rgba(255, 255, 255, 0.08);
+    --nav-font-size: 13.2px;
+  }
+
+  /* Legacy tweaks for system dark */
+  body, .top-nav, .sub-nav, .summary, .details, .indexContainer, .contentContainer,
+  .memberSummary, .overviewSummary, .serializedFormContainer {
+    background-color: var(--body-background-color) !important;
+    color: var(--body-text-color) !important;
+  }
+  a { color: var(--link-color); }
+  a:hover { color: var(--link-color-active); }
+  pre, code, .member-signature {
+    background-color: #0f1115 !important;
+    color: var(--snippet-text-color) !important;
+    border-color: var(--border-color) !important;
+  }
+  hr, .horizontal, .inherited-list {
+    border-color: var(--border-color) !important;
+  }
+}
+
+

@@ -230,7 +230,16 @@ else if (isset($_REQUEST["umpleCode"]))
     $Uigu2 = True;
     $htmlContents = True;
   }
-  
+
+  $graphvizDarkMode = false;
+  // Handle dark theme for Graphviz generators (class, state, feature, entityRelationship diagrams)
+  // If theme parameter is 'dark' and it's a Graphviz generator (starts with "Gv"), add gvdark suboption
+  if (isset($_REQUEST['theme']) && $_REQUEST['theme'] === 'dark' && strpos($language, 'Gv') === 0)
+  {
+    $suboptions = $suboptions . " -s gvdark";
+    $graphvizDarkMode = true;
+  }
+
   if ($languageStyle == "html")
   {
      $htmlContents = true;
@@ -397,6 +406,11 @@ else if (isset($_REQUEST["umpleCode"]))
   // Took off 1> {$outputFilename}  in two commands above
   $resultFromCommand = executeCommand($command);
 
+  if ($graphvizDarkMode && ($stateDiagram || $classDiagram || $featureDiagram || $entityRelationshipDiagram))
+  {
+    applyGraphvizDarkThemeFiles($thedir, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram);
+  }
+
   $dataHandle->writeData(basename($outputFilename), $resultFromCommand);
   //exec("( ulimit -t 10; " . $command . ")");
   
@@ -462,15 +476,77 @@ else if (isset($_REQUEST["umpleCode"]))
            if($foundresult != FALSE) $html = $html . "<br/><b>".$foundresult."</b>\n";
          }
        }
-       else {
-         exec("cd $thedir; rm javadocFromUmple.zip; zip -r javadocFromUmple javadoc");
-       
+      else {
+        // Append unified theme stylesheet; optionally add :root override for explicit modes
+        $themeMode = isset($_REQUEST['theme']) ? $_REQUEST['theme'] : null; // 'light' | 'dark' | 'system'
+        $themeCssPath = __DIR__ . "/javadoc-theme.css";
+        $appendCss = '';
+        $rootOverride = '';
+        
+        if (file_exists($themeCssPath)) {
+          $themeCssContent = file_get_contents($themeCssPath);
+          $appendCss = $themeCssContent;
+          
+          // Extract CSS from javadoc-theme.css for :root override (convert html[data-theme] to :root)
+          if ($themeMode === 'dark') {
+            // Extract html[data-theme="dark"] block content
+            if (preg_match('/html\[data-theme="dark"\]\s*\{([^}]+)\}/s', $themeCssContent, $matches)) {
+              $rootOverride = ":root {\n" . trim($matches[1]) . "\n}\n";
+            }
+            // Extract legacy tweaks for dark - get everything until next comment or section
+            $startPos = strpos($themeCssContent, '/* Legacy tweaks for explicit dark */');
+            if ($startPos !== false) {
+              $startPos += strlen('/* Legacy tweaks for explicit dark */');
+              $endPos = strpos($themeCssContent, '/*', $startPos + 1);
+              if ($endPos === false) {
+                $endPos = strpos($themeCssContent, 'html[data-theme="light"]');
+                if ($endPos === false) {
+                  $endPos = strlen($themeCssContent);
+                }
+              }
+              $legacyCss = substr($themeCssContent, $startPos, $endPos - $startPos);
+              $rootOverride .= "\n" . trim($legacyCss);
+            }
+          } else if ($themeMode === 'light') {
+            // Extract html[data-theme="light"] block content
+            if (preg_match('/html\[data-theme="light"\]\s*\{([^}]+)\}/s', $themeCssContent, $matches)) {
+              $rootOverride = ":root {\n" . trim($matches[1]) . "\n}\n";
+            }
+          }
+        }
+        if (is_string($appendCss) && strlen($appendCss) > 0) {
+          $candidateStylesheets = array(
+            $thedir . "/javadoc/stylesheet.css",
+            $thedir . "/javadoc/resources/stylesheet.css",
+            $thedir . "/javadoc/resource-files/stylesheet.css"
+          );
+          foreach ($candidateStylesheets as $generatedStylesheet) {
+            if (file_exists($generatedStylesheet) && is_writable($generatedStylesheet)) {
+              $existing = file_get_contents($generatedStylesheet);
+              if ($existing !== false) {
+                $marker = '/* --- UmpleOnline dark mode overrides --- */';
+                $pos = strpos($existing, $marker);
+                if ($pos !== false) {
+                  // Remove previous appended block starting at marker
+                  $existing = substr($existing, 0, $pos);
+                  file_put_contents($generatedStylesheet, $existing);
+                }
+                // Append the current CSS block(s)
+                $finalCss = $appendCss . (strlen($rootOverride) ? "\n/* --- UmpleOnline: :root override for compatibility --- */\n" . $rootOverride : "");
+                file_put_contents($generatedStylesheet, "\n" . $marker . "\n/* --- UmpleOnline: theme overrides --- */\n" . $finalCss . "\n", FILE_APPEND);
+              }
+            }
+          }
+        }
+        
+        exec("cd $thedir; rm javadocFromUmple.zip; zip -r javadocFromUmple javadoc");
+      
          $javadocdir = $workDir->makePermalink('javadoc/');
          $javadoczip = $workDir->makePermalink('javadocFromUmple.zip');
          $html = "<a href=\"{$javadoczip}\" title=\"Download the Javadoc website as a Zip file if you would like to be able to install it locally\">Download the following as a zip file</a>&nbsp;{$errhtml}
-         <iframe width=100% height=1000 src=\"" . $javadocdir . "\">This browser does not
-         support iframes, so the javadoc cannot be displayed</iframe> 
-         ";
+        <iframe width=100% height=1000 src=\"" . $javadocdir . "\">This browser does not
+        support iframes, so the javadoc cannot be displayed</iframe> 
+        ";
        }
        echo $html;
     }  // end javadoc
@@ -677,6 +753,116 @@ else if (isset($_REQUEST["asUI"]))
 else
 {
   echo "Invalid use of compiler";
+}
+
+function applyGraphvizDarkThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram)
+{
+  $targets = array();
+  if ($stateDiagram)
+  {
+    $targets[] = $directory . "/model.gv";
+  }
+  if ($featureDiagram)
+  {
+    $targets[] = $directory . "/modelGvFeatureDiagram.gv";
+  }
+  if ($classDiagram || $entityRelationshipDiagram)
+  {
+    $suffix = $generatorType;
+    if ($suffix === null)
+    {
+      $suffix = "";
+    }
+    $targets[] = $directory . "/model" . $suffix . ".gv";
+  }
+
+  foreach ($targets as $file)
+  {
+    applyGraphvizDarkThemeToFile($file);
+  }
+}
+
+function applyGraphvizDarkThemeToFile($path)
+{
+  if (!file_exists($path))
+  {
+    return;
+  }
+
+  $content = file_get_contents($path);
+  if ($content === false || trim($content) === "")
+  {
+    return;
+  }
+
+  if (strpos($content, 'bgcolor="#181818"') !== false && strpos($content, 'node [ fontcolor="#e6e6e6"') !== false)
+  {
+    return;
+  }
+
+  $themed = transformGraphvizContentToDark($content);
+  if ($themed !== null && $themed !== "")
+  {
+    file_put_contents($path, $themed);
+  }
+}
+
+function transformGraphvizContentToDark($content)
+{
+  $lines = preg_split("/\r\n|\n|\r/", $content);
+  $result = array();
+  $count = count($lines);
+
+  for ($i = 0; $i < $count; $i++)
+  {
+    $line = $lines[$i];
+    $trimmed = trim($line);
+
+    if ($trimmed !== '' && substr($trimmed, -1) === '{' && strpos($trimmed, 'subgraph') === false && strpos($trimmed, '//') !== 0)
+    {
+      $result[] = $line;
+      $result[] = '  bgcolor="#181818";';
+      $result[] = '  node [ fontcolor="#e6e6e6", style=filled, color="#e6e6e6", fillcolor="#333333" ];';
+      $result[] = '  edge [ color="#e6e6e6", fontcolor="#e6e6e6" ];';
+      continue;
+    }
+
+    if (strpos($trimmed, 'subgraph ') === 0 && strpos($line, '{') !== false)
+    {
+      $result[] = $line;
+      if ($i + 1 < $count)
+      {
+        $i++;
+        $result[] = $lines[$i];
+      }
+      $result[] = '    fontcolor="#e6e6e6";';
+      $result[] = '    color="#565f77";';
+      continue;
+    }
+
+    $processedLine = $line;
+
+    if (stripos($processedLine, '<table') !== false || stripos($processedLine, '<td') !== false)
+    {
+      $processedLine = preg_replace('/ bgcolor="#[0-9a-fA-F]+"/i', ' bgcolor="#333333"', $processedLine);
+      $processedLine = preg_replace('/ color="#[0-9a-fA-F]+"/i', ' color="#e6e6e6"', $processedLine);
+
+      if (stripos($processedLine, '<font') === false)
+      {
+        $processedLine = preg_replace('/(<td[^>]*>)([^<]+)(<\/td>)/i', '$1<font color="#e6e6e6">$2</font>$3', $processedLine);
+      }
+    }
+
+    if (stripos($processedLine, '<font') !== false)
+    {
+      $processedLine = preg_replace('/<font([^>]*)color="[^"]+"([^>]*)>/i', '<font$1color="#e6e6e6"$2>', $processedLine);
+      $processedLine = preg_replace('/<font((?![^>]*color=)[^>]*)>/i', '<font$1 color="#e6e6e6">', $processedLine);
+    }
+
+    $result[] = $processedLine;
+  }
+
+  return implode(PHP_EOL, $result);
 }
 
 function translateToLineNums($errortext) {

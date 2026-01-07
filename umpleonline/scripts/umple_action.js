@@ -473,6 +473,24 @@ Action.dragOverHandler = function(ev) {
   ev.preventDefault();
 }
 
+Action.getThemePreference = function()
+{
+  try {
+    var sel = document.getElementById("themeModeSelect");
+    var stored = localStorage.getItem("umple-theme");
+    var theme = (sel && /^(light|dark|system)$/.test(sel.value)) ? sel.value :
+                (/(light|dark|system)$/.test(stored)) ? stored : "system";
+
+    // Resolve "system" to actual theme
+    if (theme === "system") {
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    return theme;
+  } catch (e) {
+    return "light";
+  }
+}
+
 Action.redoOrUndo = function(isUndo)
 {
   var afterHistoryChange = "";
@@ -3570,11 +3588,11 @@ Action.executeCode = function(languageStyle, languageName)
 {
   var executeCodeSelector = "#buttonExecuteCode";
   var actualLanguage = languageName;
-  
+
   jQuery(executeCodeSelector).showLoading();
   Action.ajax(
-    function(response) { 
-      Action.executeCodeCallback(response); 
+    function(response) {
+      Action.executeCodeCallback(response);
     },
     format("execute=true&language={0}&languageStyle={1}&model={2}", actualLanguage, languageStyle, Page.getModel()),
     "true"
@@ -3608,9 +3626,10 @@ Action.generateCode = function(languageStyle, languageName)
   }
   
   jQuery(generateCodeSelector).showLoading();
+
   Action.ajax(
-    function(response) { 
-      Action.generateCodeCallback(response, languageStyle, additionalCallback); 
+    function(response) {
+      Action.generateCodeCallback(response, languageStyle, additionalCallback);
     },
     format("language={0}&languageStyle={1}", actualLanguage, languageStyle),
     "true"
@@ -4954,7 +4973,7 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
     }
     else if(target == "diagramEdit")
     {
-      Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage());
+      Action.ajax(Action.updateFromDiagramCallback, Action.getLanguage());
     }
     //Page.enableDiagram(true);
   }
@@ -5036,7 +5055,7 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   // console.log("Inside updateUmpleDiagramForce")
   var canonical = Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());
   if(!forceUpdate) {
-    if(canonical == Action.savedCanonical)   
+    if(canonical == Action.savedCanonical)
     {
       // The umple code is as we last sent to the diagram, except for comment
       // changes, spaces, tabs and newlines, so we return without doing anything
@@ -5045,7 +5064,7 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   }
   Action.savedCanonical=canonical;
   Page.showCanvasLoading();
-  
+
   Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
 
 }
@@ -5561,6 +5580,7 @@ Action.ajax = function(callback,post,target,errors,tabIndependent)
   var filename = Page.getFilename();
   var errors = "true";
   TabControl.useActiveTabTo(TabControl.saveTab)(umpleCode);
+  post = post + "&theme=" + Action.getThemePreference();
 
   var tabContextOld = TabControl.getActiveTabId();
   var wrappedCallback = !tabIndependent? function(response){
@@ -5927,6 +5947,7 @@ Action.getLanguage = function()
     language="language=featureDiagram";
     if(Page.showFeatureDependency) language=language+".showFeatureDependency";
   }
+
   return language;
 }
 
