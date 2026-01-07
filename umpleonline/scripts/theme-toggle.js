@@ -6,6 +6,11 @@
     return;
   }
 
+  if (select.dataset.umpleThemeInitialized === "true") {
+    return;
+  }
+  select.dataset.umpleThemeInitialized = "true";
+
   const validModes = new Set(["light", "dark", "system"]);
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)");
   const themeColorMeta = document.querySelector('meta[name="theme-color"]');
@@ -30,8 +35,8 @@
     shThemeDefault.disabled = isDark;
     shThemeMidnight.disabled = !isDark;
 
-    // Re-highlight any existing SyntaxHighlighter code blocks to apply new theme
-    if (typeof SyntaxHighlighter !== "undefined" && typeof SyntaxHighlighter.highlight === "function") {
+    const shBlocks = document.querySelectorAll('div.syntaxhighlighter');
+    if (shBlocks.length > 0 && typeof SyntaxHighlighter !== "undefined" && typeof SyntaxHighlighter.highlight === "function") {
       try {
         SyntaxHighlighter.highlight();
       } catch (err) {
@@ -102,11 +107,11 @@
   select.addEventListener("change", function () {
     applyTheme(select.value);
 
-    // Refresh in-canvas Graphviz diagram
+    // Refresh in-canvas Graphviz diagram using requestAnimationFrame for smoother rendering
     try {
       if (window.Page && window.Action) {
         if (Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram) {
-          setTimeout(function(){ Action.redrawDiagram(); }, 0);
+          requestAnimationFrame(function(){ Action.redrawDiagram(); });
         }
       }
     } catch (e) { /* ignore */ }

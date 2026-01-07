@@ -47,10 +47,6 @@ class GvClassDiagramGenerator
     if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
     code.append("\n  // Class: "+className+"\n");
     
-    String tableExtra = hasSuboption("gvdark") ? " bgcolor=\"#333333\" color=\"#e6e6e6\"" : "";
-    String fontOpen = hasSuboption("gvdark") ? "<font color=\"#e6e6e6\">" : "";
-    String fontClose = hasSuboption("gvdark") ? "</font>" : "";
-
     if (manyClass) {
       code.append("  \""+className+"\" ["+classColor+"shape=record, label=\"{"+className);
 
@@ -66,15 +62,15 @@ class GvClassDiagramGenerator
       if ((uClass.getAttributes().size() == 0 || hasSuboption("hideattributes")) && 
           (uClass.getMethods().size() == 0 || !hasSuboption("showmethods")) 
           && !uClass.getIsAbstract()) {
-        code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\""+tableExtra+">"
-                    +"<tr><td>    "+fontOpen+className+fontClose+"    </td></tr>");
+	    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
+		   			+"<tr><td>    "+className+"    </td></tr>");
       }
       else {
-        code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"2\""+tableExtra+">"
-                    +"<tr><td cellpadding=\"4\">    "+fontOpen+className+fontClose+"    </td></tr>");
+        code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"2\">"
+                    +"<tr><td cellpadding=\"4\">    "+className+"    </td></tr>");
 		  }
       if(uClass.getIsAbstract()) {  // add abstract tag
-        code.append("<tr><td cellpadding=\"4\">"+fontOpen+"&laquo;abstract&raquo;"+fontClose+"</td></tr>");
+        code.append("<tr><td cellpadding=\"4\">&laquo;abstract&raquo;"+"</td></tr>");
       }
     }
     
@@ -98,9 +94,6 @@ class GvClassDiagramGenerator
   // Create each attribute for each class - called by classCreation
   private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass)
   {
-    boolean isDark = hasSuboption("gvdark");
-    String fontOpenAttr = isDark ? "<font color=\"#e6e6e6\">" : "";
-    String fontCloseAttr = isDark ? "</font>" : "";
     // Iterate through attributes of the class]
     boolean isFirst = true;
 
@@ -126,8 +119,8 @@ class GvClassDiagramGenerator
             attrTooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
             attrTooltip.append(appendTooltipComment(uAttribute.getComments(), true));        
             code.append("<tr><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
-                  +"  "+fontOpenAttr+uAttribute.getName()+" : "
-                  +type+isList+fontCloseAttr+"  </td></tr>");
+                  +"  "+uAttribute.getName()+" : "
+                  +type+isList+"  </td></tr>");
           }
           
           isFirst = false;
@@ -139,9 +132,6 @@ class GvClassDiagramGenerator
   // Create each method for each class - called by classCreation
   private void methodCreation(UmpleClassifier inUmpleClassifier, StringBuilder code, boolean manyClass)
   {
-    boolean isDark = hasSuboption("gvdark");
-    String fontOpenMeth = isDark ? "<font color=\"#e6e6e6\">" : "";
-    String fontCloseMeth = isDark ? "</font>" : "";
     if (hasSuboption("showmethods")) {
       boolean isFirstMethod = true;
       for (Method uMethod : inUmpleClassifier.getMethods()) {
@@ -192,13 +182,13 @@ class GvClassDiagramGenerator
          
           if (isAbstract) {
             code.append("<tr><td align=\"left\" href=\""+hrefString+"\" title=\""+methTooltip+"\">"
-                +"  "+fontOpenMeth+accessModifier+ "<I>" + uMethod.getName() + "</I>" 
-                +" ("+parameters+") : "+type+fontCloseMeth+"  </td></tr>");
+                +"  "+accessModifier+ "<I>" + uMethod.getName() + "</I>" 
+                +" ("+parameters+") : "+type+"  </td></tr>");
           }
           else {
             code.append("<tr><td align=\"left\" href=\""+hrefString+"\" title=\""+methTooltip+"\">"
-              +"  "+fontOpenMeth+accessModifier+uMethod.getName()
-              +"("+parameters+") : "+type+fontCloseMeth+"  </td></tr>");  
+              +"  "+accessModifier+uMethod.getName()
+              +"("+parameters+") : "+type+"  </td></tr>");  
           }
           isFirstMethod = false;
         }
@@ -454,9 +444,6 @@ class GvClassDiagramGenerator
   //This overrides a method used for generating the necessary tags for interfaces and also their hierarchies.
    protected void createInterfacesAndTheirHirerarchy(UmpleInterface inInterface, StringBuilder code){
 	   boolean manyInterface = getModel().getUmpleInterfaces().size() >= 200 ? true : false;
-       String tableExtra = hasSuboption("gvdark") ? " bgcolor=\"#333333\" color=\"#e6e6e6\"" : "";
-       String fontOpen = hasSuboption("gvdark") ? "<font color=\"#e6e6e6\">" : "";
-       String fontClose = hasSuboption("gvdark") ? "</font>" : "";
 
 	    String interfaceName = inInterface.getName();
 	    String interfaceColor = inInterface.getDisplayColor();
@@ -470,8 +457,8 @@ class GvClassDiagramGenerator
 		    
 	      // Different cellpadding for if the class has nothing but the
 	      // name because of a glitch in graphviz's graphics
-		    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\""+tableExtra+">"
-		    			+"<tr><td>"+fontOpen+"&laquo;interface&raquo;<BR/>"+interfaceName+fontClose+"</td></tr>");
+		    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
+			   			+"<tr><td>"+"&laquo;interface&raquo;<BR/>"+interfaceName+"</td></tr>");
 	    }
 	    if ((inInterface.getMethods().size()<=0) || (!hasSuboption("showmethods"))){
 	    	code.append("<hr/><tr><td cellpadding=\"4\">   </td></tr>");

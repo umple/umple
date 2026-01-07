@@ -1,12 +1,37 @@
+:root {
+  --umple-dark-bg: #222;
+  --umple-dark-text: #ddd;
+  --umple-node-fill: #333333;
+  --umple-node-color: #e6e6e6;
+  --umple-edge-color: #e6e6e6;
+  --umple-state-border: #565f77;
+  --umple-diagram-bg: #181818;
+}
+
 body {
-  background-color: #222;
-  color: #ddd;
+  background-color: var(--umple-dark-bg);
+  color: var(--umple-dark-text);
   color-scheme: dark;
 }
 
 /* Logo container should be transparent so SVG shows without background box */
 .inRow.logo {
   background-color: transparent !important;
+}
+
+/* Smooth transitions for theme changes */
+body,
+#mainApplication,
+#paletteColumn,
+#topLine,
+#generatedCodeRow,
+#tabRow,
+#tabControl,
+#taskArea,
+#umpleCanvas,
+.joint-paper,
+.html-element {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, fill 0.3s ease, stroke 0.3s ease;
 }
 
 #mainApplication,
@@ -116,9 +141,9 @@ ul.tabrow li.selected::after {
 }
 
 #paletteColumn {
-  background-color: #2b2b2b;
+  background-color: var(--umple-node-fill);
   border-color: #444;
-  color: #e6e6e6;
+  color: var(--umple-node-color);
 }
 
 div.paletteWrapper,
@@ -216,9 +241,9 @@ div.palette li.disabled a.buttonExtend {
 }
 
 #umpleCanvas {
-  background-color: #181818;
+  background-color: var(--umple-diagram-bg);
   border-color: #333333;
-  color: #e6e6e6;
+  color: var(--umple-node-color);
 }
 
 #umpleCanvasColumn,
@@ -237,22 +262,6 @@ div.syncNeededMessage {
   color: #a7b4d6;
 }
 
-/* Reverted: let Graphviz DOT control background via bgcolor */
-
-/* Reverted SVG overlay polygon styling to defer to DOT output */
-
-/* Reverted node shape fill/stroke overrides to use DOT theme */
-
-/* Reverted cluster styling to use DOT theme */
-
-/* Reverted edge path styling to use DOT theme */
-
-/* Reverted arrowhead styling to use DOT theme */
-
-/* Reverted text fill override to use DOT theme */
-
-/* Reverted primitive fill/stroke overrides to use DOT theme */
-
 .joint-paper {
   background-color: #181818 !important;
 }
@@ -262,8 +271,8 @@ div.syncNeededMessage {
 .joint-paper .uml-class-attrs-rect,
 .joint-paper .uml-class-methods-rect,
 .joint-paper .state-name-rect {
-  fill: #333333;
-  stroke: #e6e6e6;
+  fill: var(--umple-node-fill);
+  stroke: var(--umple-node-color);
 }
 
 .joint-paper .state-actions-separator,
@@ -283,29 +292,19 @@ div.syncNeededMessage {
 }
 
 .joint-paper .joint-link .connection {
-  stroke: #e6e6e6;
+  stroke: var(--umple-edge-color);
 }
 
 .joint-paper .joint-link .marker-arrowhead,
 .joint-paper .joint-link .marker-vertex {
-  fill: #e6e6e6;
-  stroke: #e6e6e6;
+  fill: var(--umple-edge-color);
+  stroke: var(--umple-edge-color);
 }
 
 .joint-paper .joint-element .fobj body,
 .joint-paper .joint-element .fobj div {
   background-color: #333333;
   color: #e6e6e6;
-}
-
-.joint-paper .html-element[style*="background: #ffffff"],
-.joint-paper .html-element[style*="background:#ffffff"],
-.joint-paper .html-element[style*="background: white"],
-.joint-paper .html-element[style*="background:white"],
-.joint-paper .html-element[style="text-align: center"] {
-  background: #2a2f3d !important;
-  border-color: #565f77 !important;
-  color: #eef1ff;
 }
 
 .joint-paper .html-element input,
