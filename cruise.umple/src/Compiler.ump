@@ -248,8 +248,8 @@ class CodeCompiler {
   private final static String GV_DARK_STATE_BORDER = "#565f77";
 
   // Inject dark theme styles into GraphViz content
-  // This is a centralized approach that works for ALL GraphViz diagram types
-  // It handles: main graph styles, subgraph styles, and HTML table text
+  // Centralized approach for ALL GraphViz diagram types
+  // Handles: main graph styles, subgraph styles, and HTML table text
   private static String injectDarkTheme(String gvContent) {
     StringBuilder result = new StringBuilder();
     String[] lines = gvContent.split("\n");
@@ -286,7 +286,7 @@ class CodeCompiler {
       }
 
       // Handle HTML table text coloring for ClassDiagram
-      // This adds font tags and colors to HTML table content that doesn't have them
+      // Add font tags and colors to HTML table content
       if (line.contains("<td") || line.contains("<table")) {
         // Replace existing color attributes with dark theme
         line = line.replaceAll(" bgcolor=\"#[0-9a-fA-F]+\"", " bgcolor=\"" + GV_DARK_NODE_FILL + "\"");
@@ -297,7 +297,7 @@ class CodeCompiler {
         // But avoid double-wrapping if font tags already exist
         if (!line.contains("<font")) {
           // Wrap text content in <font> tags with dark color
-          // This handles class names, attributes, methods, etc. in HTML tables
+          // Handle class names, attributes, methods, etc. in HTML tables
           line = line.replaceAll("<td>([^<]+)</td>", "<td><font color=\"" + GV_DARK_NODE_COLOR + "\">$1</font></td>");
           line = line.replaceAll("<td>([^<]+)</td>", "<td><font color=\"" + GV_DARK_NODE_COLOR + "\">$1</font></td>"); // Do again for nested cases
           line = line.replaceAll("<td>(\\s*)([^<]+)(\\s*)</td>", "<td>$1<font color=\"" + GV_DARK_NODE_COLOR + "\">$2</font>$3</td>");
@@ -339,7 +339,7 @@ class CodeCompiler {
   }
 
   // Compiles graphviz files to various outputs: .svg (default), using dot
-  // Now with centralized dark theme support at the GraphViz rendering layer
+  // Centralized dark theme support at the GraphViz rendering layer
   public static boolean genDotDiagram (UmpleModel model,
     GenerateTarget gt, boolean beQuiet, String graphicFormat) {
 
@@ -385,8 +385,8 @@ class CodeCompiler {
         System.err.println("Warning: Compiling generated Graphviz files from a directory or path containing a space character may produce an error message from the PhP compiler.");
       }
 
-      // NEW: Centralized dark theme injection at GraphViz rendering layer
-      // This works for ALL diagram types that generate .gv files
+      // Centralized dark theme injection at GraphViz rendering layer
+      // Works for ALL diagram types that generate .gv files
       if (gt.tarHasSubOption("gvdark")) {
         String gvContent = readFileContent(inputFullPath);
         gvContent = injectDarkTheme(gvContent);
