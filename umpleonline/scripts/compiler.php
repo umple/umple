@@ -231,11 +231,13 @@ else if (isset($_REQUEST["umpleCode"]))
     $htmlContents = True;
   }
 
+  $graphvizDarkMode = false;
   // Handle dark theme for Graphviz generators (class, state, feature, entityRelationship diagrams)
   // If theme parameter is 'dark' and it's a Graphviz generator (starts with "Gv"), add gvdark suboption
   if (isset($_REQUEST['theme']) && $_REQUEST['theme'] === 'dark' && strpos($language, 'Gv') === 0)
   {
     $suboptions = $suboptions . " -s gvdark";
+    $graphvizDarkMode = true;
   }
 
   if ($languageStyle == "html")
@@ -403,6 +405,11 @@ else if (isset($_REQUEST["umpleCode"]))
   }
   // Took off 1> {$outputFilename}  in two commands above
   $resultFromCommand = executeCommand($command);
+
+  if ($graphvizDarkMode && ($stateDiagram || $classDiagram || $featureDiagram || $entityRelationshipDiagram))
+  {
+    applyGraphvizDarkThemeFiles($thedir, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram);
+  }
 
   $dataHandle->writeData(basename($outputFilename), $resultFromCommand);
   //exec("( ulimit -t 10; " . $command . ")");
@@ -746,6 +753,116 @@ else if (isset($_REQUEST["asUI"]))
 else
 {
   echo "Invalid use of compiler";
+}
+
+function applyGraphvizDarkThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram)
+{
+  $targets = array();
+  if ($stateDiagram)
+  {
+    $targets[] = $directory . "/model.gv";
+  }
+  if ($featureDiagram)
+  {
+    $targets[] = $directory . "/modelGvFeatureDiagram.gv";
+  }
+  if ($classDiagram || $entityRelationshipDiagram)
+  {
+    $suffix = $generatorType;
+    if ($suffix === null)
+    {
+      $suffix = "";
+    }
+    $targets[] = $directory . "/model" . $suffix . ".gv";
+  }
+
+  foreach ($targets as $file)
+  {
+    applyGraphvizDarkThemeToFile($file);
+  }
+}
+
+function applyGraphvizDarkThemeToFile($path)
+{
+  if (!file_exists($path))
+  {
+    return;
+  }
+
+  $content = file_get_contents($path);
+  if ($content === false || trim($content) === "")
+  {
+    return;
+  }
+
+  if (strpos($content, 'bgcolor="#181818"') !== false && strpos($content, 'node [ fontcolor="#e6e6e6"') !== false)
+  {
+    return;
+  }
+
+  $themed = transformGraphvizContentToDark($content);
+  if ($themed !== null && $themed !== "")
+  {
+    file_put_contents($path, $themed);
+  }
+}
+
+function transformGraphvizContentToDark($content)
+{
+  $lines = preg_split("/\r\n|\n|\r/", $content);
+  $result = array();
+  $count = count($lines);
+
+  for ($i = 0; $i < $count; $i++)
+  {
+    $line = $lines[$i];
+    $trimmed = trim($line);
+
+    if ($trimmed !== '' && substr($trimmed, -1) === '{' && strpos($trimmed, 'subgraph') === false && strpos($trimmed, '//') !== 0)
+    {
+      $result[] = $line;
+      $result[] = '  bgcolor="#181818";';
+      $result[] = '  node [ fontcolor="#e6e6e6", style=filled, color="#e6e6e6", fillcolor="#333333" ];';
+      $result[] = '  edge [ color="#e6e6e6", fontcolor="#e6e6e6" ];';
+      continue;
+    }
+
+    if (strpos($trimmed, 'subgraph ') === 0 && strpos($line, '{') !== false)
+    {
+      $result[] = $line;
+      if ($i + 1 < $count)
+      {
+        $i++;
+        $result[] = $lines[$i];
+      }
+      $result[] = '    fontcolor="#e6e6e6";';
+      $result[] = '    color="#565f77";';
+      continue;
+    }
+
+    $processedLine = $line;
+
+    if (stripos($processedLine, '<table') !== false || stripos($processedLine, '<td') !== false)
+    {
+      $processedLine = preg_replace('/ bgcolor="#[0-9a-fA-F]+"/i', ' bgcolor="#333333"', $processedLine);
+      $processedLine = preg_replace('/ color="#[0-9a-fA-F]+"/i', ' color="#e6e6e6"', $processedLine);
+
+      if (stripos($processedLine, '<font') === false)
+      {
+        $processedLine = preg_replace('/(<td[^>]*>)([^<]+)(<\/td>)/i', '$1<font color="#e6e6e6">$2</font>$3', $processedLine);
+      }
+    }
+
+    if (stripos($processedLine, '<font') !== false)
+    {
+      $processedLine = preg_replace('/<font([^>]*)color="[^"]+"([^>]*)>/i', '<font$1color="#e6e6e6"$2>', $processedLine);
+      $processedLine = preg_replace('/<font((?![^>]*color=)[^>]*)>/i', '<font$1 color="#e6e6e6">', $processedLine);
+    }
+
+    $result[] = $processedLine;
+  }
+
+  return implode(PHP_EOL, $result);
 }
 
 function translateToLineNums($errortext) {

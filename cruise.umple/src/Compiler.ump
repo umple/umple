@@ -239,112 +239,12 @@ class CodeCompiler {
     return (retval == 0);
   }
   
-  // Central GraphViz dark theme constants
-  // Used when the 'gvdark' suboption is enabled to generate dark-themed diagram files
-  private final static String GV_DARK_BG = "#181818";
-  private final static String GV_DARK_NODE_COLOR = "#e6e6e6";
-  private final static String GV_DARK_NODE_FILL = "#333333";
-  private final static String GV_DARK_EDGE_COLOR = "#e6e6e6";
-  private final static String GV_DARK_STATE_BORDER = "#565f77";
-
-  // Inject dark theme styles into GraphViz content
-  // Centralized approach for ALL GraphViz diagram types
-  // Handles: main graph styles, subgraph styles, and HTML table text
-  private static String injectDarkTheme(String gvContent) {
-    StringBuilder result = new StringBuilder();
-    String[] lines = gvContent.split("\n");
-
-    for (int i = 0; i < lines.length; i++) {
-      String line = lines[i];
-
-      // Inject main graph dark theme after digraph opening
-      if (line.trim().endsWith("{") && !line.trim().startsWith("//") && !line.contains("subgraph")) {
-        result.append(line);
-        result.append("\n");
-        // Inject global dark theme styles
-        result.append("  bgcolor=\"" + GV_DARK_BG + "\";\n");
-        result.append("  node [ fontcolor = \"" + GV_DARK_NODE_COLOR + "\", style = filled, color = \"" + GV_DARK_NODE_COLOR + "\", fillcolor = \"" + GV_DARK_NODE_FILL + "\" ];\n");
-        result.append("  edge [ color = \"" + GV_DARK_EDGE_COLOR + "\", fontcolor = \"" + GV_DARK_NODE_COLOR + "\" ];\n");
-        continue;
-      }
-
-      // Inject subgraph dark theme styling (for StateDiagram nested states)
-      // Pattern: subgraph clusterX { or subgraph clusterY {
-      if (line.trim().startsWith("subgraph ") && line.contains("{")) {
-        result.append(line);
-        result.append("\n");
-        // Next line should be the label, inject subgraph styling after it
-        if (i + 1 < lines.length) {
-          i++;
-          result.append(lines[i]);
-          result.append("\n");
-          // Inject subgraph dark theme
-          result.append("    fontcolor=\"" + GV_DARK_NODE_COLOR + "\";\n");
-          result.append("    color=\"" + GV_DARK_STATE_BORDER + "\";\n");
-        }
-        continue;
-      }
-
-      // Handle HTML table text coloring for ClassDiagram
-      // Add font tags and colors to HTML table content
-      if (line.contains("<td") || line.contains("<table")) {
-        // Replace existing color attributes with dark theme
-        line = line.replaceAll(" bgcolor=\"#[0-9a-fA-F]+\"", " bgcolor=\"" + GV_DARK_NODE_FILL + "\"");
-        line = line.replaceAll(" color=\"#[0-9a-fA-F]+\"", " color=\"" + GV_DARK_NODE_COLOR + "\"");
-
-        // Add font tags and color to <td> elements that contain text but no font tags
-        // Pattern: <td>text</td> or <td> text </td> -> <td><font color="...">text</font></td>
-        // But avoid double-wrapping if font tags already exist
-        if (!line.contains("<font")) {
-          // Wrap text content in <font> tags with dark color
-          // Handle class names, attributes, methods, etc. in HTML tables
-          line = line.replaceAll("<td>([^<]+)</td>", "<td><font color=\"" + GV_DARK_NODE_COLOR + "\">$1</font></td>");
-          line = line.replaceAll("<td>([^<]+)</td>", "<td><font color=\"" + GV_DARK_NODE_COLOR + "\">$1</font></td>"); // Do again for nested cases
-          line = line.replaceAll("<td>(\\s*)([^<]+)(\\s*)</td>", "<td>$1<font color=\"" + GV_DARK_NODE_COLOR + "\">$2</font>$3</td>");
-        }
-      }
-
-      // Also handle existing <font> tags (for backwards compatibility)
-      if (line.contains("<font")) {
-        // Replace existing <font color="..."> with dark theme color
-        line = line.replaceAll("<font color=\"#[0-9a-fA-F]+\">", "<font color=\"" + GV_DARK_NODE_COLOR + "\">");
-        // Add color to <font> tags without color attribute
-        line = line.replaceAll("<font>", "<font color=\"" + GV_DARK_NODE_COLOR + "\">");
-      }
-
-      result.append(line);
-      result.append("\n");
-    }
-
-    return result.toString();
-  }
-
-  // Read file content
-  private static String readFileContent(String filePath) throws IOException {
-    StringBuilder content = new StringBuilder();
-    BufferedReader reader = new BufferedReader(new FileReader(filePath));
-    String line;
-    while ((line = reader.readLine()) != null) {
-      content.append(line).append("\n");
-    }
-    reader.close();
-    return content.toString();
-  }
-
-  // Write file content
-  private static void writeFileContent(String filePath, String content) throws IOException {
-    PrintWriter writer = new PrintWriter(filePath);
-    writer.print(content);
-    writer.close();
-  }
-
   // Compiles graphviz files to various outputs: .svg (default), using dot
-  // Centralized dark theme support at the GraphViz rendering layer
   public static boolean genDotDiagram (UmpleModel model,
     GenerateTarget gt, boolean beQuiet, String graphicFormat) {
 
     String generator = gt.getLanguage();
-
+    
     String fileroot = model.getUmpleFile().getFileName();
     if (fileroot.endsWith(".ump")) {
       fileroot = fileroot.substring(0, fileroot.length() - 4);
@@ -377,7 +277,7 @@ class CodeCompiler {
     {
       path=model.getUmpleFile().getPath() + File.separator + extraPath;
     }
-
+    
     String inputFullPath=path + File.separator + fileroot + ".gv";
     String outputFullPath=path + File.separator + fileroot + "."+ graphicFormat;
 
@@ -387,23 +287,15 @@ class CodeCompiler {
       if(path.contains(" ") && !beQuiet) {
         System.err.println("Warning: Compiling generated Graphviz files from a directory or path containing a space character may produce an error message from the PhP compiler.");
       }
-
-      // Centralized dark theme injection at GraphViz rendering layer
-      // Works for ALL diagram types that generate .gv files
-      if (gt.tarHasSubOption("gvdark")) {
-        String gvContent = readFileContent(inputFullPath);
-        gvContent = injectDarkTheme(gvContent);
-        writeFileContent(inputFullPath, gvContent);
-      }
-
+      
       BufferedReader reader;
-
+      
       Process p = Runtime.getRuntime().exec("dot -T"+graphicFormat+" "+inputFullPath+" -o "+outputFullPath);
-      reader=new BufferedReader(new InputStreamReader(p.getInputStream()));
+      reader=new BufferedReader(new InputStreamReader(p.getInputStream())); 
 
       // All output of the above should go to standard output
       try {
-        retval=p.waitFor();
+        retval=p.waitFor(); 
       }
       catch (InterruptedException e) {}
 
