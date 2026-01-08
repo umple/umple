@@ -3,7 +3,6 @@
 package distributed.rmi5;
 import distributed.rmi5.Client;
 import java.rmi.Remote;
-import javax.jws.WebMethod;
 import java.applet.*;
 import java.util.*;
 import distributed.rmi5.Microwave;

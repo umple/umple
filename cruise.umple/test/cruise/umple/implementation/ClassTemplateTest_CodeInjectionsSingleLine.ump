@@ -1,5 +1,5 @@
 class Student {
-  String foo(int a) {
+  String foo(int a) Java {
     if(a < 0) return 0;
     else if(a == 1) { return -1; }
     else return 4;
@@ -12,11 +12,38 @@ class Student {
     return 4;
   }
 
-  before custom foo {
+  String foo(int a) Php {
+    if ($a < 0) {
+        return 0;
+    } else if ($a == 1) {
+        return -1;
+    } else {
+        return 4;
+    }
+
+    for ($i = 0; $i < $a; $i++) {
+        // TODO: call foo()
+        if ($i == $a / 4) {
+            return $a;
+        }
+    }
+
+    return 4;
+  }
+
+  before custom foo Java {
     System.out.println("Starting foo with argument: " + a);
   }
 
-  after all foo {
+  before custom foo Php {
+    System.out.println("Starting foo with argument: " + a);
+  }
+
+  after all foo Java {
+    System.out.println("Returning from foo!");
+  }
+
+  after all foo Php {
     System.out.println("Returning from foo!");
   }
 }
