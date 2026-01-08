@@ -370,12 +370,24 @@
       <fileset file="${scriptPath}/structureDiagram.js"/>
       <fileset file="${scriptPath}/statetable/state_table_colourer.js"/>
     </concat>
-    <java jar="${dist.dir}/libs/build/yuicompressor.jar"
+    
+    <!-- esbuild must be installed to run this. Download here -->
+    <!-- https://esbuild.github.io/getting-started/#download-a-build -->
+    <echo message="Using esbuild to minify javascript files to create allumple-min.js" />
+    <exec executable="esbuild" dir="umpleonline" failonerror="true">
+      <arg value="${tmpScript}"/>
+      <arg value="--outfile=${scriptPath}/allumple-min.js" />
+      <arg value="--minify" />
+    </exec>
+    
+    <!--former approach using yuicompressor-->
+    <!--java jar="${dist.dir}/libs/build/yuicompressor.jar"
           fork="true"
           failonerror="true">
       <arg value="${tmpScript}"/>
       <redirector output ="${scriptPath}/allumple-min.js"/>
-    </java>
+    </java-->
+    
     <delete>
       <fileset file="${tmpScript}"/>
     </delete>

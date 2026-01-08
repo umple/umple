@@ -129,8 +129,8 @@ repositories {
 }
 
 dependencies {
-    // Javascript compression for UmpleOnline scripts
-    ivy group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.8'
+    // Javascript compression for UmpleOnline scripts NO LONGER USED
+    // ivy group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.8'
     
     // Testing
     ivy group: 'junit', name: 'junit', version: '4.13.2'
