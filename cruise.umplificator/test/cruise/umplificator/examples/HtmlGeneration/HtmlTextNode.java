@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.21.0.4666 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
 
 
@@ -52,9 +52,7 @@ public class HtmlTextNode extends HtmlNode
 
   public String toString()
   {
-	  String outputString = "";
     return super.toString() + "["+
-            "content" + ":" + getContent()+ "]"
-     + outputString;
+            "content" + ":" + getContent()+ "]";
   }
 }
