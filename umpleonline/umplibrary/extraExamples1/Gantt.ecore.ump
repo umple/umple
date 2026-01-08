@@ -26,7 +26,7 @@ class Project
 	String webLink;
 	0..1 -> 1..* Date viewDate;
 	0..1 -> 1..* Date viewIndex;
-	0..1 -> 1..* Tasks tasks;
+	0..1 -> 1..* Tasks;
 	0..1 -> * Ressource ressources;
 	0..1 -> * Allocation allocations;
 }
@@ -61,7 +61,7 @@ class Depend
 
 class Ressource
 {
-	String Id;
+	String id;
 	String name;
 	String fonction;
 	String contact;

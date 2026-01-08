@@ -30,13 +30,13 @@ class Element
 class Representation
 {
 	isA Element;
-	* representations -- 1..* Meaning meaning;
+	* representations -- 1..* Meaning;
 }
 
 class Designation
 {
 	isA Representation;
-	0..1 -> 1..* Text text;
+	0..1 -> 1..* Text;
 }
 
 class Text
@@ -123,7 +123,7 @@ class ObjectificationFactType
 class Role
 {
 	isA Element;
-	0..1 -> 1..* NounConcept nounConcept;
+	0..1 -> 1..* NounConcept;
 }
 
 class FactTypeRole

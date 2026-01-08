@@ -20,7 +20,7 @@ namespace HAL;
 
 class HAL
 {
-	0..1 -> 1..* Connexion connexion;
+	0..1 -> 1..* Connexion;
 	0..1 -> * Entry contents;
 }
 
@@ -295,7 +295,7 @@ class WebLink
 {
 	isA AbstractDepotType;
 	String identifiant;
-	0..1 -> 1..* Server server;
+	0..1 -> 1..* Server;
 }
 
 class Server

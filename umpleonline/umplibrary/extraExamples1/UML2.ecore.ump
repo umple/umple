@@ -59,9 +59,9 @@ class Namespace
 {
 	isA NamedElement;
 	0..1 -> * NamedElement member;
-	* namespace -- * Constraint ownedRule;
-	1..* importingNamespace -- * ElementImport elementImport;
-	1..* importingNamespace -- * PackageImport packageImport;
+	* -- * Constraint ownedRule;
+	1..* importingNamespace -- * ElementImport;
+	1..* importingNamespace -- * PackageImport;
 }
 
 class OpaqueExpression
@@ -70,7 +70,7 @@ class OpaqueExpression
 	String body;
 	String language;
 	0..1 -> * Parameter result;
-	0..1 -> * Behavior behavior;
+	0..1 -> * Behavior;
 }
 
 class ValueSpecification
@@ -112,13 +112,13 @@ class Class
 	0..1 -> * Classifier nestedClassifier;
 	0..1 -> * Reception ownedReception;
 	* class_ -- * Operation ownedOperation;
-	1..* metaclass -- * Extension extension;
+	1..* metaclass -- * Extension;
 }
 
 class Type
 {
 	isA PackageableElement;
-	* ownedType -- * Package package;
+	* ownedType -- * Package;
 }
 
 class Property
@@ -136,8 +136,8 @@ class Property
 	0..1 -> * Property subsettedProperty;
 	0..1 -> * ValueSpecification defaultValue;
 	* associationEnd -- * Property qualifier;
-	* ownedAttribute -- * DataType datatype;
-	2..* memberEnd -- * Association association;
+	* ownedAttribute -- * DataType;
+	2..* memberEnd -- * Association;
 }
 
 class Operation
@@ -148,14 +148,14 @@ class Operation
 	0..1 -> * Constraint postcondition;
 	0..1 -> * Operation redefinedOperation;
 	0..1 -> * Constraint bodyCondition;
-	* operation -- * Parameter ownedParameter;
-	* ownedOperation -- * DataType datatype;
+	* -- * Parameter ownedParameter;
+	* ownedOperation -- * DataType;
 }
 
 class TypedElement
 {
 	isA NamedElement;
-	0..1 -> * Type type;
+	0..1 -> * Type;
 }
 
 class Parameter
@@ -167,7 +167,7 @@ class Parameter
 	Boolean isStream;
 	ParameterEffectKind effect;
 	0..1 -> * ValueSpecification defaultValue;
-	1..* parameter -- * ParameterSet parameterSet;
+	1..* -- * ParameterSet;
 }
 
 class Package
@@ -175,14 +175,14 @@ class Package
 	isA Namespace ;
 	* nestingPackage -- * Package nestedPackage;
 	0..1 -> * PackageableElement ownedMember;
-	0..1 mergingPackage -- * PackageMerge packageMerge;
+	0..1 mergingPackage -- * PackageMerge;
 	0..1 -> * ProfileApplication appliedProfile;
 }
 
 class Enumeration
 {
 	isA DataType;
-	* enumeration -- * EnumerationLiteral ownedLiteral;
+	* -- * EnumerationLiteral ownedLiteral;
 }
 
 class DataType
@@ -205,11 +205,11 @@ class Classifier
 	isA Namespace ;
 	Boolean isAbstract;
 	0..1 -> * NamedElement inheritedMember;
-	* featuringClassifier -- * Feature feature;
-	1..* specific -- * Generalization generalization;
-	1..* substitutingClassifier -- * Substitution substitution;
+	* featuringClassifier -- * Feature;
+	1..* specific -- * Generalization;
+	1..* substitutingClassifier -- * Substitution;
 	* powertype -- * GeneralizationSet powertypeExtent;
-	* subject -- * UseCase useCase;
+	* subject -- * UseCase;
 }
 
 class Feature
@@ -264,7 +264,7 @@ class BehavioralFeature
 	isA Namespace ;
 	Boolean isAbstract;
 	CallConcurrencyKind concurrency;
-	0..1 -> * Parameter parameter;
+	0..1 -> * Parameter;
 	0..1 -> * Type raisedException;
 	* specification -- * Behavior method;
 }
@@ -278,9 +278,9 @@ class StructuralFeature
 class InstanceSpecification
 {
 	isA PackageableElement ;
-	0..1 -> * Classifier classifier;
+	0..1 -> * Classifier;
 	0..1 -> * ValueSpecification specification;
-	1..* owningInstance -- * Slot slot;
+	1..* owningInstance -- * Slot;
 }
 
 class Slot
@@ -307,7 +307,7 @@ class Generalization
 {
 	isA DirectedRelationship;
 	Boolean isSubstitutable;
-	* generalization -- * GeneralizationSet generalizationSet;
+	* -- * GeneralizationSet;
 }
 
 class PackageableElement
@@ -378,7 +378,7 @@ class Behavior
 	isA Class;
 	Boolean isReentrant;
 	0..1 -> * Behavior redefinedBehavior;
-	0..1 -> * Parameter parameter;
+	0..1 -> * Parameter;
 	0..1 -> * Constraint precondition;
 	0..1 -> * Constraint postcondition;
 	0..1 -> * ParameterSet ownedParameterSet;
@@ -389,7 +389,7 @@ class BehavioredClassifier
 {
 	isA Classifier;
 	0..1 -> * Trigger ownedTrigger;
-	1..* implementingClassifier -- * Implementation implementation;
+	1..* implementingClassifier -- * Implementation;
 	* stateMachine_redefinitionContext -- * StateMachine ownedStateMachine;
 }
 
@@ -400,10 +400,10 @@ class Activity
 	String language;
 	Boolean isSingleExecution;
 	Boolean isReadOnly;
-	0..1 -> * Action action;
-	* activity -- * ActivityEdge edge;
+	0..1 -> * Action;
+	* -- * ActivityEdge edge;
 	* activityGroup_activity -- * ActivityGroup group;
-	* activity -- * ActivityNode node;
+	* -- * ActivityNode node;
 }
 
 class Permission
@@ -431,7 +431,7 @@ class Realization
 {
 	isA Abstraction;
 	0..1 -> 1..* Classifier realizingClassifier;
-	* realization -- * Component abstraction;
+	* -- * Component abstraction;
 }
 
 class Substitution
@@ -621,7 +621,7 @@ class Pin
 class ActivityParameterNode
 {
 	isA ObjectNode;
-	0..1 -> 1..* Parameter parameter;
+	0..1 -> 1..* Parameter;
 }
 
 class ValuePin
@@ -650,7 +650,7 @@ class Artifact
 	isA Classifier ;
 	String fileName;
 	0..1 -> * Artifact nestedArtifact;
-	0..1 -> * Manifestation manifestation;
+	0..1 -> * Manifestation;
 	0..1 -> * Operation ownedOperation;
 	0..1 -> * Property ownedAttribute;
 }
@@ -672,14 +672,14 @@ class Extend
 	0..1 -> 1..* UseCase extendedCase;
 	0..1 -> * Constraint condition;
 	0..1 -> 1..* ExtensionPoint extensionLocation;
-	* extend -- 1..* UseCase extension;
+	* -- 1..* UseCase extension;
 }
 
 class UseCase
 {
 	isA BehavioredClassifier;
-	1..* useCase -- * ExtensionPoint extensionPoint;
-	1..* includingCase -- * Include include;
+	1..* -- * ExtensionPoint;
+	1..* includingCase -- * Include;
 }
 
 class ExtensionPoint
@@ -725,7 +725,7 @@ class EncapsulatedClassifier
 class CallTrigger
 {
 	isA MessageTrigger;
-	0..1 -> 1..* Operation operation;
+	0..1 -> 1..* Operation;
 }
 
 class MessageTrigger
@@ -742,13 +742,13 @@ class ChangeTrigger
 class Trigger
 {
 	isA NamedElement;
-	0..1 -> * Port port;
+	0..1 -> * Port;
 }
 
 class Reception
 {
 	isA BehavioralFeature;
-	0..1 -> * Signal signal;
+	0..1 -> * Signal;
 }
 
 class Signal
@@ -760,7 +760,7 @@ class Signal
 class SignalTrigger
 {
 	isA MessageTrigger;
-	0..1 -> * Signal signal;
+	0..1 -> * Signal;
 }
 
 class TimeTrigger
@@ -778,7 +778,7 @@ class AnyTrigger
 class Variable
 {
 	isA ConnectableElement ;
-	* variable -- 1..* StructuredActivityNode scope;
+	* -- 1..* StructuredActivityNode scope;
 }
 
 class StructuredActivityNode
@@ -792,7 +792,7 @@ class ConditionalNode
 	isA StructuredActivityNode;
 	Boolean isDeterminate;
 	Boolean isAssured;
-	0..1 -> 1..* Clause clause;
+	0..1 -> 1..* Clause;
 	0..1 -> * OutputPin result;
 }
 
@@ -824,14 +824,14 @@ class Interaction
 	isA Behavior ;
 	0..1 -> * Gate formalGate;
 	* enclosingInteraction -- * InteractionFragment fragment;
-	1..* interaction -- * Lifeline lifeline;
-	1..* interaction -- * Message message;
+	1..* -- * Lifeline;
+	1..* -- * Message;
 }
 
 class InteractionFragment
 {
 	isA NamedElement;
-	0..1 -> * GeneralOrdering generalOrdering;
+	0..1 -> * GeneralOrdering;
 	* coveredBy -- * Lifeline covered;
 	* fragment -- * InteractionOperand enclosingOperand;
 }
@@ -850,7 +850,7 @@ class Message
 	MessageKind messageKind;
 	MessageSort messageSort;
 	0..1 receiveMessage -- * MessageEnd receiveEvent;
-	0..1 -> * Connector connector;
+	0..1 -> * Connector;
 	* sendMessage -- * MessageEnd sendEvent;
 }
 
@@ -876,7 +876,7 @@ class EventOccurrence
 class ExecutionOccurrence
 {
 	isA InteractionFragment;
-	0..1 -> * Behavior behavior;
+	0..1 -> * Behavior;
 }
 
 class StateInvariant
@@ -901,7 +901,7 @@ class TemplateSignature
 class TemplateParameter
 {
 	isA Element;
-	0..1 templateParameter -- 1..* ParameterableElement parameteredElement;
+	0..1 -- 1..* ParameterableElement parameteredElement;
 	0..1 -> * ParameterableElement default;
 	0..1 -> * ParameterableElement ownedDefault;
 }
@@ -909,7 +909,7 @@ class TemplateParameter
 class TemplateableElement
 {
 	isA Element;
-	1..* boundElement -- * TemplateBinding templateBinding;
+	1..* boundElement -- * TemplateBinding;
 }
 
 class StringExpression
@@ -927,7 +927,7 @@ class TemplateBinding
 {
 	isA DirectedRelationship;
 	0..1 -> 1..* TemplateSignature signature;
-	1..* templateBinding -- * TemplateParameterSubstitution parameterSubstitution;
+	1..* -- * TemplateParameterSubstitution parameterSubstitution;
 }
 
 class TemplateParameterSubstitution
@@ -1070,16 +1070,16 @@ class StateMachine
 	isA Behavior;
 	0..1 -> * Pseudostate connectionPoint;
 	0..1 -> * StateMachine extendedStateMachine;
-	* stateMachine -- 1..* Region region;
+	* -- 1..* Region;
 }
 
 class Region
 {
 	isA Namespace ;
 	0..1 -> * Region extendedRegion;
-	* region -- * State state;
+	* -- * State;
 	* container -- * Vertex subvertex;
-	1..* container -- * Transition transition;
+	1..* container -- * Transition;
 }
 
 class Pseudostate
@@ -1124,7 +1124,7 @@ class Transition
 	isA RedefinableElement;
 	TransitionKind kind;
 	0..1 -> * Transition redefinedTransition;
-	0..1 -> * Trigger trigger;
+	0..1 -> * Trigger;
 	0..1 -> * Constraint guard;
 	0..1 -> * Activity effect;
 }
@@ -1137,7 +1137,7 @@ class FinalState
 class CreateObjectAction
 {
 	isA Action;
-	0..1 -> 1..* Classifier classifier;
+	0..1 -> 1..* Classifier;
 	0..1 -> 1..* OutputPin result;
 }
 
@@ -1166,7 +1166,7 @@ class ReadSelfAction
 class StructuralFeatureAction
 {
 	isA Action;
-	0..1 -> 1..* StructuralFeature structuralFeature;
+	0..1 -> 1..* StructuralFeature;
 	0..1 -> 1..* InputPin object;
 }
 
@@ -1245,13 +1245,13 @@ class ClearAssociationAction
 {
 	isA Action;
 	0..1 -> 1..* InputPin object;
-	0..1 -> 1..* Association association;
+	0..1 -> 1..* Association;
 }
 
 class VariableAction
 {
 	isA Action;
-	0..1 -> 1..* Variable variable;
+	0..1 -> 1..* Variable;
 }
 
 class ReadVariableAction
@@ -1316,13 +1316,13 @@ class SendSignalAction
 {
 	isA InvocationAction;
 	0..1 -> 1..* InputPin target;
-	0..1 -> 1..* Signal signal;
+	0..1 -> 1..* Signal;
 }
 
 class BroadcastSignalAction
 {
 	isA InvocationAction;
-	0..1 -> 1..* Signal signal;
+	0..1 -> 1..* Signal;
 }
 
 class SendObjectAction
@@ -1335,14 +1335,14 @@ class SendObjectAction
 class CallOperationAction
 {
 	isA CallAction;
-	0..1 -> 1..* Operation operation;
+	0..1 -> 1..* Operation;
 	0..1 -> 1..* InputPin target;
 }
 
 class CallBehaviorAction
 {
 	isA CallAction;
-	0..1 -> 1..* Behavior behavior;
+	0..1 -> 1..* Behavior;
 }
 
 class TimeExpression
@@ -1395,7 +1395,7 @@ class TimeInterval
 class DurationObservationAction
 {
 	isA WriteStructuralFeatureAction;
-	0..1 -> * Duration duration;
+	0..1 -> * Duration;
 }
 
 class DurationConstraint
@@ -1431,9 +1431,9 @@ class Component
 class Deployment
 {
 	isA Dependency;
-	0..1 -> * DeployedArtifact deployedArtifact;
+	0..1 -> * DeployedArtifact;
 	0..1 -> * DeploymentSpecification configuration;
-	* deployment -- 1..* DeploymentTarget location;
+	* -- 1..* DeploymentTarget location;
 }
 
 class DeployedArtifact
@@ -1492,7 +1492,7 @@ class ReadExtentAction
 {
 	isA Action;
 	0..1 -> 1..* OutputPin result;
-	0..1 -> 1..* Classifier classifier;
+	0..1 -> 1..* Classifier;
 }
 
 class ReclassifyObjectAction
@@ -1508,7 +1508,7 @@ class ReadIsClassifiedObjectAction
 {
 	isA Action;
 	Boolean isDirect;
-	0..1 -> 1..* Classifier classifier;
+	0..1 -> 1..* Classifier;
 	0..1 -> 1..* OutputPin result;
 	0..1 -> 1..* InputPin object;
 }
@@ -1551,7 +1551,7 @@ class CreateLinkObjectAction
 class AcceptEventAction
 {
 	isA Action;
-	0..1 -> * Trigger trigger;
+	0..1 -> * Trigger;
 	0..1 -> * OutputPin result;
 }
 

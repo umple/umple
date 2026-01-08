@@ -16,8 +16,6 @@ See : http://www.wfmc.org/standards/XPDL.htm http://en.wikipedia.org/wiki/XPDL
 Authors : David Touzet, Freddy Allilaire
 *************/
 
-namespace DataTypes;
-
 namespace XPDL;
 
 class Element
@@ -29,7 +27,7 @@ class Element
 class Package
 {
 	isA Element;
-	0..1 -> * Script script;
+	0..1 -> * Script;
 	0..1 -> * ExternalPackage externalPackages;
 	0..1 -> * TypeDeclaration typeDeclarations;
 	0..1 -> * Participant participants;
@@ -49,7 +47,7 @@ class MessageFlow
 	0..1 -> * Activity sourceActivity;
 	0..1 -> * Pool targetPool;
 	0..1 -> * Pool sourcePool;
-	0..1 -> * Object object;
+	0..1 -> * Object;
 }
 
 class Association
@@ -62,7 +60,7 @@ class Association
 	0..1 -> * Pool sourcePool;
 	0..1 -> * Activity targetActivity;
 	0..1 -> * Activity sourceActivity;
-	0..1 -> * Object object;
+	0..1 -> * Object;
 }
 
 class Pool
@@ -71,15 +69,15 @@ class Pool
 	OrientationKind orientation;
 	Boolean boundaryVisible;
 	0..1 -> * Lane lanes;
-	0..1 -> * Object object;
-	0..1 -> * Participant participant;
-	0..1 -> * Process process;
+	0..1 -> * Object;
+	0..1 -> * Participant;
+	0..1 -> * Process;
 }
 
 class Lane
 {
 	isA Element;
-	0..1 -> * Object object;
+	0..1 -> * Object;
 	0..1 -> * Lane parentLane;
 	0..1 -> * Pool parentPool;
 }
@@ -94,8 +92,8 @@ class Artifact
 	isA Element;
 	String textAnnotation;
 	String group;
-	0..1 -> * Object object;
-	0..1 -> * DataObject dataObject;
+	0..1 -> * Object;
+	0..1 -> * DataObject;
 }
 
 class DataObject
@@ -135,7 +133,7 @@ class ParametrizedApplication
 class ReferencedApplication
 {
 	isA Application;
-	0..1 -> * ExternalReference externalReference;
+	0..1 -> * ExternalReference;
 }
 
 class Activity
@@ -148,7 +146,7 @@ class Activity
 	Integer startQuantity;
 	Boolean isATransaction;
 	0..1 -> * DataField dataFields;
-	0..1 -> * Object object;
+	0..1 -> * Object;
 }
 
 class Task
@@ -183,7 +181,7 @@ class TaskReference
 class TaskScript
 {
 	isA Task;
-	0..1 -> 1..* Script script;
+	0..1 -> 1..* Script;
 }
 
 class TaskSend
@@ -225,7 +223,7 @@ class SubFlow
 class BlockActivity
 {
 	isA Activity;
-	0..1 -> 1..* ActivitySet activitySet;
+	0..1 -> 1..* ActivitySet;
 	0..1 -> * Activity startActivity;
 }
 
@@ -234,7 +232,7 @@ class Event
 	isA Activity;
 	TriggerKind triggerKind;
 	ImplementationKind implementation;
-	0..1 -> * Trigger trigger;
+	0..1 -> * Trigger;
 }
 
 class Trigger
@@ -244,7 +242,7 @@ class Trigger
 class ResultCompensation
 {
 	isA Trigger;
-	0..1 -> * Activity activity;
+	0..1 -> * Activity;
 }
 
 class ResultError
@@ -324,13 +322,13 @@ class Process
 	Boolean adHoc;
 	AdHocOrderingKind adHocOrdering;
 	String adHocCompletionCondition;
-	0..1 -> * Participant participant;
+	0..1 -> * Participant;
 	0..1 -> * Application applications;
-	0..1 -> 1..* DataField dataField;
+	0..1 -> 1..* DataField;
 	0..1 -> * ActivitySet activitySets;
 	0..1 -> * Activity activities;
 	0..1 -> * Transition transitions;
-	0..1 -> * Object object;
+	0..1 -> * Object;
 	0..1 -> * ActivitySet defaultStartActivitySet;
 	0..1 -> * Activity defaultStartActivity;
 }
@@ -339,7 +337,7 @@ class Transition
 {
 	isA Element;
 	Integer quantity;
-	0..1 -> * Object object;
+	0..1 -> * Object;
 	0..1 -> 1..* Activity to;
 	0..1 -> 1..* Activity from;
 }
@@ -353,7 +351,7 @@ class ActivitySet
 	0..1 -> * Activity defaultStartActivity;
 	0..1 -> * Activity activities;
 	0..1 -> * Transition transitions;
-	0..1 -> * Object object;
+	0..1 -> * Object;
 }
 
 class ExternalReference

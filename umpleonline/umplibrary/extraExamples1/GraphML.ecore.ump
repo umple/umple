@@ -85,8 +85,8 @@ class Port
 class EndPoint
 {
 	isA LocatedElement;
-	0..1 -> 1..* Node node;
-	0..1 -> 1..* Port port;
+	0..1 -> 1..* Node;
+	0..1 -> 1..* Port;
 }
 
 class Data

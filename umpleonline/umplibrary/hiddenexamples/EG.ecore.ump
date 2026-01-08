@@ -17,7 +17,7 @@ namespace EG_MOF;
 
 class ExecutionGraph
 {
-	0..1 executionGraph -- 1..* Node node;
+	0..1 containingGraph -- 1..* Node nodeInGraph;
 	* nested -- 1..* Node nodeNested;
 }
 

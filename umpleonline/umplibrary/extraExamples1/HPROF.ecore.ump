@@ -30,7 +30,7 @@ class Profile
 	String header;
 	0..1 -> * ThreadAction threadActions;
 	0..1 -> * Trace traces;
-	0..1 -> 1..* Times times;
+	0..1 -> 1..* Times;
 	0..1 -> * Method methods;
 }
 
@@ -38,7 +38,7 @@ class Method
 {
 	isA LocatedElement;
 	String fullyQualifiedName;
-	1..* method -- * StackTraceElement stackTraceElements;
+	1..* -- * StackTraceElement stackTraceElements;
 }
 
 class ThreadAction
@@ -65,8 +65,8 @@ class Trace
 	isA LocatedElement;
 	Integer id;
 	Integer threadId;
-	1..* trace -- * StackTraceElement elements;
-	1..* trace -- * Time times;
+	1..* -- * StackTraceElement elements;
+	1..* -- * Time times;
 }
 
 class StackTraceElement
@@ -81,7 +81,7 @@ class Times
 	isA LocatedElement;
 	String unit;
 	Integer total;
-	0..1 -> 1..* Date date;
+	0..1 -> 1..* Date;
 	0..1 -> * Time elements;
 }
 
@@ -92,7 +92,7 @@ class Time
 	Double self;
 	Double accum;
 	Integer count;
-	0..1 -> 1..* Method method;
+	0..1 -> 1..* Method;
 }
 
 class Date

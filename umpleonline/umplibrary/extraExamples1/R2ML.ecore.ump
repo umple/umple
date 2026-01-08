@@ -57,27 +57,27 @@ class DerivationRuleSet
 
 class AbstractTransformationRule
 {
-	isA Abstract/Rule;
+	isA Rule;
 }
 
 class AbstractProductionRule
 {
-	isA Abstract/Rule;
+	isA Rule;
 }
 
 class AbstractReactionRule
 {
-	isA Abstract/Rule;
+	isA Rule;
 }
 
 class AbstractDerivationRule
 {
-	isA Abstract/Rule;
+	isA Rule;
 }
 
 class AbstractIntegrityRule
 {
-	isA Abstract/Rule;
+	isA Rule;
 }
 
 class Rule
@@ -87,78 +87,78 @@ class Rule
 
 class DerivationRule
 {
-	isA Abstract/AbstractDerivationRule;
+	isA AbstractDerivationRule;
 }
 
 class ReactionRule
 {
-	isA Abstract/AbstractReactionRule;
+	isA AbstractReactionRule;
 }
 
 class ProductionRule
 {
-	isA Abstract/AbstractProductionRule;
+	isA AbstractProductionRule;
 }
 
 class DeonticIntegrityRule
 {
-	isA Rules/IntegrityRule;
+	isA IntegrityRule;
 }
 
 class AlethicIntegrityRule
 {
-	isA Rules/IntegrityRule;
+	isA IntegrityRule;
 }
 
 class IntegrityRule
 {
-	isA Abstract/AbstractIntegrityRule;
+	isA AbstractIntegrityRule;
 }
 
 class DataAtom
 {
-	isA Atoms/Atom;
+	isA Atom;
 }
 
 class ObjectAtom
 {
-	isA Atoms/Atom;
+	isA Atom;
 }
 
 class Atom
 {
-	isA Formulas/LogicalFormula ;
+	isA LogicalFormula ;
 	Boolean isNegated;
 }
 
 class DataClassificationAtom
 {
-	isA Atoms/DataAtom;
+	isA DataAtom;
 }
 
 class DatatypePredicateAtom
 {
-	isA Atoms/DataAtom;
+	isA DataAtom;
 }
 
 class InequalityAtom
 {
-	isA Atoms/ObjectAtom;
+	isA ObjectAtom;
 }
 
 class EqualityAtom
 {
-	isA Atoms/ObjectAtom;
+	isA ObjectAtom;
 }
 
 class ObjectClassificationAtom
 {
-	isA Atoms/ObjectAtom;
+	isA ObjectAtom;
 }
 
 class GenericAtom
 {
-	isA Atoms/Atom;
+	isA Atom;
 }
 
 class Slot
@@ -167,74 +167,74 @@ class Slot
 
 class PropertyAtom
 {
-	isA Atoms/ObjectAtom;
+	isA ObjectAtom;
 }
 
 class DataSlot
 {
-	isA Atoms/AtRelational/Slot;
+	isA Slot;
 }
 
 class ObjectSlot
 {
-	isA Atoms/AtRelational/Slot;
+	isA Slot;
 }
 
 class ReferencePropertyAtom
 {
-	isA Atoms/ObjectAtom;
+	isA ObjectAtom;
 }
 
 class AttributionAtom
 {
-	isA Atoms/ObjectAtom;
+	isA ObjectAtom;
 }
 
 class ObjectDescriptionAtom
 {
-	isA Atoms/ObjectAtom;
+	isA ObjectAtom;
 }
 
 class AssociationAtom
 {
-	isA Atoms/ObjectAtom;
+	isA ObjectAtom;
 }
 
 class DatatypeFunction
 {
-	isA Vocabulary/VocFunctional/Function;
+	isA Function;
 	String ap;
 }
 
 class GenericFunction
 {
-	isA Vocabulary/VocFunctional/Function;
+	isA Function;
 }
 
 class Function
 {
-	isA Vocabulary/VocBasic/VocabularyEntry;
+	isA VocabularyEntry;
 	Integer arity;
 }
 
 class DataOperation
 {
-	isA Vocabulary/VocFunctional/Operation;
+	isA Operation;
 }
 
 class ObjectOperation
 {
-	isA Vocabulary/VocFunctional/Operation;
+	isA Operation;
 }
 
 class Operation
 {
-	isA Vocabulary/VocFunctional/Function;
+	isA Function;
 }
 
 class EnumerationDatatype
 {
-	isA Vocabulary/VocBasic/Datatype;
+	isA Datatype;
 }
 
 class ExternalVocabulary
@@ -245,7 +245,7 @@ class ExternalVocabulary
 
 class GenericEntityName
 {
-	isA Terms/GenericTerm;
+	isA GenericTerm;
 }
 
 class VocabularyEntry
@@ -259,48 +259,48 @@ class Vocabulary
 
 class Property
 {
-	isA Vocabulary/VocBasic/Predicate;
+	isA Predicate;
 }
 
 class DatatypePredicate
 {
-	isA Vocabulary/VocBasic/Predicate;
+	isA Predicate;
 	String vp;
 	Integer arity;
 }
 
 class Predicate
 {
-	isA Vocabulary/VocBasic/VocabularyEntry;
+	isA VocabularyEntry;
 	PredicateCategory predicateCategory;
 }
 
 class Attribute
 {
-	isA Vocabulary/VocBasic/Property;
+	isA Property;
 	String np;
 }
 
 class TypedLiteral
 {
-	isA Vocabulary/VocBasic/DataLiteral;
+	isA DataLiteral;
 }
 
 class PlainLiteral
 {
-	isA Vocabulary/VocBasic/DataLiteral;
+	isA DataLiteral;
 	String languageTag;
 }
 
 class DataLiteral
 {
-	isA Terms/DataTerm;
+	isA DataTerm;
 	String lexicalValue;
 }
 
 class ReferenceProperty
 {
-	isA Vocabulary/VocBasic/Property;
+	isA Property;
 	String vp;
 	String domrm;
 	String rgrn;
@@ -308,34 +308,34 @@ class ReferenceProperty
 
 class ObjectName
 {
-	isA Vocabulary/VocBasic/VocabularyEntry ;
+	isA VocabularyEntry ;
 }
 
 class Datatype
 {
-	isA Vocabulary/VocBasic/Type;
+	isA Type;
 }
 
 class Class
 {
-	isA Vocabulary/VocBasic/Type;
+	isA Type;
 	String np;
 }
 
 class Type
 {
-	isA Vocabulary/VocBasic/Predicate;
+	isA Predicate;
 }
 
 class AssociationPredicate
 {
-	isA Vocabulary/VocBasic/Predicate;
+	isA Predicate;
 	String vp;
 }
 
 class GenericPredicate
 {
-	isA Vocabulary/VocBasic/Predicate;
+	isA Predicate;
 	String vp;
 }
 
@@ -345,17 +345,17 @@ class SOAPMessageBody
 
 class SOAPConversationalMsgEvtExpression
 {
-	isA Events/SOAPMessageEventExpression;
+	isA SOAPMessageEventExpression;
 }
 
 class SOAPRPCResponseMsgEvtExpression
 {
-	isA Events/SOAPMessageEventExpression;
+	isA SOAPMessageEventExpression;
 }
 
 class SOAPRPCRequestMsgEvtExpression
 {
-	isA Events/SOAPMessageEventExpression;
+	isA SOAPMessageEventExpression;
 }
 
 class SOAPMessageHeaderBlock
@@ -381,93 +381,93 @@ class SOAPMessageBodyChild
 
 class EveryYearTimeEventExpression
 {
-	isA Events/PeriodicTimeEventExpression;
+	isA PeriodicTimeEventExpression;
 	Integer dayOfYear;
 	String time;
 }
 
 class EveryMonthTimeEventExpression
 {
-	isA Events/PeriodicTimeEventExpression;
+	isA PeriodicTimeEventExpression;
 	Integer dayOfMonth;
 	String time;
 }
 
 class EveryWeekTimeEventExpression
 {
-	isA Events/PeriodicTimeEventExpression;
+	isA PeriodicTimeEventExpression;
 	Integer dayOfWeek;
 	String time;
 }
 
 class EveryDayTimeEventExpression
 {
-	isA Events/PeriodicTimeEventExpression;
+	isA PeriodicTimeEventExpression;
 	String time;
 }
 
 class EveryHourTimeEventExpression
 {
-	isA Events/PeriodicTimeEventExpression;
+	isA PeriodicTimeEventExpression;
 	Integer minute;
 	Integer second;
 }
 
 class EveryMinuteTimeEventExpression
 {
-	isA Events/PeriodicTimeEventExpression;
+	isA PeriodicTimeEventExpression;
 	Integer second;
 }
 
 class MessageEventExpression
 {
-	isA Events/ActionEventExpression;
+	isA ActionEventExpression;
 	String sender;
 	String receiver;
 }
 
 class SOAPMessageEventExpression
 {
-	isA Events/MessageEventExpression;
+	isA MessageEventExpression;
 }
 
 class PeriodicTimeEventExpression
 {
-	isA Events/TimeEventExpression;
+	isA TimeEventExpression;
 }
 
 class SingularTimeEventExpression
 {
-	isA Events/TimeEventExpression;
+	isA TimeEventExpression;
 	Integer dateTime;
 }
 
 class ActionEventExpression
 {
-	isA Events/AtomicEventExpression;
+	isA AtomicEventExpression;
 	String actor;
 }
 
 class TimeEventExpression
 {
-	isA Events/AtomicEventExpression;
+	isA AtomicEventExpression;
 }
 
 class ParallelEventExpression
 {
-	isA Events/EventExpression;
+	isA EventExpression;
 	String timeWindow;
 }
 
 class SequenceEventExpression
 {
-	isA Events/EventExpression;
+	isA EventExpression;
 	Integer timeWindow;
 }
 
 class ChoiceEventExpression
 {
-	isA Events/EventExpression;
+	isA EventExpression;
 	Integer minOccurs;
 	Integer maxOccurs;
 	String timeWindow;
@@ -475,13 +475,13 @@ class ChoiceEventExpression
 
 class AtomicEventExpression
 {
-	isA Events/EventExpression;
+	isA EventExpression;
 	0..1 -> 1..* EventType type;
 }
 
 class AndNotEventExpression
 {
-	isA Events/EventExpression;
+	isA EventExpression;
 	String timeWndow;
 }
 
@@ -494,38 +494,38 @@ class EventExpression
 
 class InvokeActionExpression
 {
-	isA Actions/ActionExpression;
+	isA ActionExpression;
 }
 
 class SOAPRPCAction
 {
-	isA Actions/SOAPAction;
+	isA SOAPAction;
 }
 
 class SOAPAction
 {
-	isA Actions/MessageAction;
+	isA MessageAction;
 operation;
 }
 
 class DeleteActionExpression
 {
-	isA Actions/ActionExpression;
+	isA ActionExpression;
 }
 
 class CreateActionExpression
 {
-	isA Actions/ActionExpression;
+	isA ActionExpression;
 }
 
 class AssignActionExpression
 {
-	isA Actions/ActionExpression;
+	isA ActionExpression;
 }
 
 class MessageAction
 {
-	isA Actions/ActionExpression;
+	isA ActionExpression;
 }
 
 class ActionExpression
@@ -534,46 +534,46 @@ class ActionExpression
 
 class AtLeastAndAtMostQuantifiedFormula
 {
-	isA Formulas/QuantifiedFormula;
+	isA QuantifiedFormula;
 	Integer maxCardinality;
 	Integer minCardinality;
 }
 
 class AtMostQuantifiedFormula
 {
-	isA Formulas/QuantifiedFormula;
+	isA QuantifiedFormula;
 	Integer maxCardinality;
 }
 
 class AtLeastQuantifiedFormula
 {
-	isA Formulas/QuantifiedFormula;
+	isA QuantifiedFormula;
 	Integer minCardinality;
 }
 
 class Conjuction
 {
-	isA Formulas/LogicalFormula;
+	isA LogicalFormula;
 }
 
 class UniversallyQuantifiedFormula
 {
-	isA Formulas/QuantifiedFormula;
+	isA QuantifiedFormula;
 }
 
 class StrongNegation
 {
-	isA Formulas/Negation ;
+	isA Negation ;
 }
 
 class QuantifiedFormula
 {
-	isA Formulas/LogicalFormula;
+	isA LogicalFormula;
 }
 
 class NegationAsFailure
 {
-	isA Formulas/Negation ;
+	isA Negation ;
 }
 
 class Negation
@@ -586,32 +586,32 @@ class LogicalFormula
 
 class Implication
 {
-	isA Formulas/LogicalFormula;
+	isA LogicalFormula;
 }
 
 class ExistentiallyQuantifiedFormula
 {
-	isA Formulas/QuantifiedFormula;
+	isA QuantifiedFormula;
 }
 
 class Disjunction
 {
-	isA Formulas/LogicalFormula;
+	isA LogicalFormula;
 }
 
 class QFStrongNegation
 {
-	isA Formulas/qf/QFNegation;
+	isA QFNegation;
 }
 
 class QFNegationAsFailure
 {
-	isA Formulas/qf/QFNegation;
+	isA QFNegation;
 }
 
 class QFNegation
 {
-	isA Formulas/qf/AndOrNafNegFormula;
+	isA AndOrNafNegFormula;
 }
 
 class LiteralConjunction
@@ -620,12 +620,12 @@ class LiteralConjunction
 
 class QFDisjunction
 {
-	isA Formulas/qf/AndOrNafNegFormula;
+	isA AndOrNafNegFormula;
 }
 
 class QFConjunction
 {
-	isA Formulas/qf/AndOrNafNegFormula;
+	isA AndOrNafNegFormula;
 }
 
 class AndOrNafNegFormula
@@ -634,7 +634,7 @@ class AndOrNafNegFormula
 
 class GenericTerm
 {
-	isA Terms/Term;
+	isA Term;
 }
 
 class Term
@@ -644,12 +644,12 @@ class Term
 
 class ObjectTerm
 {
-	isA Terms/Term;
+	isA Term;
 }
 
 class DataTerm
 {
-	isA Terms/Term;
+	isA Term;
 }
 
 class Variable
@@ -659,51 +659,51 @@ class Variable
 
 class ObjectVariable
 {
-	isA Terms/TerBasic/Variables/Variable ;
+	isA Variable ;
 }
 
 class DataVariable
 {
-	isA Terms/TerBasic/Variables/Variable ;
+	isA Variable ;
 }
 
 class GenericVariable
 {
-	isA Terms/GenericTerm ;
+	isA GenericTerm ;
 }
 
 class DatatypeFunctionTerm
 {
-	isA Terms/TerFunctional/DataFunctionTerm;
+	isA DataFunctionTerm;
 }
 
 class DataFunctionTerm
 {
-	isA Terms/DataTerm;
+	isA DataTerm;
 }
 
 class AttributeFunctionTerm
 {
-	isA Terms/TerFunctional/DataFunctionTerm;
+	isA DataFunctionTerm;
 }
 
 class DataOperationTerm
 {
-	isA Terms/TerFunctional/DataFunctionTerm;
+	isA DataFunctionTerm;
 }
 
 class ReferencePropertyFunctionTerm
 {
-	isA Terms/ObjectTerm;
+	isA ObjectTerm;
   referencePropertyRef;
 }
 
 class ObjectOperationTerm
 {
-	isA Terms/ObjectTerm;
+	isA ObjectTerm;
 }
 
 class GenericFunctionTerm
 {
-	isA Terms/GenericTerm;
+	isA GenericTerm;
 }

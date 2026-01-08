@@ -28,20 +28,20 @@ class Unit
 {
 	isA LocatedElement;
 	String name;
-	1..* unit -- * LibraryRef libraries;
+	1..* -- * LibraryRef libraries;
 }
 
 class Library
 {
 	isA Unit;
-	* library -- * Helper helpers;
+	* -- * Helper helpers;
 }
 
 class Query
 {
 	isA Unit;
 	0..1 -> 1..* OclExpression body;
-	* query -- * Helper helpers;
+	* -- * Helper helpers;
 }
 
 class Module
@@ -50,7 +50,7 @@ class Module
 	Boolean isRefining;
 	0..1 -> 1..* OclModel inModels;
 	0..1 -> 1..* OclModel outModels;
-	1..* module -- * ModuleElement elements;
+	1..* -- * ModuleElement elements;
 }
 
 class ModuleElement
@@ -68,9 +68,9 @@ class Rule
 {
 	isA ModuleElement;
 	String name;
-	1..* rule -- * OutPattern outPattern;
-	1..* rule -- * RuleVariableDeclaration variables;
-	1..* rule -- * ActionBlock actionBlock;
+	1..* -- * OutPattern;
+	1..* -- * RuleVariableDeclaration variables;
+	1..* -- * ActionBlock;
 }
 
 class MatchedRule
@@ -80,7 +80,7 @@ class MatchedRule
 	Boolean isRefining;
 	Boolean isNoDefault;
 	* superRule -- * MatchedRule children;
-	1..* rule -- * InPattern inPattern;
+	1..* rule -- * InPattern;
 }
 
 class LazyMatchedRule
@@ -101,13 +101,13 @@ class InPattern
 {
 	isA LocatedElement;
 	0..1 -> * OclExpression filter;
-	1..* inPattern -- 1..* InPatternElement elements;
+	1..* -- 1..* InPatternElement elements;
 }
 
 class OutPattern
 {
 	isA LocatedElement;
-	1..* outPattern -- 1..* OutPatternElement elements;
+	1..* -- 1..* OutPatternElement elements;
 }
 
 class PatternElement
@@ -131,7 +131,7 @@ class OutPatternElement
 {
 	isA PatternElement;
 	0..1 -> * OclModel model;
-	1..* outPatternElement -- * Binding bindings;
+	1..* -- * Binding bindings;
 }
 
 class SimpleOutPatternElement
@@ -144,7 +144,7 @@ class ForEachOutPatternElement
 {
 	isA OutPatternElement;
 	0..1 -> 1..* OclExpression collection;
-	0..1 -> 1..* Iterator iterator;
+	0..1 -> 1..* Iterator;
 }
 
 class Binding
@@ -203,7 +203,7 @@ class IfStat
 class ForStat
 {
 	isA Statement;
-	0..1 -> 1..* Iterator iterator;
+	0..1 -> 1..* Iterator;
 	0..1 -> 1..* OclExpression collection;
 	0..1 -> * Statement statements;
 }
@@ -218,11 +218,11 @@ class OclExpression
 	* elements -- * CollectionExp collection;
 	1..* source -- * PropertyCallExp appliedProperty;
 	* arguments -- * OperationCallExp parentOperation;
-	1..* body -- * LoopExp loopExp;
-	1..* in_ -- * LetExp letExp;
+	1..* body -- * LoopExp;
+	1..* in_ -- * LetExp;
 	1..* condition -- * IfExp ifExp1;
 	* initExpression -- * VariableDeclaration initializedVariable;
-	* oclExpression -- * OclType type;
+	* -- * OclType type;
 	1..* initExpression -- * Attribute owningAttribute;
 	1..* body -- * Operation owningOperation;
 }
@@ -230,7 +230,7 @@ class OclExpression
 class VariableExp
 {
 	isA OclExpression;
-	* variableExp -- 1..* VariableDeclaration referredVariable;
+	* -- 1..* VariableDeclaration referredVariable;
 }
 
 class SuperExp
@@ -300,7 +300,7 @@ class SetExp
 class TupleExp
 {
 	isA OclExpression;
-	1..* tuple -- * TuplePart tuplePart;
+	1..* tuple -- * TuplePart;
 }
 
 class TuplePart
@@ -380,7 +380,7 @@ class IteratorExp
 class LetExp
 {
 	isA OclExpression;
-	* letExp -- 1..* VariableDeclaration variable;
+	* -- 1..* VariableDeclaration variable;
 }
 
 class IfExp
@@ -393,7 +393,7 @@ class VariableDeclaration
 	isA LocatedElement;
 	String id;
 	String varName;
-	* variableDeclaration -- * OclType type;
+	* -- * OclType type;
 }
 
 class Iterator
@@ -404,7 +404,7 @@ class Iterator
 class Parameter
 {
 	isA VariableDeclaration;
-	* parameters -- 1..* Operation operation;
+	* parameters -- 1..* Operation;
 }
 
 class CollectionType
@@ -418,11 +418,11 @@ class OclType
 	isA OclExpression;
 	String name;
 	0..1 valueType -- * MapType mapType2;
-	1..* type -- * TupleTypeAttribute tupleTypeAttribute;
-	1..* keyType -- * MapType mapType;
+	1..* type -- * TupleTypeAttribute;
+	1..* keyType -- * MapType;
 	1..* context_ -- * OclContextDefinition definitions;
-	1..* type -- * Attribute attribute;
-	1..* returnType -- * Operation operation;
+	1..* type -- * Attribute;
+	1..* returnType -- * Operation;
 }
 
 class Primitive
@@ -483,7 +483,7 @@ class OclAnyType
 class TupleType
 {
 	isA OclType;
-	1..* tupleType -- * TupleTypeAttribute attributes;
+	1..* -- * TupleTypeAttribute ttattributes;
 }
 
 class TupleTypeAttribute

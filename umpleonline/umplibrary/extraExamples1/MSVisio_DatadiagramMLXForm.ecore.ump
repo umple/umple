@@ -210,12 +210,12 @@ class NamedElt
 
 class IdentifiedElt
 {
-	Integer ID;
+	Integer id;
 }
 
 class UniqueIdElt
 {
-	String UniqueID;
+	String uniqueID;
 }
 
 class Shape
@@ -257,7 +257,7 @@ class Geom
 	1..* e_geom -- * Ellipse ellipses;
 	1..* eat_geom -- * EllipticalArcTo ellipticalArcsTo;
 	1..* ss_geom -- * SplineStart splineStarts;
-	1..* nt_geom -- * NURBSTo nurbsTo;
+	1..* nt_geom -- * NURBSTo;
 }
 
 class XYElt
@@ -541,7 +541,7 @@ class Page
 	Integer backPage;
 	Double viewScale;
 	Double viewCenterX;
-	Double ViewCenterY;
+	Double viewCenterY;
 	Integer reviewerID;
 	Integer associatedPage;
 	1..* pe_page -- * PageElt pageElts;

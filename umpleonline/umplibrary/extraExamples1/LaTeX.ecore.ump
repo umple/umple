@@ -35,8 +35,8 @@ class Title
 class Name
 {
 	isA ValuedElement;
-	1..* names -- * Author author;
-	1..* names -- * Organisation organisation;
+	1..* names -- * Author;
+	1..* names -- * Organisation;
 }
 
 class Date
@@ -55,8 +55,8 @@ class Adress
 
 class Organisation
 {
-	0..1 -> 1..* Adress adress;
-	* organisations -- 1..* Heading heading;
+	0..1 -> 1..* Adress;
+	* organisations -- 1..* Heading;
 }
 
 class Phone
@@ -76,9 +76,9 @@ class EMail
 
 class Heading
 {
-	0..1 -> * Phone phone;
-	0..1 -> * Fax fax;
-	0..1 -> * EMail email;
+	0..1 -> * Phone;
+	0..1 -> * Fax;
+	0..1 -> * EMail;
 }
 
 class Abstract
@@ -93,8 +93,8 @@ class Keywords
 
 class SectionBody
 {
-	1..* sectionbody -- * Corps corps;
-	1..* sectionBody -- 1..* Section section;
+	1..* -- * Corps;
+	1..* -- 1..* Section;
 }
 
 class Corps
@@ -124,16 +124,16 @@ class Label
 class Figure
 {
 	isA Corps;
-	0..1 -> 1..* Path path;
-	0..1 -> 1..* Label label;
-	0..1 -> 1..* Title title;
+	0..1 -> 1..* Path;
+	0..1 -> 1..* Label;
+	0..1 -> 1..* Title;
 }
 
 class Item
 {
 	isA ValuedElement;
-	1..* item -- * Items itemscontainer;
-	1..* item -- * Enumerate enumeratecontainer;
+	1..* -- * Items itemscontainer;
+	1..* -- * Enumerate enumeratecontainer;
 }
 
 class Items
@@ -149,41 +149,41 @@ class Enumerate
 class Section
 {
 	isA Corps;
-	0..1 -> 1..* Title title;
+	0..1 -> 1..* Title;
 }
 
 class Description
 {
 	isA ValuedElement;
-	0..1 -> 1..* Date date;
+	0..1 -> 1..* Date;
 }
 
 class Citation
 {
-	0..1 -> 1..* Label label;
-	0..1 -> 1..* Author author;
-	0..1 -> 1..* Description description;
-	1..* citations -- 1..* Bibliography bibliography;
+	0..1 -> 1..* Label;
+	0..1 -> 1..* Author;
+	0..1 -> 1..* Description;
+	1..* citations -- 1..* Bibliography;
 }
 
 class Bibliography
 {
-	* bibliography -- 1..* DocumentBody documentbody;
+	* -- 1..* DocumentBody;
 }
 
 class DocumentBody
 {
 	0..1 -> 1..* Section sections;
-	1..* documentbody -- 1..* Document document;
+	1..* -- 1..* Document;
 }
 
 class Document
 {
-	0..1 -> 1..* Type type;
-	0..1 -> 1..* Title title;
-	0..1 -> * Author author;
-	0..1 -> * Date date;
-	0..1 -> * Heading heading;
-	0..1 -> * Abstract abstract;
-	0..1 -> * Keywords keywords;
+	0..1 -> 1..* Type;
+	0..1 -> 1..* Title;
+	0..1 -> * Author;
+	0..1 -> * Date;
+	0..1 -> * Heading;
+	0..1 -> * Abstract;
+	0..1 -> * Keywords;
 }

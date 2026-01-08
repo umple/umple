@@ -54,8 +54,8 @@ class State
 
 class Transition
 {
-	0..1 -> * Guard guard;
-	0..1 -> * Action action;
+	0..1 -> * Guard;
+	0..1 -> * Action;
 }
 
 class Trans

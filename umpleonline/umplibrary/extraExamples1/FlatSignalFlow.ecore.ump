@@ -19,17 +19,17 @@ namespace FlatSignalFlow;
 
 class RootFolder
 {
-	1..* rootFolder -- * RootContainer rootContainer;
+	1..* -- * RootContainer;
 }
 
 class RootContainer
 {
 	String name;
 	String position;
-	1..* rootContainer -- * Actor actor;
-	1..* rootContainer -- * InputSignal inputSignal;
-	1..* rootContainer -- * OutputSignal outputSignal;
-	1..* rootContainer -- * Queue queue;
+	1..* -- * Actor;
+	1..* -- * InputSignal;
+	1..* -- * OutputSignal;
+	1..* -- * Queue;
 }
 
 class Actor
@@ -37,47 +37,47 @@ class Actor
 	String memory;
 	String script;
 	String file;
-	String WCET;
+	String wcet;
 	String name;
 	String position;
-	1..* actor -- * Transmitter transmitter;
-	1..* actor -- * Receiver receiver;
+	1..* -- * Transmitter;
+	1..* -- * Receiver;
 }
 
 class Transmitter
 {
 	String name;
 	String position;
-	1..* srctransmitter -- 1..* AssociationQueueTransmitter associationQueueTransmitter;
+	1..* srctransmitter -- 1..* AssociationQueueTransmitter;
 }
 
 class Receiver
 {
 	String name;
 	String position;
-	1..* dstreceiver -- 1..* AssociationReceiverQueue associationReceiverQueue;
+	1..* dstreceiver -- 1..* AssociationReceiverQueue;
 }
 
 class InputSignal
 {
 	String name;
 	String position;
-	1..* inputSignal -- 1..* AssociationReceiverQueue associationReceiverQueue;
+	1..* -- 1..* AssociationReceiverQueue;
 }
 
 class OutputSignal
 {
 	String name;
 	String position;
-	1..* outputSignal -- 1..* AssociationQueueTransmitter associationQueueTransmitter;
+	1..* -- 1..* AssociationQueueTransmitter;
 }
 
 class Queue
 {
 	String name;
 	String position;
-	1..* srcqueue -- 1..* AssociationReceiverQueue associationReceiverQueue;
-	1..* dstqueue -- 1..* AssociationQueueTransmitter associationQueueTransmitter;
+	1..* srcqueue -- 1..* AssociationReceiverQueue;
+	1..* dstqueue -- 1..* AssociationQueueTransmitter;
 }
 
 class AssociationReceiverQueue

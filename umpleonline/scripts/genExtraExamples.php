@@ -5,6 +5,13 @@ example menus in UmpleOnline
 
 If run manually you must be in the umpleonline directory and run
 php scripts/genExtraExamples.php
+
+This was originally designed to create 4 files (ending in AD, EL MP and QZ
+But was modified to put all the examples in the AD directory after cleaning up
+poor examples. This was done before release in early 2026.
+Weak examples were put in hiddenexamples.
+Lines commented out by HIDE were done to make this change
+
 */
 
 
@@ -46,17 +53,18 @@ foreach ($dirIterator as $fileInfo) {
 
 //Prepare to re-create the data files containing the menu items
 $fhandleAD = fopen("generatedExtraExample1OptionsAD.html","w");
-$fhandleEL = fopen("generatedExtraExample1OptionsEL.html","w");
-$fhandleMP = fopen("generatedExtraExample1OptionsMP.html","w");
-$fhandleQZ = fopen("generatedExtraExample1OptionsQZ.html","w");
+//HIDE $fhandleEL = fopen("generatedExtraExample1OptionsEL.html","w");
+//HIDE $fhandleMP = fopen("generatedExtraExample1OptionsMP.html","w");
+//HIDE $fhandleQZ = fopen("generatedExtraExample1OptionsQZ.html","w");
 
 // Sort the array
 ksort($foundOptions);
 
 // Output the groups
 foreach($foundOptions as $title => $line) {
-  if(substr($title,0,1)<="D") {
+//HIDE  if(substr($title,0,1)<="D") {
     fwrite($fhandleAD,$line);
+/*HIDE
   }
   else if(substr($title,0,1)<="L") {
     fwrite($fhandleEL,$line);
@@ -67,12 +75,12 @@ foreach($foundOptions as $title => $line) {
   else {
     fwrite($fhandleQZ,$line);
   }
-
+HIDE*/
 }
 
 fclose($fhandleAD);
-fclose($fhandleEL);
-fclose($fhandleMP);
-fclose($fhandleQZ);
+//HIDE fclose($fhandleEL);
+//HIDE fclose($fhandleMP);
+//HIDE fclose($fhandleQZ);
 
 ?>

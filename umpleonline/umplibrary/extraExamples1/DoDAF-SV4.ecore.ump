@@ -27,15 +27,15 @@ class Element
 class DoDAFModel
 {
 	isA Element;
-	0..1 -> * Document document;
+	0..1 -> * Document;
 	0..1 -> * SystemDocument sd;
-	0..1 -> * Task task;
+	0..1 -> * Task;
 	0..1 -> * InformationAssetDocument iaDocument;
-	0..1 -> * Position position;
-	0..1 -> * Occupation occupation;
+	0..1 -> * Position;
+	0..1 -> * Occupation;
 	0..1 -> * ArchitectureDocument ad;
-	0..1 -> * System system;
-	0..1 -> * AM am;
+	0..1 -> * System;
+	0..1 -> * AM;
 	0..1 -> * SystemPAStandard spas;
 	0..1 -> * InformationTechnologyStandard its;
 	0..1 -> * OperationalRolePA orpa;

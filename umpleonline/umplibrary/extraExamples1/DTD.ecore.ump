@@ -59,7 +59,7 @@ class Mixed
 	String elements;
 }
 
-class Children
+class Child
 {
 	isA ElementContent;
 	Occurence occ;
@@ -67,26 +67,26 @@ class Children
 
 class Sequence
 {
-	isA Children;
-	0..1 -> 2..* Children children;
+	isA Child;
+	0..1 -> 2..* Child children;
 }
 
 class Leaf
 {
-	isA Children;
+	isA Child;
 	String elementName;
 }
 
 class Choice
 {
-	isA Children;
-	0..1 -> 2..* Children childrenChoice;
+	isA Child;
+	0..1 -> 2..* Child childrenChoice;
 }
 
 class AttributeList
 {
 	isA TypeDescription;
-	1..* attributeList -- 1..* AttributeDescription containsAttributes;
+	1..* -- 1..* AttributeDescription containsAttributes;
 }
 
 class AttributeDescription

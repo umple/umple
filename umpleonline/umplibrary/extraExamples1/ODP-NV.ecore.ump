@@ -34,7 +34,7 @@ class Nucleus
 class Capsule
 {
 	0..1 -> * EngineeringObject otherEngObjects;
-	0..1 -> 1..* CapsuleManager capsuleManager;
+	0..1 -> 1..* CapsuleManager;
 	0..1 -> * Cluster clusters;
 }
 
@@ -45,13 +45,13 @@ class EngineeringObject
 class CapsuleManager
 {
 	isA EngineeringObject;
-	1..* capsuleManager -- * ClusterManager cmClusterManagers;
+	1..* -- * ClusterManager cmClusterManagers;
 }
 
 class Cluster
 {
 	0..1 -> * BEO clusterBeos;
-	1..* clusters -- 1..* ClusterManager clusterManager;
+	1..* clusters -- 1..* ClusterManager;
 }
 
 class ClusterManager

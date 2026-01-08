@@ -44,7 +44,7 @@ class Peer
 	String id;
 	HowKind how;
 	ExportKind export;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * Presentation presentations;
 	0..1 -> * Logic logics;
 }
@@ -56,7 +56,7 @@ class Presentation
 	HowKind how;
 	ExportKind export;
 	String base;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * DClass dClasses;
 }
 
@@ -66,7 +66,7 @@ class Logic
 	String id;
 	HowKind how;
 	ExportKind export;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * DComponent dComponents;
 }
 
@@ -78,7 +78,7 @@ class DComponent
 	ExportKind export;
 	String mapsTo;
 	String location;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * DMethod dMethods;
 }
 
@@ -90,7 +90,7 @@ class DClass
 	ExportKind export;
 	String mapsTo;
 	String mapsType;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * DMethod dMethods;
 	0..1 -> * DProperty dProperties;
 	0..1 -> * Event events;
@@ -115,9 +115,9 @@ class DMethod
 	ExportKind export;
 	String mapsTo;
 	String returnType;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * DParam dParams;
-	0..1 -> * Script script;
+	0..1 -> * Script;
 }
 
 class DParam
@@ -172,11 +172,11 @@ class Interface
 	String id;
 	HowKind how;
 	ExportKind export;
-	0..1 -> * Source source;
-	0..1 -> * Structure structure;
-	0..1 -> * Style style;
-	0..1 -> * Content content;
-	0..1 -> * Behavior behavior;
+	0..1 -> * Source;
+	0..1 -> * Structure;
+	0..1 -> * Style;
+	0..1 -> * Content;
+	0..1 -> * Behavior;
 }
 
 class Structure
@@ -185,7 +185,7 @@ class Structure
 	String id;
 	HowKind how;
 	ExportKind export;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * Part parts;
 }
 
@@ -197,10 +197,10 @@ class Part
 	ExportKind export;
 	String class;
 	String wherePart;
-	0..1 -> * Source source;
-	0..1 -> * Style style;
-	0..1 -> * Content content;
-	0..1 -> * Behavior behavior;
+	0..1 -> * Source;
+	0..1 -> * Style;
+	0..1 -> * Content;
+	0..1 -> * Behavior;
 	0..1 -> * Part parts;
 	0..1 -> * Repeat repeats;
 }
@@ -211,7 +211,7 @@ class Style
 	String id;
 	HowKind how;
 	ExportKind export;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * Property properties;
 }
 
@@ -224,7 +224,7 @@ class Property
 	String[] values;
 	0..1 -> * Part parts;
 	0..1 -> * Event events;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * Constant constants;
 	0..1 -> * Property properties;
 	0..1 -> * Reference references;
@@ -238,7 +238,7 @@ class Content
 	String id;
 	HowKind how;
 	ExportKind export;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * Constant constants;
 }
 
@@ -248,13 +248,13 @@ class Behavior
 	String id;
 	HowKind how;
 	ExportKind export;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * Rule rules;
 }
 
 class Repeat
 {
-	0..1 -> 1..* Iterator iterator;
+	0..1 -> 1..* Iterator;
 	0..1 -> 1..* Part parts;
 }
 
@@ -266,13 +266,13 @@ class Constant
 	ExportKind export;
 	String model;
 	String value;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * Constant constants;
 }
 
 class Reference
 {
-	0..1 -> * Constant constant;
+	0..1 -> * Constant;
 }
 
 class Rule
@@ -281,9 +281,9 @@ class Rule
 	String id;
 	HowKind how;
 	ExportKind export;
-	0..1 -> * Source source;
-	0..1 -> 1..* Condition condition;
-	0..1 -> 1..* Action action;
+	0..1 -> * Source;
+	0..1 -> 1..* Condition;
+	0..1 -> 1..* Action;
 }
 
 class Condition
@@ -293,13 +293,13 @@ class Condition
 class EventCondition
 {
 	isA Condition;
-	0..1 -> 1..* Event event;
+	0..1 -> 1..* Event;
 }
 
 class EqualCondition
 {
 	isA Condition;
-	0..1 -> 1..* Equal equal;
+	0..1 -> 1..* Equal;
 }
 
 class OpCondition
@@ -315,7 +315,7 @@ class Action
 class Action_1
 {
 	isA Action;
-	0..1 -> * Event event;
+	0..1 -> * Event;
 	0..1 -> * Property properties;
 	0..1 -> * Call calls;
 	0..1 -> * Restructure restructures;
@@ -324,9 +324,9 @@ class Action_1
 class Action_2
 {
 	isA Action;
-	0..1 -> * WhenTrue whenTrue;
-	0..1 -> * WhenFalse whenFalse;
-	0..1 -> * ByDefault byDefault;
+	0..1 -> * WhenTrue;
+	0..1 -> * WhenFalse;
+	0..1 -> * ByDefault;
 }
 
 class Call
@@ -343,19 +343,19 @@ class Parameter
 class PropertyParameter
 {
 	isA Parameter;
-	0..1 -> 1..* Property property;
+	0..1 -> 1..* Property;
 }
 
 class ReferenceParameter
 {
 	isA Parameter;
-	0..1 -> 1..* Reference reference;
+	0..1 -> 1..* Reference;
 }
 
 class CallParameter
 {
 	isA Parameter;
-	0..1 -> 1..* Call call;
+	0..1 -> 1..* Call;
 }
 
 class OperationParameter
@@ -367,19 +367,19 @@ class OperationParameter
 class EventParameter
 {
 	isA Parameter;
-	0..1 -> 1..* Event event;
+	0..1 -> 1..* Event;
 }
 
 class ConstantParameter
 {
 	isA Parameter;
-	0..1 -> 1..* Constant constant;
+	0..1 -> 1..* Constant;
 }
 
 class IteratorParameter
 {
 	isA Parameter;
-	0..1 -> 1..* Iterator iterator;
+	0..1 -> 1..* Iterator;
 }
 
 class Iterator
@@ -390,19 +390,19 @@ class Iterator
 class ConstantIterator
 {
 	isA Iterator;
-	0..1 -> 1..* Constant constant;
+	0..1 -> 1..* Constant;
 }
 
 class PropertyIterator
 {
 	isA Iterator;
-	0..1 -> 1..* Property property;
+	0..1 -> 1..* Property;
 }
 
 class CallIterator
 {
 	isA Iterator;
-	0..1 -> 1..* Call call;
+	0..1 -> 1..* Call;
 }
 
 class TextIterator
@@ -419,25 +419,25 @@ class Event
 
 class Equal
 {
-	0..1 -> 1..* Event event;
+	0..1 -> 1..* Event;
 }
 
 class EqualToConstant
 {
 	isA Equal;
-	0..1 -> 1..* Constant constant;
+	0..1 -> 1..* Constant;
 }
 
 class EqualToProperty
 {
 	isA Equal;
-	0..1 -> 1..* Property property;
+	0..1 -> 1..* Property;
 }
 
 class EqualToReference
 {
 	isA Equal;
-	0..1 -> 1..* Reference reference;
+	0..1 -> 1..* Reference;
 }
 
 class EqualToOperation
@@ -463,18 +463,18 @@ class Restructure
 	HowKind how;
 	0..1 -> * Part atPart;
 	0..1 -> * Part wherePart;
-	0..1 -> * Source source;
-	0..1 -> * Template template;
+	0..1 -> * Source;
+	0..1 -> * Template;
 }
 
 class Branch
 {
 	0..1 -> * Property properties;
 	0..1 -> * Call calls;
-	0..1 -> * Restructure restructure;
+	0..1 -> * Restructure;
 	0..1 -> * Operation op;
-	0..1 -> * Equal equal;
-	0..1 -> * Event event;
+	0..1 -> * Equal;
+	0..1 -> * Event;
 }
 
 class WhenTrue
@@ -502,95 +502,95 @@ class Template
 class BehaviorTemplate
 {
 	isA Template;
-	0..1 -> 1..* Behavior behavior;
+	0..1 -> 1..* Behavior;
 }
 
 class DClassTemplate
 {
 	isA Template;
-	0..1 -> 1..* DClass dClass;
+	0..1 -> 1..* DClass;
 }
 
 class DComponentTemplate
 {
 	isA Template;
-	0..1 -> 1..* DComponent dComponent;
+	0..1 -> 1..* DComponent;
 }
 
 class ConstantTemplate
 {
 	isA Template;
-	0..1 -> 1..* Constant constant;
+	0..1 -> 1..* Constant;
 }
 
 class ContentTemplate
 {
 	isA Template;
-	0..1 -> 1..* Content content;
+	0..1 -> 1..* Content;
 }
 
 class InterfaceTemplate
 {
 	isA Template;
-	0..1 -> 1..* Interface interface;
+	0..1 -> 1..* Interface;
 }
 
 class LogicTemplate
 {
 	isA Template;
-	0..1 -> 1..* Logic logic;
+	0..1 -> 1..* Logic;
 }
 
 class PartTemplate
 {
 	isA Template;
-	0..1 -> 1..* Part part;
+	0..1 -> 1..* Part;
 }
 
 class PeerTemplate
 {
 	isA Template;
-	0..1 -> 1..* Peer peer;
+	0..1 -> 1..* Peer;
 }
 
 class PresentationTemplate
 {
 	isA Template;
-	0..1 -> 1..* Presentation presentation;
+	0..1 -> 1..* Presentation;
 }
 
 class PropertyTemplate
 {
 	isA Template;
-	0..1 -> 1..* Property property;
+	0..1 -> 1..* Property;
 }
 
 class RestructureTemplate
 {
 	isA Template;
-	0..1 -> 1..* Restructure restructure;
+	0..1 template -> 1..* Restructure;
 }
 
 class RuleTemplate
 {
 	isA Template;
-	0..1 -> 1..* Rule rule;
+	0..1 -> 1..* Rule;
 }
 
 class ScriptTemplate
 {
 	isA Template;
-	0..1 -> 1..* Script script;
+	0..1 -> 1..* Script;
 }
 
 class StructureTemplate
 {
 	isA Template;
-	0..1 -> 1..* Structure structure;
+	0..1 -> 1..* Structure;
 }
 
 class StyleTemplate
 {
 	isA Template;
-	0..1 -> 1..* Style style;
+	0..1 -> 1..* Style;
 }

@@ -18,7 +18,7 @@ namespace Repository;
 
 class Subsystem
 {
-	1..* subsystem -- * Relation relations;
+	1..* -- * Relation relations;
 	1..* parentSubsystem -- * Class classes;
 }
 
@@ -36,7 +36,7 @@ class Class
 
 class Feature
 {
-	0..1 -> 1..* Type type;
+	0..1 -> 1..* Type;
 }
 
 class Type

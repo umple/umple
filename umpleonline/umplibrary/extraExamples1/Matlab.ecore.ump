@@ -20,22 +20,22 @@ namespace Matlab;
 
 class Matlab
 {
-	0..1 -> * Model model;
+	0..1 -> * Model;
 }
 
 class BlockDefaults
 {
 	String blockDefaults;
-	* blockDefaults -- 1..* Model model;
+	* -- 1..* Model;
 }
 
 class Model
 {
 	String name;
-	1..* model -- * AnnotationDefaults annotationDefaults;
-	1..* model -- * LineDefaults lineDefaults;
-	1..* model -- * System system;
-	* models -- 1..* Simulink simulink;
+	1..* -- * AnnotationDefaults;
+	1..* -- * LineDefaults;
+	1..* -- * System;
+	* models -- 1..* Simulink;
 }
 
 class AnnotationDefaults
@@ -51,10 +51,10 @@ class LineDefaults
 class System
 {
 	String name;
-	1..* system -- 1..* Subsystem parentSubsystem;
+	1..* -- 1..* Subsystem parentSubsystem;
 	1..* mySystem -- * Block blocks;
-	1..* system -- * Annotation annotations;
-	1..* system -- * Line lines;
+	1..* -- * Annotation annotations;
+	1..* -- * Line lines;
 }
 
 class Subsystem
@@ -104,8 +104,8 @@ class InputPort
 class Branch
 {
 	String points;
-	* branchs -- 1..* BranchedLine branchedLine;
-	* branchs -- 1..* NestedBranch nestedBranch;
+	* branchs -- 1..* BranchedLine;
+	* branchs -- 1..* NestedBranch;
 }
 
 class BranchedLine
@@ -117,8 +117,8 @@ class Primitive
 {
 	isA Block;
 	String id;
-	* primitive -- * Port refPort;
-	1..* primitive -- * Parameter parameters;
+	* -- * Port refPort;
+	1..* -- * Parameter parameters;
 }
 
 class Port
@@ -212,11 +212,11 @@ class Machine
 {
 	String name;
 	String id;
-	1..* machine -- * Event events;
-	1..* machine -- * Data data;
-	1..* machine -- * Instance instances;
-	1..* machine -- * Target targets;
-	* machines -- 1..* StateFlow stateFlow;
+	1..* -- * Event events;
+	1..* -- * Data;
+	1..* -- * Instance instances;
+	1..* -- * Target targets;
+	* machines -- 1..* StateFlow;
 }
 
 class Junction
@@ -225,8 +225,8 @@ class Junction
 	String id;
 	String type;
 	String position;
-	* junctions -- 1..* Chart chart;
-	* junctions -- 1..* State state;
+	* junctions -- 1..* Chart;
+	* junctions -- 1..* State;
 }
 
 class Transition
@@ -238,8 +238,8 @@ class Transition
 	String condition;
 	String conditionAction;
 	String action;
-	* transitions -- 1..* Chart chart;
-	* transitions -- 1..* State state;
+	* transitions -- 1..* Chart;
+	* transitions -- 1..* State;
 }
 
 class Event
@@ -249,8 +249,8 @@ class Event
 	String scope;
 	String description;
 	String trigger;
-	* events -- 1..* Chart chart;
-	* events -- 1..* State state;
+	* events -- 1..* Chart;
+	* events -- 1..* State;
 }
 
 class Data
@@ -261,9 +261,9 @@ class Data
 	String description;
 	String units;
 	String dataType;
-	* data -- 1..* Chart chart;
-	* data -- 1..* State state;
-	1..* data -- * Props props;
+	* -- 1..* Chart;
+	* -- 1..* State;
+	1..* -- * Props;
 }
 
 class Instance
@@ -292,7 +292,7 @@ class Chart
 	String decomposotion;
 	String updateMethode;
 	String sampleTime;
-	1..* chart -- * State states;
+	1..* -- * State states;
 }
 
 class State
@@ -313,8 +313,8 @@ class State
 class Props
 {
 	String initialValue;
-	1..* props -- * Range ranges;
-	1..* props -- * Array arrays;
+	1..* -- * Range ranges;
+	1..* -- * Array arrays;
 }
 
 class Range
@@ -332,7 +332,7 @@ class Array
 class StateFlow
 {
 	String stateFlow;
-	* stateFlows -- 1..* Simulink simulink;
+	* stateFlows -- 1..* Simulink;
 }
 
 class TransitionTerminal

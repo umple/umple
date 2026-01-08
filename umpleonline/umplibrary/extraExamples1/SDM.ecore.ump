@@ -20,14 +20,14 @@ namespace SDM;
 
 class SystemDefinitionModel
 {
-	0..1 -> * DesignData designData;
-	0..1 -> * SettingDefinitions settingDefinitions;
-	0..1 -> * NameSpace nameSpace;
-	0..1 -> 1..* NamespaceIdentity namespaceIdentity;
+	0..1 -> * DesignData;
+	0..1 -> * SettingDefinitions;
+	0..1 -> * NameSpace;
+	0..1 -> 1..* NamespaceIdentity;
 	0..1 -> * Culture documentLanguage;
 	0..1 -> * CompilationHashType compilationHash;
-	1..* sdm -- * Information information;
-	1..* sdm -- * Import import;
+	1..* sdm -- * Information;
+	1..* sdm -- * Import;
 	1..* sdm -- * SDMCommunicationDefinition communicationDefinition;
 	1..* sdm -- * SDMContainmentDefinition containmentDefinition;
 	1..* sdm -- * SDMDelegationDefinition delegationDefinition;
@@ -46,14 +46,14 @@ class Information
 	String copyright;
 	String trademark;
 	String comments;
-	0..1 -> * Description description;
+	0..1 -> * Description;
 	0..1 -> * FourPartVersionType compilerversion;
 }
 
 class Import
 {
 	0..1 -> 1..* SimpleName alias;
-	1..* import -- 1..* ImportNamespaceIdentity identity;
+	1..* -- 1..* ImportNamespaceIdentity identity;
 }
 
 class ImportNamespaceIdentity
@@ -110,7 +110,7 @@ class ManagerDeclaration
 {
 	String assemblyName;
 	Platform platform;
-	0..1 -> * Description description;
+	0..1 -> * Description;
 	0..1 -> * SimpleName name;
 	0..1 -> * FourPartVersionType version;
 	0..1 -> * PublicKeyTokenType publicKeyToken;
@@ -124,26 +124,26 @@ class ObjectDefinition
 	String layer;
 	Boolean abstract;
 	0..1 -> * QualifiedName extends;
-	1..* objectDefinition -- * OBFlow flow;
-	1..* objectDefinition -- * OBRelationshipConstraint relationshipConstraint;
-	1..* objectDefinition -- * OBConstraint constraint;
-	1..* objectDefinition -- * OBConstraintGroup constraintGroup;
-	1..* objectDefinition -- * OBEndpointDefinition endpointDefinition;
-	1..* objectDefinition -- * OBSystemDefinition systemDefinition;
-	1..* objectDefinition -- * OBResourceDefinition resourceDefinition;
-	1..* objectDefinition -- * OBCommunicationDefinition communicationDefinition;
-	1..* objectDefinition -- * OBContainmentDefinition containmentDefinition;
-	1..* objectDefinition -- * OBDelegationDefinition delegationDefinition;
-	1..* objectDefinition -- * OBReferenceDefinition referenceDefinition;
-	1..* objectDefinition -- * OBHostingDefinition hostingDefinition;
-	1..* objectDefinition -- * OBEndpoint endpoint;
-	1..* objectDefinition -- * OBSubsystem subsystem;
-	1..* objectDefinition -- * OBResource resource;
-	1..* objectDefinition -- * OBHosting hosting;
-	1..* objectDefinition -- * OBContainment containment;
-	1..* objectDefinition -- * OBConnection connection;
-	1..* objectDefinition -- * OBDelegation delegation;
-	1..* objectDefinition -- * OBReference obreference;
+	1..* -- * OBFlow flow;
+	1..* -- * OBRelationshipConstraint relationshipConstraint;
+	1..* -- * OBConstraint constraint;
+	1..* -- * OBConstraintGroup constraintGroup;
+	1..* -- * OBEndpointDefinition endpointDefinition;
+	1..* -- * OBSystemDefinition systemDefinition;
+	1..* -- * OBResourceDefinition resourceDefinition;
+	1..* -- * OBCommunicationDefinition communicationDefinition;
+	1..* -- * OBContainmentDefinition containmentDefinition;
+	1..* -- * OBDelegationDefinition delegationDefinition;
+	1..* -- * OBReferenceDefinition referenceDefinition;
+	1..* -- * OBHostingDefinition hostingDefinition;
+	1..* -- * OBEndpoint endpoint;
+	1..* -- * OBSubsystem subsystem;
+	1..* -- * OBResource resource;
+	1..* -- * OBHosting hosting;
+	1..* -- * OBContainment containment;
+	1..* -- * OBConnection connection;
+	1..* -- * OBDelegation delegation;
+	1..* -- * OBReference;
 }
 
 class OBFlow
@@ -267,15 +267,15 @@ class RelationshipDefinition
 	isA Definition;
 	Boolean abstract;
 	0..1 -> 1..* QualifiedName extends;
-	1..* relationshipDefinition -- * RDObjectConstraint objectConstraint;
-	1..* relationshipDefinition -- * RDConstraint constraint;
-	1..* relationshipDefinition -- * RDConstraintGroup constraintGroup;
-	1..* relationshipDefinition -- * RDFlow flow;
-	1..* relationshipDefinition -- * RDConnection connection;
-	1..* relationshipDefinition -- * RDHosting hosting;
-	1..* relationshipDefinition -- * RDDelegation delegation;
-	1..* relationshipDefinition -- * RDReference reference;
-	1..* relationshipDefinition -- * RDContainment containment;
+	1..* -- * RDObjectConstraint objectConstraint;
+	1..* -- * RDConstraint constraint;
+	1..* -- * RDConstraintGroup constraintGroup;
+	1..* -- * RDFlow flow;
+	1..* -- * RDConnection connection;
+	1..* -- * RDHosting hosting;
+	1..* -- * RDDelegation delegation;
+	1..* -- * RDReference reference;
+	1..* -- * RDContainment containment;
 }
 
 class RDObjectConstraint
@@ -361,12 +361,12 @@ class ReferenceDefinition
 
 class Member
 {
-	0..1 -> * Description description;
-	0..1 -> 1..* DesignData designData;
+	0..1 -> * Description;
+	0..1 -> 1..* DesignData;
 	0..1 -> 1..* SimpleName name;
 	0..1 -> 1..* QualifiedName definition;
-	1..* member -- * MembSettingValue settingValue;
-	1..* member -- * MembSettingValueList settingValueList;
+	1..* -- * MembSettingValue settingValue;
+	1..* -- * MembSettingValueList settingValueList;
 }
 
 class MembSettingValue
@@ -384,8 +384,8 @@ class ObjectMember
 	isA Member;
 	Boolean reference;
 	Boolean proxy;
-	0..1 -> * MinOccurs minOccurs;
-	0..1 -> * MaxOccurs maxOccurs;
+	0..1 -> * MinOccurs;
+	0..1 -> * MaxOccurs;
 }
 
 class RelationshipMember
@@ -444,7 +444,7 @@ class ReferenceMember
 
 class DesignData
 {
-	1..* designData -- * NameSpace nameSpace;
+	1..* -- * NameSpace;
 }
 
 class NameSpace
@@ -459,9 +459,9 @@ class ObjectConstraint
 	RolesList[] secondaryRole;
 	0..1 -> 1..* QualifiedName primaryObjectDefinition;
 	0..1 -> * QualifiedName secondaryObjectDefinition;
-	0..1 -> * MinOccurs minOccurs;
-	0..1 -> * MaxOccurs maxOccurs;
-	1..* objectConstraint -- * OCConstraint constraint;
+	0..1 -> * MinOccurs;
+	0..1 -> * MaxOccurs;
+	1..* -- * OCConstraint constraint;
 	1..* objectConstraint_OC -- * OCRelationshipConstraint relationshipConstraint;
 	1..* objectConstraint_OC -- * OCConstraintGroup constraintGroup;
 }
@@ -488,9 +488,9 @@ class RelationshipConstraint
 	Boolean delegationAware;
 	0..1 -> 1..* QualifiedName relationshipDefinition;
 	0..1 -> * QualifiedName targetObjectDefinition;
-	0..1 -> * MinOccurs minOccurs;
-	0..1 -> * MaxOccurs maxOccurs;
-	1..* relationshipConstraint -- * RCConstraint constraint;
+	0..1 -> * MinOccurs;
+	0..1 -> * MaxOccurs;
+	1..* -- * RCConstraint constraint;
 	1..* relationshipConstraint_RC -- * RCRelationshipConstraint relationshipConstraint;
 	1..* relationshipConstraint_RC -- * RCObjectConstraint objectConstraint;
 	1..* relationshipConstraint_RC -- * RCConstraintGroup constraintGroup;
@@ -519,7 +519,7 @@ class RCConstraintGroup
 class ConstraintGroup
 {
 	isA StructuralConstraint;
-	1..* constraintGroup -- * CGConstraint constraint;
+	1..* -- * CGConstraint constraint;
 	1..* constraintGroup_CG -- * CGRelationshipConstraint relationshipConstraint;
 	1..* constraintGroup_CG -- * CGObjectConstraint objectConstraint;
 }
@@ -544,8 +544,8 @@ class StructuralConstraint
 	ConstraintEvaluation evaluate;
 	Boolean raiseError;
 	Boolean returnEarly;
-	0..1 -> * Description description;
-	0..1 -> * DesignData designData;
+	0..1 -> * Description;
+	0..1 -> * DesignData;
 	0..1 -> 1..* SimpleName name;
 }
 
@@ -554,10 +554,10 @@ class ConstraintDefinition
 	isA Definition;
 	Boolean returnEarly;
 	0..1 -> * QualifiedName targetDefinition;
-	1..* constraintDefinition -- * CDRelationshipConstraint relationshipConstraint;
-	1..* constraintDefinition -- * CDConstraintGroup constraintGroup;
-	1..* constraintDefinition -- * CDObjectConstraint objectConstraint;
-	1..* constraintDefinition -- * CDConstraint constraint;
+	1..* -- * CDRelationshipConstraint relationshipConstraint;
+	1..* -- * CDConstraintGroup constraintGroup;
+	1..* -- * CDObjectConstraint objectConstraint;
+	1..* -- * CDConstraint constraint;
 }
 
 class CDRelationshipConstraint
@@ -585,19 +585,19 @@ class ConstraintMember
 	isA Member;
 	Boolean raiseError;
 	ConstraintEvaluation evaluate;
-	0..1 -> * Input input;
+	0..1 -> * Input;
 }
 
 class Definition
 {
 	String className;
-	0..1 -> * Description description;
-	0..1 -> * DesignData designData;
+	0..1 -> * Description;
+	0..1 -> * DesignData;
 	0..1 -> 1..* SimpleName name;
 	0..1 -> * QualifiedName manager;
 	1..* definition_DSD -- * DefSettingDeclaration settingDeclaration;
-	1..* definition -- * DefSettingValue settingValue;
-	1..* definition -- * DefSettingValueList settingValueList;
+	1..* -- * DefSettingValue settingValue;
+	1..* -- * DefSettingValueList settingValueList;
 }
 
 class DefSettingDeclaration
@@ -653,8 +653,8 @@ class FlowDefinition
 class FlowMember
 {
 	isA Member;
-	0..1 -> * Input input;
-	0..1 -> * Output output;
+	0..1 -> * Input;
+	0..1 -> * Output;
 }
 
 class ValueTransfer
@@ -680,14 +680,14 @@ class Input
 class SettingDefinitions
 {
 	String clrNameSpace;
-	0..1 -> * NameSpace nameSpace;
+	0..1 -> * NameSpace;
 	0..1 -> 1..* QualifiedName manager;
 }
 
 class SettingMember
 {
 	isA Member;
-	0..1 -> * Facet facet;
+	0..1 -> * Facet;
 	0..1 -> 1..* SettingsAttributes settingAttributes;
 }
 
@@ -712,13 +712,13 @@ class Facet
 class SettingValue
 {
 	String[] contents;
-	0..1 -> 1..* SettingValueAttributes settingValueAttributes;
+	0..1 -> 1..* SettingValueAttributes;
 }
 
 class SettingValueList
 {
-	0..1 -> * Value value;
-	0..1 -> 1..* SettingValueAttributes settingValueAttributes;
+	0..1 -> * Value;
+	0..1 -> 1..* SettingValueAttributes;
 }
 
 class Value
@@ -743,7 +743,7 @@ class Description
 {
 	String resourceId;
 	0..1 -> * QualifiedName manager;
-	1..* description -- * Entry entry;
+	1..* -- * Entry;
 }
 
 class Entry
@@ -756,7 +756,7 @@ class DescriptionEntry
 	String name;
 	String resourceId;
 	0..1 -> * QualifiedName manager;
-	* descriptionEntry -- * Substitute substitute;
+	* -- * Substitute;
 }
 
 class Substitute
@@ -766,7 +766,7 @@ class Substitute
 
 class PathList
 {
-	0..1 -> * SettingPath settingPath;
+	0..1 -> * SettingPath;
 }
 
 class MaxOccurs

@@ -27,14 +27,14 @@ class Element
 class DoDAFModel
 {
 	isA Element;
-	0..1 -> * Document document;
+	0..1 -> * Document;
 	0..1 -> * SystemDocument sd;
-	0..1 -> * AM am;
-	0..1 -> * System system;
-	0..1 -> * Task task;
-	0..1 -> * Capability capability;
-	0..1 -> * CapabilityDocument capabilityDocument;
-	0..1 -> * SystemCapability systemCapability;
+	0..1 -> * AM;
+	0..1 -> * System;
+	0..1 -> * Task;
+	0..1 -> * Capability;
+	0..1 -> * CapabilityDocument;
+	0..1 -> * SystemCapability;
 }
 
 class Document
@@ -57,9 +57,9 @@ class SystemFunctionTraceabilityElement
 {
 	isA Element;
 	SupportStatusCode supportStatusCode;
-	0..1 -> * System system;
-	0..1 -> * Capability capability;
-	* isCitedFor -- * SystemFunction systemFunction;
+	0..1 -> * System;
+	0..1 -> * Capability;
+	* isCitedFor -- * SystemFunction;
 	* mayBeCitedFor -- * SystemPA systemProcessActivity;
 	* isCitedFor -- * Task operationalActivity;
 }

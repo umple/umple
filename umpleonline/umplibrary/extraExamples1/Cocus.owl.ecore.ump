@@ -179,15 +179,15 @@ class MetaReview
 	isA Review;
 }
 
-class date
+class Date
 {
 }
 
-class unsignedLong
+class UnsignedLong
 {
 }
 
-class anyURI
+class AnyURI
 {
 }
 

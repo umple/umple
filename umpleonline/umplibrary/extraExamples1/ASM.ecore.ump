@@ -11,7 +11,7 @@ Description: Abstract State Machine Language
 
 Title: Abstract State Machine Language
 
-Authors: Albin Jossic (albin.jossic <at> gmail.com)[1] ;[1] ATLAS team (Nantes, France)
+Authors: Albin Jossic (albin.jossic <at> gmail.com)[1];[1] ATLAS team (Nantes, France)
 ************************/
 
 namespace ASM;
@@ -29,16 +29,16 @@ class XAsmFile
 class XAsmSpec
 {
 	isA XAsmFile;
-	0..1 -> 1..* Asm Asm;
+	0..1 -> 1..* Asm;
 }
 
 class Asm
 {
 	isA LocatedElement;
 	String returnType;
-	0..1 -> 1..* Signature signature;
-	0..1 -> 1..* MetaInformation metaInformation;
-	0..1 -> 1..* Body body;
+	0..1 -> 1..* Signature;
+	0..1 -> 1..* MetaInformation;
+	0..1 -> 1..* Body;
 }
 
 class Signature
@@ -59,7 +59,7 @@ class Body
 {
 	isA XAsmFile;
 	0..1 -> * Declaration declarations;
-	0..1 -> * Initialization initialization;
+	0..1 -> * Initialization;
 	0..1 -> * Rule rules;
 }
 
@@ -244,13 +244,11 @@ class Extension
 {
 	isA LocatedElement;
 	0..1 -> 1..* VariableDecl elements;
-	0..1 -> 1..* Universe universe;
+	0..1 -> 1..* Universe;
 }
 
 class ReturnRule
 {
 	isA Rule;
-	0..1 -> 1..* Term term;
+	0..1 -> 1..* Term;
 }
-
-namespace Enum;

@@ -29,16 +29,16 @@ class StateBase
 	String defaultTransition;
 	Boolean marked;
 	0..1 dstTransition -- 1..* AssociationStateState associationStateStatedst;
-	* stateBase -- * DataVar data;
+	* -- * DataVar data;
 	1..* srcTransition -- 1..* AssociationStateState associationStateStatesrc;
-	1..* stateBase -- 1..* AssociationDataStateBase associationDataStateBase;
+	1..* -- 1..* AssociationDataStateBase;
 }
 
 class DataVar
 {
 	isA MgaObject;
-	* dataVar -- 1..* OrState orState;
-	1..* dataVar -- 1..* AssociationDataStateBase associationDataStateBase;
+	* -- 1..* OrState;
+	1..* -- 1..* AssociationDataStateBase;
 }
 
 class Transition
@@ -48,8 +48,8 @@ class Transition
 	String trigger;
 	String action;
 	Boolean isSync;
-	* transition -- 1..* OrState orState;
-	1..* transition -- 1..* AssociationStateState associationStateState;
+	* -- 1..* OrState;
+	1..* -- 1..* AssociationStateState;
 }
 
 class StateDateRelation
@@ -63,22 +63,22 @@ class RootFolder
 {
 	String name;
 	0..1 -> * RootFolder rootFolders;
-	1..* rootFolder -- * OrState orState;
+	1..* -- * OrState;
 }
 
 class OrState
 {
 	isA CompoundState;
-	1..* orState -- * CompoundState compoundState;
-	1..* orState -- 1..* Init init;
-	1..* orState -- * State state;
-	1..* orState -- * StateDataRelation stateDataRelation;
+	1..* -- * CompoundState;
+	1..* -- 1..* Init;
+	1..* -- * State;
+	1..* -- * StateDataRelation;
 }
 
 class AndState
 {
 	isA CompoundState;
-	1..* andState -- * CompoundState compoundState;
+	1..* -- * CompoundState;
 }
 
 class CompoundState
@@ -106,7 +106,7 @@ class StateDataRelation
 	isA PrimitiveState;
 	String value;
 	String color;
-	1..* stateDataRelation -- 1..* AssociationDataStateBase associationDataStateBase1;
+	1..* -- 1..* AssociationDataStateBase associationDataStateBase1;
 }
 
 class AssociationStateState

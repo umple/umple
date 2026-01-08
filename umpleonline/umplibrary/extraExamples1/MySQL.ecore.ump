@@ -24,13 +24,13 @@ class NamedElement
 class DataBase
 {
 	isA NamedElement;
-	1..* database -- * Table tables;
+	1..* -- * Table tables;
 }
 
 class Table
 {
 	isA NamedElement;
-	1..* table -- * Column columns;
+	1..* -- * Column columns;
 }
 
 class Column
@@ -52,12 +52,12 @@ class IntegerColumn
 class EnumColumn
 {
 	isA Column;
-	0..1 -> 1..* EnumSet enumSet;
+	0..1 -> 1..* EnumSet;
 }
 
 class EnumSet
 {
-	1..* enumSet -- * EnumItem enumItems;
+	1..* -- * EnumItem enumItems;
 }
 
 class EnumItem

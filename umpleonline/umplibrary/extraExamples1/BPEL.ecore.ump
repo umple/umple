@@ -516,7 +516,7 @@ class Property
 	QName qName;
 	EString name;
 	EJavaObject type;
-	EString ID;
+	EString id;
 }
 
 class PropertyAlias
@@ -525,14 +525,14 @@ class PropertyAlias
 	EJavaObject messageType;
 	EString part;
 	EJavaObject propertyName;
-	EString ID;
+	EString id;
 	EJavaObject type;
-	EJavaObject XSDElement;
+	EJavaObject xsdElement;
 	0..1 -> 1..* Part wsdlPart;
-	0..1 -> * messagepropertiesQuery query;
+	0..1 -> * MessagepropertiesQuery query;
 }
 
-class messagepropertiesQuery
+class MessagepropertiesQuery
 {
 	isA ExtensibilityElement;
 	EString queryLanguage;
@@ -571,14 +571,14 @@ class PartnerLinkType
 {
 	isA ExtensibilityElement;
 	EString name;
-	EString ID;
-	0..1 -> * Role role;
+	EString id;
+	0..1 -> * Role;
 }
 
 class Role
 {
 	isA ExtensibilityElement;
-	EString ID;
+	EString id;
 	EString name;
 	EJavaObject portType;
 }
@@ -595,14 +595,14 @@ class Process
 	EBooleanObject suppressJoinFailure;
 	EBooleanObject variableAccessSerializable;
 	EBooleanObject exitOnStandardFault;
-	0..1 -> * PartnerLinks partnerLinks;
-	0..1 -> * Variables variables;
-	0..1 -> 1..* Activity activity;
+	0..1 -> * PartnerLinks;
+	0..1 -> * Variables;
+	0..1 -> 1..* Activity;
 	0..1 -> * FaultHandler faultHandlers;
 	0..1 -> * EventHandler eventHandlers;
-	0..1 -> * CorrelationSets correlationSets;
+	0..1 -> * CorrelationSets;
 	0..1 -> * BPELImport imports;
-	0..1 -> * Extensions extensions;
+	0..1 -> * Extensions;
 }
 
 class PartnerLink
@@ -612,14 +612,14 @@ class PartnerLink
 	EBooleanObject initializePartnerRole;
 	0..1 -> * Role myRole;
 	0..1 -> * Role partnerRole;
-	0..1 -> * PartnerLinkType PartnerLinkType;
+	0..1 -> * PartnerLinkType;
 }
 
 class FaultHandler
 {
 	isA BPELExtensibleElement;
-	0..1 -> * Catch catch;
-	0..1 -> * CatchAll catchAll;
+	0..1 -> * Catch;
+	0..1 -> * CatchAll;
 }
 
 class Activity
@@ -627,8 +627,8 @@ class Activity
 	isA BPELExtensibleElement;
 	EString name;
 	EBooleanObject suppressJoinFailure;
-	0..1 -> * Targets targets;
-	0..1 -> * Sources sources;
+	0..1 -> * Targets;
+	0..1 -> * Sources;
 }
 
 class CorrelationSet
@@ -643,18 +643,18 @@ class Invoke
 	isA PartnerActivity;
 	0..1 -> * Variable outputVariable;
 	0..1 -> * Variable inputVariable;
-	0..1 -> * CompensationHandler compensationHandler;
-	0..1 -> * FaultHandler faultHandler;
-	0..1 -> * ToPart toPart;
-	0..1 -> * FromPart fromPart;
+	0..1 -> * CompensationHandler;
+	0..1 -> * FaultHandler;
+	0..1 -> * ToPart;
+	0..1 -> * FromPart;
 }
 
 class Link
 {
 	isA BPELExtensibleElement;
 	EString name;
-	0..1 Link -- * Source sources;
-	0..1 Link -- * Target targets;
+	0..1 -- * Source sources;
+	0..1 -- * Target targets;
 }
 
 class Catch
@@ -662,34 +662,34 @@ class Catch
 	isA BPELExtensibleElement;
 	QName faultName;
 	0..1 -> * Variable faultVariable;
-	0..1 -> 1..* Activity activity;
+	0..1 -> 1..* Activity;
 	0..1 -> * Message faultMessageType;
 	0..1 -> * XSDElementDeclaration faultElement;
 }
 
 class Reply
 {
-	isA PartnerActivity Activity;
+	isA PartnerActivity;
 	QName faultName;
-	0..1 -> * Variable variable;
-	0..1 -> * ToPart toPart;
+	0..1 -> * Variable;
+	0..1 -> * ToPart;
 }
 
 class PartnerActivity
 {
 	isA Activity;
-	0..1 -> 1..* PartnerLink partnerLink;
-	0..1 -> * Correlations correlations;
-	0..1 -> 1..* PortType portType;
-	0..1 -> 1..* Operation operation;
+	0..1 -> 1..* PartnerLink;
+	0..1 -> * Correlations;
+	0..1 -> 1..* PortType;
+	0..1 -> 1..* Operation;
 }
 
 class Receive
 {
 	isA PartnerActivity;
 	EBooleanObject createInstance;
-	0..1 -> 1..* Variable variable;
-	0..1 -> * FromPart fromPart;
+	0..1 -> 1..* Variable;
+	0..1 -> * FromPart;
 }
 
 class Exit
@@ -726,21 +726,21 @@ class Switch
 {
 	isA Activity;
 	0..1 -> 1..* Case cases;
-	0..1 -> * Otherwise otherwise;
+	0..1 -> * Otherwise;
 }
 
 class Case
 {
 	isA BPELExtensibleElement;
-	0..1 -> 1..* Activity activity;
-	0..1 -> 1..* Condition condition;
+	0..1 -> 1..* Activity;
+	0..1 -> 1..* Condition;
 }
 
 class While
 {
 	isA Activity;
-	0..1 -> 1..* Activity activity;
-	0..1 -> 1..* Condition condition;
+	0..1 -> 1..* Activity;
+	0..1 -> 1..* Condition;
 }
 
 class Pick
@@ -755,14 +755,14 @@ class Flow
 {
 	isA Activity;
 	0..1 -> 1..* Activity activities;
-	0..1 -> * Links links;
-	0..1 -> * CompletionCondition completionCondition;
+	0..1 -> * Links;
+	0..1 -> * CompletionCondition;
 }
 
 class OnAlarm
 {
 	isA BPELExtensibleElement;
-	0..1 -> 1..* Activity activity;
+	0..1 -> 1..* Activity;
 	0..1 -> * Expression for;
 	0..1 -> * Expression until;
 	0..1 -> * Expression repeatEvery;
@@ -772,15 +772,15 @@ class Assign
 {
 	isA Activity;
 	EBooleanObject validate;
-	0..1 -> 1..* Copy copy;
+	0..1 -> 1..* Copy;
 }
 
 class Copy
 {
 	isA BPELExtensibleElement;
 	EBooleanObject keepSrcElementName;
-	0..1 -> 1..* To to;
-	0..1 -> 1..* From from;
+	0..1 -> 1..* To;
+	0..1 -> 1..* From;
 }
 
 class Extension
@@ -795,13 +795,13 @@ class Scope
 	isA Activity;
 	EBooleanObject isolated;
 	0..1 -> * FaultHandler faultHandlers;
-	0..1 -> * CompensationHandler compensationHandler;
-	0..1 -> 1..* Activity activity;
-	0..1 -> * Variables variables;
-	0..1 -> * CorrelationSets correlationSets;
+	0..1 -> * CompensationHandler;
+	0..1 -> 1..* Activity;
+	0..1 -> * Variables;
+	0..1 -> * CorrelationSets;
 	0..1 -> * EventHandler eventHandlers;
-	0..1 -> * PartnerLinks partnerLinks;
-	0..1 -> * TerminationHandler terminationHandler;
+	0..1 -> * PartnerLinks;
+	0..1 -> * TerminationHandler;
 }
 
 class Compensate
@@ -812,41 +812,41 @@ class Compensate
 class CompensationHandler
 {
 	isA BPELExtensibleElement;
-	0..1 -> 1..* Activity activity;
+	0..1 -> 1..* Activity;
 }
 
 class To
 {
 	isA BPELExtensibleElement;
-	0..1 -> * Variable variable;
-	0..1 -> * Part part;
-	0..1 -> * PartnerLink partnerLink;
-	0..1 -> * Property property;
+	0..1 -> * Variable;
+	0..1 -> * Part;
+	0..1 -> * PartnerLink;
+	0..1 -> * Property;
 	0..1 -> * BPELQuery query;
 }
 
 class From
 {
-	isA To BPELExtensibleElement;
+	isA BPELExtensibleElement;
 	EBooleanObject opaque;
 	EndpointReferenceRole endpointReference;
 	EString literal;
 	EBooleanObject unsafeLiteral;
-	0..1 -> * Expression expression;
-	0..1 -> * ServiceRef serviceRef;
+	0..1 -> * Expression;
+	0..1 -> * ServiceRef;
 	0..1 -> * XSDTypeDefinition type;
 }
 
 class OnMessage
 {
 	isA BPELExtensibleElement;
-	0..1 -> * Variable variable;
-	0..1 -> * Activity activity;
-	0..1 -> 1..* PortType portType;
-	0..1 -> 1..* PartnerLink partnerLink;
-	0..1 -> * Correlations correlations;
-	0..1 -> 1..* Operation operation;
-	0..1 -> * FromPart fromPart;
+	0..1 -> * Variable;
+	0..1 -> * Activity;
+	0..1 -> 1..* PortType;
+	0..1 -> 1..* PartnerLink;
+	0..1 -> * Correlations;
+	0..1 -> 1..* Operation;
+	0..1 -> * FromPart;
 }
 
 class Expression
@@ -880,16 +880,16 @@ class EventHandler
 class Source
 {
 	isA BPELExtensibleElement;
-	0..1 sources -- 1..* Link Link;
-	0..1 -> 1..* Activity activity;
-	0..1 -> * Condition transitionCondition;
+	0..1 linkSource -- 1..* Link sLink;
+	0..1 activitySource-> 1..* Activity;
+	0..1 conditionSource-> * Condition transitionCondition;
 }
 
 class Target
 {
 	isA BPELExtensibleElement;
-	0..1 targets -- 1..* Link Link;
-	0..1 -> 1..* Activity activity;
+	0..1 linkTarget -- 1..* Link tLink;
+	0..1 activityTarget-> 1..* Activity;
 }
 
 class PartnerLinks
@@ -919,7 +919,7 @@ class Links
 class CatchAll
 {
 	isA BPELExtensibleElement;
-	0..1 -> 1..* Activity activity;
+	0..1 -> 1..* Activity;
 }
 
 class Correlations
@@ -935,13 +935,13 @@ class Variable
 	0..1 -> * Message messageType;
 	0..1 -> * XSDElementDeclaration XSDElement;
 	0..1 -> * XSDTypeDefinition type;
-	0..1 -> * From from;
+	0..1 -> * From;
 }
 
 class Otherwise
 {
 	isA BPELExtensibleElement;
-	0..1 -> 1..* Activity activity;
+	0..1 -> 1..* Activity;
 }
 
 class UnknownExtensibilityAttribute
@@ -952,15 +952,15 @@ class UnknownExtensibilityAttribute
 class OnEvent
 {
 	isA BPELExtensibleElement;
-	0..1 -> * Activity activity;
-	0..1 -> * Variable variable;
-	0..1 -> 1..* PartnerLink partnerLink;
-	0..1 -> * Correlations correlations;
-	0..1 -> 1..* Operation operation;
-	0..1 -> 1..* PortType portType;
+	0..1 -> * Activity;
+	0..1 -> * Variable;
+	0..1 -> 1..* PartnerLink;
+	0..1 -> * Correlations;
+	0..1 -> 1..* Operation;
+	0..1 -> 1..* PortType;
 	0..1 -> 1..* Message messageType;
-	0..1 -> * FromPart fromPart;
-	0..1 -> * CorrelationSets correlationSets;
+	0..1 -> * FromPart;
+	0..1 -> * CorrelationSets;
 }
 
 class BPELImport
@@ -1019,13 +1019,13 @@ class ExtensionActivity
 class FromPart
 {
 	EString part;
-	0..1 -> * To to;
+	0..1 -> * To;
 }
 
 class ToPart
 {
 	EString part;
-	0..1 -> * From from;
+	0..1 -> * From;
 }
 
 class OpaqueActivity
@@ -1038,22 +1038,22 @@ class ForEach
 	isA Activity;
 	EBooleanObject parallel;
 	0..1 -> 1..* Variable counterName;
-	0..1 -> * CompletionCondition completionCondition;
-	0..1 -> 1..* Iterator iterator;
-	0..1 -> 1..* Activity activity;
+	0..1 -> * CompletionCondition;
+	0..1 -> 1..* Iterator;
+	0..1 -> 1..* Activity;
 }
 
 class RepeatUntil
 {
 	isA Activity;
-	0..1 -> 1..* Activity activity;
-	0..1 -> 1..* Condition condition;
+	0..1 -> 1..* Activity;
+	0..1 -> 1..* Condition;
 }
 
 class TerminationHandler
 {
 	isA BPELExtensibleElement;
-	0..1 -> * Activity activity;
+	0..1 -> * Activity;
 }
 
 class Validate
@@ -1065,34 +1065,34 @@ class Validate
 class If
 {
 	isA Activity;
-	0..1 -> * Condition condition;
-	0..1 -> * Then then;
-	0..1 -> * ElseIf elseIf;
-	0..1 -> * Else else;
+	0..1 -> * Condition;
+	0..1 -> * Then;
+	0..1 -> * ElseIf;
+	0..1 -> * Else;
 }
 
 class Then
 {
 	isA BPELExtensibleElement;
-	0..1 -> 1..* Activity activity;
+	0..1 -> 1..* Activity;
 }
 
 class ElseIf
 {
 	isA BPELExtensibleElement;
-	0..1 -> * Condition condition;
-	0..1 -> 1..* Activity activity;
+	0..1 -> * Condition;
+	0..1 -> 1..* Activity;
 }
 
 class Else
 {
 	isA BPELExtensibleElement;
-	0..1 -> 1..* Activity activity;
+	0..1 -> 1..* Activity;
 }
 
 class CompletionCondition
 {
-	0..1 -> * Branches branches;
+	0..1 -> * Branches;
 }
 
 class Branches
@@ -1104,7 +1104,7 @@ class Branches
 class BPELExtensibleElement
 {
 	isA WSDLExtensibleElement;
-	0..1 -> * Documentation documentation;
+	0..1 -> * Documentation;
 }
 
 class Documentation
@@ -1291,7 +1291,7 @@ class QName
 
 class Namespace
 {
-	EString URI;
+	EString uri;
 	EString prefix;
 }
 

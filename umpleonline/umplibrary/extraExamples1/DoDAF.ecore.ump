@@ -185,8 +185,8 @@ class QualityRequirement
 class DIA
 {
 	isA Element;
-	1..* dia -- 1..* NMJIC nmjic;
-	1..* dia -- 1..* HigherEchelon higherEchelon;
+	1..* -- 1..* NMJIC;
+	1..* -- 1..* HigherEchelon;
 }
 
 class NMJIC
@@ -197,14 +197,14 @@ class NMJIC
 class HigherEchelon
 {
 	isA Element;
-	1..* higherEchelon -- 1..* JFC jfc;
+	1..* -- 1..* JFC;
 }
 
 class JFC
 {
 	isA Element;
-	1..* jfc -- 1..* F2C2 f2c2;
-	1..* jfc -- 1..* ComponentCommand componentComand;
+	1..* -- 1..* F2C2;
+	1..* -- 1..* ComponentCommand componentComand;
 }
 
 class F2C2
@@ -225,9 +225,9 @@ class DJFLCC
 class JFACC
 {
 	isA ComponentCommand;
-	0..1 -> * AOCCID aoccid;
+	0..1 -> * AOCCID;
 	0..1 -> * AOCCombatPlanStrategyCells aoccpsc;
-	1..* jfacc -- 1..* SubordinateAirCommand subordinateAirCommand;
+	1..* -- 1..* SubordinateAirCommand;
 }
 
 class JFMCC
@@ -270,7 +270,7 @@ class ResultData
 	String sourceID;
 	String timeStamp;
 	* rd -- * CollectionRequirement cr;
-	1..* rd -- * BDAReport bdaReport;
+	1..* rd -- * BDAReport;
 }
 
 class CombatReport
@@ -313,7 +313,7 @@ class CollectionRequirement
 	String collectionTargetID;
 	String toBeDoneByTime;
 	String specialNeeds;
-	* cr -- * ATO ato;
+	* cr -- * ATO;
 	* cr -- * Target isContainedIn;
 }
 
@@ -323,20 +323,20 @@ class BDAReport
 	String reportSourceID;
 	String assesmentSumart;
 	String validityDuration;
-	* bdaReport -- * MunitionsEffectsAssesment mea;
+	* -- * MunitionsEffectsAssesment mea;
 }
 
 class MunitionsEffectsAssesment
 {
-	1..* mea -- 1..* ATO ato;
+	1..* mea -- 1..* ATO;
 	* mea -- 1..* TargetNomination tn;
 }
 
 class ATO
 {
 	String timePeriod;
-	* ato -- * RestrikeRecommendation rr;
-	* ato -- * TargetNomination tn;
+	* -- * RestrikeRecommendation rr;
+	* -- * TargetNomination tn;
 }
 
 class RestrikeRecommendation
@@ -346,18 +346,18 @@ class RestrikeRecommendation
 
 class TargetNomination
 {
-	* tn -- 1..* Target target;
+	* tn -- 1..* Target;
 }
 
 class TargetMaterialsAnalysis
 {
 	String targetID;
-	* describes -- 1..* Target target;
+	* describes -- 1..* Target;
 }
 
 class Target
 {
-	* target -- * MIDB holds;
+	* -- * MIDB holds;
 }
 
 class MIDB

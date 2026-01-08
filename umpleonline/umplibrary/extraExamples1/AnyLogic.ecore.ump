@@ -144,9 +144,9 @@ class SimulationExperiment
 	String finalDate;
 	String finalTime;
 	String modelTimeUnit;
-	0..1 -> 1..* ActiveObjectClass activeObjectClass;
+	0..1 -> 1..* ActiveObjectClass;
 	0..1 -> 1..* Point clientAreaTopLeft;
-	0..1 -> 1..* Frame frame;
+	0..1 -> 1..* Frame;
 	0..1 -> * Shape shapes;
 	0..1 -> * Control controls;
 	0..1 -> * Parameter parameters;
@@ -165,7 +165,7 @@ class Control
 	String enableExpression;
 	String actionCode;
 	String labelText;
-	0..1 -> 1..* Font font;
+	0..1 -> 1..* Font;
 }
 
 class Button
@@ -187,7 +187,7 @@ class Text
 	Integer color;
 	String text;
 	String alignment;
-	0..1 -> 1..* Font font;
+	0..1 -> 1..* Font;
 }
 
 class Font

@@ -35,7 +35,7 @@ class EvaluationCriteria
 class Action
 {
 	* super_action -- * Action sub_actions;
-	1..* actor_action -- 1..* Actor actor;
+	1..* actor_action -- 1..* Actor;
 	1..* resource_action -- * Resource resources;
 	1..* timeSpec_action -- * TimeSpec timeSpecs;
 }

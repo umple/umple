@@ -19,16 +19,16 @@ class Element
 class IEEE1471Model
 {
 	isA Element;
-	0..1 -> 1..* System system;
-	0..1 -> 1..* Environment environment;
+	0..1 -> 1..* System;
+	0..1 -> 1..* Environment;
 	0..1 -> * Mission missions;
-	0..1 -> 1..* Architecture architecture;
+	0..1 -> 1..* Architecture;
 	0..1 -> * Stakeholder stakeholders;
 	0..1 -> * Concern concerns;
 	0..1 -> * Viewpoint viewpoints;
 	0..1 -> * LibraryViewpoint libraryViewpoints;
-	0..1 -> 1..* ArchitecturalDescription architecturalDescription;
-	0..1 -> 1..* Rationale rationale;
+	0..1 -> 1..* ArchitecturalDescription;
+	0..1 -> 1..* Rationale;
 }
 
 class System

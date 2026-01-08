@@ -30,8 +30,8 @@ class NamedElement
 class Grafcet
 {
 	isA NamedElement;
-	1..* grafcet -- * Element elements;
-	1..* grafcet -- * Connection connections;
+	1..* -- * Element elements;
+	1..* -- * Connection connections;
 }
 
 class Element

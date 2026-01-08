@@ -20,7 +20,7 @@ namespace RSS;
 class RSS
 {
 	String version;
-	1..* rss -- 1..* Channel channel;
+	1..* -- 1..* Channel;
 }
 
 class Channel
@@ -40,11 +40,11 @@ class Channel
 	DayKind[] skipDays;
 	0..1 -> * Date pubDate;
 	0..1 -> * Date lastBuildDate;
-	0..1 -> * Category category;
-	1..* channel -- * Item items;
-	1..* channel -- * Image image;
-	1..* channel -- * TextInput textInput;
-	1..* channel -- * Cloud cloud;
+	0..1 -> * Category;
+	1..* -- * Item items;
+	1..* -- * Image;
+	1..* -- * TextInput;
+	1..* -- * Cloud;
 }
 
 class Item
@@ -55,10 +55,10 @@ class Item
 	String author;
 	String comments;
 	String guid;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * Date pubDate;
-	0..1 -> * Enclosure enclosure;
-	0..1 -> * Category category;
+	0..1 -> * Enclosure;
+	0..1 -> * Category;
 }
 
 class Image

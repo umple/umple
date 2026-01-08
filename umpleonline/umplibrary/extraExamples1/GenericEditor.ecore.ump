@@ -31,7 +31,7 @@ class AbstractElement
 {
 	isA LocatedElement;
 	String type;
-	0..1 -> * Format format;
+	0..1 -> * Format;
 }
 
 class Block
@@ -44,8 +44,8 @@ class Block
 class GroupElement
 {
 	isA AbstractElement;
-	0..1 -> * Element element;
-	0..1 -> * Indent indent;
+	0..1 -> * Element;
+	0..1 -> * Indent;
 }
 
 class Element
@@ -57,8 +57,8 @@ class Element
 class Format
 {
 	isA LocatedElement;
-	0..1 -> * Color color;
-	0..1 -> * Font font;
+	0..1 -> * Color;
+	0..1 -> * Font;
 }
 
 class Color

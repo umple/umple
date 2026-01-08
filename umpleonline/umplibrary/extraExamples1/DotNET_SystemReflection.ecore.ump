@@ -28,9 +28,9 @@ class Assembly
 	String evidence;
 	String codeBase;
 	0..1 -> 1..* MethodInfo entryPoint;
-	0..1 assembly -- * Module modules;
+	0..1 -- * Module modules;
 	0..1 -> * Assembly referencedAssembly;
-	1..* assembly -- 1..* ManifestResource manifest;
+	1..* -- 1..* ManifestResource manifest;
 	0..1 -> 1..* Module manifestModule;
 }
 
@@ -44,7 +44,7 @@ class Module
 	isA NamedElement;
 	String qualifiedName;
 	String scopeName;
-	1..* module -- * Type types;
+	1..* -- * Type types;
 }
 
 class MemberInfo

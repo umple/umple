@@ -25,8 +25,8 @@ class ArtifactUsageName
 	Boolean isInput;
 	Boolean isOutput;
 	Boolean hasWorkPerArtifact;
-	* artifactUsageNames -- 1..* ArtifactKind artifactKind;
-	* artifactUsageNames -- 1..* WorkDefinition workDefinition;
+	* artifactUsageNames -- 1..* ArtifactKind;
+	* artifactUsageNames -- 1..* WorkDefinition;
 }
 
 class ProcessDefinitionElement
@@ -69,13 +69,13 @@ class ProcessComponent
 class Goal
 {
 	isA Condition;
-	* goal -- 1..* WorkDefinition workDefinition;
+	* -- 1..* WorkDefinition;
 }
 
 class Precondition
 {
 	isA Condition;
-	* precondition -- 1..* WorkDefinition workDefinition;
+	* -- 1..* WorkDefinition;
 }
 
 class WorkDefinition

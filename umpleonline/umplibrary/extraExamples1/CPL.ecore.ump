@@ -24,8 +24,8 @@ class CPL
 {
 	isA Element;
 	0..1 -> * SubAction subActions;
-	0..1 -> * Outgoing outgoing;
-	0..1 -> * Incoming incoming;
+	0..1 -> * Outgoing;
+	0..1 -> * Incoming;
 }
 
 class NodeContainer
@@ -144,8 +144,8 @@ class Node
 class Switch
 {
 	isA Node;
-	0..1 -> * NotPresent notPresent;
-	0..1 -> * Otherwise otherwise;
+	0..1 -> * NotPresent;
+	0..1 -> * Otherwise;
 }
 
 class AddressSwitch
@@ -213,11 +213,11 @@ class Proxy
 	String timeout;
 	String recurse;
 	String ordering;
-	0..1 -> * Busy busy;
-	0..1 -> * NoAnswer noAnswer;
-	0..1 -> * Redirection redirection;
-	0..1 -> * Failure failure;
-	0..1 -> * Default default;
+	0..1 -> * Busy;
+	0..1 -> * NoAnswer;
+	0..1 -> * Redirection;
+	0..1 -> * Failure;
+	0..1 -> * Default;
 }
 
 class Redirect

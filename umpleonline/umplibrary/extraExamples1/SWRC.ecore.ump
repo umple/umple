@@ -115,7 +115,7 @@ class InProceedings
 	String booktitle;
 	0..1 -> 1..* Person editor;
 	0..1 -> 1..* Person author;
-	0..1 -> 1..* Organization organization;
+	0..1 -> 1..* Organization;
 }
 
 class Proceedings
@@ -128,7 +128,7 @@ class Proceedings
 	String series;
 	0..1 -> 1..* Person editor;
 	0..1 -> 1..* Organization publisher;
-	0..1 -> 1..* Organization organization;
+	0..1 -> 1..* Organization;
 }
 
 class Manual
@@ -138,7 +138,7 @@ class Manual
 	String address;
 	String edition;
 	0..1 -> 1..* Person author;
-	0..1 -> 1..* Organization organization;
+	0..1 -> 1..* Organization;
 }
 
 class Misc
@@ -191,7 +191,7 @@ class TechnicalReport
 {
 	isA Report;
 	String series;
-	0..1 -> 1..* Organization organization;
+	0..1 -> 1..* Organization;
 }
 
 class Event
@@ -276,7 +276,7 @@ class AcademicStaff
 	0..1 -> 1..* Publication editor;
 	0..1 -> 1..* Event memberOfPC;
 	0..1 -> 1..* Event organizerOrChairOf;
-	0..1 -> * Publication publication;
+	0..1 -> * Publication;
 	1..* supervisor -- * PhDStudent supervises;
 	1..* head -- 1..* ResearchGroup headOfGroup;
 	1..* head -- 1..* Project headOf;
@@ -327,7 +327,7 @@ class Graduate
 class PhDStudent
 {
 	isA Graduate;
-	0..1 -> * Publication publication;
+	0..1 -> * Publication;
 	0..1 -> 1..* Project worksAtProject;
 }
 
@@ -396,7 +396,7 @@ class DevelopmentProject
 class SoftwareProject
 {
 	isA Project;
-	0..1 -> 1..* Product product;
+	0..1 -> 1..* Product;
 }
 
 class Product

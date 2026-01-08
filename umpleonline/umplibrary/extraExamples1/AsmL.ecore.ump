@@ -41,7 +41,7 @@ class AsmLFile
 {
 	isA LocatedElement;
 	1..* file -- * AsmLElement elements;
-	1..* mainFile -- 1..* Main main;
+	1..* mainFile -- 1..* Main;
 }
 
 class AsmLElement
@@ -56,7 +56,7 @@ class VarDeclaration
 	Boolean isDeclaration;
 	Boolean isLocal;
 	String name;
-	* ownerDeclaration -- 1..* Type type;
+	* ownerDeclaration -- 1..* Type;
 }
 
 class Namespace
@@ -70,7 +70,7 @@ class Structure
 	isA AsmLElement;
 	String name;
 	String superStructureName;
-	1..* ownerStructure -- * VarOrCase varOrCase;
+	1..* ownerStructure -- * VarOrCase;
 }
 
 class VarOrCase
@@ -91,7 +91,7 @@ class Class
 	String name;
 	Boolean isAbstract;
 	String superClassName;
-	1..* ownerClass -- * VarOrMethod varOrMethod;
+	1..* ownerClass -- * VarOrMethod;
 }
 
 class VarOrMethod
@@ -117,7 +117,7 @@ class Function
 {
 	isA AsmLElement;
 	String name;
-	0..1 -> 1..* Body body;
+	0..1 -> 1..* Body;
 }
 
 class Method
@@ -135,7 +135,7 @@ class Parameter
 {
 	isA LocatedElement;
 	String name;
-	* ownerParameter -- 1..* Type type;
+	* ownerParameter -- 1..* Type;
 }
 
 class Main
@@ -202,7 +202,7 @@ class MethodInvocation
 class UpdateRule
 {
 	isA Rule;
-	0..1 -> 1..* Term term;
+	0..1 -> 1..* Term;
 }
 
 class UpdateVarRule
@@ -255,7 +255,7 @@ class ElseIf
 class ReturnRule
 {
 	isA Rule;
-	0..1 -> 1..* Term term;
+	0..1 -> 1..* Term;
 }
 
 class AddRule

@@ -64,11 +64,11 @@ class Column
 {
 	isA Attribute;
 	String name;
-	0..1 -> 1..* DataType dataType;
+	0..1 colDataType -> 1..* DataType dataType;
 	0..1 hasColumn -- * Key keys;
 	0..1 hasColumn -- 1..* ColumnSet belongsToColumnSet;
-	0..1 -> 1..* BaseAttribute corespondsToBaseAttribute;
-	0..1 column -- * LinkPackage linkPackage;
+	0..1 colAttr -> 1..* BaseAttribute corespondsToBaseAttribute;
+	0..1 columnPkg -- * LinkPackage packagesOfCol;
 }
 
 class ColumnSet
@@ -79,7 +79,7 @@ class ColumnSet
 	String dbConnectString;
 	String user;
 	0..1 isAssociatedToColumnSet -- 1..* Key hasKey;
-	0..1 columnSet -- * LinkPackage linkPackage;
+	0..1 columnSet -- * LinkPackage;
 }
 
 class ColumnStatistics
@@ -126,7 +126,7 @@ class Key
 {
 	isA ModelElement;
 	Boolean isUsedForIndex;
-	0..1 keys -- 1..* Column hasColumn;
+	0..1 keys -- 1..* Column;
 }
 
 class ForeignKey
@@ -154,7 +154,7 @@ class RelationShip
 	String subRelationShipRestriction;
 	String defined;
 	0..1 -> 1..* RelationShip isA;
-	0..1 correspondsToRelationShip -- 1..* ForeignKey correspondsToForeignKey;
+	0..1 correspondsToRelationShip -- 1..* ForeignKey correspondsToForKey;
 	0..1 ToConcept -- 1..* Concept ToConcept;
 }
 
@@ -178,14 +178,14 @@ class BaseAttribute
 class MultiColumnFeature
 {
 	isA FeatureAttribute;
-	0..1 isPartMultiColumnFeature -- * BaseAttribute consitsOfBaseAttributes;
+	0..1 isPartMultiColumnFeature -- * BaseAttribute consistsOfBaseAttributes;
 }
 
 class Value
 {
 	isA Attribute ;
 	0..1 -> 1..* DomainDataType domainDataType;
-	0..1 value -- * LinkPackage linkPackage;
+	0..1 value -- * LinkPackage;
 }
 
 class UserInput
@@ -393,7 +393,7 @@ class TransformationGroup
 class Transformation
 {
 	isA ExecutionElement;
-	0..1 transformation -- 1..* TransformationGroup transformationGroup;
+	0..1 transformation -- 1..* TransformationGroup;
 }
 
 class Function

@@ -27,11 +27,11 @@ class ATOM
 	String logo;
 	0..1 -> 1..* Link links;
 	0..1 -> 1..* Date lastUpdate;
-	0..1 -> * Generator generator;
+	0..1 -> * Generator;
 	0..1 -> * Category categories;
 	0..1 -> 1..* Author authors;
 	0..1 -> * Contributor contibutors;
-	1..* atom -- * Entry entries;
+	1..* -- * Entry entries;
 }
 
 class Entry
@@ -41,10 +41,10 @@ class Entry
 	String rights;
 	String summary;
 	0..1 -> 1..* Link links;
-	0..1 -> * Source source;
+	0..1 -> * Source;
 	0..1 -> * Date published;
 	0..1 -> 1..* Date lastUpdate;
-	0..1 -> * Content content;
+	0..1 -> * Content;
 	0..1 -> * Category categories;
 	0..1 -> 1..* Author authors;
 	0..1 -> * Contributor contibutors;
@@ -60,10 +60,10 @@ class Source
 	String subtitle;
 	0..1 -> * Link links;
 	0..1 -> * Date lastUpdate;
-	0..1 -> * Generator generator;
+	0..1 -> * Generator;
 	0..1 -> * Contributor contributors;
 	0..1 -> * Category categories;
-	0..1 -> * Author author;
+	0..1 -> * Author;
 }
 
 class Content

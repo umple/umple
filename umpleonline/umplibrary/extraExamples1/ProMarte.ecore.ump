@@ -26,7 +26,7 @@ class TimeBase
 class Instant
 {
 	Boolean isBefore;
-	* denotedInstant -- 1..* TimeValue timeValue;
+	* denotedInstant -- 1..* TimeValue;
 }
 
 class TimeValue
@@ -37,7 +37,7 @@ class TimeValue
 class TimeInterval
 {
 	0..1 -> 2..* TimeValue endValues;
-	1..* timeInterval -- * Interval denotedInterval;
+	1..* -- * Interval denotedInterval;
 }
 
 class Interval
@@ -312,7 +312,7 @@ class QuantitativeNFP
 {
 	isA NFP;
 	1..* owner -- * Realization sampleSet;
-	1..* owner -- * Measure measure;
+	1..* owner -- * Measure;
 }
 
 class Realization
@@ -526,20 +526,20 @@ class Channel
 class AnalysisContext
 {
 	0..1 -> * ComplexNFP global;
-	0..1 -> * Workload workload;
-	0..1 -> * Behavior behavior;
+	0..1 -> * Workload;
+	0..1 -> * Behavior;
 	0..1 -> 1..* Resource usedResources;
 }
 
 class Workload
 {
-	1..* workload -- 1..* Transaction transaction;
+	1..* -- 1..* Transaction;
 }
 
 class Transaction
 {
-	0..1 -> 1..* Trigger trigger;
-	0..1 -> 1..* Response response;
+	0..1 -> 1..* Trigger;
+	0..1 -> 1..* Response;
 }
 
 class Trigger
@@ -557,7 +557,7 @@ class Response
 
 class Behavior
 {
-	1..* behavior -- 1..* Scenario scenario;
+	1..* -- 1..* Scenario;
 }
 
 class Scenario
@@ -587,7 +587,7 @@ class BasicResource
 class StructuredResource
 {
 	isA Resource;
-	0..1 -> 1..* BasicResource basicResource;
+	0..1 -> 1..* BasicResource;
 }
 
 class ProcessingResource
@@ -635,7 +635,7 @@ class ServerResource
 
 class Service
 {
-	1..* service -- 1..* Interface interface;
+	1..* -- 1..* Interface;
 }
 
 class Interface

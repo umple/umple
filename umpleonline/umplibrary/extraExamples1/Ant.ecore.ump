@@ -25,7 +25,7 @@ class Project
 	0..1 -> 1..* Target default;
 	0..1 -> * Path paths;
 	0..1 -> * Property properties;
-	0..1 -> * TaskDef taskdef;
+	0..1 -> * TaskDef;
 	0..1 -> 1..* Target targets;
 }
 
@@ -70,7 +70,7 @@ class Target
 	String unless;
 	String ifCondition;
 	0..1 -> * Target depends;
-	1..* target -- * Task tasks;
+	1..* -- * Task tasks;
 }
 
 class Pattern
@@ -156,14 +156,14 @@ class Set
 class PatternSet
 {
 	isA Set;
-	0..1 -> 1..* InExcludes inexcludes;
+	0..1 -> 1..* InExcludes;
 }
 
 class FileSet
 {
 	isA Set;
 	String dir;
-	0..1 -> * PatternSet patternset;
+	0..1 -> * PatternSet;
 	0..1 -> * Includes include;
 	0..1 -> * Excludes exclude;
 }
@@ -173,8 +173,8 @@ class FilterSet
 	isA Set;
 	String starttoken;
 	String endtoken;
-	0..1 -> * Filter filter;
-	0..1 -> * FiltersFile filtersfile;
+	0..1 -> * Filter;
+	0..1 -> * FiltersFile;
 }
 
 class Path
@@ -187,8 +187,8 @@ class ClassPath
 {
 	isA Set;
 	String refid;
-	0..1 -> * PathElement pathElement;
-	0..1 -> * FileSet fileset;
+	0..1 -> * PathElement;
+	0..1 -> * FileSet;
 }
 
 class Task
@@ -240,7 +240,7 @@ class Java
 	String classname;
 	String jar;
 	String fork;
-	0..1 -> * ClassPath classPath;
+	0..1 -> * ClassPath;
 }
 
 class MiscellaneousTask
@@ -285,8 +285,8 @@ class Javac
 	String fork;
 	String optimize;
 	String deprecation;
-	0..1 -> * InExcludes inExcludes;
-	0..1 -> * ClassPath classPath;
+	0..1 -> * InExcludes;
+	0..1 -> * ClassPath;
 }
 
 class DocumentationTask
@@ -344,9 +344,9 @@ class Copy
 	String filtering;
 	String flatten;
 	String includeEmptyDirs;
-	0..1 -> * FileSet fileset;
-	0..1 -> * FilterSet filterset;
-	0..1 -> * Mapper mapper;
+	0..1 -> * FileSet;
+	0..1 -> * FilterSet;
+	0..1 -> * Mapper;
 }
 
 class Delete

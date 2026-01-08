@@ -24,7 +24,7 @@ class Outline
 {
 	isA LocatedElement;
 	String extension;
-	* outline -- * Node nodes;
+	* -- * Node nodes;
 }
 
 class Node
@@ -32,7 +32,7 @@ class Node
 	isA LocatedElement;
 	String name;
 	String icon;
-	0..1 -> 1..* Label label;
+	0..1 -> 1..* Label;
 	0..1 -> * Map mapping;
 }
 
@@ -41,7 +41,7 @@ class Label
 	isA LocatedElement;
 	String label;
 	String methodCall;
-	0..1 -> * LabelSuite labelSuite;
+	0..1 -> * LabelSuite;
 }
 
 class LabelSuite

@@ -48,7 +48,7 @@ class ProductLine
 	String name;
 	String textDescription;
 	String htmlDescription;
-	1..* productLine -- * Product products;
+	1..* -- * Product products;
 }
 
 class Product
@@ -60,7 +60,7 @@ class Product
 	String description;
 	Integer quantityInStock;
 	Double buyPrice;
-	Double MSRP;
+	Double msrp;
 }
 
 class Office
@@ -68,7 +68,7 @@ class Office
 	isA AddressInfo;
 	String code;
 	String territory;
-	1..* office -- * Employee employees;
+	1..* -- * Employee employees;
 }
 
 class Employee
@@ -91,30 +91,30 @@ class Customer
 	String contactLastName;
 	String contactFirstName;
 	Double creditLimit;
-	1..* customer -- * Payment payments;
-	1..* customer -- * Order orders;
+	1..* -- * Payment payments;
+	1..* -- * Order orders;
 }
 
 class Payment
 {
 	String checkNumber;
 	Double amount;
-	0..1 -> 1..* Date date;
+	0..1 -> 1..* Date;
 }
 
 class Order
 {
 	Integer number;
 	String status;
-	0..1 -> 1..* Date date;
-	1..* order -- * OrderDetail orderDetails;
+	0..1 -> 1..* Date;
+	1..* -- * OrderDetail orderDetails;
 }
 
 class OrderDetail
 {
 	Integer quantityOrdered;
 	Double priceEach;
-	0..1 -> 1..* Product product;
+	0..1 -> 1..* Product;
 }
 
 //$?[End_of_model]$?

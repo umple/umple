@@ -88,7 +88,7 @@ class AssertStatement
 {
 	isA Statement;
 	0..1 -> * Expression message;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 }
 
 class Assignment
@@ -131,7 +131,7 @@ class BreakStatement
 class CastExpression
 {
 	isA Expression;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 }
 
 class CatchClause
@@ -146,8 +146,8 @@ class ClassInstanceCreation
 	isA Expression;
 	0..1 -> * Expression arguments;
 	0..1 -> 1..* NamedElementRef type;
-	0..1 -> * Expression expression;
-	0..1 -> * AnonymousClassDeclaration anonymousClassDeclaration;
+	0..1 -> * Expression;
+	0..1 -> * AnonymousClassDeclaration;
 }
 
 class Comment
@@ -163,7 +163,7 @@ class ConditionalExpression
 	isA Expression;
 	0..1 -> 1..* Expression elseExpression;
 	0..1 -> 1..* Expression thenExpression;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 }
 
 class ContinueStatement
@@ -181,7 +181,7 @@ class ConstructorInvocation
 class DoStatement
 {
 	isA Statement;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 	0..1 -> 1..* Statement body;
 }
 
@@ -194,7 +194,7 @@ class EnhancedForStatement
 {
 	isA Statement;
 	0..1 -> 1..* SingleVariableDeclaration parameter;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 	0..1 -> 1..* Statement body;
 }
 
@@ -202,7 +202,7 @@ class EnumConstantDeclaration
 {
 	isA BodyDeclaration ;
 	0..1 -> * Expression arguments;
-	0..1 -> * AnonymousClassDeclaration anonymousClassDeclaration;
+	0..1 -> * AnonymousClassDeclaration;
 }
 
 class EnumDeclaration
@@ -219,13 +219,13 @@ class Expression
 class ExpressionStatement
 {
 	isA Statement;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 }
 
 class FieldAccess
 {
 	isA Expression;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 }
 
 class FieldDeclaration
@@ -238,7 +238,7 @@ class ForStatement
 {
 	isA Statement;
 	0..1 -> 1..* Statement body;
-	0..1 -> * Expression expression;
+	0..1 -> * Expression;
 }
 
 class InfixExpression
@@ -253,7 +253,7 @@ class InfixExpression
 class IfStatement
 {
 	isA Statement;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 	0..1 -> * Statement elseStatement;
 	0..1 -> 1..* Statement thenStatement;
 }
@@ -319,7 +319,7 @@ class MethodInvocation
 	isA Expression;
 	0..1 -> 1..* NamedElementRef method;
 	0..1 -> * Expression arguments;
-	0..1 -> * Expression expression;
+	0..1 -> * Expression;
 }
 
 class MethodRef
@@ -342,7 +342,7 @@ class Model
 {
 	String name;
 	0..1 -> * OrphanType orphanTypes;
-	1..* model -- * PackageDeclaration ownedElements;
+	1..* -- * PackageDeclaration ownedElements;
 }
 
 class MultipleValuedNamedElement
@@ -385,7 +385,7 @@ class ParameterizedType
 class ParenthesizedExpression
 {
 	isA Expression;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 }
 
 class PostfixExpression
@@ -410,13 +410,13 @@ class PrimitiveType
 class ReturnStatement
 {
 	isA Statement;
-	0..1 -> * Expression expression;
+	0..1 -> * Expression;
 }
 
 class ThrowStatement
 {
 	isA Statement;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 }
 
 class SingleVariableDeclaration
@@ -436,7 +436,7 @@ class SuperConstructorInvocation
 {
 	isA Statement;
 	0..1 -> * Expression arguments;
-	0..1 -> * Expression expression;
+	0..1 -> * Expression;
 }
 
 class SuperFieldAccess
@@ -456,21 +456,21 @@ class SwitchCase
 {
 	isA Statement;
 	Boolean expressionInitialized;
-	0..1 -> * Expression expression;
+	0..1 -> * Expression;
 }
 
 class SwitchStatement
 {
 	isA Statement;
 	0..1 -> * Statement statements;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 }
 
 class SynchronizedStatement
 {
 	isA Statement;
 	0..1 -> 1..* Block body;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 }
 
 class TagElement
@@ -562,6 +562,6 @@ class WildCardType
 class WhileStatement
 {
 	isA Statement;
-	0..1 -> 1..* Expression expression;
+	0..1 -> 1..* Expression;
 	0..1 -> 1..* Statement body;
 }

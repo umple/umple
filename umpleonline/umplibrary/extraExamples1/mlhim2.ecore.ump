@@ -72,7 +72,7 @@ class CCD
 {
 	0..1 -> 1..* Locatable definition;
 	0..1 -> 1..* MetaDataSet metaData;
-	0..1 -> 1..* Ontology ontology;
+	0..1 -> 1..* Ontology;
 }
 
 class Cluster
@@ -99,7 +99,7 @@ class ContentItem
 {
 	isA Locatable;
 	0..1 -> * Link links;
-	0..1 -> * Attestation attestation;
+	0..1 -> * Attestation;
 }
 
 class DataStructure
@@ -403,7 +403,6 @@ class DvString
 
 class DvTemporal
 {
-	isA AnyType;
 }
 
 class DvTime
@@ -490,8 +489,8 @@ class EventContext
 	0..1 -> * Organization healthcareFacility;
 	0..1 -> 1..* DvTemporal startTime;
 	0..1 -> * DvTemporal endTime;
-	0..1 -> * Participation participation;
-	0..1 -> * Location location;
+	0..1 -> * Participation;
+	0..1 -> * Location;
 	0..1 -> * DvCodedString setting;
 }
 
@@ -503,7 +502,6 @@ class ExceptionalValue
 
 class FeederAudit
 {
-	isA AnyType;
 	0..1 -> 1..* FeederAuditDetails originatingSystemAudit;
 	0..1 -> 1..* DvIdentifier originatingSystemItemIds;
 	0..1 -> 1..* FeederAuditDetails feederSystemAudit;
@@ -513,10 +511,9 @@ class FeederAudit
 
 class FeederAuditDetails
 {
-	isA AnyType;
 	0..1 -> 1..* DvIdentifier systemId;
 	0..1 -> * DvNormalizedString versionId;
-	0..1 -> * Location location;
+	0..1 -> * Location;
 	0..1 -> * DvTemporal time;
 	0..1 -> * PartyProxy subject;
 }
@@ -579,7 +576,7 @@ class ItemList
 class ItemSingle
 {
 	isA ItemStructure;
-	0..1 -> 1..* Item item;
+	0..1 -> 1..* Item;
 }
 
 class ItemStructure
@@ -601,15 +598,13 @@ class ItemTree
 
 class Link
 {
-	isA AnyType;
 	0..1 -> 1..* Relationship relation;
 	0..1 -> 1..* DvToken target;
 }
 
 class Locatable
 {
-	isA AnyType;
-	0..1 -> * FeederAudit feederAudit;
+	0..1 -> * FeederAudit;
 	0..1 -> 1..* DvNormalizedString name;
 	0..1 -> 1..* DvToken uuid;
 	0..1 -> * DvToken parent;
@@ -712,7 +707,6 @@ class OTH
 
 class Participation
 {
-	isA AnyType;
 	0..1 -> * PartyProxy performer;
 	0..1 -> 1..* DvCodedString function;
 	0..1 -> 1..* DvCodedString mode;
@@ -747,7 +741,7 @@ class PartyProxy
 class PartyRelated
 {
 	isA PartyIdentified;
-	0..1 -> 1..* Relationship relationship;
+	0..1 -> 1..* Relationship;
 }
 
 class PartySelf

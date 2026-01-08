@@ -23,7 +23,7 @@ class Node
 	String description;
 	Boolean preliminary;
 	String object;
-	1..* node -- * Attribute attributes;
+	1..* -- * Attribute attributes;
 	* cn_src -- * Child cn_dst;
 	* nx_src -- * XORGroup nx_dst;
 	* no_src -- * ORGroup no_dst;
@@ -61,5 +61,3 @@ class ORGroup
 	Boolean preliminary;
 	String name;
 }
-
-namespace PrimitiveTypes;

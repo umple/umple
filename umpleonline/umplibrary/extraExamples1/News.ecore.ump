@@ -28,8 +28,8 @@ class Newspaper
 	String language;
 	String copyright;
 	0..1 -> * Date pubDate;
-	0..1 -> * Category category;
-	1..* newspaper -- * News news;
+	0..1 -> * Category;
+	1..* -- * News;
 }
 
 class News
@@ -38,7 +38,7 @@ class News
 	String author;
 	String comments;
 	0..1 -> * Date pubDate;
-	0..1 -> * Category category;
+	0..1 -> * Category;
 }
 
 class Category

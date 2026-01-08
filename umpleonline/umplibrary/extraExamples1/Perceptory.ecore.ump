@@ -18,15 +18,15 @@ Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
 
 namespace Perceptory;
 
-class RelationSchip
+class Relationship
 {
-	0..1 relationSchip -- * Package packages;
-	* relationSchip -- * Steriotype steriotype;
-	* relationSchip -- * Constraint constraint;
-	1..* relationSchip -- * Characteristic affectCharacteristic;
+	0..1 -- * Package packages;
+	* -- * Stereotype;
+	* -- * Constraint;
+	1..* -- * Characteristic affectCharacteristic;
 }
 
-class ConstrainedRelationSchip
+class ConstrainedRelationship
 {
 }
 
@@ -42,17 +42,17 @@ class Composition
 
 class Association
 {
-	isA RelationSchip;
+	isA Relationship;
 }
 
 class Generalisation
 {
-	isA RelationSchip;
+	isA Relationship;
 }
 
 class Dependency
 {
-	isA RelationSchip;
+	isA Relationship;
 }
 
 class AssociationEnd
@@ -62,29 +62,29 @@ class AssociationEnd
 class Package
 {
 	* parent -- * Package children;
-	* thePackage -- * Steriotype steriotype;
+	* thePackage -- * Stereotype;
 	* packages -- * Class classes;
 }
 
-class Steriotype
+class Stereotype
 {
-	* steriotype -- * Class theClass;
-	* steriotype -- * Operation operations;
-	* steriotype -- * DescriptiveAttribute descriptiveAttribute;
+	* -- * Class theClass;
+	* -- * Operation operations;
+	* -- * DescriptiveAttribute;
 }
 
 class Class
 {
 	0..1 affectFeature -- 1..* Operation operations;
-	1..* theClass -- * Constraint constraint;
+	1..* theClass -- * Constraint;
 	1..* behaviour -- * Operation myOperations;
-	1..* theClass -- * Characteristic characteristic;
+	1..* theClass -- * Characteristic;
 	1..* theClass -- * MetaData details;
 }
 
 class Constraint
 {
-	* constraint -- 1..* Characteristic caracteristic;
+	* -- 1..* Characteristic caracteristic;
 }
 
 class Operation
@@ -95,8 +95,8 @@ class Operation
 
 class Characteristic
 {
-	1..* characteristic -- * BusnissRule rule;
-	1..* characteristic -- * MetaData details;
+	1..* -- * BusnissRule rule;
+	1..* -- * MetaData details;
 }
 
 class BusnissRule
@@ -105,7 +105,7 @@ class BusnissRule
 
 class MetaData
 {
-	1..* metaData -- * Source source;
+	1..* -- * Source;
 }
 
 class Source
@@ -114,7 +114,7 @@ class Source
 
 class Domain
 {
-	* domain -- 1..* DescriptiveAttribute descriptiveAttribute;
+	* -- 1..* DescriptiveAttribute;
 }
 
 class DescriptiveAttribute
@@ -126,23 +126,23 @@ class DescriptiveAttribute
 
 class Geometry
 {
-	isA PerceptorySteriotype ;
-	* geometry -- * Temporality tempsDef;
+	isA PerceptoryStereotype ;
+	* -- * Temporality tempsDef;
 }
 
 class Temporality
 {
-	isA PerceptorySteriotype ;
+	isA PerceptoryStereotype ;
 }
 
 class VisualInfo
 {
-	isA PerceptorySteriotype ;
+	isA PerceptoryStereotype ;
 }
 
 class Value
 {
-	1..* value -- 1..* EnumeratedDomain enumeratedDomain;
+	1..* -- 1..* EnumeratedDomain;
 }
 
 class RangeDomain
@@ -155,7 +155,7 @@ class EnumeratedDomain
 	isA Domain;
 }
 
-class PerceptorySteriotype
+class PerceptoryStereotype
 {
-	isA Steriotype;
+	isA Stereotype;
 }

@@ -177,7 +177,7 @@ class CField
 class CParameter
 {
 	isA CTypedElement;
-	* parameters -- * BehavioralFeature behavioralFeature;
+	* parameters -- * BehavioralFeature;
 }
 
 class BehavioralFeature

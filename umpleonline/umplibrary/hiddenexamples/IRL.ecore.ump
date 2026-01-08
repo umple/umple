@@ -49,7 +49,7 @@ class RuleSet
 {
 	isA NamedElement;
 	0..1 propertyDefinitionOwner -- * PropertyDefinition propertyDefinitions;
-	0..1 rulesetElementDefinitionOwner -- * RulesetElementDefinition rulesetElementDefinitions;
+	0..1 rulesetElementDefinitionOwner -- * RulesetElementDefinition;
 	1..* importDefinitionOwners -- * ImportDefinition importDefinitions;
 }
 
@@ -74,7 +74,7 @@ class Expression
 class PropertyCallExpression
 {
 	isA Expression;
-	0..1 appliedProperty -- * Expression source;
+	0..1 appliedProperty -- * Expression;
 }
 
 class IteratorExp

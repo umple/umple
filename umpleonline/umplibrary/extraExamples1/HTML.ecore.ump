@@ -21,21 +21,20 @@ namespace HTML;
 
 class HTML
 {
-	1..* html -- 1..* HEAD head;
-	1..* html -- 1..* BODY body;
+	1..* -- 1..* HEAD;
+	1..* -- 1..* BODY;
 }
 
 class HTMLElement
 {
 	String value;
 	* parent -- * HTMLElement children;
-	1..* children ++ 1..* HTMLElement parent;
 }
 
 class HEAD
 {
 	isA HTMLElement;
-	1..* head -- * HEADElement headElements;
+	1..* -- * HEADElement headElements;
 }
 
 class HEADElement
@@ -66,7 +65,7 @@ class BODY
 	String link;
 	String alink;
 	String vlink;
-	1..* body -- * BODYElement bodyElements;
+	1..* -- * BODYElement bodyElements;
 }
 
 class BODYElement
@@ -252,7 +251,7 @@ class TABLE
 	String width;
 	String cellspacing;
 	String cellpadding;
-	1..* table -- * TR trs;
+	1..* -- * TR trs;
 }
 
 class TR
@@ -260,7 +259,7 @@ class TR
 	isA TABLEElement;
 	String valign;
 	String align;
-	1..* tr -- * TD tds;
+	1..* -- * TD tds;
 }
 
 class TD

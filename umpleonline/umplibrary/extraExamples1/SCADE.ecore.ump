@@ -32,30 +32,30 @@ class Model
 	isA Object ;
 	Boolean library;
 	String pathname;
-	0..1 -> * Project project;
-	0..1 -> * FileRef fileRef;
+	0..1 -> * Project;
+	0..1 -> * FileRef;
 	0..1 modelC -- 1..* ConstBlock enumsBlock;
 	0..1 modelO -- * Operator importedOperator;
 	* libraries -- * Model client;
 	0..1 -> * Model allLibry;
-	0..1 -> * Reference reference;
+	0..1 -> * Reference;
 	0..1 modelN -- * Node tmpNode;
 	0..1 keyC -- * ConstBlock constBlockK;
 	0..1 keyVB -- * VarBlock varBlockK;
 	0..1 keyM -- * NamedType refinement;
 	0..1 -> * ConstVar allConstVar;
-	0..1 -> * ConstVar constVar;
+	0..1 -> * ConstVar;
 	0..1 -> * NamedType allNamedType;
-	1..* key -- * Implementation implementation;
-	1..* key -- * ConstBlock constBlock;
-	1..* key -- * VarBlock varBlock;
-	1..* key -- * TypeBlock typeBlock;
-	1..* modelD -- * Descriptor descriptor;
+	1..* key -- * Implementation;
+	1..* key -- * ConstBlock;
+	1..* key -- * VarBlock;
+	1..* key -- * TypeBlock;
+	1..* modelD -- * Descriptor;
 	1..* modelS -- * StorageUnit storageUnitM;
 	1..* modelOp -- * Operator all;
-	1..* key -- * Node node;
-	1..* model -- * Type typeM;
-	0..1 -> * NamedType namedType;
+	1..* key -- * Node;
+	1..* -- * Type typeM;
+	0..1 -> * NamedType;
 	1..* modelM -- 1..* MtcApplication application;
 	1..* modelCov -- 1..* CoverageFile coverageFileM;
 	1..* modelCri -- 1..* CriterionFile criterionFileM;
@@ -65,13 +65,13 @@ class Model
 class Implementation
 {
 	isA Object;
-	* implementation -- 1..* NamedType namedTypeI;
+	* -- 1..* NamedType namedTypeI;
 }
 
 class ConstBlock
 {
 	isA ModelBlock;
-	* key -- * Constant constant;
+	* key -- * Constant;
 }
 
 class VarBlock
@@ -93,9 +93,9 @@ class TypeBlock
 
 class Session
 {
-	0..1 -> 1..* Descriptor descriptor;
-	0..1 -> * Model model;
-	1..* session -- 1..* Loader loader;
+	0..1 -> 1..* Descriptor;
+	0..1 -> * Model;
+	1..* -- 1..* Loader;
 }
 
 class Descriptor
@@ -123,7 +123,7 @@ class StorageUnit
 	Boolean loaded;
 	Boolean saoModified;
 	Boolean annModified;
-	0..1 -> 1..* FileRef fileRef;
+	0..1 -> 1..* FileRef;
 	1..* storageUnitE -- * StorageElement element;
 }
 
@@ -150,14 +150,14 @@ class Block
 class NodeBlock
 {
 	isA Block;
-	0..1 -> 1..* Node node;
+	0..1 -> 1..* Node;
 }
 
 class ModelBlock
 {
 	isA Block;
 	0..1 -> * ListInteger columnsSize;
-	0..1 -> 1..* Model model;
+	0..1 -> 1..* Model;
 }
 
 class Expression
@@ -165,13 +165,13 @@ class Expression
 	isA Object;
 	0..1 -> * ConstVar dependance;
 	0..1 -> * ExprId subExprId;
-	1..* expression -- * Label label;
+	1..* -- * Label;
 	* initValue -- 1..* ExprContact exprContactE;
 	* parameter -- * ExprCall exprCallE;
-	* value -- * ParamArray paramArray;
-	* value -- * Constant constant;
+	* value -- * ParamArray;
+	* value -- * Constant;
 	* right -- * Equation equationE;
-	1..* expression -- * Assertion assertionE;
+	1..* -- * Assertion assertionE;
 }
 
 class Label
@@ -203,7 +203,7 @@ class ExprCall
 	isA Expression;
 	Integer numOcc;
 	Integer predefOpr;
-	0..1 -> * Operator operator;
+	0..1 -> * Operator;
 }
 
 class Operator
@@ -244,30 +244,30 @@ class Node
 {
 	isA Operator;
 	0..1 -> 1..* Object nodeKind;
-	0..1 -> * StateMachine stateMachine;
-	1..* key -- * ParamBlock paramBlock;
-	1..* key -- * EqBlock eqBlock;
+	0..1 -> * StateMachine;
+	1..* key -- * ParamBlock;
+	1..* key -- * EqBlock;
 }
 
 class ParamBlock
 {
 	isA NodeBlock;
 	0..1 -> * ListInteger columnsSize;
-	1..* paramBlock -- 1..* ParamArray array;
+	1..* -- 1..* ParamArray array;
 }
 
 class ParamArray
 {
 	isA Annotable;
 	0..1 -> * ListString notes;
-	0..1 -> 1..* Operator operator;
+	0..1 -> 1..* Operator;
 }
 
 class ConstVar
 {
 	isA Annotable;
 	0..1 -> 1..* Object kind;
-	* constVar -- 1..* Type type;
+	* -- 1..* Type;
 	* referencedId -- * EqBlock client;
 }
 
@@ -275,7 +275,7 @@ class Constant
 {
 	isA ConstVar;
 	Boolean imported;
-	1..* value -- * Enumeration enumeration;
+	1..* value -- * Enumeration;
 }
 
 class Variable
@@ -338,8 +338,8 @@ class Tuple
 class EqBlock
 {
 	isA NodeBlock;
-	1..* eqBlock -- 1..* Equation equation;
-	* key -- * Assertion assertion;
+	1..* -- 1..* Equation;
+	* key -- * Assertion;
 }
 
 class Equation
@@ -357,13 +357,13 @@ class Assertion
 {
 	isA Annotable;
 	0..1 -> * RPoint position;
-	* assertion -- * Edge edge;
+	* -- * Edge;
 }
 
 class Annotable
 {
 	isA Object;
-	String DefinedIn;
+	String definedIn;
 }
 
 class Prop
@@ -376,14 +376,14 @@ class Prop
 class Configuration
 {
 	String name;
-	* configuration -- 1..* Project projectC;
+	* -- 1..* Project projectC;
 }
 
 class Project
 {
 	isA Annotable;
 	String pathname;
-	0..1 -> * FileRef fileRef;
+	0..1 -> * FileRef;
 	* root -- * Element owner;
 }
 
@@ -394,8 +394,8 @@ class Element
 	Boolean derived;
 	String ident;
 	String description;
-	* element -- * Folder folder;
-	* element -- 1..* Criterion criterionE;
+	* -- * Folder;
+	* -- 1..* Criterion criterionE;
 }
 
 class FileRef
@@ -403,7 +403,7 @@ class FileRef
 	isA Element;
 	String pathname;
 	String persistAs;
-	String DefinedIn;
+	String definedIn;
 }
 
 class Folder
@@ -455,7 +455,7 @@ class RSize
 
 class Entity
 {
-	String DefinedIn;
+	String definedIn;
 }
 
 class StateObj
@@ -508,7 +508,7 @@ class State
 	String name;
 	Double cx;
 	Double cy;
-	0..1 -> 1..* StOutput stOutput;
+	0..1 -> 1..* StOutput;
 }
 
 class InitialStPtr
@@ -516,20 +516,20 @@ class InitialStPtr
 	isA GraphicalObject;
 	Double cx;
 	Double cy;
-	0..1 -> 1..* State state;
+	0..1 -> 1..* State;
 }
 
 class StateMachine
 {
 	isA Object;
-	0..1 -> 1..* InitialStPtr initialStPtr;
-	0..1 -> * State state;
-	0..1 -> * Transition transition;
+	0..1 -> 1..* InitialStPtr;
+	0..1 -> * State;
+	0..1 -> * Transition;
 }
 
 class Base
 {
-	String DefineIn;
+	String defineIn;
 }
 
 class StateBase
@@ -541,30 +541,30 @@ class AnnNote
 {
 	String name;
 	Boolean modified;
-	0..1 -> 1..* AnnNoteType annNoteType;
-	0..1 -> 1..* Annotable annotable;
-	1..* annNote -- 1..* AnnAttValue annAttValue;
+	0..1 -> 1..* AnnNoteType;
+	0..1 -> 1..* Annotable;
+	1..* -- 1..* AnnAttValue;
 }
 
 class AnnAttValue
 {
-	0..1 -> 1..* AnnAttDefinition annAttDefinition;
+	0..1 -> 1..* AnnAttDefinition;
 }
 
 class AnnNoteType
 {
 	String name;
-	1..* key -- * AnnAttDefinition annAttDefinition;
-	1..* annNoteType -- 1..* AnnotSchema key;
-	1..* key -- * AnnAttGroup annAttGroup;
+	1..* key -- * AnnAttDefinition;
+	1..* -- 1..* AnnotSchema key;
+	1..* key -- * AnnAttGroup;
 }
 
 class AnnAttDefinition
 {
 	String name;
 	Integer type;
-	0..1 -> 1..* AnnAttGroup annAttGroup;
-	1..* key -- * AnnProperty annProperty;
+	0..1 -> 1..* AnnAttGroup;
+	1..* key -- * AnnProperty;
 }
 
 class AnnAttIntValue
@@ -662,7 +662,7 @@ class AnnPropertyEnum
 class AnnotSchema
 {
 	String pathname;
-	1..* key -- 1..* AnnCategory annCategory;
+	1..* key -- 1..* AnnCategory;
 }
 
 class AnnCategory
@@ -676,7 +676,7 @@ class Annotability
 	Integer minCardinality;
 	Integer maxCardinality;
 	Boolean defaultNote;
-	0..1 -> 1..* AnnNoteType annNoteType;
+	0..1 -> 1..* AnnNoteType;
 }
 
 class AnnAttGroup
@@ -698,7 +698,7 @@ class MtcApplication
 class CoverageFile
 {
 	isA File;
-	0..1 key -- * Record record;
+	0..1 key -- * Record;
 }
 
 class CriterionFile
@@ -709,7 +709,7 @@ class CriterionFile
 
 class MtcEntity
 {
-	0..1 -> * File file;
+	0..1 -> * File;
 }
 
 class HistoryEntry
@@ -744,7 +744,7 @@ class Result
 {
 	isA MtcEntity;
 	Integer elementCount;
-	* result -- 1..* Record record;
+	* -- 1..* Record;
 }
 
 class Record
@@ -759,5 +759,5 @@ class Record
 
 class Loader
 {
-	0..1 -> * Descriptor descriptor;
+	0..1 -> * Descriptor;
 }

@@ -49,30 +49,30 @@ class NetElement
 	0..1 -> 1..* URI type;
 	1..* net -- * NetContent contents;
 	* net -- * ToolSpecific tools;
-	* net -- * Name name;
-	1..* net -- * NetGraphics netgraphics;
+	* net -- * Name;
+	1..* net -- * NetGraphics;
 }
 
 class NetContent
 {
-	* netcontent -- * Name name;
-	* contents -- * Page page;
+	* -- * Name;
+	* contents -- * Page;
 }
 
 class ToolSpecific
 {
 	String tool;
 	String version;
-	0..1 -> * AnyElement anyelement;
-	* tools -- * Arc arc;
-	* tools -- * Page page;
-	* tools -- * Node node;
+	0..1 -> * AnyElement;
+	* tools -- * Arc;
+	* tools -- * Page;
+	* tools -- * Node;
 }
 
 class LabeledElement
 {
 	1..* namedelement -- * Label labels;
-	1..* namedelement -- * AnnotationGraphics annotationgraphics;
+	1..* namedelement -- * AnnotationGraphics;
 }
 
 class Label
@@ -88,19 +88,19 @@ class Name
 class Inscription
 {
 	isA LabeledElement;
-	* inscription -- 1..* Arc arc;
+	* -- 1..* Arc;
 }
 
 class InitialMarking
 {
 	isA LabeledElement;
-	* initialmarking -- 1..* Place place;
+	* -- 1..* Place;
 }
 
 class NetContentElement
 {
 	isA NetContent;
-	1..* netcontentelement -- 1..* Node node;
+	1..* -- 1..* Node;
 }
 
 class Arc
@@ -108,13 +108,13 @@ class Arc
 	isA NetContent ;
 	0..1 -> 1..* NetContentElement source;
 	0..1 -> 1..* NetContentElement target;
-	1..* arc -- * EdgeGraphics edgegraphics;
+	1..* -- * EdgeGraphics;
 }
 
 class Page
 {
 	isA NetContent ;
-	1..* page -- * PageGraphics pagegraphics;
+	1..* -- * PageGraphics;
 }
 
 class Reference
@@ -136,7 +136,7 @@ class ReferenceTransition
 class Node
 {
 	isA IdedElement;
-	1..* node -- * NodeGraphics nodegraphics;
+	1..* -- * NodeGraphics;
 }
 
 class Place
@@ -161,27 +161,27 @@ class NetGraphics
 class NodeGraphics
 {
 	isA Graphics;
-	* nodegraphics -- 1..* Position position;
-	1..* nodegraphics -- * Dimension dimension;
-	* nodegraphics -- * Fill fill;
-	* nodegraphics -- * Line line;
+	* -- 1..* Position;
+	1..* -- * Dimension;
+	* -- * Fill;
+	* -- * Line;
 }
 
 class EdgeGraphics
 {
 	isA Graphics;
-	* edgegraphics -- * Position position;
-	* edgegraphics -- * Fill fill;
-	* edgegraphics -- * Line line;
+	* -- * Position;
+	* -- * Fill;
+	* -- * Line;
 }
 
 class AnnotationGraphics
 {
 	isA Graphics;
-	1..* annotationgraphics -- 1..* Offset offset;
-	* annotationgraphics -- * Fill fill;
-	* annotationgraphics -- * Line line;
-	1..* annotationgraphics -- * Font font;
+	1..* -- 1..* Offset;
+	* -- * Fill;
+	* -- * Line;
+	1..* -- * Font;
 }
 
 class PageGraphics
@@ -224,7 +224,7 @@ class Line
 	Integer width;
 	ShapeType shape;
 	StyleType style;
-	0..1 -> * Color color;
+	0..1 -> * Color;
 }
 
 class Font

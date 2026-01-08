@@ -27,14 +27,14 @@ class Element
 class MoDAFModel
 {
 	isA Element;
-	0..1 -> 1..* Enterprise enterprise;
-	0..1 -> 1..* Environment environment;
+	0..1 -> 1..* Enterprise;
+	0..1 -> 1..* Environment;
 	0..1 -> 1..* OperationalMission operationalMissions;
 	0..1 -> 1..* Architecture architectures;
-	0..1 -> 1..* ArchitecturalDescription architecturalDescription;
+	0..1 -> 1..* ArchitecturalDescription;
 	0..1 -> 1..* ArchitecturalReference architecturalReferences;
 	0..1 -> 1..* ArchitecturalFramework architecturalFrameworks;
-	0..1 -> * ArchitectureMetaData architectureMetadatas;
+	0..1 model -> * ArchitectureMetaData;
 	0..1 -> * MetaData metaDatas;
 	0..1 -> 1..* Stakeholder stakeholders;
 	1..* owner -- 1..* StakeholderHasConcern stakeholderHasConcerns;
@@ -60,7 +60,7 @@ class OperationalMission
 class Architecture
 {
 	isA Element;
-	0..1 -> 1..* Enterprise enterprise;
+	0..1 -> 1..* Enterprise;
 	0..1 -> 1..* ArchitecturalDescription describedBy;
 }
 
@@ -78,7 +78,7 @@ class ArchitecturalDescription
 	String tollsUsed;
 	0..1 -> 1..* View viewpoints;
 	0..1 -> 1..* ArchitecturalProduct products;
-	0..1 -> 1..* Taxonomy taxonomy;
+	0..1 -> 1..* Taxonomy;
 }
 
 class ArchitecturalReference
@@ -155,7 +155,7 @@ class Taxonomy
 	String date;
 	String url;
 	String version;
-	1..* taxonomy -- * ClassifiedElement contents;
+	1..* -- * ClassifiedElement contents;
 }
 
 class ClassifiedElement

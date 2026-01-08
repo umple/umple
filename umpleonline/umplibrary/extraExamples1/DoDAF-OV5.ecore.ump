@@ -27,12 +27,12 @@ class Element
 class DoDAFModel
 {
 	isA Element;
-	0..1 -> * Document document;
-	0..1 -> * AM am;
-	0..1 -> * Task task;
+	0..1 -> * Document;
+	0..1 -> * AM;
+	0..1 -> * Task;
 	0..1 -> * InformationAssetDocument iaDocument;
-	0..1 -> * DOSCR doscr;
-	0..1 -> * OrganizationType organizationType;
+	0..1 -> * DOSCR;
+	0..1 -> * OrganizationType;
 }
 
 class Document
@@ -159,7 +159,7 @@ class AM
 	String type;
 	0..1 -> * AMSpecification specifies;
 	0..1 -> * AMPA includes;
-	0..1 -> * PATask paTask;
+	0..1 -> * PATask;
 }
 
 class InformationAsset

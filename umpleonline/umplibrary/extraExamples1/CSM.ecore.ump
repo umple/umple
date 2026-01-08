@@ -18,33 +18,33 @@ namespace CSM;
 
 class CSM
 {
-	0..1 -> 1..* GeneralResource generalResource;
-	0..1 -> 1..* Scenarion scenarion;
+	0..1 -> 1..* GeneralResource;
+	0..1 -> 1..* Scenarion;
 }
 
 class GeneralResource
 {
-	1..* generalResource -- * ResourceAcquire resourceAcquire;
-	1..* generalResource -- * ResourceRelease resourceRelease;
+	1..* -- * ResourceAcquire;
+	1..* -- * ResourceRelease;
 }
 
 class Step
 {
 	isA Scenarion;
 	0..1 post -- * PathConnection postPath;
-	* step -- 1..* ActiveResource activeResource;
+	* -- 1..* ActiveResource;
 	* pre -- * PathConnection prePath;
 }
 
 class Scenarion
 {
-	0..1 -> 1..* Step step;
+	0..1 -> 1..* Step;
 }
 
 class Start
 {
 	isA Step;
-	1..* start -- * Workload workload;
+	1..* -- * Workload;
 }
 
 class End
@@ -97,7 +97,7 @@ class Message
 
 class PathConnection
 {
-	0..1 -> * Message message;
+	0..1 -> * Message;
 }
 
 class Join

@@ -55,13 +55,13 @@ class CompModExp
 class ModuleIdModExp
 {
 	isA ModExpression;
-	0..1 -> 1..* Module module;
+	0..1 -> 1..* Module;
 }
 
 class TheoryIdModExp
 {
 	isA ModExpression;
-	0..1 -> 1..* Theory theory;
+	0..1 -> 1..* Theory;
 }
 
 class Parameter
@@ -74,7 +74,7 @@ class Parameter
 class Theory
 {
 	isA MaudeTopEl;
-	* theory -- * ModElement els;
+	* -- * ModElement els;
 }
 
 class FTheory
@@ -91,7 +91,7 @@ class Module
 {
 	isA MaudeTopEl;
 	0..1 -> * Parameter params;
-	* module -- * ModElement els;
+	* -- * ModElement els;
 }
 
 class FModule
@@ -124,7 +124,7 @@ class Sort
 {
 	isA Type ;
 	0..1 supersorts -- * SubsortRel subsortRels;
-	1..* sorts -- 1..* Kind kind;
+	1..* sorts -- 1..* Kind;
 	1..* subsorts -- * SubsortRel supersortRels;
 }
 
@@ -158,8 +158,8 @@ class Statement
 class Membership
 {
 	isA Statement;
-	0..1 -> 1..* Term term;
-	0..1 -> 1..* Sort sort;
+	0..1 -> 1..* Term;
+	0..1 -> 1..* Sort;
 }
 
 class Equation
@@ -217,7 +217,7 @@ class EqualCond
 
 class Term
 {
-	0..1 -> 1..* Type type;
+	0..1 -> 1..* Type;
 }
 
 class Constant

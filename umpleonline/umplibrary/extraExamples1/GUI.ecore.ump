@@ -29,14 +29,14 @@ class Named
 class GUI
 {
 	isA Named;
-	1..* gui -- * Tab guiTabs;
+	1..* -- * Tab guiTabs;
 }
 
 class Tab
 {
 	isA Named;
 	String title;
-	* tabGroup -- 1..* Group group;
+	* tabGroup -- 1..* Group;
 }
 
 class Composant

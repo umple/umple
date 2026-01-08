@@ -2214,7 +2214,7 @@ Action.updateGvPosition=function(className,deltaX,deltaY) {
   if(theMatch == null) {
     // Could not find position for this class
 //DEBUG
-Page.catFeedbackMessage("NOPOS:"+className+" ");
+//Page.catFeedbackMessage("NOPOS:"+className+" ");
 
     return null;
   }
@@ -4353,6 +4353,7 @@ Action.loadExample = function loadExample()
     diagramType="&diagramtype=structure&generateDefault=cpp";
   }
   else {
+    diagramType="&diagramtype=GvClass";
     //jQuery("#genjava").prop("selected",true);
   }
   
@@ -4374,9 +4375,11 @@ Action.loadExample = function loadExample()
     var shortExampleName=exampleName;
     var newURL="?example="+shortExampleName+diagramType;
   }
-  
-  Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+shortExampleName+" example</a>");
 
+  setTimeout(function () { // Delay so it doesn't get erased
+    Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+shortExampleName+" example</a>");
+  }, 3000);
+  
   // TODO - fix so history works nicely           
   jQuery("#inputExample").blur();
 }
@@ -5882,7 +5885,7 @@ Action.updateUmpleDiagramCallback = function(response)
         let currentTop = classRect.top;
         let currentLeft = classRect.left;        
 //Debug
-        Page.setFeedbackMessage("!! down!! "+Page.selectedGvClass + " X="+currentLeft +  " Y="+currentTop);
+//        Page.setFeedbackMessage("!! down!! "+Page.selectedGvClass + " X="+currentLeft +  " Y="+currentTop);
 
         function moveClass(moveEvent) {
           moveEvent.preventDefault();
@@ -5909,14 +5912,14 @@ Action.updateUmpleDiagramCallback = function(response)
           }
           else {
 //DebugPosition
-Page.setFeedbackMessage("Moving "+Page.selectedGvClass + "to "+currentLeft+", "+currentTop+" dx="+deltaXSum+" dy="+deltaYSum);
+//Page.setFeedbackMessage("Moving "+Page.selectedGvClass + "to "+currentLeft+", "+currentTop+" dx="+deltaXSum+" dy="+deltaYSum);
           }
         }
 
         function stopMovingClass(stopEvent) {
           if(allowNodeMovement && (didAMove && (deltaXSum != 0 || deltaXSum != 0)) ) {
 //DebugPosition
-Page.setFeedbackMessage("!!moved!! "+Page.selectedGvClass + " dx="+deltaXSum+" dy="+deltaYSum);
+//Page.setFeedbackMessage("!!moved!! "+Page.selectedGvClass + " dx="+deltaXSum+" dy="+deltaYSum);
             // Update the text and get thebackend to refresh
             Action.updateGvPosition(Page.selectedGvClass,deltaXSum,deltaYSum);
           }

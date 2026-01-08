@@ -34,7 +34,7 @@ class VocabularyEntry
 {
 	isA LocatedElement;
 	0..1 -> 1..* PrimaryRepresentation primaryRep;
-	0..1 -> * Caption caption;
+	0..1 -> * Caption;
 }
 
 class Caption
@@ -99,7 +99,7 @@ class RefSCaption
 class NoteCaption
 {
 	isA Caption;
-	0..1 -> 1..* Note note;
+	0..1 -> 1..* Note;
 }
 
 class ExCaption
@@ -135,7 +135,7 @@ class SFCaption
 class NSURICaption
 {
 	isA Caption;
-	0..1 -> * NameSpaceURI namespaceURI;
+	0..1 -> * NameSpaceURI;
 }
 
 class PrimaryRepresentation
@@ -267,14 +267,14 @@ class LinkSBVRConcept
 {
 	isA LocatedElement;
 	Link link;
-	0..1 -> 1..* Concept concept;
+	0..1 -> 1..* Concept;
 }
 
 class ConjConcept
 {
 	isA LocatedElement;
 	ConjonctionnalKeyWord conjonction;
-	0..1 -> 1..* Concept concept;
+	0..1 -> 1..* Concept;
 }
 
 class Concept
@@ -312,7 +312,7 @@ class NounConcept
 class Qualification
 {
 	isA LocatedElement;
-	0..1 -> 1..* GeneralConcept generalConcept;
+	0..1 -> 1..* GeneralConcept;
 }
 
 class GeneralConcept

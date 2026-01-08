@@ -22,7 +22,7 @@ class AWKProgram
 	String name;
 	0..1 -> 1..* File input;
 	0..1 -> 1..* File output;
-	0..1 -> 1..* Script script;
+	0..1 -> 1..* Script;
 }
 
 class File
@@ -49,8 +49,8 @@ class Script
 
 class Rule
 {
-	0..1 -> 1..* Pattern pattern;
-	0..1 -> 1..* Action action;
+	0..1 -> 1..* Pattern;
+	0..1 -> 1..* Action;
 }
 
 class Pattern

@@ -740,10 +740,11 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExampleType" id = "smModels" value="smModels">State Machines</option>
                 <option name = "optionExampleType" id = "structureModels" value="structureModels">Composite Structure</option>
                 <option name = "optionExampleType" id = "featureModels" value="featureModels">Feature Diagram</option>
-                <option name = "optionExampleType" id = "extra1ModelsAD" value="extra1ModelsAD">Extra Class Diagrams A-D</option>
-                <option name = "optionExampleType" id = "extra1ModelsEL" value="extra1ModelsEL">Extra Class Diagrams E-L</option>
-                <option name = "optionExampleType" id = "extra1ModelsMP" value="extra1ModelsMP">Extra Class Diagrams M-P</option>
-                <option name = "optionExampleType" id = "extra1ModelsQZ" value="extra1ModelsQZ">Extra Class Diagrams Q-Z</option>
+                <option name = "optionExampleType" id = "extra1ModelsAD" value="extra1ModelsAD">Extra Class Diagrams </option>
+                <!-- The following removed due to too many examples being poor -->
+                <!--option name = "optionExampleType" id = "extra1ModelsEL" value="extra1ModelsEL">Extra Class Diagrams E-L</option-->
+                <!--option name = "optionExampleType" id = "extra1ModelsMP" value="extra1ModelsMP">Extra Class Diagrams M-P</option-->
+                <!--option name = "optionExampleType" id = "extra1ModelsQZ" value="extra1ModelsQZ">Extra Class Diagrams Q-Z</option-->
 
               </select>
             </li>
@@ -886,6 +887,7 @@ $output = $dataHandle->readData('model.ump');
               </select>
             </li>
 
+<!-- The following removed as too many examples were poor
             <li id="itemLoadExamples6">
               <select id="inputExample6" name="inputExample6" class="button" size="1" data-diagram-type="class">
                 <option name = "optionExample6" id = "defaultExampleOption5" value="">Select Example</option>
@@ -933,7 +935,7 @@ $output = $dataHandle->readData('model.ump');
                 ?>
               </select>
             </li>
-
+-->
           
             <!-- <li class="dropbox-add-chooser"></li> --> 
           </ul>

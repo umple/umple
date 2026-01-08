@@ -52,12 +52,12 @@ class Bug
 	OperatingSystemType op_sys;
 	String bug_file_loc;
 	String short_desc;
-	0..1 -> * Keywords keywords;
-	0..1 -> * Dependson dependson;
-	0..1 -> * Blocks blocks;
-	0..1 -> * Cc cc;
+	0..1 -> * Keywords;
+	0..1 -> * Dependson;
+	0..1 -> * Blocks;
+	0..1 -> * Cc;
 	0..1 -> * LongDesc long_desc;
-	0..1 -> * Attachment attachment;
+	0..1 -> * Attachment;
 }
 
 class StringElt

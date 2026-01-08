@@ -29,7 +29,7 @@ class ModelElement
 	0..1 clients -- * Dependency clientDependencies;
 	1..* suppliers -- * Dependency supplierDependencies;
 	* constrainedElements -- * Constraint contraints;
-	* ownedElements -- * NameSpace namespace;
+	* ownedElements -- * NameSpace;
 	* importedElements -- * Package importers;
 }
 

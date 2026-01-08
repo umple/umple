@@ -49,7 +49,7 @@ class ColumnSet
 class NamedColumnSet
 {
 	isA ColumnSet;
-	1..* namedColumnSet -- * Trigger triggers;
+	1..* -- * Trigger triggers;
 }
 
 class QueryColumnSet
@@ -71,7 +71,7 @@ class View
 	isA NamedColumnSet;
 	Boolean isReadOnly;
 	Boolean checkOption;
-	0..1 -> 1..* QueryExpression queryExpression;
+	0..1 -> 1..* QueryExpression;
 }
 
 class Trigger
@@ -89,7 +89,7 @@ class SQLDistinctType
 	Integer length;
 	Integer precision;
 	Integer scale;
-	* sqlDistinctTypes -- 1..* SQLSimpleType sqlSimpleType;
+	* sqlDistinctTypes -- 1..* SQLSimpleType;
 }
 
 class SQLSimpleType

@@ -17,7 +17,7 @@ namespace Bossa;
 
 class BossaProgramm
 {
-	0..1 -> 1..* Scheduler scheduler;
+	0..1 -> 1..* Scheduler;
 }
 
 class Scheduler
@@ -26,15 +26,15 @@ class Scheduler
 	Boolean high_Res;
 	Boolean low_Res;
 	String id;
-	1..* scheduler -- 1..* HandlerDef handlerDef;
-	1..* scheduler -- 1..* InterfaceDef interfaceDef;
-	1..* scheduler -- 1..* FunctionDef functionDef;
+	1..* -- 1..* HandlerDef;
+	1..* -- 1..* InterfaceDef;
+	1..* -- 1..* FunctionDef;
 }
 
 class NormalScheduler
 {
 	isA Scheduler;
-	0..1 -> 1..* SchedulerDecl schedulerDecl;
+	0..1 -> 1..* SchedulerDecl;
 }
 
 class VirtualScheduler
@@ -45,33 +45,33 @@ class VirtualScheduler
 
 class AbstractSchedulerDecl
 {
-	0..1 -> * ConstDef constDef;
-	0..1 -> * TypeDef typeDef;
-	1..* abstractSchedulerDecl -- * ValDecl valDecl;
-	1..* abstractSchedulerDecl -- * FunDecl funDecl;
-	1..* abstractSchedulerDecl -- 1..* StateDef stateDef;
-	1..* abstractSchedulerDecl -- * OrderDef orderDef;
-	1..* abstractSchedulerDecl -- * AdmissionDef admissionDef;
-	1..* abstractSchedulerDecl -- * TraceDef traceDef;
+	0..1 -> * ConstDef;
+	0..1 -> * TypeDef;
+	1..* -- * ValDecl;
+	1..* -- * FunDecl;
+	1..* -- 1..* StateDef;
+	1..* -- * OrderDef;
+	1..* -- * AdmissionDef;
+	1..* -- * TraceDef;
 }
 
 class SchedulerDecl
 {
 	isA AbstractSchedulerDecl;
-	0..1 -> 1..* ProcessDef processDef;
+	0..1 -> 1..* ProcessDef;
 }
 
 class VSchdulerDecl
 {
 	isA AbstractSchedulerDecl;
-	0..1 -> 1..* SchedulerDef schedulerDef;
+	0..1 -> 1..* SchedulerDef;
 }
 
 class ConstDef
 {
 	String id;
 	0..1 -> 1..* Expression expr;
-	0..1 -> 1..* BossaTypeExpr bossaTypeExpr;
+	0..1 -> 1..* BossaTypeExpr;
 }
 
 class TypeDef
@@ -81,8 +81,8 @@ class TypeDef
 
 class EnumRange
 {
-	0..1 -> * EnumDef enumDef;
-	0..1 -> * RangeDef rangeDef;
+	0..1 -> * EnumDef;
+	0..1 -> * RangeDef;
 }
 
 class EnumDef
@@ -102,12 +102,12 @@ class RangeDef
 
 class ProcessDef
 {
-	1..* processDef -- 1..* ProcessVarDecl processVarDecl;
+	1..* -- 1..* ProcessVarDecl;
 }
 
 class SchedulerDef
 {
-	1..* schedulerDef -- 1..* ProcessVarDecl processVarDecl;
+	1..* -- 1..* ProcessVarDecl;
 }
 
 class ProcessVarDecl
@@ -124,29 +124,29 @@ class System_ProcessVarDecl
 {
 	isA ProcessVarDecl;
 	Boolean system;
-	0..1 -> 1..* TypeExpr typeExpr;
+	0..1 -> 1..* TypeExpr;
 }
 
 class Normal_ProcessVarDecl
 {
 	isA ProcessVarDecl;
-	0..1 -> 1..* TypeExpr typeExpr;
+	0..1 -> 1..* TypeExpr;
 }
 
 class HandlerDef
 {
 	String id;
-	0..1 -> 1..* OnHandlerDef onHandlerDef;
+	0..1 -> 1..* OnHandlerDef;
 }
 
 class InterfaceDef
 {
-	0..1 -> 1..* ComposantOfInterFunc composantOfInterFunc;
+	0..1 -> 1..* ComposantOfInterFunc;
 }
 
 class FunctionDef
 {
-	0..1 -> 1..* ComposantOfInterFunc composantOfInterFunc;
+	0..1 -> 1..* ComposantOfInterFunc;
 }
 
 class Expression
@@ -184,7 +184,7 @@ class False_Expression
 class Unop_Expression
 {
 	isA Expression;
-	0..1 -> 1..* Unop unop;
+	0..1 -> 1..* Unop;
 	0..1 -> 1..* Expression expr;
 }
 
@@ -215,7 +215,7 @@ class FnName_Expression
 class Empty_Expression
 {
 	isA Expression;
-	0..1 -> 1..* ClassState classState;
+	0..1 -> 1..* ClassState;
 }
 
 class SRCOnSched_Expression
@@ -234,7 +234,7 @@ class In_Expression
 	isA Expression;
 	Boolean in;
 	0..1 -> 1..* Expression expr;
-	0..1 -> 1..* ClassState classState;
+	0..1 -> 1..* ClassState;
 }
 
 class Parenthese_Expression
@@ -246,14 +246,14 @@ class Parenthese_Expression
 class Binop_Expression
 {
 	isA Expression;
-	0..1 -> 1..* Id_Expression id_Expression;
-	0..1 -> 1..* Compo_Binop_Expression compo_Binop_Expression;
+	0..1 -> 1..* Id_Expression;
+	0..1 -> 1..* Compo_Binop_Expression;
 }
 
 class Compo_Binop_Expression
 {
-	0..1 -> 1..* Binop binop;
-	0..1 -> 1..* Id_Expression id_Expression;
+	0..1 -> 1..* Binop;
+	0..1 -> 1..* Id_Expression;
 }
 
 class ValDecl
@@ -264,13 +264,13 @@ class ValDecl
 class Normal_ValDecl
 {
 	isA ValDecl;
-	0..1 -> * NonProcType nonProcType;
+	0..1 -> * NonProcType;
 }
 
 class System_ValDecl
 {
 	isA ValDecl;
-	0..1 -> * NonProcType nonProcType;
+	0..1 -> * NonProcType;
 }
 
 class Timer_ValDecl
@@ -281,56 +281,56 @@ class Timer_ValDecl
 class FunDecl
 {
 	0..1 -> * ParameterType parameterTypes;
-	0..1 -> * NonProcType nonProcType;
+	0..1 -> * NonProcType;
 }
 
 class StateDef
 {
-	0..1 -> 1..* ClassNameStorage classNameStorage;
+	0..1 -> 1..* ClassNameStorage;
 }
 
 class ClassNameStorage
 {
 	String id;
-	0..1 -> 1..* ClassName className;
-	0..1 -> * Storage storage;
+	0..1 -> 1..* ClassName;
+	0..1 -> * Storage;
 }
 
 class OrderDef
 {
 	0..1 -> 1..* KeyCritDecls keyCritDecl;
-	0..1 -> 1..* CritDecls critDecls;
+	0..1 -> 1..* CritDecls;
 }
 
 class AdmissionDef
 {
-	0..1 -> * ValDef valDef;
-	0..1 -> 1..* AdmCrit admCrit;
-	0..1 -> * AttachDetach attachDetach;
+	0..1 -> * ValDef;
+	0..1 -> 1..* AdmCrit;
+	0..1 -> * AttachDetach;
 }
 
 class TraceDef
 {
-	0..1 -> * TraceEvent traceEvent;
-	0..1 -> * TraceExpr traceExpr;
-	0..1 -> * TraceTest traceTest;
+	0..1 -> * TraceEvent;
+	0..1 -> * TraceExpr;
+	0..1 -> * TraceTest;
 }
 
 class TypeExpr
 {
 	String id;
-	0..1 -> * BossaTypeExpr bossaTypeExpr;
+	0..1 -> * BossaTypeExpr;
 }
 
 class TypeOrVoid
 {
 	Boolean isVoid;
-	0..1 -> * TypeExpr typeExpr;
+	0..1 -> * TypeExpr;
 }
 
 class ParameterType
 {
-	0..1 -> 1..* TypeExpr typeExpr;
+	0..1 -> 1..* TypeExpr;
 }
 
 class Storage
@@ -345,34 +345,34 @@ class Process_Storage
 class Scheduler_Storage
 {
 	isA Storage;
-	0..1 -> * StateVisibility stateVisibility;
+	0..1 -> * StateVisibility;
 }
 
 class Queue_Storage
 {
 	isA Storage;
-	0..1 -> * StateVisibility stateVisibility;
-	0..1 -> * QueueType queueType;
+	0..1 -> * StateVisibility;
+	0..1 -> * QueueType;
 }
 
 class KeyCritDecls
 {
-	0..1 -> 1..* CompoKeyCritDecls compoKeyCritDecls;
+	0..1 -> 1..* CompoKeyCritDecls;
 }
 
 class CompoKeyCritDecls
 {
-	0..1 -> 1..* CritDecl critDecl;
+	0..1 -> 1..* CritDecl;
 }
 
 class CritDecls
 {
-	0..1 -> 1..* CritDecl critDecl;
+	0..1 -> 1..* CritDecl;
 }
 
 class CritDecl
 {
-	0..1 -> 1..* Critop critop;
+	0..1 -> 1..* Critop;
 }
 
 class CritDeclWhithId
@@ -390,13 +390,13 @@ class CritDeclWhithoutId
 class ValDef
 {
 	String id;
-	0..1 -> 1..* TypeExpr typeExpr;
+	0..1 -> 1..* TypeExpr;
 	0..1 -> 1..* Expression expr;
 }
 
 class AdmCrit
 {
-	0..1 -> * ParamVarDecl paramVarDecl;
+	0..1 -> * ParamVarDecl;
 	0..1 -> 1..* Expression expr;
 }
 
@@ -411,18 +411,18 @@ class AttachDetach
 class ParamVarDecl
 {
 	String id;
-	0..1 -> 1..* TypeExpr typeExpr;
+	0..1 -> 1..* TypeExpr;
 }
 
 class SeqStmt
 {
-	0..1 -> * ValDef valDef;
+	0..1 -> * ValDef;
 	0..1 -> * Statment stmt;
 }
 
 class TraceEvent
 {
-	0..1 -> 1..* EventName eventName;
+	0..1 -> 1..* EventName;
 }
 
 class TraceExpr
@@ -450,7 +450,7 @@ class IfStmt
 {
 	isA Statment;
 	0..1 -> 1..* Expression expr;
-	0..1 -> 1..2 SeqStmt seqStmt;
+	0..1 -> 1..2 SeqStmt;
 }
 
 class ForStmt
@@ -463,22 +463,22 @@ class ForeachForStmt
 	isA ForStmt;
 	String id;
 	Boolean isIn;
-	0..1 -> * ClassState classState;
-	0..1 -> 1..* SeqStmt seqStmt;
+	0..1 -> * ClassState;
+	0..1 -> 1..* SeqStmt;
 }
 
 class ForEachIncreasingForStmt
 {
 	isA ForStmt;
 	String id;
-	0..1 -> 1..* SeqStmt seqStmt;
+	0..1 -> 1..* SeqStmt;
 }
 
 class ForEachDecreasingForStmt
 {
 	isA ForStmt;
 	String id;
-	0..1 -> 1..* SeqStmt seqStmt;
+	0..1 -> 1..* SeqStmt;
 }
 
 class ReturnStmt
@@ -490,16 +490,16 @@ class ReturnStmt
 class SwitchStmt
 {
 	isA Statment;
-	0..1 -> 1..* LocExpr locExpr;
-	0..1 -> * ComposantOfSwitchStmt composantOfSwitchStmt;
+	0..1 -> 1..* LocExpr;
+	0..1 -> * ComposantOfSwitchStmt;
 }
 
 class AssignStmt
 {
 	isA Statment;
-	0..1 -> 1..* LocExpr locExpr;
-	0..1 -> * AssignUnop assignUnop;
-	0..1 -> * AssignBinop assignBinop;
+	0..1 -> 1..* LocExpr;
+	0..1 -> * AssignUnop;
+	0..1 -> * AssignBinop;
 	0..1 -> * Expression expr;
 }
 
@@ -508,13 +508,13 @@ class MoveStmt
 	isA Statment;
 	Boolean isHead;
 	Boolean isTail;
-	0..1 -> 1..* MoveExpr moveExpr;
+	0..1 -> 1..* MoveExpr;
 }
 
 class NormalMoveStmt
 {
 	isA MoveStmt;
-	0..1 -> 1..* StateRef stateRef;
+	0..1 -> 1..* StateRef;
 }
 
 class ForwardMoveStmt
@@ -591,13 +591,13 @@ class IDTarget_MoveExpr
 class ClassState
 {
 	Boolean state;
-	0..1 -> * ClassName className;
+	0..1 -> * ClassName;
 }
 
 class OnHandlerDef
 {
-	0..1 -> * EventName eventName;
-	0..1 -> 1..* SeqStmt seqStmt;
+	0..1 -> * EventName;
+	0..1 -> 1..* SeqStmt;
 }
 
 class EventName
@@ -608,16 +608,16 @@ class EventName
 
 class ComposantOfSwitchStmt
 {
-	0..1 -> 1..* ClassState classState;
-	0..1 -> 1..* SeqStmt seqStmt;
+	0..1 -> 1..* ClassState;
+	0..1 -> 1..* SeqStmt;
 }
 
 class ComposantOfInterFunc
 {
 	String id;
-	0..1 -> 1..* TypeOrVoid typeOrVoid;
-	0..1 -> * ParamVarDecl paramVarDecl;
-	0..1 -> 1..* SeqStmt seqStmt;
+	0..1 -> 1..* TypeOrVoid;
+	0..1 -> * ParamVarDecl;
+	0..1 -> 1..* SeqStmt;
 }
 
 class BossaTypeExpr

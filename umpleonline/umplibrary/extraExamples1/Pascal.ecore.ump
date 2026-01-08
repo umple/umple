@@ -18,16 +18,16 @@ namespace Pascal;
 class Program
 {
 	String name;
-	1..* program -- * Variable variables;
-	1..* program -- * Type types;
-	1..* program -- * Procedure procedures;
+	1..* -- * Variable variables;
+	1..* -- * Type types;
+	1..* -- * Procedure procedures;
 }
 
 class Variable
 {
 	String name;
-	* variables -- 1..* Type type;
-	* variables -- 1..* Procedure procedure;
+	* variables -- 1..* Type;
+	* variables -- 1..* Procedure;
 }
 
 class Type
@@ -43,7 +43,7 @@ class Parameter
 
 class Instruction
 {
-	* instructions -- 1..* Block block;
+	* instructions -- 1..* Block;
 }
 
 class Calculation
@@ -64,9 +64,9 @@ class Assignment
 class Block
 {
 	isA Instruction;
-	1..2 blocks -- 1..* Conditional conditional;
-	1..* block_loop -- 1..* Loop loop;
-	1..* block_procedure -- 1..* Procedure procedure;
+	1..2 blocks -- 1..* Conditional;
+	1..* block_loop -- 1..* Loop;
+	1..* block_procedure -- 1..* Procedure;
 }
 
 class Conditional

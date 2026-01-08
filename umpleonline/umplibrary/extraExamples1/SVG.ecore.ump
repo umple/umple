@@ -29,7 +29,7 @@ class Element
 	* groupContent -- * GroupingElement group;
 	* use -- * Use target;
 	* drawing -- * Marker drawsMarker;
-	* attOwner -- * Attribute attribute;
+	* attOwner -- * Attribute;
 	* elements -- * SvgFile owner;
 }
 

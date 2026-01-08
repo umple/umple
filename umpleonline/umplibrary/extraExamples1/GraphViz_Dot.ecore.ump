@@ -21,7 +21,7 @@ namespace DOT;
 
 class Label
 {
-	* label -- 1..* GraphElement element;
+	* -- 1..* GraphElement element;
 }
 
 class SimpleLabel
@@ -33,13 +33,13 @@ class SimpleLabel
 class ComplexLabel
 {
 	isA Label;
-	1..* complexLabel -- 1..* Compartment compartments;
+	1..* -- 1..* Compartment compartments;
 }
 
 class Compartment
 {
 	0..1 -> * Compartment compartments;
-	* source -- * Anchor anchor;
+	* source -- * Anchor;
 }
 
 class VerticalCompartment
@@ -85,8 +85,8 @@ class Graph
 	String size;
 	String ratio;
 	Boolean center;
-	1..* graph -- * Layer layers;
-	* graph -- * Nodelike nodes;
+	1..* -- * Layer layers;
+	* -- * Nodelike nodes;
 }
 
 class Layer

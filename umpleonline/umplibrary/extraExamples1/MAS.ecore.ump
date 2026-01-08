@@ -20,15 +20,15 @@ namespace MAS;
 
 class Agent
 {
-	0..1 -> * Service service;
-	0..1 -> 1..* Requirement requirement;
+	0..1 -> * Service;
+	0..1 -> 1..* Requirement;
 	0..1 -> * Organization belongs;
-	0..1 -> * CooperationRules cooperationRules;
-	1..* agentR -- 1..* Role role;
-	1..* agentRep -- * Representation representation;
-	1..* agentC -- * Characteristic characteristic;
-	1..* agentS -- * Skill skill;
-	1..* agentA -- * Aptitude aptitude;
+	0..1 -> * CooperationRules;
+	1..* agentR -- 1..* Role;
+	1..* agentRep -- * Representation;
+	1..* agentC -- * Characteristic;
+	1..* agentS -- * Skill;
+	1..* agentA -- * Aptitude;
 }
 
 class Service
@@ -49,7 +49,7 @@ class Requirement
 
 class Organization
 {
-	0..1 -> * Organizational Structure observes;
+	0..1 -> * OrganizationalStructure observes;
 	* organization -- 1..* Organizational Structure organizational_Structure;
 }
 
@@ -69,7 +69,7 @@ class LivenessRule
 
 class CooperationRules
 {
-	1..* cooperationRules -- 1..* NCS ncs;
+	1..* -- 1..* NCS;
 }
 
 class NCS
@@ -83,7 +83,7 @@ class FIPAPlatformAgent
 
 class FIPAPlatformTask
 {
-	1..* fipa_Platform_TaskT -- 1..* Task task;
+	1..* fipa_Platform_TaskT -- 1..* Task;
 }
 
 class Task
@@ -95,15 +95,15 @@ class Role
 {
 	0..1 -> 1..* Task activity;
 	0..1 -> * Resource actsOn;
-	0..1 -> 1..* Scenario scenario;
+	0..1 -> 1..* Scenario;
 	0..1 -> * Communication participant;
 	0..1 -> 1..* Responsibility has;
 }
 
 class Representation
 {
-	0..1 -> * Ontology ontology;
-	0..1 -> 1..* Environnement environnement;
+	0..1 -> * Ontology;
+	0..1 -> 1..* Environnement;
 }
 
 class Characteristic
@@ -120,7 +120,7 @@ class Aptitude
 
 class Ontology
 {
-	0..1 -> 1..* Environnement environnement;
+	0..1 -> 1..* Environnement;
 }
 
 class Concept
@@ -140,7 +140,7 @@ class Action
 
 class Environnement
 {
-	1..* environnement -- 1..* Resource resource;
+	1..* -- 1..* Resource;
 }
 
 class Responsibility
@@ -160,22 +160,22 @@ class SafetyProperty
 class Resource
 {
 	String name;
-	0..1 -> 1..* Action action;
+	0..1 -> 1..* Action;
 }
 
 class Communication
 {
 	String name;
 	0..1 -> 1..* Ontology Exchanged Knoledge;
-	0..1 -> 1..* Scenario scenario;
-	0..1 -> 1..* AIP aip;
-	1..* communication -- * Message message;
+	0..1 -> 1..* Scenario;
+	0..1 -> 1..* AIP;
+	1..* -- * Message;
 }
 
 class AIP
 {
 	String name;
-	1..* aip -- 1..* Performative performative;
+	1..* -- 1..* Performative;
 }
 
 class Performative
