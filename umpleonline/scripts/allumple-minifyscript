@@ -15,4 +15,4 @@ cat \
  umple_*.js \
  structureDiagram.js \
  statetable/state_table_colourer.js \
- | yuicompressor --type js --line-break 132 > allumple-min.js
+ | esbuild --minify > allumple-min.js
