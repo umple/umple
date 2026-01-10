@@ -165,34 +165,66 @@ const AiStorage = {
     ) ?? "";
   },
 
-  /**
-   * Check if API key was previously verified
-   * @returns {boolean} True if verified
-   */
-  isVerified() {
-    return this._withStorage(
-      () => localStorage.getItem(this.STORAGE_KEY_VERIFIED) === "true",
-      "Error checking verification status:"
-    ) ?? false;
-  },
+   /**
+    * Check if API key was previously verified for a specific provider
+    * @param {string} provider - The provider name (optional, uses current provider if not provided)
+    * @returns {boolean} True if verified for that provider
+    */
+   isVerified(provider = null) {
+     const providerToCheck = provider || this.getProvider();
+     if (!providerToCheck) return false;
+     
+     return this._withStorage(
+       () => {
+         const stored = localStorage.getItem(this.STORAGE_KEY_VERIFIED);
+         if (stored) {
+           try {
+             const verifiedMap = JSON.parse(stored);
+             return verifiedMap[providerToCheck] === true;
+           } catch (e) {
+             return stored === "true";
+           }
+         }
+         return false;
+       },
+       "Error checking verification status:"
+     ) ?? false;
+   },
 
-  /**
-   * Set verification status
-   * @param {boolean} verified - Verification status
-   * @returns {boolean} Success status
-   */
-  setVerified(verified) {
-    return this._withStorage(
-      () => {
-        if (verified) {
-          localStorage.setItem(this.STORAGE_KEY_VERIFIED, "true");
-        } else {
-          localStorage.removeItem(this.STORAGE_KEY_VERIFIED);
-        }
-        return true;
-      },
-      "Error setting verification status:"
-    ) ?? false;
-  }
+   /**
+    * Set verification status for a specific provider
+    * @param {boolean} verified - Verification status
+    * @param {string} provider - The provider name (optional, uses current provider if not provided)
+    * @returns {boolean} Success status
+    */
+   setVerified(verified, provider = null) {
+     const providerToSet = provider || this.getProvider();
+     if (!providerToSet) return false;
+     
+     return this._withStorage(
+       () => {
+         let verifiedMap = {};
+         const stored = localStorage.getItem(this.STORAGE_KEY_VERIFIED);
+         
+         if (stored) {
+           try {
+             verifiedMap = JSON.parse(stored);
+           } catch (e) {
+             verifiedMap = {};
+           }
+         }
+         
+         if (verified) {
+           verifiedMap[providerToSet] = true;
+         } else {
+           delete verifiedMap[providerToSet];
+         }
+         
+         localStorage.setItem(this.STORAGE_KEY_VERIFIED, JSON.stringify(verifiedMap));
+         return true;
+       },
+       "Error setting verification status:"
+     ) ?? false;
+   }
 };
 

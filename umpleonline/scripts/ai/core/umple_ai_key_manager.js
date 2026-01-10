@@ -94,7 +94,7 @@ const AiApi = {
     const provider = this.getProvider();
     const apiKey = this.getApiKey(provider);
     const model = this.getModel(true);
-    const verified = AiStorage.isVerified();
+    const verified = AiStorage.isVerified(provider);
     
     AiUI.updateStatusIndicator({ provider, apiKey, model, verified });
   },
@@ -220,19 +220,19 @@ const AiApi = {
         if (success) {
           this.updateStatus("Success!", false);
           this.showModelSelection();
-          AiStorage.setVerified(true);
+          AiStorage.setVerified(true, provider);
           // Update status indicator after a brief delay to ensure model select is populated
           setTimeout(() => this.updateStatusIndicator(), 100);
         } else {
           this.updateStatus("Failed to load models after verification.", true);
-          AiStorage.setVerified(false);
+          AiStorage.setVerified(false, provider);
           this.updateStatusIndicator();
         }
       });
     } else {
       // API key invalid
       this.updateStatus(`API key verification failed: ${result.error}`, true);
-      AiStorage.setVerified(false);
+      AiStorage.setVerified(false, provider);
       this.updateStatusIndicator();
     }
   },
@@ -303,15 +303,16 @@ const AiApi = {
     if (providerSelect) {
       providerSelect.addEventListener("change", () => {
         const newProvider = providerSelect.value;
-        this.saveProvider(newProvider);
-        
-        // Update API key input field with the key for the new provider
         const inputField = AiUI.elements.inputField;
+        
+        this.saveProvider(newProvider);
+        this.clearStatus();
+        
+        const apiKey = this.getApiKey(newProvider);
+        
         if (inputField) {
-          inputField.value = this.getApiKey(newProvider);
-          
-          // Visual feedback if no API key is saved for this provider
-          if (!inputField.value) {
+          inputField.value = apiKey;
+          if (!apiKey) {
             inputField.placeholder = "Enter your API key";
             inputField.classList.add("api-key-empty-hint");
           } else {
@@ -320,9 +321,21 @@ const AiApi = {
           }
         }
         
+        if (apiKey && AiStorage.isVerified(newProvider)) {
+          this.loadModels(newProvider, apiKey, success => {
+            if (success) {
+              this.showModelSelection();
+            } else {
+              this.hideModelSelection();
+              AiStorage.setVerified(false, newProvider);
+            }
+            this.updateStatusIndicator();
+          });
+          return;
+        }
+        
         this.hideModelSelection();
-        this.clearStatus();
-        AiStorage.setVerified(false);
+        AiStorage.setVerified(false, newProvider);
         this.updateStatusIndicator();
       });
     }

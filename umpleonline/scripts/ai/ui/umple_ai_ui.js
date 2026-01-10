@@ -246,7 +246,7 @@ const AiUI = {
    * @param {Object} storage - Storage object with getProvider, getApiKey, getModel
    * @param {Function} loadModelsCallback - Callback to load models
    */
-  loadPreferences(storage, loadModelsCallback) {
+   loadPreferences(storage, loadModelsCallback) {
     const providerSelect = this._getElement("selectAiProvider", "providerSelect");
     if (providerSelect) {
       const savedProvider = storage.getProvider();
@@ -254,14 +254,12 @@ const AiUI = {
     }
 
     const inputField = this._getElement("inputAiApiKey", "inputField");
+    const currentProvider = providerSelect?.value || storage.getProvider();
     if (inputField) {
-      const currentProvider = providerSelect?.value || storage.getProvider();
       inputField.value = storage.getApiKey(currentProvider);
     }
 
-    // Only load models if API key was previously verified
-    const wasVerified = storage.isVerified();
-    const currentProvider = providerSelect?.value || storage.getProvider();
+    const wasVerified = storage.isVerified(currentProvider);
     const apiKey = storage.getApiKey(currentProvider);
     if (wasVerified && apiKey && providerSelect) {
       loadModelsCallback?.(currentProvider, apiKey);
