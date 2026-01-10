@@ -13,11 +13,16 @@ cat \
  inlineeditor.js \
  dropbox/*.js \
  umple_*.js \
- ai/core/umple_ai_*.js \
- ai/providers/umple_ai_*.js \
- ai/ui/umple_*.js \
- ai/features/umple_ai_*.js \
- ai/features/requirements/umple_ai_*.js \
+ # Core AI modules - must be in dependency order \
+ ai/config/umple_ai_config.js \
+ ai/core/umple_ai_errors.js \
+ ai/core/umple_ai_storage.js \
+ ai/core/umple_ai_providers.js \
+ ai/ui/umple_ai_ui.js \
+ ai/ui/umple_dialog.js \
+ ai/core/umple_ai_key_manager.js \
+ # Features - recursive wildcard for any new files/directories \
+ ai/features/**/*.js \
  structureDiagram.js \
  statetable/state_table_colourer.js \
  | esbuild --minify > allumple-min.js
