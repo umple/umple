@@ -252,6 +252,9 @@ class CodeCompiler {
     if(generator.equals("GvClassDiagram")) {
       fileroot+="cd";
     }
+    if(generator.equals("InstanceDiagram")) {
+      fileroot+="cid";
+    }
     else if(generator.equals("GvEntityRelationshipDiagram")) {
       fileroot+="erd";
     }

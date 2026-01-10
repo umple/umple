@@ -1,0 +1,718 @@
+/************
+This file is an Umple translation of a model
+of Bossa version 1.1 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Bossa.ecore
+
+date: 2006/07/31
+
+Description: This metamodel describes Bossa. Bossa is a kernel-level event-based framework to facilitate the implementation and integration of new scheduling policies.
+
+Title: Bossa
+
+See: http://www.emn.fr/x-info/bossa/grammar3.pdf http://www.emn.fr/x-info/bossa/
+
+Authors: SROUR Youssef (srour.youssef_NOSPAM <AT> gmail.com)
+************/
+namespace Bossa;
+
+class BossaProgramm
+{
+	0..1 -> 1..* Scheduler;
+}
+
+class Scheduler
+{
+	Boolean defaultAtt;
+	Boolean high_Res;
+	Boolean low_Res;
+	String id;
+	1..* -- 1..* HandlerDef;
+	1..* -- 1..* InterfaceDef;
+	1..* -- 1..* FunctionDef;
+}
+
+class NormalScheduler
+{
+	isA Scheduler;
+	0..1 -> 1..* SchedulerDecl;
+}
+
+class VirtualScheduler
+{
+	isA Scheduler;
+	0..1 -> 1..* VSchdulerDecl vschedulerDecl;
+}
+
+class AbstractSchedulerDecl
+{
+	0..1 -> * ConstDef;
+	0..1 -> * TypeDef;
+	1..* -- * ValDecl;
+	1..* -- * FunDecl;
+	1..* -- 1..* StateDef;
+	1..* -- * OrderDef;
+	1..* -- * AdmissionDef;
+	1..* -- * TraceDef;
+}
+
+class SchedulerDecl
+{
+	isA AbstractSchedulerDecl;
+	0..1 -> 1..* ProcessDef;
+}
+
+class VSchdulerDecl
+{
+	isA AbstractSchedulerDecl;
+	0..1 -> 1..* SchedulerDef;
+}
+
+class ConstDef
+{
+	String id;
+	0..1 -> 1..* Expression expr;
+	0..1 -> 1..* BossaTypeExpr;
+}
+
+class TypeDef
+{
+	0..1 -> 1..* EnumRange enumRang;
+}
+
+class EnumRange
+{
+	0..1 -> * EnumDef;
+	0..1 -> * RangeDef;
+}
+
+class EnumDef
+{
+	String[] theIds;
+}
+
+class BagId
+{
+	String theValue;
+}
+
+class RangeDef
+{
+	0..1 -> 2 Expression expr;
+}
+
+class ProcessDef
+{
+	1..* -- 1..* ProcessVarDecl;
+}
+
+class SchedulerDef
+{
+	1..* -- 1..* ProcessVarDecl;
+}
+
+class ProcessVarDecl
+{
+	String id;
+}
+
+class Timer_ProcessVarDecl
+{
+	isA ProcessVarDecl;
+}
+
+class System_ProcessVarDecl
+{
+	isA ProcessVarDecl;
+	Boolean system;
+	0..1 -> 1..* TypeExpr;
+}
+
+class Normal_ProcessVarDecl
+{
+	isA ProcessVarDecl;
+	0..1 -> 1..* TypeExpr;
+}
+
+class HandlerDef
+{
+	String id;
+	0..1 -> 1..* OnHandlerDef;
+}
+
+class InterfaceDef
+{
+	0..1 -> 1..* ComposantOfInterFunc;
+}
+
+class FunctionDef
+{
+	0..1 -> 1..* ComposantOfInterFunc;
+}
+
+class Expression
+{
+}
+
+class Integer_Expression
+{
+	isA Expression;
+	Integer theValue;
+}
+
+class Id_Expression
+{
+	isA Expression;
+	String id;
+}
+
+class State_Expression
+{
+	isA Expression;
+	String theValue;
+}
+
+class True_Expression
+{
+	isA Expression;
+}
+
+class False_Expression
+{
+	isA Expression;
+}
+
+class Unop_Expression
+{
+	isA Expression;
+	0..1 -> 1..* Unop;
+	0..1 -> 1..* Expression expr;
+}
+
+class Etoile_Expression
+{
+	isA Expression;
+	0..1 -> 1..* Expression expr;
+}
+
+class ExpId_Expression
+{
+	isA Expression;
+	String id;
+	0..1 -> 1..* Expression expr;
+}
+
+class Select_Expression
+{
+	isA Expression;
+}
+
+class FnName_Expression
+{
+	isA Expression;
+	0..1 -> * Expression expr;
+}
+
+class Empty_Expression
+{
+	isA Expression;
+	0..1 -> 1..* ClassState;
+}
+
+class SRCOnSched_Expression
+{
+	isA Expression;
+}
+
+class SchedulerOf_Expression
+{
+	isA Expression;
+	0..1 -> 1..* Expression expr;
+}
+
+class In_Expression
+{
+	isA Expression;
+	Boolean in;
+	0..1 -> 1..* Expression expr;
+	0..1 -> 1..* ClassState;
+}
+
+class Parenthese_Expression
+{
+	isA Expression;
+	0..1 -> 1..* Expression expr;
+}
+
+class Binop_Expression
+{
+	isA Expression;
+	0..1 -> 1..* Id_Expression;
+	0..1 -> 1..* Compo_Binop_Expression;
+}
+
+class Compo_Binop_Expression
+{
+	0..1 -> 1..* Binop;
+	0..1 -> 1..* Id_Expression;
+}
+
+class ValDecl
+{
+	String id;
+}
+
+class Normal_ValDecl
+{
+	isA ValDecl;
+	0..1 -> * NonProcType;
+}
+
+class System_ValDecl
+{
+	isA ValDecl;
+	0..1 -> * NonProcType;
+}
+
+class Timer_ValDecl
+{
+	isA ValDecl;
+}
+
+class FunDecl
+{
+	0..1 -> * ParameterType parameterTypes;
+	0..1 -> * NonProcType;
+}
+
+class StateDef
+{
+	0..1 -> 1..* ClassNameStorage;
+}
+
+class ClassNameStorage
+{
+	String id;
+	0..1 -> 1..* ClassName;
+	0..1 -> * Storage;
+}
+
+class OrderDef
+{
+	0..1 -> 1..* KeyCritDecls keyCritDecl;
+	0..1 -> 1..* CritDecls;
+}
+
+class AdmissionDef
+{
+	0..1 -> * ValDef;
+	0..1 -> 1..* AdmCrit;
+	0..1 -> * AttachDetach;
+}
+
+class TraceDef
+{
+	0..1 -> * TraceEvent;
+	0..1 -> * TraceExpr;
+	0..1 -> * TraceTest;
+}
+
+class TypeExpr
+{
+	String id;
+	0..1 -> * BossaTypeExpr;
+}
+
+class TypeOrVoid
+{
+	Boolean isVoid;
+	0..1 -> * TypeExpr;
+}
+
+class ParameterType
+{
+	0..1 -> 1..* TypeExpr;
+}
+
+class Storage
+{
+}
+
+class Process_Storage
+{
+	isA Storage;
+}
+
+class Scheduler_Storage
+{
+	isA Storage;
+	0..1 -> * StateVisibility;
+}
+
+class Queue_Storage
+{
+	isA Storage;
+	0..1 -> * StateVisibility;
+	0..1 -> * QueueType;
+}
+
+class KeyCritDecls
+{
+	0..1 -> 1..* CompoKeyCritDecls;
+}
+
+class CompoKeyCritDecls
+{
+	0..1 -> 1..* CritDecl;
+}
+
+class CritDecls
+{
+	0..1 -> 1..* CritDecl;
+}
+
+class CritDecl
+{
+	0..1 -> 1..* Critop;
+}
+
+class CritDeclWhithId
+{
+	isA CritDecl;
+	String id;
+}
+
+class CritDeclWhithoutId
+{
+	isA CritDecl;
+	0..1 -> 2..3 Expression expr;
+}
+
+class ValDef
+{
+	String id;
+	0..1 -> 1..* TypeExpr;
+	0..1 -> 1..* Expression expr;
+}
+
+class AdmCrit
+{
+	0..1 -> * ParamVarDecl;
+	0..1 -> 1..* Expression expr;
+}
+
+class AttachDetach
+{
+	0..1 -> 1..* ProcParam procParam1;
+	0..1 -> 1..* ProcParam procParam2;
+	0..1 -> 1..* SeqStmt seqStmt1;
+	0..1 -> 1..* SeqStmt seqStmt2;
+}
+
+class ParamVarDecl
+{
+	String id;
+	0..1 -> 1..* TypeExpr;
+}
+
+class SeqStmt
+{
+	0..1 -> * ValDef;
+	0..1 -> * Statment stmt;
+}
+
+class TraceEvent
+{
+	0..1 -> 1..* EventName;
+}
+
+class TraceExpr
+{
+	String[] id;
+}
+
+class TraceTest
+{
+	0..1 -> 1..* Expression expr;
+}
+
+class ProcParam
+{
+	String id;
+	Boolean process;
+	Boolean scheduler;
+}
+
+class Statment
+{
+}
+
+class IfStmt
+{
+	isA Statment;
+	0..1 -> 1..* Expression expr;
+	0..1 -> 1..2 SeqStmt;
+}
+
+class ForStmt
+{
+	isA Statment;
+}
+
+class ForeachForStmt
+{
+	isA ForStmt;
+	String id;
+	Boolean isIn;
+	0..1 -> * ClassState;
+	0..1 -> 1..* SeqStmt;
+}
+
+class ForEachIncreasingForStmt
+{
+	isA ForStmt;
+	String id;
+	0..1 -> 1..* SeqStmt;
+}
+
+class ForEachDecreasingForStmt
+{
+	isA ForStmt;
+	String id;
+	0..1 -> 1..* SeqStmt;
+}
+
+class ReturnStmt
+{
+	isA Statment;
+	0..1 -> * Expression expr;
+}
+
+class SwitchStmt
+{
+	isA Statment;
+	0..1 -> 1..* LocExpr;
+	0..1 -> * ComposantOfSwitchStmt;
+}
+
+class AssignStmt
+{
+	isA Statment;
+	0..1 -> 1..* LocExpr;
+	0..1 -> * AssignUnop;
+	0..1 -> * AssignBinop;
+	0..1 -> * Expression expr;
+}
+
+class MoveStmt
+{
+	isA Statment;
+	Boolean isHead;
+	Boolean isTail;
+	0..1 -> 1..* MoveExpr;
+}
+
+class NormalMoveStmt
+{
+	isA MoveStmt;
+	0..1 -> 1..* StateRef;
+}
+
+class ForwardMoveStmt
+{
+	isA MoveStmt;
+}
+
+class StateRef
+{
+	String stateRef;
+}
+
+class DeferStmt
+{
+	isA Statment;
+	String deferStmt;
+}
+
+class PrimStmt
+{
+	isA Statment;
+	0..1 -> * Expression expr;
+}
+
+class ErrorStmt
+{
+	isA Statment;
+	String errorType;
+}
+
+class BreakStmt
+{
+	isA Statment;
+}
+
+class LocExpr
+{
+	String stateName;
+	String[] id;
+}
+
+class MoveExpr
+{
+}
+
+class Select_MoveExpr
+{
+	isA MoveExpr;
+}
+
+class SatateName_MoveExpr
+{
+	isA MoveExpr;
+}
+
+class ID_MoveExpr
+{
+	isA MoveExpr;
+	String id;
+}
+
+class IDSource_MoveExpr
+{
+	isA MoveExpr;
+	String id;
+}
+
+class IDTarget_MoveExpr
+{
+	isA MoveExpr;
+	String id;
+}
+
+class ClassState
+{
+	Boolean state;
+	0..1 -> * ClassName;
+}
+
+class OnHandlerDef
+{
+	0..1 -> * EventName;
+	0..1 -> 1..* SeqStmt;
+}
+
+class EventName
+{
+	String eventNameLeft;
+	String eventNameRight;
+}
+
+class ComposantOfSwitchStmt
+{
+	0..1 -> 1..* ClassState;
+	0..1 -> 1..* SeqStmt;
+}
+
+class ComposantOfInterFunc
+{
+	String id;
+	0..1 -> 1..* TypeOrVoid;
+	0..1 -> * ParamVarDecl;
+	0..1 -> 1..* SeqStmt;
+}
+
+class BossaTypeExpr
+{
+	String bossaTypeExpr;
+}
+
+class QueueType
+{
+}
+
+class Normal_QueueType
+{
+	isA QueueType;
+}
+
+class Fifo_QueueType
+{
+	isA QueueType;
+}
+
+class Lifo_QueueType
+{
+	isA QueueType;
+}
+
+class Critop
+{
+	Boolean lowest;
+	Boolean highest;
+}
+
+class StateVisibility
+{
+	Boolean public;
+	Boolean private;
+}
+
+class ClassName
+{
+	String className;
+}
+
+class NonProcType
+{
+	Boolean system;
+	Boolean struct;
+	Boolean id;
+	String nonProcType;
+}
+
+class Unop
+{
+	Boolean plus;
+	Boolean minus;
+	Boolean excl;
+	Boolean tild;
+}
+
+class Binop
+{
+	Boolean plus;
+	Boolean minus;
+	Boolean star;
+	Boolean slash;
+	Boolean percentage;
+	Boolean doubleAnd;
+	Boolean doubleVerticalBar;
+	Boolean and;
+	Boolean eq;
+	Boolean ne;
+	Boolean lt;
+	Boolean gt;
+	Boolean le;
+	Boolean ge;
+	Boolean doubleLt;
+	Boolean doubleGt;
+}
+
+class AssignUnop
+{
+	Boolean doublePlus;
+	Boolean doubleMoins;
+}
+
+class AssignBinop
+{
+	Boolean affect;
+	Boolean plusEqual;
+	Boolean moinsEqual;
+	Boolean starEqual;
+	Boolean slashEqual;
+	Boolean percentageEqual;
+	Boolean andEqual;
+	Boolean orEqual;
+	Boolean doubleLtEqual;
+	Boolean doubleGtEqual;
+}
