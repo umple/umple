@@ -423,6 +423,10 @@ a.button:active {
   color: #f0f0f0;
 }
 
+.loading-indicator-overlay {
+  background-color: #333333 !important;
+}
+
 .ui-tooltip {
   background-color: #333 !important;
   color: #ddd !important;
