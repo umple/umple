@@ -475,3 +475,29 @@ a.button:active {
   background-color: #4d5a6a;
   color: #ff6666;
 }
+
+#topLine,
+#topLine * {
+  color: #ddd !important;
+}
+
+#feedbackMessage,
+#feedbackMessage * {
+  color: #ddd !important;
+}
+
+#exampleMessage,
+#exampleMessage * {
+  color: #ccc !important;
+}
+
+.linetext,
+.linetext * {
+  color: #ddd !important;
+}
+
+input,
+textarea,
+select {
+  color: #ddd !important;
+}
