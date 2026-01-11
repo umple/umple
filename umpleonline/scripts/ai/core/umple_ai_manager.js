@@ -9,11 +9,6 @@ const AiApi = {
   STORAGE_KEY_PROVIDER_DATA: AiStorage.STORAGE_KEY_PROVIDER_DATA,
   STORAGE_KEY_PROVIDER: AiStorage.STORAGE_KEY_PROVIDER,
 
-  // Expose provider endpoints for backward compatibility
-  get PROVIDER_ENDPOINTS() {
-    return AiProviderAdapters.ENDPOINTS;
-  },
-
   // Storage methods - delegate to AiStorage
   saveApiKey(provider, apiKey) {
     return AiStorage.saveApiKey(provider, apiKey);
@@ -63,23 +58,6 @@ const AiApi = {
 
   parseModelsResponse(provider, responseData) {
     return AiProviderAdapters.parseModelsResponse(provider, responseData);
-  },
-
-  // Helper methods (kept for backward compatibility)
-  _withStorage(action, errorMsg) {
-    return AiStorage._withStorage(action, errorMsg);
-  },
-
-  _getErrorMessage(errorData, defaultMsg) {
-    return AiErrors.extractErrorMessage(errorData, defaultMsg);
-  },
-
-  _getApiKeysMap() {
-    return AiStorage.getApiKeysMap();
-  },
-
-  _saveApiKeysMap(keysMap) {
-    return AiStorage.saveApiKeysMap(keysMap);
   },
 
   /**

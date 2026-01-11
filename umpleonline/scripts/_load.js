@@ -109,8 +109,6 @@ document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_man
 document.write('<script type="text/javascript" src="scripts/ai/ui/umple_ai_ui.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/ui/umple_dialog.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/config/umple_ai_controller.js"></script>');
-document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements_parser.js"></script>');
-document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_prompt_builder.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/explain/umple_ai_prompt_builder.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/explain/umple_ai_explain.js"></script>');

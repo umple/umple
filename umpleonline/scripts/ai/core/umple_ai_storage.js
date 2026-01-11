@@ -103,52 +103,6 @@ const AiStorage = {
   },
 
   /**
-   * Get all API keys map from localStorage (backward-compatible)
-   * @returns {Object} Map of provider -> apiKey
-   */
-  getApiKeysMap() {
-    const providerData = this.getProviderDataMap();
-    const keysMap = {};
-    Object.entries(providerData).forEach(([provider, data]) => {
-      if (data?.apiKey) {
-        keysMap[provider] = data.apiKey;
-      }
-    });
-    return keysMap;
-  },
-
-  /**
-   * Save API keys map to localStorage (backward-compatible)
-   * @param {Object} keysMap - Map of provider -> apiKey
-   * @returns {boolean} Success status
-   */
-  saveApiKeysMap(keysMap) {
-    const providerData = this.getProviderDataMap();
-    const nextData = { ...providerData };
-    const safeKeysMap = keysMap || {};
-
-    Object.keys(nextData).forEach(provider => {
-      if (!(provider in safeKeysMap)) {
-        delete nextData[provider].apiKey;
-      }
-    });
-
-    Object.entries(safeKeysMap).forEach(([provider, apiKey]) => {
-      if (!provider) return;
-      const entry = nextData[provider] || {};
-      const key = apiKey?.trim();
-      if (key) {
-        entry.apiKey = key;
-      } else {
-        delete entry.apiKey;
-      }
-      nextData[provider] = entry;
-    });
-
-    return this.saveProviderDataMap(nextData);
-  },
-
-  /**
    * Save API key for a specific provider to localStorage
    * @param {string} provider - The provider name
    * @param {string} apiKey - The API key to save

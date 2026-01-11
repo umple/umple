@@ -232,7 +232,7 @@ const AiUI = {
 
         // Handle authentication errors
         if (response.status === 401 || response.status === 403) {
-          const errorMsg = this._getErrorMessage(errorData, "Enter API key to load models");
+          const errorMsg = AiErrors.extractErrorMessage(errorData, "Enter API key to load models");
           modelSelect.innerHTML = `<option value="">${errorMsg}</option>`;
           modelSelect.disabled = false;
           onError?.();
@@ -240,7 +240,7 @@ const AiUI = {
         }
 
         // Other errors
-        const errorMsg = this._getErrorMessage(errorData, `Failed to fetch models: ${response.status}`);
+        const errorMsg = AiErrors.extractErrorMessage(errorData, `Failed to fetch models: ${response.status}`);
         throw new Error(errorMsg);
       }
 
@@ -294,17 +294,6 @@ const AiUI = {
     } else {
       this.hideModelSelection();
     }
-  },
-
-  /**
-   * Helper: Extract error message from API response
-   * @param {Object} errorData - Error response data
-   * @param {string} defaultMsg - Default error message
-   * @returns {string} Error message
-   */
-  _getErrorMessage(errorData, defaultMsg) {
-    if (!errorData?.error) return defaultMsg;
-    return typeof errorData.error === "object" ? errorData.error.message || defaultMsg : errorData.error;
   },
 
   /**
