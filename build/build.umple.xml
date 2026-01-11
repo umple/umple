@@ -372,11 +372,12 @@
       <fileset file="${scriptPath}/ai/core/umple_ai_errors.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_storage.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_providers.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_manager.js"/>
       <fileset file="${scriptPath}/ai/ui/umple_ai_ui.js"/>
       <fileset file="${scriptPath}/ai/ui/umple_dialog.js"/>
-      <fileset file="${scriptPath}/ai/core/umple_ai_key_manager.js"/>
-      <!-- Features - can use wildcards since no interdependencies -->
-      <fileset dir="${scriptPath}/ai/features" includes="**/*.js"/>
+      <!-- Features - include config controller explicitly, then other features -->
+      <fileset file="${scriptPath}/ai/features/config/umple_ai_controller.js"/>
+      <fileset dir="${scriptPath}/ai/features" includes="**/*.js" excludes="config/*.js"/>
       <fileset file="${scriptPath}/structureDiagram.js"/>
       <fileset file="${scriptPath}/statetable/state_table_colourer.js"/>
     </concat>

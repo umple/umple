@@ -105,9 +105,10 @@ document.write('<script type="text/javascript" src="scripts/ai/config/umple_ai_c
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_errors.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_storage.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_providers.js"></script>');
-document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_key_manager.js"></script>');
-document.write('<script type="text/javascript" src="scripts/ai/ui/umple_dialog.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_manager.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/ui/umple_ai_ui.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/ui/umple_dialog.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/config/umple_ai_controller.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements_parser.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_prompt_builder.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements.js"></script>');
@@ -177,5 +178,3 @@ document.write('<script type="text/javascript" src="scripts/jjs/jjs_parse.js"></
 
 // OBSOLETE
 //document.write('<script type="text/javascript" src="scripts/scriptaculous.js"></script>');
-
-

@@ -18,9 +18,10 @@ cat \
  ai/core/umple_ai_errors.js \
  ai/core/umple_ai_storage.js \
  ai/core/umple_ai_providers.js \
+ ai/core/umple_ai_manager.js \
  ai/ui/umple_ai_ui.js \
  ai/ui/umple_dialog.js \
- ai/core/umple_ai_key_manager.js \
+  ai/features/config/umple_ai_controller.js \
  # Features - recursive wildcard for any new files/directories \
  ai/features/**/*.js \
  structureDiagram.js \

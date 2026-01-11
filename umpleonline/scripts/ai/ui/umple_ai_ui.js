@@ -25,6 +25,28 @@ const AiUI = {
   },
 
   /**
+   * Public wrapper for cached element access
+   * @param {string} id - Element ID
+   * @param {string} cacheKey - Key to cache element
+   * @returns {HTMLElement|null} Element or null
+   */
+  getElement(id, cacheKey) {
+    return this._getElement(id, cacheKey);
+  },
+
+  /**
+   * Initialize and cache key AI settings elements
+   * @returns {Object} Cached elements
+   */
+  initElements() {
+    this._getElement("selectAiProvider", "providerSelect");
+    this._getElement("selectAiModel", "modelSelect");
+    this._getElement("inputAiApiKey", "inputField");
+    this._getElement("apiKeyStatus", "statusDiv");
+    return this.elements;
+  },
+
+  /**
    * Update status message display
    * @param {string} message - Status message
    * @param {boolean} isError - Whether it's an error message
@@ -125,7 +147,7 @@ const AiUI = {
 
   /**
    * Restore saved model selection in the model select dropdown
-   * @param {Function} getModel - Function to get model (with checkUI support)
+   * @param {Function} getModel - Function to get stored model
    * @param {Function} saveModel - Function to save model
    * @param {number} retryCount - Current retry count (internal use)
    */
@@ -157,18 +179,24 @@ const AiUI = {
       return;
     }
 
-    // Try to get saved model from localStorage, with fallback to UI element
-    const savedModel = getModel(true);
+    // Get saved model from localStorage (no UI fallback)
+    const savedModel = getModel(false);
     if (savedModel) {
       // Check if the saved model exists in the options
       const optionExists = Array.from(modelSelect.options).some(option => option.value === savedModel);
       if (optionExists) {
         modelSelect.value = savedModel;
-      } else {
-        // If saved model doesn't exist in the list, clear the saved model
-        console.warn(`Saved model "${savedModel}" not found in available models`);
-        saveModel("");
+        return;
       }
+
+      console.warn(`Saved model "${savedModel}" not found in available models`);
+    }
+
+    // Initialize or recover by saving the current selection
+    const fallbackModel = modelSelect.value || modelSelect.options[0]?.value || "";
+    if (fallbackModel) {
+      modelSelect.value = fallbackModel;
+      saveModel(fallbackModel);
     }
   },
 
@@ -243,7 +271,7 @@ const AiUI = {
 
   /**
    * Load saved preferences into the UI
-   * @param {Object} storage - Storage object with getProvider, getApiKey, getModel
+   * @param {Object} storage - Storage object with getProvider, getApiKey, isVerified
    * @param {Function} loadModelsCallback - Callback to load models
    */
    loadPreferences(storage, loadModelsCallback) {
@@ -296,4 +324,3 @@ const AiUI = {
     }
   }
 };
-

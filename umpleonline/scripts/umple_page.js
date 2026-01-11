@@ -181,6 +181,10 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   jQuery(document).ready(function() {
     DropboxInitializer.initializeDropbox();
     ToolTips.initTooltips();
+    // Initialize AI controller after DOM is ready so modal elements exist
+    if (window.AiController && window.AiController.init) {
+      window.AiController.init();
+    }
   });
 
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}

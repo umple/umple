@@ -51,7 +51,7 @@ const AiRequirements = {
     }
 
     // Check both localStorage and UI element for model
-    const model = AiApi.getModel(true);
+    const model = AiApi.getModel();
     if (!model) {
       return {
         configured: false,
@@ -257,8 +257,8 @@ Umple code:`;
     const apiConfig = this.checkApiConfig();
     if (!apiConfig.configured) {
       // Show the settings modal instead of just an alert
-      if (typeof AiApi !== "undefined" && AiApi.showSettingsModal) {
-        AiApi.showSettingsModal();
+      if (typeof AiController !== "undefined" && AiController.showSettingsModal) {
+        AiController.showSettingsModal();
       }
       alert(apiConfig.message);
       return;

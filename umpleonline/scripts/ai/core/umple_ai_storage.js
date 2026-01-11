@@ -6,10 +6,8 @@
 
 const AiStorage = {
   // LocalStorage keys for storing preferences
-  STORAGE_KEY_API_KEYS: "umpleAiApiKeys", // Map of provider -> apiKey
+  STORAGE_KEY_PROVIDER_DATA: "umpleAiProviderData", // Map of provider -> { apiKey, model, verified }
   STORAGE_KEY_PROVIDER: "umpleAiProvider",
-  STORAGE_KEY_MODEL: "umpleAiModel",
-  STORAGE_KEY_VERIFIED: "umpleAiApiKeyVerified",
 
   /**
    * Execute localStorage operation with error handling
@@ -38,47 +36,116 @@ const AiStorage = {
   },
 
   /**
-   * Get all API keys map from localStorage
-   * @returns {Object} Map of provider -> apiKey
+   * Normalize provider data entries before storage
+   * @param {Object} providerData - Map of provider -> data
+   * @returns {Object} Sanitized map
    */
-  getApiKeysMap() {
+  _sanitizeProviderDataMap(providerData) {
+    if (!providerData || typeof providerData !== "object") return {};
+
+    const sanitized = {};
+    Object.entries(providerData).forEach(([provider, data]) => {
+      if (!provider || !data || typeof data !== "object") return;
+
+      const entry = {};
+      if (data.apiKey) entry.apiKey = String(data.apiKey).trim();
+      if (data.model) entry.model = String(data.model).trim();
+      if (data.verified === true) entry.verified = true;
+
+      if (entry.apiKey || entry.model || entry.verified) {
+        sanitized[provider] = entry;
+      }
+    });
+
+    return sanitized;
+  },
+
+  /**
+   * Get provider data map from localStorage
+   * @returns {Object} Map of provider -> { apiKey, model, verified }
+   */
+  getProviderDataMap() {
     return this._withStorage(
       () => {
-        const stored = localStorage.getItem(this.STORAGE_KEY_API_KEYS);
+        const stored = localStorage.getItem(this.STORAGE_KEY_PROVIDER_DATA);
         if (stored) {
-          return JSON.parse(stored);
+          try {
+            return this._sanitizeProviderDataMap(JSON.parse(stored));
+          } catch (e) {
+            return {};
+          }
         }
-        
-        // Backward compatibility: migrate old single API key format
-        const oldKey = localStorage.getItem("umpleAiApiKey");
-        if (oldKey) {
-          const oldProvider = localStorage.getItem(this.STORAGE_KEY_PROVIDER) || "";
-          const keysMap = oldProvider ? { [oldProvider]: oldKey } : {};
-          // Save in new format and remove old key
-          localStorage.setItem(this.STORAGE_KEY_API_KEYS, JSON.stringify(keysMap));
-          localStorage.removeItem("umpleAiApiKey");
-          return keysMap;
-        }
-        
+
         return {};
       },
-      "Error retrieving API keys map:"
+      "Error retrieving provider data map:"
     ) ?? {};
   },
 
   /**
-   * Save API keys map to localStorage
+   * Save provider data map to localStorage
+   * @param {Object} providerData - Map of provider -> { apiKey, model, verified }
+   * @returns {boolean} Success status
+   */
+  saveProviderDataMap(providerData) {
+    return this._withStorage(
+      () => {
+        const sanitized = this._sanitizeProviderDataMap(providerData);
+        if (Object.keys(sanitized).length > 0) {
+          localStorage.setItem(this.STORAGE_KEY_PROVIDER_DATA, JSON.stringify(sanitized));
+        } else {
+          localStorage.removeItem(this.STORAGE_KEY_PROVIDER_DATA);
+        }
+        return true;
+      },
+      "Error saving provider data map:"
+    ) ?? false;
+  },
+
+  /**
+   * Get all API keys map from localStorage (backward-compatible)
+   * @returns {Object} Map of provider -> apiKey
+   */
+  getApiKeysMap() {
+    const providerData = this.getProviderDataMap();
+    const keysMap = {};
+    Object.entries(providerData).forEach(([provider, data]) => {
+      if (data?.apiKey) {
+        keysMap[provider] = data.apiKey;
+      }
+    });
+    return keysMap;
+  },
+
+  /**
+   * Save API keys map to localStorage (backward-compatible)
    * @param {Object} keysMap - Map of provider -> apiKey
    * @returns {boolean} Success status
    */
   saveApiKeysMap(keysMap) {
-    return this._withStorage(
-      () => {
-        localStorage.setItem(this.STORAGE_KEY_API_KEYS, JSON.stringify(keysMap));
-        return true;
-      },
-      "Error saving API keys map:"
-    ) ?? false;
+    const providerData = this.getProviderDataMap();
+    const nextData = { ...providerData };
+    const safeKeysMap = keysMap || {};
+
+    Object.keys(nextData).forEach(provider => {
+      if (!(provider in safeKeysMap)) {
+        delete nextData[provider].apiKey;
+      }
+    });
+
+    Object.entries(safeKeysMap).forEach(([provider, apiKey]) => {
+      if (!provider) return;
+      const entry = nextData[provider] || {};
+      const key = apiKey?.trim();
+      if (key) {
+        entry.apiKey = key;
+      } else {
+        delete entry.apiKey;
+      }
+      nextData[provider] = entry;
+    });
+
+    return this.saveProviderDataMap(nextData);
   },
 
   /**
@@ -93,13 +160,15 @@ const AiStorage = {
       return false;
     }
     const key = apiKey?.trim();
-    const keysMap = this.getApiKeysMap();
+    const providerData = this.getProviderDataMap();
+    const entry = providerData[provider] || {};
     if (key) {
-      keysMap[provider] = key;
+      entry.apiKey = key;
     } else {
-      delete keysMap[provider];
+      delete entry.apiKey;
     }
-    return this.saveApiKeysMap(keysMap);
+    providerData[provider] = entry;
+    return this.saveProviderDataMap(providerData);
   },
 
   /**
@@ -109,8 +178,8 @@ const AiStorage = {
    */
   getApiKey(provider) {
     if (!provider) return "";
-    const keysMap = this.getApiKeysMap();
-    return keysMap[provider] || "";
+    const providerData = this.getProviderDataMap();
+    return providerData[provider]?.apiKey || "";
   },
 
   /**
@@ -144,11 +213,24 @@ const AiStorage = {
    * @param {string} model - The model name
    * @returns {boolean} Success status
    */
-  saveModel(model) {
+  saveModel(model, provider = null) {
+    const providerToUse = provider || this.getProvider();
+    if (!providerToUse) {
+      console.error("Provider is required to save model");
+      return false;
+    }
+    const trimmedModel = model?.trim();
     return this._withStorage(
       () => {
-        model ? localStorage.setItem(this.STORAGE_KEY_MODEL, model) : localStorage.removeItem(this.STORAGE_KEY_MODEL);
-        return true;
+        const providerData = this.getProviderDataMap();
+        const entry = providerData[providerToUse] || {};
+        if (trimmedModel) {
+          entry.model = trimmedModel;
+        } else {
+          delete entry.model;
+        }
+        providerData[providerToUse] = entry;
+        return this.saveProviderDataMap(providerData);
       },
       "Error saving model:"
     ) ?? false;
@@ -158,9 +240,14 @@ const AiStorage = {
    * Retrieve model from localStorage
    * @returns {string} The model name, or empty string if not found
    */
-  getModel() {
+  getModel(provider = null) {
+    const providerToUse = provider || this.getProvider();
+    if (!providerToUse) return "";
     return this._withStorage(
-      () => localStorage.getItem(this.STORAGE_KEY_MODEL) || "",
+      () => {
+        const providerData = this.getProviderDataMap();
+        return providerData[providerToUse]?.model || "";
+      },
       "Error retrieving model:"
     ) ?? "";
   },
@@ -173,19 +260,11 @@ const AiStorage = {
    isVerified(provider = null) {
      const providerToCheck = provider || this.getProvider();
      if (!providerToCheck) return false;
-     
+
      return this._withStorage(
        () => {
-         const stored = localStorage.getItem(this.STORAGE_KEY_VERIFIED);
-         if (stored) {
-           try {
-             const verifiedMap = JSON.parse(stored);
-             return verifiedMap[providerToCheck] === true;
-           } catch (e) {
-             return stored === "true";
-           }
-         }
-         return false;
+         const providerData = this.getProviderDataMap();
+         return providerData[providerToCheck]?.verified === true;
        },
        "Error checking verification status:"
      ) ?? false;
@@ -200,31 +279,20 @@ const AiStorage = {
    setVerified(verified, provider = null) {
      const providerToSet = provider || this.getProvider();
      if (!providerToSet) return false;
-     
+
      return this._withStorage(
        () => {
-         let verifiedMap = {};
-         const stored = localStorage.getItem(this.STORAGE_KEY_VERIFIED);
-         
-         if (stored) {
-           try {
-             verifiedMap = JSON.parse(stored);
-           } catch (e) {
-             verifiedMap = {};
-           }
-         }
-         
+         const providerData = this.getProviderDataMap();
+         const entry = providerData[providerToSet] || {};
          if (verified) {
-           verifiedMap[providerToSet] = true;
+           entry.verified = true;
          } else {
-           delete verifiedMap[providerToSet];
+           delete entry.verified;
          }
-         
-         localStorage.setItem(this.STORAGE_KEY_VERIFIED, JSON.stringify(verifiedMap));
-         return true;
+         providerData[providerToSet] = entry;
+         return this.saveProviderDataMap(providerData);
        },
        "Error setting verification status:"
      ) ?? false;
    }
 };
-

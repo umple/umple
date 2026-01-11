@@ -33,7 +33,7 @@ const AiExplain = {
       };
     }
 
-    const model = AiApi.getModel(true);
+    const model = AiApi.getModel();
     if (!model) {
       return {
         configured: false,
@@ -82,8 +82,8 @@ const AiExplain = {
     // Check API configuration
     const apiConfig = this.checkApiConfig();
     if (!apiConfig.configured) {
-      if (typeof AiApi !== "undefined" && AiApi.showSettingsModal) {
-        AiApi.showSettingsModal();
+      if (typeof AiController !== "undefined" && AiController.showSettingsModal) {
+        AiController.showSettingsModal();
       }
       alert(apiConfig.message);
       return;
