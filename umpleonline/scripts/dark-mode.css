@@ -455,3 +455,23 @@ a.button:active {
   color: #ddd;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
 }
+
+.cm-editor .cm-selectionBackground,
+.cm-editor .cm-selectionLayer .cm-selectionBackground {
+  background-color: #4d5a6a !important;
+}
+
+.cm-editor.cm-focused .cm-selectionBackground,
+.cm-editor.cm-focused .cm-selectionLayer .cm-selectionBackground {
+  background-color: #4d5a6a !important;
+}
+
+.cm-editor .cm-selectionBackground,
+.cm-editor .cm-content ::selection {
+  background-color: #4d5a6a !important;
+}
+
+.cm-editor ::selection {
+  background-color: #4d5a6a;
+  color: #ff6666;
+}
