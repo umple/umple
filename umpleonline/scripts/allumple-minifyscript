@@ -19,6 +19,8 @@ cat \
  ai/core/umple_ai_storage.js \
  ai/core/umple_ai_providers.js \
  ai/core/umple_ai_manager.js \
+ ai/core/umple_ai_prompt_examples.js \
+ ai/core/umple_ai_prompting.js \
  ai/ui/umple_ai_ui.js \
  ai/ui/umple_dialog.js \
   ai/features/config/umple_ai_controller.js \

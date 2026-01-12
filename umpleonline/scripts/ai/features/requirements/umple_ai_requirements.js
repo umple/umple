@@ -69,66 +69,13 @@ const AiRequirements = {
    * @returns {string} The prompt to send to AI
    */
   buildPrompt(requirements, generationType) {
+    if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.buildGeneration) {
+      return RequirementsPromptBuilder.buildGeneration(requirements, generationType).prompt;
+    }
+
+    // Fallback (should be unreachable in normal UmpleOnline load order)
     const requirementTexts = requirements.map(req => `Requirement ${req.id}:\n${req.text}`).join("\n\n");
-
-    if (generationType === "statemachine") {
-      return `You are an expert in Umple modeling language. Based on the following requirement(s), generate ONLY Umple code for a state machine. 
-
-Requirements:
-${requirementTexts}
-
-Generate Umple code that includes:
-1. A class with the state machine
-2. Use implementsReq to tag the class and state machine with the requirement ID(s)
-3. States with transitions based on events mentioned in the requirements
-4. Use proper Umple state machine syntax
-
-Rules:
-- Output ONLY valid Umple code, no explanations
-- Use this format:
-  class ClassName {
-    implementsReq RequirementID;
-    sm {
-      state1 { event -> state2; }
-      state2 {}
-    }
-  }
-- Include all relevant states and transitions from the requirements
-- Use meaningful names for classes, states, and events
-
-Umple code:`;
-    } else {
-      // classdiagram
-      return `You are an expert in Umple modeling language. Based on the following requirement(s), generate ONLY Umple code for a class diagram.
-
-Requirements:
-${requirementTexts}
-
-Generate Umple code that includes:
-1. Classes with attributes based on the requirements
-2. Use implementsReq to tag classes with the requirement ID(s)
-3. Associations between classes if mentioned in requirements
-4. Use proper Umple class diagram syntax
-
-Rules:
-- Output ONLY valid Umple code, no explanations
-- Use this format:
-  class ClassName {
-    implementsReq RequirementID;
-    attributeName;
-    anotherAttribute;
-  }
-  
-  association {
-    implementsReq RequirementID;
-    1 Class1 -> * Class2;
-  }
-- Include all entities and relationships mentioned in the requirements
-- Use meaningful names for classes and attributes
-- Infer cardinalities from requirement descriptions
-
-Umple code:`;
-    }
+    return `You are an expert in Umple modeling language. Based on the following requirement(s), generate ONLY Umple code.\n\nRequirements:\n${requirementTexts}\n\nUmple code:`;
   },
 
   /**
@@ -156,7 +103,9 @@ Umple code:`;
   },
 
   // System prompt for Umple code generation
-  SYSTEM_PROMPT: "You are an expert in Umple modeling language. Generate only valid Umple code without explanations.",
+  SYSTEM_PROMPT: (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
+    ? `${AiPrompting.getBaseSystemPrompt()}\n\nYour job is to generate ONLY valid Umple code.`
+    : "You are an expert in Umple modeling language. Generate only valid Umple code without explanations.",
 
   /**
    * Insert generated code at cursor position in CodeMirror 6
@@ -665,23 +614,59 @@ Umple code:`;
     statusDiv.style.color = "#3383bb";
 
     try {
-      // Build prompt
-      const prompt = this.buildPrompt(selectedReqs, genType);
+      const generation = (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.buildGeneration)
+        ? RequirementsPromptBuilder.buildGeneration(selectedReqs, genType)
+        : { prompt: this.buildPrompt(selectedReqs, genType), systemPrompt: this.SYSTEM_PROMPT, expectedRequirementIds: selectedReqs.map(r => r.id) };
 
       // Call AI API using centralized AiApi.chat()
-      const response = await AiApi.chat(prompt, this.SYSTEM_PROMPT);
+      const response = await AiApi.chat(generation.prompt, generation.systemPrompt);
 
       // Extract Umple code
-      const umpleCode = this.extractUmpleCode(response);
+      let umpleCode = this.extractUmpleCode(response);
+
+      // Validate + single repair pass
+      if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.validateGeneratedUmple && RequirementsPromptBuilder.buildRepairPrompt) {
+        const validation = RequirementsPromptBuilder.validateGeneratedUmple({
+          code: umpleCode,
+          expectedRequirementIds: generation.expectedRequirementIds || [],
+          generationType: genType
+        });
+
+        if (!validation.valid) {
+          const repairPrompt = RequirementsPromptBuilder.buildRepairPrompt({
+            generationType: genType,
+            requirements: selectedReqs,
+            invalidCode: umpleCode,
+            errors: validation.errors
+          });
+
+          const repairedResponse = await AiApi.chat(repairPrompt, generation.systemPrompt);
+          umpleCode = this.extractUmpleCode(repairedResponse);
+
+          const repairedValidation = RequirementsPromptBuilder.validateGeneratedUmple({
+            code: umpleCode,
+            expectedRequirementIds: generation.expectedRequirementIds || [],
+            generationType: genType
+          });
+
+          if (!repairedValidation.valid) {
+            statusDiv.style.display = "block";
+            statusDiv.textContent = `Generated code may be invalid:\n${repairedValidation.errors.join("\n")}`;
+            statusDiv.style.color = "#DD0033";
+          }
+        }
+      }
 
       // Display generated code
       codeArea.value = umpleCode;
       codeContainer.style.display = "block";
       btnInsert.style.display = "inline-block";
 
-      statusDiv.style.display = "block";
-      statusDiv.textContent = "Code generated successfully! Review and click 'Insert to Editor' to add it to your model.";
-      statusDiv.style.color = "#3383bb";
+      if (statusDiv.style.color !== "#DD0033") {
+        statusDiv.style.display = "block";
+        statusDiv.textContent = "Code generated successfully! Review and click 'Insert to Editor' to add it to your model.";
+        statusDiv.style.color = "#3383bb";
+      }
     } catch (error) {
       console.error("Error generating code:", error);
       statusDiv.style.display = "block";

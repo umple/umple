@@ -13,7 +13,13 @@ const ExplainPromptBuilder = (() => {
 
   const MIN_EXPLANATION_LENGTH = 50;
 
-  const SYSTEM_PROMPT = `You are an expert in Umple (https://cruise.umple.org/umple/): its textual modeling syntax, class/state-machine/traits/aspects, associations & multiplicities, constraints, generation targets (Java/PHP/… as supported by Umple), and common Umple patterns. Your job is to explain any Umple snippet (or mixed Umple + generated code) clearly and accurately.`;
+  const SYSTEM_PROMPT = (() => {
+    const base = (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
+      ? AiPrompting.getBaseSystemPrompt()
+      : "You are an expert in Umple (https://cruise.umple.org/umple/): its textual modeling syntax, class/state-machine/traits/aspects, associations & multiplicities, constraints, generation targets (Java/PHP/… as supported by Umple), and common Umple patterns.";
+
+    return `${base}\n\nYour job is to explain any Umple snippet (or mixed Umple + generated code) clearly and accurately.`;
+  })();
 
   const INITIAL_PROMPT_TEMPLATE = `Explain the following Umple code.
 
@@ -106,7 +112,6 @@ Assistant:`;
       return INITIAL_PROMPT_TEMPLATE.replace(/\{\{code\}\}/g, umpleCode);
     },
 
-
     /**
      * Build follow-up prompt with conversation context
      * @param {Array<Object>} conversationHistory - Array of conversation messages
@@ -131,11 +136,11 @@ Assistant:`;
 
       // Apply markdown transformations in order
       formatted = formatted
-        .replace(MARKDOWN_PATTERNS.codeBlock, '<pre><code>$2</code></pre>')
-        .replace(MARKDOWN_PATTERNS.inlineCode, '<code>$1</code>')
-        .replace(MARKDOWN_PATTERNS.bold, '<strong>$1</strong>')
-        .replace(MARKDOWN_PATTERNS.italic, '<em>$1</em>')
-        .replace(MARKDOWN_PATTERNS.lineBreak, '<br/>');
+        .replace(MARKDOWN_PATTERNS.codeBlock, "<pre><code>$2</code></pre>")
+        .replace(MARKDOWN_PATTERNS.inlineCode, "<code>$1</code>")
+        .replace(MARKDOWN_PATTERNS.bold, "<strong>$1</strong>")
+        .replace(MARKDOWN_PATTERNS.italic, "<em>$1</em>")
+        .replace(MARKDOWN_PATTERNS.lineBreak, "<br/>");
 
       return formatted;
     },
@@ -225,4 +230,3 @@ Assistant:`;
     }
   };
 })();
-
