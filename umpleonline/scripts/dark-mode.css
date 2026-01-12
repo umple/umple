@@ -422,3 +422,91 @@ a.button:active {
   border-color: #565f77;
   color: #f0f0f0;
 }
+
+.loading-indicator-overlay {
+  background-color: #333333 !important;
+}
+
+.ui-tooltip {
+  background-color: #333 !important;
+  color: #ddd !important;
+  border-color: #555 !important;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+}
+
+.ui-tooltip * {
+  color: #ddd !important;
+}
+
+.ui-tooltip a {
+  color: #8af !important;
+}
+
+.ui-tooltip a:hover {
+  color: #adcdff !important;
+}
+
+.tooltip .tooltiptext {
+  background-color: #333;
+  color: #ddd;
+  border-color: #555;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+}
+
+#extraInfo {
+  background-color: #333;
+  border-color: #555;
+  color: #ddd;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+}
+
+.cm-editor .cm-selectionBackground,
+.cm-editor .cm-selectionLayer .cm-selectionBackground {
+  background-color: #4d5a6a !important;
+}
+
+.cm-editor.cm-focused .cm-selectionBackground,
+.cm-editor.cm-focused .cm-selectionLayer .cm-selectionBackground {
+  background-color: #4d5a6a !important;
+}
+
+.cm-editor .cm-selectionBackground,
+.cm-editor .cm-content ::selection {
+  background-color: #4d5a6a !important;
+}
+
+.cm-editor ::selection {
+  background-color: #4d5a6a;
+  color: #ff6666;
+}
+
+#topLine,
+#topLine * {
+  color: #ddd !important;
+}
+
+#feedbackMessage,
+#feedbackMessage * {
+  color: #ddd !important;
+}
+
+#exampleMessage,
+#exampleMessage * {
+  color: #ccc !important;
+}
+
+.linetext,
+.linetext * {
+  color: #ddd !important;
+}
+
+input,
+textarea,
+select {
+  color: #ddd !important;
+}
+
+#executionMessage,
+#executionMessage * {
+  color: #ddd !important;
+}
