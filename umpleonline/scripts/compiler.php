@@ -904,18 +904,21 @@ function transformGraphvizContentToDark($content)
   $lines = preg_split("/\r\n|\n|\r/", $content);
   $result = array();
   $count = count($lines);
+  $darkThemeAdded = false;
 
   for ($i = 0; $i < $count; $i++)
   {
     $line = $lines[$i];
     $trimmed = trim($line);
 
-    if ($trimmed !== '' && substr($trimmed, -1) === '{' && strpos($trimmed, 'subgraph') === false && strpos($trimmed, '//') !== 0)
+    // Add dark theme styling right after the digraph opening line, only once
+    if (!$darkThemeAdded && preg_match('/^digraph\s+.*\{?\s*$/', $trimmed))
     {
       $result[] = $line;
       $result[] = '  bgcolor="#181818";';
       $result[] = '  node [ fontcolor="#e6e6e6", style=filled, color="#e6e6e6", fillcolor="#333333" ];';
       $result[] = '  edge [ color="#e6e6e6", fontcolor="#e6e6e6" ];';
+      $darkThemeAdded = true;
       continue;
     }
 
