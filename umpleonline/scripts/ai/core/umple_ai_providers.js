@@ -136,10 +136,16 @@ const AiProviderAdapters = {
           messages: [
             ...(systemPrompt ? [{ role: "system", content: systemPrompt }] : []),
             { role: "user", content: prompt }
-          ],
-          temperature: params.temperature,
-          max_tokens: params.maxTokens
+          ]
         };
+        if (AiProviderUtils.isGpt5FamilyModel(model)) {
+          body.reasoning_effort = "minimal";
+        } else {
+          body.temperature = params.temperature;
+        }
+        const tokenLimitField = AiProviderUtils.getOpenAiTokenLimitField(model);
+        const tokenBudget = AiProviderUtils.isGpt5FamilyModel(model) ? (params.maxTokens + 1024) : params.maxTokens;
+        body[tokenLimitField] = tokenBudget;
         break;
 
       case "anthropic":
@@ -172,10 +178,16 @@ const AiProviderAdapters = {
           messages: [
             ...(systemPrompt ? [{ role: "system", content: systemPrompt }] : []),
             { role: "user", content: prompt }
-          ],
-          temperature: params.temperature,
-          max_tokens: params.maxTokens
+          ]
         };
+        if (!AiProviderUtils.isGpt5FamilyModel(model)) {
+          body.temperature = params.temperature;
+        }
+        if (AiProviderUtils.isGpt5FamilyModel(model)) {
+          body.max_completion_tokens = params.maxTokens;
+        } else {
+          body.max_tokens = params.maxTokens;
+        }
         break;
 
       default:
@@ -228,7 +240,7 @@ const AiProviderAdapters = {
         break;
     }
 
-    return models;
+    return AiProviderUtils.filterModelsForProvider(provider, models);
   },
 
   /**
@@ -303,17 +315,52 @@ const AiProviderAdapters = {
   async chat(provider, apiKey, model, prompt, systemPrompt = "", options = {}) {
     const { url, headers, body } = this.buildChatRequest(provider, apiKey, model, prompt, systemPrompt, options);
 
-    const response = await fetch(url, {
+    const send = (requestBody) => fetch(url, {
       method: "POST",
       headers,
-      body: JSON.stringify(body)
+      body: JSON.stringify(requestBody)
     });
 
+    let response = await send(body);
     if (!response.ok) {
-      throw await AiErrors.fromResponse(response, "API request failed");
+      const error = await AiErrors.fromResponse(response, "API request failed");
+      const adjustedBody = AiProviderUtils.openAIParamsFallback(provider, body, error);
+      if (adjustedBody) {
+        response = await send(adjustedBody);
+        if (!response.ok) {
+          throw await AiErrors.fromResponse(response, "API request failed");
+        }
+      } else {
+        throw error;
+      }
     }
 
-    const data = await response.json();
-    return this.parseChatResponse(provider, data);
+    let data = await response.json();
+    let text = this.parseChatResponse(provider, data);
+
+    if (!text && provider === "openai" && AiProviderUtils.isGpt5FamilyModel(model) && data?.choices?.[0]?.finish_reason === "length") {
+      const tokenLimitField = AiProviderUtils.getOpenAiTokenLimitField(model);
+      const current = body?.[tokenLimitField];
+      const bumped = typeof current === "number" ? Math.max(current + 1024, current * 2) : current;
+      const retryBody = { ...body, reasoning_effort: "minimal" };
+      if (typeof bumped === "number") retryBody[tokenLimitField] = bumped;
+
+      response = await send(retryBody);
+      if (!response.ok) {
+        const error = await AiErrors.fromResponse(response, "API request failed");
+        const adjustedRetryBody = AiProviderUtils.openAIParamsFallback(provider, retryBody, error);
+        if (adjustedRetryBody) {
+          response = await send(adjustedRetryBody);
+          if (!response.ok) throw await AiErrors.fromResponse(response, "API request failed");
+        } else {
+          throw error;
+        }
+      }
+
+      data = await response.json();
+      text = this.parseChatResponse(provider, data);
+    }
+
+    return text;
   }
 };
