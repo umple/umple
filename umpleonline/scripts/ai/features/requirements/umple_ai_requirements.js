@@ -102,40 +102,336 @@ const AiRequirements = {
     return response.trim();
   },
 
+  // --------------------------------------------------------------------------
+  // Self-correction helpers (compiler-based)
+  // --------------------------------------------------------------------------
+
+  getCompilerLanguage() {
+    return "Json";
+  },
+
+  getSelfCorrectionMaxPasses() {
+    return 10;
+  },
+
+  getRequirementsOutputArea() {
+    return document.getElementById("requirementsOutputArea");
+  },
+
+  clearRequirementsOutput() {
+    const area = this.getRequirementsOutputArea();
+    if (area) area.value = "";
+  },
+
+  appendRequirementsOutput(line) {
+    const area = this.getRequirementsOutputArea();
+    if (!area) return;
+    const text = String(line || "");
+    area.value = area.value ? `${area.value}\n${text}` : text;
+    area.scrollTop = area.scrollHeight;
+  },
+
+  stripHtmlToText(html) {
+    const raw = String(html || "")
+      .replace(/<script[\s\S]*?<\/script>/gi, "")
+      .replace(/<style[\s\S]*?<\/style>/gi, "");
+    const div = document.createElement("div");
+    div.innerHTML = raw;
+    return (div.textContent || div.innerText || "").trim();
+  },
+
+  parseCompilerIssuesFromErrorHtml(errorHtml) {
+    const html = String(errorHtml || "");
+    if (!html.trim()) return [];
+
+    const issues = [];
+
+    try {
+      const container = document.createElement("div");
+      container.innerHTML = html;
+      const errorRow = container.querySelector("#errorRow");
+
+      if (errorRow) {
+        const fonts = Array.from(errorRow.querySelectorAll("font"));
+
+        const findNextHelpLink = (fontEl) => {
+          let node = fontEl.nextSibling;
+          while (node) {
+            if (node.nodeType === 1) {
+              const tag = node.tagName.toLowerCase();
+              if (tag === "i") {
+                const link = node.querySelector("a");
+                if (link) return link;
+              }
+              if (tag === "font") break;
+            }
+            node = node.nextSibling;
+          }
+          return null;
+        };
+
+        fonts.forEach(fontEl => {
+          const text = String(fontEl.textContent || "").replace(/\s+/g, " ").trim();
+          const severity = text.startsWith("Warning") ? "Warning" : (text.startsWith("Error") ? "Error" : "Unknown");
+
+          const lineLink = fontEl.querySelector("a");
+          const lineText = String(lineLink?.textContent || "");
+          const lineMatch = lineText.match(/(\d+)/);
+          const line = lineMatch ? parseInt(lineMatch[1], 10) : null;
+
+          let message = text;
+          const colonIndex = message.indexOf(":");
+          if (colonIndex >= 0) message = message.slice(colonIndex + 1).trim();
+          message = message.replace(/\.$/, "").trim();
+
+          const helpLink = findNextHelpLink(fontEl);
+          const helpText = String(helpLink?.textContent || "");
+          const codeMatch = helpText.match(/\(([^)]+)\)/);
+          const errorCode = codeMatch ? codeMatch[1].trim() : "";
+
+          if (severity !== "Unknown" || message) {
+            issues.push({ severity, line, message, errorCode });
+          }
+        });
+
+        if (issues.length > 0) return issues;
+      }
+    } catch (e) {
+      // Fall through to text parsing
+    }
+
+    const text = this.stripHtmlToText(html);
+    const regex = /\b(Error|Warning)\s+on\s+line\s+(\d+)\s*:\s*([\s\S]*?)\.(?:\s*More information\s*\(([^)]+)\))?/g;
+    let match;
+    while ((match = regex.exec(text)) !== null) {
+      issues.push({
+        severity: match[1],
+        line: parseInt(match[2], 10),
+        message: (match[3] || "").trim(),
+        errorCode: (match[4] || "").trim()
+      });
+    }
+
+    if (issues.length === 0 && /\b(Error|Warning)\b/i.test(text)) {
+      issues.push({ severity: "Unknown", line: null, message: text, errorCode: "" });
+    }
+
+    return issues;
+  },
+
+  getIssueKey(issue) {
+    const severity = (issue?.severity || "").trim();
+    const errorCode = (issue?.errorCode || "").trim();
+    const message = (issue?.message || "").trim();
+    return `${severity}|${errorCode}|${message}`;
+  },
+
+  formatIssuesForLog(issues) {
+    return (issues || []).map(i => {
+      const codeSuffix = i.errorCode ? ` (${i.errorCode})` : "";
+      const lineText = Number.isFinite(i.line) ? i.line : "?";
+      return `- ${i.severity} on line ${lineText}${codeSuffix}: ${i.message}`;
+    }).join("\n");
+  },
+
+  formatIssuesForPrompt(issues) {
+    return (issues || []).map(i => {
+      const codeSuffix = i.errorCode ? ` (${i.errorCode})` : "";
+      const lineText = Number.isFinite(i.line) ? i.line : "?";
+      return `- ${i.severity}${codeSuffix} on line ${lineText}: ${i.message}`;
+    }).join("\n");
+  },
+
+  computeLineNumberAtIndex(text, index) {
+    const safeIndex = Math.max(0, Math.min(Number(index) || 0, String(text || "").length));
+    return this.normalizeNewlines(String(text || "").slice(0, safeIndex)).split("\n").length - 1;
+  },
+
+  async compileUmpleWithServer(umpleCode) {
+    const language = this.getCompilerLanguage();
+    const filename = (typeof Page !== "undefined" && Page.getFilename) ? (Page.getFilename() || "") : "";
+    const theme = (typeof Action !== "undefined" && Action.getThemePreference) ? Action.getThemePreference() : "system";
+
+    const postData = [
+      `language=${encodeURIComponent(language)}`,
+      "error=true",
+      `umpleCode=${encodeURIComponent(String(umpleCode || ""))}`,
+      `filename=${encodeURIComponent(filename)}`,
+      `theme=${encodeURIComponent(theme)}`
+    ].join("&");
+
+    return new Promise((resolve, reject) => {
+      if (typeof Ajax === "undefined" || !Ajax.sendRequest) {
+        reject(new Error("Ajax subsystem not available"));
+        return;
+      }
+
+      Ajax.sendRequest("scripts/compiler.php", (http) => {
+        try {
+          const responseText = String(http?.responseText || "");
+          const splitIndex = responseText.indexOf("URL_SPLIT");
+          const errorHtml = (splitIndex >= 0 ? responseText.slice(0, splitIndex) : responseText).trim();
+          const issues = this.parseCompilerIssuesFromErrorHtml(errorHtml);
+          resolve({ errorHtml, issues });
+        } catch (e) {
+          reject(e);
+        }
+      }, postData);
+    });
+  },
+
+  getInsertionPos(docText) {
+    const modelDelimiter = (typeof Page !== "undefined" && Page.modelDelimiter) ? Page.modelDelimiter : null;
+    const modelEndIndex = modelDelimiter ? docText.indexOf(modelDelimiter) : -1;
+    const insertBeforeIndex = modelEndIndex >= 0 ? modelEndIndex : docText.length;
+
+    const modelText = docText.slice(0, insertBeforeIndex);
+    const reqPattern = /req\s+(\w+(?:[-_]\w+)*)\s*\{[^}]*\}/gs;
+    let lastReqEnd = -1;
+    let match;
+
+    while ((match = reqPattern.exec(modelText)) !== null) {
+      lastReqEnd = match.index + match[0].length;
+    }
+
+    return lastReqEnd >= 0 ? lastReqEnd : insertBeforeIndex;
+  },
+
+  normalizeNewlines(text) {
+    return String(text || "").replace(/\r\n/g, "\n");
+  },
+
+  computePrefix(docText, pos) {
+    const before = this.normalizeNewlines(docText.slice(0, pos));
+    const trailingNewlines = (before.match(/\n*$/) || [""])[0].length;
+    const needed = Math.max(2 - trailingNewlines, 0);
+    return "\n".repeat(needed);
+  },
+
+  computeSuffix(docText, pos) {
+    const after = this.normalizeNewlines(docText.slice(pos));
+    const leadingNewlines = (after.match(/^\n*/) || [""])[0].length;
+    const needed = Math.max(2 - leadingNewlines, 0);
+    return "\n".repeat(needed);
+  },
+
+  buildMergedCode(docText, blockCode) {
+    const insertPos = this.getInsertionPos(docText);
+    const codeText = String(blockCode || "").trim();
+    const prefix = this.computePrefix(docText, insertPos);
+    const suffix = this.computeSuffix(docText, insertPos);
+    const insertText = prefix + codeText + suffix;
+    const mergedText = docText.slice(0, insertPos) + insertText + docText.slice(insertPos);
+
+    const highlightFrom = insertPos + prefix.length;
+    const highlightTo = highlightFrom + codeText.length;
+
+    return { insertPos, insertText, mergedText, highlightFrom, highlightTo, codeText };
+  },
+
+  async selfCorrectWithCompiler({ originalCode, generatedBlock, requirements, generationType, systemPrompt } = {}) {
+    const maxPasses = this.getSelfCorrectionMaxPasses();
+    let currentBlock = String(generatedBlock || "").trim();
+    if (!currentBlock) return { block: currentBlock };
+
+    let baseline = null;
+    try {
+      baseline = await this.compileUmpleWithServer(originalCode);
+      if (baseline.issues.length > 0) {
+        this.appendRequirementsOutput("Baseline compile: the original model already has issues:");
+        this.appendRequirementsOutput(this.formatIssuesForLog(baseline.issues));
+      } else {
+        this.appendRequirementsOutput("Baseline compile: no issues in original model.");
+      }
+    } catch (e) {
+      this.appendRequirementsOutput(`Baseline compile failed: ${e.message}`);
+    }
+
+    let previousBlock = null;
+
+    for (let pass = 1; pass <= maxPasses; pass++) {
+      this.appendRequirementsOutput(`\nSelf-correction pass ${pass}: compiling merged model...`);
+      const merged = this.buildMergedCode(originalCode, currentBlock);
+      const insertedStartLine = this.computeLineNumberAtIndex(merged.mergedText, merged.highlightFrom);
+      const insertedEndLine = this.computeLineNumberAtIndex(merged.mergedText, merged.highlightTo);
+
+      const mergedText = merged.mergedText;
+
+      let compiled;
+      try {
+        compiled = await this.compileUmpleWithServer(mergedText);
+      } catch (e) {
+        this.appendRequirementsOutput(`Compile failed: ${e.message}`);
+        break;
+      }
+
+      const issues = compiled.issues || [];
+      if (issues.length === 0) {
+        this.appendRequirementsOutput("Compiler reports no errors and no warnings.");
+        return { block: currentBlock };
+      }
+
+      const inInsertedRange = issues.filter(i => Number.isFinite(i.line) && i.line >= insertedStartLine && i.line <= insertedEndLine);
+      const focusIssues = inInsertedRange.length > 0 ? inInsertedRange : issues;
+
+      if ((baseline?.issues || []).length > 0) {
+        this.appendRequirementsOutput(`Baseline issues: ${baseline.issues.length}`);
+      }
+
+      this.appendRequirementsOutput(`Compiler reported ${issues.length} issue(s) in merged model.`);
+      if (inInsertedRange.length > 0) {
+        this.appendRequirementsOutput(`Focusing on ${inInsertedRange.length} issue(s) within the inserted block (lines ${insertedStartLine}-${insertedEndLine}).`);
+      } else {
+        this.appendRequirementsOutput("No issues were located within the inserted block line range; attempting to fix by adjusting the generated block anyway.");
+      }
+      this.appendRequirementsOutput(this.formatIssuesForLog(focusIssues));
+
+      const compilerIssuesText = this.formatIssuesForPrompt(focusIssues);
+      const repairPrompt = (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.buildCompilerRepairPrompt)
+        ? RequirementsPromptBuilder.buildCompilerRepairPrompt({
+          generationType,
+          requirements,
+          originalCode,
+          invalidBlock: currentBlock,
+          compilerIssuesText
+        })
+        : `Fix the following Umple block so that it compiles with the original model without warnings or errors.\n\nOriginal model:\n\n\`\`\`umple\n${originalCode}\n\`\`\`\n\nBlock to fix:\n\n\`\`\`umple\n${currentBlock}\n\`\`\`\n\nCompiler issues:\n${compilerIssuesText}\n\nOutput ONLY the corrected block as a single \`\`\`umple\`\`\` code block.`;
+
+      this.appendRequirementsOutput("Asking AI to repair the generated block...");
+
+      let repairedResponse;
+      try {
+        repairedResponse = await AiApi.chat(repairPrompt, systemPrompt);
+      } catch (e) {
+        this.appendRequirementsOutput(`AI repair failed: ${e.message}`);
+        break;
+      }
+
+      const repairedBlock = String(this.extractUmpleCode(repairedResponse) || "").trim();
+      if (!repairedBlock) {
+        this.appendRequirementsOutput("AI repair produced empty output; stopping.");
+        break;
+      }
+
+      if (previousBlock && repairedBlock === previousBlock) {
+        this.appendRequirementsOutput("AI repair repeated the previous output; stopping.");
+        break;
+      }
+
+      previousBlock = currentBlock;
+      currentBlock = repairedBlock;
+
+      this.appendRequirementsOutput("Retrying compile with repaired block...");
+    }
+
+    this.appendRequirementsOutput("Self-correction stopped before reaching a clean compile.");
+    return { block: currentBlock };
+  },
+
   // System prompt for Umple code generation
   SYSTEM_PROMPT: (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
     ? `${AiPrompting.getBaseSystemPrompt()}\n\nYour job is to generate ONLY valid Umple code.`
     : "You are an expert in Umple modeling language. Generate only valid Umple code without explanations.",
-
-  /**
-   * Insert generated code at cursor position in CodeMirror 6
-   * @param {string} code - Code to insert
-   */
-  insertCodeAtCursor(code) {
-    if (!Page.codeMirrorEditor6) {
-      alert("Editor not initialized");
-      return;
-    }
-
-    // Get current cursor position
-    const cursorPos = Page.codeMirrorEditor6.state.selection.main.head;
-
-    // Add newlines before and after for proper formatting
-    const formattedCode = "\n" + code + "\n";
-
-    // Insert the code at cursor position
-    Page.codeMirrorEditor6.dispatch({
-      changes: { from: cursorPos, to: cursorPos, insert: formattedCode },
-      selection: { anchor: cursorPos + formattedCode.length }
-    });
-
-    // Focus the editor
-    Page.codeMirrorEditor6.focus();
-
-    // Save to history
-    const newCode = Page.codeMirrorEditor6.state.doc.toString();
-    TabControl.getCurrentHistory().save(newCode, "aiGeneration");
-  },
 
   /**
    * Show the requirements selection dialog
@@ -413,6 +709,21 @@ const AiRequirements = {
 
     content.appendChild(codeContainer);
 
+    // Self-correction / compilation output
+    const outputContainer = document.createElement("div");
+    outputContainer.id = "requirementsOutputContainer";
+    outputContainer.style.display = "none";
+
+    const outputHeading = document.createElement("h4");
+    outputHeading.textContent = "Output:";
+    outputContainer.appendChild(outputHeading);
+
+    const outputArea = document.createElement("textarea");
+    outputArea.id = "requirementsOutputArea";
+    outputArea.readOnly = true;
+    outputContainer.appendChild(outputArea);
+    content.appendChild(outputContainer);
+
     // Dialog buttons
     const buttonsDiv = document.createElement("div");
     buttonsDiv.className = "dialog-buttons";
@@ -508,7 +819,38 @@ const AiRequirements = {
       const codeArea = document.getElementById("generatedCodeArea");
       const code = codeArea.value;
       if (code) {
-        this.insertCodeAtCursor(code);
+        if (!Page.codeMirrorEditor6) {
+          alert("Editor not initialized");
+          return;
+        }
+        const currentDoc = Page.codeMirrorEditor6.state.doc.toString();
+        const insertion = this.buildMergedCode(currentDoc, code);
+        const highlightDurationMs = 1500;
+
+        Page.codeMirrorEditor6.dispatch({
+          changes: { from: insertion.insertPos, to: insertion.insertPos, insert: insertion.insertText },
+          selection: insertion.highlightTo > insertion.highlightFrom
+            ? { anchor: insertion.highlightFrom, head: insertion.highlightTo }
+            : { anchor: insertion.insertPos + insertion.insertText.length }
+          ,
+          scrollIntoView: true
+        });
+
+        Page.codeMirrorEditor6.focus();
+
+        const newCode = Page.codeMirrorEditor6.state.doc.toString();
+        TabControl.getCurrentHistory().save(newCode, "aiGeneration");
+
+        // Temporary highlight to help users spot the inserted block.
+        setTimeout(() => {
+          const view = Page.codeMirrorEditor6;
+          if (!view) return;
+
+          const selection = view.state.selection.main;
+          if (selection.from === insertion.highlightFrom && selection.to === insertion.highlightTo) {
+            view.dispatch({ selection: { anchor: insertion.highlightTo } });
+          }
+        }, highlightDurationMs);
         dialog.remove();
       }
     };
@@ -583,6 +925,7 @@ const AiRequirements = {
     const btnInsert = document.getElementById("btnInsert");
     const codeContainer = document.getElementById("generatedCodeContainer");
     const codeArea = document.getElementById("generatedCodeArea");
+    const outputContainer = document.getElementById("requirementsOutputContainer");
 
     // Get selected requirements
     const selectedReqs = this.getSelectedRequirements(dialog, requirements);
@@ -613,6 +956,10 @@ const AiRequirements = {
     statusDiv.textContent = "Generating Umple code from requirements...";
     statusDiv.style.color = "#3383bb";
 
+    if (outputContainer) outputContainer.style.display = "block";
+    this.clearRequirementsOutput();
+    this.appendRequirementsOutput(`Generation type: ${genType}`);
+
     try {
       const generation = (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.buildGeneration)
         ? RequirementsPromptBuilder.buildGeneration(selectedReqs, genType)
@@ -623,6 +970,8 @@ const AiRequirements = {
 
       // Extract Umple code
       let umpleCode = this.extractUmpleCode(response);
+
+      this.appendRequirementsOutput("Generated initial Umple block from AI.");
 
       // Validate + single repair pass
       if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.validateGeneratedUmple && RequirementsPromptBuilder.buildRepairPrompt) {
@@ -655,6 +1004,23 @@ const AiRequirements = {
             statusDiv.style.color = "#DD0033";
           }
         }
+      }
+
+      // Compiler-based self-correction loop (compile merged model: original + inserted block)
+      const originalEditorCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
+      try {
+        const corrected = await this.selfCorrectWithCompiler({
+          originalCode: originalEditorCode,
+          generatedBlock: umpleCode,
+          requirements: selectedReqs,
+          generationType: genType,
+          systemPrompt: generation.systemPrompt
+        });
+        if (corrected && typeof corrected.block === "string" && corrected.block.trim()) {
+          umpleCode = corrected.block.trim();
+        }
+      } catch (e) {
+        this.appendRequirementsOutput(`Self-correction failed: ${e.message}`);
       }
 
       // Display generated code

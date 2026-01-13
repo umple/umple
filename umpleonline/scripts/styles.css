@@ -1112,6 +1112,26 @@ textarea#umpleLayoutEditorText {
   -moz-box-sizing: border-box;
 }
 
+.ai-requirements-dialog #requirementsOutputContainer {
+  margin-bottom: 15px;
+}
+
+.ai-requirements-dialog #requirementsOutputArea {
+  width: 100%;
+  min-height: 140px;
+  padding: 8px;
+  border: DimGray solid 1px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 9pt;
+  resize: vertical;
+  background-color: White;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
 .ai-requirements-dialog .dialog-buttons {
   display: flex;
   gap: 8px;

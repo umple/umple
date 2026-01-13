@@ -17,13 +17,13 @@ cat \
  ai/config/umple_ai_config.js \
  ai/core/umple_ai_errors.js \
  ai/core/umple_ai_storage.js \
+ ai/utils/umple_ai_provider_utils.js \
  ai/core/umple_ai_providers.js \
  ai/core/umple_ai_manager.js \
  ai/core/umple_ai_prompt_examples.js \
  ai/core/umple_ai_prompting.js \
  ai/ui/umple_ai_ui.js \
  ai/ui/umple_dialog.js \
-  ai/features/config/umple_ai_controller.js \
  # Features - recursive wildcard for any new files/directories \
  ai/features/**/*.js \
  structureDiagram.js \
