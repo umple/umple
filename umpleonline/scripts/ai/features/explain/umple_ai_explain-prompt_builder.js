@@ -24,41 +24,25 @@ const ExplainPromptBuilder = (() => {
   const INITIAL_PROMPT_TEMPLATE = `Explain the following Umple code.
 
 ## Goals
-
-- Explain what the model/code means (domain intent), not just what each line says
-- Make the explanation accessible to a reader with limited modeling or coding background
 - Preserve correctness: be precise and accurate, do not invent features
-- If something is ambiguous or invalid Umple, say so and propose fixes
 
 ## Response Structure (follow strictly)
 
 1. **One-sentence summary** of what the snippet models/does
 
-2. **Key elements** (bullet list covering only relevant constructs present):
-   - Classes / attributes / methods
-   - Associations (role names, multiplicities, navigability, qualifiers)
-   - Inheritance / traits
-   - State machines (states, events, guards, actions, entry/exit)
-   - Constraints (pre/post/invariants), if present
-   - Code generation implications (what fields/methods will be generated, lifecycle methods, association management methods)
+2. **Walkthrough**: Explain the umple code in plain language, and provide a high-level workflow explaination.
 
-3. **Walkthrough**: Explain the snippet in small chunks, in plain language
-   - Avoid jargon; if you must use a term (e.g., multiplicity, guard), define it in one sentence
-
-4. **Concrete example**: Show a tiny scenario with example objects or a short event sequence demonstrating behavior (especially for associations or state machines)
-
-5. **Pitfalls & improvements** (only if applicable):
+3. **Pitfalls & improvements** (only if applicable):
    - List likely mistakes, ambiguities, or better modeling choices
-   - Provide corrected Umple snippets when helpful
 
 ## Rules
-
+- Your audience are familiar with modeling and have basic coding background
+- Explain in a high-level and conclusive sentence.
 - Be precise and accurate in your explanations
 - Do not assume missing context
 - Keep output concise but complete
-- Prefer clear bullets over long paragraphs
-- If the snippet includes errors, point to the exact part and explain what Umple expects instead
-- Use markdown formatting (headers, bullets, code blocks) for readability
+- Use markdown syntax
+- Only summary style content should have bullet points, avoid using bullet points in most of the cases.
 
 ## Code to Explain
 
