@@ -65,7 +65,7 @@ document.write('<script type="text/javascript" src="scripts/socket.io/socket.io.
 document.write('<script type="text/javascript" src="scripts/allumple-min.js"></script>');
 
 
-// ------ The following should be commented out, and the above min version used, except when testing 
+// ------ The following should be commented out, and the above min version used, except when testing
 // If you change any constituent file, regenerate allumple-min.js as above
 /*
 
@@ -104,7 +104,6 @@ document.write('<script type="text/javascript" src="scripts/dropbox/saver.js"></
 document.write('<script type="text/javascript" src="scripts/ai/config/umple_ai_config.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_errors.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_storage.js"></script>');
-document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_provider_utils.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_providers.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_manager.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_prompt_examples.js"></script>');

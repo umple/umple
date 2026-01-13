@@ -4,7 +4,9 @@
 //
 // AI Provider Utils - provider-agnostic helper logic
 
-const AiProviderUtils = {
+var _aiGlobal = (typeof window !== "undefined") ? window : globalThis;
+
+var AiProviderUtils = _aiGlobal.AiProviderUtils || {
   _compareIntArrays(a, b) {
     const aArr = Array.isArray(a) ? a : [];
     const bArr = Array.isArray(b) ? b : [];
@@ -163,3 +165,5 @@ const AiProviderUtils = {
     return changed ? updated : null;
   }
 };
+
+_aiGlobal.AiProviderUtils = AiProviderUtils;

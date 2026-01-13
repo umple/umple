@@ -77,5 +77,25 @@ const AiApi = {
     if (!model) throw new Error("Model not selected");
 
     return AiProviderAdapters.chat(provider, apiKey, model, prompt, systemPrompt, options);
+  },
+
+  /**
+   * Stream a chat completion response to the configured AI provider
+   * @param {string} prompt - The user prompt to send
+   * @param {string} systemPrompt - Optional system prompt
+   * @param {Object} options - Optional configuration {temperature, maxTokens, timeout}
+   * @param {Object} callbacks - Optional callbacks {onDelta}
+   * @returns {{abort: Function, done: Promise<string>}} Stream handle
+   */
+  chatStream(prompt, systemPrompt = "", options = {}, callbacks = {}) {
+    const provider = this.getProvider();
+    const apiKey = this.getApiKey(provider);
+    const model = this.getModel();
+
+    if (!provider) throw new Error("Provider not configured");
+    if (!apiKey) throw new Error("API key not configured");
+    if (!model) throw new Error("Model not selected");
+
+    return AiProviderAdapters.chatStream(provider, apiKey, model, prompt, systemPrompt, options, callbacks);
   }
 };

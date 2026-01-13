@@ -12,6 +12,9 @@ const AiExplain = {
   // Current explanation for context
   currentExplanation: null,
 
+  // Active stream handle (for abort)
+  activeStream: null,
+
   /**
    * Check if API key and model are configured
    * @returns {Object} {configured: boolean, message: string}
@@ -51,6 +54,16 @@ const AiExplain = {
   resetConversation() {
     this.conversationHistory = [];
     this.currentExplanation = null;
+  },
+
+  abortActiveStream() {
+    try {
+      this.activeStream?.abort?.();
+    } catch (e) {
+      // ignore
+    } finally {
+      this.activeStream = null;
+    }
   },
 
   /**
@@ -239,6 +252,7 @@ const AiExplain = {
     const btnNewConversation = document.getElementById("btnNewConversation");
     const newConvHandler = event => {
       event.preventDefault();
+      this.abortActiveStream();
       dialog.remove();
       this.showDialog();
     };
@@ -251,6 +265,7 @@ const AiExplain = {
     const btnCancel = document.getElementById("btnCancel");
     const cancelHandler = event => {
       event.preventDefault();
+      this.abortActiveStream();
       dialog.remove();
     };
     btnCancel.addEventListener("click", cancelHandler);
@@ -261,6 +276,7 @@ const AiExplain = {
     // Close on overlay click
     const overlay = dialog.querySelector(".dialog-overlay");
     overlay.addEventListener("click", () => {
+      this.abortActiveStream();
       dialog.remove();
     });
   },
@@ -279,17 +295,45 @@ const AiExplain = {
     const followUpInput = document.getElementById("followUpInput");
 
     // Update status
-    statusDiv.textContent = "Analyzing your code...";
+    statusDiv.textContent = "Generating explanation...";
     statusDiv.style.color = "#3383bb";
     statusDiv.style.display = "block";
+
+    this.abortActiveStream();
+    explanationText.textContent = "";
+    explanationContainer.style.display = "block";
 
     try {
       // Build prompt using ExplainPromptBuilder
       const prompt = ExplainPromptBuilder.buildInitialPrompt(umpleCode);
       const systemPrompt = ExplainPromptBuilder.getSystemPrompt();
 
-      // Call AI API
-      const explanation = await AiApi.chat(prompt, systemPrompt);
+      // Call AI API (stream)
+      let buffer = "";
+      let updateTimer = null;
+      const scheduleUpdate = () => {
+        if (updateTimer) return;
+        updateTimer = setTimeout(() => {
+          updateTimer = null;
+          // Real-time formatting (safe: formatExplanation escapes HTML first)
+          explanationText.innerHTML = ExplainPromptBuilder.formatExplanation(buffer);
+        }, 120);
+      };
+
+      this.activeStream = AiApi.chatStream(prompt, systemPrompt, {}, {
+        onDelta: chunk => {
+          buffer += chunk;
+          scheduleUpdate();
+        }
+      });
+
+      const explanation = await this.activeStream.done;
+      this.activeStream = null;
+
+      if (updateTimer) {
+        clearTimeout(updateTimer);
+        updateTimer = null;
+      }
 
       // Validate explanation
       const validation = ExplainPromptBuilder.validateExplanation(explanation);
@@ -303,9 +347,6 @@ const AiExplain = {
 
       // Display explanation with markdown-like formatting
       explanationText.innerHTML = ExplainPromptBuilder.formatExplanation(explanation);
-
-      // Show explanation container
-      explanationContainer.style.display = "block";
 
       // Show follow-up UI
       followUpContainer.style.display = "block";
@@ -321,6 +362,9 @@ const AiExplain = {
       // Focus follow-up input
       followUpInput.focus();
     } catch (error) {
+      if (error?.name === "AbortError") {
+        return;
+      }
       console.error("Error explaining code:", error);
       statusDiv.textContent = `Error: ${error.message}`;
       statusDiv.style.color = "#DD0033";
@@ -355,6 +399,8 @@ const AiExplain = {
     statusDiv.textContent = "Getting answer...";
     statusDiv.style.color = "#3383bb";
 
+    this.abortActiveStream();
+
     try {
       // Add user question to history
       this.addToHistory("user", userQuestion);
@@ -366,25 +412,64 @@ const AiExplain = {
       );
       const systemPrompt = ExplainPromptBuilder.getSystemPrompt();
 
-      // Call AI API
-      const answer = await AiApi.chat(prompt, systemPrompt);
+      // Append placeholder Q/A
+      const qaWrapper = document.createElement("div");
+      qaWrapper.className = "followup-qa";
+
+      const qDiv = document.createElement("div");
+      qDiv.className = "followup-question";
+      const qStrong = document.createElement("strong");
+      qStrong.textContent = "Q:";
+      qDiv.appendChild(qStrong);
+      qDiv.appendChild(document.createTextNode(` ${userQuestion}`));
+
+      const aDiv = document.createElement("div");
+      aDiv.className = "followup-answer";
+      const aStrong = document.createElement("strong");
+      aStrong.textContent = "A:";
+      const aContent = document.createElement("div");
+      aContent.className = "followup-answer-content";
+      aContent.textContent = "";
+      aDiv.appendChild(aStrong);
+      aDiv.appendChild(document.createTextNode(" "));
+      aDiv.appendChild(aContent);
+
+      qaWrapper.appendChild(qDiv);
+      qaWrapper.appendChild(aDiv);
+      explanationText.appendChild(qaWrapper);
+      explanationText.appendChild(document.createElement("hr"));
+
+      // Call AI API (stream)
+      let buffer = "";
+      let updateTimer = null;
+      const scheduleUpdate = () => {
+        if (updateTimer) return;
+        updateTimer = setTimeout(() => {
+          updateTimer = null;
+          aContent.innerHTML = ExplainPromptBuilder.formatExplanation(buffer);
+        }, 120);
+      };
+
+      this.activeStream = AiApi.chatStream(prompt, systemPrompt, {}, {
+        onDelta: chunk => {
+          buffer += chunk;
+          scheduleUpdate();
+        }
+      });
+
+      const answer = await this.activeStream.done;
+      this.activeStream = null;
+
+      if (updateTimer) {
+        clearTimeout(updateTimer);
+        updateTimer = null;
+      }
 
       // Add answer to history
       this.addToHistory("assistant", answer);
 
-      // Append question and answer to explanation
-      const qaHtml = `
-        <div class="followup-qa">
-          <div class="followup-question">
-            <strong>Q:</strong> ${ExplainPromptBuilder.escapeHtml(userQuestion)}
-          </div>
-          <div class="followup-answer">
-            <strong>A:</strong> ${ExplainPromptBuilder.formatExplanation(answer)}
-          </div>
-        </div>
-        <hr/>
-      `;
-      explanationText.innerHTML += qaHtml;
+      // Final formatting pass for the answer
+      aContent.innerHTML = ExplainPromptBuilder.formatExplanation(answer);
 
       // Clear input
       followUpInput.value = "";
@@ -396,6 +481,9 @@ const AiExplain = {
       // Focus follow-up input
       followUpInput.focus();
     } catch (error) {
+      if (error?.name === "AbortError") {
+        return;
+      }
       console.error("Error asking follow-up:", error);
       statusDiv.style.display = "block";
       statusDiv.textContent = `Error: ${error.message}`;

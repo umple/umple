@@ -371,8 +371,11 @@
       <fileset file="${scriptPath}/ai/config/umple_ai_config.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_errors.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_storage.js"/>
+      <fileset dir="${scriptPath}/ai/utils" includes="**/*.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_providers.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_manager.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_prompt_examples.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_prompting.js"/>
       <fileset file="${scriptPath}/ai/ui/umple_ai_ui.js"/>
       <fileset file="${scriptPath}/ai/ui/umple_dialog.js"/>
       <!-- Features - include config controller explicitly, then other features -->
