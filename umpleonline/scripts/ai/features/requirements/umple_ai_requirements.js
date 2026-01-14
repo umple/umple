@@ -361,7 +361,7 @@ const AiRequirements = {
     return { insertPos, insertText, mergedText, highlightFrom, highlightTo, codeText };
   },
 
-  async selfCorrectWithCompiler({ originalCode, generatedBlock, requirements, generationType, systemPrompt } = {}) {
+  async selfCorrectWithCompiler({ originalCode, generatedBlock, requirements, generationType, systemPrompt, dialog } = {}) {
     const maxPasses = this.getSelfCorrectionMaxPasses();
     let currentBlock = String(generatedBlock || "").trim();
     if (!currentBlock) return { block: currentBlock };
@@ -391,6 +391,10 @@ const AiRequirements = {
     }
 
     for (let pass = 1; pass <= maxPasses; pass++) {
+      if (dialog?.stopped) {
+        this.appendRequirementsOutput(`\nSelf-correction stopped by user at pass ${pass}.`);
+        break;
+      }
       this.appendRequirementsOutput(`\nSelf-correction pass ${pass}: compiling merged model...`);
       const merged = this.buildMergedCode(originalCode, currentBlock);
       const insertedStartLine = this.computeLineNumberAtIndex(merged.mergedText, merged.highlightFrom);
@@ -1087,22 +1091,26 @@ const AiRequirements = {
             errors: validation.errors
           });
 
-          const repairedResponse = await AiApi.chat(repairPrompt, generation.systemPrompt);
-          umpleCode = this.extractUmpleCode(repairedResponse);
-          dialog.generationContext.umpleCode = umpleCode;
-
-          const repairedValidation = RequirementsPromptBuilder.validateGeneratedUmple({
-            code: umpleCode,
-            expectedRequirementIds: generation.expectedRequirementIds || [],
-            generationType: genType
-          });
-
-          if (!repairedValidation.valid) {
-            statusDiv.style.display = "block";
-            statusDiv.textContent = `Generated code may be invalid:\n${repairedValidation.errors.join("\n")}`;
-            statusDiv.style.color = "#DD0033";
+          if (dialog.stopped) {
+            this.appendRequirementsOutput("\nRepair stopped by user.");
           } else {
-            this.appendRequirementsOutput("Code repaired successfully.");
+            const repairedResponse = await AiApi.chat(repairPrompt, generation.systemPrompt);
+            umpleCode = this.extractUmpleCode(repairedResponse);
+            dialog.generationContext.umpleCode = umpleCode;
+
+            const repairedValidation = RequirementsPromptBuilder.validateGeneratedUmple({
+              code: umpleCode,
+              expectedRequirementIds: generation.expectedRequirementIds || [],
+              generationType: genType
+            });
+
+            if (!repairedValidation.valid) {
+              statusDiv.style.display = "block";
+              statusDiv.textContent = `Generated code may be invalid:\n${repairedValidation.errors.join("\n")}`;
+              statusDiv.style.color = "#DD0033";
+            } else {
+              this.appendRequirementsOutput("Code repaired successfully.");
+            }
           }
         }
       }
@@ -1117,7 +1125,8 @@ const AiRequirements = {
             generatedBlock: umpleCode,
             requirements: selectedReqs,
             generationType: genType,
-            systemPrompt: generation.systemPrompt
+            systemPrompt: generation.systemPrompt,
+            dialog
           });
           if (corrected && typeof corrected.block === "string" && corrected.block.trim()) {
             umpleCode = corrected.block.trim();
