@@ -6,6 +6,9 @@
 // Generates Umple code (state machines, class diagrams) from requirements using LLMs
 
 const AiRequirements = {
+  // Active stream handle (for abort)
+  activeStream: null,
+
   /**
    * Parse all requirements from Umple code
    * Requirements are defined with: req RequirementID { requirement text }
@@ -27,6 +30,19 @@ const AiRequirements = {
     }
 
     return requirements;
+  },
+
+  /**
+   * Abort the active stream (if any)
+   */
+  abortActiveStream() {
+    try {
+      this.activeStream?.abort?.();
+    } catch (e) {
+      // ignore
+    } finally {
+      this.activeStream = null;
+    }
   },
 
   /**
@@ -773,6 +789,15 @@ const AiRequirements = {
     btnGenerate.textContent = "Generate";
     buttonsDiv.appendChild(btnGenerate);
 
+    const btnStop = document.createElement("div");
+    btnStop.id = "btnStop";
+    btnStop.className = "jQuery-palette-button unselectable ui-button ui-corner-all ui-widget";
+    btnStop.tabIndex = 0;
+    btnStop.setAttribute("role", "button");
+    btnStop.style.display = "none";
+    btnStop.textContent = "Stop";
+    buttonsDiv.appendChild(btnStop);
+
     const btnInsert = document.createElement("div");
     btnInsert.id = "btnInsert";
     btnInsert.className = "jQuery-palette-button unselectable ui-button ui-corner-all ui-widget";
@@ -849,6 +874,17 @@ const AiRequirements = {
       if (event.key === "Enter" || event.key === " ") generateHandler(event);
     });
 
+    // Stop button
+    const btnStop = document.getElementById("btnStop");
+    const stopHandler = event => {
+      event.preventDefault();
+      this.handleStop(dialog);
+    };
+    btnStop.addEventListener("click", stopHandler);
+    btnStop.addEventListener("keypress", event => {
+      if (event.key === "Enter" || event.key === " ") stopHandler(event);
+    });
+
     // Insert button
     const btnInsert = document.getElementById("btnInsert");
     const insertHandler = event => {
@@ -900,6 +936,7 @@ const AiRequirements = {
     const btnCancel = document.getElementById("btnCancel");
     const cancelHandler = event => {
       event.preventDefault();
+      this.abortActiveStream();
       dialog.remove();
     };
     btnCancel.addEventListener("click", cancelHandler);
@@ -910,6 +947,7 @@ const AiRequirements = {
     // Close on overlay click
     const overlay = dialog.querySelector(".dialog-overlay");
     overlay.addEventListener("click", () => {
+      this.abortActiveStream();
       dialog.remove();
     });
   },
@@ -959,6 +997,7 @@ const AiRequirements = {
   async handleGenerate(dialog, requirements) {
     const statusDiv = document.getElementById("statusMessage");
     const btnGenerate = document.getElementById("btnGenerate");
+    const btnStop = document.getElementById("btnStop");
     const btnInsert = document.getElementById("btnInsert");
     const codeContainer = document.getElementById("generatedCodeContainer");
     const codeArea = document.getElementById("generatedCodeArea");
@@ -986,9 +1025,10 @@ const AiRequirements = {
       return;
     }
 
-    // Disable generate button and show loading
+    // Disable generate button, show stop button, and show loading
     btnGenerate.classList.add("disabled");
     btnGenerate.textContent = "Generating...";
+    btnStop.style.display = "inline-block";
     statusDiv.style.display = "block";
     statusDiv.textContent = "Generating Umple code from requirements...";
     statusDiv.style.color = "#3383bb";
@@ -996,6 +1036,9 @@ const AiRequirements = {
     if (outputContainer) outputContainer.style.display = "block";
     this.clearRequirementsOutput();
     this.appendRequirementsOutput(`Generation type: ${genType}`);
+
+    // Store generation context for stop handler
+    dialog.generationContext = { selectedReqs, genType, generation: null, umpleCode: "" };
 
     try {
       if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.preloadGuidance) {
@@ -1006,16 +1049,27 @@ const AiRequirements = {
         ? RequirementsPromptBuilder.buildGeneration(selectedReqs, genType)
         : { prompt: this.buildPrompt(selectedReqs, genType), systemPrompt: this.SYSTEM_PROMPT, expectedRequirementIds: selectedReqs.map(r => r.id) };
 
-      // Call AI API using centralized AiApi.chat()
-      const response = await AiApi.chat(generation.prompt, generation.systemPrompt);
+      dialog.generationContext.generation = generation;
+
+      // Call AI API using streaming
+      this.appendRequirementsOutput("Starting AI generation...");
+      let accumulatedResponse = "";
+      this.activeStream = AiApi.chatStream(generation.prompt, generation.systemPrompt, {}, {
+        onDelta: chunk => {
+          accumulatedResponse += chunk;
+        }
+      });
+
+      const response = await this.activeStream.done;
+      this.activeStream = null;
+      this.appendRequirementsOutput("\nGenerated initial Umple block from AI.");
 
       // Extract Umple code
-      let umpleCode = this.extractUmpleCode(response);
+      dialog.generationContext.umpleCode = this.extractUmpleCode(response);
+      let umpleCode = dialog.generationContext.umpleCode;
 
-      this.appendRequirementsOutput("Generated initial Umple block from AI.");
-
-      // Validate + single repair pass
-      if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.validateGeneratedUmple && RequirementsPromptBuilder.repair_buildGeneration) {
+      // Validate + single repair pass (only if not stopped)
+      if (!dialog.stopped && typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.validateGeneratedUmple && RequirementsPromptBuilder.repair_buildGeneration) {
         const validation = RequirementsPromptBuilder.validateGeneratedUmple({
           code: umpleCode,
           expectedRequirementIds: generation.expectedRequirementIds || [],
@@ -1023,6 +1077,7 @@ const AiRequirements = {
         });
 
         if (!validation.valid) {
+          this.appendRequirementsOutput("Validation failed, attempting repair...");
           const repairPrompt = RequirementsPromptBuilder.repair_buildGeneration({
             generationType: genType,
             requirements: selectedReqs,
@@ -1032,6 +1087,7 @@ const AiRequirements = {
 
           const repairedResponse = await AiApi.chat(repairPrompt, generation.systemPrompt);
           umpleCode = this.extractUmpleCode(repairedResponse);
+          dialog.generationContext.umpleCode = umpleCode;
 
           const repairedValidation = RequirementsPromptBuilder.validateGeneratedUmple({
             code: umpleCode,
@@ -1043,25 +1099,30 @@ const AiRequirements = {
             statusDiv.style.display = "block";
             statusDiv.textContent = `Generated code may be invalid:\n${repairedValidation.errors.join("\n")}`;
             statusDiv.style.color = "#DD0033";
+          } else {
+            this.appendRequirementsOutput("Repair successful.");
           }
         }
       }
 
       // Compiler-based self-correction loop (compile merged model: original + inserted block)
-      const originalEditorCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
-      try {
-        const corrected = await this.selfCorrectWithCompiler({
-          originalCode: originalEditorCode,
-          generatedBlock: umpleCode,
-          requirements: selectedReqs,
-          generationType: genType,
-          systemPrompt: generation.systemPrompt
-        });
-        if (corrected && typeof corrected.block === "string" && corrected.block.trim()) {
-          umpleCode = corrected.block.trim();
+      if (!dialog.stopped) {
+        const originalEditorCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
+        try {
+          const corrected = await this.selfCorrectWithCompiler({
+            originalCode: originalEditorCode,
+            generatedBlock: umpleCode,
+            requirements: selectedReqs,
+            generationType: genType,
+            systemPrompt: generation.systemPrompt
+          });
+          if (corrected && typeof corrected.block === "string" && corrected.block.trim()) {
+            umpleCode = corrected.block.trim();
+            dialog.generationContext.umpleCode = umpleCode;
+          }
+        } catch (e) {
+          this.appendRequirementsOutput(`Self-correction failed: ${e.message}`);
         }
-      } catch (e) {
-        this.appendRequirementsOutput(`Self-correction failed: ${e.message}`);
       }
 
       // Display generated code
@@ -1070,11 +1131,18 @@ const AiRequirements = {
       btnInsert.style.display = "inline-block";
 
       if (statusDiv.style.color !== "#DD0033") {
+        const successMsg = dialog.stopped
+          ? "Generation stopped. Partial code generated! Review and click 'Insert to Editor' to add it to your model."
+          : "Code generated successfully! Review and click 'Insert to Editor' to add it to your model.";
         statusDiv.style.display = "block";
-        statusDiv.textContent = "Code generated successfully! Review and click 'Insert to Editor' to add it to your model.";
+        statusDiv.textContent = successMsg;
         statusDiv.style.color = "#3383bb";
       }
     } catch (error) {
+      if (error?.name === "AbortError") {
+        this.appendRequirementsOutput("\nGeneration stopped by user.");
+        return;
+      }
       console.error("Error generating code:", error);
       statusDiv.style.display = "block";
       statusDiv.textContent = `Error: ${error.message}`;
@@ -1082,6 +1150,71 @@ const AiRequirements = {
     } finally {
       btnGenerate.classList.remove("disabled");
       btnGenerate.textContent = "Generate";
+      btnStop.style.display = "none";
+      dialog.stopped = false;
+      dialog.generationContext = null;
+    }
+  },
+
+  /**
+   * Handle stop button click
+   * @param {HTMLElement} dialog - The dialog element
+   */
+  async handleStop(dialog) {
+    const statusDiv = document.getElementById("statusMessage");
+    const btnGenerate = document.getElementById("btnGenerate");
+    const btnStop = document.getElementById("btnStop");
+    const btnInsert = document.getElementById("btnInsert");
+    const codeContainer = document.getElementById("generatedCodeContainer");
+    const codeArea = document.getElementById("generatedCodeArea");
+
+    // Mark as stopped
+    dialog.stopped = true;
+
+    // Abort the active stream
+    this.abortActiveStream();
+
+    statusDiv.style.display = "block";
+    statusDiv.textContent = "Stopping generation...";
+
+    try {
+      const context = dialog.generationContext;
+      if (!context) {
+        statusDiv.textContent = "No generation in progress.";
+        statusDiv.style.color = "#DD0033";
+        return;
+      }
+
+      let umpleCode = context.umpleCode;
+
+      // If we have no code yet (stopped too early), extract from any accumulated response
+      if (!umpleCode) {
+        umpleCode = "";
+      }
+
+      if (umpleCode.trim()) {
+        this.appendRequirementsOutput("Applying partial generated code...");
+
+        // Display generated code
+        codeArea.value = umpleCode;
+        codeContainer.style.display = "block";
+        btnInsert.style.display = "inline-block";
+
+        statusDiv.textContent = "Generation stopped. Partial code generated! Review and click 'Insert to Editor' to add it to your model.";
+        statusDiv.style.color = "#3383bb";
+      } else {
+        statusDiv.textContent = "Generation stopped before any code was generated.";
+        statusDiv.style.color = "#DD0033";
+      }
+    } catch (error) {
+      console.error("Error stopping generation:", error);
+      statusDiv.textContent = `Error stopping: ${error.message}`;
+      statusDiv.style.color = "#DD0033";
+    } finally {
+      btnGenerate.classList.remove("disabled");
+      btnGenerate.textContent = "Generate";
+      btnStop.style.display = "none";
+      dialog.generationContext = null;
     }
   }
 };
