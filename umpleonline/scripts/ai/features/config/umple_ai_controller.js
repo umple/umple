@@ -157,6 +157,7 @@ const AiController = {
         const apiKey = inputField.value.trim();
         if (provider && apiKey) {
           AiApi.saveApiKey(provider, apiKey);
+          AiApi.setVerified(true, provider);
           this.updateStatusIndicator();
         }
       });

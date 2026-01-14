@@ -337,12 +337,22 @@ const AiProviderAdapters = {
   },
 
   async _sendStreamingRequest(url, headers, body, signal) {
-    return fetch(url, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(body),
-      signal
-    });
+    const timeout = AiConfig.defaults.timeout;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body),
+        signal: signal ? AbortSignal.any([signal, controller.signal]) : controller.signal
+      });
+      clearTimeout(timeoutId);
+      return response;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      throw error;
+    }
   },
 
   async _sendStreamingRequestWithFallback(provider, url, headers, body, signal) {
@@ -481,6 +491,9 @@ const AiProviderAdapters = {
    * @returns {Promise<Object>} {valid: boolean, error?: string}
    */
   async verifyKey(provider, apiKey) {
+    if (!provider) {
+      return { valid: false, error: "Provider not selected" };
+    }
     try {
       const { url, headers } = this.buildVerificationRequest(provider, apiKey);
       const response = await fetch(url, { method: "GET", headers });
@@ -594,7 +607,11 @@ const AiProviderAdapters = {
     const done = (async () => {
       if (!window.ReadableStream || !window.TextDecoder || !fetch) {
         const text = await this.chat(provider, apiKey, model, prompt, systemPrompt, options);
-        onDelta?.(text);
+        if (text) {
+          onDelta?.(text);
+        } else {
+          onDelta?.("No response from AI");
+        }
         return text;
       }
 

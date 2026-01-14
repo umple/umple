@@ -166,15 +166,17 @@ const AiUI = {
                       !modelSelect.options[0].text.includes("No models");
     
     if (!hasModels) {
+      // Set flag to prevent other calls from also retrying
+      this.modelRestoreInProgress = true;
       // Max 10 retries (2 seconds total at 200ms intervals)
       const maxRetries = 10;
       if (retryCount < maxRetries) {
-        // Set flag to prevent other calls from also retrying
-        this.modelRestoreInProgress = true;
         setTimeout(() => {
           this.modelRestoreInProgress = false;
           this.restoreSavedModel(getModel, saveModel, retryCount + 1);
         }, 200);
+      } else {
+        this.modelRestoreInProgress = false;
       }
       return;
     }
