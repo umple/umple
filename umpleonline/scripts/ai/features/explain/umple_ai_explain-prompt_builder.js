@@ -34,17 +34,16 @@ const ExplainPromptBuilder = (() => {
       "- Preserve correctness: be precise and accurate, do not invent features"
     ]),
     block("response_structure_follow_strictly", [
-      "1. **One-sentence summary** of what the snippet models/does",
-      "2. **Walkthrough**: Explain the Umple code in plain language, and provide a high-level workflow explanation.",
-      "3. **Pitfalls & improvements** (only if applicable):",
-      "   - List likely mistakes, ambiguities, or better modeling choices"
+      "1. ## Summary: A one-sentence summary of what the snippet models/does",
+      "2. ## Walkthrough: Explain the Umple code in plain language, and provide a high-level workflow explanation.",
+      "3. Use level 2 headings (`## Title`) for all section titles in your response",
     ]),
     block("rules", [
       "- Your audience are familiar with modeling and have basic coding background",
       "- Be precise and accurate in your explanations",
       "- Do not assume missing context",
       "- Keep output concise but complete",
-      "- Use markdown syntax",
+      "- Use markdown syntax (level 2 headings `##` for all section titles)",
       "- Only summary-style content should have bullet points; avoid bullet points in most cases"
     ]),
     block("code_to_explain", "```umple\n{{code}}\n```"),
@@ -54,7 +53,10 @@ const ExplainPromptBuilder = (() => {
   const FOLLOW_UP_PROMPT_TEMPLATE = joinBlocks([
     block("conversation_history", "{{conversationHistory}}", { allowEmpty: true }),
     block("user_question", "{{userQuestion}}"),
-    block("instructions", "Answer based on the original Umple code and previous explanation. Be precise and accurate. Reference specific code elements.")
+    block("instructions", [
+      "Answer based on the original Umple code and previous explanation. Be precise and accurate. Reference specific code elements.",
+      "Use level 2 headings (`## Title`) for all section titles in your response."
+    ])
   ]);
 
   // ============================================================================
