@@ -7,46 +7,79 @@
 const RequirementsPromptBuilder = (() => {
   "use strict";
 
-  function buildRequirementsPrimer(expectedRequirementIds = []) {
-    const ids = (expectedRequirementIds || []).filter(Boolean);
-    const idsText = ids.length > 0 ? ids.join(", ") : "<ReqId>";
+  const Tags = (typeof AiPromptTags !== "undefined") ? AiPromptTags : null;
+  const block = (title, content, opts) => (Tags && Tags.block) ? Tags.block(title, content, opts) : String(content || "").trim();
+  const joinBlocks = (blocks, opts) => (Tags && Tags.joinBlocks) ? Tags.joinBlocks(blocks, opts) : (blocks || []).filter(Boolean).join("\n\n");
 
-    return `In Umple, requirements are declared separately using:
+  const GUIDANCE_SOURCES = {
+    requirements: {
+      url: "scripts/ai/prompts/requirement_guidance_prompt.md",
+      blockTitle: "how_to_use_requirements_in_umple"
+    },
+    statemachine: {
+      url: "scripts/ai/prompts/state_machine_guidance_prompt.md",
+      blockTitle: "how_to_model_state_machines_in_umple"
+    },
+    classdiagram: {
+      url: "scripts/ai/prompts/class_diagram_guidance_prompt.md",
+      blockTitle: "how_to_model_class_diagrams_in_umple"
+    }
+  };
 
-- req R01 { ... }   // requirement definition (already present in the editor input)
+  const guidanceTextCache = Object.create(null);
+  const guidanceLoaders = Object.create(null);
 
-To indicate that a model element implements requirement(s), use implementsReq. It can appear:
+  function getGuidanceText(key) {
+    return String(guidanceTextCache[key] || "").trim();
+  }
 
-- At top-level, before a class/trait/interface (tags the next entity)
-- Inside a class, before a member (tags the next member)
-- On the same line as an attribute/association end (tags that member)
+  function getGuidanceKeysForGenerationType(generationType) {
+    if (generationType === "statemachine") return ["statemachine"];
+    if (generationType === "classdiagram") return ["classdiagram"];
+    return [];
+  }
 
-Multiple requirements can be listed, comma-separated:
+  function getGuidanceBlocksForGenerationType(generationType) {
+    const keys = getGuidanceKeysForGenerationType(generationType);
+    return keys
+      .map(key => {
+        const src = GUIDANCE_SOURCES[key];
+        if (!src) return "";
+        const text = getGuidanceText(key);
+        return text ? block(src.blockTitle, text) : "";
+      })
+      .filter(Boolean);
+  }
 
-- implementsReq ${idsText};
+  function ensureGuidanceLoaded(key) {
+    if (String(guidanceTextCache[key] || "").trim()) return Promise.resolve(guidanceTextCache[key]);
+    if (guidanceLoaders[key]) return guidanceLoaders[key];
 
-Example placements (for illustration only):
+    const src = GUIDANCE_SOURCES[key];
+    const loader = (typeof AiPrompting !== "undefined" && AiPrompting.getPromptText)
+      ? AiPrompting.getPromptText
+      : null;
 
-1) Tag a class:
-   implementsReq R01;
-   class Example { }
+    if (!src) return Promise.reject(new Error(`Unknown guidance key: ${key}`));
+    if (!loader) return Promise.reject(new Error("AiPrompting.getPromptText is not available"));
 
-2) Tag a specific attribute:
-   class Example {
-     totalAmount;
-     paidAmount; implementsReq R02, R03;
-   }
+    guidanceLoaders[key] = loader(src.url)
+      .then(text => {
+        guidanceTextCache[key] = text;
+        delete guidanceLoaders[key];
+        return text;
+      })
+      .catch(err => {
+        delete guidanceLoaders[key];
+        throw err;
+      });
 
-3) Tag an association and a state machine:
-   class Order {
-     implementsReq R04;
-     1 -> 1 Customer;
+    return guidanceLoaders[key];
+  }
 
-     implementsReq R05;
-     sm { s1 { e -> s2; } s2 { } }
-   }
-
-Important: When generating from requirements, do NOT re-output the req { ... } blocks; generate the model (classes/associations/state machines) and add implementsReq tags to trace back to the requirement IDs.`;
+  async function preloadGuidance(generationType) {
+    const keys = ["requirements", ...getGuidanceKeysForGenerationType(generationType)];
+    await Promise.all(keys.map(k => ensureGuidanceLoaded(k)));
   }
 
   function formatRequirements(requirements) {
@@ -55,69 +88,93 @@ Important: When generating from requirements, do NOT re-output the req { ... } b
       .join("\n\n");
   }
 
-  function inferExampleTags(generationType) {
-    if (generationType === "statemachine") return ["statemachine", "actions", "guards", "timed"];
-    if (generationType === "classdiagram") return ["classdiagram", "associations", "attributes"];
-    return [];
+  function getSystemPrompt() {
+    const base = (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
+      ? AiPrompting.getBaseSystemPrompt()
+      : "You are an expert in Umple modeling language.";
+
+    return joinBlocks([
+      block("system", base, { allowEmpty: true }),
+      block("directive", "Your job is to generate ONLY valid Umple code.")
+    ]);
   }
 
-  function selectExamples(generationType, limit) {
-    if (typeof AiPromptExamples === "undefined") return [];
-    const tags = inferExampleTags(generationType);
-    return AiPromptExamples.getExamplesByTags(tags, limit);
+  function getCheatSheet() {
+    return (typeof AiPrompting !== "undefined" && AiPrompting.getUmpleCheatSheet)
+      ? AiPrompting.getUmpleCheatSheet()
+      : "";
+  }
+
+  function getTaskLine(generationType) {
+    return generationType === "classdiagram"
+      ? "Generate Umple for a class diagram (classes, attributes, associations)."
+      : "Generate Umple for a state machine (states, events, transitions, guards/actions if relevant).";
+  }
+
+  function getTypeRule(generationType) {
+    return generationType === "statemachine"
+      ? "- Include at least one class with a state machine using Umple syntax (state/status/sm/flow are acceptable if valid)."
+      : generationType === "classdiagram"
+        ? "- Include classes/attributes and associations if implied by the requirements."
+        : "";
+  }
+
+  function getRequirementRule(expectedRequirementIds, mode = "initial") {
+    const reqs = (expectedRequirementIds || []).join(", ");
+    if (mode === "repair" && !reqs) {
+      return "- If requirement IDs are provided, include implementsReq for them.";
+    }
+    const verb = mode === "repair" ? "need to" : "MUST";
+    return `- You ${verb} include implementsReq for: ${reqs} (on the generated class(es) and/or association/sm as appropriate).`;
+  }
+
+  function buildCommonOutputRules() {
+    return [
+      "- Output ONLY Umple code.",
+      "- Output EXACTLY ONE fenced code block with language \"umple\":",
+      "  ```umple",
+      "  ...",
+      "  ```",
+      "- No prose before or after the code block."
+    ];
+  }
+
+  function buildCommonConstraintRules() {
+    return [
+      "- Do NOT re-output any req { ... } blocks.",
+      "- Do NOT re-output the user's existing model; output ONLY the new model elements to insert.",
+      "- Do NOT output position blocks, diagram layout, or @@@skip* directives unless explicitly requested.",
+      "- If you must assume something, add a single-line comment inside the code: // Assumption: ..."
+    ];
+  }
+
+  function buildCommonGuidanceBlocks(generationType) {
+    return [
+      block("how_to_use_requirements_in_umple", getGuidanceText("requirements")),
+      ...getGuidanceBlocksForGenerationType(generationType),
+      block("umple_quick_reference", getCheatSheet(), { allowEmpty: true })
+    ];
   }
 
   function buildOutputContract({ generationType, expectedRequirementIds }) {
-    const reqs = (expectedRequirementIds || []).join(", ");
-    const reqRule = reqs
-      ? `- You MUST include implementsReq for: ${reqs} (on the generated class(es) and/or association/state machine as appropriate).`
-      : "- If requirement IDs are provided, include implementsReq for them.";
-
-    const typeRule = generationType === "statemachine"
-      ? "- Include at least one class with a state machine using Umple syntax (state/status/sm/flow are acceptable if valid)."
-      : generationType === "classdiagram"
-        ? "- Include classes/attributes and associations if implied by the requirements."
-        : "";
-
-    return `## Output contract (follow strictly)
-
-- Output ONLY Umple code.
-- Output EXACTLY ONE fenced code block with language \"umple\":
-  \`\`\`umple
-  ...
-  \`\`\`
-- No prose before or after the code block.
-${reqRule}
-${typeRule}
-- Do NOT output position blocks, diagram layout, or @@@skip* directives unless explicitly requested.
-- If you must assume something, add a single-line comment inside the code: // Assumption: ...`;
+    return [
+      ...buildCommonOutputRules(),
+      getRequirementRule(expectedRequirementIds, "initial"),
+      getTypeRule(generationType),
+      ...buildCommonConstraintRules()
+    ].filter(Boolean).join("\n");
   }
 
-  function buildBlockOnlyOutputContract({ generationType, expectedRequirementIds }) {
-    const reqs = (expectedRequirementIds || []).join(", ");
-    const reqRule = reqs
-      ? `- You MUST include implementsReq for: ${reqs} (on the generated class(es) and/or association/state machine as appropriate).`
-      : "- If requirement IDs are provided, include implementsReq for them.";
-
-    const typeRule = generationType === "statemachine"
-      ? "- Include at least one class with a state machine using Umple syntax (state/status/sm/flow are acceptable if valid)."
-      : generationType === "classdiagram"
-        ? "- Include classes/attributes and associations if implied by the requirements."
-        : "";
-
-    return `## Output contract (follow strictly)
-
-- Output ONLY the corrected generated block (not the user's full model).
-- Output EXACTLY ONE fenced code block with language \"umple\":
-  \`\`\`umple
-  ...
-  \`\`\`
-- No prose before or after the code block.
-${reqRule}
-${typeRule}
-- Do NOT re-output any req { ... } blocks.
-- Do NOT change or reference line-numbered edits in the user's original code; fix only the generated block.
-- If you must assume something, add a single-line comment inside the code: // Assumption: ...`;
+  function repair_buildOutputContract({ generationType, expectedRequirementIds }) {
+    return [
+      ...buildCommonOutputRules(),
+      getRequirementRule(expectedRequirementIds, "repair"),
+      getTypeRule(generationType),
+      "- Do NOT re-output any req { ... } blocks.",
+      "- Do NOT re-output the user's existing model; output ONLY the corrected generated block.",
+      "- Do NOT change or reference line-numbered edits in the user's original code; fix only the generated block.",
+      "- If you must assume something, add a single-line comment inside the code: // Assumption: ..."
+    ].filter(Boolean).join("\n");
   }
 
   function validateBalancedBraces(code) {
@@ -158,35 +215,22 @@ ${typeRule}
   }
 
   return {
+    preloadGuidance(generationType) {
+      return preloadGuidance(generationType);
+    },
+
     buildGeneration(requirements, generationType) {
       const expectedRequirementIds = (requirements || []).map(r => r.id).filter(Boolean);
       const reqText = formatRequirements(requirements);
-      const examples = selectExamples(generationType, generationType === "statemachine" ? 2 : 1);
-      const primer = buildRequirementsPrimer(expectedRequirementIds);
 
-      const taskLine = generationType === "classdiagram"
-        ? "Generate Umple for a class diagram (classes, attributes, associations)."
-        : "Generate Umple for a state machine (states, events, transitions, guards/actions if relevant).";
+      const prompt = joinBlocks([
+        block("task", getTaskLine(generationType)),
+        block("requirements", reqText, { allowEmpty: true }),
+        ...buildCommonGuidanceBlocks(generationType),
+        block("output_contract", buildOutputContract({ generationType, expectedRequirementIds }))
+      ]);
 
-      const cheatSheet = (typeof AiPrompting !== "undefined" && AiPrompting.getUmpleCheatSheet)
-        ? AiPrompting.getUmpleCheatSheet()
-        : "";
-
-      const examplesText = (typeof AiPrompting !== "undefined" && AiPrompting.formatFewShotExamples)
-        ? AiPrompting.formatFewShotExamples(examples)
-        : "";
-
-      const systemPrompt = (() => {
-        const base = (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
-          ? AiPrompting.getBaseSystemPrompt()
-          : "You are an expert in Umple modeling language.";
-
-        return `${base}\n\nYour job is to generate ONLY valid Umple code.`;
-      })();
-
-      const prompt = `## Task\n\n${taskLine}\n\n## Requirements\n\n${reqText}\n\n## How to use requirements in Umple\n\n${primer}\n\n## Umple quick reference\n\n${cheatSheet}\n\n${examplesText}\n\n${buildOutputContract({ generationType, expectedRequirementIds })}`;
-
-      return { prompt, systemPrompt, expectedRequirementIds };
+      return { prompt, systemPrompt: getSystemPrompt(), expectedRequirementIds };
     },
 
     validateGeneratedUmple({ code, expectedRequirementIds = [], generationType } = {}) {
@@ -201,23 +245,9 @@ ${typeRule}
       return { valid: errors.length === 0, errors };
     },
 
-    buildRepairPrompt({ generationType, requirements, invalidCode, errors } = {}) {
+    repair_buildGeneration({ generationType, requirements, originalCode, invalidBlock, compilerIssuesText } = {}) {
       const expectedRequirementIds = (requirements || []).map(r => r.id).filter(Boolean);
       const reqText = formatRequirements(requirements);
-      const errorText = (errors || []).map(e => `- ${e}`).join("\n");
-      const primer = buildRequirementsPrimer(expectedRequirementIds);
-
-      return `You generated invalid or incomplete Umple. Fix it.\n\n## Requirements\n\n${reqText}\n\n## How to use requirements in Umple\n\n${primer}\n\n## Problems to fix\n\n${errorText}\n\n## Invalid output\n\n\`\`\`umple\n${(invalidCode || "").trim()}\n\`\`\`\n\n${buildOutputContract({ generationType, expectedRequirementIds })}`;
-    },
-
-    buildCompilerRepairPrompt({ generationType, requirements, originalCode, invalidBlock, compilerIssuesText } = {}) {
-      const expectedRequirementIds = (requirements || []).map(r => r.id).filter(Boolean);
-      const reqText = formatRequirements(requirements);
-      const primer = buildRequirementsPrimer(expectedRequirementIds);
-
-      const cheatSheet = (typeof AiPrompting !== "undefined" && AiPrompting.getUmpleCheatSheet)
-        ? AiPrompting.getUmpleCheatSheet()
-        : "";
 
       const original = (originalCode || "").trim();
       const originalTrimmed = original.length > 8000
@@ -225,40 +255,20 @@ ${typeRule}
         : original;
 
       const issues = (compilerIssuesText || "").trim();
-      const issuesBlock = issues
-        ? `\n\n## Compiler issues (errors/warnings)\n\n${issues}`
-        : "\n\n## Compiler issues (errors/warnings)\n\n- (No details provided)";
+      const issuesText = issues || "- (No details provided)";
 
-      return `You generated an Umple block from requirements, then it was inserted into a user's existing Umple model and compiled.
-
-Fix the GENERATED BLOCK ONLY so that, after insertion into the original model, the compiler reports no errors and no warnings.
-
-## Requirements
-
-${reqText}
-
-## How to use requirements in Umple
-
-${primer}
-
-## Original model (read-only context)
-
-\`\`\`umple
-${originalTrimmed}
-\`\`\`
-
-## Current generated block (to fix)
-
-\`\`\`umple
-${(invalidBlock || "").trim()}
-\`\`\`
-${issuesBlock}
-
-## Umple quick reference
-
-${cheatSheet}
-
-${buildBlockOnlyOutputContract({ generationType, expectedRequirementIds })}`;
+      return joinBlocks([
+        block(
+          "task",
+          "You generated an Umple block from requirements, then it was inserted into a user's existing Umple model and compiled.\n\nFix the GENERATED BLOCK ONLY so that, after insertion into the original model, the compiler reports no errors and no warnings."
+        ),
+        block("requirements", reqText, { allowEmpty: true }),
+        ...buildCommonGuidanceBlocks(generationType),
+        block("original_model_read_only_context", `\`\`\`umple\n${originalTrimmed}\n\`\`\``),
+        block("current_generated_block_to_fix", `\`\`\`umple\n${(invalidBlock || "").trim()}\n\`\`\``),
+        block("compiler_issues_errors_warnings", issuesText, { allowEmpty: true }),
+        block("output_contract", repair_buildOutputContract({ generationType, expectedRequirementIds }))
+      ]);
     }
   };
 })();

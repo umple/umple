@@ -75,7 +75,23 @@ const AiRequirements = {
 
     // Fallback (should be unreachable in normal UmpleOnline load order)
     const requirementTexts = requirements.map(req => `Requirement ${req.id}:\n${req.text}`).join("\n\n");
-    return `You are an expert in Umple modeling language. Based on the following requirement(s), generate ONLY Umple code.\n\nRequirements:\n${requirementTexts}\n\nUmple code:`;
+
+    if (typeof AiPromptTags !== "undefined" && AiPromptTags.block && AiPromptTags.joinBlocks) {
+      return AiPromptTags.joinBlocks([
+        AiPromptTags.block("task", "Generate ONLY Umple code based on the following requirement(s)."),
+        AiPromptTags.block("requirements", requirementTexts, { allowEmpty: true }),
+        AiPromptTags.block("output_contract", [
+          "- Output ONLY Umple code.",
+          "- Output EXACTLY ONE fenced code block with language \"umple\":",
+          "  ```umple",
+          "  ...",
+          "  ```",
+          "- No prose before or after the code block."
+        ].join("\n"))
+      ]);
+    }
+
+    return `Generate ONLY Umple code based on the following requirement(s).\n\nRequirements:\n${requirementTexts}\n\nUmple code:`;
   },
 
   /**
@@ -387,8 +403,8 @@ const AiRequirements = {
       this.appendRequirementsOutput(this.formatIssuesForLog(focusIssues));
 
       const compilerIssuesText = this.formatIssuesForPrompt(focusIssues);
-      const repairPrompt = (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.buildCompilerRepairPrompt)
-        ? RequirementsPromptBuilder.buildCompilerRepairPrompt({
+      const repairPrompt = (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.repair_buildGeneration)
+        ? RequirementsPromptBuilder.repair_buildGeneration({
           generationType,
           requirements,
           originalCode,
@@ -429,9 +445,21 @@ const AiRequirements = {
   },
 
   // System prompt for Umple code generation
-  SYSTEM_PROMPT: (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
-    ? `${AiPrompting.getBaseSystemPrompt()}\n\nYour job is to generate ONLY valid Umple code.`
-    : "You are an expert in Umple modeling language. Generate only valid Umple code without explanations.",
+  SYSTEM_PROMPT: (() => {
+    const base = (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
+      ? AiPrompting.getBaseSystemPrompt()
+      : "You are an expert in Umple modeling language.";
+
+    const directive = "Your job is to generate ONLY valid Umple code.";
+    if (typeof AiPromptTags !== "undefined" && AiPromptTags.block && AiPromptTags.joinBlocks) {
+      return AiPromptTags.joinBlocks([
+        AiPromptTags.block("system", base, { allowEmpty: true }),
+        AiPromptTags.block("directive", directive)
+      ]);
+    }
+
+    return `${base}\n\n${directive}`;
+  })(),
 
   /**
    * Show the requirements selection dialog
@@ -961,6 +989,10 @@ const AiRequirements = {
     this.appendRequirementsOutput(`Generation type: ${genType}`);
 
     try {
+      if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.preloadGuidance) {
+        await RequirementsPromptBuilder.preloadGuidance(genType);
+      }
+
       const generation = (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.buildGeneration)
         ? RequirementsPromptBuilder.buildGeneration(selectedReqs, genType)
         : { prompt: this.buildPrompt(selectedReqs, genType), systemPrompt: this.SYSTEM_PROMPT, expectedRequirementIds: selectedReqs.map(r => r.id) };
@@ -974,7 +1006,7 @@ const AiRequirements = {
       this.appendRequirementsOutput("Generated initial Umple block from AI.");
 
       // Validate + single repair pass
-      if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.validateGeneratedUmple && RequirementsPromptBuilder.buildRepairPrompt) {
+      if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.validateGeneratedUmple && RequirementsPromptBuilder.repair_buildGeneration) {
         const validation = RequirementsPromptBuilder.validateGeneratedUmple({
           code: umpleCode,
           expectedRequirementIds: generation.expectedRequirementIds || [],
@@ -982,7 +1014,7 @@ const AiRequirements = {
         });
 
         if (!validation.valid) {
-          const repairPrompt = RequirementsPromptBuilder.buildRepairPrompt({
+          const repairPrompt = RequirementsPromptBuilder.repair_buildGeneration({
             generationType: genType,
             requirements: selectedReqs,
             invalidCode: umpleCode,

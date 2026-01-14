@@ -18,6 +18,7 @@ cat \
  ai/core/umple_ai_errors.js \
  ai/core/umple_ai_storage.js \
  ai/utils/umple_ai_provider_utils.js \
+ ai/utils/umple_ai_prompt_tags.js \
  ai/core/umple_ai_providers.js \
  ai/core/umple_ai_manager.js \
  ai/core/umple_ai_prompt_examples.js \

@@ -7,6 +7,10 @@
 const ExplainPromptBuilder = (() => {
   "use strict";
 
+  const Tags = (typeof AiPromptTags !== "undefined") ? AiPromptTags : null;
+  const block = (title, content, opts) => (Tags && Tags.block) ? Tags.block(title, content, opts) : String(content || "").trim();
+  const joinBlocks = (blocks, opts) => (Tags && Tags.joinBlocks) ? Tags.joinBlocks(blocks, opts) : (blocks || []).filter(Boolean).join("\n\n");
+
   // ============================================================================
   // CONSTANTS
   // ============================================================================
@@ -18,49 +22,40 @@ const ExplainPromptBuilder = (() => {
       ? AiPrompting.getBaseSystemPrompt()
       : "You are an expert in Umple (https://cruise.umple.org/umple/): its textual modeling syntax, class/state-machine/traits/aspects, associations & multiplicities, constraints, generation targets (Java/PHP/… as supported by Umple), and common Umple patterns.";
 
-    return `${base}\n\nYour job is to explain any Umple snippet (or mixed Umple + generated code) clearly and accurately.`;
+    return joinBlocks([
+      block("system", base, { allowEmpty: true }),
+      block("directive", "Your job is to explain any Umple snippet (or mixed Umple + generated code) clearly and accurately.")
+    ]);
   })();
 
-  const INITIAL_PROMPT_TEMPLATE = `Explain the following Umple code.
+  const INITIAL_PROMPT_TEMPLATE = joinBlocks([
+    block("task", "Explain the following Umple code."),
+    block("goals", [
+      "- Preserve correctness: be precise and accurate, do not invent features"
+    ]),
+    block("response_structure_follow_strictly", [
+      "1. **One-sentence summary** of what the snippet models/does",
+      "2. **Walkthrough**: Explain the Umple code in plain language, and provide a high-level workflow explanation.",
+      "3. **Pitfalls & improvements** (only if applicable):",
+      "   - List likely mistakes, ambiguities, or better modeling choices"
+    ]),
+    block("rules", [
+      "- Your audience are familiar with modeling and have basic coding background",
+      "- Be precise and accurate in your explanations",
+      "- Do not assume missing context",
+      "- Keep output concise but complete",
+      "- Use markdown syntax",
+      "- Only summary-style content should have bullet points; avoid bullet points in most cases"
+    ]),
+    block("code_to_explain", "```umple\n{{code}}\n```"),
+    block("your_response", "Provide your explanation following the structure above.")
+  ]);
 
-## Goals
-- Preserve correctness: be precise and accurate, do not invent features
-
-## Response Structure (follow strictly)
-
-1. **One-sentence summary** of what the snippet models/does
-
-2. **Walkthrough**: Explain the umple code in plain language, and provide a high-level workflow explaination.
-
-3. **Pitfalls & improvements** (only if applicable):
-   - List likely mistakes, ambiguities, or better modeling choices
-
-## Rules
-- Your audience are familiar with modeling and have basic coding background
-- Explain in a high-level and conclusive sentence.
-- Be precise and accurate in your explanations
-- Do not assume missing context
-- Keep output concise but complete
-- Use markdown syntax
-- Only summary style content should have bullet points, avoid using bullet points in most of the cases.
-
-## Code to Explain
-
-\`\`\`umple
-{{code}}
-\`\`\`
-
-## Your Response
-
-Provide your explanation following the structure above:`;
-
-  const FOLLOW_UP_PROMPT_TEMPLATE = `{{conversationHistory}}
-
-User: {{userQuestion}}
-
-Answer based on the original Umple code and previous explanation. Be precise and accurate. Reference specific code elements.
-
-Assistant:`;
+  const FOLLOW_UP_PROMPT_TEMPLATE = joinBlocks([
+    block("conversation_history", "{{conversationHistory}}", { allowEmpty: true }),
+    block("user_question", "{{userQuestion}}"),
+    block("instructions", "Answer based on the original Umple code and previous explanation. Be precise and accurate. Reference specific code elements.")
+  ]);
 
   // ============================================================================
   // MARKDOWN REGEX PATTERNS
