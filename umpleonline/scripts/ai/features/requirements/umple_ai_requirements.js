@@ -1042,6 +1042,8 @@ const AiRequirements = {
 
     try {
       if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.preloadGuidance) {
+        const guidanceType = genType === "classdiagram" ? "class diagrams" : "state machines";
+        this.appendRequirementsOutput(`Reading guidance on requirements and ${guidanceType}...`);
         await RequirementsPromptBuilder.preloadGuidance(genType);
       }
 
@@ -1052,7 +1054,7 @@ const AiRequirements = {
       dialog.generationContext.generation = generation;
 
       // Call AI API using streaming
-      this.appendRequirementsOutput("Starting AI generation...");
+      this.appendRequirementsOutput(`Generating ${genType === "classdiagram" ? "class diagram" : "state machine"}...`);
       let accumulatedResponse = "";
       this.activeStream = AiApi.chatStream(generation.prompt, generation.systemPrompt, {}, {
         onDelta: chunk => {
@@ -1062,7 +1064,7 @@ const AiRequirements = {
 
       const response = await this.activeStream.done;
       this.activeStream = null;
-      this.appendRequirementsOutput("\nGenerated initial Umple block from AI.");
+      this.appendRequirementsOutput("Generated initial Umple block from AI.");
 
       // Extract Umple code
       dialog.generationContext.umpleCode = this.extractUmpleCode(response);
@@ -1077,7 +1079,7 @@ const AiRequirements = {
         });
 
         if (!validation.valid) {
-          this.appendRequirementsOutput("Validation failed, attempting repair...");
+          this.appendRequirementsOutput(`Validation issues found: ${validation.errors.join(", ")}. Repairing...`);
           const repairPrompt = RequirementsPromptBuilder.repair_buildGeneration({
             generationType: genType,
             requirements: selectedReqs,
@@ -1100,13 +1102,14 @@ const AiRequirements = {
             statusDiv.textContent = `Generated code may be invalid:\n${repairedValidation.errors.join("\n")}`;
             statusDiv.style.color = "#DD0033";
           } else {
-            this.appendRequirementsOutput("Repair successful.");
+            this.appendRequirementsOutput("Code repaired successfully.");
           }
         }
       }
 
       // Compiler-based self-correction loop (compile merged model: original + inserted block)
       if (!dialog.stopped) {
+        this.appendRequirementsOutput("Running compiler-based self-correction...");
         const originalEditorCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
         try {
           const corrected = await this.selfCorrectWithCompiler({
