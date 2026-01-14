@@ -365,6 +365,15 @@ const AiRequirements = {
 
     let previousBlock = null;
 
+    // Preload guidance for repair prompts to ensure cached content is available
+    if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.preloadGuidance) {
+      try {
+        await RequirementsPromptBuilder.preloadGuidance(generationType);
+      } catch (e) {
+        this.appendRequirementsOutput(`Guidance preload failed (continuing anyway): ${e.message}`);
+      }
+    }
+
     for (let pass = 1; pass <= maxPasses; pass++) {
       this.appendRequirementsOutput(`\nSelf-correction pass ${pass}: compiling merged model...`);
       const merged = this.buildMergedCode(originalCode, currentBlock);
@@ -853,7 +862,7 @@ const AiRequirements = {
         }
         const currentDoc = Page.codeMirrorEditor6.state.doc.toString();
         const insertion = this.buildMergedCode(currentDoc, code);
-        const highlightDurationMs = 1500;
+        const highlightDurationMs = 3000;
 
         Page.codeMirrorEditor6.dispatch({
           changes: { from: insertion.insertPos, to: insertion.insertPos, insert: insertion.insertText },
@@ -876,7 +885,7 @@ const AiRequirements = {
 
           const selection = view.state.selection.main;
           if (selection.from === insertion.highlightFrom && selection.to === insertion.highlightTo) {
-            view.dispatch({ selection: { anchor: insertion.highlightTo } });
+            view.dispatch({ selection: { anchor: insertion.highlightFrom } });
           }
         }, highlightDurationMs);
         dialog.remove();
