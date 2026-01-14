@@ -159,12 +159,6 @@ const AiProviderAdapters = {
           headers["X-Title"] = "UmpleOnline";
         }
         break;
-      case "anthropic":
-        if (key) {
-          headers["x-api-key"] = key;
-          headers["anthropic-version"] = config?.version || "2023-06-01";
-        }
-        break;
       case "google":
         // Google uses key in URL, not headers
         break;
@@ -271,18 +265,6 @@ const AiProviderAdapters = {
         const tokenLimitField = AiProviderUtils.getOpenAiTokenLimitField(model);
         const tokenBudget = AiProviderUtils.isGpt5FamilyModel(model) ? (params.maxTokens + 1024) : params.maxTokens;
         body[tokenLimitField] = tokenBudget;
-        if (options?.stream) body.stream = true;
-        break;
-
-      case "anthropic":
-        url = endpoint.chatUrl;
-        body = {
-          model,
-          max_tokens: params.maxTokens,
-          messages: [{ role: "user", content: prompt }],
-          ...(systemPrompt && { system: systemPrompt }),
-          temperature: params.temperature
-        };
         if (options?.stream) body.stream = true;
         break;
 
@@ -401,29 +383,6 @@ const AiProviderAdapters = {
     return fullText;
   },
 
-  async _streamAnthropic(response, onDelta, signal) {
-    let fullText = "";
-
-    await this._readSse(response, ({ data }) => {
-      if (data === "[DONE]") return;
-
-      let payload;
-      try {
-        payload = JSON.parse(data);
-      } catch (e) {
-        return;
-      }
-
-      const deltaText = payload?.delta?.text;
-      if (deltaText) {
-        fullText += deltaText;
-        onDelta?.(deltaText);
-      }
-    }, signal);
-
-    return fullText;
-  },
-
   async _streamGoogle(response, onDelta, signal) {
     let fullText = "";
 
@@ -475,12 +434,6 @@ const AiProviderAdapters = {
         });
         break;
 
-      case "anthropic":
-        responseData.data?.forEach(model => {
-          if (model.id) models.push({ value: model.id, label: model.id });
-        });
-        break;
-
       case "google":
         responseData.models?.forEach(model => {
           if (model.name && model.supportedGenerationMethods?.includes("generateContent")) {
@@ -514,8 +467,6 @@ const AiProviderAdapters = {
       case "openai":
       case "openrouter":
         return responseData.choices?.[0]?.message?.content || "";
-      case "anthropic":
-        return responseData.content?.[0]?.text || "";
       case "google":
         return responseData.candidates?.[0]?.content?.parts?.[0]?.text || "";
       default:
@@ -668,8 +619,6 @@ const AiProviderAdapters = {
         case "openai":
         case "openrouter":
           return this._streamOpenAiCompatible(response, onDelta, signal);
-        case "anthropic":
-          return this._streamAnthropic(response, onDelta, signal);
         case "google":
           return this._streamGoogle(response, onDelta, signal);
         default:

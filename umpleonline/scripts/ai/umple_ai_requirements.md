@@ -184,7 +184,7 @@ This creates a traceable link between your requirements and the code that implem
 Before using the feature, you must configure an AI provider API key:
 
 1. Expand the **AI** section in the left sidebar (below Tools)
-2. In **AI Settings**, select your AI provider (OpenAI, Anthropic, Google, or OpenRouter)
+2. In **AI Settings**, select your AI provider (OpenAI, Google, or OpenRouter)
 3. Enter your API key
 4. Click **Verify API Key**
 5. Select a model from the available options
@@ -416,7 +416,6 @@ association {
 The feature supports multiple AI providers through the existing key manager:
 
 - **OpenAI** (GPT-3.5, GPT-4, etc.)
-- **Anthropic** (Claude models)
 - **Google** (Gemini models)
 - **OpenRouter** (Multiple models)
 

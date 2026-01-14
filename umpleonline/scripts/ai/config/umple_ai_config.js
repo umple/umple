@@ -13,13 +13,6 @@ const AiConfig = {
       timeout: 30000,
       maxRetries: 3
     },
-    anthropic: {
-      modelsUrl: "https://api.anthropic.com/v1/models",
-      chatUrl: "https://api.anthropic.com/v1/messages",
-      version: "2023-06-01",
-      timeout: 30000,
-      maxRetries: 3
-    },
     google: {
       modelsUrl: "https://generativelanguage.googleapis.com/v1beta/models",
       chatUrl: "https://generativelanguage.googleapis.com/v1beta/models",

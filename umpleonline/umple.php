@@ -1261,7 +1261,6 @@ $output = $dataHandle->readData('model.ump');
           <select id="selectAiProvider" class="button">
             <option value="" selected>Select provider...</option>
             <option value="openai">OpenAI</option>
-            <option value="anthropic">Anthropic</option>
             <option value="google">Google</option>
             <option value="openrouter">OpenRouter</option>
           </select>

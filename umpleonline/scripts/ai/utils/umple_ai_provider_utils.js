@@ -95,20 +95,6 @@ var AiProviderUtils = _aiGlobal.AiProviderUtils || {
         return toModelList([flash, pro]);
       }
 
-      case "anthropic": {
-        const haikuIds = ids.filter(id => String(id).toLowerCase().includes("haiku"));
-        const sonnetIds = ids.filter(id => String(id).toLowerCase().includes("sonnet"));
-
-        const parseClaude = (id) => {
-          const parts = String(id).match(/\d+/g);
-          if (!parts) return null;
-          return parts.map(n => Number.parseInt(n, 10));
-        };
-        const haiku = this._pickLatestModelId(haikuIds, parseClaude);
-        const sonnet = this._pickLatestModelId(sonnetIds, parseClaude);
-        return toModelList([haiku, sonnet]);
-      }
-
       case "openrouter":
       default:
         return models;
