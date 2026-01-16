@@ -99,56 +99,6 @@ var AiProviderUtils = _aiGlobal.AiProviderUtils || {
       default:
         return models;
     }
-  },
-
-  isGpt5FamilyModel(model) {
-    if (!model) return false;
-    const m = String(model).toLowerCase();
-    return m.startsWith("gpt-5") || m.includes("/gpt-5");
-  },
-
-  getOpenAiTokenLimitField(model) {
-    return this.isGpt5FamilyModel(model) ? "max_completion_tokens" : "max_tokens";
-  },
-
-  openAIParamsFallback(provider, body, error) {
-    if (provider !== "openai" && provider !== "openrouter") return null;
-    if (!body || typeof body !== "object") return null;
-
-    const updated = { ...body };
-    let changed = false;
-
-    const message = (error?.message || "").toLowerCase();
-    const param = error?.details?.responseData?.error?.param;
-
-    const mentionsMaxTokens = message.includes("max_tokens");
-    const mentionsMaxCompletionTokens = message.includes("max_completion_tokens");
-
-    if ((param === "max_tokens" || mentionsMaxTokens) && mentionsMaxCompletionTokens && typeof updated.max_tokens === "number") {
-      updated.max_completion_tokens = updated.max_tokens;
-      delete updated.max_tokens;
-      changed = true;
-    }
-
-    if ((param === "max_completion_tokens" || mentionsMaxCompletionTokens) && mentionsMaxTokens && typeof updated.max_completion_tokens === "number") {
-      updated.max_tokens = updated.max_completion_tokens;
-      delete updated.max_completion_tokens;
-      changed = true;
-    }
-
-    const mentionsTemperature = message.includes("'temperature'") || message.includes(" temperature ");
-    if ((param === "temperature" || mentionsTemperature) && Object.prototype.hasOwnProperty.call(updated, "temperature")) {
-      delete updated.temperature;
-      changed = true;
-    }
-
-    const knownOptionalParams = ["reasoning_effort", "verbosity", "top_p", "presence_penalty", "frequency_penalty"];
-    if (param && knownOptionalParams.includes(param) && Object.prototype.hasOwnProperty.call(updated, param)) {
-      delete updated[param];
-      changed = true;
-    }
-
-    return changed ? updated : null;
   }
 };
 

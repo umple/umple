@@ -624,11 +624,6 @@ Page.initCodeMirrorEditor = function() {
    });
 
   Page.codeMirrorOn = true;
-
-  // Initialize AI controller after editor is ready
-  if (typeof AiController !== "undefined") {
-    AiController.init();
-  }
 }
 
 // Function to make the E G S icons in UmpleOnline context senstive (#1400)

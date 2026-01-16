@@ -20,31 +20,7 @@ const AiExplain = {
    * @returns {Object} {configured: boolean, message: string}
    */
   checkApiConfig() {
-    const provider = AiApi.getProvider();
-    if (!provider) {
-      return {
-        configured: false,
-        message: "Please select an AI provider in the AI section first."
-      };
-    }
-
-    const apiKey = AiApi.getApiKey(provider);
-    if (!apiKey) {
-      return {
-        configured: false,
-        message: "Please configure your AI API key in the AI section first."
-      };
-    }
-
-    const model = AiApi.getModel();
-    if (!model) {
-      return {
-        configured: false,
-        message: "Please verify your API key and select a model in the AI section."
-      };
-    }
-
-    return { configured: true };
+    return AiConfigValidation.checkApiConfig({ requireVerified: false });
   },
 
 

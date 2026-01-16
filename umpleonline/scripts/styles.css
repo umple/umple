@@ -934,6 +934,7 @@ textarea#umpleLayoutEditorText {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 10001;
+  pointer-events: none;
 }
 
 .ai-requirements-dialog .dialog-content,
@@ -1157,6 +1158,7 @@ textarea#umpleLayoutEditorText {
 }
 
 .ai-requirements-dialog .status-message {
+  margin: 10px 0 12px 0;
   padding: 8px;
   border: DimGray solid 1px;
   -moz-border-radius: 3px;

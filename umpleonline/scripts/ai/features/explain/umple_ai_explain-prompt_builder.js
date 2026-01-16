@@ -182,9 +182,7 @@ const ExplainPromptBuilder = (() => {
      * @returns {string} HTML-escaped text
      */
     escapeHtml(text) {
-      const tempElement = document.createElement("div");
-      tempElement.textContent = text;
-      return tempElement.innerHTML;
+      return AiTextUtils.escapeHtml(text);
     },
 
     /**

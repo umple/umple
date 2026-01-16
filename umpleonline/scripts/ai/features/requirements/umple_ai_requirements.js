@@ -50,32 +50,7 @@ const AiRequirements = {
    * @returns {Object} {configured: boolean, message: string}
    */
   checkApiConfig() {
-    const provider = AiApi.getProvider();
-    if (!provider) {
-      return {
-        configured: false,
-        message: "Please select an AI provider in the AI section first."
-      };
-    }
-
-    const apiKey = AiApi.getApiKey(provider);
-    if (!apiKey) {
-      return {
-        configured: false,
-        message: "Please configure your AI API key in the AI section first."
-      };
-    }
-
-    // Check both localStorage and UI element for model
-    const model = AiApi.getModel();
-    if (!model) {
-      return {
-        configured: false,
-        message: "Please verify your API key and select a model in the AI section."
-      };
-    }
-
-    return { configured: true };
+    return AiConfigValidation.checkApiConfig({ requireVerified: false });
   },
 
   /**
@@ -116,22 +91,7 @@ const AiRequirements = {
    * @returns {string} Extracted Umple code
    */
   extractUmpleCode(response) {
-    // Try to extract code from markdown code blocks first
-    const codeBlockMatch = response.match(/```(?:umple)?\s*([\s\S]*?)```/);
-    if (codeBlockMatch) {
-      return codeBlockMatch[1].trim();
-    }
-
-    // If no code block, try to find class definitions or req statements
-    const classMatch = response.match(/(?:class|interface|trait|association)\s+\w+/);
-    if (classMatch) {
-      // Return everything from the first class/interface/trait/association keyword
-      const startIndex = response.indexOf(classMatch[0]);
-      return response.substring(startIndex).trim();
-    }
-
-    // Return the whole response, trimmed
-    return response.trim();
+    return AiResponseUtils.extractUmpleCode(response);
   },
 
   // --------------------------------------------------------------------------
@@ -139,11 +99,11 @@ const AiRequirements = {
   // --------------------------------------------------------------------------
 
   getCompilerLanguage() {
-    return "Json";
+    return AiCompilerService.getCompilerLanguage();
   },
 
   getSelfCorrectionMaxPasses() {
-    return 10;
+    return AiCompilerService.getSelfCorrectionMaxPasses();
   },
 
   getRequirementsOutputArea() {
@@ -164,152 +124,31 @@ const AiRequirements = {
   },
 
   stripHtmlToText(html) {
-    const raw = String(html || "")
-      .replace(/<script[\s\S]*?<\/script>/gi, "")
-      .replace(/<style[\s\S]*?<\/style>/gi, "");
-    const div = document.createElement("div");
-    div.innerHTML = raw;
-    return (div.textContent || div.innerText || "").trim();
+    return AiTextUtils.stripHtmlToText(html);
   },
 
   parseCompilerIssuesFromErrorHtml(errorHtml) {
-    const html = String(errorHtml || "");
-    if (!html.trim()) return [];
-
-    const issues = [];
-
-    try {
-      const container = document.createElement("div");
-      container.innerHTML = html;
-      const errorRow = container.querySelector("#errorRow");
-
-      if (errorRow) {
-        const fonts = Array.from(errorRow.querySelectorAll("font"));
-
-        const findNextHelpLink = (fontEl) => {
-          let node = fontEl.nextSibling;
-          while (node) {
-            if (node.nodeType === 1) {
-              const tag = node.tagName.toLowerCase();
-              if (tag === "i") {
-                const link = node.querySelector("a");
-                if (link) return link;
-              }
-              if (tag === "font") break;
-            }
-            node = node.nextSibling;
-          }
-          return null;
-        };
-
-        fonts.forEach(fontEl => {
-          const text = String(fontEl.textContent || "").replace(/\s+/g, " ").trim();
-          const severity = text.startsWith("Warning") ? "Warning" : (text.startsWith("Error") ? "Error" : "Unknown");
-
-          const lineLink = fontEl.querySelector("a");
-          const lineText = String(lineLink?.textContent || "");
-          const lineMatch = lineText.match(/(\d+)/);
-          const line = lineMatch ? parseInt(lineMatch[1], 10) : null;
-
-          let message = text;
-          const colonIndex = message.indexOf(":");
-          if (colonIndex >= 0) message = message.slice(colonIndex + 1).trim();
-          message = message.replace(/\.$/, "").trim();
-
-          const helpLink = findNextHelpLink(fontEl);
-          const helpText = String(helpLink?.textContent || "");
-          const codeMatch = helpText.match(/\(([^)]+)\)/);
-          const errorCode = codeMatch ? codeMatch[1].trim() : "";
-
-          if (severity !== "Unknown" || message) {
-            issues.push({ severity, line, message, errorCode });
-          }
-        });
-
-        if (issues.length > 0) return issues;
-      }
-    } catch (e) {
-      // Fall through to text parsing
-    }
-
-    const text = this.stripHtmlToText(html);
-    const regex = /\b(Error|Warning)\s+on\s+line\s+(\d+)\s*:\s*([\s\S]*?)\.(?:\s*More information\s*\(([^)]+)\))?/g;
-    let match;
-    while ((match = regex.exec(text)) !== null) {
-      issues.push({
-        severity: match[1],
-        line: parseInt(match[2], 10),
-        message: (match[3] || "").trim(),
-        errorCode: (match[4] || "").trim()
-      });
-    }
-
-    if (issues.length === 0 && /\b(Error|Warning)\b/i.test(text)) {
-      issues.push({ severity: "Unknown", line: null, message: text, errorCode: "" });
-    }
-
-    return issues;
+    return AiCompilerService.parseCompilerIssuesFromErrorHtml(errorHtml);
   },
 
   getIssueKey(issue) {
-    const severity = (issue?.severity || "").trim();
-    const errorCode = (issue?.errorCode || "").trim();
-    const message = (issue?.message || "").trim();
-    return `${severity}|${errorCode}|${message}`;
+    return AiCompilerService.getIssueKey(issue);
   },
 
   formatIssuesForLog(issues) {
-    return (issues || []).map(i => {
-      const codeSuffix = i.errorCode ? ` (${i.errorCode})` : "";
-      const lineText = Number.isFinite(i.line) ? i.line : "?";
-      return `- ${i.severity} on line ${lineText}${codeSuffix}: ${i.message}`;
-    }).join("\n");
+    return AiCompilerService.formatIssuesForLog(issues);
   },
 
   formatIssuesForPrompt(issues) {
-    return (issues || []).map(i => {
-      const codeSuffix = i.errorCode ? ` (${i.errorCode})` : "";
-      const lineText = Number.isFinite(i.line) ? i.line : "?";
-      return `- ${i.severity}${codeSuffix} on line ${lineText}: ${i.message}`;
-    }).join("\n");
+    return AiCompilerService.formatIssuesForPrompt(issues);
   },
 
   computeLineNumberAtIndex(text, index) {
-    const safeIndex = Math.max(0, Math.min(Number(index) || 0, String(text || "").length));
-    return this.normalizeNewlines(String(text || "").slice(0, safeIndex)).split("\n").length - 1;
+    return AiTextUtils.computeLineNumberAtIndex(text, index);
   },
 
   async compileUmpleWithServer(umpleCode) {
-    const language = this.getCompilerLanguage();
-    const filename = (typeof Page !== "undefined" && Page.getFilename) ? (Page.getFilename() || "") : "";
-    const theme = (typeof Action !== "undefined" && Action.getThemePreference) ? Action.getThemePreference() : "system";
-
-    const postData = [
-      `language=${encodeURIComponent(language)}`,
-      "error=true",
-      `umpleCode=${encodeURIComponent(String(umpleCode || ""))}`,
-      `filename=${encodeURIComponent(filename)}`,
-      `theme=${encodeURIComponent(theme)}`
-    ].join("&");
-
-    return new Promise((resolve, reject) => {
-      if (typeof Ajax === "undefined" || !Ajax.sendRequest) {
-        reject(new Error("Ajax subsystem not available"));
-        return;
-      }
-
-      Ajax.sendRequest("scripts/compiler.php", (http) => {
-        try {
-          const responseText = String(http?.responseText || "");
-          const splitIndex = responseText.indexOf("URL_SPLIT");
-          const errorHtml = (splitIndex >= 0 ? responseText.slice(0, splitIndex) : responseText).trim();
-          const issues = this.parseCompilerIssuesFromErrorHtml(errorHtml);
-          resolve({ errorHtml, issues });
-        } catch (e) {
-          reject(e);
-        }
-      }, postData);
-    });
+    return AiCompilerService.compileUmpleWithServer(umpleCode);
   },
 
   getInsertionPos(docText) {
@@ -330,21 +169,15 @@ const AiRequirements = {
   },
 
   normalizeNewlines(text) {
-    return String(text || "").replace(/\r\n/g, "\n");
+    return AiTextUtils.normalizeNewlines(text);
   },
 
   computePrefix(docText, pos) {
-    const before = this.normalizeNewlines(docText.slice(0, pos));
-    const trailingNewlines = (before.match(/\n*$/) || [""])[0].length;
-    const needed = Math.max(2 - trailingNewlines, 0);
-    return "\n".repeat(needed);
+    return AiTextUtils.computePrefix(docText, pos);
   },
 
   computeSuffix(docText, pos) {
-    const after = this.normalizeNewlines(docText.slice(pos));
-    const leadingNewlines = (after.match(/^\n*/) || [""])[0].length;
-    const needed = Math.max(2 - leadingNewlines, 0);
-    return "\n".repeat(needed);
+    return AiTextUtils.computeSuffix(docText, pos);
   },
 
   buildMergedCode(docText, blockCode) {
@@ -772,7 +605,7 @@ const AiRequirements = {
     outputContainer.style.display = "none";
 
     const outputHeading = document.createElement("h4");
-    outputHeading.textContent = "Output:";
+    outputHeading.textContent = "Log:";
     outputContainer.appendChild(outputHeading);
 
     const outputArea = document.createElement("textarea");
@@ -819,14 +652,14 @@ const AiRequirements = {
     btnCancel.textContent = "Cancel";
     buttonsDiv.appendChild(btnCancel);
 
-    content.appendChild(buttonsDiv);
-
-    // Status message
+    // Status message (compiler-like output)
     const statusDiv = document.createElement("div");
     statusDiv.id = "statusMessage";
     statusDiv.className = "status-message";
     statusDiv.style.display = "none";
     content.appendChild(statusDiv);
+
+    content.appendChild(buttonsDiv);
 
     dialog.appendChild(content);
     document.body.appendChild(dialog);
@@ -1043,6 +876,7 @@ const AiRequirements = {
 
     // Store generation context for stop handler
     dialog.generationContext = { selectedReqs, genType, generation: null, umpleCode: "" };
+    let tokenLimitTruncated = false;
 
     try {
       if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.preloadGuidance) {
@@ -1059,16 +893,29 @@ const AiRequirements = {
 
       // Call AI API using streaming
       this.appendRequirementsOutput(`Generating ${genType === "classdiagram" ? "class diagram" : "state machine"}...`);
-      let accumulatedResponse = "";
       this.activeStream = AiApi.chatStream(generation.prompt, generation.systemPrompt, {}, {
-        onDelta: chunk => {
-          accumulatedResponse += chunk;
+        onTruncated: () => {
+          tokenLimitTruncated = true;
         }
       });
 
       const response = await this.activeStream.done;
       this.activeStream = null;
       this.appendRequirementsOutput("Generated initial Umple block from AI.");
+
+      if (tokenLimitTruncated) {
+        // Stop further processing (validation/repair/self-correction)
+        dialog.stopped = true;
+        statusDiv.style.display = "block";
+        statusDiv.textContent = "Generation stopped: AI output was truncated due to token limit. Try selecting fewer requirements, shortening requirement text, or using a larger model.";
+        statusDiv.style.color = "#DD0033";
+
+        // Still show whatever we got so the user can decide what to do.
+        codeArea.value = response || "";
+        codeContainer.style.display = "block";
+        btnInsert.style.display = response && response.trim() ? "inline-block" : "none";
+        return;
+      }
 
       // Extract Umple code
       dialog.generationContext.umpleCode = this.extractUmpleCode(response);

@@ -8,52 +8,29 @@ const AiController = {
   elements: {},
   _initialized: false,
 
+  _bindOnce(element, datasetKey, eventName, handler) {
+    if (!element) return;
+    if (element.dataset[datasetKey]) return;
+    element.dataset[datasetKey] = "1";
+    element.addEventListener(eventName, handler);
+  },
+
   /**
    * Check if AI settings are configured
    * @returns {Object} {configured: boolean, message: string}
    */
   checkApiConfig() {
-    const provider = AiApi.getProvider();
-    if (!provider) {
-      return {
-        configured: false,
-        message: "Please select an AI provider in the AI section first."
-      };
-    }
-
-    const apiKey = AiApi.getApiKey(provider);
-    if (!apiKey) {
-      return {
-        configured: false,
-        message: "Please configure your AI API key in the AI section first."
-      };
-    }
-
-    const model = AiApi.getModel();
-    if (!model) {
-      return {
-        configured: false,
-        message: "Please verify your API key and select a model in the AI section."
-      };
-    }
-
-    if (!AiApi.isVerified(provider)) {
-      return {
-        configured: false,
-        message: "Please verify your API key in the AI section first."
-      };
-    }
-
-    return { configured: true, message: "" };
+    return AiConfigValidation.checkApiConfig({ requireVerified: true });
   },
 
   init() {
-    if (this._initialized) return;
     this.elements = AiUI.initElements();
-    this._initialized = true;
 
-    // Load saved preferences
-    this.loadPreferences();
+    if (!this._initialized) {
+      this._initialized = true;
+      // Load saved preferences
+      this.loadPreferences();
+    }
 
     // Settings row click handler (entire row is clickable)
     const settingsRow = document.getElementById("buttonAiSettings");
@@ -62,8 +39,9 @@ const AiController = {
         event.preventDefault();
         this.showSettingsModal();
       };
-      settingsRow.addEventListener("click", openModal);
-      settingsRow.addEventListener("keypress", event => {
+
+      this._bindOnce(settingsRow, "aiBoundOpenSettings", "click", openModal);
+      this._bindOnce(settingsRow, "aiBoundOpenSettingsKeypress", "keypress", event => {
         if (event.key === "Enter" || event.key === " ") openModal(event);
       });
     }
@@ -75,8 +53,9 @@ const AiController = {
         event.preventDefault();
         this.hideSettingsModal();
       };
-      closeButton.addEventListener("click", closeModal);
-      closeButton.addEventListener("keypress", event => {
+
+      this._bindOnce(closeButton, "aiBoundCloseSettings", "click", closeModal);
+      this._bindOnce(closeButton, "aiBoundCloseSettingsKeypress", "keypress", event => {
         if (event.key === "Enter" || event.key === " ") closeModal(event);
       });
     }
@@ -86,14 +65,19 @@ const AiController = {
     if (modal) {
       const overlay = modal.querySelector(".dialog-overlay");
       if (overlay) {
-        overlay.addEventListener("click", () => this.hideSettingsModal());
+        this._bindOnce(
+          overlay,
+          "aiBoundOverlayClose",
+          "click",
+          () => this.hideSettingsModal()
+        );
       }
     }
 
     // Provider selection change handler
     const providerSelect = this.elements.providerSelect;
     if (providerSelect) {
-      providerSelect.addEventListener("change", () => {
+      this._bindOnce(providerSelect, "aiBoundProviderChange", "change", () => {
         const newProvider = providerSelect.value;
         const inputField = this.elements.inputField;
 
@@ -135,7 +119,7 @@ const AiController = {
     // Model selection change handler
     const modelSelect = this.elements.modelSelect;
     if (modelSelect) {
-      modelSelect.addEventListener("change", () => {
+      this._bindOnce(modelSelect, "aiBoundModelChange", "change", () => {
         const provider = this.elements.providerSelect?.value || AiApi.getProvider();
         const selectedValue = modelSelect.value;
         if (selectedValue) {
@@ -152,7 +136,7 @@ const AiController = {
     // API key input field handler - save on blur
     const inputField = this.elements.inputField;
     if (inputField) {
-      inputField.addEventListener("blur", () => {
+      this._bindOnce(inputField, "aiBoundApiKeyBlur", "blur", () => {
         const provider = this.elements.providerSelect?.value || AiApi.getProvider();
         const apiKey = inputField.value.trim();
         if (provider && apiKey) {
@@ -163,7 +147,7 @@ const AiController = {
       });
 
       // Also save on Enter key
-      inputField.addEventListener("keypress", event => {
+      this._bindOnce(inputField, "aiBoundApiKeyKeypress", "keypress", event => {
         if (event.key === "Enter") {
           event.preventDefault();
           this.verifyApiKey();
@@ -179,8 +163,8 @@ const AiController = {
         this.verifyApiKey();
       };
 
-      verifyButton.addEventListener("click", handler);
-      verifyButton.addEventListener("keypress", event => {
+      this._bindOnce(verifyButton, "aiBoundVerifyClick", "click", handler);
+      this._bindOnce(verifyButton, "aiBoundVerifyKeypress", "keypress", event => {
         if (event.key === "Enter" || event.key === " ") handler(event);
       });
     }
@@ -188,10 +172,11 @@ const AiController = {
     // API key visibility toggle handler
     const toggleButton = document.getElementById("toggleApiKeyVisibility");
     if (toggleButton && inputField) {
-      toggleButton.addEventListener("click", () => {
+
+      this._bindOnce(toggleButton, "aiBoundToggleVisibilityClick", "click", () => {
         this.toggleApiKeyVisibility();
       });
-      toggleButton.addEventListener("keypress", event => {
+      this._bindOnce(toggleButton, "aiBoundToggleVisibilityKeypress", "keypress", event => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           this.toggleApiKeyVisibility();

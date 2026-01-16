@@ -64,7 +64,7 @@ const AiApi = {
    * Send a chat completion request to the configured AI provider
    * @param {string} prompt - The user prompt to send
    * @param {string} systemPrompt - Optional system prompt (ignored by some providers)
-   * @param {Object} options - Optional configuration {temperature, maxTokens}
+   * @param {Object} options - Optional configuration {maxTokens}
    * @returns {Promise<string>} The generated text response
    */
   async chat(prompt, systemPrompt = "", options = {}) {
@@ -83,7 +83,7 @@ const AiApi = {
    * Stream a chat completion response to the configured AI provider
    * @param {string} prompt - The user prompt to send
    * @param {string} systemPrompt - Optional system prompt
-   * @param {Object} options - Optional configuration {temperature, maxTokens, timeout}
+    * @param {Object} options - Optional configuration {maxTokens}
    * @param {Object} callbacks - Optional callbacks {onDelta}
    * @returns {{abort: Function, done: Promise<string>}} Stream handle
    */

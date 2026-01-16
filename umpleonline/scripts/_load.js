@@ -59,11 +59,13 @@ document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/edi
 // socket io to connect to UmpleCollabServer using sockets
 document.write('<script type="text/javascript" src="scripts/socket.io/socket.io.js"></script>');
 
+// OpenAI SDK
+document.write('<script type="text/javascript" src="scripts/openai-sdk/openai.bundle.js"></script>');
+
 // ====== The following minified version of the subsequent group can be commented out when testing
 // Regenerate this using the allumple-minifyscript unix script (relies on esbuild, formerly yuicompressor)
 // regenerated in the build using ant -f build.umple.xml compressAllScripts
 document.write('<script type="text/javascript" src="scripts/allumple-min.js"></script>');
-
 
 // ------ The following should be commented out, and the above min version used, except when testing
 // If you change any constituent file, regenerate allumple-min.js as above
@@ -106,6 +108,10 @@ document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_err
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_storage.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_provider_utils.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_prompt_tags.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_text_utils.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_response_utils.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_config_validation.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_compiler_service.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_providers.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_manager.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_prompt_examples.js"></script>');
