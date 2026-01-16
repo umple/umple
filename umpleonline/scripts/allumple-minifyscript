@@ -21,10 +21,8 @@ cat \
  ai/utils/umple_ai_prompt_tags.js \
  ai/core/umple_ai_providers.js \
  ai/core/umple_ai_manager.js \
- ai/core/umple_ai_prompt_examples.js \
- ai/core/umple_ai_prompting.js \
- ai/ui/umple_ai_ui.js \
- ai/ui/umple_dialog.js \
+ ai/prompts/umple_ai_base_prompt.js \
+ ai/features/settings/umple_ai_settings_view.js \
  # Features - recursive wildcard for any new files/directories \
  ai/features/**/*.js \
  structureDiagram.js \

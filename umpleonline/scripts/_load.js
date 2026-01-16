@@ -114,11 +114,9 @@ document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_con
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_compiler_service.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_providers.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_manager.js"></script>');
-document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_prompt_examples.js"></script>');
-document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_prompting.js"></script>');
-document.write('<script type="text/javascript" src="scripts/ai/ui/umple_ai_ui.js"></script>');
-document.write('<script type="text/javascript" src="scripts/ai/ui/umple_dialog.js"></script>');
-document.write('<script type="text/javascript" src="scripts/ai/features/config/umple_ai_controller.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/prompts/umple_ai_base_prompt.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/settings/umple_ai_settings_view.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/settings/umple_ai_settings.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements-prompt_builder.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/explain/umple_ai_explain-prompt_builder.js"></script>');

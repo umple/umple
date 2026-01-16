@@ -366,6 +366,22 @@ input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
   border: 1px dashed #ff9800;
 }
 
+/* Generic visibility class */
+.is-hidden {
+  display: none !important;
+}
+
+/* Status message styles for API key status div */
+.ai-status-message--error {
+  color: #d32f2f;
+  font-weight: normal;
+}
+
+.ai-status-message--success {
+  color: #2e7d32;
+  font-weight: normal;
+}
+
 /* AI SETTINGS MODAL */
 .ai-settings-modal {
   position: fixed;

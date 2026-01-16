@@ -27,35 +27,13 @@ const AiProviderAdapters = {
     // Retry once with a larger token budget.
     const bumped = { ...requestParams };
 
-    const usesMaxCompletionTokens = this._usesMaxCompletionTokens(model);
+    const usesMaxCompletionTokens = AiProviderUtils.usesMaxCompletionTokens(model);
     const current = Number(usesMaxCompletionTokens ? requestParams.max_completion_tokens : requestParams.max_tokens) || 0;
     const next = current > 0 ? current * 2 : 16000;
     if (usesMaxCompletionTokens) bumped.max_completion_tokens = next;
     else bumped.max_tokens = next;
 
     return client.chat.completions.create(bumped);
-  },
-
-  _contentToText(content) {
-    if (content == null) return "";
-    if (typeof content === "string") return content;
-    if (Array.isArray(content)) {
-      return content
-        .map(part => {
-          if (typeof part === "string") return part;
-          if (!part || typeof part !== "object") return "";
-          // Common shapes: {type:'text', text:'...'} or {text:{value:'...'}}
-          if (typeof part.text === "string") return part.text;
-          if (part.text && typeof part.text === "object" && typeof part.text.value === "string") return part.text.value;
-          return "";
-        })
-        .join("");
-    }
-    if (typeof content === "object") {
-      if (typeof content.text === "string") return content.text;
-      if (content.text && typeof content.text === "object" && typeof content.text.value === "string") return content.text.value;
-    }
-    return String(content);
   },
 
   /**
@@ -192,8 +170,8 @@ const AiProviderAdapters = {
       messages
     };
 
-    // Use max_completion_tokens for GPT-5 and reasoning models, max_tokens for others
-    if (this._usesMaxCompletionTokens(model)) {
+    // max_completion_tokens is newer, but most providers still support max_tokens
+    if (AiProviderUtils.usesMaxCompletionTokens(model)) {
       requestParams.max_completion_tokens = params.maxTokens;
     } else {
       requestParams.max_tokens = params.maxTokens;
@@ -202,7 +180,7 @@ const AiProviderAdapters = {
     let response = await client.chat.completions.create(requestParams);
     response = await this._retryIfEmptyReasoningOnly(client, requestParams, response, model);
     const content = response.choices?.[0]?.message?.content;
-    return this._contentToText(content);
+    return AiProviderUtils.contentToText(content);
   },
 
   /**
@@ -237,7 +215,7 @@ const AiProviderAdapters = {
       };
 
       // Use max_completion_tokens for GPT-5 and reasoning models, max_tokens for others
-      if (this._usesMaxCompletionTokens(model)) {
+      if (AiProviderUtils.usesMaxCompletionTokens(model)) {
         requestParams.max_completion_tokens = params.maxTokens;
       } else {
         requestParams.max_tokens = params.maxTokens;
@@ -258,7 +236,7 @@ const AiProviderAdapters = {
         if (choice?.finish_reason) finishReason = choice.finish_reason;
         const deltaObj = choice?.delta;
         const deltaContent = deltaObj?.content ?? "";
-        const deltaText = this._contentToText(deltaContent);
+        const deltaText = AiProviderUtils.contentToText(deltaContent);
         if (deltaText) {
           fullText += deltaText;
           onDelta?.(deltaText);
@@ -275,17 +253,5 @@ const AiProviderAdapters = {
       abort: () => controller.abort(),
       done
     };
-  },
-
-  /**
-   * Check if model requires max_completion_tokens instead of max_tokens
-   * @param {string} model - Model name
-   * @returns {boolean} True if model needs max_completion_tokens
-   */
-  _usesMaxCompletionTokens(model) {
-    if (!model) return false;
-    const m = String(model).toLowerCase();
-    // GPT-5 series and reasoning models (o1, o3) require max_completion_tokens
-    return /gpt-?5/.test(m) || /\bo[13](-|$)/.test(m) || m.includes("/o1") || m.includes("/o3") || m.includes("/gpt-5") || m.includes("/gpt5");
   }
 };

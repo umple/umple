@@ -376,11 +376,11 @@
       <fileset file="${scriptPath}/ai/core/umple_ai_manager.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_prompt_examples.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_prompting.js"/>
-      <fileset file="${scriptPath}/ai/ui/umple_ai_ui.js"/>
       <fileset file="${scriptPath}/ai/ui/umple_dialog.js"/>
-      <!-- Features - include config controller explicitly, then other features -->
-      <fileset file="${scriptPath}/ai/features/config/umple_ai_controller.js"/>
-      <fileset dir="${scriptPath}/ai/features" includes="**/*.js" excludes="config/*.js"/>
+      <!-- Features - include settings view and controller explicitly, then other features -->
+      <fileset file="${scriptPath}/ai/features/settings/umple_ai_settings_view.js"/>
+      <fileset file="${scriptPath}/ai/features/settings/umple_ai_settings.js"/>
+      <fileset dir="${scriptPath}/ai/features" includes="**/*.js" excludes="settings/*.js"/>
       <fileset file="${scriptPath}/structureDiagram.js"/>
       <fileset file="${scriptPath}/statetable/state_table_colourer.js"/>
     </concat>

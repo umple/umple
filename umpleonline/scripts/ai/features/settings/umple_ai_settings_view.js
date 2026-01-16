@@ -2,9 +2,9 @@
 // This file is made available subject to the open source license found at:
 // https://umple.org/license
 //
-// AI UI Module - Handles UI updates and modal management
+// AI Settings View - DOM manipulation for AI settings UI (view-only)
 
-const AiUI = {
+const AiSettingsView = {
   // Cache DOM elements to avoid repeated lookups
   elements: {},
   
@@ -47,16 +47,18 @@ const AiUI = {
   },
 
   /**
-   * Update status message display
+   * Update status message display (uses CSS classes)
    * @param {string} message - Status message
-   * @param {boolean} isError - Whether it's an error message
+   * @param {string} kind - Message type: 'error' | 'success' | ''
    */
-  updateStatus(message, isError) {
+  setStatusMessage(message, kind = "") {
     const statusDiv = this._getElement("apiKeyStatus", "statusDiv");
     if (statusDiv) {
       statusDiv.textContent = message;
-      statusDiv.style.color = isError ? "#d32f2f" : "#2e7d32";
-      statusDiv.style.fontWeight = "normal";
+      statusDiv.className = "";
+      if (kind) {
+        statusDiv.classList.add(`ai-status-message--${kind}`);
+      }
     }
   },
 
@@ -67,6 +69,7 @@ const AiUI = {
     const statusDiv = this._getElement("apiKeyStatus", "statusDiv");
     if (statusDiv) {
       statusDiv.textContent = "";
+      statusDiv.className = "";
     }
   },
 
@@ -76,7 +79,7 @@ const AiUI = {
   showModelSelection() {
     const modelContainer = document.getElementById("ttAiModel");
     if (modelContainer) {
-      modelContainer.style.display = "flex";
+      modelContainer.classList.remove("is-hidden");
     }
   },
 
@@ -86,7 +89,7 @@ const AiUI = {
   hideModelSelection() {
     const modelContainer = document.getElementById("ttAiModel");
     if (modelContainer) {
-      modelContainer.style.display = "none";
+      modelContainer.classList.add("is-hidden");
     }
   },
 
@@ -131,7 +134,7 @@ const AiUI = {
   showSettingsModal() {
     const modal = document.getElementById("aiSettingsModal");
     if (modal) {
-      modal.style.display = "flex";
+      modal.classList.remove("is-hidden");
     }
   },
 
@@ -141,7 +144,48 @@ const AiUI = {
   hideSettingsModal() {
     const modal = document.getElementById("aiSettingsModal");
     if (modal) {
-      modal.style.display = "none";
+      modal.classList.add("is-hidden");
+    }
+  },
+
+  /**
+   * Set model select to loading state
+   */
+  setModelsLoading() {
+    const modelSelect = this._getElement("selectAiModel", "modelSelect");
+    if (modelSelect) {
+      modelSelect.innerHTML = '<option value="">Loading models...</option>';
+      modelSelect.disabled = true;
+    }
+  },
+
+  /**
+   * Set model select to error state
+   * @param {string} message - Error message to display
+   */
+  setModelsError(message) {
+    const modelSelect = this._getElement("selectAiModel", "modelSelect");
+    if (modelSelect) {
+      modelSelect.innerHTML = `<option value="">${message}</option>`;
+      modelSelect.disabled = false;
+    }
+  },
+
+  /**
+   * Populate model select with options
+   * @param {Array} models - Array of {value, label} objects
+   */
+  setModelsOptions(models) {
+    const modelSelect = this._getElement("selectAiModel", "modelSelect");
+    if (modelSelect) {
+      if (models.length === 0) {
+        modelSelect.innerHTML = '<option value="">No models available</option>';
+      } else {
+        modelSelect.innerHTML = models
+          .map(model => `<option value="${model.value}">${model.label}</option>`)
+          .join("");
+      }
+      modelSelect.disabled = false;
     }
   },
 
@@ -203,102 +247,6 @@ const AiUI = {
   },
 
   /**
-   * Load models into the model select dropdown
-   * @param {string} provider - Provider name
-   * @param {string} apiKey - API key
-   * @param {Function} fetchModels - Function to fetch models
-   * @param {Function} parseModels - Function to parse models response
-   * @param {Function} restoreModel - Function to restore saved model selection
-   * @param {Function} onSuccess - Callback on success
-   * @param {Function} onError - Callback on error
-   */
-  async loadModels(provider, apiKey, fetchModels, parseModels, restoreModel, onSuccess, onError) {
-    const modelSelect = this._getElement("selectAiModel", "modelSelect");
-    if (!modelSelect) {
-      onError?.();
-      return;
-    }
-
-    // Clear and show loading
-    modelSelect.innerHTML = '<option value="">Loading models...</option>';
-    modelSelect.disabled = true;
-
-    // For OpenRouter, we can fetch without API key
-    const keyToUse = (provider === "openrouter" && !apiKey) ? null : apiKey;
-
-    try {
-      const response = await fetchModels(provider, keyToUse);
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-
-        // Handle authentication errors
-        if (response.status === 401 || response.status === 403) {
-          const errorMsg = AiErrors.extractErrorMessage(errorData, "Enter API key to load models");
-          modelSelect.innerHTML = `<option value="">${errorMsg}</option>`;
-          modelSelect.disabled = false;
-          onError?.();
-          return;
-        }
-
-        // Other errors
-        const errorMsg = AiErrors.extractErrorMessage(errorData, `Failed to fetch models: ${response.status}`);
-        throw new Error(errorMsg);
-      }
-
-      const data = await response.json();
-      const models = parseModels(provider, data);
-
-      if (models.length === 0) {
-        modelSelect.innerHTML = '<option value="">No models available</option>';
-      } else {
-        modelSelect.innerHTML = models
-          .map(model => `<option value="${model.value}">${model.label}</option>`)
-          .join("");
-
-        // Restore saved model selection
-        restoreModel?.();
-      }
-
-      modelSelect.disabled = false;
-      onSuccess?.();
-    } catch (error) {
-      console.error("Error loading models:", error);
-      const errorMessage = error.message ? `Error: ${error.message}` : "Error loading models";
-      modelSelect.innerHTML = `<option value="">${errorMessage}</option>`;
-      modelSelect.disabled = false;
-      onError?.();
-    }
-  },
-
-  /**
-   * Load saved preferences into the UI
-   * @param {Object} storage - Storage object with getProvider, getApiKey, isVerified
-   * @param {Function} loadModelsCallback - Callback to load models
-   */
-   loadPreferences(storage, loadModelsCallback) {
-    const providerSelect = this._getElement("selectAiProvider", "providerSelect");
-    if (providerSelect) {
-      const savedProvider = storage.getProvider();
-      providerSelect.value = savedProvider;
-    }
-
-    const inputField = this._getElement("inputAiApiKey", "inputField");
-    const currentProvider = providerSelect?.value || storage.getProvider();
-    if (inputField) {
-      inputField.value = storage.getApiKey(currentProvider);
-    }
-
-    const wasVerified = storage.isVerified(currentProvider);
-    const apiKey = storage.getApiKey(currentProvider);
-    if (wasVerified && apiKey && providerSelect) {
-      loadModelsCallback?.(currentProvider, apiKey);
-    } else {
-      this.hideModelSelection();
-    }
-  },
-
-  /**
    * Toggle API key visibility between password and text
    */
   toggleApiKeyVisibility() {
@@ -312,6 +260,28 @@ const AiUI = {
     
     if (toggleButton) {
       toggleButton.classList.toggle("visible", isPassword);
+    }
+  },
+
+  /**
+   * Set provider select value
+   * @param {string} value - Provider value to select
+   */
+  setProviderValue(value) {
+    const providerSelect = this._getElement("selectAiProvider", "providerSelect");
+    if (providerSelect) {
+      providerSelect.value = value;
+    }
+  },
+
+  /**
+   * Set API key input value
+   * @param {string} value - API key value
+   */
+  setApiKeyValue(value) {
+    const inputField = this._getElement("inputAiApiKey", "inputField");
+    if (inputField) {
+      inputField.value = value;
     }
   }
 };

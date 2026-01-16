@@ -2,9 +2,9 @@
 // This file is made available subject to the open source license found at:
 // https://umple.org/license
 //
-// AI Controller - UI orchestration and event wiring for AI settings
+// AI Settings Controller - Event wiring and state flow for AI settings
 
-const AiController = {
+const AiSettings = {
   elements: {},
   _initialized: false,
 
@@ -24,7 +24,7 @@ const AiController = {
   },
 
   init() {
-    this.elements = AiUI.initElements();
+    this.elements = AiSettingsView.initElements();
 
     if (!this._initialized) {
       this._initialized = true;
@@ -100,9 +100,9 @@ const AiController = {
         if (apiKey && AiApi.isVerified(newProvider)) {
           this.loadModels(newProvider, apiKey, success => {
             if (success) {
-              this.showModelSelection();
+              AiSettingsView.showModelSelection();
             } else {
-              this.hideModelSelection();
+              AiSettingsView.hideModelSelection();
               AiApi.setVerified(false, newProvider);
             }
             this.updateStatusIndicator();
@@ -110,7 +110,7 @@ const AiController = {
           return;
         }
 
-        this.hideModelSelection();
+        AiSettingsView.hideModelSelection();
         AiApi.setVerified(false, newProvider);
         this.updateStatusIndicator();
       });
@@ -185,20 +185,20 @@ const AiController = {
     }
   },
 
-  updateStatus(message, isError) {
-    AiUI.updateStatus(message, isError);
+  updateStatus(message, kind) {
+    AiSettingsView.setStatusMessage(message, kind);
   },
 
   clearStatus() {
-    AiUI.clearStatus();
+    AiSettingsView.clearStatus();
   },
 
   showModelSelection() {
-    AiUI.showModelSelection();
+    AiSettingsView.showModelSelection();
   },
 
   hideModelSelection() {
-    AiUI.hideModelSelection();
+    AiSettingsView.hideModelSelection();
   },
 
   updateStatusIndicator() {
@@ -207,11 +207,11 @@ const AiController = {
     const model = AiApi.getModel(false, provider);
     const verified = AiApi.isVerified(provider);
 
-    AiUI.updateStatusIndicator({ provider, apiKey, model, verified });
+    AiSettingsView.updateStatusIndicator({ provider, apiKey, model, verified });
   },
 
   showSettingsModal() {
-    AiUI.showSettingsModal();
+    AiSettingsView.showSettingsModal();
     // Reload preferences when modal opens
     this.loadPreferences();
     // Ensure saved model is selected (fallback if models are already loaded)
@@ -227,14 +227,14 @@ const AiController = {
   },
 
   hideSettingsModal() {
-    AiUI.hideSettingsModal();
+    AiSettingsView.hideSettingsModal();
     // Update status indicator when modal closes
     this.updateStatusIndicator();
   },
 
   restoreSavedModel(provider = null) {
     const providerToUse = provider || AiApi.getProvider();
-    AiUI.restoreSavedModel(
+    AiSettingsView.restoreSavedModel(
       () => AiApi.getModel(false, providerToUse),
       model => AiApi.saveModel(model, providerToUse)
     );
@@ -247,32 +247,67 @@ const AiController = {
    * @param {function} callback - Optional callback with success boolean
    */
   async loadModels(provider, apiKey, callback) {
-    await AiUI.loadModels(
-      provider,
-      apiKey,
-      (p, k) => AiApi.fetchModels(p, k),
-      (p, d) => AiApi.parseModelsResponse(p, d),
-      () => this.restoreSavedModel(provider),
-      () => {
-        callback?.(true);
-      },
-      () => callback?.(false)
-    );
+    AiSettingsView.setModelsLoading();
+
+    // For OpenRouter, we can fetch without API key
+    const keyToUse = (provider === "openrouter" && !apiKey) ? null : apiKey;
+
+    try {
+      const response = await AiApi.fetchModels(provider, keyToUse);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+
+        // Handle authentication errors
+        if (response.status === 401 || response.status === 403) {
+          const errorMsg = AiErrors.extractErrorMessage(errorData, "Enter API key to load models");
+          AiSettingsView.setModelsError(errorMsg);
+          callback?.(false);
+          return;
+        }
+
+        // Other errors
+        const errorMsg = AiErrors.extractErrorMessage(errorData, `Failed to fetch models: ${response.status}`);
+        throw new Error(errorMsg);
+      }
+
+      const data = await response.json();
+      const models = AiApi.parseModelsResponse(provider, data);
+
+      AiSettingsView.setModelsOptions(models);
+      this.restoreSavedModel(provider);
+      callback?.(true);
+    } catch (error) {
+      console.error("Error loading models:", error);
+      const errorMessage = error.message ? `Error: ${error.message}` : "Error loading models";
+      AiSettingsView.setModelsError(errorMessage);
+      callback?.(false);
+    }
   },
 
   /**
    * Load saved preferences into the UI
    */
   loadPreferences() {
-    AiUI.loadPreferences(AiApi, (provider, apiKey) => {
-      this.loadModels(provider, apiKey, success => {
+    const savedProvider = AiApi.getProvider();
+    const savedApiKey = AiApi.getApiKey(savedProvider);
+
+    // Update UI with saved values
+    AiSettingsView.setProviderValue(savedProvider);
+    AiSettingsView.setApiKeyValue(savedApiKey);
+
+    const wasVerified = AiApi.isVerified(savedProvider);
+    if (wasVerified && savedApiKey && savedProvider) {
+      this.loadModels(savedProvider, savedApiKey, success => {
         if (success) {
-          this.showModelSelection();
+          AiSettingsView.showModelSelection();
         }
         this.updateStatusIndicator();
       });
-    });
-    this.updateStatusIndicator();
+    } else {
+      AiSettingsView.hideModelSelection();
+      this.updateStatusIndicator();
+    }
   },
 
   /**
@@ -280,11 +315,11 @@ const AiController = {
    * If successful, show the models dropdown
    */
   async verifyApiKey() {
-    const providerSelect = AiUI.getElement("selectAiProvider", "providerSelect");
-    const inputField = AiUI.getElement("inputAiApiKey", "inputField");
+    const providerSelect = AiSettingsView.getElement("selectAiProvider", "providerSelect");
+    const inputField = AiSettingsView.getElement("inputAiApiKey", "inputField");
 
     if (!providerSelect || !inputField) {
-      this.updateStatus("UI elements not found", true);
+      this.updateStatus("UI elements not found", "error");
       return;
     }
 
@@ -292,12 +327,12 @@ const AiController = {
     const apiKey = inputField.value.trim();
 
     if (!provider) {
-      this.updateStatus("Please select a provider first", true);
+      this.updateStatus("Please select a provider first", "error");
       return;
     }
 
     if (!apiKey) {
-      this.updateStatus("Please enter an API key", true);
+      this.updateStatus("Please enter an API key", "error");
       return;
     }
 
@@ -306,8 +341,8 @@ const AiController = {
     AiApi.saveProvider(provider);
 
     // Update status and hide model dropdown until verified
-    this.updateStatus("Verifying API key...", false);
-    this.hideModelSelection();
+    this.updateStatus("Verifying API key...", "success");
+    AiSettingsView.hideModelSelection();
 
     // Actually verify the API key with an authenticated request
     const result = await AiApi.verifyKey(provider, apiKey);
@@ -316,28 +351,32 @@ const AiController = {
       // API key is valid, now load models
       this.loadModels(provider, apiKey, success => {
         if (success) {
-          this.updateStatus("Success!", false);
-          this.showModelSelection();
+          this.updateStatus("Success!", "success");
+          AiSettingsView.showModelSelection();
           AiApi.setVerified(true, provider);
           // Update status indicator after a brief delay to ensure model select is populated
           setTimeout(() => this.updateStatusIndicator(), 100);
         } else {
-          this.updateStatus("Failed to load models after verification.", true);
+          this.updateStatus("Failed to load models after verification.", "error");
           AiApi.setVerified(false, provider);
           this.updateStatusIndicator();
         }
       });
     } else {
       // API key invalid
-      this.updateStatus(`API key verification failed: ${result.error}`, true);
+      this.updateStatus(`API key verification failed: ${result.error}`, "error");
       AiApi.setVerified(false, provider);
       this.updateStatusIndicator();
     }
   },
 
   toggleApiKeyVisibility() {
-    AiUI.toggleApiKeyVisibility();
+    AiSettingsView.toggleApiKeyVisibility();
   }
 };
 
-window.AiController = AiController;
+// Backwards compatibility alias
+window.AiController = AiSettings;
+
+// Also expose the new canonical name
+window.AiSettings = AiSettings;

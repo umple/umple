@@ -99,6 +99,45 @@ var AiProviderUtils = _aiGlobal.AiProviderUtils || {
       default:
         return models;
     }
+  },
+
+  /**
+   * Convert AI response content (various formats) to a text string
+   * Handles: string, array of parts, object with text property
+   * @param {any} content - Response content in various formats
+   * @returns {string} Plain text string
+   */
+  contentToText(content) {
+    if (content == null) return "";
+    if (typeof content === "string") return content;
+    if (Array.isArray(content)) {
+      return content
+        .map(part => {
+          if (typeof part === "string") return part;
+          if (!part || typeof part !== "object") return "";
+          if (typeof part.text === "string") return part.text;
+          if (part.text && typeof part.text === "object" && typeof part.text.value === "string") return part.text.value;
+          return "";
+        })
+        .join("");
+    }
+    if (typeof content === "object") {
+      if (typeof content.text === "string") return content.text;
+      if (content.text && typeof content.text === "object" && typeof content.text.value === "string") return content.text.value;
+    }
+    return String(content);
+  },
+
+  /**
+   * Check if model requires max_completion_tokens instead of max_tokens
+   * GPT-5 series and reasoning models (o1, o3) require max_completion_tokens
+   * @param {string} model - Model name
+   * @returns {boolean} True if model needs max_completion_tokens
+   */
+  usesMaxCompletionTokens(model) {
+    if (!model) return false;
+    const m = String(model).toLowerCase();
+    return /gpt-?5/.test(m) || /\bo[13](-|$)/.test(m) || m.includes("/o1") || m.includes("/o3") || m.includes("/gpt-5") || m.includes("/gpt5");
   }
 };
 

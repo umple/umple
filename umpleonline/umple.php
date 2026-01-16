@@ -1251,7 +1251,7 @@ $output = $dataHandle->readData('model.ump');
   <?php } ?>
 
   <!-- AI Settings Modal (hidden by default) -->
-  <div id="aiSettingsModal" class="ai-settings-modal" style="display: none;">
+  <div id="aiSettingsModal" class="ai-settings-modal is-hidden">
     <div class="dialog-overlay"></div>
     <div class="dialog-content">
       <h3>AI Settings</h3>
@@ -1280,7 +1280,7 @@ $output = $dataHandle->readData('model.ump');
           <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Verify Key</div>
           <div id="apiKeyStatus" style="margin-top: 3px; font-size: 9pt;"></div>
         </div>
-        <div id="ttAiModel" class="setting-row" style="display: none;">
+        <div id="ttAiModel" class="setting-row is-hidden">
           <label for="selectAiModel">Model:</label>
           <select id="selectAiModel" class="button">
             <option value="">Select model...</option>
