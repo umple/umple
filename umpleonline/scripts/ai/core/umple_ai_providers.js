@@ -36,6 +36,40 @@ const AiProviderAdapters = {
     return client.chat.completions.create(bumped);
   },
 
+  _normalizeUsage(usage, response = null) {
+    const toNumber = value => {
+      const num = Number(value);
+      return Number.isFinite(num) ? num : null;
+    };
+
+    const inputTokens = toNumber(usage?.prompt_tokens ?? usage?.input_tokens);
+    const outputTokens = toNumber(usage?.completion_tokens ?? usage?.output_tokens);
+    let totalTokens = toNumber(usage?.total_tokens);
+    if (totalTokens == null && Number.isFinite(inputTokens) && Number.isFinite(outputTokens)) {
+      totalTokens = inputTokens + outputTokens;
+    }
+
+    const costUsd = toNumber(usage?.cost ?? response?.cost ?? response?.usage?.cost);
+
+    return {
+      inputTokens,
+      outputTokens,
+      totalTokens,
+      costUsd
+    };
+  },
+
+  _recordUsage(provider, usage, response = null) {
+    const normalized = this._normalizeUsage(usage, response);
+    AiStorage.recordUsage(provider, {
+      requests: 1,
+      inputTokens: normalized.inputTokens,
+      outputTokens: normalized.outputTokens,
+      totalTokens: normalized.totalTokens,
+      costUsd: normalized.costUsd
+    });
+  },
+
   /**
    * Get or create an OpenAI client for the given provider and API key
    * @param {string} provider - Provider name
@@ -178,7 +212,16 @@ const AiProviderAdapters = {
     }
 
     let response = await client.chat.completions.create(requestParams);
-    response = await this._retryIfEmptyReasoningOnly(client, requestParams, response, model);
+    this._recordUsage(provider, response?.usage, response);
+
+    const retriedResponse = await this._retryIfEmptyReasoningOnly(client, requestParams, response, model);
+    if (retriedResponse !== response) {
+      response = retriedResponse;
+      this._recordUsage(provider, response?.usage, response);
+    } else {
+      response = retriedResponse;
+    }
+
     const content = response.choices?.[0]?.message?.content;
     return AiProviderUtils.contentToText(content);
   },
@@ -211,7 +254,10 @@ const AiProviderAdapters = {
       const requestParams = {
         model,
         messages,
-        stream: true
+        stream: true,
+        stream_options: {
+          include_usage: true
+        }
       };
 
       // Use max_completion_tokens for GPT-5 and reasoning models, max_tokens for others
@@ -228,6 +274,7 @@ const AiProviderAdapters = {
 
       let fullText = "";
       let finishReason = null;
+      let usage = null;
       for await (const chunk of stream) {
         if (controller.signal.aborted) {
           break;
@@ -241,11 +288,23 @@ const AiProviderAdapters = {
           fullText += deltaText;
           onDelta?.(deltaText);
         }
+        if (chunk?.usage) {
+          usage = chunk.usage;
+        }
       }
 
       if (!controller.signal.aborted && finishReason === "length") {
         onTruncated?.();
       }
+
+      if (!controller.signal.aborted) {
+        if (usage) {
+          this._recordUsage(provider, usage, null);
+        } else {
+          AiStorage.recordUsage(provider, { requests: 1 });
+        }
+      }
+
       return fullText;
     })();
 

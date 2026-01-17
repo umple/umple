@@ -7,6 +7,7 @@
 const AiSettings = {
   elements: {},
   _initialized: false,
+  _usageListenerBound: false,
 
   _bindOnce(element, datasetKey, eventName, handler) {
     if (!element) return;
@@ -106,6 +107,7 @@ const AiSettings = {
               AiApi.setVerified(false, newProvider);
             }
             this.updateStatusIndicator();
+            this.refreshUsage();
           });
           return;
         }
@@ -113,6 +115,7 @@ const AiSettings = {
         AiSettingsView.hideModelSelection();
         AiApi.setVerified(false, newProvider);
         this.updateStatusIndicator();
+        this.refreshUsage();
       });
     }
 
@@ -183,6 +186,31 @@ const AiSettings = {
         }
       });
     }
+
+    // Reset usage button handler
+    const resetUsageButton = this.elements.resetUsageButton;
+    if (resetUsageButton) {
+      const handler = event => {
+        event.preventDefault();
+        AiStorage.resetUsage();
+        this.refreshUsage();
+      };
+
+      this._bindOnce(resetUsageButton, "aiBoundResetUsage", "click", handler);
+      this._bindOnce(resetUsageButton, "aiBoundResetUsageKeypress", "keypress", event => {
+        if (event.key === "Enter" || event.key === " ") handler(event);
+      });
+    }
+
+    if (!this._usageListenerBound && typeof window !== "undefined") {
+      this._usageListenerBound = true;
+      window.addEventListener("aiUsageUpdated", () => {
+        const modal = document.getElementById("aiSettingsModal");
+        if (modal && !modal.classList.contains("is-hidden")) {
+          this.refreshUsage();
+        }
+      });
+    }
   },
 
   updateStatus(message, kind) {
@@ -216,6 +244,7 @@ const AiSettings = {
     this.loadPreferences();
     // Ensure saved model is selected (fallback if models are already loaded)
     setTimeout(() => this.restoreSavedModel(), 100);
+    this.refreshUsage();
     this.updateStatusIndicator();
   },
 
@@ -308,6 +337,8 @@ const AiSettings = {
       AiSettingsView.hideModelSelection();
       this.updateStatusIndicator();
     }
+
+    this.refreshUsage();
   },
 
   /**
@@ -372,6 +403,12 @@ const AiSettings = {
 
   toggleApiKeyVisibility() {
     AiSettingsView.toggleApiKeyVisibility();
+  },
+
+  refreshUsage() {
+    const usageMap = AiStorage.getUsageMap();
+    const provider = this.elements.providerSelect?.value || AiApi.getProvider();
+    AiSettingsView.renderUsage(usageMap, provider);
   }
 };
 

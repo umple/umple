@@ -1267,24 +1267,38 @@ $output = $dataHandle->readData('model.ump');
         </div>
         <div class="setting-row">
           <label for="inputAiApiKey">API Key:</label>
-          <!-- Hidden dummy field to prevent browser password autofill -->
-          <input type="password" style="position: absolute; left: -9999px; opacity: 0;" tabindex="-1" autocomplete="new-password"/>
-          <div class="api-key-input-wrapper">
-            <input id="inputAiApiKey" type="password" placeholder="Enter API key" autocomplete="new-password" data-form-type="other" class="button api-key-input"/>
-            <button type="button" id="toggleApiKeyVisibility" class="api-key-toggle" tabindex="0">
-              <span class="eye-icon">👁</span>
-            </button>
+          <div class="ai-settings-field">
+            <!-- Hidden dummy field to prevent browser password autofill -->
+            <input type="password" style="position: absolute; left: -9999px; opacity: 0;" tabindex="-1" autocomplete="new-password"/>
+            <div class="api-key-input-wrapper">
+              <input id="inputAiApiKey" type="password" placeholder="Enter API key" autocomplete="new-password" data-form-type="other" class="button api-key-input"/>
+              <button type="button" id="toggleApiKeyVisibility" class="api-key-toggle" tabindex="0">
+                <span class="eye-icon">👁</span>
+              </button>
+            </div>
           </div>
         </div>
-        <div class="setting-row setting-row-button">
-          <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Verify Key</div>
-          <div id="apiKeyStatus" style="margin-top: 3px; font-size: 9pt;"></div>
+        <div class="setting-row">
+          <label>&nbsp;</label>
+          <div class="ai-settings-field ai-settings-actions">
+            <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Verify Key</div>
+            <div id="apiKeyStatus"></div>
+          </div>
         </div>
         <div id="ttAiModel" class="setting-row is-hidden">
           <label for="selectAiModel">Model:</label>
           <select id="selectAiModel" class="button">
             <option value="">Select model...</option>
           </select>
+        </div>
+        <div class="setting-row ai-usage-section">
+          <label>Token:</label>
+          <div id="aiUsageSummary" class="ai-usage-summary">
+            <div class="ai-usage-empty">No usage recorded yet.</div>
+          </div>
+          <div class="ai-usage-actions">
+            <div id="buttonResetAiUsage" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Reset Usage</div>
+          </div>
         </div>
       </div>
       <div class="dialog-buttons">

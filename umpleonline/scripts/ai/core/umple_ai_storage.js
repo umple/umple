@@ -8,6 +8,7 @@ const AiStorage = {
   // LocalStorage keys for storing preferences
   STORAGE_KEY_PROVIDER_DATA: "umpleAiProviderData", // Map of provider -> { apiKey, model, verified }
   STORAGE_KEY_PROVIDER: "umpleAiProvider",
+  STORAGE_KEY_USAGE: "umpleAiUsage",
 
   /**
    * Execute localStorage operation with error handling
@@ -61,6 +62,46 @@ const AiStorage = {
   },
 
   /**
+   * Sanitize usage map entries before storage
+   * @param {Object} usageMap - Map of provider -> usage data
+   * @returns {Object} Sanitized map
+   */
+  _sanitizeUsageMap(usageMap) {
+    if (!usageMap || typeof usageMap !== "object") return {};
+
+    const sanitized = {};
+    Object.entries(usageMap).forEach(([provider, data]) => {
+      if (!provider || !data || typeof data !== "object") return;
+
+      const entry = {};
+      const toNumber = value => {
+        const num = Number(value);
+        return Number.isFinite(num) ? num : null;
+      };
+
+      const requests = toNumber(data.requests);
+      const inputTokens = toNumber(data.inputTokens);
+      const outputTokens = toNumber(data.outputTokens);
+      const totalTokens = toNumber(data.totalTokens);
+      const costUsd = toNumber(data.costUsd);
+      const lastUsedAt = data.lastUsedAt ? String(data.lastUsedAt) : "";
+
+      if (requests != null) entry.requests = Math.max(0, Math.floor(requests));
+      if (inputTokens != null) entry.inputTokens = Math.max(0, Math.floor(inputTokens));
+      if (outputTokens != null) entry.outputTokens = Math.max(0, Math.floor(outputTokens));
+      if (totalTokens != null) entry.totalTokens = Math.max(0, Math.floor(totalTokens));
+      if (costUsd != null) entry.costUsd = Math.max(0, costUsd);
+      if (lastUsedAt) entry.lastUsedAt = lastUsedAt;
+
+      if (Object.keys(entry).length > 0) {
+        sanitized[provider] = entry;
+      }
+    });
+
+    return sanitized;
+  },
+
+  /**
    * Get provider data map from localStorage
    * @returns {Object} Map of provider -> { apiKey, model, verified }
    */
@@ -100,6 +141,107 @@ const AiStorage = {
       },
       "Error saving provider data map:"
     ) ?? false;
+  },
+
+  /**
+   * Retrieve usage map from localStorage
+   * @returns {Object} Map of provider -> usage data
+   */
+  getUsageMap() {
+    return this._withStorage(
+      () => {
+        const stored = localStorage.getItem(this.STORAGE_KEY_USAGE);
+        if (stored) {
+          try {
+            return this._sanitizeUsageMap(JSON.parse(stored));
+          } catch (e) {
+            return {};
+          }
+        }
+        return {};
+      },
+      "Error retrieving usage map:"
+    ) ?? {};
+  },
+
+  /**
+   * Save usage map to localStorage
+   * @param {Object} usageMap - Map of provider -> usage data
+   * @returns {boolean} Success status
+   */
+  saveUsageMap(usageMap) {
+    return this._withStorage(
+      () => {
+        const sanitized = this._sanitizeUsageMap(usageMap);
+        if (Object.keys(sanitized).length > 0) {
+          localStorage.setItem(this.STORAGE_KEY_USAGE, JSON.stringify(sanitized));
+        } else {
+          localStorage.removeItem(this.STORAGE_KEY_USAGE);
+        }
+        return true;
+      },
+      "Error saving usage map:"
+    ) ?? false;
+  },
+
+  /**
+   * Record usage for a provider
+   * @param {string} provider - Provider name
+   * @param {Object} usageDelta - {requests,inputTokens,outputTokens,totalTokens,costUsd}
+   * @returns {boolean} Success status
+   */
+  recordUsage(provider, usageDelta = {}) {
+    if (!provider) return false;
+
+    const delta = usageDelta && typeof usageDelta === "object" ? usageDelta : {};
+    const toNumber = value => {
+      const num = Number(value);
+      return Number.isFinite(num) ? num : null;
+    };
+
+    const usageMap = this.getUsageMap();
+    const entry = usageMap[provider] || {};
+
+    const requests = toNumber(delta.requests);
+    const inputTokens = toNumber(delta.inputTokens);
+    const outputTokens = toNumber(delta.outputTokens);
+    let totalTokens = toNumber(delta.totalTokens);
+    const costUsd = toNumber(delta.costUsd);
+
+    if (totalTokens == null && Number.isFinite(inputTokens) && Number.isFinite(outputTokens)) {
+      totalTokens = inputTokens + outputTokens;
+    }
+
+    entry.requests = Math.max(0, Math.floor((entry.requests || 0) + (requests != null ? requests : 1)));
+    if (inputTokens != null) entry.inputTokens = Math.max(0, Math.floor((entry.inputTokens || 0) + inputTokens));
+    if (outputTokens != null) entry.outputTokens = Math.max(0, Math.floor((entry.outputTokens || 0) + outputTokens));
+    if (totalTokens != null) entry.totalTokens = Math.max(0, Math.floor((entry.totalTokens || 0) + totalTokens));
+    if (costUsd != null) entry.costUsd = Math.max(0, (entry.costUsd || 0) + costUsd);
+    entry.lastUsedAt = new Date().toISOString();
+
+    usageMap[provider] = entry;
+    const saved = this.saveUsageMap(usageMap);
+
+    if (saved && typeof window !== "undefined" && window.dispatchEvent) {
+      window.dispatchEvent(new CustomEvent("aiUsageUpdated", { detail: { provider } }));
+    }
+
+    return saved;
+  },
+
+  /**
+   * Reset usage for a provider (or all providers)
+   * @param {string|null} provider - Provider name or null for all
+   * @returns {boolean} Success status
+   */
+  resetUsage(provider = null) {
+    if (provider) {
+      const usageMap = this.getUsageMap();
+      delete usageMap[provider];
+      return this.saveUsageMap(usageMap);
+    }
+
+    return this.saveUsageMap({});
   },
 
   /**

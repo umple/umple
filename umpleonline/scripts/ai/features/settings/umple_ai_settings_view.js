@@ -43,6 +43,8 @@ const AiSettingsView = {
     this._getElement("selectAiModel", "modelSelect");
     this._getElement("inputAiApiKey", "inputField");
     this._getElement("apiKeyStatus", "statusDiv");
+    this._getElement("aiUsageSummary", "usageSummary");
+    this._getElement("buttonResetAiUsage", "resetUsageButton");
     return this.elements;
   },
 
@@ -283,5 +285,64 @@ const AiSettingsView = {
     if (inputField) {
       inputField.value = value;
     }
+  },
+
+  _formatNumber(value) {
+    if (!Number.isFinite(value)) return "—";
+    return Math.round(value).toLocaleString();
+  },
+
+  _formatCost(value) {
+    if (!Number.isFinite(value)) return "—";
+    return `$${value.toFixed(4)}`;
+  },
+
+  _getProviderLabel(provider) {
+    const config = typeof AiConfig !== "undefined" ? AiConfig.getProviderConfig(provider) : null;
+    return config?.name || provider;
+  },
+
+  renderUsage(usageMap, provider) {
+    const container = this._getElement("aiUsageSummary", "usageSummary");
+    if (!container) return;
+    const section = container.closest(".ai-usage-section");
+
+    if (!provider) {
+      if (section) section.classList.add("is-hidden");
+      container.innerHTML = "";
+      return;
+    }
+
+    const usage = usageMap?.[provider] || {};
+    const hasUsage = Number.isFinite(usage.requests) || Number.isFinite(usage.totalTokens);
+    const hasCost = Number.isFinite(usage.costUsd);
+
+    if (!hasCost) {
+      if (section) section.classList.add("is-hidden");
+      container.innerHTML = "";
+      return;
+    }
+
+    if (section) section.classList.remove("is-hidden");
+
+    if (!hasUsage) {
+      container.innerHTML = '<div class="ai-usage-empty">No usage recorded yet.</div>';
+      return;
+    }
+
+    const total = this._formatNumber(usage.totalTokens);
+    const input = this._formatNumber(usage.inputTokens);
+    const output = this._formatNumber(usage.outputTokens);
+    const requests = this._formatNumber(usage.requests);
+    const cost = this._formatCost(usage.costUsd);
+    container.innerHTML = `
+      <div class="ai-usage-row">
+        <span class="ai-usage-metric">Total: ${total}</span>
+        <span class="ai-usage-metric">In: ${input}</span>
+        <span class="ai-usage-metric">Out: ${output}</span>
+        <span class="ai-usage-metric">Requests: ${requests}</span>
+        <span class="ai-usage-metric">Cost: ${cost}</span>
+      </div>
+    `;
   }
 };
