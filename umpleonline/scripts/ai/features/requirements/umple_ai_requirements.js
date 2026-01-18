@@ -123,6 +123,22 @@ const AiRequirements = {
     area.scrollTop = area.scrollHeight;
   },
 
+  setStatusMessage(statusDiv, label, message, color = "#3383bb") {
+    if (!statusDiv) return;
+    statusDiv.style.display = "block";
+    statusDiv.style.color = color;
+    statusDiv.textContent = "";
+    if (label) {
+      const labelSpan = document.createElement("span");
+      labelSpan.className = "ai-status-label";
+      labelSpan.textContent = label;
+      statusDiv.appendChild(labelSpan);
+      statusDiv.appendChild(document.createTextNode(` ${message}`));
+    } else {
+      statusDiv.textContent = message;
+    }
+  },
+
   stripHtmlToText(html) {
     return AiTextUtils.stripHtmlToText(html);
   },
@@ -194,7 +210,7 @@ const AiRequirements = {
     return { insertPos, insertText, mergedText, highlightFrom, highlightTo, codeText };
   },
 
-  async selfCorrectWithCompiler({ originalCode, generatedBlock, requirements, generationType, systemPrompt, dialog } = {}) {
+  async selfCorrectWithCompiler({ originalCode, generatedBlock, requirements, generationType, systemPrompt, dialog, statusDiv } = {}) {
     const maxPasses = this.getSelfCorrectionMaxPasses();
     let currentBlock = String(generatedBlock || "").trim();
     if (!currentBlock) return { block: currentBlock };
@@ -212,7 +228,13 @@ const AiRequirements = {
       this.appendRequirementsOutput(`Baseline compile failed: ${e.message}`);
     }
 
-    let previousBlock = null;
+    const seenBlocks = new Set();
+    const initialBlock = String(currentBlock || "").trim();
+    if (initialBlock) {
+      seenBlocks.add(initialBlock);
+    }
+    let lastIssueSignature = null;
+    let stagnantIssueCount = 0;
 
     // Preload guidance for repair prompts to ensure cached content is available
     if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.preloadGuidance) {
@@ -228,6 +250,7 @@ const AiRequirements = {
         this.appendRequirementsOutput(`\nSelf-correction stopped by user at pass ${pass}.`);
         break;
       }
+      this.setStatusMessage(statusDiv, "Compiler", `Self-correction pass ${pass}/${maxPasses}: compiling...`);
       this.appendRequirementsOutput(`\nSelf-correction pass ${pass}: compiling merged model...`);
       const merged = this.buildMergedCode(originalCode, currentBlock);
       const insertedStartLine = this.computeLineNumberAtIndex(merged.mergedText, merged.highlightFrom);
@@ -244,19 +267,53 @@ const AiRequirements = {
       }
 
       const issues = compiled.issues || [];
-      if (issues.length === 0) {
-        this.appendRequirementsOutput("Compiler reports no errors and no warnings.");
+      const errorIssues = issues.filter(issue => issue.severity === "Error");
+      if (errorIssues.length === 0) {
+        const warningCount = issues.filter(issue => issue.severity === "Warning").length;
+        this.appendRequirementsOutput(
+          warningCount > 0
+            ? `Compiler reports no errors (${warningCount} warning(s) ignored for self-correction).`
+            : "Compiler reports no errors."
+        );
         return { block: currentBlock };
       }
 
-      const inInsertedRange = issues.filter(i => Number.isFinite(i.line) && i.line >= insertedStartLine && i.line <= insertedEndLine);
-      const focusIssues = inInsertedRange.length > 0 ? inInsertedRange : issues;
+      const baselineIssues = baseline?.issues || [];
+      const baselineIssueKeys = baselineIssues.length > 0
+        ? new Set(baselineIssues.map(issue => this.getIssueKey(issue)))
+        : new Set();
 
-      if ((baseline?.issues || []).length > 0) {
-        this.appendRequirementsOutput(`Baseline issues: ${baseline.issues.length}`);
+      const nonBaselineErrors = baselineIssueKeys.size > 0
+        ? errorIssues.filter(issue => !baselineIssueKeys.has(this.getIssueKey(issue)))
+        : errorIssues;
+
+      if (baselineIssueKeys.size > 0) {
+        this.appendRequirementsOutput(`Baseline issues: ${baselineIssues.length}`);
       }
 
-      this.appendRequirementsOutput(`Compiler reported ${issues.length} issue(s) in merged model.`);
+      if (baselineIssueKeys.size > 0 && nonBaselineErrors.length === 0) {
+        this.appendRequirementsOutput("Only baseline errors remain; stopping self-correction.");
+        return { block: currentBlock };
+      }
+
+      const focusErrorIssues = nonBaselineErrors.length > 0 ? nonBaselineErrors : errorIssues;
+      const inInsertedRange = focusErrorIssues.filter(i => Number.isFinite(i.line) && i.line >= insertedStartLine && i.line <= insertedEndLine);
+      const focusIssues = inInsertedRange.length > 0 ? inInsertedRange : focusErrorIssues;
+
+      const issueSignature = focusIssues.map(issue => this.getIssueKey(issue)).join("||");
+      if (issueSignature && issueSignature === lastIssueSignature) {
+        stagnantIssueCount += 1;
+      } else {
+        stagnantIssueCount = 0;
+        lastIssueSignature = issueSignature;
+      }
+
+      if (stagnantIssueCount >= 1) {
+        this.appendRequirementsOutput("Compiler issues did not change after a repair attempt; stopping self-correction.");
+        break;
+      }
+
+      this.appendRequirementsOutput(`Compiler reported ${errorIssues.length} error(s) in merged model.`);
       if (inInsertedRange.length > 0) {
         this.appendRequirementsOutput(`Focusing on ${inInsertedRange.length} issue(s) within the inserted block (lines ${insertedStartLine}-${insertedEndLine}).`);
       } else {
@@ -264,7 +321,24 @@ const AiRequirements = {
       }
       this.appendRequirementsOutput(this.formatIssuesForLog(focusIssues));
 
-      const compilerIssuesText = this.formatIssuesForPrompt(focusIssues);
+      const compilerIssuesText = focusIssues.map(issue => {
+        const codeSuffix = issue.errorCode ? ` (${issue.errorCode})` : "";
+        const lineText = Number.isFinite(issue.line) ? issue.line : "?";
+        const blockLine = Number.isFinite(issue.line) && issue.line >= insertedStartLine && issue.line <= insertedEndLine
+          ? issue.line - insertedStartLine + 1
+          : null;
+        const blockText = Number.isFinite(blockLine) ? ` (block line ${blockLine})` : "";
+        let issueText = `- ${issue.severity}${codeSuffix} on merged line ${lineText}${blockText}: ${issue.message}`;
+
+        if (Number.isFinite(issue.line) && mergedText) {
+          const snippet = AiTextUtils.getLinesAround(mergedText, issue.line - 1, 2);
+          if (snippet) {
+            issueText += `\n  snippet:\n${snippet.split("\n").map(l => "  " + l).join("\n")}`;
+          }
+        }
+
+        return issueText;
+      }).join("\n");
       const repairPrompt = (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.repair_buildGeneration)
         ? RequirementsPromptBuilder.repair_buildGeneration({
           generationType,
@@ -273,8 +347,9 @@ const AiRequirements = {
           invalidBlock: currentBlock,
           compilerIssuesText
         })
-        : `Fix the following Umple block so that it compiles with the original model without warnings or errors.\n\nOriginal model:\n\n\`\`\`umple\n${originalCode}\n\`\`\`\n\nBlock to fix:\n\n\`\`\`umple\n${currentBlock}\n\`\`\`\n\nCompiler issues:\n${compilerIssuesText}\n\nOutput ONLY the corrected block as a single \`\`\`umple\`\`\` code block.`;
+        : `Fix the following Umple block so that it compiles with the original model without errors.\n\nOriginal model:\n\n\`\`\`umple\n${originalCode}\n\`\`\`\n\nBlock to fix:\n\n\`\`\`umple\n${currentBlock}\n\`\`\`\n\nCompiler issues:\n${compilerIssuesText}\n\nOutput ONLY the corrected block as a single \`\`\`umple\`\`\` code block.`;
 
+      this.setStatusMessage(statusDiv, "LLM", `Repairing generated block (pass ${pass}/${maxPasses})...`);
       this.appendRequirementsOutput("Asking AI to repair the generated block...");
 
       let repairedResponse;
@@ -291,13 +366,18 @@ const AiRequirements = {
         break;
       }
 
-      if (previousBlock && repairedBlock === previousBlock) {
-        this.appendRequirementsOutput("AI repair repeated the previous output; stopping.");
+      if (repairedBlock.trim() === String(currentBlock || "").trim()) {
+        this.appendRequirementsOutput("AI repair repeated the current output; stopping.");
         break;
       }
 
-      previousBlock = currentBlock;
+      if (seenBlocks.has(repairedBlock)) {
+        this.appendRequirementsOutput("AI repair repeated an earlier output; stopping.");
+        break;
+      }
+
       currentBlock = repairedBlock;
+      seenBlocks.add(repairedBlock);
 
       this.appendRequirementsOutput("Retrying compile with repaired block...");
     }
@@ -844,9 +924,7 @@ const AiRequirements = {
     const selectedReqs = this.getSelectedRequirements(dialog, requirements);
 
     if (selectedReqs.length === 0) {
-      statusDiv.style.display = "block";
-      statusDiv.textContent = "Please select at least one requirement";
-      statusDiv.style.color = "#DD0033";
+      this.setStatusMessage(statusDiv, "Error", "Please select at least one requirement", "#DD0033");
       return;
     }
 
@@ -856,9 +934,7 @@ const AiRequirements = {
     // Get API config
     const apiConfig = this.checkApiConfig();
     if (!apiConfig.configured) {
-      statusDiv.style.display = "block";
-      statusDiv.textContent = apiConfig.message;
-      statusDiv.style.color = "#DD0033";
+      this.setStatusMessage(statusDiv, "Error", apiConfig.message, "#DD0033");
       return;
     }
 
@@ -866,9 +942,7 @@ const AiRequirements = {
     btnGenerate.classList.add("disabled");
     btnGenerate.textContent = "Generating...";
     btnStop.style.display = "inline-block";
-    statusDiv.style.display = "block";
-    statusDiv.textContent = "Generating Umple code from requirements...";
-    statusDiv.style.color = "#3383bb";
+    this.setStatusMessage(statusDiv, "LLM", "Generating Umple code from requirements...");
 
     if (outputContainer) outputContainer.style.display = "block";
     this.clearRequirementsOutput();
@@ -891,9 +965,18 @@ const AiRequirements = {
 
       dialog.generationContext.generation = generation;
 
-      // Call AI API using streaming
+    // Call AI API using streaming
+      this.setStatusMessage(statusDiv, "LLM", `Generating ${genType === "classdiagram" ? "class diagram" : "state machine"}...`);
       this.appendRequirementsOutput(`Generating ${genType === "classdiagram" ? "class diagram" : "state machine"}...`);
+      let streamedText = "";
+      codeArea.value = "";
+      codeContainer.style.display = "block";
+      btnInsert.style.display = "none";
       this.activeStream = AiApi.chatStream(generation.prompt, generation.systemPrompt, {}, {
+        onDelta: (deltaText) => {
+          streamedText += deltaText;
+          codeArea.value = streamedText;
+        },
         onTruncated: () => {
           tokenLimitTruncated = true;
         }
@@ -906,9 +989,12 @@ const AiRequirements = {
       if (tokenLimitTruncated) {
         // Stop further processing (validation/repair/self-correction)
         dialog.stopped = true;
-        statusDiv.style.display = "block";
-        statusDiv.textContent = "Generation stopped: AI output was truncated due to token limit. Try selecting fewer requirements, shortening requirement text, or using a larger model.";
-        statusDiv.style.color = "#DD0033";
+        this.setStatusMessage(
+          statusDiv,
+          "LLM",
+          "Generation stopped: AI output was truncated due to token limit. Try selecting fewer requirements, shortening requirement text, or using a larger model.",
+          "#DD0033"
+        );
 
         // Still show whatever we got so the user can decide what to do.
         codeArea.value = response || "";
@@ -930,12 +1016,14 @@ const AiRequirements = {
         });
 
         if (!validation.valid) {
+          this.setStatusMessage(statusDiv, "LLM", "Repairing validation issues...");
           this.appendRequirementsOutput(`Validation issues found: ${validation.errors.join(", ")}. Repairing...`);
+          const validationIssuesText = validation.errors.map(err => `- ${err}`).join("\n");
           const repairPrompt = RequirementsPromptBuilder.repair_buildGeneration({
             generationType: genType,
             requirements: selectedReqs,
-            invalidCode: umpleCode,
-            errors: validation.errors
+            invalidBlock: umpleCode,
+            compilerIssuesText: validationIssuesText
           });
 
           if (dialog.stopped) {
@@ -952,9 +1040,12 @@ const AiRequirements = {
             });
 
             if (!repairedValidation.valid) {
-              statusDiv.style.display = "block";
-              statusDiv.textContent = `Generated code may be invalid:\n${repairedValidation.errors.join("\n")}`;
-              statusDiv.style.color = "#DD0033";
+              this.setStatusMessage(
+                statusDiv,
+                "LLM",
+                `Generated code may be invalid:\n${repairedValidation.errors.join("\n")}`,
+                "#DD0033"
+              );
             } else {
               this.appendRequirementsOutput("Code repaired successfully.");
             }
@@ -964,7 +1055,10 @@ const AiRequirements = {
 
       // Compiler-based self-correction loop (compile merged model: original + inserted block)
       if (!dialog.stopped) {
+        this.setStatusMessage(statusDiv, "Compiler", "Running compiler-based self-correction...");
         this.appendRequirementsOutput("Running compiler-based self-correction...");
+        codeArea.value = "";
+        codeArea.placeholder = "Self-correction in progress...";
         const originalEditorCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
         try {
           const corrected = await this.selfCorrectWithCompiler({
@@ -973,7 +1067,8 @@ const AiRequirements = {
             requirements: selectedReqs,
             generationType: genType,
             systemPrompt: generation.systemPrompt,
-            dialog
+            dialog,
+            statusDiv
           });
           if (corrected && typeof corrected.block === "string" && corrected.block.trim()) {
             umpleCode = corrected.block.trim();
@@ -985,6 +1080,7 @@ const AiRequirements = {
       }
 
       // Display generated code
+      codeArea.placeholder = "";
       codeArea.value = umpleCode;
       codeContainer.style.display = "block";
       btnInsert.style.display = "inline-block";
@@ -993,9 +1089,7 @@ const AiRequirements = {
         const successMsg = dialog.stopped
           ? "Generation stopped. Partial code generated! Review and click 'Insert to Editor' to add it to your model."
           : "Code generated successfully! Review and click 'Insert to Editor' to add it to your model.";
-        statusDiv.style.display = "block";
-        statusDiv.textContent = successMsg;
-        statusDiv.style.color = "#3383bb";
+        this.setStatusMessage(statusDiv, "LLM", successMsg);
       }
     } catch (error) {
       if (error?.name === "AbortError") {
@@ -1003,9 +1097,7 @@ const AiRequirements = {
         return;
       }
       console.error("Error generating code:", error);
-      statusDiv.style.display = "block";
-      statusDiv.textContent = `Error: ${error.message}`;
-      statusDiv.style.color = "#DD0033";
+      this.setStatusMessage(statusDiv, "Error", `Error: ${error.message}`, "#DD0033");
     } finally {
       btnGenerate.classList.remove("disabled");
       btnGenerate.textContent = "Generate";
@@ -1033,14 +1125,12 @@ const AiRequirements = {
     // Abort the active stream
     this.abortActiveStream();
 
-    statusDiv.style.display = "block";
-    statusDiv.textContent = "Stopping generation...";
+    this.setStatusMessage(statusDiv, "LLM", "Stopping generation...");
 
     try {
       const context = dialog.generationContext;
       if (!context) {
-        statusDiv.textContent = "No generation in progress.";
-        statusDiv.style.color = "#DD0033";
+        this.setStatusMessage(statusDiv, "LLM", "No generation in progress.", "#DD0033");
         return;
       }
 
@@ -1059,16 +1149,17 @@ const AiRequirements = {
         codeContainer.style.display = "block";
         btnInsert.style.display = "inline-block";
 
-        statusDiv.textContent = "Generation stopped. Partial code generated! Review and click 'Insert to Editor' to add it to your model.";
-        statusDiv.style.color = "#3383bb";
+        this.setStatusMessage(
+          statusDiv,
+          "LLM",
+          "Generation stopped. Partial code generated! Review and click 'Insert to Editor' to add it to your model."
+        );
       } else {
-        statusDiv.textContent = "Generation stopped before any code was generated.";
-        statusDiv.style.color = "#DD0033";
+        this.setStatusMessage(statusDiv, "LLM", "Generation stopped before any code was generated.", "#DD0033");
       }
     } catch (error) {
       console.error("Error stopping generation:", error);
-      statusDiv.textContent = `Error stopping: ${error.message}`;
-      statusDiv.style.color = "#DD0033";
+      this.setStatusMessage(statusDiv, "Error", `Error stopping: ${error.message}`, "#DD0033");
     } finally {
       btnGenerate.classList.remove("disabled");
       btnGenerate.textContent = "Generate";

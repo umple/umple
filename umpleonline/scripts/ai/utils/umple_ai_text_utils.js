@@ -87,5 +87,28 @@ const AiTextUtils = {
     const str = String(text || "");
     if (str.length <= maxLength) return str;
     return str.slice(0, maxLength - suffix.length) + suffix;
+  },
+
+  /**
+   * Get lines around a target line with context
+   * @param {string} text - Full text
+   * @param {number} targetLine - Target line number (0-based)
+   * @param {number} contextLines - Number of lines before and after to include
+   * @returns {string} Formatted snippet with line numbers
+   */
+  getLinesAround(text, targetLine, contextLines = 2) {
+    const normalized = this.normalizeNewlines(String(text || ""));
+    const lines = normalized.split("\n");
+    const safeTargetLine = Math.max(0, Math.min(Number(targetLine) || 0, lines.length - 1));
+    const startLine = Math.max(0, safeTargetLine - contextLines);
+    const endLine = Math.min(lines.length - 1, safeTargetLine + contextLines);
+
+    const result = [];
+    for (let i = startLine; i <= endLine; i++) {
+      const lineContent = lines[i] || "";
+      const truncated = this.truncate(lineContent, 80, "...");
+      result.push(`${i + 1}: ${truncated}`);
+    }
+    return result.join("\n");
   }
 };

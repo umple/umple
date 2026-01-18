@@ -255,7 +255,7 @@ const RequirementsPromptBuilder = (() => {
         : original;
 
       const issues = (compilerIssuesText || "").trim();
-      const issuesText = issues || "- (No details provided)";
+      const issuesText = issues ? `Compiler issues with code snippets:\n${issues}` : "- (No details provided)";
 
       return joinBlocks([
         block(

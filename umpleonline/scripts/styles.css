@@ -1260,6 +1260,13 @@ textarea#umpleLayoutEditorText {
   display: none;
 }
 
+.ai-requirements-dialog .status-message .ai-status-label {
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: inherit;
+}
+
 .ai-requirements-dialog .status-message:not(:empty) {
   display: block;
   min-height: 20px;

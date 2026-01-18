@@ -13,6 +13,7 @@ Rules:
 - Do not invent Umple syntax or project context.
 - If something is ambiguous, choose the simplest valid Umple and note assumptions inside Umple comments.
 - Follow the output contract exactly.
+- When the user prompt includes tagged sections like <tag> ... <\\tag>, read each section only from its opening tag to its matching closing tag and do not merge content across blocks.
 - Never name attributes identical to the class name.`;
 
   const UMPLE_CHEAT_SHEET = `Umple quick reference (non-exhaustive):

@@ -29,7 +29,7 @@ const AiPromptTags = (() => {
     let body = toText(content);
     if (trimContent) body = body.trim();
     if (!allowEmpty && !body) return "";
-    return `<${tag}>\n${body}\n<\\${tag}>`;
+    return `<${tag}>\n${body}\n</${tag}>`;
   }
 
   function joinBlocks(blocks, { separator = "\n\n" } = {}) {
