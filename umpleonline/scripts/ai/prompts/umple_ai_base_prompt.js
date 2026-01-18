@@ -12,7 +12,8 @@ const AiPrompting = (() => {
 Rules:
 - Do not invent Umple syntax or project context.
 - If something is ambiguous, choose the simplest valid Umple and note assumptions inside Umple comments.
-- Follow the output contract exactly.`;
+- Follow the output contract exactly.
+- Never name attributes identical to the class name.`;
 
   const UMPLE_CHEAT_SHEET = `Umple quick reference (non-exhaustive):
 

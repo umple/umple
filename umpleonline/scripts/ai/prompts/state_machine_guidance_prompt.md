@@ -1,194 +1,117 @@
-# Umple State Machines (agent-oriented, minimal, correct)
+````markdown
+Umple state machines (compressed, feature-complete)
 
-## Placement
-- **Inline** inside class:
+Placement
 ```umple
-class C {
-  sm { S1 { e -> S2; } S2 {} }
-}
+class C { sm { S1 { e -> S2; } S2 {} } }                 // inline
+class A { st as M; }  statemachine M { S1{e->S2;} S2{} }  // standalone + reuse
 ````
 
-* **Standalone + reuse**:
+Core
 
 ```umple
-class A { st as M; }
-statemachine M { S1 { e -> S2; } S2 {} }
+State { ... }          // state block
+event -> Target;       // transition (semicolon required)
 ```
 
----
+Guards, actions, entry/exit/do
 
-## Core grammar
-
-* **State**
-
-```umple
-State { ... }
-```
-
-* **Transition**
-
-```umple
-event -> Target;
-```
-
----
-
-## Guards & actions
-
-* **Guard**: `[boolean]`
-* **Action**: `/ { code }` (before or after arrow)
+* Guard: `[boolean]`
+* Action: `/ { code }` (either side of `->`)
 
 ```umple
 e [cond] / { act(); } -> S2;
 e -> / { act(); } S2;
 ```
 
-* **Entry / Exit**
+* Entry/exit:
 
 ```umple
-S {
-  entry / { onEnter(); }
-  exit  / { onExit(); }
-}
+S { entry / { onEnter(); }  exit / { onExit(); } }
 ```
 
-* **Do activity** (long-running, interruptible on exit)
+* Do activity (long-running; interrupted on exit): `do { ... }`
+* Rule: keep entry/exit/transition fast; long work in `do`.
 
-```umple
-S { do { work(); } }
-```
-
-Rule: keep entry/exit/transition fast; long work in `do`.
-
----
-
-## Auto-transitions (eventless)
+Auto-transitions (eventless)
 
 ```umple
 -> Next;
 ```
 
-* Fires after entry, or after `do` completes.
-* May include guards/actions.
+* Fires after entry, or after `do` completes; can include guards/actions.
 
----
-
-## Event parameters
+Event parameters
 
 ```umple
 S { e(int x) [x > 0] -> T; }
 ```
 
-Constraint: same event name ⇒ same parameter types everywhere.
+* Constraint: same event name ⇒ same parameter types everywhere.
 
----
-
-## `unspecified` (catch-all)
+`unspecified` (catch-all)
 
 ```umple
-S {
-  unspecified -> Error;
-}
+S { unspecified -> Error; }
 ```
 
 * Catches unhandled events.
-* In **pooled** machines, treated as a normal event.
+* In pooled machines, treated as a normal event.
 
----
+Threading / ordering
 
-## Threading / ordering
-
-* **regular** (default): synchronous.
-* **queued sm**:
-
-  * enqueue events, FIFO, wait until head is handleable.
-* **pooled sm**:
-
-  * may process later events first if handleable.
+* regular (default): synchronous.
+* `queued sm { ... }`: enqueue events FIFO; waits until the head event is handleable.
+* `pooled sm { ... }`: may process later events first if they’re handleable.
 
 ```umple
 queued sm { ... }
 pooled sm { ... }
 ```
 
----
+Final states
 
-## Final states
-
-* **`Final`** (capital): implicit top-level final.
+* `Final` (capital): implicit top-level final target.
 
 ```umple
 go -> Final;
 ```
 
-* **`final`** keyword: named finals (multiple allowed).
+* `final` keyword: named finals (multiple allowed).
 
 ```umple
-final Done {}
-final Failed {}
+final Done {}  final Failed {}
 ```
 
----
+Concurrency (orthogonal regions)
 
-## Concurrency (orthogonal regions)
-
-* Use `||` inside composite state.
-* Region completes when **all** sub-machines reach final.
+* Use `||` inside a composite state; composite completes when all regions reach final.
 
 ```umple
-S {
-  A { ... final Af {} }
-  ||
-  B { ... final Bf {} }
-}
+S { A { ... final Af {} }  ||  B { ... final Bf {} } }
 ```
 
----
-
-## Reuse + extension (`as`)
-
-* Use standalone machine:
+Reuse + extension (`as`)
 
 ```umple
-class X { st as M; }
+class X { st as M; }               // reuse standalone machine
+class X { st as M {                // extend inline
+  cancel S1 -> S0;
+  New { go -> S2; }
+  S0 { entry / { reset(); } }
+}; }
 ```
 
-* Extend inline:
+Composition / split definitions
+
+* Can extend a machine across multiple class declarations; standalone transitions allowed.
 
 ```umple
-class X {
-  st as M {
-    cancel S1 -> S0;
-    New { go -> S2; }
-    S0 { entry / { reset(); } }
-  };
-}
+class X { sm { A { e1 -> B; }  e2 B -> A; } }
+class X { sm { e3 A -> B; } }
 ```
 
----
-
-## Composition / split definitions
-
-* State machines can be extended across class declarations.
-* Standalone transitions allowed.
-
-```umple
-class X {
-  sm {
-    A { e1 -> B; }
-    e2 B -> A;
-  }
-}
-class X {
-  sm {
-    e3 A -> B;
-  }
-}
-```
-
----
-
-## Minimal feature-complete template
+Minimal template
 
 ```umple
 class Device {
@@ -211,6 +134,4 @@ class Device {
     }
   }
 }
-```
-
 ```

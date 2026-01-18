@@ -1,248 +1,158 @@
-# Umple Class Diagrams (agent-oriented, minimal, correct)
+````markdown
+Umple class diagrams (compressed, feature-complete)
 
-## Goal
-Model a domain as **classes + attributes + associations** using valid Umple.
+Goal: model domain as classes + attributes + associations (valid Umple).
 
----
-
-## Classes
-
-Define a class with `class` keyword followed by a name (start with capital letter) and a body in braces.
-
+Classes
 ```umple
 class Person {
   String name;
   Integer age;
 }
-```
+````
 
-Classes can contain: attributes, associations, methods, state machines, interfaces, generalizations (via `isA`), and more.
+* Class names typically start with a capital.
+* Class body may include attributes, associations, methods, state machines, `isA` (inheritance), etc.
 
----
-
-## Attributes
-
-Attributes represent simple data stored in a class.
+Attributes
 
 ```umple
 class Student {
   String name;
   Integer number;
   Boolean enrolled = false;
-  lazy Date birthDate;
-  immutable String id;
+
+  lazy Date birthDate;        // no ctor arg; default init (0/false/null)
+  immutable String id;        // ctor arg; no setter
+  const Integer MAX = 10;     // class constant (static final)
+  unique String email;        // unique across instances
+  autounique Integer uid;     // auto-assigned unique int (read-only)
+  defaulted Integer level;    // resetLevel(), getDefaultLevel()
+  internal String cache;      // no getter/setter
 }
 ```
 
-**Modifiers** (choose as needed):
-- **lazy**: No constructor argument; initialized to default (0, false, null).
-- **settable**: Constructor argument required; mutable via set method (default).
-- **immutable**: Constructor argument required; no set method generated.
-- **const**: Class constant (`static final` in Java).
-- **unique**: Value must be unique across instances.
-- **autounique**: Auto-assigned unique integer; read-only.
-- **defaulted**: Reset to default via `resetX()`; query default via `getDefaultX()`.
-- **internal**: No getter/setter; for internal use only.
+* Multi-valued:
 
-**Multi-valued**:
 ```umple
 String[] tags;
 Integer[] scores = {1, 2, 3};
 ```
 
----
+* `settable` is the default (ctor arg + setter).
 
-## Associations (relationships)
+Associations (relationships)
+Basic forms:
 
-Associations define links between classes. Specify multiplicity on both ends.
-
-### Basic syntax
-
-**Inline** (inside a class):
-```umple
-class Group {
-  * -- * Item;
-  1 -> 0..1 Description;
-}
-```
-
-**Independent** (outside classes):
-```umple
-association {
-  * Group -- * Item;
-}
-```
-
-### Navigability
-
-- `--` : Bidirectional (both ends can access each other)
-- `->` : Directed (left can access right, right cannot access left)
-- `<-` : Directed (right can access left, left cannot access right)
-- `><` : No navigation (both ends cannot access each other)
+* Inline (inside a class):
 
 ```umple
-class A {
-  1 -- * B;  // both ways
-  1 -> * C;  // A can access C, C cannot access A
-}
+class Group { * -- * Item;  1 -> 0..1 Description; }
 ```
 
-### Multiplicity
+* Independent:
 
-Indicates allowable number of linked objects.
+```umple
+association { * Group -- * Item; }
+```
 
-| Multiplicity | Meaning |
-|--------------|----------|
-| `1` | Exactly one (mandatory) |
-| `0..1` | Optional (zero or one) |
-| `*` | Many (0 or more) |
-| `1..*` | One or more (mandatory many) |
-| `m..n` | Between m and n (inclusive) |
+Navigability
+
+* `--` both ways, `->` left→right only, `<-` right→left only, `><` none.
+
+```umple
+class A { 1 -- * B;  1 -> * C; }
+```
+
+Multiplicity (both ends)
+
+* `1` exactly one, `0..1` optional, `*` many, `1..*` mandatory many, `m..n` bounded.
 
 ```umple
 class Student {
-  * -- * Course;           // many-to-many
-  1 -- 0..1 Advisor;       // one-to-optional
-  0..1 -> * Publication;   // zero-or-one to many
+  * -- * Course;          // many-to-many
+  1 -- 0..1 Advisor;      // one-to-optional
+  0..1 -> * Publication;  // optional to many (directed)
 }
 ```
 
-### Role names
-
-Clarify relationships, especially when classes associate in multiple ways.
+Role names (use when it improves clarity / multiple links)
 
 ```umple
-class GraduateStudent {
-  * -- 0..2 Professor supervisor;
-}
+class GraduateStudent { * -- 0..2 Professor supervisor; }
 ```
 
-### Composition
+Common AI mistake: role name must not equal the class name it describes.
 
-Strong ownership: deleting parent deletes children regardless of multiplicity.
+* Bad: `* Employer -- 1 Employer;`
+* Good: `* Employer hiringEmployer -- 1 JobPosting;` (pick a relationship-specific role name)
+
+Composition (strong ownership: deleting parent deletes children)
 
 ```umple
-class Vehicle {
-  0..1 <@>- 2..4 Wheel wheels;
-}
+class Vehicle { 0..1 <@>- 2..4 Wheel wheels; }
 ```
 
-- `<@>-` : Parent composed with children (parent side)
-- `-<@>` : Children composed with parent (child side)
+* `<@>-` composition marker on parent side; `-<@>` on child side.
 
-### Reflexive
-
-Association from a class to itself.
+Reflexive (self-association)
 
 ```umple
-class Employee {
-  * -- 0..1 Employee manager;
-}
+class Employee { * -- 0..1 Employee manager; }
 ```
 
-### External
-
-Link to classes defined elsewhere (non-Umple code).
+External types (declared as external)
 
 ```umple
-class A {
-  1 -- 0..1 ExternalClass externalRef;
-}
-
+class A { 1 -- 0..1 ExternalClass externalRef; }
 external ExternalClass {}
 ```
 
----
-
-## Generalization (inheritance)
-
-Use `isA` for subclass relationships.
+Generalization (inheritance)
 
 ```umple
-class Person {
-  name;
-}
-
-class Student {
-  isA Person;
-  Integer number;
-}
-
-class Employee {
-  isA Person;
-  String position;
-}
+class Person { String name; }
+class Student { isA Person; Integer number; }
+class Employee { isA Person; String position; }
 ```
 
-**Alternative syntax** (nesting):
-```umple
-class Person {
-  name;
+* Multiple inheritance:
 
-  class Student {
-    Integer number;
-  }
-}
+```umple
+class TeachingAssistant { isA Person, Student, Teacher; }
 ```
 
-Multiple inheritance:
-```umple
-class TeachingAssistant {
-  isA Person, Student, Teacher;
-}
-```
-
----
-
-## Interfaces
-
-Define abstract method contracts. Classes implement via `isA`.
+* Alternative nesting form:
 
 ```umple
-interface Drawable {
-  void draw();
-}
-
-class Shape {
-  isA Drawable;
-  void draw() {
-    // implementation
-  }
-}
-```
-
-Interfaces can only contain: dependencies, method declarations (no body), `isA` clauses.
-
----
-
-## Minimal feature-complete template
-
-```umple
-// Classes with attributes
 class Person {
   String name;
-  immutable String id;
+  class Student { Integer number; }
 }
+```
 
-class Course {
-  String code;
-  Integer credits;
+Interfaces
+
+```umple
+interface Drawable { void draw(); }    // declarations only (no bodies)
+class Shape {
+  isA Drawable;
+  void draw() { /* impl */ }
 }
+```
 
-// Association with multiplicities and role name
+Minimal template
+
+```umple
+class Person { String name; immutable String id; }
+class Course { String code; Integer credits; }
+
 class Student {
   isA Person;
   Integer studentNumber;
   * -- * Course coursesTaken;
 }
 
-// Composition: Department owns Professors
-class Department {
-  String name;
-  1 <@>- * Professor staff;
-}
-
-class Professor {
-  String title;
-}
+class Department { String name; 1 <@>- * Professor staff; }
+class Professor  { String title; }
 ```

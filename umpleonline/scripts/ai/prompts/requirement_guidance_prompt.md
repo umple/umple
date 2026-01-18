@@ -1,122 +1,68 @@
-# Umple Requirements (agent-oriented, minimal, correct)
+````markdown
+Umple requirements (implementation-only, compressed)
 
-## Semantics
-- `req`: define a reusable requirement (ID + raw text).
-- `implementsReq`: attach requirement IDs to model elements.
-- Purpose: lightweight traceability (many-to-many).
-- **Not** the same as `require` (mixset dependency).
+Attach requirement IDs with `implementsReq`; it applies to the *next element*.
 
----
-
-## Grammar
-
-### Define
-```umple
-req <ReqID> {
-  <free-form text>
-}
-````
-
-* `<ReqID>`: user-defined identifier.
-* Body is raw text until `}`.
-
-### Attach
-
+Attach (single or multiple)
 ```umple
 implementsReq R01;
-implementsReq R01, R02;
-```
+implementsReq R01, R02, R03;
+````
 
----
+Where you can attach (common)
 
-## Attachment scope
-
-`implementsReq` applies to the **next element**.
-
-Supported elements (non-exhaustive):
-
-* class, interface, trait
+* class / interface / trait
 * attribute
 * association
 * method
-* state machine / state
+* state machine (not individual states)
 
-### Canonical (prefix, unambiguous)
+Preferred usage (prefix; unambiguous)
 
 ```umple
 implementsReq R01;
 class A {
   implementsReq R02;
-  x;
+  String x;
 
   implementsReq R03;
   sm { s1 { e -> s2; } s2 {} }
 }
 ```
 
-### Inline (allowed, less explicit)
+Inline (allowed; less explicit)
 
 ```umple
-class B {
-  y; implementsReq R01, R02;
-}
+class B { String y; implementsReq R01, R02; }
 ```
 
----
-
-## Multiple IDs
-
-```umple
-implementsReq R01, R02, R03;
-```
-
----
-
-## Requirements document generation
-
-Generator: `PlainRequirementsDoc`
+Requirements doc generation
 
 ```umple
 generate PlainRequirementsDoc;
+suboption "reqSortID";       // default
+suboption "reqSortStat";     // sort by text
+suboption "reqHideNotImpl";  // omit unattached reqs
 ```
 
-### Options
+Recommended conventions (for agents)
 
-```umple
-suboption "reqSortID";      // sort by ID (default)
-suboption "reqSortStat";    // sort by text
-suboption "reqHideNotImpl"; // omit unattached reqs
-```
+* Use stable IDs (e.g., `REQ-<DOMAIN>-<NNN>`).
+* One attachment block per element; prefer prefix form.
+* Keep IDs consistent across files.
 
----
-
-## Recommended conventions
-
-* Centralize all `req` blocks (e.g., `requirements.ump`).
-* Stable IDs (e.g., `REQ-<DOMAIN>-<NNN>`).
-* One requirement = one testable statement.
-* Prefer prefix attachments.
-
----
-
-## Minimal complete example
+Minimal example
 
 ```umple
 suboption "reqSortID";
 generate PlainRequirementsDoc;
 
-req REQ-AUTH-001 { Auth required before access. }
-req REQ-AUTH-002 { Session expires after 30 min idle. }
-
 implementsReq REQ-AUTH-001;
 class UserService {
-
   implementsReq REQ-AUTH-002;
   Integer sessionTimeout = 30;
 
   implementsReq REQ-AUTH-001, REQ-AUTH-002;
   Boolean isSessionValid() { return true; }
 }
-```
-
 ```

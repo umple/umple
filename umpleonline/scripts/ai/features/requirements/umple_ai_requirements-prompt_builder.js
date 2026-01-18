@@ -88,13 +88,15 @@ const RequirementsPromptBuilder = (() => {
       .join("\n\n");
   }
 
-  function getSystemPrompt() {
+  function getSystemPrompt(generationType) {
     const base = (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
       ? AiPrompting.getBaseSystemPrompt()
       : "You are an expert in Umple modeling language.";
 
     return joinBlocks([
       block("system", base, { allowEmpty: true }),
+      block("how_to_use_requirements_in_umple", getGuidanceText("requirements"), { allowEmpty: true }),
+      ...getGuidanceBlocksForGenerationType(generationType),
       block("directive", "Your job is to generate ONLY valid Umple code.")
     ]);
   }
@@ -150,8 +152,6 @@ const RequirementsPromptBuilder = (() => {
 
   function buildCommonGuidanceBlocks(generationType) {
     return [
-      block("how_to_use_requirements_in_umple", getGuidanceText("requirements")),
-      ...getGuidanceBlocksForGenerationType(generationType),
       block("umple_quick_reference", getCheatSheet(), { allowEmpty: true })
     ];
   }
@@ -230,7 +230,7 @@ const RequirementsPromptBuilder = (() => {
         block("output_contract", buildOutputContract({ generationType, expectedRequirementIds }))
       ]);
 
-      return { prompt, systemPrompt: getSystemPrompt(), expectedRequirementIds };
+      return { prompt, systemPrompt: getSystemPrompt(generationType), expectedRequirementIds };
     },
 
     validateGeneratedUmple({ code, expectedRequirementIds = [], generationType } = {}) {
