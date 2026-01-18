@@ -1514,6 +1514,22 @@ Page.showGeneratedCode = function(code,language,tabnumber)
     jQuery("#messageArea").html(errorMarkup);
   }
 
+  // Add AI fix actions to compiler errors.
+  if (language == "diagramUpdate")
+  {
+    const container = (tabnumber == "") ? jQuery("#downloadArea") : jQuery("#messageArea");
+    if (typeof AiFix !== "undefined" && AiFix.decorateErrorOutput)
+    {
+      // Only add AI fix buttons if the API key is verified
+      const isVerified = (typeof AiApi !== "undefined" && AiApi.isVerified) ? AiApi.isVerified() : false;
+      if (isVerified)
+      {
+        const html = (typeof Action !== "undefined" && Action.lastCompilerErrorHtml) ? Action.lastCompilerErrorHtml : errorMarkup;
+        AiFix.decorateErrorOutput(container.get(0), html);
+      }
+    }
+  }
+
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
     || language == "ruby" || language == "python" || language == "xml" || language == "sql" || language == "alloy" || language == "nusmv")

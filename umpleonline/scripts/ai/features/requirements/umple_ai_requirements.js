@@ -976,6 +976,7 @@ const AiRequirements = {
         onDelta: (deltaText) => {
           streamedText += deltaText;
           codeArea.value = streamedText;
+          codeArea.scrollTop = codeArea.scrollHeight;
         },
         onTruncated: () => {
           tokenLimitTruncated = true;

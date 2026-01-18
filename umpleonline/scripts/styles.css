@@ -1002,7 +1002,8 @@ textarea#umpleLayoutEditorText {
 
 /* AI Dialog Base Styles */
 .ai-requirements-dialog,
-.ai-explain-dialog {
+.ai-explain-dialog,
+.ai-fix-dialog {
   position: fixed;
   top: 0;
   left: 0;
@@ -1016,7 +1017,8 @@ textarea#umpleLayoutEditorText {
 }
 
 .ai-requirements-dialog .dialog-overlay,
-.ai-explain-dialog .dialog-overlay {
+.ai-explain-dialog .dialog-overlay,
+.ai-fix-dialog .dialog-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -1028,7 +1030,8 @@ textarea#umpleLayoutEditorText {
 }
 
 .ai-requirements-dialog .dialog-content,
-.ai-explain-dialog .dialog-content {
+.ai-explain-dialog .dialog-content,
+.ai-fix-dialog .dialog-content {
   position: relative;
   background-color: White;
   border: DimGray solid 1px;
@@ -1046,7 +1049,8 @@ textarea#umpleLayoutEditorText {
 }
 
 .ai-requirements-dialog h3,
-.ai-explain-dialog h3 {
+.ai-explain-dialog h3,
+.ai-fix-dialog h3 {
   margin-top: 0;
   margin-bottom: 15px;
   font-size: 14pt;
@@ -1055,12 +1059,83 @@ textarea#umpleLayoutEditorText {
 }
 
 .ai-requirements-dialog h4,
-.ai-explain-dialog h4 {
+.ai-explain-dialog h4,
+.ai-fix-dialog h4 {
   margin-top: 12px;
   margin-bottom: 8px;
   font-size: 10pt;
   color: #000000;
   font-weight: bold;
+}
+
+/* AI Fix Dialog Styles */
+.ai-fix-dialog .dialog-content {
+  max-width: 920px;
+}
+
+.ai-fix-dialog .dialog-overlay {
+  pointer-events: auto;
+}
+
+/* AI Fix Inline Styles */
+.ai-fix-issue {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.ai-fix-issue-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.ai-fix-icon {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  line-height: 0;
+  border: 1px solid #888;
+  background: #f6f6f6;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #444;
+}
+
+.ai-fix-icon svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+  margin: 0 auto;
+}
+
+.ai-fix-icon:hover {
+  background: #e9e9e9;
+}
+
+.ai-fix-issue-content {
+  flex: 1;
+}
+
+.ai-fix-sub-bullets {
+  margin-left: 22px;
+  margin-top: 2px;
+}
+
+.ai-fix-sub-bullet-item {
+  color: #333;
+  font-size: 12px;
+  padding-top: 2px;
+}
+
+.ai-fix-sub-bullet-pending {
+  color: #3383bb;
+}
+
+.cm-line.ai-fix-highlight-line {
+  background-color: #fff3cd;
 }
 
 /* AI Requirements Generator Dialog Styles */

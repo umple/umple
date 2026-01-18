@@ -5842,7 +5842,12 @@ Action.updateUmpleDiagramCallback = function(response)
   //Show the error message
   if(errorMessage != "")
   {
+    Action.lastCompilerErrorHtml = errorMessage;
     Page.showGeneratedCode(errorMessage, "diagramUpdate");
+  }
+  else
+  {
+    Action.lastCompilerErrorHtml = "";
   }
   
   Page.hideLoading();
@@ -6071,8 +6076,13 @@ Action.updateFromDiagramCallback = function(response)
   //Show the error message
   if(errorMessage != "")
   {
+    Action.lastCompilerErrorHtml = errorMessage;
     Page.showGeneratedCode(errorMessage, "diagramUpdate");
   }  
+  else
+  {
+    Action.lastCompilerErrorHtml = "";
+  }
 }
 
 // Gets the code to display from the AJAX response
