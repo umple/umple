@@ -28,6 +28,36 @@ var AiProviderUtils = _aiGlobal.AiProviderUtils || {
     return match[1].split(".").map(n => Number.parseInt(n, 10));
   },
 
+  /**
+   * Parse GPT version from GPT-Codex model ID
+   * GPT-Codex models follow pattern: gpt-X.X-codex (e.g., gpt-5.2-codex)
+   * Extract the GPT version number (e.g., 5.2 from gpt-5.2-codex)
+   * @param {string} id - Model ID
+   * @returns {Array|null} Version number array or null
+   */
+  _parseGptCodexVersion(id) {
+    const value = String(id || "").toLowerCase();
+    // Match pattern: gpt-X.X-codex where X.X is version (e.g., 5.2, 4.1, etc.)
+    const match = value.match(/^gpt-([\d.]+)-codex$/);
+    if (!match) return null;
+    const versionStr = match[1];
+    return versionStr.split(".").map(n => Number.parseInt(n, 10));
+  },
+
+  /**
+   * Extract the original model provider from OpenRouter model ID
+   * OpenRouter aggregates models from many providers in one marketplace
+   * Model IDs follow pattern: <provider>/<model-name>
+   * @param {string} modelId - The model ID (e.g., "openai/gpt-4-turbo")
+   * @returns {string} The provider name (e.g., "openai", "anthropic", "deepseek")
+   */
+  extractModelProvider(modelId) {
+    if (!modelId || typeof modelId !== "string") return "unknown";
+    const parts = modelId.split("/");
+    if (parts.length < 2) return "unknown";
+    return parts[0].toLowerCase();
+  },
+
   _pickLatestModelId(ids, versionParser = null) {
     const list = (ids || []).filter(Boolean);
     if (list.length === 0) return null;
@@ -74,15 +104,22 @@ var AiProviderUtils = _aiGlobal.AiProviderUtils || {
 
     switch (provider) {
       case "openai": {
+        // GPT text/chat models
         const baseIds = ids.filter(id => /^gpt-\d+(?:\.\d+){0,3}$/i.test(id));
         const miniIds = ids.filter(id => /^gpt-\d+(?:\.\d+){0,3}-mini$/i.test(id));
         const nanoIds = ids.filter(id => /^gpt-\d+(?:\.\d+){0,3}-nano$/i.test(id));
+
+        // GPT-Codex code generation models (constrained to gpt-X.X-codex pattern)
+        // Exclude models with -mini, -nano, -lite suffixes
+        const codexIds = ids.filter(id => /^gpt-[\d.]+-codex(?!-mini|-nano|-lite)$/i.test(id));
 
         const parseGpt = (id) => this._parseDotVersionAfterPrefix(id, "gpt-");
         const base = this._pickLatestModelId(baseIds, parseGpt);
         const mini = this._pickLatestModelId(miniIds, parseGpt);
         const nano = this._pickLatestModelId(nanoIds, parseGpt);
-        return toModelList([base, mini, nano]);
+        // Find latest GPT-Codex by parsing GPT version number
+        const codex = this._pickLatestModelId(codexIds, (id) => this._parseGptCodexVersion(id));
+        return toModelList([base, mini, nano, codex]);
       }
 
       case "google": {
@@ -95,7 +132,6 @@ var AiProviderUtils = _aiGlobal.AiProviderUtils || {
         return toModelList([flash, pro]);
       }
 
-      case "openrouter":
       default:
         return models;
     }
@@ -138,6 +174,27 @@ var AiProviderUtils = _aiGlobal.AiProviderUtils || {
     if (!model) return false;
     const m = String(model).toLowerCase();
     return /gpt-?5/.test(m) || /\bo[13](-|$)/.test(m) || m.includes("/o1") || m.includes("/o3") || m.includes("/gpt-5") || m.includes("/gpt5");
+  },
+
+  /**
+   * Group models by their original provider (for OpenRouter)
+   * OpenRouter aggregates models from many providers (OpenAI, Anthropic, etc.)
+   * This function creates a grouped object: { provider: [models] }
+   * @param {Array} models - Array of model objects with modelProvider property
+   * @returns {Object} Grouped models by provider
+   */
+  groupModelsByProvider(models) {
+    const groups = {};
+
+    models.forEach(model => {
+      const provider = model.modelProvider || "unknown";
+      if (!groups[provider]) {
+        groups[provider] = [];
+      }
+      groups[provider].push(model);
+    });
+
+    return groups;
   }
 };
 

@@ -174,21 +174,56 @@ const AiSettingsView = {
   },
 
   /**
-   * Populate model select with options
-   * @param {Array} models - Array of {value, label} objects
+   * Populate model select with options (grouped by provider for OpenRouter)
+   * @param {Array} models - Array of {value, label, modelProvider} objects
    */
   setModelsOptions(models) {
     const modelSelect = this._getElement("selectAiModel", "modelSelect");
-    if (modelSelect) {
-      if (models.length === 0) {
-        modelSelect.innerHTML = '<option value="">No models available</option>';
-      } else {
-        modelSelect.innerHTML = models
-          .map(model => `<option value="${model.value}">${model.label}</option>`)
-          .join("");
-      }
+    if (!modelSelect) return;
+
+    if (models.length === 0) {
+      modelSelect.innerHTML = '<option value="">No models available</option>';
       modelSelect.disabled = false;
+      return;
     }
+
+    // Check if models have provider information (OpenRouter only)
+    const hasProviderInfo = models.some(m => m.modelProvider);
+
+    if (hasProviderInfo) {
+      // Group models by provider
+      const groupedModels = AiProviderUtils.groupModelsByProvider(models);
+
+      // Sort providers alphabetically (with "unknown" at the end)
+      const providers = Object.keys(groupedModels).sort((a, b) => {
+        if (a === "unknown") return 1;
+        if (b === "unknown") return -1;
+        return a.localeCompare(b);
+      });
+
+      // Build HTML with optgroups for each provider
+      let html = '';
+      providers.forEach(provider => {
+        const providerModels = groupedModels[provider];
+        const count = providerModels.length;
+
+        // Create optgroup for this provider (use provider name as-is)
+        html += `<optgroup label="${provider} (${count})">`;
+        providerModels.forEach(model => {
+          html += `<option value="${model.value}">${model.label}</option>`;
+        });
+        html += '</optgroup>';
+      });
+
+      modelSelect.innerHTML = html;
+    } else {
+      // No provider info: simple list (OpenAI, Google)
+      modelSelect.innerHTML = models
+        .map(model => `<option value="${model.value}">${model.label}</option>`)
+        .join("");
+    }
+
+    modelSelect.disabled = false;
   },
 
   /**

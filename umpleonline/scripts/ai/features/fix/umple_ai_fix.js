@@ -126,8 +126,14 @@ const AiFix = {
 
     try {
       this.abortActiveRequest();
-      const prompt = this.buildGuidancePrompt(issue, errorHtml);
-      const systemPrompt = this.getSystemPrompt();
+
+      // Add context to issue for prompt builder
+      const issueWithContext = issue || {};
+      issueWithContext.context = this.getIssueContext(issue);
+
+      // Preload guidance and build prompt
+      await FixPromptBuilder.preloadGuidance();
+      const { prompt, systemPrompt } = FixPromptBuilder.buildGuidancePrompt(issueWithContext, errorHtml);
 
       let buffer = "";
       this.activeRequest = AiApi.chatStream(prompt, systemPrompt, { maxTokens: 500 }, {
@@ -138,8 +144,8 @@ const AiFix = {
       });
 
       const resultText = await this.activeRequest.done;
-      const cleaned = this.cleanGuidanceText(resultText);
-      const formatted = this.formatGuidanceHtml(cleaned || "No guidance produced.");
+      const cleaned = FixPromptBuilder.cleanGuidanceText(resultText);
+      const formatted = FixPromptBuilder.formatGuidanceHtml(cleaned || "No guidance produced.");
       guidanceBullet.innerHTML = `- ${formatted}`;
       guidanceBullet.classList.remove("ai-fix-sub-bullet-pending");
     } catch (e) {
@@ -303,44 +309,6 @@ const AiFix = {
     }
   },
 
-  buildGuidancePrompt(issue, errorHtml) {
-    const base = (typeof AiPrompting !== "undefined" && AiPrompting.getUmpleCheatSheet)
-      ? AiPrompting.getUmpleCheatSheet()
-      : "";
-
-    const context = this.getIssueContext(issue);
-    const issueLine = Number.isFinite(issue?.line) ? issue.line : "?";
-    const issueSummary = [
-      `- severity: ${issue?.severity || ""}`,
-      `- line: ${issueLine}`,
-      `- errorCode: ${issue?.errorCode || ""}`,
-      `- message: ${issue?.message || ""}`
-    ].join("\n");
-
-    return [
-      "## Task",
-      "Provide a short, concise description of how to fix this Umple compiler issue.",
-      "First check for simple typos (misspellings, missing punctuation, or incorrect identifiers).",
-      "",
-      "## Compiler issue",
-      issueSummary,
-      "",
-      "## Local context (line numbers included)",
-      context || "(no context available)",
-      "",
-      "## Umple quick reference",
-      base,
-      "",
-      "## Output contract (follow strictly)",
-      "- Output 1-2 short sentences, plain text only.",
-      "- Do NOT output code or bullet points.",
-      "- Do NOT mention that you are an AI model.",
-      "- When referencing lines, use only: 'line N' or 'lines N-M' (N/M are numbers).",
-      "- If it looks like a typo, mention the likely typo fix first.",
-      "- Keep it actionable and specific to the error."
-    ].join("\n");
-  },
-
   getIssueContext(issue) {
     if (!Page.codeMirrorEditor6 || !issue || !Number.isFinite(issue.line)) return "";
     const doc = Page.codeMirrorEditor6.state.doc;
@@ -351,44 +319,5 @@ const AiFix = {
       lines.push(`${i}: ${line.text}`);
     }
     return lines.join("\n");
-  },
-
-  getSystemPrompt() {
-    const base = (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
-      ? AiPrompting.getBaseSystemPrompt()
-      : "You are an expert in Umple modeling language.";
-    return [
-      base,
-      "",
-      "Give concise, actionable fix guidance.",
-      "Output format:",
-      "1. Examine the overall REPL correctness (such as typos or similar errors)",
-      "2. Scan the issue-related errors, where the issue represents the compiler output errors"
-    ].join("\n");
-  },
-
-  cleanGuidanceText(text) {
-    let output = String(text || "").trim();
-    output = output.replace(/^[\-•*]\s+/g, "");
-    output = output.replace(/```[\s\S]*?```/g, "").trim();
-    output = output.replace(/\s+/g, " ");
-    return output;
-  },
-
-  formatGuidanceHtml(text) {
-    const safe = this.escapeHtml(text);
-    return safe.replace(/\bline(s)?\s+(\d+)(\s*[-–]\s*(\d+))?/gi, (match, plural, start) => {
-      return `<a href="javascript:Action.setCaretPosition(${start});Action.updateLineNumberDisplay();">${match}</a>`;
-    });
-  },
-
-  escapeHtml(text) {
-    return String(text || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
   }
 };
-

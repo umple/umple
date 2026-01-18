@@ -154,7 +154,14 @@ const AiProviderAdapters = {
     }
 
     const client = this._getClient(provider, apiKey);
-    const response = await client.models.list();
+    let response;
+
+    // For OpenRouter, filter by programming category
+    if (provider === "openrouter") {
+      response = await client.models.list({ category: "programming" });
+    } else {
+      response = await client.models.list();
+    }
 
     // Return in a format compatible with existing parseModelsResponse
     return { ok: true, json: () => Promise.resolve({ data: response.data }) };
@@ -164,7 +171,7 @@ const AiProviderAdapters = {
    * Parse models response from provider
    * @param {string} provider - Provider name
    * @param {Object} responseData - Response data from API
-   * @returns {Array<Object>} Array of {value, label} model objects
+   * @returns {Array<Object>} Array of {value, label, modelProvider} model objects
    */
   parseModelsResponse(provider, responseData) {
     const models = [];
@@ -172,7 +179,14 @@ const AiProviderAdapters = {
 
     data.forEach(model => {
       if (model.id) {
-        models.push({ value: model.id, label: model.id });
+        const modelObj = { value: model.id, label: model.id };
+
+        // For OpenRouter, extract original model provider from model ID
+        if (provider === "openrouter") {
+          modelObj.modelProvider = AiProviderUtils.extractModelProvider(model.id);
+        }
+
+        models.push(modelObj);
       }
     });
 
