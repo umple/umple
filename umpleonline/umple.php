@@ -1276,14 +1276,9 @@ $output = $dataHandle->readData('model.ump');
                 <span class="eye-icon">👁</span>
               </button>
             </div>
+            <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget ai-verify-button" tabindex="0" role="button">Verify</div>
           </div>
-        </div>
-        <div class="setting-row">
-          <label>&nbsp;</label>
-          <div class="ai-settings-field ai-settings-actions">
-            <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Verify Key</div>
-            <div id="apiKeyStatus"></div>
-          </div>
+          <div id="apiKeyStatus" class="ai-key-status-message is-hidden"></div>
         </div>
         <div id="ttAiModel" class="setting-row is-hidden">
           <label for="selectAiModel">Model:</label>
@@ -1296,12 +1291,10 @@ $output = $dataHandle->readData('model.ump');
           <div id="aiUsageSummary" class="ai-usage-summary">
             <div class="ai-usage-empty">No usage recorded yet.</div>
           </div>
-          <div class="ai-usage-actions">
-            <div id="buttonResetAiUsage" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Reset Usage</div>
-          </div>
         </div>
       </div>
       <div class="dialog-buttons">
+        <div id="buttonResetAiUsage" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Reset Usage</div>
         <div id="btnCloseAiSettings" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Close</div>
       </div>
     </div>

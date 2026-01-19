@@ -215,9 +215,11 @@ a.button:active { color:black; text-decoration:none; }
 
 /* SELECT and CUSTOM SIZE INPUTS */
 select.button,
-input.button { 
-  width:134px; border: DimGray solid 1px; font: Verdana; font-size: 10pt; padding: 0px; 
-  margin: 0px 0px 5px 0px; cursor:pointer; 
+input.button {
+  width:134px; border: DimGray solid 1px; font: Verdana; font-size: 10pt; padding: 0px;
+  margin: 0; cursor:pointer;
+  height: 24px;
+  box-sizing: border-box;
 }
 input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
 
@@ -452,6 +454,11 @@ input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
   line-height: 1.2;
 }
 
+.ai-settings-form .setting-row select.button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .ai-settings-form .ai-settings-field {
   display: flex;
   align-items: center;
@@ -459,25 +466,41 @@ input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
   min-width: 0;
 }
 
-.ai-settings-form .ai-settings-actions {
-  flex-wrap: wrap;
-}
-
-.ai-settings-form #apiKeyStatus {
+/* API Key status message - shown/hidden via .is-hidden */
+.ai-settings-form .ai-key-status-message {
+  grid-column: 2 / -1;
   font-size: 9pt;
   line-height: 1.2;
-  margin: 0;
-  min-height: 14px;
+  margin: 2px 0 0 0;
+  padding: 0;
 }
 
 .ai-settings-form .ai-usage-section .ai-usage-summary {
-  border: 1px solid #d7d7d7;
-  background: #f9f9f9;
-  padding: 6px 8px;
+  border: 1px solid DimGray;
+  background: #f5f5f5;
+  padding: 8px 10px;
   border-radius: 3px;
   font-size: 9pt;
   color: #333;
   grid-column: 2 / -1;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+}
+
+/* Model select spans full width like token summary */
+.ai-settings-form #ttAiModel select {
+  grid-column: 2 / -1;
+  width: 100%;
+}
+
+/* Model cost display */
+.ai-model-cost {
+  grid-column: 2 / -1;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 8pt;
+  color: #888;
+  line-height: 1.3;
+  margin-top: 4px;
 }
 
 .ai-settings-form .ai-usage-section .ai-usage-row,
@@ -488,72 +511,75 @@ input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
 .ai-settings-form .ai-usage-section .ai-usage-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 10px;
-  padding: 3px 0;
-  border-bottom: 1px dashed #e3e3e3;
+  gap: 8px 12px;
+  padding: 4px 0;
+  border-bottom: 1px dashed #ccc;
+  align-items: center;
 }
 
 .ai-settings-form .ai-usage-section .ai-usage-row:last-child {
   border-bottom: none;
+  padding-bottom: 0;
 }
 
 .ai-settings-form .ai-usage-section .ai-usage-provider {
   font-weight: bold;
   color: #3383bb;
+  font-size: 9pt;
 }
 
 .ai-settings-form .ai-usage-section .ai-usage-metric {
-  color: #555;
+  color: #333;
+  font-size: 9pt;
+  font-weight: normal;
+}
+
+.ai-settings-form .ai-usage-section .ai-usage-key {
+  font-weight: bold;
+  color: #333;
+  margin-right: 4px;
+}
+
+.ai-settings-form .ai-usage-section .ai-usage-value {
+  color: #333;
+  font-weight: normal;
 }
 
 .ai-settings-form .ai-usage-section .ai-usage-empty {
-  color: #777;
-}
-
-.ai-settings-form .ai-usage-section .ai-usage-actions {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 6px;
-  grid-column: 2 / -1;
-}
-
-.ai-settings-form .ai-usage-section .ai-usage-actions .jQuery-palette-button {
-  width: 76px;
-  height: 20px;
-  line-height: 20px;
-  font-size: 8pt;
-}
-
-.ai-settings-form .setting-row select.button,
-.ai-settings-form .setting-row .api-key-input-wrapper {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.ai-settings-form .setting-row select.button {
-  width: 100%;
-}
-
-.ai-settings-form .setting-row #buttonVerifyApiKey {
-  width: 76px;
-  height: 20px;
-  line-height: 20px;
-  font-size: 8pt;
+  color: #666;
+  font-style: italic;
+  font-size: 9pt;
+  padding: 4px 0;
 }
 
 .ai-settings-form .setting-row .api-key-input-wrapper {
-  width: 100%;
-}
-
-.ai-settings-form .setting-row .ai-settings-field .api-key-input-wrapper {
   flex: 1;
+  min-width: 0;
+  height: 24px;
+  margin: 0;
 }
 
 .ai-settings-form .setting-row .api-key-input-wrapper input.api-key-input {
-  width: calc(100% - 30px);
+  height: 24px;
+  box-sizing: border-box;
   flex: 1;
+  width: calc(100% - 30px);
 }
 
+.ai-settings-form .setting-row .api-key-toggle {
+  height: 24px;
+  box-sizing: border-box;
+}
+
+.ai-settings-form .setting-row .ai-verify-button {
+  flex-shrink: 0;
+  height: 24px;
+  line-height: 22px;
+  padding: 0 12px;
+  font-size: 9pt;
+  margin: 0;
+  box-sizing: border-box;
+}
 .ai-settings-modal .dialog-buttons {
   display: flex;
   gap: 8px;

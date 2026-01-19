@@ -171,7 +171,7 @@ const AiProviderAdapters = {
    * Parse models response from provider
    * @param {string} provider - Provider name
    * @param {Object} responseData - Response data from API
-   * @returns {Array<Object>} Array of {value, label, modelProvider} model objects
+   * @returns {Array<Object>} Array of {value, label, modelProvider, pricing} model objects
    */
   parseModelsResponse(provider, responseData) {
     const models = [];
@@ -184,6 +184,14 @@ const AiProviderAdapters = {
         // For OpenRouter, extract original model provider from model ID
         if (provider === "openrouter") {
           modelObj.modelProvider = AiProviderUtils.extractModelProvider(model.id);
+        }
+
+        // Extract pricing information if available and convert to per-million tokens
+        if (model.pricing) {
+          modelObj.pricing = {
+            input: model.pricing.prompt * 1000000,  // per million tokens
+            output: model.pricing.completion * 1000000  // per million tokens
+          };
         }
 
         models.push(modelObj);

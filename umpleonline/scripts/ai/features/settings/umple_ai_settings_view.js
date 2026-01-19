@@ -55,12 +55,19 @@ const AiSettingsView = {
    */
   setStatusMessage(message, kind = "") {
     const statusDiv = this._getElement("apiKeyStatus", "statusDiv");
-    if (statusDiv) {
-      statusDiv.textContent = message;
-      statusDiv.className = "";
-      if (kind) {
-        statusDiv.classList.add(`ai-status-message--${kind}`);
-      }
+    if (!statusDiv) return;
+
+    const text = (message ?? "").toString();
+    statusDiv.textContent = text;
+
+    statusDiv.className = "ai-key-status-message";
+    if (!text) {
+      statusDiv.classList.add("is-hidden");
+      return;
+    }
+
+    if (kind) {
+      statusDiv.classList.add(`ai-status-message--${kind}`);
     }
   },
 
@@ -71,7 +78,7 @@ const AiSettingsView = {
     const statusDiv = this._getElement("apiKeyStatus", "statusDiv");
     if (statusDiv) {
       statusDiv.textContent = "";
-      statusDiv.className = "";
+      statusDiv.className = "ai-key-status-message is-hidden";
     }
   },
 
@@ -175,7 +182,7 @@ const AiSettingsView = {
 
   /**
    * Populate model select with options (grouped by provider for OpenRouter)
-   * @param {Array} models - Array of {value, label, modelProvider} objects
+   * @param {Array} models - Array of {value, label, modelProvider, pricing} objects
    */
   setModelsOptions(models) {
     const modelSelect = this._getElement("selectAiModel", "modelSelect");
@@ -184,8 +191,12 @@ const AiSettingsView = {
     if (models.length === 0) {
       modelSelect.innerHTML = '<option value="">No models available</option>';
       modelSelect.disabled = false;
+      this.updateModelCostDisplay(null);
       return;
     }
+
+    // Store model data for pricing lookup
+    this._modelsData = new Map(models.map(m => [m.value, m]));
 
     // Check if models have provider information (OpenRouter only)
     const hasProviderInfo = models.some(m => m.modelProvider);
@@ -224,6 +235,72 @@ const AiSettingsView = {
     }
 
     modelSelect.disabled = false;
+
+    // Add change listener for pricing display
+    if (!this._modelChangeListener) {
+      this._modelChangeListener = true;
+      modelSelect.addEventListener('change', () => this._onModelChange());
+    }
+
+    // Update pricing for currently selected model after loading
+    this._onModelChange();
+  },
+
+  /**
+   * Update model cost display below select dropdown
+   * @param {string} modelId - Selected model ID
+   */
+  updateModelCostDisplay(modelId) {
+    // Find existing cost display element
+    let costDisplay = document.getElementById("aiModelCostDisplay");
+
+    if (!modelId) {
+      if (costDisplay) costDisplay.remove();
+      return;
+    }
+
+    const modelData = this._modelsData?.get(modelId);
+    const pricing = modelData?.pricing;
+
+    let inputCost = "—";
+    let outputCost = "—";
+
+    if (pricing) {
+      // Pricing is already stored as USD per million tokens.
+      inputCost = this._formatPricing(pricing.input);
+      outputCost = this._formatPricing(pricing.output);
+    }
+
+    const costHtml = `<div id="aiModelCostDisplay" class="ai-model-cost">$${inputCost}/M input tokens $${outputCost}/M output tokens</div>`;
+
+    if (costDisplay) {
+      costDisplay.outerHTML = costHtml;
+    } else {
+      const modelContainer = document.getElementById("ttAiModel");
+      if (modelContainer) {
+        modelContainer.insertAdjacentHTML('beforeend', costHtml);
+      }
+    }
+  },
+
+  /**
+   * Format pricing value for display
+   * @param {number} value - Pricing per million tokens
+   * @returns {string} Formatted price string
+   */
+  _formatPricing(value) {
+    if (!Number.isFinite(value)) return "—";
+    return value.toFixed(2);
+  },
+
+  /**
+   * Update cost display when model selection changes (attached to select)
+   */
+  _onModelChange() {
+    const modelSelect = this._getElement("selectAiModel", "modelSelect");
+    if (modelSelect) {
+      this.updateModelCostDisplay(modelSelect.value);
+    }
   },
 
   /**
@@ -372,11 +449,11 @@ const AiSettingsView = {
     const cost = this._formatCost(usage.costUsd);
     container.innerHTML = `
       <div class="ai-usage-row">
-        <span class="ai-usage-metric">Total: ${total}</span>
-        <span class="ai-usage-metric">In: ${input}</span>
-        <span class="ai-usage-metric">Out: ${output}</span>
-        <span class="ai-usage-metric">Requests: ${requests}</span>
-        <span class="ai-usage-metric">Cost: ${cost}</span>
+        <span class="ai-usage-metric"><span class="ai-usage-key">Total:</span> <span class="ai-usage-value">${total}</span></span>
+        <span class="ai-usage-metric"><span class="ai-usage-key">In:</span> <span class="ai-usage-value">${input}</span></span>
+        <span class="ai-usage-metric"><span class="ai-usage-key">Out:</span> <span class="ai-usage-value">${output}</span></span>
+        <span class="ai-usage-metric"><span class="ai-usage-key">Requests:</span> <span class="ai-usage-value">${requests}</span></span>
+        <span class="ai-usage-metric"><span class="ai-usage-key">Cost:</span> <span class="ai-usage-value">${cost}</span></span>
       </div>
     `;
   }
