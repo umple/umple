@@ -201,24 +201,52 @@ const AiSettingsView = {
     // Check if models have provider information (OpenRouter only)
     const hasProviderInfo = models.some(m => m.modelProvider);
 
+    // Helper function to check if model is free (zero cost for both input and output)
+    const isFreeModel = (model) => {
+      if (!model.pricing) return false;
+      const inputCost = model.pricing.input;
+      const outputCost = model.pricing.output;
+      return inputCost === 0 && outputCost === 0;
+    };
+
     if (hasProviderInfo) {
-      // Group models by provider
-      const groupedModels = AiProviderUtils.groupModelsByProvider(models);
+      // Separate free models from paid models
+      const freeModels = models.filter(model => isFreeModel(model));
+      const paidModels = models.filter(model => !isFreeModel(model));
+
+      // Sort free models alphabetically by label
+      freeModels.sort((a, b) => a.label.localeCompare(b.label));
+
+      // Group paid models by provider and sort within each group
+      const groupedPaidModels = AiProviderUtils.groupModelsByProvider(paidModels);
+      Object.keys(groupedPaidModels).forEach(provider => {
+        groupedPaidModels[provider].sort((a, b) => a.label.localeCompare(b.label));
+      });
 
       // Sort providers alphabetically (with "unknown" at the end)
-      const providers = Object.keys(groupedModels).sort((a, b) => {
+      const providers = Object.keys(groupedPaidModels).sort((a, b) => {
         if (a === "unknown") return 1;
         if (b === "unknown") return -1;
         return a.localeCompare(b);
       });
 
-      // Build HTML with optgroups for each provider
+      // Build HTML with free models at the top, then grouped paid models
       let html = '';
+
+      // Free models section at the top
+      if (freeModels.length > 0) {
+        html += `<optgroup label="🆓 Free Models (${freeModels.length})">`;
+        freeModels.forEach(model => {
+          html += `<option value="${model.value}">${model.label}</option>`;
+        });
+        html += '</optgroup>';
+      }
+
+      // Paid models grouped by provider
       providers.forEach(provider => {
-        const providerModels = groupedModels[provider];
+        const providerModels = groupedPaidModels[provider];
         const count = providerModels.length;
 
-        // Create optgroup for this provider (use provider name as-is)
         html += `<optgroup label="${provider} (${count})">`;
         providerModels.forEach(model => {
           html += `<option value="${model.value}">${model.label}</option>`;
@@ -229,8 +257,21 @@ const AiSettingsView = {
       modelSelect.innerHTML = html;
     } else {
       // No provider info: simple list (OpenAI, Google)
-      modelSelect.innerHTML = models
-        .map(model => `<option value="${model.value}">${model.label}</option>`)
+      // Separate and sort free models first, then paid models
+      const freeModels = models.filter(model => isFreeModel(model));
+      const paidModels = models.filter(model => !isFreeModel(model));
+
+      freeModels.sort((a, b) => a.label.localeCompare(b.label));
+      paidModels.sort((a, b) => a.label.localeCompare(b.label));
+
+      const allModels = [...freeModels, ...paidModels];
+
+      modelSelect.innerHTML = allModels
+        .map(model => {
+          const isFree = isFreeModel(model);
+          const label = isFree ? `🆓 ${model.label}` : model.label;
+          return `<option value="${model.value}">${label}</option>`;
+        })
         .join("");
     }
 

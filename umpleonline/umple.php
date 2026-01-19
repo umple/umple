@@ -437,8 +437,8 @@ $output = $dataHandle->readData('model.ump');
             }
           ?>
         </span>
-        <span id="gdprtext" class="pretext">        
-          This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="https://umple.org/privacy" target="privacy">Click to learn about privacy.</a>
+        <span id="gdprtext" class="pretext">
+          This tool stores your data in cookies and on a server. For the AI feature, your API key is never sent to our server backend. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="https://umple.org/privacy" target="privacy">Click to learn about privacy.</a>
         <br/></span>  
 
         
