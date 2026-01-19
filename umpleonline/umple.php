@@ -1258,12 +1258,15 @@ $output = $dataHandle->readData('model.ump');
       <div class="ai-settings-form">
         <div class="setting-row">
           <label for="selectAiProvider">Provider:</label>
-          <select id="selectAiProvider" class="button">
-            <option value="" selected>Select provider...</option>
-            <option value="openai">OpenAI</option>
-            <option value="google">Google</option>
-            <option value="openrouter">OpenRouter</option>
-          </select>
+          <div class="ai-settings-field ai-provider-field">
+            <select id="selectAiProvider" class="button">
+              <option value="" selected>Select provider...</option>
+              <option value="openai">OpenAI</option>
+              <option value="google">Google</option>
+              <option value="openrouter">OpenRouter</option>
+            </select>
+            <a id="aiProviderLink" class="ai-provider-link is-hidden" href="" target="_blank" rel="noopener noreferrer"></a>
+          </div>
         </div>
         <div class="setting-row">
           <label for="inputAiApiKey">API Key:</label>

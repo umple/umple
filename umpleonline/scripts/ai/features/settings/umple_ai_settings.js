@@ -84,6 +84,7 @@ const AiSettings = {
 
         AiApi.saveProvider(newProvider);
         this.clearStatus();
+        AiSettingsView.updateProviderLink(newProvider);
 
         const apiKey = AiApi.getApiKey(newProvider);
 
@@ -324,6 +325,7 @@ const AiSettings = {
     // Update UI with saved values
     AiSettingsView.setProviderValue(savedProvider);
     AiSettingsView.setApiKeyValue(savedApiKey);
+    AiSettingsView.updateProviderLink(savedProvider);
 
     const wasVerified = AiApi.isVerified(savedProvider);
     if (wasVerified && savedApiKey && savedProvider) {

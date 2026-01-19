@@ -40,6 +40,7 @@ const AiSettingsView = {
    */
   initElements() {
     this._getElement("selectAiProvider", "providerSelect");
+    this._getElement("aiProviderLink", "providerLink");
     this._getElement("selectAiModel", "modelSelect");
     this._getElement("inputAiApiKey", "inputField");
     this._getElement("apiKeyStatus", "statusDiv");
@@ -453,6 +454,48 @@ const AiSettingsView = {
   _getProviderLabel(provider) {
     const config = typeof AiConfig !== "undefined" ? AiConfig.getProviderConfig(provider) : null;
     return config?.name || provider;
+  },
+
+  _getProviderLinkInfo(provider) {
+    const linkLabel = "Get API Key";
+    const linkMap = {
+      openai: {
+        label: linkLabel,
+        url: "https://platform.openai.com/"
+      },
+      google: {
+        label: linkLabel,
+        url: "https://aistudio.google.com/apikey"
+      },
+      openrouter: {
+        label: linkLabel,
+        url: "https://openrouter.ai/"
+      }
+    };
+
+    return linkMap[provider] || null;
+  },
+
+  updateProviderLink(provider) {
+    const link = this._getElement("aiProviderLink", "providerLink");
+    if (!link) return;
+
+    const info = this._getProviderLinkInfo(provider);
+
+    if (!info) {
+      link.classList.add("is-hidden");
+      link.removeAttribute("href");
+      link.textContent = "";
+      link.setAttribute("tabindex", "-1");
+      link.removeAttribute("title");
+      return;
+    }
+
+    link.textContent = info.label;
+    link.href = info.url;
+    link.title = info.url;
+    link.classList.remove("is-hidden");
+    link.setAttribute("tabindex", "0");
   },
 
   renderUsage(usageMap, provider) {

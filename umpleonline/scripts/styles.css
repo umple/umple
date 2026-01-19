@@ -416,7 +416,8 @@ input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
   -webkit-border-radius: 4px;
   border-radius: 4px;
   padding: 15px 20px;
-  min-width: 320px;
+  width: 400px;
+  min-width: 400px;
   max-width: 400px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   z-index: 10002;
@@ -464,6 +465,24 @@ input.customSize { height: 18px; width: 36px; cursor: caret; margin-top: 5px}
   align-items: center;
   gap: 8px;
   min-width: 0;
+}
+
+.ai-settings-form .ai-provider-field {
+  min-width: 0;
+}
+
+.ai-settings-form .ai-provider-field #selectAiProvider {
+  flex: 1 1 auto;
+  min-width: 0;
+  width: auto;
+}
+
+.ai-settings-form .ai-provider-link {
+  flex: 0 0 auto;
+  font-size: 9pt;
+  color: #3383bb;
+  text-decoration: underline;
+  white-space: nowrap;
 }
 
 /* API Key status message - shown/hidden via .is-hidden */
