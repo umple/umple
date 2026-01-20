@@ -237,11 +237,11 @@ const AiRequirements = {
     let stagnantIssueCount = 0;
 
     // Preload guidance for repair prompts to ensure cached content is available
-    if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.preloadGuidance) {
+    if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.preloadRepairGuidance) {
       try {
-        await RequirementsPromptBuilder.preloadGuidance(generationType);
+        await RequirementsPromptBuilder.preloadRepairGuidance(generationType);
       } catch (e) {
-        this.appendRequirementsOutput(`Guidance preload failed (continuing anyway): ${e.message}`);
+        this.appendRequirementsOutput(`Repair guidance preload failed (continuing anyway): ${e.message}`);
       }
     }
 
@@ -339,7 +339,7 @@ const AiRequirements = {
 
         return issueText;
       }).join("\n");
-      const repairPrompt = (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.repair_buildGeneration)
+      const repairResult = (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.repair_buildGeneration)
         ? RequirementsPromptBuilder.repair_buildGeneration({
           generationType,
           requirements,
@@ -347,14 +347,14 @@ const AiRequirements = {
           invalidBlock: currentBlock,
           compilerIssuesText
         })
-        : `Fix the following Umple block so that it compiles with the original model without errors.\n\nOriginal model:\n\n\`\`\`umple\n${originalCode}\n\`\`\`\n\nBlock to fix:\n\n\`\`\`umple\n${currentBlock}\n\`\`\`\n\nCompiler issues:\n${compilerIssuesText}\n\nOutput ONLY the corrected block as a single \`\`\`umple\`\`\` code block.`;
+        : { prompt: `Fix the following Umple block so that it compiles with the original model without errors.\n\nOriginal model:\n\n\`\`\`umple\n${originalCode}\n\`\`\`\n\nBlock to fix:\n\n\`\`\`umple\n${currentBlock}\n\`\`\`\n\nCompiler issues:\n${compilerIssuesText}\n\nOutput ONLY the corrected block as a single \`\`\`umple\`\`\` code block.`, systemPrompt };
 
       this.setStatusMessage(statusDiv, "LLM", `Repairing generated block (pass ${pass}/${maxPasses})...`);
       this.appendRequirementsOutput("Asking AI to repair the generated block...");
 
       let repairedResponse;
       try {
-        repairedResponse = await AiApi.chat(repairPrompt, systemPrompt);
+        repairedResponse = await AiApi.chat(repairResult.prompt, repairResult.systemPrompt);
       } catch (e) {
         this.appendRequirementsOutput(`AI repair failed: ${e.message}`);
         break;
@@ -1020,7 +1020,7 @@ const AiRequirements = {
           this.setStatusMessage(statusDiv, "LLM", "Repairing validation issues...");
           this.appendRequirementsOutput(`Validation issues found: ${validation.errors.join(", ")}. Repairing...`);
           const validationIssuesText = validation.errors.map(err => `- ${err}`).join("\n");
-          const repairPrompt = RequirementsPromptBuilder.repair_buildGeneration({
+          const repairResult = RequirementsPromptBuilder.repair_buildGeneration({
             generationType: genType,
             requirements: selectedReqs,
             invalidBlock: umpleCode,
@@ -1030,7 +1030,7 @@ const AiRequirements = {
           if (dialog.stopped) {
             this.appendRequirementsOutput("\nRepair stopped by user.");
           } else {
-            const repairedResponse = await AiApi.chat(repairPrompt, generation.systemPrompt);
+            const repairedResponse = await AiApi.chat(repairResult.prompt, repairResult.systemPrompt);
             umpleCode = this.extractUmpleCode(repairedResponse);
             dialog.generationContext.umpleCode = umpleCode;
 
