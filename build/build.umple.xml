@@ -380,7 +380,11 @@
       <!-- Features - include settings view and controller explicitly, then other features -->
       <fileset file="${scriptPath}/ai/features/settings/umple_ai_settings_view.js"/>
       <fileset file="${scriptPath}/ai/features/settings/umple_ai_settings.js"/>
-      <fileset dir="${scriptPath}/ai/features" includes="**/*.js" excludes="settings/*.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements-prompt_builder.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements_dialog.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements_self_correction.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements.js"/>
+      <fileset dir="${scriptPath}/ai/features" includes="**/*.js" excludes="settings/*.js,requirements/*.js"/>
       <fileset file="${scriptPath}/structureDiagram.js"/>
       <fileset file="${scriptPath}/statetable/state_table_colourer.js"/>
     </concat>

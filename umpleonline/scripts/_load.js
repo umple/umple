@@ -118,6 +118,8 @@ document.write('<script type="text/javascript" src="scripts/ai/prompts/umple_ai_
 document.write('<script type="text/javascript" src="scripts/ai/features/settings/umple_ai_settings_view.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/settings/umple_ai_settings.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements-prompt_builder.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements_dialog.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements_self_correction.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/explain/umple_ai_explain-prompt_builder.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/explain/umple_ai_explain.js"></script>');
