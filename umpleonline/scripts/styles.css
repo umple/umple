@@ -1047,6 +1047,7 @@ textarea#umpleLayoutEditorText {
   -webkit-border-radius: 4px;
   border-radius: 4px;
   padding: 15px;
+  width: 550px;
   max-width: 650px;
   max-height: 90vh;
   overflow-y: auto;
@@ -1357,7 +1358,7 @@ textarea#umpleLayoutEditorText {
 
 /* AI Explain Dialog Styles */
 .ai-explain-dialog .explanation-container {
-  margin-bottom: 15px;
+  margin-bottom: 0;
 }
 
 .ai-explain-dialog .explanation-text {
@@ -1393,7 +1394,8 @@ textarea#umpleLayoutEditorText {
 }
 
 .ai-explain-dialog .followup-container {
-  margin-bottom: 15px;
+  margin-top: 15px;
+  margin-bottom: 0;
 }
 
 .ai-explain-dialog .followup-input {
@@ -1442,7 +1444,7 @@ textarea#umpleLayoutEditorText {
 }
 
 .ai-explain-dialog .status-message {
-  margin-top: 15px;
+  margin-bottom: 15px;
   padding: 10px;
   background-color: #eee;
   border: DimGray solid 1px;
@@ -1457,4 +1459,16 @@ textarea#umpleLayoutEditorText {
 .ai-explain-dialog .status-message:not(:empty) {
   display: block;
   min-height: 20px;
+}
+
+.ai-explain-dialog .status-message.ai-status--info {
+  color: #3383bb;
+}
+
+.ai-explain-dialog .status-message.ai-status--success {
+  color: #2e7d32;
+}
+
+.ai-explain-dialog .status-message.ai-status--error {
+  color: #DD0033;
 }

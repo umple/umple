@@ -534,15 +534,14 @@ const AiSettingsView = {
       return;
     }
 
-    if (section) section.classList.remove("is-hidden");
-    if (resetButton) resetButton.classList.toggle("is-hidden", !hasUsage);
-
     if (!hasUsage) {
       if (section) section.classList.add("is-hidden");
       container.innerHTML = "";
       if (resetButton) resetButton.classList.add("is-hidden");
       return;
     }
+
+    if (section) section.classList.remove("is-hidden");
 
     const total = this._formatTokens(usage.totalTokens);
     const input = this._formatTokens(usage.inputTokens);

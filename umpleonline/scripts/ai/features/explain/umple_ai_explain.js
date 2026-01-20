@@ -15,6 +15,9 @@ const AiExplain = {
   // Active stream handle (for abort)
   activeStream: null,
 
+  // Thinking animation state
+  thinkingInterval: null,
+
   /**
    * Check if API key and model are configured
    * @returns {Object} {configured: boolean, message: string}
@@ -39,6 +42,36 @@ const AiExplain = {
       // ignore
     } finally {
       this.activeStream = null;
+    }
+    this.stopThinkingAnimation();
+  },
+
+  /**
+   * Start thinking animation in explanation text
+   * @param {HTMLElement} targetElement - Element to animate
+   */
+  startThinkingAnimation(targetElement) {
+    if (!targetElement) return;
+
+    this.stopThinkingAnimation();
+
+    let dots = 0;
+    const updateThinking = () => {
+      dots = (dots % 3) + 1;
+      targetElement.textContent = "thinking" + ".".repeat(dots);
+    };
+
+    updateThinking();
+    this.thinkingInterval = setInterval(updateThinking, 500);
+  },
+
+  /**
+   * Stop thinking animation
+   */
+  stopThinkingAnimation() {
+    if (this.thinkingInterval) {
+      clearInterval(this.thinkingInterval);
+      this.thinkingInterval = null;
     }
   },
 
@@ -119,20 +152,13 @@ const AiExplain = {
     const statusDiv = document.createElement("div");
     statusDiv.id = "explainStatusMessage";
     statusDiv.className = "status-message";
-    statusDiv.textContent = "Analyzing your code...";
-    statusDiv.style.color = "#3383bb";
-    statusDiv.style.display = "block";
+    statusDiv.textContent = "";
     content.appendChild(statusDiv);
 
     // Explanation display area (hidden initially)
     const explanationContainer = document.createElement("div");
     explanationContainer.id = "explanationContainer";
     explanationContainer.className = "explanation-container";
-    explanationContainer.style.display = "none";
-
-    const explanationHeading = document.createElement("h4");
-    explanationHeading.textContent = "Explanation:";
-    explanationContainer.appendChild(explanationHeading);
 
     const explanationText = document.createElement("div");
     explanationText.id = "explanationText";
@@ -146,10 +172,6 @@ const AiExplain = {
     followUpContainer.id = "followUpContainer";
     followUpContainer.className = "followup-container";
     followUpContainer.style.display = "none";
-
-    const followUpHeading = document.createElement("h4");
-    followUpHeading.textContent = "Follow-up Question:";
-    followUpContainer.appendChild(followUpHeading);
 
     const followUpInput = document.createElement("input");
     followUpInput.type = "text";
@@ -271,13 +293,14 @@ const AiExplain = {
     const followUpInput = document.getElementById("followUpInput");
 
     // Update status
-    statusDiv.textContent = "Generating explanation...";
-    statusDiv.style.color = "#3383bb";
-    statusDiv.style.display = "block";
+    statusDiv.textContent = "Analyzing your code...";
+    statusDiv.className = "status-message ai-status--info";
 
     this.abortActiveStream();
     explanationText.textContent = "";
-    explanationContainer.style.display = "block";
+
+    // Start thinking animation
+    this.startThinkingAnimation(explanationText);
 
     try {
       // Build prompt using ExplainPromptBuilder
@@ -298,6 +321,10 @@ const AiExplain = {
 
       this.activeStream = AiApi.chatStream(prompt, systemPrompt, {}, {
         onDelta: chunk => {
+          // Stop thinking animation on first chunk
+          if (buffer === "") {
+            this.stopThinkingAnimation();
+          }
           buffer += chunk;
           scheduleUpdate();
         }
@@ -305,6 +332,7 @@ const AiExplain = {
 
       const explanation = await this.activeStream.done;
       this.activeStream = null;
+      this.stopThinkingAnimation();
 
       if (updateTimer) {
         clearTimeout(updateTimer);
@@ -331,9 +359,8 @@ const AiExplain = {
       btnNewConversation.style.display = "inline-block";
 
       // Update status
-      statusDiv.textContent = "Code explained successfully! Ask follow-up questions below.";
-      statusDiv.style.color = "#2e7d32";
-      statusDiv.style.display = "block";
+      statusDiv.textContent = "";
+      statusDiv.className = "status-message";
 
       // Focus follow-up input
       followUpInput.focus();
@@ -343,8 +370,7 @@ const AiExplain = {
       }
       console.error("Error explaining code:", error);
       statusDiv.textContent = `Error: ${error.message}`;
-      statusDiv.style.color = "#DD0033";
-      statusDiv.style.display = "block";
+      statusDiv.className = "status-message ai-status--error";
     }
   },
 
@@ -361,9 +387,8 @@ const AiExplain = {
     const userQuestion = followUpInput.value.trim();
 
     if (!userQuestion) {
-      statusDiv.style.display = "block";
       statusDiv.textContent = "Please enter a question";
-      statusDiv.style.color = "#DD0033";
+      statusDiv.className = "status-message ai-status--error";
       return;
     }
 
@@ -371,9 +396,8 @@ const AiExplain = {
     btnAsk.classList.add("disabled");
     btnAsk.textContent = "Asking...";
     followUpInput.disabled = true;
-    statusDiv.style.display = "block";
     statusDiv.textContent = "Getting answer...";
-    statusDiv.style.color = "#3383bb";
+    statusDiv.className = "status-message ai-status--info";
 
     this.abortActiveStream();
 
@@ -395,19 +419,15 @@ const AiExplain = {
       const qDiv = document.createElement("div");
       qDiv.className = "followup-question";
       const qStrong = document.createElement("strong");
-      qStrong.textContent = "Q:";
+      qStrong.textContent = "You:";
       qDiv.appendChild(qStrong);
       qDiv.appendChild(document.createTextNode(` ${userQuestion}`));
 
       const aDiv = document.createElement("div");
       aDiv.className = "followup-answer";
-      const aStrong = document.createElement("strong");
-      aStrong.textContent = "A:";
       const aContent = document.createElement("div");
       aContent.className = "followup-answer-content";
       aContent.textContent = "";
-      aDiv.appendChild(aStrong);
-      aDiv.appendChild(document.createTextNode(" "));
       aDiv.appendChild(aContent);
 
       qaWrapper.appendChild(qDiv);
@@ -415,19 +435,32 @@ const AiExplain = {
       explanationText.appendChild(qaWrapper);
       explanationText.appendChild(document.createElement("hr"));
 
+      // Scroll to bottom after adding Q/A
+      explanationText.scrollTop = explanationText.scrollHeight;
+
       // Call AI API (stream)
       let buffer = "";
       let updateTimer = null;
+
+      // Start thinking animation for the answer
+      this.startThinkingAnimation(aContent);
+
       const scheduleUpdate = () => {
         if (updateTimer) return;
         updateTimer = setTimeout(() => {
           updateTimer = null;
           aContent.innerHTML = ExplainPromptBuilder.formatExplanation(buffer);
+          // Auto-scroll during streaming
+          explanationText.scrollTop = explanationText.scrollHeight;
         }, 120);
       };
 
       this.activeStream = AiApi.chatStream(prompt, systemPrompt, {}, {
         onDelta: chunk => {
+          // Stop thinking animation on first chunk
+          if (buffer === "") {
+            this.stopThinkingAnimation();
+          }
           buffer += chunk;
           scheduleUpdate();
         }
@@ -435,6 +468,7 @@ const AiExplain = {
 
       const answer = await this.activeStream.done;
       this.activeStream = null;
+      this.stopThinkingAnimation();
 
       if (updateTimer) {
         clearTimeout(updateTimer);
@@ -447,12 +481,14 @@ const AiExplain = {
       // Final formatting pass for the answer
       aContent.innerHTML = ExplainPromptBuilder.formatExplanation(answer);
 
+      // Final scroll to bottom
+      explanationText.scrollTop = explanationText.scrollHeight;
+
       // Clear input
       followUpInput.value = "";
 
-      statusDiv.style.display = "block";
-      statusDiv.textContent = "Answer received! Ask another question if you'd like.";
-      statusDiv.style.color = "#2e7d32";
+      statusDiv.textContent = "";
+      statusDiv.className = "status-message";
 
       // Focus follow-up input
       followUpInput.focus();
@@ -461,9 +497,8 @@ const AiExplain = {
         return;
       }
       console.error("Error asking follow-up:", error);
-      statusDiv.style.display = "block";
       statusDiv.textContent = `Error: ${error.message}`;
-      statusDiv.style.color = "#DD0033";
+      statusDiv.className = "status-message ai-status--error";
     } finally {
       btnAsk.classList.remove("disabled");
       btnAsk.textContent = "Ask";
