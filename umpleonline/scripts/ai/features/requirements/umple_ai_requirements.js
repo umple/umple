@@ -95,7 +95,7 @@ const AiRequirements = {
   },
 
   // --------------------------------------------------------------------------
-  // Self-correction helpers (compiler-based)
+  // Self-correction helpers (compiler + validation)
   // --------------------------------------------------------------------------
 
   getCompilerLanguage() {
@@ -210,7 +210,23 @@ const AiRequirements = {
     return { insertPos, insertText, mergedText, highlightFrom, highlightTo, codeText };
   },
 
-  async selfCorrectWithCompiler({ originalCode, generatedBlock, requirements, generationType, systemPrompt, dialog, statusDiv } = {}) {
+  /**
+   * Self-correct generated code using compiler feedback and validation checks.
+   * On each pass, checks validation issues (empty code, balanced braces,
+   * implementsReq tags, expected structure) and adds them as pseudo-compiler errors.
+   * Only exits when both compiler and validation checks pass.
+   * @param {Object} params - Self-correction parameters
+   * @param {string} params.originalCode - Original editor code (before insertion)
+   * @param {string} params.generatedBlock - Generated Umple block to insert
+   * @param {Array} params.requirements - Selected requirements
+   * @param {string} params.generationType - 'statemachine' or 'classdiagram'
+   * @param {string} params.systemPrompt - System prompt for repair
+   * @param {HTMLElement} params.dialog - Dialog element (for stop checking)
+   * @param {HTMLElement} params.statusDiv - Status display element
+   * @param {Array<string>} params.expectedRequirementIds - Requirement IDs to verify implementsReq tags
+   * @returns {Promise<{block: string}>} Corrected block
+   */
+  async selfCorrectWithCompiler({ originalCode, generatedBlock, requirements, generationType, systemPrompt, dialog, statusDiv, expectedRequirementIds } = {}) {
     const maxPasses = this.getSelfCorrectionMaxPasses();
     let currentBlock = String(generatedBlock || "").trim();
     if (!currentBlock) return { block: currentBlock };
@@ -267,6 +283,20 @@ const AiRequirements = {
       }
 
       const issues = compiled.issues || [];
+
+      // Check validation issues on every pass and add them as pseudo-compiler errors
+      if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.getValidationAsCompilerErrors) {
+        const validationErrors = RequirementsPromptBuilder.getValidationAsCompilerErrors({
+          code: currentBlock,
+          expectedRequirementIds: expectedRequirementIds || [],
+          generationType
+        });
+        if (validationErrors.length > 0) {
+          this.appendRequirementsOutput(`Validation issues found: ${validationErrors.map(e => e.message).join(", ")}`);
+          issues.unshift(...validationErrors);
+        }
+      }
+
       const errorIssues = issues.filter(issue => issue.severity === "Error");
       if (errorIssues.length === 0) {
         const warningCount = issues.filter(issue => issue.severity === "Warning").length;
@@ -313,7 +343,12 @@ const AiRequirements = {
         break;
       }
 
-      this.appendRequirementsOutput(`Compiler reported ${errorIssues.length} error(s) in merged model.`);
+      const validationErrorCount = errorIssues.filter(i => i.errorCode === "VALIDATION_ERROR").length;
+      const compilerErrorCount = errorIssues.length - validationErrorCount;
+      const errorSummary = [];
+      if (compilerErrorCount > 0) errorSummary.push(`${compilerErrorCount} compiler`);
+      if (validationErrorCount > 0) errorSummary.push(`${validationErrorCount} validation`);
+      this.appendRequirementsOutput(`Found ${errorSummary.join(" + ")} error(s) in merged model.`);
       if (inInsertedRange.length > 0) {
         this.appendRequirementsOutput(`Focusing on ${inInsertedRange.length} issue(s) within the inserted block (lines ${insertedStartLine}-${insertedEndLine}).`);
       } else {
@@ -349,7 +384,7 @@ const AiRequirements = {
         })
         : { prompt: `Fix the following Umple block so that it compiles with the original model without errors.\n\nOriginal model:\n\n\`\`\`umple\n${originalCode}\n\`\`\`\n\nBlock to fix:\n\n\`\`\`umple\n${currentBlock}\n\`\`\`\n\nCompiler issues:\n${compilerIssuesText}\n\nOutput ONLY the corrected block as a single \`\`\`umple\`\`\` code block.`, systemPrompt };
 
-      this.setStatusMessage(statusDiv, "LLM", `Repairing generated block (pass ${pass}/${maxPasses})...`);
+      this.setStatusMessage(statusDiv, "LLM", `Repairing errors (compiler + validation) in block (pass ${pass}/${maxPasses})...`);
       this.appendRequirementsOutput("Asking AI to repair the generated block...");
 
       let repairedResponse;
@@ -1008,7 +1043,7 @@ const AiRequirements = {
       this.appendRequirementsOutput("Generated initial Umple block from AI.");
 
       if (tokenLimitTruncated) {
-        // Stop further processing (validation/repair/self-correction)
+        // Stop further processing (self-correction loop)
         dialog.stopped = true;
         this.setStatusMessage(
           statusDiv,
@@ -1028,71 +1063,10 @@ const AiRequirements = {
       dialog.generationContext.umpleCode = this.extractUmpleCode(response);
       let umpleCode = dialog.generationContext.umpleCode;
 
-      // Validate + single repair pass (only if not stopped)
-      if (!dialog.stopped && typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.validateGeneratedUmple && RequirementsPromptBuilder.repair_buildGeneration) {
-        const validation = RequirementsPromptBuilder.validateGeneratedUmple({
-          code: umpleCode,
-          expectedRequirementIds: generation.expectedRequirementIds || [],
-          generationType: genType
-        });
-
-        if (!validation.valid) {
-          this.setStatusMessage(statusDiv, "LLM", "Repairing validation issues...");
-          this.appendRequirementsOutput(`Validation issues found: ${validation.errors.join(", ")}. Repairing...`);
-          const validationIssuesText = validation.errors.map(err => `- ${err}`).join("\n");
-          const repairResult = RequirementsPromptBuilder.repair_buildGeneration({
-            generationType: genType,
-            requirements: selectedReqs,
-            invalidBlock: umpleCode,
-            compilerIssuesText: validationIssuesText
-          });
-
-          if (dialog.stopped) {
-            this.appendRequirementsOutput("\nRepair stopped by user.");
-          } else {
-            let repairedText = "";
-            codeArea.value = "";
-            codeArea.placeholder = "Repairing validation issues...";
-            this.activeStream = AiApi.chatStream(repairResult.prompt, repairResult.systemPrompt, {}, {
-              onDelta: (deltaText) => {
-                repairedText += deltaText;
-                codeArea.value = repairedText;
-                codeArea.scrollTop = codeArea.scrollHeight;
-              }
-            });
-            const repairedResponse = await this.activeStream.done;
-            this.activeStream = null;
-            if (dialog.stopped) {
-              this.appendRequirementsOutput("\nRepair stopped by user.");
-              return;
-            }
-            umpleCode = this.extractUmpleCode(repairedResponse);
-            dialog.generationContext.umpleCode = umpleCode;
-
-            const repairedValidation = RequirementsPromptBuilder.validateGeneratedUmple({
-              code: umpleCode,
-              expectedRequirementIds: generation.expectedRequirementIds || [],
-              generationType: genType
-            });
-
-            if (!repairedValidation.valid) {
-              this.setStatusMessage(
-                statusDiv,
-                "LLM",
-                `Generated code may be invalid:\n${repairedValidation.errors.join("\n")}`,
-                "#DD0033"
-              );
-            } else {
-              this.appendRequirementsOutput("Code repaired successfully.");
-            }
-          }
-        }
-      }
-
-      // Compiler-based self-correction loop (compile merged model: original + inserted block)
+      // Compiler-based self-correction loop (includes validation checks on first pass)
       if (!dialog.stopped) {
-        this.setStatusMessage(statusDiv, "Compiler", "Running compiler-based self-correction...");
-        this.appendRequirementsOutput("Running compiler-based self-correction...");
+        this.setStatusMessage(statusDiv, "Compiler", "Running self-correction (compiler + validation)...");
+        this.appendRequirementsOutput("Running self-correction (compiler + validation)...");
         codeArea.value = "";
         codeArea.placeholder = "Self-correction in progress...";
         const originalEditorCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
@@ -1104,7 +1078,8 @@ const AiRequirements = {
             generationType: genType,
             systemPrompt: generation.systemPrompt,
             dialog,
-            statusDiv
+            statusDiv,
+            expectedRequirementIds: generation.expectedRequirementIds
           });
           if (corrected && typeof corrected.block === "string" && corrected.block.trim()) {
             umpleCode = corrected.block.trim();

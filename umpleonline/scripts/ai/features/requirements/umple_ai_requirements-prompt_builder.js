@@ -23,6 +23,14 @@ const RequirementsPromptBuilder = (() => {
     classdiagram: {
       url: "scripts/ai/prompts/class_diagram_guidance_prompt.md",
       blockTitle: "how_to_model_class_diagrams_in_umple"
+    },
+    statemachine_system: {
+      url: "scripts/ai/prompts/state_machine_system_prompt.md",
+      blockTitle: "state_machine_critical_rules"
+    },
+    classdiagram_system: {
+      url: "scripts/ai/prompts/class_diagram_system_prompt.md",
+      blockTitle: "class_diagram_critical_rules"
     }
   };
 
@@ -39,8 +47,26 @@ const RequirementsPromptBuilder = (() => {
     return [];
   }
 
+  function getSystemGuidanceKeysForGenerationType(generationType) {
+    if (generationType === "statemachine") return ["statemachine_system"];
+    if (generationType === "classdiagram") return ["classdiagram_system"];
+    return [];
+  }
+
   function getGuidanceBlocksForGenerationType(generationType) {
     const keys = getGuidanceKeysForGenerationType(generationType);
+    return keys
+      .map(key => {
+        const src = GUIDANCE_SOURCES[key];
+        if (!src) return "";
+        const text = getGuidanceText(key);
+        return text ? block(src.blockTitle, text) : "";
+      })
+      .filter(Boolean);
+  }
+
+  function getSystemGuidanceBlocksForGenerationType(generationType) {
+    const keys = getSystemGuidanceKeysForGenerationType(generationType);
     return keys
       .map(key => {
         const src = GUIDANCE_SOURCES[key];
@@ -78,12 +104,20 @@ const RequirementsPromptBuilder = (() => {
   }
 
   async function preloadGuidance(generationType) {
-    const keys = ["requirements", ...getGuidanceKeysForGenerationType(generationType)];
+    const keys = [
+      "requirements",
+      ...getGuidanceKeysForGenerationType(generationType),
+      ...getSystemGuidanceKeysForGenerationType(generationType)
+    ];
     await Promise.all(keys.map(k => ensureGuidanceLoaded(k)));
   }
 
   async function preloadRepairGuidance(generationType) {
-    const keys = ["requirements", ...getGuidanceKeysForGenerationType(generationType)];
+    const keys = [
+      "requirements",
+      ...getGuidanceKeysForGenerationType(generationType),
+      ...getSystemGuidanceKeysForGenerationType(generationType)
+    ];
     await Promise.all(keys.map(k => ensureGuidanceLoaded(k)));
   }
 
@@ -93,15 +127,17 @@ const RequirementsPromptBuilder = (() => {
       .join("\n\n");
   }
 
-  function getSystemPrompt(generationType) {
+  function getSystemPrompt(generationType, expectedRequirementIds = []) {
     const base = (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
       ? AiPrompting.getBaseSystemPrompt()
       : "You are an expert in Umple modeling language.";
 
     return joinBlocks([
       block("system", base, { allowEmpty: true }),
-      block("how_to_use_requirements_in_umple", getGuidanceText("requirements"), { allowEmpty: true }),
+      ...getSystemGuidanceBlocksForGenerationType(generationType),
       ...getGuidanceBlocksForGenerationType(generationType),
+      block("umple_quick_reference", getCheatSheet(), { allowEmpty: true }),
+      block("output_contract", buildOutputContract({ generationType, expectedRequirementIds })),
       block("directive", "Your job is to generate ONLY valid Umple code.")
     ]);
   }
@@ -114,7 +150,7 @@ const RequirementsPromptBuilder = (() => {
     return joinBlocks([
       block("system", base, { allowEmpty: true }),
       block("role", "You are debugging Umple code. Your task is to FIX compiler errors in a generated block so it compiles cleanly when inserted into the user's existing model."),
-      block("how_to_use_requirements_in_umple", getGuidanceText("requirements"), { allowEmpty: true }),
+      ...getSystemGuidanceBlocksForGenerationType(generationType),
       ...getGuidanceBlocksForGenerationType(generationType),
       block("umple_quick_reference", getCheatSheet(), { allowEmpty: true }),
       block("repair_strategy", [
@@ -256,13 +292,18 @@ const RequirementsPromptBuilder = (() => {
       const prompt = joinBlocks([
         block("task", getTaskLine(generationType)),
         block("requirements", reqText, { allowEmpty: true }),
-        ...buildCommonGuidanceBlocks(generationType),
-        block("output_contract", buildOutputContract({ generationType, expectedRequirementIds }))
+        block("how_to_use_requirements_in_umple", getGuidanceText("requirements"), { allowEmpty: true })
       ]);
 
-      return { prompt, systemPrompt: getSystemPrompt(generationType), expectedRequirementIds };
+      return { prompt, systemPrompt: getSystemPrompt(generationType, expectedRequirementIds), expectedRequirementIds };
     },
 
+    /**
+     * Validate generated Umple code.
+     * Checks: empty code, balanced braces, expected structure, implementsReq tags.
+     * @param {Object} params - {code, expectedRequirementIds, generationType}
+     * @returns {Object} {valid: boolean, errors: Array<string>}
+     */
     validateGeneratedUmple({ code, expectedRequirementIds = [], generationType } = {}) {
       const errors = [];
       const text = (code || "").trim();
@@ -275,6 +316,25 @@ const RequirementsPromptBuilder = (() => {
       return { valid: errors.length === 0, errors };
     },
 
+    /**
+     * Convert validation errors to pseudo-compiler error format for integration into compiler loop.
+     * These appear as "Validation Error" type with line 1 (block-level issues).
+     * @param {Object} params - {code, expectedRequirementIds, generationType}
+     * @returns {Array<{severity: string, errorCode: string, message: string, line: number, isPseudoError: boolean}>} Array of pseudo-compiler error objects
+     */
+    getValidationAsCompilerErrors({ code, expectedRequirementIds = [], generationType } = {}) {
+      const validation = this.validateGeneratedUmple({ code, expectedRequirementIds, generationType });
+      if (validation.valid) return [];
+
+      return validation.errors.map(err => ({
+        severity: "Error",
+        errorCode: "VALIDATION_ERROR",
+        message: err,
+        line: 1,
+        isPseudoError: true
+      }));
+    },
+
     repair_buildGeneration({ generationType, requirements, originalCode, invalidBlock, compilerIssuesText } = {}) {
       const expectedRequirementIds = (requirements || []).map(r => r.id).filter(Boolean);
       const reqText = formatRequirements(requirements);
@@ -285,12 +345,12 @@ const RequirementsPromptBuilder = (() => {
         : original;
 
       const issues = (compilerIssuesText || "").trim();
-      const issuesText = issues ? `Compiler issues with code snippets:\n${issues}` : "- (No details provided)";
+      const issuesText = issues ? `Errors (compiler and validation) with code snippets:\n${issues}` : "- (No details provided)";
 
       const prompt = joinBlocks([
         block(
           "task",
-          "You generated an Umple block from requirements, then it was inserted into a user's existing Umple model and compiled.\n\nFix the GENERATED BLOCK ONLY so that, after insertion into the original model, the compiler reports no errors and no warnings."
+          "You are debugging Umple code. Follow this workflow:\n\n1. Read the current_generated_block_to_fix\n2. Read the compiler_issues_errors_warnings\n3. Read the troubleshooting information (if any)\n4. Read the requirements and output_contract\n5. Generate corrected block that satisfies all constraints"
         ),
         block("compiler_issues_errors_warnings", issuesText),
         block("current_generated_block_to_fix", `\`\`\`umple\n${(invalidBlock || "").trim()}\n\`\`\``),

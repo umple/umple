@@ -82,11 +82,6 @@ Role names (use when it improves clarity / multiple links)
 class GraduateStudent { * -- 0..2 Professor supervisor; }
 ```
 
-Common AI mistake: role name must not equal the class name it describes.
-
-* Bad: `* Employer -- 1 Employer;`
-* Good: `* Employer hiringEmployer -- 1 JobPosting;` (pick a relationship-specific role name)
-
 Composition (strong ownership: deleting parent deletes children)
 
 ```umple
@@ -155,4 +150,39 @@ class Student {
 
 class Department { String name; 1 <@>- * Professor staff; }
 class Professor  { String title; }
+```
+
+Troubleshooting
+
+**Duplicate associations between same classes**
+
+There can ONLY be ONE association between any two classes. Do NOT define the same relationship in both classes.
+
+WRONG (duplicate association creates conflict):
+```umple
+class Interview {
+  * -- 0..1 Application;  // defined in Interview
+}
+
+class Application {
+  1 -- 1 Interview;  // CONFLICT: same relationship again!
+}
+```
+
+CORRECT (define association ONCE only):
+```umple
+// Option 1: Define in either class
+class Interview {
+  * -- 0..1 Application;
+}
+
+class Application {
+  // No association to Interview here (already defined above)
+}
+
+// Option 2: Use independent association statement
+association { * Interview -- 0..1 Application; }
+
+class Interview { }
+class Application { }
 ```
