@@ -104,8 +104,8 @@ const AiExplain = {
     // Check API configuration
     const apiConfig = this.checkApiConfig();
     if (!apiConfig.configured) {
-      if (typeof AiController !== "undefined" && AiController.showSettingsModal) {
-        AiController.showSettingsModal();
+      if (typeof AiSettings !== "undefined" && AiSettings.showSettingsModal) {
+        AiSettings.showSettingsModal();
       }
       alert(apiConfig.message);
       return;

@@ -182,8 +182,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     DropboxInitializer.initializeDropbox();
     ToolTips.initTooltips();
     // Initialize AI controller after DOM is ready so modal elements exist
-    if (window.AiController && window.AiController.init) {
-      window.AiController.init();
+    if (window.AiSettings && window.AiSettings.init) {
+      window.AiSettings.init();
     }
   });
 

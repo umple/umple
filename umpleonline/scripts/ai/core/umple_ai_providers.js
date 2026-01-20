@@ -134,6 +134,25 @@ const AiProviderAdapters = {
 
     try {
       const client = this._getClient(provider, apiKey);
+
+      if (provider === "openrouter") {
+        // Use OpenRouter's key endpoint to verify without consuming model tokens.
+        const response = await fetch("https://openrouter.ai/api/v1/key", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${apiKey}`
+          }
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          const msg = AiErrors.extractErrorMessage(errorData, `Verification failed: ${response.status}`);
+          return { valid: false, error: msg };
+        }
+
+        return { valid: true };
+      }
+
       await client.models.list();
       return { valid: true };
     } catch (error) {

@@ -472,8 +472,8 @@ const AiRequirements = {
     const apiConfig = this.checkApiConfig();
     if (!apiConfig.configured) {
       // Show the settings modal instead of just an alert
-      if (typeof AiController !== "undefined" && AiController.showSettingsModal) {
-        AiController.showSettingsModal();
+      if (typeof AiSettings !== "undefined" && AiSettings.showSettingsModal) {
+        AiSettings.showSettingsModal();
       }
       alert(apiConfig.message);
       return;

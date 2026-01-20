@@ -319,7 +319,12 @@ const AiSettings = {
    * Load saved preferences into the UI
    */
   loadPreferences() {
-    const savedProvider = AiApi.getProvider();
+    let savedProvider = AiApi.getProvider();
+    // Fallback to OpenRouter if no provider is saved
+    if (!savedProvider) {
+      savedProvider = "openrouter";
+      AiApi.saveProvider(savedProvider);
+    }
     const savedApiKey = AiApi.getApiKey(savedProvider);
 
     // Update UI with saved values
@@ -414,8 +419,5 @@ const AiSettings = {
   }
 };
 
-// Backwards compatibility alias
-window.AiController = AiSettings;
-
-// Also expose the new canonical name
+// Expose as global
 window.AiSettings = AiSettings;

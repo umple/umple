@@ -1260,10 +1260,9 @@ $output = $dataHandle->readData('model.ump');
           <label for="selectAiProvider">Provider:</label>
           <div class="ai-settings-field ai-provider-field">
             <select id="selectAiProvider" class="button">
-              <option value="" selected>Select provider...</option>
+              <option value="openrouter" selected>OpenRouter</option>
               <option value="openai">OpenAI</option>
               <option value="google">Google</option>
-              <option value="openrouter">OpenRouter</option>
             </select>
             <a id="aiProviderLink" class="ai-provider-link is-hidden" href="" target="_blank" rel="noopener noreferrer"></a>
           </div>
