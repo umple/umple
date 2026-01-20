@@ -1290,9 +1290,8 @@ $output = $dataHandle->readData('model.ump');
           </select>
         </div>
         <div class="setting-row ai-usage-section">
-          <label>Token:</label>
+          <label>Usage:</label>
           <div id="aiUsageSummary" class="ai-usage-summary">
-            <div class="ai-usage-empty">No usage recorded yet.</div>
           </div>
         </div>
       </div>

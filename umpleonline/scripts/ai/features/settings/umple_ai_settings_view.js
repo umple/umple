@@ -446,6 +446,18 @@ const AiSettingsView = {
     return Math.round(value).toLocaleString();
   },
 
+  _formatTokens(value) {
+    if (!Number.isFinite(value)) return "—";
+    const k = value / 1000;
+    if (k < 1) {
+      return `${Math.round(value)} tokens`;
+    } else if (k < 1000) {
+      return `${k.toFixed(1)}K`;
+    } else {
+      return `${(k / 1000).toFixed(2)}M`;
+    }
+  },
+
   _formatCost(value) {
     if (!Number.isFinite(value)) return "—";
     return `$${value.toFixed(4)}`;
@@ -500,12 +512,14 @@ const AiSettingsView = {
 
   renderUsage(usageMap, provider) {
     const container = this._getElement("aiUsageSummary", "usageSummary");
+    const resetButton = this._getElement("buttonResetAiUsage", "resetUsageButton");
     if (!container) return;
     const section = container.closest(".ai-usage-section");
 
     if (!provider) {
       if (section) section.classList.add("is-hidden");
       container.innerHTML = "";
+      if (resetButton) resetButton.classList.add("is-hidden");
       return;
     }
 
@@ -516,28 +530,31 @@ const AiSettingsView = {
     if (!hasCost) {
       if (section) section.classList.add("is-hidden");
       container.innerHTML = "";
+      if (resetButton) resetButton.classList.add("is-hidden");
       return;
     }
 
     if (section) section.classList.remove("is-hidden");
+    if (resetButton) resetButton.classList.toggle("is-hidden", !hasUsage);
 
     if (!hasUsage) {
-      container.innerHTML = '<div class="ai-usage-empty">No usage recorded yet.</div>';
+      if (section) section.classList.add("is-hidden");
+      container.innerHTML = "";
+      if (resetButton) resetButton.classList.add("is-hidden");
       return;
     }
 
-    const total = this._formatNumber(usage.totalTokens);
-    const input = this._formatNumber(usage.inputTokens);
-    const output = this._formatNumber(usage.outputTokens);
+    const total = this._formatTokens(usage.totalTokens);
+    const input = this._formatTokens(usage.inputTokens);
+    const output = this._formatTokens(usage.outputTokens);
     const requests = this._formatNumber(usage.requests);
     const cost = this._formatCost(usage.costUsd);
     container.innerHTML = `
-      <div class="ai-usage-row">
-        <span class="ai-usage-metric"><span class="ai-usage-key">Total:</span> <span class="ai-usage-value">${total}</span></span>
-        <span class="ai-usage-metric"><span class="ai-usage-key">In:</span> <span class="ai-usage-value">${input}</span></span>
-        <span class="ai-usage-metric"><span class="ai-usage-key">Out:</span> <span class="ai-usage-value">${output}</span></span>
-        <span class="ai-usage-metric"><span class="ai-usage-key">Requests:</span> <span class="ai-usage-value">${requests}</span></span>
-        <span class="ai-usage-metric"><span class="ai-usage-key">Cost:</span> <span class="ai-usage-value">${cost}</span></span>
+      <div class="ai-usage-primary">
+        ${total} · ${requests} req · ${cost}
+      </div>
+      <div class="ai-usage-secondary">
+        ↳ In: ${input} / Out: ${output}
       </div>
     `;
   }
