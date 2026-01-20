@@ -308,8 +308,8 @@ const AiRequirements = {
         lastIssueSignature = issueSignature;
       }
 
-      if (stagnantIssueCount >= 1) {
-        this.appendRequirementsOutput("Compiler issues did not change after a repair attempt; stopping self-correction.");
+      if (stagnantIssueCount >= 3) {
+        this.appendRequirementsOutput("Compiler issues did not change after 3 repair attempts; stopping self-correction.");
         break;
       }
 
@@ -354,7 +354,27 @@ const AiRequirements = {
 
       let repairedResponse;
       try {
-        repairedResponse = await AiApi.chat(repairResult.prompt, repairResult.systemPrompt);
+        const codeArea = document.getElementById("generatedCodeArea");
+        let repairedText = "";
+        if (codeArea) {
+          codeArea.value = "";
+          codeArea.placeholder = "Repairing generated block...";
+        }
+        this.activeStream = AiApi.chatStream(repairResult.prompt, repairResult.systemPrompt, {}, {
+          onDelta: (deltaText) => {
+            repairedText += deltaText;
+            if (codeArea) {
+              codeArea.value = repairedText;
+              codeArea.scrollTop = codeArea.scrollHeight;
+            }
+          }
+        });
+        repairedResponse = await this.activeStream.done;
+        this.activeStream = null;
+        if (dialog?.stopped) {
+          this.appendRequirementsOutput("\nSelf-correction stopped by user.");
+          break;
+        }
       } catch (e) {
         this.appendRequirementsOutput(`AI repair failed: ${e.message}`);
         break;
@@ -1030,7 +1050,22 @@ const AiRequirements = {
           if (dialog.stopped) {
             this.appendRequirementsOutput("\nRepair stopped by user.");
           } else {
-            const repairedResponse = await AiApi.chat(repairResult.prompt, repairResult.systemPrompt);
+            let repairedText = "";
+            codeArea.value = "";
+            codeArea.placeholder = "Repairing validation issues...";
+            this.activeStream = AiApi.chatStream(repairResult.prompt, repairResult.systemPrompt, {}, {
+              onDelta: (deltaText) => {
+                repairedText += deltaText;
+                codeArea.value = repairedText;
+                codeArea.scrollTop = codeArea.scrollHeight;
+              }
+            });
+            const repairedResponse = await this.activeStream.done;
+            this.activeStream = null;
+            if (dialog.stopped) {
+              this.appendRequirementsOutput("\nRepair stopped by user.");
+              return;
+            }
             umpleCode = this.extractUmpleCode(repairedResponse);
             dialog.generationContext.umpleCode = umpleCode;
 
