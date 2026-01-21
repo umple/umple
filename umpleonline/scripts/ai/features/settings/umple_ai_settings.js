@@ -297,8 +297,7 @@ const AiSettings = {
         }
 
         // Other errors
-        const errorMsg = AiErrors.extractErrorMessage(errorData, `Failed to fetch models: ${response.status}`);
-        throw new Error(errorMsg);
+        throw AiErrors.createApiError(response, errorData, "Failed to fetch models");
       }
 
       const data = await response.json();
@@ -413,7 +412,7 @@ const AiSettings = {
   },
 
   refreshUsage() {
-    const usageMap = AiStorage.getUsageMap();
+    const usageMap = AiStorage.getAllUsage();
     const provider = this.elements.providerSelect?.value || AiApi.getProvider();
     AiSettingsView.renderUsage(usageMap, provider);
   }

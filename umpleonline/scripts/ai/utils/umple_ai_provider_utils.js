@@ -132,6 +132,10 @@ var AiProviderUtils = _aiGlobal.AiProviderUtils || {
         return toModelList([flash, pro]);
       }
 
+      case "openrouter":
+        // OpenRouter models are already filtered through the API request stage
+        return models;
+
       default:
         return models;
     }
@@ -195,6 +199,36 @@ var AiProviderUtils = _aiGlobal.AiProviderUtils || {
     });
 
     return groups;
+  },
+
+  /**
+   * Normalize usage data from AI API responses
+   * Handles different token key names across providers (prompt_tokens vs input_tokens)
+   * @param {Object} usage - Usage object from API response
+   * @param {Object} response - Full response object (for fallback cost lookup)
+   * @returns {Object} Normalized usage with inputTokens, outputTokens, totalTokens, costUsd
+   */
+  normalizeUsage(usage, response = null) {
+    const toNumber = value => {
+      const num = Number(value);
+      return Number.isFinite(num) ? num : null;
+    };
+
+    const inputTokens = toNumber(usage?.prompt_tokens ?? usage?.input_tokens);
+    const outputTokens = toNumber(usage?.completion_tokens ?? usage?.output_tokens);
+    let totalTokens = toNumber(usage?.total_tokens);
+    if (totalTokens == null && Number.isFinite(inputTokens) && Number.isFinite(outputTokens)) {
+      totalTokens = inputTokens + outputTokens;
+    }
+
+    const costUsd = toNumber(usage?.cost ?? response?.cost ?? response?.usage?.cost);
+
+    return {
+      inputTokens,
+      outputTokens,
+      totalTokens,
+      costUsd
+    };
   }
 };
 

@@ -2,7 +2,7 @@
 // This file is made available subject to the open source license found at:
 // https://umple.org/license
 //
-// AI Manager - Core API facade for storage and provider operations
+// AI Controller - Core API facade for storage and provider operations
 
 const AiApi = {
   // Expose storage keys for backward compatibility
@@ -72,9 +72,9 @@ const AiApi = {
     const apiKey = this.getApiKey(provider);
     const model = this.getModel();
 
-    if (!provider) throw new Error("Provider not configured");
-    if (!apiKey) throw new Error("API key not configured");
-    if (!model) throw new Error("Model not selected");
+    if (!provider) throw AiErrors.createConfigurationError("PROVIDER_NOT_CONFIGURED");
+    if (!apiKey) throw AiErrors.createConfigurationError("API_KEY_NOT_CONFIGURED");
+    if (!model) throw AiErrors.createConfigurationError("MODEL_NOT_CONFIGURED");
 
     return AiProviderAdapters.chat(provider, apiKey, model, prompt, systemPrompt, options);
   },
@@ -92,9 +92,9 @@ const AiApi = {
     const apiKey = this.getApiKey(provider);
     const model = this.getModel();
 
-    if (!provider) throw new Error("Provider not configured");
-    if (!apiKey) throw new Error("API key not configured");
-    if (!model) throw new Error("Model not selected");
+    if (!provider) throw AiErrors.createConfigurationError("PROVIDER_NOT_CONFIGURED");
+    if (!apiKey) throw AiErrors.createConfigurationError("API_KEY_NOT_CONFIGURED");
+    if (!model) throw AiErrors.createConfigurationError("MODEL_NOT_CONFIGURED");
 
     return AiProviderAdapters.chatStream(provider, apiKey, model, prompt, systemPrompt, options, callbacks);
   }

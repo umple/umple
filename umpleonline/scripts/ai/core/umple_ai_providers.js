@@ -8,68 +8,6 @@ const AiProviderAdapters = {
   // Cache OpenAI client instances by provider:apiKey
   _clients: new Map(),
 
-  async _retryIfEmptyReasoningOnly(client, requestParams, response, model) {
-    const content = response?.choices?.[0]?.message?.content;
-    const finishReason = response?.choices?.[0]?.finish_reason;
-    const completionTokens = response?.usage?.completion_tokens;
-    const reasoningTokens = response?.usage?.completion_tokens_details?.reasoning_tokens;
-
-    const reasoningOnly =
-      (content === "" || content == null) &&
-      finishReason === "length" &&
-      Number.isFinite(completionTokens) &&
-      Number.isFinite(reasoningTokens) &&
-      completionTokens > 0 &&
-      reasoningTokens >= completionTokens;
-
-    if (!reasoningOnly) return response;
-
-    // Retry once with a larger token budget.
-    const bumped = { ...requestParams };
-
-    const usesMaxCompletionTokens = AiProviderUtils.usesMaxCompletionTokens(model);
-    const current = Number(usesMaxCompletionTokens ? requestParams.max_completion_tokens : requestParams.max_tokens) || 0;
-    const next = current > 0 ? current * 2 : 16000;
-    if (usesMaxCompletionTokens) bumped.max_completion_tokens = next;
-    else bumped.max_tokens = next;
-
-    return client.chat.completions.create(bumped);
-  },
-
-  _normalizeUsage(usage, response = null) {
-    const toNumber = value => {
-      const num = Number(value);
-      return Number.isFinite(num) ? num : null;
-    };
-
-    const inputTokens = toNumber(usage?.prompt_tokens ?? usage?.input_tokens);
-    const outputTokens = toNumber(usage?.completion_tokens ?? usage?.output_tokens);
-    let totalTokens = toNumber(usage?.total_tokens);
-    if (totalTokens == null && Number.isFinite(inputTokens) && Number.isFinite(outputTokens)) {
-      totalTokens = inputTokens + outputTokens;
-    }
-
-    const costUsd = toNumber(usage?.cost ?? response?.cost ?? response?.usage?.cost);
-
-    return {
-      inputTokens,
-      outputTokens,
-      totalTokens,
-      costUsd
-    };
-  },
-
-  _recordUsage(provider, usage, response = null) {
-    const normalized = this._normalizeUsage(usage, response);
-    AiStorage.recordUsage(provider, {
-      requests: 1,
-      inputTokens: normalized.inputTokens,
-      outputTokens: normalized.outputTokens,
-      totalTokens: normalized.totalTokens,
-      costUsd: normalized.costUsd
-    });
-  },
-
   /**
    * Get or create an OpenAI client for the given provider and API key
    * @param {string} provider - Provider name
@@ -97,6 +35,46 @@ const AiProviderAdapters = {
       this._clients.set(cacheKey, new OpenAI(clientConfig));
     }
     return this._clients.get(cacheKey);
+  },
+
+  // If reasoning only response is empty, retry with larger token budget
+  async _retryIfEmptyReasoningOnly(client, requestParams, response, model) {
+    const content = response?.choices?.[0]?.message?.content;
+    const finishReason = response?.choices?.[0]?.finish_reason;
+    const completionTokens = response?.usage?.completion_tokens;
+    const reasoningTokens = response?.usage?.completion_tokens_details?.reasoning_tokens;
+
+    const reasoningOnly =
+      (content === "" || content == null) &&
+      finishReason === AiConstants.FinishReason.LENGTH &&
+      Number.isFinite(completionTokens) &&
+      Number.isFinite(reasoningTokens) &&
+      completionTokens > 0 &&
+      reasoningTokens >= completionTokens;
+
+    if (!reasoningOnly) return response;
+
+    // Retry once with a larger token budget.
+    const bumped = { ...requestParams };
+
+    const usesMaxCompletionTokens = AiProviderUtils.usesMaxCompletionTokens(model);
+    const current = Number(usesMaxCompletionTokens ? requestParams.max_completion_tokens : requestParams.max_tokens) || 0;
+    const next = current > 0 ? current * 2 : 16000;
+    if (usesMaxCompletionTokens) bumped.max_completion_tokens = next;
+    else bumped.max_tokens = next;
+
+    return client.chat.completions.create(bumped);
+  },
+
+  _recordUsage(provider, usage, response = null) {
+    const normalized = AiProviderUtils.normalizeUsage(usage, response);
+    AiStorage.recordUsage(provider, {
+      requests: 1,
+      inputTokens: normalized.inputTokens,
+      outputTokens: normalized.outputTokens,
+      totalTokens: normalized.totalTokens,
+      costUsd: normalized.costUsd
+    });
   },
 
   /**
@@ -334,7 +312,7 @@ const AiProviderAdapters = {
         }
       }
 
-      if (!controller.signal.aborted && finishReason === "length") {
+      if (!controller.signal.aborted && finishReason === AiConstants.FinishReason.LENGTH) {
         onTruncated?.();
       }
 

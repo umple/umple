@@ -8,11 +8,10 @@ const AiErrors = {
   // Error types
   types: {
     NETWORK_ERROR: "NETWORK_ERROR",
+    CONFIGURATION_ERROR: "CONFIGURATION_ERROR",
     API_ERROR: "API_ERROR",
     VALIDATION_ERROR: "VALIDATION_ERROR",
-    STORAGE_ERROR: "STORAGE_ERROR",
-    CONFIGURATION_ERROR: "CONFIGURATION_ERROR",
-    PARSE_ERROR: "PARSE_ERROR"
+    PROMPT_LOAD_ERROR: "PROMPT_LOAD_ERROR"
   },
 
   // Error messages
@@ -23,12 +22,9 @@ const AiErrors = {
     PROVIDER_NOT_CONFIGURED: "Provider not configured",
     API_KEY_NOT_CONFIGURED: "API key not configured",
     MODEL_NOT_CONFIGURED: "Model not configured",
-    VERIFICATION_FAILED: "API key verification failed",
-    MODEL_LOAD_FAILED: "Failed to load models",
     NETWORK_ERROR: "Network error - please check your connection",
-    INVALID_REQUIREMENT: "Invalid requirement format",
-    NO_REQUIREMENTS_FOUND: "No requirements found in your Umple code",
-    NO_REQUIREMENTS_SELECTED: "Please select at least one requirement"
+    PROVIDER_REQUIRED: "Provider is required",
+    VERIFICATION_FAILED: "API key verification failed"
   },
 
   /**
@@ -60,66 +56,6 @@ const AiErrors = {
   },
 
   /**
-   * Create error from fetch response
-   * @param {Response} response - Fetch response object
-   * @param {string} defaultMsg - Default error message
-   * @returns {Error} Structured error object
-   */
-  async fromResponse(response, defaultMsg = "API request failed") {
-    let errorData = {};
-    let message = defaultMsg;
-
-    try {
-      errorData = await response.json();
-    } catch (e) {
-      // If response is not JSON, use status text
-      message = response.statusText || defaultMsg;
-    }
-
-    message = this.extractErrorMessage(errorData, message);
-
-    const error = this.createError(
-      this.types.API_ERROR,
-      message,
-      {
-        statusCode: response.status,
-        statusText: response.statusText,
-        responseData: errorData
-      }
-    );
-
-    return error;
-  },
-
-  /**
-   * Create network error
-   * @param {string} message - Error message
-   * @param {Error} originalError - Original error object
-   * @returns {Error} Structured error object
-   */
-  createNetworkError(message = this.messages.NETWORK_ERROR, originalError = null) {
-    return this.createError(
-      this.types.NETWORK_ERROR,
-      message,
-      { originalError }
-    );
-  },
-
-  /**
-   * Create validation error
-   * @param {string} message - Error message
-   * @param {Object} validationDetails - Validation details
-   * @returns {Error} Structured error object
-   */
-  createValidationError(message, validationDetails = {}) {
-    return this.createError(
-      this.types.VALIDATION_ERROR,
-      message,
-      validationDetails
-    );
-  },
-
-  /**
    * Create configuration error
    * @param {string} messageKey - Key from AiErrors.messages
    * @returns {Error} Structured error object
@@ -131,5 +67,72 @@ const AiErrors = {
       message,
       { messageKey }
     );
+  },
+
+  /**
+   * Create network error
+   * @param {string} message - Error message
+   * @param {Error} originalError - Original error object
+   * @returns {Error} Structured error object
+   */
+  createNetworkError(message, originalError = null) {
+    return this.createError(
+      this.types.NETWORK_ERROR,
+      message,
+      { originalError: originalError?.message }
+    );
+  },
+
+  /**
+   * Create API error from response
+   * @param {Response} response - Fetch response object
+   * @param {Object} errorData - Parsed error data
+   * @param {string} defaultMsg - Default error message
+   * @returns {Error} Structured error object
+   */
+  createApiError(response, errorData, defaultMsg = "API request failed") {
+    const message = this.extractErrorMessage(errorData, `${defaultMsg}: ${response?.status || 'unknown'}`);
+    return this.createError(
+      this.types.API_ERROR,
+      message,
+      { status: response?.status, errorData }
+    );
+  },
+
+  /**
+   * Create validation error
+   * @param {string} message - Validation error message
+   * @returns {Error} Structured error object
+   */
+  createValidationError(message) {
+    return this.createError(
+      this.types.VALIDATION_ERROR,
+      message
+    );
+  },
+
+  /**
+   * Create prompt loading error
+   * @param {string} url - URL that failed to load
+   * @param {number} status - HTTP status code
+   * @returns {Error} Structured error object
+   */
+  createPromptLoadError(url, status) {
+    return this.createError(
+      this.types.PROMPT_LOAD_ERROR,
+      `Failed to load prompt (${status}): ${url}`,
+      { url, status }
+    );
+  },
+
+  /**
+   * Create error from API response
+   * @param {Response} response - Fetch response object
+   * @param {string} defaultMsg - Default error message
+   * @returns {Promise<Error>} Structured error object
+   */
+  async fromResponse(response, defaultMsg = "API request failed") {
+    const errorData = await response.json().catch(() => ({}));
+    return this.createApiError(response, errorData, defaultMsg);
   }
 };

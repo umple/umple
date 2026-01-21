@@ -63,7 +63,7 @@ const AiRequirements = {
   },
 
   extractUmpleCode(response) {
-    return AiResponseUtils.extractUmpleCode(response);
+    return AiTextUtils.extractUmpleCode(response);
   },
 
   SYSTEM_PROMPT: (() => {

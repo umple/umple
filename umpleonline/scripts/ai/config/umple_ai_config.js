@@ -2,10 +2,9 @@
 // This file is made available subject to the open source license found at:
 // https://umple.org/license
 //
-// AI Configuration Module - Centralized configuration for AI features
+// AI Configuration Module - Compatible with OpenAI SDK
 
 const AiConfig = {
-  // Provider configuration for OpenAI SDK
   providers: {
     openai: {
       name: "OpenAI",

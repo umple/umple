@@ -250,7 +250,7 @@ const RequirementsSelfCorrection = {
         break;
       }
 
-      const repairedBlock = String(AiResponseUtils.extractUmpleCode(repairedResponse) || "").trim();
+      const repairedBlock = String(AiTextUtils.extractUmpleCode(repairedResponse) || "").trim();
       if (!repairedBlock) {
         RequirementsDialog.appendRequirementsOutput("AI repair produced empty output; stopping.");
         break;

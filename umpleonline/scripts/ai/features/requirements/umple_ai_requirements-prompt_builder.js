@@ -155,10 +155,7 @@ const RequirementsPromptBuilder = (() => {
       block("umple_quick_reference", getCheatSheet(), { allowEmpty: true }),
       block("repair_strategy", [
         "1. Analyze the compiler error message carefully",
-        "2. Check for simple typos (misspellings, missing punctuation, incorrect identifiers)",
-        "3. Verify syntax against Umple quick reference",
-        "4. Ensure the fix doesn't break existing model elements",
-        "5. Preserve all implementsReq tags from the original block"
+        "2. Identify the root cause of the error in the code block",
       ].join("\n"))
     ]);
   }
@@ -233,7 +230,7 @@ const RequirementsPromptBuilder = (() => {
       getRequirementRule(expectedRequirementIds, "repair"),
       getTypeRule(generationType),
       "- Do NOT re-output any req { ... } blocks.",
-      "- Do NOT re-output the user's existing model; output ONLY the corrected generated block.",
+      "- Do NOT repeat the user's existing code; output ONLY the corrected generated block.",
       "- Do NOT change or reference line-numbered edits in the user's original code; fix only the generated block.",
       "- If you must assume something, add a single-line comment inside the code: // Assumption: ..."
     ].filter(Boolean).join("\n");
@@ -285,19 +282,6 @@ const RequirementsPromptBuilder = (() => {
       return preloadRepairGuidance(generationType);
     },
 
-    buildGeneration(requirements, generationType) {
-      const expectedRequirementIds = (requirements || []).map(r => r.id).filter(Boolean);
-      const reqText = formatRequirements(requirements);
-
-      const prompt = joinBlocks([
-        block("task", getTaskLine(generationType)),
-        block("requirements", reqText, { allowEmpty: true }),
-        block("how_to_use_requirements_in_umple", getGuidanceText("requirements"), { allowEmpty: true })
-      ]);
-
-      return { prompt, systemPrompt: getSystemPrompt(generationType, expectedRequirementIds), expectedRequirementIds };
-    },
-
     /**
      * Validate generated Umple code.
      * Checks: empty code, balanced braces, expected structure, implementsReq tags.
@@ -335,6 +319,19 @@ const RequirementsPromptBuilder = (() => {
       }));
     },
 
+    buildGeneration(requirements, generationType) {
+      const expectedRequirementIds = (requirements || []).map(r => r.id).filter(Boolean);
+      const reqText = formatRequirements(requirements);
+
+      const prompt = joinBlocks([
+        block("task", getTaskLine(generationType)),
+        block("requirements", reqText, { allowEmpty: true }),
+        block("how_to_use_requirements_in_umple", getGuidanceText("requirements"), { allowEmpty: true })
+      ]);
+
+      return { prompt, systemPrompt: getSystemPrompt(generationType, expectedRequirementIds), expectedRequirementIds };
+    },
+
     repair_buildGeneration({ generationType, requirements, originalCode, invalidBlock, compilerIssuesText } = {}) {
       const expectedRequirementIds = (requirements || []).map(r => r.id).filter(Boolean);
       const reqText = formatRequirements(requirements);
@@ -350,7 +347,7 @@ const RequirementsPromptBuilder = (() => {
       const prompt = joinBlocks([
         block(
           "task",
-          "You are debugging Umple code. Follow this workflow:\n\n1. Read the current_generated_block_to_fix\n2. Read the compiler_issues_errors_warnings\n3. Read the troubleshooting information (if any)\n4. Read the requirements and output_contract\n5. Generate corrected block that satisfies all constraints"
+          "You are debugging Umple code. Follow this workflow:\n\n1. Read the current_generated_block_to_fix\n2. Read the compiler_issues_errors_warnings\n3. Read the troubleshooting information\n4. Read the requirements and output_contract\n5. Generate corrected block that satisfies all constraints"
         ),
         block("compiler_issues_errors_warnings", issuesText),
         block("current_generated_block_to_fix", `\`\`\`umple\n${(invalidBlock || "").trim()}\n\`\`\``),

@@ -55,7 +55,7 @@ Rules:
     if (typeof fetch === "function") {
       return fetch(resolvedUrl)
         .then(r => {
-          if (!r.ok) throw new Error(`Failed to load prompt (${r.status}): ${resolvedUrl}`);
+          if (!r.ok) throw AiErrors.createPromptLoadError(resolvedUrl, r.status);
           return r.text();
         })
         .then(sanitizePromptText);
@@ -70,7 +70,7 @@ Rules:
           if (xhr.status >= 200 && xhr.status < 300) {
             resolve(sanitizePromptText(xhr.responseText));
           } else {
-            reject(new Error(`Failed to load prompt (${xhr.status}): ${resolvedUrl}`));
+            reject(AiErrors.createPromptLoadError(resolvedUrl, xhr.status));
           }
         };
         xhr.send(null);

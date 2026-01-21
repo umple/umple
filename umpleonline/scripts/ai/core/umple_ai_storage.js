@@ -8,7 +8,6 @@ const AiStorage = {
   // LocalStorage keys for storing preferences
   STORAGE_KEY_PROVIDER_DATA: "umpleAiProviderData", // Map of provider -> { apiKey, model, verified }
   STORAGE_KEY_PROVIDER: "umpleAiProvider",
-  STORAGE_KEY_USAGE: "umpleAiUsage",
 
   /**
    * Execute localStorage operation with error handling
@@ -37,7 +36,7 @@ const AiStorage = {
   },
 
   /**
-   * Normalize provider data entries before storage
+   * Normalize provider data entries before storage (now includes usage)
    * @param {Object} providerData - Map of provider -> data
    * @returns {Object} Sanitized map
    */
@@ -52,6 +51,33 @@ const AiStorage = {
       if (data.apiKey) entry.apiKey = String(data.apiKey).trim();
       if (data.model) entry.model = String(data.model).trim();
       if (data.verified === true) entry.verified = true;
+
+      // Sanitize usage data
+      if (data.usage && typeof data.usage === "object") {
+        const usage = {};
+        const toNumber = value => {
+          const num = Number(value);
+          return Number.isFinite(num) ? num : null;
+        };
+
+        const requests = toNumber(data.usage.requests);
+        const inputTokens = toNumber(data.usage.inputTokens);
+        const outputTokens = toNumber(data.usage.outputTokens);
+        const totalTokens = toNumber(data.usage.totalTokens);
+        const costUsd = toNumber(data.usage.costUsd);
+        const lastUsedAt = data.usage.lastUsedAt ? String(data.usage.lastUsedAt) : "";
+
+        if (requests != null) usage.requests = Math.max(0, Math.floor(requests));
+        if (inputTokens != null) usage.inputTokens = Math.max(0, Math.floor(inputTokens));
+        if (outputTokens != null) usage.outputTokens = Math.max(0, Math.floor(outputTokens));
+        if (totalTokens != null) usage.totalTokens = Math.max(0, Math.floor(totalTokens));
+        if (costUsd != null) usage.costUsd = Math.max(0, costUsd);
+        if (lastUsedAt) usage.lastUsedAt = lastUsedAt;
+
+        if (Object.keys(usage).length > 0) {
+          entry.usage = usage;
+        }
+      }
 
       if (entry.apiKey || entry.model || entry.verified) {
         sanitized[provider] = entry;
@@ -103,7 +129,7 @@ const AiStorage = {
 
   /**
    * Get provider data map from localStorage
-   * @returns {Object} Map of provider -> { apiKey, model, verified }
+   * @returns {Object} Map of provider -> { apiKey, model, verified, usage }
    */
   getProviderDataMap() {
     return this._withStorage(
@@ -125,7 +151,7 @@ const AiStorage = {
 
   /**
    * Save provider data map to localStorage
-   * @param {Object} providerData - Map of provider -> { apiKey, model, verified }
+   * @param {Object} providerData - Map of provider -> { apiKey, model, verified, usage }
    * @returns {boolean} Success status
    */
   saveProviderDataMap(providerData) {
@@ -144,44 +170,29 @@ const AiStorage = {
   },
 
   /**
-   * Retrieve usage map from localStorage
-   * @returns {Object} Map of provider -> usage data
+   * Get usage data for a specific provider
+   * @param {string} provider - Provider name
+   * @returns {Object} Usage data or empty object
    */
-  getUsageMap() {
-    return this._withStorage(
-      () => {
-        const stored = localStorage.getItem(this.STORAGE_KEY_USAGE);
-        if (stored) {
-          try {
-            return this._sanitizeUsageMap(JSON.parse(stored));
-          } catch (e) {
-            return {};
-          }
-        }
-        return {};
-      },
-      "Error retrieving usage map:"
-    ) ?? {};
+  getUsage(provider) {
+    if (!provider) return {};
+    const providerData = this.getProviderDataMap();
+    return providerData[provider]?.usage || {};
   },
 
   /**
-   * Save usage map to localStorage
-   * @param {Object} usageMap - Map of provider -> usage data
-   * @returns {boolean} Success status
+   * Get usage data for all providers
+   * @returns {Object} Map of provider -> usage data
    */
-  saveUsageMap(usageMap) {
-    return this._withStorage(
-      () => {
-        const sanitized = this._sanitizeUsageMap(usageMap);
-        if (Object.keys(sanitized).length > 0) {
-          localStorage.setItem(this.STORAGE_KEY_USAGE, JSON.stringify(sanitized));
-        } else {
-          localStorage.removeItem(this.STORAGE_KEY_USAGE);
-        }
-        return true;
-      },
-      "Error saving usage map:"
-    ) ?? false;
+  getAllUsage() {
+    const providerData = this.getProviderDataMap();
+    const usage = {};
+    Object.entries(providerData).forEach(([provider, data]) => {
+      if (data.usage) {
+        usage[provider] = data.usage;
+      }
+    });
+    return usage;
   },
 
   /**
@@ -199,8 +210,9 @@ const AiStorage = {
       return Number.isFinite(num) ? num : null;
     };
 
-    const usageMap = this.getUsageMap();
-    const entry = usageMap[provider] || {};
+    const providerData = this.getProviderDataMap();
+    const providerEntry = providerData[provider] || {};
+    const usage = providerEntry.usage || {};
 
     const requests = toNumber(delta.requests);
     const inputTokens = toNumber(delta.inputTokens);
@@ -212,15 +224,16 @@ const AiStorage = {
       totalTokens = inputTokens + outputTokens;
     }
 
-    entry.requests = Math.max(0, Math.floor((entry.requests || 0) + (requests != null ? requests : 1)));
-    if (inputTokens != null) entry.inputTokens = Math.max(0, Math.floor((entry.inputTokens || 0) + inputTokens));
-    if (outputTokens != null) entry.outputTokens = Math.max(0, Math.floor((entry.outputTokens || 0) + outputTokens));
-    if (totalTokens != null) entry.totalTokens = Math.max(0, Math.floor((entry.totalTokens || 0) + totalTokens));
-    if (costUsd != null) entry.costUsd = Math.max(0, (entry.costUsd || 0) + costUsd);
-    entry.lastUsedAt = new Date().toISOString();
+    usage.requests = Math.max(0, Math.floor((usage.requests || 0) + (requests != null ? requests : 1)));
+    if (inputTokens != null) usage.inputTokens = Math.max(0, Math.floor((usage.inputTokens || 0) + inputTokens));
+    if (outputTokens != null) usage.outputTokens = Math.max(0, Math.floor((usage.outputTokens || 0) + outputTokens));
+    if (totalTokens != null) usage.totalTokens = Math.max(0, Math.floor((usage.totalTokens || 0) + totalTokens));
+    if (costUsd != null) usage.costUsd = Math.max(0, (usage.costUsd || 0) + costUsd);
+    usage.lastUsedAt = new Date().toISOString();
 
-    usageMap[provider] = entry;
-    const saved = this.saveUsageMap(usageMap);
+    providerEntry.usage = usage;
+    providerData[provider] = providerEntry;
+    const saved = this.saveProviderDataMap(providerData);
 
     if (saved && typeof window !== "undefined" && window.dispatchEvent) {
       window.dispatchEvent(new CustomEvent("aiUsageUpdated", { detail: { provider } }));
@@ -235,13 +248,24 @@ const AiStorage = {
    * @returns {boolean} Success status
    */
   resetUsage(provider = null) {
+    const providerData = this.getProviderDataMap();
+
     if (provider) {
-      const usageMap = this.getUsageMap();
-      delete usageMap[provider];
-      return this.saveUsageMap(usageMap);
+      const entry = providerData[provider];
+      if (entry) {
+        delete entry.usage;
+        providerData[provider] = entry;
+      }
+      return this.saveProviderDataMap(providerData);
     }
 
-    return this.saveUsageMap({});
+    // Reset usage for all providers
+    Object.keys(providerData).forEach(p => {
+      if (providerData[p]) {
+        delete providerData[p].usage;
+      }
+    });
+    return this.saveProviderDataMap(providerData);
   },
 
   /**
@@ -252,8 +276,7 @@ const AiStorage = {
    */
   saveApiKey(provider, apiKey) {
     if (!provider) {
-      console.error("Provider is required to save API key");
-      return false;
+      throw AiErrors.createValidationError("Provider is required to save API key");
     }
     const key = apiKey?.trim();
     const providerData = this.getProviderDataMap();
@@ -312,8 +335,7 @@ const AiStorage = {
   saveModel(model, provider = null) {
     const providerToUse = provider || this.getProvider();
     if (!providerToUse) {
-      console.error("Provider is required to save model");
-      return false;
+      throw AiErrors.createValidationError("Provider is required to save model");
     }
     const trimmedModel = model?.trim();
     return this._withStorage(
