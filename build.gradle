@@ -1872,6 +1872,7 @@ task rtcppUserManualAndExampleTests {
             "E233RemoveInitialState.ump",
             "E008AssociationClassMissingEnd1.ump",
             "E3607PortNameCannotBeResolved1.ump",
+            "E3607NoDestinationClassName.ump",
             "E210ConflictMethods4.ump",
             "E229RenamingTwoTimesStates.ump",
             "E028ConstraintIdentifierIncorrect1.ump",

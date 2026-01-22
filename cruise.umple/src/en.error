@@ -251,7 +251,7 @@
 3604: 1, "https://manual.umple.org/?PageBeingDeveloped.html", Port binding to component '{0}' can not be resolved.;
 3605: 1, "https://manual.umple.org/?PageBeingDeveloped.html", Port binding from port can not be resolved.;
 3606: 1, "https://manual.umple.org/?PageBeingDeveloped.html", Port binding to port can not be resolved.;
-3607: 1, "https://manual.umple.org/?E3607PortNameCannotBeResolved.html", Port name '{0}' from class '{1}' can not be resolved.;
+3607: 1, "https://manual.umple.org/?E3607PortNameCannotBeResolved.html", Port name '{0}' from class '{1}' can not be resolved or else you intended to create an association but omitted destination class.;
 
 # Messages related to fixml
 4500: 1,  "https://manual.umple.org/?E4500TagNotClosedCorrectly.html", The tag '{0}' is not closed correctly.  ;
