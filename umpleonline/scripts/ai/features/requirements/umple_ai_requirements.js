@@ -87,52 +87,7 @@ const AiRequirements = {
     const requirements = this.parseRequirements(umpleCode);
 
     if (requirements.length === 0) {
-      const dialog = document.createElement("div");
-      dialog.className = "ai-requirements-dialog";
-
-      const overlay = document.createElement("div");
-      overlay.className = "dialog-overlay";
-      overlay.style.pointerEvents = "none";
-      dialog.appendChild(overlay);
-
-      const content = document.createElement("div");
-      content.className = "dialog-content";
-
-      const title = document.createElement("h3");
-      title.textContent = "No Requirements Found";
-      content.appendChild(title);
-
-      const messageDiv = document.createElement("div");
-      messageDiv.style.marginBottom = "15px";
-      messageDiv.style.whiteSpace = "pre-line";
-      const messageText = document.createTextNode("No requirements found in your Umple code.\n\nSee ");
-      messageDiv.appendChild(messageText);
-      const link = document.createElement("a");
-      link.href = "https://cruise.umple.org/umple/Requirements.html";
-      link.target = "_blank";
-      link.textContent = "https://cruise.umple.org/umple/Requirements.html";
-      messageDiv.appendChild(link);
-      messageDiv.appendChild(document.createTextNode(" for more information."));
-      content.appendChild(messageDiv);
-
-      const buttonsDiv = document.createElement("div");
-      buttonsDiv.className = "dialog-buttons";
-      buttonsDiv.style.justifyContent = "center";
-
-      const btnOK = document.createElement("div");
-      btnOK.className = "jQuery-palette-button unselectable ui-button ui-corner-all ui-widget";
-      btnOK.tabIndex = 0;
-      btnOK.setAttribute("role", "button");
-      btnOK.textContent = "OK";
-      btnOK.addEventListener("click", () => dialog.remove());
-      btnOK.addEventListener("keypress", (event) => {
-        if (event.key === "Enter" || event.key === " ") dialog.remove();
-      });
-      buttonsDiv.appendChild(btnOK);
-
-      content.appendChild(buttonsDiv);
-      dialog.appendChild(content);
-      document.body.appendChild(dialog);
+      alert("No requirements found in your Umple code.\n\nSee https://cruise.umple.org/umple/Requirements.html for more information.");
       return;
     }
 
@@ -241,7 +196,55 @@ const AiRequirements = {
         return;
       }
 
-      dialog.generationContext.umpleCode = this.extractUmpleCode(response);
+      let responseText = response || "";
+      if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.validateResponseFormat) {
+        const formatErrors = RequirementsPromptBuilder.validateResponseFormat(responseText);
+        if (formatErrors.length > 0 && !dialog.stopped) {
+          RequirementsDialog.appendRequirementsOutput(`Output contract violations: ${formatErrors.join("; ")}`);
+          RequirementsDialog.setStatusMessage(statusDiv, "LLM", "Repairing output format...");
+          RequirementsDialog.appendRequirementsOutput("Attempting format-only repair...");
+          codeArea.value = "";
+          codeArea.placeholder = "Repairing output format...";
+          codeContainer.style.display = "block";
+
+          const originalEditorCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
+          const invalidBlock = this.extractUmpleCode(responseText);
+          const compilerIssuesText = formatErrors.map(err => `- Validation Error: ${err}`).join("\n");
+
+          const repairResult = (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.repair_buildGeneration)
+            ? RequirementsPromptBuilder.repair_buildGeneration({
+              generationType: genType,
+              requirements: selectedReqs,
+              originalCode: originalEditorCode,
+              invalidBlock,
+              compilerIssuesText
+            })
+            : {
+              prompt: `Fix the output format: ${compilerIssuesText}\n\nOutput ONLY a single \`\`\`umple\`\`\` code block with valid Umple code.`,
+              systemPrompt: generation.systemPrompt
+            };
+
+          let repairedText = "";
+          this.activeStream = AiApi.chatStream(repairResult.prompt, repairResult.systemPrompt, {}, {
+            onDelta: (deltaText) => {
+              repairedText += deltaText;
+              codeArea.value = repairedText;
+              codeArea.scrollTop = codeArea.scrollHeight;
+            }
+          });
+
+          responseText = await this.activeStream.done;
+          this.activeStream = null;
+          RequirementsDialog.appendRequirementsOutput("Output format repair completed.");
+
+          const remainingErrors = RequirementsPromptBuilder.validateResponseFormat(responseText);
+          if (remainingErrors.length > 0) {
+            RequirementsDialog.appendRequirementsOutput(`Output contract still violated: ${remainingErrors.join("; ")}`);
+          }
+        }
+      }
+
+      dialog.generationContext.umpleCode = this.extractUmpleCode(responseText);
       let umpleCode = dialog.generationContext.umpleCode;
 
       if (!dialog.stopped) {

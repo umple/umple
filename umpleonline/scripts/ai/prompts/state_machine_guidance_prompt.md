@@ -1,11 +1,10 @@
-````markdown
 Umple state machines (compressed, feature-complete)
 
 Placement
 ```umple
 class C { sm { S1 { e -> S2; } S2 {} } }                 // inline
 class A { st as M; }  statemachine M { S1{e->S2;} S2{} }  // standalone + reuse
-````
+```
 
 Core
 

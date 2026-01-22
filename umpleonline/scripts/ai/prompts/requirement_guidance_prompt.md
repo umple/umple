@@ -1,4 +1,3 @@
-````markdown
 Umple requirements (implementation-only, compressed)
 
 Attach requirement IDs with `implementsReq`; it applies to the *next element*.
@@ -7,7 +6,7 @@ Attach (single or multiple)
 ```umple
 implementsReq R01;
 implementsReq R01, R02, R03;
-````
+```
 
 Where you can attach (common)
 

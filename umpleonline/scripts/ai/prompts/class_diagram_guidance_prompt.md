@@ -1,4 +1,3 @@
-````markdown
 Umple class diagrams (compressed, feature-complete)
 
 Goal: model domain as classes + attributes + associations (valid Umple).
@@ -9,7 +8,7 @@ class Person {
   String name;
   Integer age;
 }
-````
+```
 
 * Class names typically start with a capital.
 * Class body may include attributes, associations, methods, state machines, `isA` (inheritance), etc.

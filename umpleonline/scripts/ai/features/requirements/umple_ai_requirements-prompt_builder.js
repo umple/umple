@@ -236,6 +236,33 @@ const RequirementsPromptBuilder = (() => {
     ].filter(Boolean).join("\n");
   }
 
+  function validateResponseFormat(response) {
+    const text = String(response || "");
+    if (!text.trim()) return ["Response is empty"];
+
+    const blocks = (typeof AiTextUtils !== "undefined" && AiTextUtils.parseCodeBlocks)
+      ? AiTextUtils.parseCodeBlocks(text)
+      : [];
+    const codeBlocks = blocks.length > 0 ? blocks : [];
+    const errors = [];
+
+    if (codeBlocks.length !== 1) {
+      errors.push(`Expected exactly one fenced code block, found ${codeBlocks.length}.`);
+    } else {
+      const language = codeBlocks[0].language;
+      if (!language || language !== "umple") {
+        errors.push(`Code block language must be "umple" (found "${language || "none"}").`);
+      }
+    }
+
+    const outside = text.replace(/```[\s\S]*?```/g, "").trim();
+    if (outside) {
+      errors.push("Response contains text outside the code block.");
+    }
+
+    return errors;
+  }
+
   function validateBalancedBraces(code) {
     const open = (code.match(/\{/g) || []).length;
     const close = (code.match(/\}/g) || []).length;
@@ -301,6 +328,16 @@ const RequirementsPromptBuilder = (() => {
     },
 
     /**
+     * Validate raw response format against output contract.
+     * Checks: single umple code block, no extra text.
+     * @param {string} response - Raw AI response
+     * @returns {Array<string>} Array of validation errors (empty if valid)
+     */
+    validateResponseFormat(response) {
+      return validateResponseFormat(response);
+    },
+
+    /**
      * Convert validation errors to pseudo-compiler error format for integration into compiler loop.
      * These appear as "Validation Error" type with line 1 (block-level issues).
      * @param {Object} params - {code, expectedRequirementIds, generationType}
@@ -326,7 +363,8 @@ const RequirementsPromptBuilder = (() => {
       const prompt = joinBlocks([
         block("task", getTaskLine(generationType)),
         block("requirements", reqText, { allowEmpty: true }),
-        block("how_to_use_requirements_in_umple", getGuidanceText("requirements"), { allowEmpty: true })
+        block("how_to_use_requirements_in_umple", getGuidanceText("requirements"), { allowEmpty: true }),
+        block("output_contract", buildOutputContract({ generationType, expectedRequirementIds }))
       ]);
 
       return { prompt, systemPrompt: getSystemPrompt(generationType, expectedRequirementIds), expectedRequirementIds };
