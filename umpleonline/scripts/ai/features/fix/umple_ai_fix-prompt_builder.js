@@ -7,7 +7,7 @@
 const FixPromptBuilder = (() => {
   "use strict";
 
-  const Tags = (typeof AiPromptTags !== "undefined") ? AiPromptTags : null;
+  const Tags = (typeof AiPromptUtils !== "undefined") ? AiPromptUtils : null;
   const block = (title, content, opts) => (Tags && Tags.block) ? Tags.block(title, content, opts) : String(content || "").trim();
   const joinBlocks = (blocks, opts) => (Tags && Tags.joinBlocks) ? Tags.joinBlocks(blocks, opts) : (blocks || []).filter(Boolean).join("\n\n");
 

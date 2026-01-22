@@ -2,9 +2,9 @@
 // This file is made available subject to the open source license found at:
 // https://umple.org/license
 //
-// AI Prompt Tags - Shared, global utilities for building structured prompts using <tag>...<\tag>
+// AI Prompt Utils - Shared, global utilities for building structured prompts using <tag>...<\tag>
 
-const AiPromptTags = (() => {
+const AiPromptUtils = (() => {
   "use strict";
 
   function normalizeTagName(name) {

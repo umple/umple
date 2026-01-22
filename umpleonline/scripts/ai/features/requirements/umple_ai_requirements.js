@@ -44,11 +44,11 @@ const AiRequirements = {
 
     const requirementTexts = requirements.map(req => `Requirement ${req.id}:\n${req.text}`).join("\n\n");
 
-    if (typeof AiPromptTags !== "undefined" && AiPromptTags.block && AiPromptTags.joinBlocks) {
-      return AiPromptTags.joinBlocks([
-        AiPromptTags.block("task", "Generate ONLY Umple code based on the following requirement(s)."),
-        AiPromptTags.block("requirements", requirementTexts, { allowEmpty: true }),
-        AiPromptTags.block("output_contract", [
+    if (typeof AiPromptUtils !== "undefined" && AiPromptUtils.block && AiPromptUtils.joinBlocks) {
+      return AiPromptUtils.joinBlocks([
+        AiPromptUtils.block("task", "Generate ONLY Umple code based on the following requirement(s)."),
+        AiPromptUtils.block("requirements", requirementTexts, { allowEmpty: true }),
+        AiPromptUtils.block("output_contract", [
           "- Output ONLY Umple code.",
           "- Output EXACTLY ONE fenced code block with language \"umple\":",
           "  ```umple",
@@ -72,10 +72,10 @@ const AiRequirements = {
       : "You are an expert in Umple modeling language.";
 
     const directive = "Your job is to generate ONLY valid Umple code.";
-    if (typeof AiPromptTags !== "undefined" && AiPromptTags.block && AiPromptTags.joinBlocks) {
-      return AiPromptTags.joinBlocks([
-        AiPromptTags.block("system", base, { allowEmpty: true }),
-        AiPromptTags.block("directive", directive)
+    if (typeof AiPromptUtils !== "undefined" && AiPromptUtils.block && AiPromptUtils.joinBlocks) {
+      return AiPromptUtils.joinBlocks([
+        AiPromptUtils.block("system", base, { allowEmpty: true }),
+        AiPromptUtils.block("directive", directive)
       ]);
     }
 
