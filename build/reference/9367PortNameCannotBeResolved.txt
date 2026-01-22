@@ -1,4 +1,4 @@
-E3607 Port Name Cannot Be Resolved
+E3607 Missing Class in Association or Port Name Cannot Be Resolved
 Errors and Warnings 1000+
 noreferences
 
@@ -8,8 +8,11 @@ noreferences
 
 <p>
 A port used in a class must be defined before usage by port bindings and
-active methods. <br/>
-The cause of the error is possibly a typographical mistake.
+active methods. This is shown in the first example below, with a resolution in the second example.</p>
+
+<p>
+This error might also be raised if you intended to write an association from one class to another, but omitted the destination class. This is shown in the third example. The solution would be to add another class and then give the name of that class as the destination of the association.
+
 </p>
 
 
@@ -21,6 +24,6 @@ The cause of the error is possibly a typographical mistake.
 @@source manualexamples/E3607PortNameCannotBeResolved2.ump
 @@endexample
 
-@@example
+@@example  @@caption Example where this an association with a missing Class that should have followed the *  @@endcaption
 @@source manualexamples/E3607NoDestinationClassName.ump
 @@endexample
