@@ -538,7 +538,7 @@
       <exclude name="E105EnumerationInComposition1.ump"/>
       <exclude name="E023AttributeAssociationNameClash1.ump"/>
       <exclude name="E214Twosametemplateparameters.ump"/>
-      
+      <exclude name="E3607NoDestinationClassName.ump"/>
     </fileset>  
 
     <pathconvert pathsep=";" property="cppumpfiles2" refid="cppumpfiles"/>

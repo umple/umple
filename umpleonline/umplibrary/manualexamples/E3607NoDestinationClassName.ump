@@ -1,0 +1,5 @@
+//Destination class name is missing, 
+//causing the error
+class X {
+  1 -> *;
+}
