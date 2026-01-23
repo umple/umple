@@ -91,7 +91,7 @@ if (isset($_REQUEST["nochrome"])) {$showChrome=false;} else {$showChrome=true;}
 if (isset($_REQUEST["nodiagram"])) {$showDiagram=false;} else {$showDiagram=true;}
 
 // diagramtype means choose some diagram other than the default which is class
-$diagramType = "class";
+$diagramType = "GvClass";
 if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
   if ($diagramType=="state") $diagramType = "GvState";
@@ -1191,18 +1191,6 @@ $output = $dataHandle->readData('model.ump');
       <?php if (isset($_REQUEST['example']) && $actualExample != ""){?> 
       Page.setExamples("<?php echo $actualExample ?>")
       <?php } ?>
-      
-      <?php
-      $isFreshLoad =
-        !isset($_REQUEST["diagramtype"]) &&
-        !isset($_REQUEST["model"]) &&
-        !isset($_REQUEST["example"]) &&
-        !isset($_REQUEST["text"]) &&
-        !isset($_REQUEST["filename"]);
-      if ($isFreshLoad) {
-        echo "Page.clickShowGvClassDiagram();";
-      }
-    ?>
       //
   </script>
 
