@@ -565,8 +565,8 @@ $output = $dataHandle->readData('model.ump');
    <span id="linetext">Line=<input size=2 style="font-size: 12px;" id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
 
     <span style="font-size: 30%">
-    <a id="ECD_button" class="button2 active" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
-    <a id="GCD_button" class="button2" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
+    <a id="ECD_button" class="button2" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
+    <a id="GCD_button" class="button2 active" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
     <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()">S</a>&nbsp;
     </span>
  
@@ -1190,7 +1190,19 @@ $output = $dataHandle->readData('model.ump');
       ); 
       <?php if (isset($_REQUEST['example']) && $actualExample != ""){?> 
       Page.setExamples("<?php echo $actualExample ?>")
-      <?php } ?> 
+      <?php } ?>
+      
+      <?php
+      $isFreshLoad =
+        !isset($_REQUEST["diagramtype"]) &&
+        !isset($_REQUEST["model"]) &&
+        !isset($_REQUEST["example"]) &&
+        !isset($_REQUEST["text"]) &&
+        !isset($_REQUEST["filename"]);
+      if ($isFreshLoad) {
+        echo "Page.clickShowGvClassDiagram();";
+      }
+    ?>
       //
   </script>
 
