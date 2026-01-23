@@ -1069,19 +1069,56 @@ Action.copyCommandLineCode = function()
 
 Action.showCodeInSeparateWindow = function()
 {
-  codeWindow = window.open("","UmpleCode"+Math.random()*10000,"height=700, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
-  codeWindow.document.write('<code><pre id="umpleCode">' + Page.getUmpleCode() + '</pre></code>');
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  const stamp =
+    d.getFullYear() +
+    pad(d.getMonth() + 1) +
+    pad(d.getDate()) + " " +
+    pad(d.getHours()) + ":" +
+    pad(d.getMinutes()) + ":" +
+    pad(d.getSeconds());
+
+  const header = `// UmpleOnline code as of ${stamp}\n\n`;
+  const content = header + Page.getUmpleCode();
+  
+  codeWindow = window.open("","UmpleCode","height=700, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
+  codeWindow.document.write('<code><pre id="umpleCode">' + content + '</pre></code>');
   codeWindow.document.title="Umple raw code";
   codeWindow.document.close();
 }
 
 Action.showEncodedURLCodeInSeparateWindow = function()
 {
-  codeWindow = window.open("","UmpleEncodedURL"+Math.random()*10000,"height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
-  codeWindow.document.write('<code><pre id="umpleCode">' + Page.getEncodedURL() + '</pre></code>');
-  codeWindow.document.title="Umple encoded URL";
+  const MAX_ENCODED_URL_LEN = 2000; // conservative safe limit
+  const url = Page.getEncodedURL();
+  const len = url.length;
+
+  let header = "";
+  if (len > MAX_ENCODED_URL_LEN) {
+    header =
+      "// WARNING: Encoded URL length (" + len + " characters)\n" +
+      "// exceeds recommended limit (" + MAX_ENCODED_URL_LEN + ").\n" +
+      "// Use Save & Collaborate for larger models.\n\n";
+
+    Page.setFeedbackMessage(
+      "Encoded URL too long (" + len + " chars). Use Save & Collaborate instead."
+    );
+  } else {
+    Page.setFeedbackMessage(
+      "Encoded URL generated (" + len + " chars). Ideal for PowerPoint embedding."
+    );
+  }
+
+  const content = header + url;
+
+  codeWindow = window.open("","UmpleEncodedURL","height=500, width=520, left=100, top=100, location=no, status=no, scrollbars=yes");
+
+  codeWindow.document.write('<code><pre id="umpleCode">' + content + '</pre></code>');
+  codeWindow.document.title = "Umple encoded URL";
   codeWindow.document.close();
 }
+
 
 Action.simulateCode = function()
 {
