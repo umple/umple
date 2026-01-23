@@ -66,7 +66,7 @@ left hand pane, you will <u>not</u> be saving the <i>layout of the
 diagram</i>. If you want to save the layout too, you have to do one of the 
 following:
   <ul>
-     <li>Click on 'Source to Copy' in the 'SAVE' menu. This will generate a popup 
+     <li>Click on 'Popup Current' in the 'SAVE' menu. This will generate a popup 
 that contains Umple code with the layout information. Copy and paste the contents
 of this window, and then close the window.
      <li>Check the box 'Layout Editor' in the 'OPTIONS' menu to view a 
