@@ -557,10 +557,20 @@ function extractFilename()
         else
         {
             $dataToWrite = file_get_contents("https://" . $rootOfOnlineUmpToLoad);
-            if($dataToWrite == null || substr($http_response_header[0],-2)!="OK") {
+            $headers = function_exists('http_get_last_response_headers')
+                ? http_get_last_response_headers()
+                : ($http_response_header ?? []);
+            $statusLine = $headers[0] ?? '';
+            
+            if($dataToWrite == null || $statusLine === '' || substr($statusLine,-2)!="OK") {
                 // try https
                 $dataToWrite = file_get_contents("http://" . $rootOfOnlineUmpToLoad);
-                if($dataToWrite == null || substr($http_response_header[0],-2)!="OK") {         
+                $headers = function_exists('http_get_last_response_headers')
+                    ? http_get_last_response_headers()
+                    : ($http_response_header ?? []);
+                $statusLine = $headers[0] ?? '';
+
+                if($dataToWrite == null || $statusLine === '' || substr($statusLine,-2)!="OK") {         
                     $dataToWrite = "// URL of the Umple file to be loaded in the URL after ?filename= must omit the initial http:// or https:// and end with .ump.\n// The file must be accessible from our server.\n// Could not load https://" . $rootOfOnlineUmpToLoad ." xxxx" . substr($rootOfOnlineUmpToLoad,-4);
                 }
             }
