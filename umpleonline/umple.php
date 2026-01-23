@@ -685,8 +685,8 @@ $output = $dataHandle->readData('model.ump');
             </li>     
 
             <li id="buttonCopy" class="copy">
-              <img src="scripts/copy.png" alt="Source to Copy icon"/> 
-               Source to Copy
+              <img src="scripts/copy.png" alt="Popup current icon"/> 
+               Popup Current
             </li>
             <li id="buttonCopyEncodedURL" class="copyEncoded">
               <img src="scripts/copy.png" alt="Copy Encoded URL icon"/> 
