@@ -91,7 +91,7 @@ if (isset($_REQUEST["nochrome"])) {$showChrome=false;} else {$showChrome=true;}
 if (isset($_REQUEST["nodiagram"])) {$showDiagram=false;} else {$showDiagram=true;}
 
 // diagramtype means choose some diagram other than the default which is class
-$diagramType = "class";
+$diagramType = "GvClass";
 if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
   if ($diagramType=="state") $diagramType = "GvState";
@@ -565,8 +565,8 @@ $output = $dataHandle->readData('model.ump');
    <span id="linetext">Line=<input size=2 style="font-size: 12px;" id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
 
     <span style="font-size: 30%">
-    <a id="ECD_button" class="button2 active" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
-    <a id="GCD_button" class="button2" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
+    <a id="ECD_button" class="button2" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
+    <a id="GCD_button" class="button2 active" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
     <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()">S</a>&nbsp;
     </span>
  
@@ -1190,7 +1190,7 @@ $output = $dataHandle->readData('model.ump');
       ); 
       <?php if (isset($_REQUEST['example']) && $actualExample != ""){?> 
       Page.setExamples("<?php echo $actualExample ?>")
-      <?php } ?> 
+      <?php } ?>
       //
   </script>
 
