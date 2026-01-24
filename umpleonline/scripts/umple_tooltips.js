@@ -97,7 +97,7 @@ ToolTips.tooltipEntries = {
   ttShowGvFeatureDiagram: ["li", "Display a feature diagram rendered using GraphViz </br>"],
 
   ECD_button: ['a', "Class diagram where the user can Edit the layout - <b>ctrl-E</b>"],
-  GCD_button: ['a', "Graphviz Class diagram, automatically laid out - editable using a contextual menu (double-click or right-click to display it) when pointing to a class, association or attribute - <b>ctrl-G</b>"],
+  GCD_button: ['a', "Graphviz Class diagram (the default as of 2026), automatically laid out - editable using a contextual menu (double-click or right-click to display it) when pointing to a class, association or attribute - <b>ctrl-G</b>"],
   SD_button: ['a', "State diagram - editable using a contextual menu (double-click or right-click to display it) when pointing to  a state or transition  - <b>ctrl-S</b>"],
   
   GenJavaButton:['a',"Generate Java from this Umple model ... To generate other outputs such as Python, C++, PhP, ER Diagrams and Formal Methods, use the Generate menu in Tools"],
