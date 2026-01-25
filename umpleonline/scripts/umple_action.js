@@ -2129,24 +2129,17 @@ Action.setColor=function(classCode,className,color){
   }
 }
 
-//Add filter to a specific class from menu item - gazi
-Action.filterOnOneClass=function(className){
-  if(Page.filterWordsOutput.length==0 || Page.filterWordsOutput.includes("~")){
-    // Precedence over Filter class - getting rid of other filters like hide class
-    Action.setFilterFull(className, true); 
-  }else{
-    Action.setFilterFull(`${Page.filterWordsOutput} ${className}`, true); // passing the classname to setFilterFull to immitate 'include classname' text input
-  }
+// Focuses the diagram on a specific class and its immediate neighbors (1 hop).
+Action.filterOnOneClass = function(className) {
+  var focusValue = className + " 1";
   
-  var textInputValues = jQuery('#filtervalues').val();
-  if(textInputValues.includes('*') || textInputValues.includes("~")){
-    jQuery("#filtervalues").val(className);
-  }else{
-    jQuery("#filtervalues").val(textInputValues+" "+className);
-  }
+  // Set the filter, clearing previous class filters as per Issue #2277
+  Action.setFilterFull(focusValue, true); 
+  
+  // Update the UI filter text field
+  jQuery("#filtervalues").val(focusValue);
+  
   Action.removeContextMenu();
-
-
 }
 
 Action.clearFilterOnOneClass=function(className){
@@ -2685,7 +2678,7 @@ Action.displayMenu = function(event) {
     return;
   }
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color", "Filter Class", "Hide Class"];
+  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color", "Focus on this class", "Do not show this class"];
   var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
   var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")", "Action.filterOnOneClass(\""+elemText+"\")", "Action.hideClass(\""+elemText+"\")"];
 
@@ -2717,10 +2710,10 @@ Action.displayMenu = function(event) {
       if(aFilterWord.toLowerCase()==elemText.toLowerCase()){
         //remove the filter option from the menu
         //using array.includes("subString") instead of splice() - because menu index can alter in future.
-        rowContent=rowContent.filter(menuItem=>!menuItem.includes("Filter Class"));
+        rowContent=rowContent.filter(menuItem=>!menuItem.includes("Focus on this class"));
         
         //add the Remove Filter option in the menu
-        rowContent.push("Remove Filter");
+        rowContent.push("Remove Focus");
         //remove the function of the Filter option
         rowFuncs=rowFuncs.filter(funcItem=>!funcItem.includes("Action.filterOnOneClass"));
 
@@ -2728,7 +2721,7 @@ Action.displayMenu = function(event) {
         rowFuncs.push("Action.clearFilterOnOneClass(\""+elemText+"\")");
 
 
-      rowContent=rowContent.filter(menuItem=>!menuItem.includes("Hide Class"));
+      rowContent=rowContent.filter(menuItem=>!menuItem.includes("Do not show this class"));
       rowFuncs=rowFuncs.filter(funcItem=>!funcItem.includes("Action.hideClass"));
       }
 
