@@ -388,6 +388,7 @@ const AiSettingsView = {
       const optionExists = Array.from(modelSelect.options).some(option => option.value === savedModel);
       if (optionExists) {
         modelSelect.value = savedModel;
+        this.updateModelCostDisplay(modelSelect.value);
         return;
       }
 
@@ -399,6 +400,7 @@ const AiSettingsView = {
     if (fallbackModel) {
       modelSelect.value = fallbackModel;
       saveModel(fallbackModel);
+      this.updateModelCostDisplay(modelSelect.value);
     }
   },
 
