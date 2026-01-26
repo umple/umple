@@ -731,3 +731,7 @@ select {
 #executionMessage * {
   color: #ddd !important;
 }
+
+/* Theme-aware compiler message colors (used by compiler.php error/warning output) */
+.umple-message-warning { color: var(--umple-dark-text) !important; }
+.umple-message-error { color: #ff6b6b !important; }
