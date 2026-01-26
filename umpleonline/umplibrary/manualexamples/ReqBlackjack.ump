@@ -1,0 +1,20 @@
+// The following is a (partial) set of requirements for
+// the card game Blackjack, that can be used to experiment
+// with generating state machines in Umple using AI,
+// or merely as an example of how requirements can be specified in Umple.
+// It was used in the following thesis by Parva Pathak
+// https://ruor.uottawa.ca/items/b3679a91-5445-45ce-b289-bfddba3010f6
+
+req 001dealing {The player and dealer will be dealt cards}
+
+req 002playerchoice {The player can choose to hit or stand}
+
+req 003dealerchoice {The dealer can choose to hit or stand}
+
+req 004dealerwin {If dealer gets a blackjack the dealer wins}
+
+req 005playermaywin {If the player stands and the dealer has a lower score the player wins}
+
+req 006dealermaywin {If the player stands and the dealer has a higher score the dealer wins}
+
+req 007samescoremore {If the dealer and player have the same score the game will push}

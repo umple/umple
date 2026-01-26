@@ -1,0 +1,19 @@
+// The following is a (partial) set of requirements for
+// a credit card approval system that can be used to experiment
+// with generating state machines in Umple using AI,
+// or merely as an example of how requirements can be specified in Umple.=
+// It was used in the following thesis by Parva Pathak
+// https://ruor.uottawa.ca/items/b3679a91-5445-45ce-b289-bfddba3010f6
+
+req CC1 {
+  The different stages of the approval process must be included (Pre Approval,
+Cancelled, Complete, Failed)
+}
+
+req CC2 {
+  The status of the account must be included (On Hold, Not On Hold)
+}
+
+req CC3 {
+  The transaction can be successful or fail
+}

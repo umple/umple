@@ -1,14 +1,18 @@
 Umple AI Skills
 AI
 noreferences
-
+@@tooltip Technology to allow AI Agents to work with Umple via the Umple command line interface..
 @@description
 
-<p>This page describes AI agent skills for working with Umple and the Umple CLI.</p>
+<p>This page describes AI agent skills for working with Umple and the Umple CLI (Command line interface). This is in beta and will be enhanced.</p>
 
-<p><b>repository overview</b></p>
+<p><a target="skills" href="https://skills.sh">A 'skill' is a technology released by Vercel that is gaining acceptance in 2026.</a>  The <a target="npmskills" href="https://www.npmjs.com/package/skills">npm skills package is here.</a></p>
 
-<p>The umple-skills repository (<a href="https://github.com/umple/umple-skills">https://github.com/umple/umple-skills</a>) provides reusable AI agent skills, scripts, and guidance for working with Umple models and diagrams. This page gives a high-level overview and links to separate sections for each skill.</p>
+<br />
+
+<p><b>Repository overview</b></p>
+
+<p>The umple-skills repository (<a target="umpleskillsrepo" href="https://github.com/umple/umple-skills">https://github.com/umple/umple-skills</a> or <a target="umpleskillsrepo" href="https://github.com/ElwinLiu/umple-skills">initially here</a> ) provides reusable AI agent skills, scripts, and guidance for working with Umple models and diagrams. This page gives a high-level overview and links to separate sections for each skill.</p>
 
 <ul>
   <li><b>Install the skills pack.</b> Use <code>npx skills add umple/umple-skills</code> to add the skills to your agent environment.</li>

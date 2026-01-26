@@ -15,54 +15,7 @@ column of this page, including information about defining <a href="ClassDefiniti
 
 <br />
 
-<p><b>AI features</b></p>
-
-<ul>
-
-<li><b>AI setup.</b> UmpleOnline uses a <b>BYOK (bring-your-own-key)</b> approach for AI features. Your API key is stored locally in your browser's local storage and is never sent to our servers. All AI requests are made directly from your browser to the selected provider.
-  <ul>
-    <li><p><b>AI settings dialog.</b> In UmpleOnline, open the AI settings from the AI menu.</p></li>
-    <li><p><b>Select a provider.</b> Currently, the supported providers are OpenAI, Google Gemini, and OpenRouter.</p></li>
-    <li><p><b>Enter API key.</b></p>
-      <ul>
-        <li>If you already have an API key, enter it in the field.</li>
-        <li>If you don't have one, click the "Get API Key" link next to the provider selection to obtain a key from your provider.</li>
-      </ul>
-    </li>
-    <li><p><b>Verify API key.</b> Click the Verify button. The system checks the key's validity with the provider. If verification succeeds, a list of available models is displayed.</p></li>
-    <li><p><b>Select a model.</b> Choose a model from the dropdown list. Free models are listed at the top, followed by paid models grouped by provider. The cost per million tokens (input and output) is displayed below the selection dropdown.</p></li>
-  </ul>
-</li>
-
-<br />
-
-<li><b>Status indicator.</b> The AI status indicator in the sidebar shows the current configuration status. Once a model is selected, the indicator displays the model name and provider name. AI preferences (provider, model, verification, usage) are stored in your browser's local storage.</li>
-
-<br />
-
-<li><b>Explain code.</b> Open the AI Explain tool. The dialog analyzes the entire editor content and streams the explanation. You can use the follow-up input to ask questions about the same model, as the dialog maintains a short conversation history for context. If the editor is empty, an alert dialog will prompt you to enter Umple code first.</li>
-
-<br />
-
-<li><b>Fix guidance.</b> After compiling your model, when errors appear, each issue is shown in the bottom pane. Click the AI fix icon beside an issue to generate guidance. The tool highlights the relevant line in the editor and returns a short fix suggestion. Note that this feature provides guidance only and does not auto-edit your code.</li>
-
-<br />
-
-<li><b>Generate from requirements.</b> Add requirement blocks to your model with the syntax <code>req ID { ... }</code>. <a href="Requirements.html">Learn more about requirements</a>. Open the AI Requirements dialog. If multiple requirements exist, choose to use all or select specific ones. Select a generation type (state machine or class diagram) and click Generate. The result is streamed into the dialog, where you can stop generation, review the output, and insert it into the editor. When enabled, the system runs a compiler-based self-correction loop to repair issues in the generated block before insertion.</li>
-
-<br />
-
-<li><b>Troubleshooting.</b>
-  <ul>
-    <li><p>If AI actions are disabled, ensure you have selected a provider, entered an API key, verified it successfully, and selected a model.</p></li>
-    <li><p>If no requirements are found, confirm your model contains <code>req ... { ... }</code> blocks.</p></li>
-    <li><p>If a generated block fails to compile, review the error list and re-run generation with fewer or clearer requirements.</p></li>
-  </ul>
-</li>
-
-</ul>
-
-<p><b>Loading and saving</b></p>
+<p><b>Basic use of UmpleOnline</b></p>
 
 <ul>
 
@@ -76,6 +29,23 @@ here to jump to the 2DShapes example: https://try.umple.org/?example=2DShapes</a
 saved), click 'Start Over' under the 'SAVE &amp; LOAD' menu.</li>
 
 <br />
+
+<li>New in 2026:
+<ul>
+  <li>We have transitioned to automatic layout of diagrams. You can still manually lay out diagrams by clicking the 'E' at the top left.
+  <li>You easily select a subset of classes by specifying a pattern in the Show & Hide field in the Tools menu.
+  <li>We have a <a href="UmpleOnlineAICapabilities.html">beta AI feature that allows you to generate models from requirements.</a>
+</ul>
+
+</li>
+
+</ul>
+
+<br />
+
+<p><b>Loading and saving</b></p>
+
+<ul>
 
 <li><b>To save your work</b>, there are several approaches:
 
