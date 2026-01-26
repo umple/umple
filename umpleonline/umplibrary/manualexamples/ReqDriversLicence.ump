@@ -1,13 +1,19 @@
 // The following is a (partial) set of requirements for
-// the process of getting a driver's license in Ontario, Canada.
-// It can be used for generating state machines in Umple using AI,
-// or merely as an example of how requirements can be specified in Umple.=
-// Requirements 1-8 were used in the following thesis by Parva Pathak
+// the process of getting a driver's license in Ontario, 
+// Canada.
+// It can be used for generating state machines in Umple 
+// using AI,
+// or merely as an example of how requirements can be 
+// specified in Umple.=
+// Requirements 1-8 were used in the following thesis by 
+// Parva Pathak
 // https://ruor.uottawa.ca/items/b3679a91-5445-45ce-b289-bfddba3010f6
-// It has been extended to also add knowledge for generating a class diagram
+// It has been extended to also add knowledge for generating 
+// a class diagram
 
 req L01-LicenseTypes {
-  The user can have no license, a G1 license, a G2 license or a G license
+  The user can have no license, a G1 license, a G2 license or 
+  a G license
 }
 
 req L02-G1Test {
@@ -15,11 +21,13 @@ req L02-G1Test {
 }
 
 req L03-G2Test {
-  To get a G2, the user must have a G1 and a test must be completed
+  To get a G2, the user must have a G1 and a test must be 
+  completed
 }
 
 req L04-GTest {
- To get a G, the user must have a G2 and a test must be completed
+ To get a G, the user must have a G2 and a test must be 
+ completed
 }
 
 req L05-Expiry {
@@ -43,9 +51,12 @@ req L09-licensedata {
 }
 
 req L11-holderdata-{
-  The system will keep the following information about the holder of a license: Name, Date of Birth, Address
+  The system will keep the following information about the 
+  holder of a license: Name, Date of Birth, Address
 }
 
 req L12-testdata {
-  The system will keep track of the tests of each license holder or applicant (who has not yet passed a test), along with the score on each test.
+  The system will keep track of the tests of each license 
+  holder or applicant (who has not yet passed a test), along 
+  with the score on each test.
 }
