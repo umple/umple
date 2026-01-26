@@ -4,8 +4,8 @@ noreferences
 
 @@description
 
-<p>The following describes how to use the <a 
-href="https://try.umple.org">UmpleOnline tool accessible online at 
+<p>The following describes how to use the <a
+href="https://try.umple.org">UmpleOnline tool accessible online at
 try.umple.org</a></p>
 
 <p>For information about writing Umple models or code in UmpleOnline, look at the <a href="GettingStarted.html">Getting
@@ -14,6 +14,53 @@ column of this page, including information about defining <a href="ClassDefiniti
 <a href="AttributeDefinition.html">attributes</a>, <a href="AssociationDefinition.html">associations</a> and <a href="BasicStateMachines.html">state machines</a>.</p>
 
 <br />
+
+<p><b>AI features</b></p>
+
+<ul>
+
+<li><b>AI setup.</b> UmpleOnline uses a <b>BYOK (bring-your-own-key)</b> approach for AI features. Your API key is stored locally in your browser's local storage and is never sent to our servers. All AI requests are made directly from your browser to the selected provider.
+  <ul>
+    <li><p><b>AI settings dialog.</b> In UmpleOnline, open the AI settings from the AI menu.</p></li>
+    <li><p><b>Select a provider.</b> Currently, the supported providers are OpenAI, Google Gemini, and OpenRouter.</p></li>
+    <li><p><b>Enter API key.</b></p>
+      <ul>
+        <li>If you already have an API key, enter it in the field.</li>
+        <li>If you don't have one, click the "Get API Key" link next to the provider selection to obtain a key from your provider.</li>
+      </ul>
+    </li>
+    <li><p><b>Verify API key.</b> Click the Verify button. The system checks the key's validity with the provider. If verification succeeds, a list of available models is displayed.</p></li>
+    <li><p><b>Select a model.</b> Choose a model from the dropdown list. Free models are listed at the top, followed by paid models grouped by provider. The cost per million tokens (input and output) is displayed below the selection dropdown.</p></li>
+  </ul>
+</li>
+
+<br />
+
+<li><b>Status indicator.</b> The AI status indicator in the sidebar shows the current configuration status. Once a model is selected, the indicator displays the model name and provider name. AI preferences (provider, model, verification, usage) are stored in your browser's local storage.</li>
+
+<br />
+
+<li><b>Explain code.</b> Open the AI Explain tool. The dialog analyzes the entire editor content and streams the explanation. You can use the follow-up input to ask questions about the same model, as the dialog maintains a short conversation history for context. If the editor is empty, an alert dialog will prompt you to enter Umple code first.</li>
+
+<br />
+
+<li><b>Fix guidance.</b> After compiling your model, when errors appear, each issue is shown in the bottom pane. Click the AI fix icon beside an issue to generate guidance. The tool highlights the relevant line in the editor and returns a short fix suggestion. Note that this feature provides guidance only and does not auto-edit your code.</li>
+
+<br />
+
+<li><b>Generate from requirements.</b> Add requirement blocks to your model with the syntax <code>req ID { ... }</code>. <a href="Requirements.html">Learn more about requirements</a>. Open the AI Requirements dialog. If multiple requirements exist, choose to use all or select specific ones. Select a generation type (state machine or class diagram) and click Generate. The result is streamed into the dialog, where you can stop generation, review the output, and insert it into the editor. When enabled, the system runs a compiler-based self-correction loop to repair issues in the generated block before insertion.</li>
+
+<br />
+
+<li><b>Troubleshooting.</b>
+  <ul>
+    <li><p>If AI actions are disabled, ensure you have selected a provider, entered an API key, verified it successfully, and selected a model.</p></li>
+    <li><p>If no requirements are found, confirm your model contains <code>req ... { ... }</code> blocks.</p></li>
+    <li><p>If a generated block fails to compile, review the error list and re-run generation with fewer or clearer requirements.</p></li>
+  </ul>
+</li>
+
+</ul>
 
 <p><b>Loading and saving</b></p>
 
@@ -25,7 +72,7 @@ here to jump to the 2DShapes example: https://try.umple.org/?example=2DShapes</a
 
 <br />
 
-<li><b>To restart UmpleOnline</b> (you will lose any work you have not 
+<li><b>To restart UmpleOnline</b> (you will lose any work you have not
 saved), click 'Start Over' under the 'SAVE &amp; LOAD' menu.</li>
 
 <br />
@@ -34,16 +81,16 @@ saved), click 'Start Over' under the 'SAVE &amp; LOAD' menu.</li>
 
 <ol>
 <li><b>Create a bookmarkable URL</b>. To do this, click 'Create Bookmarkable URL'
-at the top near the centre 'Save as URLg' in the centre pane under 'SAVE LOAD'. Then copy or bookmark the URL that 
+at the top near the centre 'Save as URLg' in the centre pane under 'SAVE LOAD'. Then copy or bookmark the URL that
 appears in your browser's URL bar. <br/>&nbsp;<br/>
 
-Note that from this point on you can 
-keep editing the Umple code or diagram, and your work will continue to be 
-saved at this URL. You are thus saving your work in the 'cloud'. You can 
-embed the URL in other pages to document your product. Note that at the 
-current time, anyone who knows your URL can also edit your work (which enables collaboration), and if 
+Note that from this point on you can
+keep editing the Umple code or diagram, and your work will continue to be
+saved at this URL. You are thus saving your work in the 'cloud'. You can
+embed the URL in other pages to document your product. Note that at the
+current time, anyone who knows your URL can also edit your work (which enables collaboration), and if
 you forget your URL, or someone messes up the saved contents at that URL,
-there is no way to retrieve it. Saved URLs are also only saved for one year since their last edit. Therefore it is also 
+there is no way to retrieve it. Saved URLs are also only saved for one year since their last edit. Therefore it is also
 suggested that if this is a concern, you use saving mehods 2 or 3.<br/>&nbsp;<br/></li>
 
 
@@ -52,7 +99,7 @@ work for small diagrams, since some browsers such as older versions
 of Internet Explorer limit the number of characters in a URL. <br/>&nbsp;<br/>
 
 To do this, click on "Encoded URL" in the 'SAVE' menu, and copy the URL that appears in a separate window. You might want to
-use a URL shortening service such as bit.ly to shorten the URL before 
+use a URL shortening service such as bit.ly to shorten the URL before
 posting it or embedding it in another document. You also need to be aware that you are limited by certain browsers and URL shortening services to files with about 2000 characters or less, so test your URL once you have created it.<br/>&nbsp;<br/></li>
 
 <li><b>Temporarily stash your current work in your browser.</b> You can click 'Store in Browser' in the 'SAVE' menu at any time. Later on, in the same browser, you can retrieve this model using 'Load from Browser' (and if you load by mistake, you can click undo from the Tools menu). This method is not for permanent saving, but can be useful for temporary backups to protect against power failure, browser crashes and so on.</li>
@@ -60,24 +107,24 @@ posting it or embedding it in another document. You also need to be aware that y
 <li><b>Download Files.</b> This is probably the safest approach. It will generate a zip file with the code.</li>
 
 
-<li><b>Copy and paste the text of important models somewhere 
-else</b>. One thing to note is that if you just copy the visible text in the 
-left hand pane, you will <u>not</u> be saving the <i>layout of the 
-diagram</i>. If you want to save the layout too, you have to do one of the 
+<li><b>Copy and paste the text of important models somewhere
+else</b>. One thing to note is that if you just copy the visible text in the
+left hand pane, you will <u>not</u> be saving the <i>layout of the
+diagram</i>. If you want to save the layout too, you have to do one of the
 following:
   <ul>
-     <li>Click on 'Popup Current' in the 'SAVE' menu. This will generate a popup 
+     <li>Click on 'Popup Current' in the 'SAVE' menu. This will generate a popup
 that contains Umple code with the layout information. Copy and paste the contents
 of this window, and then close the window.
-     <li>Check the box 'Layout Editor' in the 'OPTIONS' menu to view a 
-separate window containing the layout, and then save the 
-automatically-generated layout information in a file. You can actually 
-edit this layout textually, but we suggest you only do that if you are an 
-expert since it us much easier to edit the layout from the right-hand 
+     <li>Check the box 'Layout Editor' in the 'OPTIONS' menu to view a
+separate window containing the layout, and then save the
+automatically-generated layout information in a file. You can actually
+edit this layout textually, but we suggest you only do that if you are an
+expert since it us much easier to edit the layout from the right-hand
 graphical pane, as described later.
   </ul>
 </li>
-</ol>  
+</ol>
 </li>
 
 &nbsp;<br/>
@@ -89,11 +136,11 @@ graphical pane, as described later.
     argument's syntax is ?filename=X, where X is the URL of the file containing
     the Umple file, <i>minus the leading 'https://'</i>. So, for example there
     is a .ump file in the repository at the following URL: <a href="https://raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump">   https://raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump
-    </a>. This can be loaded into Umple using the following URL: <a href="https://try.umple.org/?filename=raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump">   https://try.umple.org/?filename=raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump</a><br /></li> 
+    </a>. This can be loaded into Umple using the following URL: <a href="https://try.umple.org/?filename=raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump">   https://try.umple.org/?filename=raw.githubusercontent.com/umple/umple/master/cruise.umple/src/Umple.ump</a><br /></li>
     <li><b>Paste Umple code into UmpleOnline.</b> Note however, that you have to make
     sure the pasted file contains the layout information, as described under the saving methods above. it is suggested to drag and drop the file into the center pane to ensure the layout information is properly handled.
   </ol>
-   <br>Note that in most of these cases, the user can edit the Umple, without affecting the 
+   <br>Note that in most of these cases, the user can edit the Umple, without affecting the
 original content. In other words, a copy is saved first. The only exception is that when you edit Umple saved using method 1, any changes are saved permanently.
 </li>
 
@@ -103,15 +150,15 @@ original content. In other words, a copy is saved first. The only exception is t
 
 <ul>
 
-<li>Type any Umple code into this pane. Three seconds after you stop 
-typing, your program will be interpreted by Umple, and Umple will attempt 
-to draw a corresponding class diagram in the right-hand side. Just about 
+<li>Type any Umple code into this pane. Three seconds after you stop
+typing, your program will be interpreted by Umple, and Umple will attempt
+to draw a corresponding class diagram in the right-hand side. Just about
 the simplest Umple program you could type here would be class X {}</li>
 
 <br />
 
-<li><b>If you make a mistake</b>, you can click 'Undo' in the 'TOOLS' menu, 
-repeatedly to 'back out' each change you made (or use your browser's undo keystroke). You can also redo changes 
+<li><b>If you make a mistake</b>, you can click 'Undo' in the 'TOOLS' menu,
+repeatedly to 'back out' each change you made (or use your browser's undo keystroke). You can also redo changes
 in a similar manner.</li>
 
 <br />
@@ -120,8 +167,8 @@ in a similar manner.</li>
 
 <br />
 
-<li><b>If you are doing a lot of text editing</b>, and don't want to have 
-the diagram generated all the time, you can check 'Manual Sync' 
+<li><b>If you are doing a lot of text editing</b>, and don't want to have
+the diagram generated all the time, you can check 'Manual Sync'
 in the 'OPTIONS' menu or uncheck 'Canvas' to hide the diagram entirely.</li>
 
 <br />
@@ -145,42 +192,42 @@ in the 'OPTIONS' menu or uncheck 'Canvas' to hide the diagram entirely.</li>
 
 <ul>
 
-<li><b>To add a <a href="ClassDefinition.html">class</a></b>, click on 'Class' in the 'TOOLS' menu, 
-then position the cursor over the canvas. To add a whole series of 
-classes, double-click on 'Class' then click repeatedly on 
-the canvas. Press escape if you change your mind and you don't want to add 
+<li><b>To add a <a href="ClassDefinition.html">class</a></b>, click on 'Class' in the 'TOOLS' menu,
+then position the cursor over the canvas. To add a whole series of
+classes, double-click on 'Class' then click repeatedly on
+the canvas. Press escape if you change your mind and you don't want to add
 a class.</li>
 
 <br />
 
-<li>You can also use the text (left) pane to write Umple code that will 
-appear on the canvas. If you do this, you will have to then lay out the 
+<li>You can also use the text (left) pane to write Umple code that will
+appear on the canvas. If you do this, you will have to then lay out the
 diagram, since the layout algorithm is rather simple.</li>
 
 <br />
 
-<li><b>To rename a class</b>, click on the class name and type over it, then hit 
-enter or click somewhere else. Alternatively edit it on the text (left) 
+<li><b>To rename a class</b>, click on the class name and type over it, then hit
+enter or click somewhere else. Alternatively edit it on the text (left)
 pane.</li>
 
 <br />
 
-<li><b>To reposition classes,</b> you can drag classes around to align 
-them the way you like. You can also select a class and use the arrow keys 
-to move it by a small amount in any direction. This is nice to carefully 
-arrange classes. Note that the positions of your classes are saved in a 
-hidden text pane on the left hand side. See the discussion above regarding 
+<li><b>To reposition classes,</b> you can drag classes around to align
+them the way you like. You can also select a class and use the arrow keys
+to move it by a small amount in any direction. This is nice to carefully
+arrange classes. Note that the positions of your classes are saved in a
+hidden text pane on the left hand side. See the discussion above regarding
 showing this pane and saving the layout information</li>
 
 <br />
 
 
-<li><b>To add an <a href="AttributeDefinition.html">attribute</a></b>, click in the 'Add More' box and type the 
-attribute name. To give an attribute a type, follow the name by a colon, 
-and then one of the Umple types (Integer, String, Date, Time, Boolean or 
-the name of an Umple class). Note that this is UML diagram syntax for typed attributes which is not the same as the Umple textual syntax. You can click on an attribute at any time to 
-change its name or type, or you can edit the attribute in the textual 
-(left) pane. You can add a whole series of attributes by just hitting 
+<li><b>To add an <a href="AttributeDefinition.html">attribute</a></b>, click in the 'Add More' box and type the
+attribute name. To give an attribute a type, follow the name by a colon,
+and then one of the Umple types (Integer, String, Date, Time, Boolean or
+the name of an Umple class). Note that this is UML diagram syntax for typed attributes which is not the same as the Umple textual syntax. You can click on an attribute at any time to
+change its name or type, or you can edit the attribute in the textual
+(left) pane. You can add a whole series of attributes by just hitting
 return after each one and typing the next one.</li>
 
 <br />
@@ -190,44 +237,44 @@ return after each one and typing the next one.</li>
 <br />
 
 
-<li><b>To add a <a href="isAclause.html">generalization</a></b> (an inheritance relationship between 
-classes), click on 'Generalization'  in 'TOOLS' menu., and then click 
-first on the subclass, then the superclass. If you double-click on 
-Tools/Generalization you can then hook up a subclass to its parent, and 
-then the parent to a higher-level parent, etc. Press escape to cancel the 
+<li><b>To add a <a href="isAclause.html">generalization</a></b> (an inheritance relationship between
+classes), click on 'Generalization'  in 'TOOLS' menu., and then click
+first on the subclass, then the superclass. If you double-click on
+Tools/Generalization you can then hook up a subclass to its parent, and
+then the parent to a higher-level parent, etc. Press escape to cancel the
 process of adding generalizations..</li>
 
 <br />
 
-<li><b>To add an <a href="AssociationDefinition.html">association</a></b> (a relationship that describes how 
-instances of one class are to be connected to instances of another at run 
-time), click on 'Association' in 'TOOLS' menu. Then click on one 
-class to be connected, and then the second class. By default, the 
-multiplicity of a new association is many-to-many (* -- *). To change 
-this, or to add a name to the assocation, you currently have to edit the 
+<li><b>To add an <a href="AssociationDefinition.html">association</a></b> (a relationship that describes how
+instances of one class are to be connected to instances of another at run
+time), click on 'Association' in 'TOOLS' menu. Then click on one
+class to be connected, and then the second class. By default, the
+multiplicity of a new association is many-to-many (* -- *). To change
+this, or to add a name to the assocation, you currently have to edit the
 Umple code in the left (textual) pane.</li>
 
 <br />
 
-<li><b>To adjust the location of an association</b>, in other words how it 
-is connected to each class, hover over the association until you see 
-little squares at its ends, then click. The squares should change to a 
-darker colour. Select a little square and move it to a new location on 
-the class. If an association crosses a class's border, just move the class 
-a little. Note that the location of the association end is saved with the 
+<li><b>To adjust the location of an association</b>, in other words how it
+is connected to each class, hover over the association until you see
+little squares at its ends, then click. The squares should change to a
+darker colour. Select a little square and move it to a new location on
+the class. If an association crosses a class's border, just move the class
+a little. Note that the location of the association end is saved with the
 layout information of the diagram.</li>
 
 
 <br />
 
-<li><b>To delete a class, generalization or association</b> click on 
+<li><b>To delete a class, generalization or association</b> click on
 'Delete' in the 'TOOLS' menu and then select the item to delete.</li>
 
 <br />
 
-<li><b>To hide the 'add more' line in each class</b>, select 'Photo 
-Ready' from the 'OPTIONS' menu. You can also click on any class to adjust its 
-size a little. UmpleOnline is an excellent tool for preparing nice-looking 
+<li><b>To hide the 'add more' line in each class</b>, select 'Photo
+Ready' from the 'OPTIONS' menu. You can also click on any class to adjust its
+size a little. UmpleOnline is an excellent tool for preparing nice-looking
 diagrams ready for publication. Note that this works best in Firefox at the current time. You can also turn on pinch to zoom in the "show and hide" menu in tools, to more easily change your view of the diagram and to make the diagram more legible.</li>
 
 <br />

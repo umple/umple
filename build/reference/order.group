@@ -17,6 +17,7 @@ Concurrency%Capabilities to define elements of programs that will run at the sam
 Distribution%Capabilities to generate code for components that will run on different processors and communicate with each other;
 Composite Structure%Capabilities to define components with nested elements and communication channels;
 Tracing%Capabilities to specify run-time tracing of API calls for attributes, associations, state machines and methods;
+AI%Capabilities for AI-assisted modeling in UmpleOnline;
 UmpleOnline%Capabilities of the Umple web-based interface that runs at try.umple.org and in Docker;
 Generators%Capabilities of Umple to generate code;
 Persistence%Capabilities to load and save instances of Umple classes;
