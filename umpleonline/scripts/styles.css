@@ -7,6 +7,10 @@ p, ol, ul, div, h1, h2, h3, h4, b {
    font-size: 10pt; color: #000000; 
 }
 
+/* Theme-aware compiler message colors (used by compiler.php error/warning output) */
+.umple-message-warning { color: inherit; }
+.umple-message-error { color: #cc0000; }
+
 .theme-mode-toggle {
   display: inline-flex;
   align-items: center;
