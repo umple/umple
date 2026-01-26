@@ -1019,16 +1019,16 @@ function getErrorHtml($errorFilename, $offset = 1)
             $severityInt = intval($result["severity"]);
             if($severityInt > 2) {
               $severity = "Warning";
-              $textcolor = "<font color=\"black\">";
+              $textcolor = "<span class=\"umple-message-warning\">";
             }
             else
             {
               $severity = "Error";
-              $textcolor = "<font color=\"red\">";
+              $textcolor = "<span class=\"umple-message-error\">";
             }
             $msg = htmlspecialchars($result["message"]);
                         
-            $errhtml .= $textcolor." {$severity} on <a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a> : {$msg}.</font> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
+            $errhtml .= $textcolor." {$severity} on <a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a> : {$msg}.</span> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
         }
      }
     
