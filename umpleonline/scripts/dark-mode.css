@@ -6,6 +6,14 @@
   --umple-edge-color: #e6e6e6;
   --umple-state-border: #565f77;
   --umple-diagram-bg: #181818;
+
+  --ai-surface-bg: #2a2a2a;
+  --ai-surface-bg-alt: #333333;
+  --ai-border: #555;
+  --ai-text: #e6e6e6;
+  --ai-muted: #bdbdbd;
+  --ai-code-bg: #1e1e1e;
+  --ai-link: #9cc7ff;
 }
 
 body {
@@ -504,6 +512,219 @@ input,
 textarea,
 select {
   color: #ddd !important;
+}
+
+/* --- UmpleOnline AI: dark mode overrides --- */
+.ai-status-row:hover {
+  background-color: #2a2a2a;
+}
+
+.ai-settings-icon,
+.ai-status-text {
+  color: var(--ai-muted) !important;
+}
+
+.ai-settings-modal .dialog-content,
+.ai-requirements-dialog .dialog-content,
+.ai-explain-dialog .dialog-content,
+.ai-fix-dialog .dialog-content {
+  background-color: var(--ai-surface-bg) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-settings-modal h3,
+.ai-requirements-dialog h3,
+.ai-explain-dialog h3,
+.ai-fix-dialog h3 {
+  color: var(--ai-link) !important;
+}
+
+.ai-settings-form .setting-row label {
+  color: var(--ai-text) !important;
+}
+
+.ai-settings-form .ai-provider-link,
+.ai-settings-form .ai-provider-link:visited {
+  color: var(--ai-link) !important;
+}
+
+.ai-settings-form .ai-usage-section .ai-usage-summary,
+.ai-settings-form .ai-usage-section .ai-usage-primary,
+.ai-model-cost {
+  color: var(--ai-text) !important;
+}
+
+.ai-settings-form .ai-usage-section .ai-usage-secondary {
+  color: var(--ai-muted) !important;
+}
+
+.api-key-empty-hint {
+  background-color: #3a2a1a;
+  border-color: #c07a28;
+}
+
+.ai-requirements-dialog h4,
+.ai-explain-dialog h4,
+.ai-fix-dialog h4 {
+  color: var(--ai-text) !important;
+}
+
+.ai-requirements-dialog .requirement-display,
+.ai-requirements-dialog .selected-req-display,
+.ai-requirements-dialog .multiple-req-selection,
+.ai-requirements-dialog .status-message,
+.ai-explain-dialog .status-message {
+  background-color: var(--ai-surface-bg-alt) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-requirements-dialog .requirement-text,
+.ai-requirements-dialog #selectedReqText,
+.ai-requirements-dialog .requirement-mode label,
+.ai-requirements-dialog .generation-type label {
+  color: var(--ai-text) !important;
+}
+
+.ai-requirements-dialog #generatedCodeArea,
+.ai-requirements-dialog #requirementsOutputArea {
+  background-color: var(--ai-code-bg) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-explain-dialog .explanation-text {
+  background-color: var(--ai-surface-bg-alt) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-explain-dialog .explanation-text pre,
+.ai-explain-dialog .explanation-text code {
+  background-color: var(--ai-code-bg) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-explain-dialog .followup-input {
+  background-color: var(--ai-code-bg) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-explain-dialog .followup-question {
+  color: var(--ai-link) !important;
+}
+
+.ai-explain-dialog .followup-answer {
+  color: var(--ai-text) !important;
+}
+
+.ai-explain-dialog .followup-qa {
+  border-top-color: var(--ai-border) !important;
+}
+
+.ai-fix-sub-bullet-item {
+  color: var(--ai-text) !important;
+}
+
+.ai-fix-sub-bullet-pending {
+  color: var(--ai-link) !important;
+}
+
+.ai-fix-icon {
+  background-color: var(--ai-surface-bg-alt) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-fix-icon:hover {
+  background-color: #3a3a3a !important;
+}
+
+.cm-line.ai-fix-highlight-line {
+  background-color: #4a3b16;
+}
+
+.ai-requirements-dialog .requirement-checkbox {
+  color: var(--ai-text) !important;
+}
+
+.ai-settings-modal .dialog-overlay,
+.ai-requirements-dialog .dialog-overlay,
+.ai-explain-dialog .dialog-overlay,
+.ai-fix-dialog .dialog-overlay {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.ai-settings-form select.button,
+.ai-settings-form input.api-key-input,
+#selectAiModel {
+  background-color: #2e2e2e !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-settings-form .api-key-toggle {
+  background-color: #2e2e2e !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-settings-form .ai-verify-button {
+  background-color: #3a3a3a !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-link) !important;
+}
+
+.ai-settings-form .ai-verify-button:hover {
+  background-color: #4a4a4a !important;
+}
+
+.ai-status-message--error {
+  color: #ff6b6b !important;
+}
+
+.ai-status-message--success {
+  color: #69db7c !important;
+}
+
+.ai-explain-dialog .status-message.ai-status--info {
+  color: var(--ai-link) !important;
+}
+
+.ai-explain-dialog .status-message.ai-status--success {
+  color: #69db7c !important;
+}
+
+.ai-explain-dialog .status-message.ai-status--error {
+  color: #ff6b6b !important;
+}
+
+/* AI dialog buttons - background, borders, colors, and states */
+.ai-settings-modal .dialog-buttons .jQuery-palette-button,
+.ai-requirements-dialog .dialog-buttons .jQuery-palette-button,
+.ai-explain-dialog .dialog-buttons .jQuery-palette-button {
+  color: var(--ai-link) !important;
+  background: #2f2f2f !important;
+  border: 1px solid #4a4a4a !important;
+}
+
+.ai-requirements-dialog .dialog-buttons .jQuery-palette-button:hover,
+.ai-explain-dialog .dialog-buttons .jQuery-palette-button:hover,
+.ai-settings-modal .dialog-buttons .jQuery-palette-button:hover {
+  background: #3a3a3a !important;
+}
+
+.ai-requirements-dialog .dialog-buttons .jQuery-palette-button.disabled {
+  opacity: 0.5;
+  color: var(--ai-muted) !important;
+}
+
+.ai-explain-dialog .dialog-buttons .jQuery-palette-button.disabled {
+  opacity: 0.5;
+  color: var(--ai-muted) !important;
 }
 
 #executionMessage,
