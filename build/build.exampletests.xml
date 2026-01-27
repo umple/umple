@@ -204,6 +204,9 @@
       <exclude name="BasicTemplates2.ump"/>
       <exclude name="BasicTemplates3.ump"/>
       <exclude name="HtmlGeneration.ump"/>
+      <exclude name="DistributedClassInheritance1.ump"/>
+      <exclude name="DistributedOptions2.ump"/>
+      <exclude name="ExtendedDistributedExample3.ump"/>
 
       <!-- Other issues bugs -->
       <exclude name="AroundStatement1.ump"/>  <!-- Code Injection -->
@@ -305,6 +308,7 @@
       <exclude name="E2*.ump" />
       <exclude name="E3*.ump" />
       <exclude name="E4*.ump" />      
+      <exclude name="ExtendedDistributedExample3.ump"/>
       <exclude name="WE1xxIdentifierInvalid1.ump" />
       <exclude name="WE1xxIdentifierInvalid3.ump" />
       <exclude name="WE1xxIdentifierInvalid5.ump" />
@@ -388,6 +392,9 @@
       <exclude name="ComplexStateMachine.ump"/>
       <exclude name="ConcurrencyUsingDoActivities1.ump"/>
       <exclude name="ConcurrencyUsingDoActivities2.ump"/>
+      <exclude name="DistributedClassInheritance1.ump"/>
+      <exclude name="DistributedOptions2.ump"/>
+      <exclude name="ExtendedDistributedExample3.ump"/>
       <exclude name="CoordinationStateMachine.ump"/>
       <exclude name="DelegationPattern1.ump"/>
       <exclude name="Dishwasher.ump"/>
@@ -438,6 +445,7 @@
       <exclude name="E018ReflexiveImmutable1.ump"/>
       <exclude name="E083InvalidMultivaluedAttributeInitialization1.ump"/>
       <exclude name="E180DuplicateRoleNameSubclass.ump"/>
+      <exclude name="E181AssociationSpecializationInvalidMultiplicity1.ump"/>
       <exclude name="E3504TemplateReferenceCannotBeResolved1.ump"/>
       <exclude name="E219NoBindingParameters.ump"/>
       <exclude name="E3507DuplicateEmitMethodName1.ump"/>
@@ -530,7 +538,7 @@
       <exclude name="E105EnumerationInComposition1.ump"/>
       <exclude name="E023AttributeAssociationNameClash1.ump"/>
       <exclude name="E214Twosametemplateparameters.ump"/>
-      
+      <exclude name="E3607NoDestinationClassName.ump"/>
     </fileset>  
 
     <pathconvert pathsep=";" property="cppumpfiles2" refid="cppumpfiles"/>

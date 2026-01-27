@@ -1,0 +1,516 @@
+:root {
+  --umple-dark-bg: #222;
+  --umple-dark-text: #ddd;
+  --umple-node-fill: #333333;
+  --umple-node-color: #e6e6e6;
+  --umple-edge-color: #e6e6e6;
+  --umple-state-border: #565f77;
+  --umple-diagram-bg: #181818;
+}
+
+body {
+  background-color: var(--umple-dark-bg);
+  color: var(--umple-dark-text);
+  color-scheme: dark;
+}
+
+/* Logo container should be transparent so SVG shows without background box */
+.inRow.logo {
+  background-color: transparent !important;
+}
+
+/* Smooth transitions for theme changes */
+body,
+#mainApplication,
+#paletteColumn,
+#topLine,
+#generatedCodeRow,
+#tabRow,
+#tabControl,
+#taskArea,
+#umpleCanvas,
+.joint-paper,
+.html-element {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, fill 0.3s ease, stroke 0.3s ease;
+}
+
+#mainApplication,
+#paletteColumn,
+#topLine,
+#generatedCodeRow,
+#tabRow,
+#tabControl,
+#taskArea {
+  background-color: #222;
+  color: #ddd;
+}
+
+#header.row {
+  background-color: transparent;
+}
+
+.pagedescription,
+.pagedescription a {
+  color: #ccc;
+}
+
+.button2 {
+  background: linear-gradient(180deg, #4f4f4f 0%, #3a3a3a 100%);
+  border: 1px solid #5a5a5a;
+  border-top-color: #707070;
+  color: #ffffff;
+  text-shadow: none;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.button2:hover {
+  background: linear-gradient(180deg, #626262 0%, #4e4e4e 100%);
+  border-color: #7a7a7a;
+  color: #ffffff;
+}
+
+.active {
+  background: linear-gradient(180deg, #3a639b 0%, #2c4a75 100%);
+  border-color: #456da5;
+  color: #ffffff;
+}
+
+.section {
+  background-color: #333;
+  border-color: #555;
+}
+
+h3 a,
+h3 a:link {
+  background: none;
+  box-shadow: none;
+  color: #eee;
+}
+
+a {
+  color: #8af;
+}
+
+.visitors-count {
+  color: #ccc;
+}
+
+.visitors-count a {
+  color: #9cc7ff;
+}
+
+img[src="scripts/uottawa_ver_black.png"],
+img[src="scripts/delete2.jpg"] {
+  filter: invert(1);
+}
+
+ul.tabrow li,
+ul.tabrow li.selected {
+  background: #444;
+  border-color: #555;
+}
+
+ul.tabrow li.selected,
+.tabrow li.selected {
+  background: #222;
+  border-bottom-color: #222;
+}
+
+ul.tabrow li a {
+  background: transparent;
+  border-color: inherit;
+  color: #fff;
+  text-shadow: none;
+}
+
+ul.tabrow li::before,
+ul.tabrow li::after,
+ul.tabrow li.selected::before,
+ul.tabrow li.selected::after {
+  content: none;
+  box-shadow: none;
+}
+
+.tabrow::before {
+  border-bottom: none;
+}
+
+.tabrow li {
+  box-shadow: none;
+  text-shadow: none;
+}
+
+#paletteColumn {
+  background-color: var(--umple-node-fill);
+  border-color: #444;
+  color: var(--umple-node-color);
+}
+
+div.paletteWrapper,
+div.palette ul {
+  background-color: #2b2b2b;
+  border-color: #444;
+  color: inherit;
+}
+
+div.palette ul.first,
+div.palette ul.second {
+  border-top-color: #444;
+}
+
+div.palette ul {
+  box-shadow: none;
+}
+
+div.palette li {
+  border-color: #2b2b2b;
+  color: #e6e6e6;
+  background-color: transparent;
+}
+
+div.palette li.subtitle {
+  color: #f0f0f0;
+  border-bottom-color: #555;
+  text-shadow: none;
+}
+
+div.palette li.selected,
+div.palette li.highlight {
+  background-color: #3a3a3a;
+  border-color: #666;
+  color: #ffffff;
+}
+
+div.palette li.disabled {
+  background-color: #333;
+  color: #777;
+}
+
+div.palette li.disabled img {
+  opacity: 0.35;
+}
+
+#paletteColumn h3.ui-accordion-header>a:link,
+#paletteColumn h3.ui-accordion-header>a:visited {
+  color: #9cc7ff !important;
+}
+
+#paletteColumn h3.ui-accordion-header:hover>a:link,
+#paletteColumn h3.ui-accordion-header:hover>a:visited {
+  color: #c0ddff !important;
+}
+
+#paletteColumn .ui-state-default,
+#paletteColumn .ui-widget-content {
+  background: #333;
+  color: #e6e6e6;
+  border-color: #444;
+}
+
+#paletteColumn .ui-state-hover {
+  background: #3f3f3f;
+}
+
+#paletteColumn .ui-state-default .ui-icon,
+#paletteColumn .ui-state-active .ui-icon,
+#paletteColumn .ui-state-hover .ui-icon {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+#paletteColumn div.jQuery-palette-button {
+  background: #2f2f2f;
+  border: 1px solid #4a4a4a;
+  color: #9cc7ff;
+}
+
+#paletteColumn div.jQuery-palette-button.ui-state-hover {
+  background: #3a3a3a;
+}
+
+div.palette a.buttonExtend {
+  color: #ffffff;
+}
+
+div.palette li.disabled a.buttonExtend {
+  color: #777;
+}
+
+#buttonAddAssociation img,
+#buttonAddGeneralization img {
+  filter: invert(1) brightness(1.1);
+}
+
+#umpleCanvas {
+  background-color: var(--umple-diagram-bg);
+  border-color: #333333;
+  color: var(--umple-node-color);
+}
+
+#umpleCanvasColumn,
+div.surface,
+.structureInCanvas {
+  background-color: #181818;
+  border-color: #333333;
+  color: #e6e6e6;
+}
+
+div.surface.photoReady {
+  background-color: #181b25;
+}
+
+div.syncNeededMessage {
+  color: #a7b4d6;
+}
+
+.joint-paper {
+  background-color: #181818 !important;
+}
+
+.joint-paper .joint-element rect,
+.joint-paper .uml-class-name-rect,
+.joint-paper .uml-class-attrs-rect,
+.joint-paper .uml-class-methods-rect,
+.joint-paper .state-name-rect {
+  fill: var(--umple-node-fill);
+  stroke: var(--umple-node-color);
+}
+
+.joint-paper .state-actions-separator,
+.joint-paper .state-internals-separator {
+  stroke: #e6e6e6;
+}
+
+.joint-paper .joint-element text,
+.joint-paper text,
+.joint-paper .uml-class-name-text,
+.joint-paper .uml-class-attrs-text,
+.joint-paper .uml-class-methods-text,
+.joint-paper .state-name-text,
+.joint-paper .state-actions-text,
+.joint-paper .state-internals-text {
+  fill: #e6e6e6;
+}
+
+.joint-paper .joint-link .connection {
+  stroke: var(--umple-edge-color);
+}
+
+.joint-paper .joint-link .marker-arrowhead,
+.joint-paper .joint-link .marker-vertex {
+  fill: var(--umple-edge-color);
+  stroke: var(--umple-edge-color);
+}
+
+.joint-paper .joint-element .fobj body,
+.joint-paper .joint-element .fobj div {
+  background-color: #333333;
+  color: #e6e6e6;
+}
+
+.joint-paper .html-element input,
+.joint-paper .html-element .classAttributes,
+.joint-paper .html-element .classMethods {
+  background: transparent;
+  color: inherit;
+}
+
+.html-element {
+  background-color: #333333 !important;
+  border-color: #e6e6e6 !important;
+  box-shadow: none !important;
+  color: #e6e6e6 !important;
+}
+
+.html-element input {
+  color: #e6e6e6 !important;
+}
+
+.html-element label {
+  color: #e6e6e6 !important;
+  text-shadow: none !important;
+}
+
+.html-element span {
+  color: #e6e6e6 !important;
+}
+
+.className .edit {
+  filter: invert(0.85) !important;
+}
+
+.html-element button.delete {
+  background-color: #2a2f3d !important;
+  border: 1px solid #f48b8b !important;
+  color: #f48b8b !important;
+}
+
+.html-element button.delete:hover {
+  background-color: #f48b8b !important;
+  color: #1c1f2a !important;
+}
+
+div.umpleClass {
+  background-color: #333333 !important;
+  color: #e6e6e6 !important;
+  border-color: #e6e6e6 !important;
+}
+
+div.umpleClass td {
+  border-color: #e6e6e6 !important;
+}
+
+div.umpleAttribute span,
+div.umpleMethod span {
+  color: #e6e6e6 !important;
+}
+
+div.umpleAttributeNew span,
+div.umpleMethodNew span {
+  color: #e6e6e6 !important;
+}
+
+div.umpleLine {
+  background-color: #e6e6e6 !important;
+}
+
+div.umpleAssociationTemp,
+div.umpleGeneralization {
+  background-color: #e6e6e6 !important;
+}
+
+div.umpleAssociation,
+div.umpleGeneralization,
+div.umpleAssociation span,
+div.umpleGeneralization span {
+  color: #e6e6e6 !important;
+}
+
+div.untracedAssociation,
+div.redTracedAssociation {
+  background-color: transparent !important;
+}
+
+div.multiplicity,
+div.role {
+  color: #e6e6e6 !important;
+}
+
+select.button {
+  background-color: #2e2e2e;
+  border-color: #555;
+  color: #e6e6e6;
+}
+
+.bookmarkableUrl,
+.bookmarkableUrl a {
+  color: #9cc7ff;
+}
+
+a.button:link,
+a.button:visited,
+a.button:hover,
+a.button:active {
+  color: #f0f0f0;
+}
+
+.theme-mode-toggle {
+  color: #ddd;
+}
+
+.theme-mode-select {
+  background-color: #2f2f2f;
+  border-color: #565f77;
+  color: #f0f0f0;
+}
+
+.loading-indicator-overlay {
+  background-color: #333333 !important;
+}
+
+.ui-tooltip {
+  background-color: #333 !important;
+  color: #ddd !important;
+  border-color: #555 !important;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+}
+
+.ui-tooltip * {
+  color: #ddd !important;
+}
+
+.ui-tooltip a {
+  color: #8af !important;
+}
+
+.ui-tooltip a:hover {
+  color: #adcdff !important;
+}
+
+.tooltip .tooltiptext {
+  background-color: #333;
+  color: #ddd;
+  border-color: #555;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+}
+
+#extraInfo {
+  background-color: #333;
+  border-color: #555;
+  color: #ddd;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
+}
+
+.cm-editor .cm-selectionBackground,
+.cm-editor .cm-selectionLayer .cm-selectionBackground {
+  background-color: #4d5a6a !important;
+}
+
+.cm-editor.cm-focused .cm-selectionBackground,
+.cm-editor.cm-focused .cm-selectionLayer .cm-selectionBackground {
+  background-color: #4d5a6a !important;
+}
+
+.cm-editor .cm-selectionBackground,
+.cm-editor .cm-content ::selection {
+  background-color: #4d5a6a !important;
+}
+
+.cm-editor ::selection {
+  background-color: #4d5a6a;
+  color: #ff6666;
+}
+
+#topLine,
+#topLine * {
+  color: #ddd !important;
+}
+
+#feedbackMessage,
+#feedbackMessage * {
+  color: #ddd !important;
+}
+
+#exampleMessage,
+#exampleMessage * {
+  color: #ccc !important;
+}
+
+.linetext,
+.linetext * {
+  color: #ddd !important;
+}
+
+input,
+textarea,
+select {
+  color: #ddd !important;
+}
+
+#executionMessage,
+#executionMessage * {
+  color: #ddd !important;
+}
+
+/* Theme-aware compiler message colors (used by compiler.php error/warning output) */
+.umple-message-warning { color: var(--umple-dark-text) !important; }
+.umple-message-error { color: #ff6b6b !important; }

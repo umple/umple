@@ -3,7 +3,6 @@
 package ecommerceRMI0;
 import ecommerceRMI0.Agent;
 import java.rmi.Remote;
-import javax.jws.WebMethod;
 import java.util.*;
 import ecommerceRMI0.Customer;
 import ecommerceRMI0.Warehouse;

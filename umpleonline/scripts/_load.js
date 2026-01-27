@@ -12,7 +12,8 @@ document.write('<link href="scripts/jquery/jquery-ui-1.13.2.min.css" rel="styles
 
 // Syntax highlighter
 document.write('<link href="scripts/shCore.css" rel="stylesheet" type="text/css" />');
-document.write('<link href="scripts/shThemeDefault.css" rel="stylesheet" type="text/css" />');
+document.write('<link href="scripts/shThemeDefault.css" rel="stylesheet" type="text/css" id="shThemeDefault" />');
+document.write('<link href="scripts/shThemeMidnight.css" rel="stylesheet" type="text/css" id="shThemeMidnight" disabled />');
 
 // Code mirror
 document.write('<link href="scripts/CodeMirror/lib/codemirror.css" rel="stylesheet" type="text/css" />');
@@ -59,13 +60,14 @@ document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/edi
 document.write('<script type="text/javascript" src="scripts/socket.io/socket.io.js"></script>');
 
 // ====== The following minified version of the subsequent group can be commented out when testing
-// Regenerate this using the allumple-minifyscript unix script (relies on yuicompressor)
-// document.write('<script type="text/javascript" src="scripts/allumple-min.js"></script>');
+// Regenerate this using the allumple-minifyscript unix script (relies on esbuild, formerly yuicompressor)
+// regenerated in the build using ant -f build.umple.xml compressAllScripts
+document.write('<script type="text/javascript" src="scripts/allumple-min.js"></script>');
 
 
 // ------ The following should be commented out, and the above min version used, except when testing 
 // If you change any constituent file, regenerate allumple-min.js as above
-///*
+/*
 
 //Prototype
 document.write('<script type="text/javascript" src="scripts/prototype.js"></script>');
@@ -80,6 +82,7 @@ document.write('<script type="text/javascript" src="scripts/debugger.js"></scrip
 //Syntax Highlighter
 document.write('<script type="text/javascript" src="scripts/shCore.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushJava.js"></script>');
+document.write('<script type="text/javascript" src="scripts/shBrushPython.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushPhp.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushRuby.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushSql.js"></script>');
@@ -122,7 +125,7 @@ document.write('<script type="text/javascript" src="scripts/collab-server-config
 //For styling and colouring statetables
 document.write('<script type="text/javascript" src="scripts/statetable/state_table_colourer.js"></script>');
 
-//*/
+*/
 
 // ----------- END OF FILES THAT ARE MINIFIED -----------
 

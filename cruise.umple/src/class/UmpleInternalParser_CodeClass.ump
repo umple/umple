@@ -670,6 +670,9 @@ class UmpleInternalParser
       checkIgnoredAssociations();
       checkSubclassSameAssociationDifferentRoleNames();
 
+      //Issue 1662
+      checkRolenameMatchingClassname();
+
       checkExtendsForCycles();
       checkSortedAssociations();
       checkAssociationsValidity();
@@ -2768,6 +2771,25 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         secondLowerBoundOK = (b2LB <= a2LB);
         secondUpperBoundOK = (b2UB >= a2UB);
 
+        // Special case for * multiplicity; any upper bound is more specific than 0..*
+        if ( b1UB == -1 ) 
+        { 
+          firstUpperBoundOK = true;
+        }
+        if ( b2UB == -1 ) 
+        { 
+          secondUpperBoundOK = true;
+        }
+        // Issue 2220: 0..* is LESS specific than 0..X;
+        if ( a1UB == -1 && b1UB != -1) 
+        { 
+          firstUpperBoundOK = false;
+        }
+        if ( a2UB == -1 && b2UB != -1) 
+        { 
+          secondUpperBoundOK = false;
+        }
+
         Boolean firstMulChToOne = false;
         Boolean secondMulChToOne = false;
         Boolean firstMulChToN = false;
@@ -2794,24 +2816,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         // changed to MN (or M*)
         if (a2UB >= a2LB && a2LB != 0 && a2UB > 1 && ((b2LB == 0 && b2UB > 1) || b2UB == -1))
           secondMulChToN = true;    
-           
-        // special case for * multiplicity
-        if ( b1UB == -1 ) 
-        { 
-          firstUpperBoundOK = true;
-        }
-        
-        if ( b2UB == -1 ) 
-        { 
-          secondUpperBoundOK = true;
-
-        }
         
         if ( b1UB == -1 || (b1LB == 0 && b1UB != 1))
         { 
           secondNeedsSetCode = true;
         } 
-        
         if ( b2UB == -1 || (b2LB == 0 && b2UB != 1))
         {
           firstNeedsSetCode = true;
@@ -2823,8 +2832,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           boundsOK = true;
         }
         
-        if ( subclassOK && namesOK && boundsOK )
+        if ( subclassOK && namesOK )
         {
+          if (!boundsOK) {
+            // The user has either: entered an invalid bound, or reused a rolename unintentionally
+            if (!firstLowerBoundOK || !firstUpperBoundOK) {
+              getParseResult().addErrorMessage(new ErrorMessage(181, A.getTokenPosition(), currentLeftClass.getName(), currentRightClass.getName(), b1LB+"", b1UB+""));
+            } else if (!secondLowerBoundOK || !secondUpperBoundOK) {
+              getParseResult().addErrorMessage(new ErrorMessage(181, A.getTokenPosition(), currentLeftClass.getName(), currentRightClass.getName(), b2LB+"", b2UB+""));
+            }
+          }
+
           // then it's a redefinition
           // so B is a parent
           aFirstEnd.setSuperClassName(bFirstEnd.getClassName());
@@ -2979,6 +2997,23 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     
   }
 
+  private void checkRolenameMatchingClassname()
+  {
+    for (Association assoc : model.getAssociations()) {
+      AssociationEnd firstEnd = assoc.getEnd(0);
+      AssociationEnd secondEnd = assoc.getEnd(1); 
+
+      if (firstEnd.getRoleName().toLowerCase().equals(firstEnd.getClassName().toLowerCase()) && !firstEnd.getIsDefaultRoleName()) 
+      {
+        getParseResult().addErrorMessage(new ErrorMessage(89,assoc.getTokenPosition(),firstEnd.getRoleName(), firstEnd.getClassName()));
+      } 
+      if (secondEnd.getRoleName().toLowerCase().equals(secondEnd.getClassName().toLowerCase()) && !secondEnd.getIsDefaultRoleName()) 
+      {
+        getParseResult().addErrorMessage(new ErrorMessage(89,assoc.getTokenPosition(),secondEnd.getRoleName(), secondEnd.getClassName()));
+      }
+    }
+  }
+
   private void checkDuplicateAssociationNames()
   {
     for(UmpleClass C : model.getUmpleClasses())
@@ -3008,7 +3043,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         AssociationEnd firstEnd = assoc.getEnd(0);
         AssociationEnd secondEnd = assoc.getEnd(1); 
 
-      if ( assoc.getIsSpecialization() )
+        if ( assoc.getIsSpecialization() )
         {
         //getParseResult().addErrorMessage(new ErrorMessage(400,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
           continue;
@@ -3020,7 +3055,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
         Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
         
-        //issue 288: firstEnd of association does not indicate current (this) class being analyzed.
+        //issue 188: firstEnd of association does not indicate current (this) class being analyzed.
         //If association is NOT reflexive, must check the differing class.  Check if role name
         //matches class name, but only if it is a user entered role name.  Current class must
         //also have multiple associations to the same class to cause java compile errors.  
@@ -3058,10 +3093,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
         }
 
+        //Issue 2210: existingNames now uses the lowercase of role names
+
         // check names on other-class end of associations to other classes
         if (!isSymmetricReflexive && (checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
         { 
-          if (existingNames.contains(firstEnd.getRoleName()) || hasMultipleAssocToSameClass)
+          if (existingNames.contains(firstEnd.getRoleName().toLowerCase()) || hasMultipleAssocToSameClass)
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),firstEnd.getClassName(), C.getName()));
             return;
@@ -3073,12 +3110,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
           else
           {
-            existingNames.add(firstEnd.getRoleName());
+            existingNames.add(firstEnd.getRoleName().toLowerCase());
           }
         }
         if (!isSymmetricReflexive && (checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
         {
-          if (existingNames.contains(secondEnd.getRoleName()) || hasMultipleAssocToSameClass)
+          if (existingNames.contains(secondEnd.getRoleName().toLowerCase()) || hasMultipleAssocToSameClass)
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(), secondEnd.getClassName(), C.getName()));
             return;
@@ -3090,7 +3127,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
           else
           {
-            existingNames.add(secondEnd.getRoleName());
+            existingNames.add(secondEnd.getRoleName().toLowerCase());
           }
         }
         
@@ -3105,7 +3142,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             roleNameToCheck = secondEnd.getRoleName();
           }
 
-          if(existingNames.contains(roleNameToCheck))
+          if(existingNames.contains(roleNameToCheck.toLowerCase()))
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),roleNameToCheck));
             return;
@@ -3117,7 +3154,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
           else
           {
-            existingNames.add(roleNameToCheck);
+            existingNames.add(roleNameToCheck.toLowerCase());
           }
         }
 

@@ -8,10 +8,9 @@ class Student
 class Mentor 
 {
 	singleton;
-  name;
-  
+  lazy name;
 }
 
 association {
-	* Mentor -- 1 Student;
+	1 Mentor -- 0..1 Student;
 }

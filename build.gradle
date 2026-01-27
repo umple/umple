@@ -87,7 +87,8 @@ def buildAliases = [
    'packageUmpleonline' : [
     'packageAllJars',
     'compileUmpleSelf',
-    'deployUmpleonline'
+    'deployUmpleonline',
+    'copyTxlUmpleonline'
    ],
    'genPackages' : [
         'packageDeb',
@@ -128,8 +129,8 @@ repositories {
 }
 
 dependencies {
-    // Javascript compression for UmpleOnline scripts
-    ivy group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.8'
+    // Javascript compression for UmpleOnline scripts NO LONGER USED
+    // ivy group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.8'
     
     // Testing
     ivy group: 'junit', name: 'junit', version: '4.13.2'
@@ -959,6 +960,19 @@ task deployUmpleonline(type: Copy) {
     dependsOn ':packageSync'
 }
 
+task copyTxlUmpleonline(type: Copy) {
+    group = "Custom"
+    description = "Copying the generated JavaToPython ctxl file to the umpleonline scripts folder"
+    from "${rootProject.projectDir.toString()}/UmpleToPython/txl/umpleJavaToPython.ctxl"
+    into "${rootProject.projectDir.toString()}/umpleonline/scripts/txl/"
+    doFirst {
+        println("Copying umpleJavaToPython.ctxl to umpleonline/scripts/txl")
+        if (inputs.sourceFiles.isEmpty()){
+            throw new StopExecutionException(); 
+           } 
+    }
+}
+
 
 task deployUpdatedLib(type: Copy) {
     group = "Custom"
@@ -1615,6 +1629,9 @@ task pythonUserManualAndExampleTests {
                 "CodeInjectioninCustomMethods1.ump",
                 "CodeInjectioninEventMethods1.ump",
                 "Dishwasher.ump",
+                "DistributedClassInheritance1.ump",
+                "DistributedOptions2.ump",
+                "ExtendedDistributedExample3.ump",
                 "Elevator_State_Machine.ump",
                 "HtmlGeneration.ump",
                 "LibraryLoanStateMachine.ump",
@@ -1692,6 +1709,7 @@ task phpUserManualAndExampleTests {
                 "E2*.ump",
                 "E3*.ump",
                 "E4*.ump",
+                "ExtendedDistributedExample3.ump",
                 "WE1xxIdentifierInvalid1.ump",
                 "WE1xxIdentifierInvalid3.ump",
                 "WE1xxIdentifierInvalid5.ump",
@@ -1735,6 +1753,9 @@ task rtcppUserManualAndExampleTests {
             "ComplexStateMachine.ump",
             "ConcurrencyUsingDoActivities1.ump",
             "ConcurrencyUsingDoActivities2.ump",
+            "DistributedClassInheritance1.ump",
+            "DistributedOptions2.ump",
+            "ExtendedDistributedExample3.ump",
             "CoordinationStateMachine.ump",
             "DelegationPattern1.ump",
             "Dishwasher.ump",
@@ -1851,6 +1872,7 @@ task rtcppUserManualAndExampleTests {
             "E233RemoveInitialState.ump",
             "E008AssociationClassMissingEnd1.ump",
             "E3607PortNameCannotBeResolved1.ump",
+            "E3607NoDestinationClassName.ump",
             "E210ConflictMethods4.ump",
             "E229RenamingTwoTimesStates.ump",
             "E028ConstraintIdentifierIncorrect1.ump",
@@ -1876,6 +1898,7 @@ task rtcppUserManualAndExampleTests {
             "E105EnumerationInComposition1.ump",
             "E023AttributeAssociationNameClash1.ump",
             "E214Twosametemplateparameters.ump",
+            "E181AssociationSpecializationInvalidMultiplicity1.ump",
             "src-gen-umple",
             "allExamplesList.txt"]
         runUserManualAndExampleTests("rtcpp", "RTCpp", excludes)

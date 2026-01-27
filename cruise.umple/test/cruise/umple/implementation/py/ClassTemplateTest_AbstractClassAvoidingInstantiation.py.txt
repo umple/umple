@@ -1,9 +1,23 @@
-from Person import Person
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 
 class Teacher():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Teacher Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
+        self._myStudents = None
         self._myStudents = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetMany 
     def getMyStudent(self, index):
         aMyStudent = self._myStudents[index]
         return aMyStudent
@@ -21,68 +35,61 @@ class Teacher():
         return has
 
     def indexOfMyStudent(self, aMyStudent):
-        index = self._myStudents.index(aMyStudent)
+        index = (-1 if not aMyStudent in self._myStudents else self._myStudents.index(aMyStudent))
         return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMyStudents():
         return 0
 
+    # Code from template association_AddManyToOne 
     def addMyStudent(self, aMyStudent):
         wasAdded = False
-        if aMyStudent in self._myStudents :
+        if (aMyStudent) in self._myStudents :
             return False
-
         existingTeacher = aMyStudent.getTeacher()
-        isNewTeacher = existingTeacher != None and not self.equals(existingTeacher)
+        isNewTeacher = not (existingTeacher is None) and not self == existingTeacher
         if isNewTeacher :
             aMyStudent.setTeacher(self)
-
         else :
             self._myStudents.append(aMyStudent)
-
         wasAdded = True
         return wasAdded
 
     def removeMyStudent(self, aMyStudent):
         wasRemoved = False
-        if not self.equals(aMyStudent.getTeacher()) :
+        #Unable to remove aMyStudent, as it must always have a teacher
+        if not self == aMyStudent.getTeacher() :
             self._myStudents.remove(aMyStudent)
             wasRemoved = True
-
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addMyStudentAt(self, aMyStudent, index):
         wasAdded = False
         if self.addMyStudent(aMyStudent) :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfMyStudents() :
                 index = self.numberOfMyStudents() - 1
-
             self._myStudents.remove(aMyStudent)
             self._myStudents.insert(index, aMyStudent)
             wasAdded = True
-
         return wasAdded
 
     def addOrMoveMyStudentAt(self, aMyStudent, index):
         wasAdded = False
-        if aMyStudent in self._myStudents :
+        if (aMyStudent) in self._myStudents :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfMyStudents() :
                 index = self.numberOfMyStudents() - 1
-
             self._myStudents.remove(aMyStudent)
             self._myStudents.insert(index, aMyStudent)
             wasAdded = True
-
         else :
             wasAdded = self.addMyStudentAt(aMyStudent, index)
-
         return wasAdded
 
     def delete(self):
@@ -90,5 +97,4 @@ class Teacher():
         while i > 0 :
             aMyStudent = self._myStudents[i - 1]
             aMyStudent.delete()
-            i = i - 1
-
+            i -= 1

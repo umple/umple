@@ -39,8 +39,8 @@ class Student():
         return newMentors
 
     def numberOfMentors(self):
-        self._number = len(self._mentors)
-        return self._number
+        number = len(self._mentors)
+        return number
 
     def hasMentors(self):
         has = len(self._mentors) > 0
@@ -131,7 +131,7 @@ class Student():
         return wasSet
 
     def delete(self):
-        from Mentor import Mentor
+        from example.Mentor import Mentor
         copyOfMentors = self._mentors.copy()
         self._mentors.clear()
         for aMentor in copyOfMentors:

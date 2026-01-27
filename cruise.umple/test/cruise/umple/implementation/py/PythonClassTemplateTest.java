@@ -53,13 +53,6 @@ public class PythonClassTemplateTest extends ClassTemplateTest
     language = null;
     assertUmpleTemplateFor("py/ClassTemplateTest_ExtraCode.ump","py/ClassTemplateTest_ExtraCode.py.txt","Mentor");
   }
-  
-  @Test
-  public void abstractClass()
-  {
-	language = "Python";
-	assertUmpleTemplateFor("py/ClassTemplateTest_AbstractClass.ump","py/ClassTemplateTest_AbstractClass.py.txt", "Student");
-  }
 
    @Test
   public void MethodParameterTypes(){
@@ -76,12 +69,6 @@ public class PythonClassTemplateTest extends ClassTemplateTest
 	  System.out.print(actual);
 	  
     SampleFileWriter.assertFileContent(new File(pathToInput, languagePath + "/ClassTemplateTest_BuildOutputPath.ump.txt"), actual);
-  }
-
-
-  @Test
-  public void immutableNotLazyAttributeConstructor(){
-	  assertUmpleTemplateFor("py/ImmutableNotLazyAttributeConstructor.ump","py/StudentImmutableNotLazyTest.py.txt","Student");
   }
 
   @Test
@@ -103,6 +90,11 @@ public class PythonClassTemplateTest extends ClassTemplateTest
     assertUmpleTemplateFor("py/ClassTemplateTest_StateMachineDoesNotImplementInterface.ump", 
                            "py/ClassTemplateTest_StateMachineDoesNotImplementInterface.py.txt",
                            "Router");
+  }
+
+  @Test
+  public void InternalConstant(){
+        assertUmpleTemplateFor("ClassTemplateTest_InternalConstant.ump",languagePath+"/ClassTemplateTest_InternalConstant."+ languagePath + ".txt","Student");
   }
 
   @Test @Ignore

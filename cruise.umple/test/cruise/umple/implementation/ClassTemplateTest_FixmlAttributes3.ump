@@ -5,9 +5,15 @@ class Mentor
   fixml capacity = "31";
   fixml Integer id;
   fixml name = "Umple";
-  after emptyConstructor
+  after emptyConstructor Java
   {
     System.out.println("Testing");
     String test;
+  }
+  after emptyConstructor Python
+  {
+    print("Testing")
+    #
+    test = None
   }
 }

@@ -10,7 +10,7 @@ class Unicycle { isA Vehicle; }
 // It defines the Vehicle to Wheel relationship
 // with as much abstraction as possible.
 association {
-  0..1 Vehicle vehicle -- 0..* Wheel wheel;
+  0..1 Vehicle -- 0..* Wheel vehicleWheel;
 }
 
 // Here, we'd like to extend the functionality of
@@ -28,9 +28,9 @@ association {
 //    association;
 // -> Finally, the role names are the same.
 association
-  { 0..1 Bicycle vehicle -- 0..2 Wheel wheel; }
+  { 0..1 Bicycle vehicle -- 0..2 Wheel vehicleWheel; }
 association
-  { 0..1 Unicycle vehicle -- 0..1 Wheel wheel; }
+  { 0..1 Unicycle vehicle -- 0..1 Wheel vehicleWheel; }
 
 //$?[End_of_model]$?
 // Positioning

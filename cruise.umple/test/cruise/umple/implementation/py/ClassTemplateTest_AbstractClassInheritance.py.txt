@@ -1,12 +1,27 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 from Person import Person
-from Student import Student
 
 class Teacher(Person):
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Teacher Attributes
+    #Teacher Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName, aAge, aPosition):
+        self._students = None
+        self._position = None
         super().__init__(aName, aAge)
         self._position = aPosition
         self._students = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setPosition(self, aPosition):
         wasSet = False
         self._position = aPosition
@@ -16,6 +31,7 @@ class Teacher(Person):
     def getPosition(self):
         return self._position
 
+    # Code from template association_GetMany 
     def getStudent(self, index):
         aStudent = self._students[index]
         return aStudent
@@ -33,71 +49,65 @@ class Teacher(Person):
         return has
 
     def indexOfStudent(self, aStudent):
-        index = self._students.index(aStudent)
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
         return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 0
 
-    def addStudent(self, aName, aAge, aStudentID):
+    # Code from template association_AddManyToOne 
+    def addStudent1(self, aName, aAge, aStudentID):
+        from Student import Student
         return Student(aName, aAge, aStudentID, self)
 
-    def addStudent(self, aStudent):
+    def addStudent2(self, aStudent):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             return False
-
         existingTeacher = aStudent.getTeacher()
-        isNewTeacher = existingTeacher != None and not self.equals(existingTeacher)
+        isNewTeacher = not (existingTeacher is None) and not self == existingTeacher
         if isNewTeacher :
             aStudent.setTeacher(self)
-
         else :
             self._students.append(aStudent)
-
         wasAdded = True
         return wasAdded
 
     def removeStudent(self, aStudent):
         wasRemoved = False
-        if not self.equals(aStudent.getTeacher()) :
+        #Unable to remove aStudent, as it must always have a teacher
+        if not self == aStudent.getTeacher() :
             self._students.remove(aStudent)
             wasRemoved = True
-
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addStudentAt(self, aStudent, index):
         wasAdded = False
         if self.addStudent(aStudent) :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfStudents() :
                 index = self.numberOfStudents() - 1
-
             self._students.remove(aStudent)
             self._students.insert(index, aStudent)
             wasAdded = True
-
         return wasAdded
 
     def addOrMoveStudentAt(self, aStudent, index):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfStudents() :
                 index = self.numberOfStudents() - 1
-
             self._students.remove(aStudent)
             self._students.insert(index, aStudent)
             wasAdded = True
-
         else :
             wasAdded = self.addStudentAt(aStudent, index)
-
         return wasAdded
 
     def delete(self):
@@ -105,10 +115,17 @@ class Teacher(Person):
         while i > 0 :
             aStudent = self._students[i - 1]
             aStudent.delete()
-            i = i - 1
+            i -= 1
 
         super().delete()
 
     def __str__(self):
-        return str(super()) + "[" + "position" + ":" + self.getPosition() + "]"
+        return str(super().__str__()) + "[" + "position" + ":" + str(self.getPosition()) + "]"
 
+    def addStudent(self, *argv):
+        from Student import Student
+        if len(argv) == 3 and isinstance(argv[0], str) and isinstance(argv[1], int) and isinstance(argv[2], int) :
+            return self.addStudent1(argv[0], argv[1], argv[2])
+        if len(argv) == 1 and isinstance(argv[0], Student) :
+            return self.addStudent2(argv[0])
+        raise TypeError("No method matches provided parameters")
