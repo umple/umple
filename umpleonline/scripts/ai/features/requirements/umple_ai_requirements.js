@@ -354,6 +354,8 @@ const AiRequirements = {
         alert("Editor not initialized");
         return;
       }
+
+      const genType = dialog?.querySelector('input[name="genType"]:checked')?.value || "statemachine";
       const currentDoc = Page.codeMirrorEditor6.state.doc.toString();
       const insertion = RequirementsSelfCorrection.buildMergedCode(currentDoc, code);
       const highlightDurationMs = 3000;
@@ -369,6 +371,15 @@ const AiRequirements = {
       Page.codeMirrorEditor6.focus();
       const newCode = Page.codeMirrorEditor6.state.doc.toString();
       TabControl.getCurrentHistory().save(newCode, "aiGeneration");
+
+      // Switch diagram view to match what was generated.
+      if (typeof Action !== "undefined" && typeof Action.changeDiagramType === "function") {
+        if (genType === "statemachine") {
+          Action.changeDiagramType({ type: "GvState" });
+        } else if (genType === "classdiagram") {
+          Action.changeDiagramType({ type: "GvClass" });
+        }
+      }
 
       setTimeout(() => {
         const view = Page.codeMirrorEditor6;

@@ -89,6 +89,59 @@ const AiExplain = {
     }
   },
 
+  _createBufferedStreamRenderer({ targetElement, scrollContainer = null, format, onFirstChunk = null, updateIntervalMs = 120 }) {
+    let buffer = "";
+    let updateTimer = null;
+    let hasReceivedFirstChunk = false;
+
+    const renderNow = () => {
+      if (!targetElement) return;
+      targetElement.innerHTML = format(buffer);
+      if (scrollContainer) {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      }
+    };
+
+    const scheduleUpdate = () => {
+      if (updateTimer) return;
+      updateTimer = setTimeout(() => {
+        updateTimer = null;
+        renderNow();
+      }, updateIntervalMs);
+    };
+
+    return {
+      append(chunk) {
+        if (!hasReceivedFirstChunk) {
+          hasReceivedFirstChunk = true;
+          if (typeof onFirstChunk === "function") {
+            onFirstChunk();
+          }
+        }
+        buffer += chunk;
+        scheduleUpdate();
+      },
+      hasContent() {
+        return !!buffer.trim();
+      },
+      flush() {
+        if (updateTimer) {
+          clearTimeout(updateTimer);
+          updateTimer = null;
+        }
+        if (buffer.trim()) {
+          renderNow();
+        }
+      },
+      clearTimer() {
+        if (updateTimer) {
+          clearTimeout(updateTimer);
+          updateTimer = null;
+        }
+      }
+    };
+  },
+
   /**
    * Show the explain dialog and start explaining immediately
    */
@@ -302,43 +355,28 @@ const AiExplain = {
     // Start thinking animation
     this.startThinkingAnimation(explanationText);
 
+    const renderer = this._createBufferedStreamRenderer({
+      targetElement: explanationText,
+      format: text => ExplainPromptBuilder.formatExplanation(text),
+      onFirstChunk: () => this.stopThinkingAnimation()
+    });
+
     try {
       // Build prompt using ExplainPromptBuilder
       const prompt = ExplainPromptBuilder.buildInitialPrompt(umpleCode);
       const systemPrompt = ExplainPromptBuilder.getSystemPrompt();
 
       // Call AI API (stream)
-      let buffer = "";
-      let updateTimer = null;
-      const scheduleUpdate = () => {
-        if (updateTimer) return;
-        updateTimer = setTimeout(() => {
-          updateTimer = null;
-          // Real-time formatting (safe: formatExplanation escapes HTML first)
-          explanationText.innerHTML = ExplainPromptBuilder.formatExplanation(buffer);
-        }, 120);
-      };
-
       this.activeStream = AiApi.chatStream(prompt, systemPrompt, {}, {
         onDelta: chunk => {
-          // Stop thinking animation on first chunk
-          if (buffer === "") {
-            this.stopThinkingAnimation();
-          }
-          buffer += chunk;
-          scheduleUpdate();
+          renderer.append(chunk);
         }
       });
 
       const explanation = await this.activeStream.done;
       this.activeStream = null;
       this.stopThinkingAnimation();
-
-      if (updateTimer) {
-        clearTimeout(updateTimer);
-        updateTimer = null;
-      }
-
+      renderer.clearTimer();
       // Validate explanation
       const validation = ExplainPromptBuilder.validateExplanation(explanation);
       if (!validation.valid) {
@@ -366,11 +404,21 @@ const AiExplain = {
       followUpInput.focus();
     } catch (error) {
       if (error?.name === "AbortError") {
+        this.stopThinkingAnimation();
+        if (!renderer.hasContent()) {
+          explanationText.textContent = "stopped";
+        }
         return;
+      }
+      this.stopThinkingAnimation();
+      if (!renderer.hasContent()) {
+        explanationText.textContent = "";
       }
       console.error("Error explaining code:", error);
       statusDiv.textContent = `Error: ${error.message}`;
       statusDiv.className = "status-message ai-status--error";
+    } finally {
+      renderer.flush();
     }
   },
 
@@ -401,6 +449,9 @@ const AiExplain = {
 
     this.abortActiveStream();
 
+    let renderer = null;
+    let answerTarget = null;
+
     try {
       // Add user question to history
       this.addToHistory("user", userQuestion);
@@ -428,7 +479,15 @@ const AiExplain = {
       const aContent = document.createElement("div");
       aContent.className = "followup-answer-content";
       aContent.textContent = "";
+      answerTarget = aContent;
       aDiv.appendChild(aContent);
+
+      renderer = this._createBufferedStreamRenderer({
+        targetElement: aContent,
+        scrollContainer: explanationText,
+        format: text => ExplainPromptBuilder.formatExplanation(text),
+        onFirstChunk: () => this.stopThinkingAnimation()
+      });
 
       qaWrapper.appendChild(qDiv);
       qaWrapper.appendChild(aDiv);
@@ -439,30 +498,12 @@ const AiExplain = {
       explanationText.scrollTop = explanationText.scrollHeight;
 
       // Call AI API (stream)
-      let buffer = "";
-      let updateTimer = null;
-
       // Start thinking animation for the answer
       this.startThinkingAnimation(aContent);
 
-      const scheduleUpdate = () => {
-        if (updateTimer) return;
-        updateTimer = setTimeout(() => {
-          updateTimer = null;
-          aContent.innerHTML = ExplainPromptBuilder.formatExplanation(buffer);
-          // Auto-scroll during streaming
-          explanationText.scrollTop = explanationText.scrollHeight;
-        }, 120);
-      };
-
       this.activeStream = AiApi.chatStream(prompt, systemPrompt, {}, {
         onDelta: chunk => {
-          // Stop thinking animation on first chunk
-          if (buffer === "") {
-            this.stopThinkingAnimation();
-          }
-          buffer += chunk;
-          scheduleUpdate();
+          renderer?.append(chunk);
         }
       });
 
@@ -470,10 +511,7 @@ const AiExplain = {
       this.activeStream = null;
       this.stopThinkingAnimation();
 
-      if (updateTimer) {
-        clearTimeout(updateTimer);
-        updateTimer = null;
-      }
+      renderer?.clearTimer();
 
       // Add answer to history
       this.addToHistory("assistant", answer);
@@ -494,12 +532,21 @@ const AiExplain = {
       followUpInput.focus();
     } catch (error) {
       if (error?.name === "AbortError") {
+        this.stopThinkingAnimation();
+        if (!renderer?.hasContent() && answerTarget) {
+          answerTarget.textContent = "stopped";
+        }
         return;
+      }
+      this.stopThinkingAnimation();
+      if (!renderer?.hasContent() && answerTarget) {
+        answerTarget.textContent = "";
       }
       console.error("Error asking follow-up:", error);
       statusDiv.textContent = `Error: ${error.message}`;
       statusDiv.className = "status-message ai-status--error";
     } finally {
+      renderer?.flush();
       btnAsk.classList.remove("disabled");
       btnAsk.textContent = "Ask";
       followUpInput.disabled = false;

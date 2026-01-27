@@ -230,19 +230,23 @@ const AiProviderAdapters = {
       requestParams.max_tokens = params.maxTokens;
     }
 
-    let response = await client.chat.completions.create(requestParams);
-    this._recordUsage(provider, response?.usage, response);
-
-    const retriedResponse = await this._retryIfEmptyReasoningOnly(client, requestParams, response, model);
-    if (retriedResponse !== response) {
-      response = retriedResponse;
+    try {
+      let response = await client.chat.completions.create(requestParams);
       this._recordUsage(provider, response?.usage, response);
-    } else {
-      response = retriedResponse;
-    }
 
-    const content = response.choices?.[0]?.message?.content;
-    return AiProviderUtils.contentToText(content);
+      const retriedResponse = await this._retryIfEmptyReasoningOnly(client, requestParams, response, model);
+      if (retriedResponse !== response) {
+        response = retriedResponse;
+        this._recordUsage(provider, response?.usage, response);
+      } else {
+        response = retriedResponse;
+      }
+
+      const content = response.choices?.[0]?.message?.content;
+      return AiProviderUtils.contentToText(content);
+    } catch (error) {
+      throw AiErrors.toApiError(error, { provider, model, operation: "chat" });
+    }
   },
 
   /**
@@ -264,67 +268,74 @@ const AiProviderAdapters = {
     const onTruncated = callbacks?.onTruncated;
 
     const done = (async () => {
-      const messages = [];
-      if (systemPrompt) {
-        messages.push({ role: "system", content: systemPrompt });
-      }
-      messages.push({ role: "user", content: prompt });
-
-      const requestParams = {
-        model,
-        messages,
-        stream: true,
-        stream_options: {
-          include_usage: true
+      try {
+        const messages = [];
+        if (systemPrompt) {
+          messages.push({ role: "system", content: systemPrompt });
         }
-      };
+        messages.push({ role: "user", content: prompt });
 
-      // Use max_completion_tokens for GPT-5 and reasoning models, max_tokens for others
-      if (AiProviderUtils.usesMaxCompletionTokens(model)) {
-        requestParams.max_completion_tokens = params.maxTokens;
-      } else {
-        requestParams.max_tokens = params.maxTokens;
-      }
+        const requestParams = {
+          model,
+          messages,
+          stream: true,
+          stream_options: {
+            include_usage: true
+          }
+        };
 
-      const stream = await client.chat.completions.create(
-        requestParams,
-        { signal: controller.signal }
-      );
-
-      let fullText = "";
-      let finishReason = null;
-      let usage = null;
-      for await (const chunk of stream) {
-        if (controller.signal.aborted) {
-          break;
-        }
-        const choice = chunk.choices?.[0];
-        if (choice?.finish_reason) finishReason = choice.finish_reason;
-        const deltaObj = choice?.delta;
-        const deltaContent = deltaObj?.content ?? "";
-        const deltaText = AiProviderUtils.contentToText(deltaContent);
-        if (deltaText) {
-          fullText += deltaText;
-          onDelta?.(deltaText);
-        }
-        if (chunk?.usage) {
-          usage = chunk.usage;
-        }
-      }
-
-      if (!controller.signal.aborted && finishReason === AiConstants.FinishReason.LENGTH) {
-        onTruncated?.();
-      }
-
-      if (!controller.signal.aborted) {
-        if (usage) {
-          this._recordUsage(provider, usage, null);
+        // Use max_completion_tokens for GPT-5 and reasoning models, max_tokens for others
+        if (AiProviderUtils.usesMaxCompletionTokens(model)) {
+          requestParams.max_completion_tokens = params.maxTokens;
         } else {
-          AiStorage.recordUsage(provider, { requests: 1 });
+          requestParams.max_tokens = params.maxTokens;
         }
-      }
 
-      return fullText;
+        const stream = await client.chat.completions.create(
+          requestParams,
+          { signal: controller.signal }
+        );
+
+        let fullText = "";
+        let finishReason = null;
+        let usage = null;
+        for await (const chunk of stream) {
+          if (controller.signal.aborted) {
+            break;
+          }
+          const choice = chunk.choices?.[0];
+          if (choice?.finish_reason) finishReason = choice.finish_reason;
+          const deltaObj = choice?.delta;
+          const deltaContent = deltaObj?.content ?? "";
+          const deltaText = AiProviderUtils.contentToText(deltaContent);
+          if (deltaText) {
+            fullText += deltaText;
+            onDelta?.(deltaText);
+          }
+          if (chunk?.usage) {
+            usage = chunk.usage;
+          }
+        }
+
+        if (!controller.signal.aborted && finishReason === AiConstants.FinishReason.LENGTH) {
+          onTruncated?.();
+        }
+
+        if (!controller.signal.aborted) {
+          if (usage) {
+            this._recordUsage(provider, usage, null);
+          } else {
+            AiStorage.recordUsage(provider, { requests: 1 });
+          }
+        }
+
+        return fullText;
+      } catch (error) {
+        if (controller.signal.aborted && error?.name === "AbortError") {
+          throw error;
+        }
+        throw AiErrors.toApiError(error, { provider, model, operation: "chatStream" });
+      }
     })();
 
     return {

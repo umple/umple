@@ -55,6 +55,96 @@ const AiErrors = {
       : errorData.error;
   },
 
+  _extractErrorDataLike(error) {
+    if (!error || typeof error !== "object") return null;
+
+    // Common shapes:
+    // - OpenRouter: { error: { message, code, metadata } }
+    // - Fetch-based: { error: { ... } }
+    // - OpenAI SDK APIError: { status, error: <body> }
+    const candidates = [
+      error,
+      error.error,
+      error.response,
+      error.body,
+      error.data
+    ].filter(Boolean);
+
+    for (const c of candidates) {
+      if (!c || typeof c !== "object") continue;
+      if (c.error) return c;
+      if (typeof c.message === "string" || Number.isFinite(c.code) || c.metadata) {
+        return { error: c };
+      }
+    }
+
+    return null;
+  },
+
+  normalizeApiError(error, { provider = null, model = null } = {}) {
+    const errorData = this._extractErrorDataLike(error);
+
+    const statusFromError = Number.isFinite(error?.status) ? error.status : null;
+    const statusFromCode = Number.isFinite(error?.code) ? error.code : null;
+    const statusFromBody = Number.isFinite(errorData?.error?.code) ? errorData.error.code : null;
+    const status = statusFromError ?? statusFromCode ?? statusFromBody ?? null;
+
+    const metadata = (errorData?.error && typeof errorData.error === "object") ? errorData.error.metadata : null;
+    const upstreamProviderName = metadata?.provider_name || null;
+    const isByok = metadata?.is_byok;
+    const raw = typeof metadata?.raw === "string" ? metadata.raw : null;
+
+    const providerDisplayName = (provider && typeof AiConfig !== "undefined")
+      ? (AiConfig.getProviderConfig?.(provider)?.name || provider)
+      : provider;
+
+    const baseMessage = this.extractErrorMessage(errorData, error?.message || "API request failed");
+
+    const isRateLimited = status === 429 || /rate.?limit/i.test(String(baseMessage || "") + " " + String(raw || ""));
+    const isAuthError = status === 401 || status === 403;
+
+    let userMessage = baseMessage;
+    if (isRateLimited) {
+      const upstream = upstreamProviderName ? ` (${upstreamProviderName})` : "";
+      userMessage = `Rate limited${upstream}. Please retry shortly.`;
+      if (provider === "openrouter" && isByok === false) {
+        const urlMatch = raw ? raw.match(/https?:\/\/\S+/) : null;
+        const url = urlMatch ? urlMatch[0] : "https://openrouter.ai/settings/integrations";
+        userMessage += ` If this keeps happening, add your own OpenRouter integration key: ${url}`;
+      }
+    } else if (isAuthError) {
+      userMessage = "Authentication failed. Please check your API key.";
+    } else if (status && status >= 500) {
+      userMessage = "Provider error. Please retry shortly.";
+    }
+
+    // Avoid leaking unrelated top-level fields (e.g., OpenRouter user_id)
+    return {
+      status,
+      provider,
+      providerDisplayName,
+      model,
+      upstreamProviderName,
+      isRateLimited,
+      isAuthError,
+      isByok,
+      raw,
+      baseMessage,
+      userMessage
+    };
+  },
+
+  toApiError(error, { provider = null, model = null, operation = null } = {}) {
+    if (!error) return this.createError(this.types.API_ERROR, "API request failed", { provider, model, operation });
+    if (error?.isAiError) return error;
+    const normalized = this.normalizeApiError(error, { provider, model });
+    return this.createError(
+      this.types.API_ERROR,
+      normalized.userMessage || normalized.baseMessage || (error.message || "API request failed"),
+      { ...normalized, operation }
+    );
+  },
+
   /**
    * Create configuration error
    * @param {string} messageKey - Key from AiErrors.messages
