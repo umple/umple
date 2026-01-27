@@ -321,6 +321,12 @@ const AiRequirements = {
       }
 
       let umpleCode = context.umpleCode || "";
+      const streamedText = codeArea?.value || "";
+
+      if (!umpleCode.trim() && streamedText.trim()) {
+        const extracted = this.extractUmpleCode(streamedText);
+        umpleCode = extracted && extracted.trim() ? extracted : streamedText;
+      }
 
       if (umpleCode.trim()) {
         RequirementsDialog.appendRequirementsOutput("Applying partial generated code...");
