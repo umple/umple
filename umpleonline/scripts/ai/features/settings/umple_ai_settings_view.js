@@ -11,6 +11,22 @@ const AiSettingsView = {
   // Flag to prevent double model restoration
   modelRestoreInProgress: false,
 
+  _clearChildren(element) {
+    if (!element) return;
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
+  },
+
+  _setSelectSingleOption(select, label) {
+    if (!select) return;
+    this._clearChildren(select);
+    const option = document.createElement("option");
+    option.value = "";
+    option.textContent = (label ?? "").toString();
+    select.appendChild(option);
+  },
+
   /**
    * Get or cache a DOM element
    * @param {string} id - Element ID
@@ -164,7 +180,7 @@ const AiSettingsView = {
   setModelsLoading() {
     const modelSelect = this._getElement("selectAiModel", "modelSelect");
     if (modelSelect) {
-      modelSelect.innerHTML = '<option value="">Loading models...</option>';
+      this._setSelectSingleOption(modelSelect, "Loading models...");
       modelSelect.disabled = true;
     }
   },
@@ -176,7 +192,7 @@ const AiSettingsView = {
   setModelsError(message) {
     const modelSelect = this._getElement("selectAiModel", "modelSelect");
     if (modelSelect) {
-      modelSelect.innerHTML = `<option value="">${message}</option>`;
+      this._setSelectSingleOption(modelSelect, message);
       modelSelect.disabled = false;
     }
   },
@@ -190,7 +206,7 @@ const AiSettingsView = {
     if (!modelSelect) return;
 
     if (models.length === 0) {
-      modelSelect.innerHTML = '<option value="">No models available</option>';
+      this._setSelectSingleOption(modelSelect, "No models available");
       modelSelect.disabled = false;
       this.updateModelCostDisplay(null);
       return;
@@ -208,6 +224,16 @@ const AiSettingsView = {
       const inputCost = model.pricing.input;
       const outputCost = model.pricing.output;
       return inputCost === 0 && outputCost === 0;
+    };
+
+    this._clearChildren(modelSelect);
+    const fragment = document.createDocumentFragment();
+
+    const appendOption = (parent, model, labelOverride = null) => {
+      const option = document.createElement("option");
+      option.value = model.value;
+      option.textContent = (labelOverride ?? model.label ?? "").toString();
+      parent.appendChild(option);
     };
 
     if (hasProviderInfo) {
@@ -231,31 +257,23 @@ const AiSettingsView = {
         return a.localeCompare(b);
       });
 
-      // Build HTML with free models at the top, then grouped paid models
-      let html = '';
-
       // Free models section at the top
       if (freeModels.length > 0) {
-        html += `<optgroup label="🆓 Free Models (${freeModels.length})">`;
-        freeModels.forEach(model => {
-          html += `<option value="${model.value}">${model.label}</option>`;
-        });
-        html += '</optgroup>';
+        const optGroup = document.createElement("optgroup");
+        optGroup.label = `🆓 Free Models (${freeModels.length})`;
+        freeModels.forEach(model => appendOption(optGroup, model));
+        fragment.appendChild(optGroup);
       }
 
       // Paid models grouped by provider
       providers.forEach(provider => {
         const providerModels = groupedPaidModels[provider];
         const count = providerModels.length;
-
-        html += `<optgroup label="${provider} (${count})">`;
-        providerModels.forEach(model => {
-          html += `<option value="${model.value}">${model.label}</option>`;
-        });
-        html += '</optgroup>';
+        const optGroup = document.createElement("optgroup");
+        optGroup.label = `${provider} (${count})`;
+        providerModels.forEach(model => appendOption(optGroup, model));
+        fragment.appendChild(optGroup);
       });
-
-      modelSelect.innerHTML = html;
     } else {
       // No provider info: simple list (OpenAI, Google)
       // Separate and sort free models first, then paid models
@@ -267,15 +285,14 @@ const AiSettingsView = {
 
       const allModels = [...freeModels, ...paidModels];
 
-      modelSelect.innerHTML = allModels
-        .map(model => {
-          const isFree = isFreeModel(model);
-          const label = isFree ? `🆓 ${model.label}` : model.label;
-          return `<option value="${model.value}">${label}</option>`;
-        })
-        .join("");
+      allModels.forEach(model => {
+        const isFree = isFreeModel(model);
+        const label = isFree ? `🆓 ${model.label}` : model.label;
+        appendOption(fragment, model, label);
+      });
     }
 
+    modelSelect.appendChild(fragment);
     modelSelect.disabled = false;
 
     // Add change listener for pricing display

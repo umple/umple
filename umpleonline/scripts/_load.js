@@ -106,6 +106,7 @@ document.write('<script type="text/javascript" src="scripts/dropbox/saver.js"></
 document.write('<script type="text/javascript" src="scripts/ai/config/umple_ai_config.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_errors.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_storage.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_constants.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_provider_utils.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_prompt_utils.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_text_utils.js"></script>');

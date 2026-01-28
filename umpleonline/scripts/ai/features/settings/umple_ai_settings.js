@@ -142,14 +142,27 @@ const AiSettings = {
     if (inputField) {
       this._bindOnce(inputField, "aiBoundApiKeyBlur", "blur", () => {
         const provider = this.elements.providerSelect?.value || AiApi.getProvider();
+        if (!provider) return;
+
         const apiKey = inputField.value.trim();
-        if (provider && apiKey) {
-          AiApi.saveApiKey(provider, apiKey);
-          AiApi.setVerified(false, provider);
-          AiSettingsView.hideModelSelection();
-          this.clearStatus();
-          this.updateStatusIndicator();
+        inputField.value = apiKey;
+
+        // Allow clearing a previously-saved key by saving an empty value.
+        AiApi.saveApiKey(provider, apiKey);
+
+        if (!apiKey) {
+          inputField.placeholder = "Enter your API key";
+          inputField.classList.add("api-key-empty-hint");
+        } else {
+          inputField.placeholder = "";
+          inputField.classList.remove("api-key-empty-hint");
         }
+
+        // Any change to the key invalidates verification/model list until re-verified.
+        AiApi.setVerified(false, provider);
+        AiSettingsView.hideModelSelection();
+        this.clearStatus();
+        this.updateStatusIndicator();
       });
 
       // Also save on Enter key
