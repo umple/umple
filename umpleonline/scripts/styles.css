@@ -1397,6 +1397,35 @@ textarea#umpleLayoutEditorText {
   font-size: 9pt;
 }
 
+/* Markdown Table Styles */
+.ai-explain-dialog .explanation-text .ai-md-table-wrap {
+  overflow-x: auto;
+  margin: 10px 0;
+}
+
+.ai-explain-dialog .explanation-text .ai-md-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9pt;
+  border: #ccc solid 1px;
+}
+
+.ai-explain-dialog .explanation-text .ai-md-table th,
+.ai-explain-dialog .explanation-text .ai-md-table td {
+  border: #ccc solid 1px;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.ai-explain-dialog .explanation-text .ai-md-table th {
+  background-color: #e8e8e8;
+  font-weight: bold;
+}
+
+.ai-explain-dialog .explanation-text .ai-md-table tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
 .ai-explain-dialog .followup-container {
   margin-top: 15px;
   margin-bottom: 0;

@@ -607,17 +607,45 @@ select {
   color: var(--ai-text) !important;
 }
 
+/* Markdown Table Styles - Dark Mode */
+.ai-explain-dialog .explanation-text .ai-md-table-wrap {
+  border-color: var(--ai-border) !important;
+}
+
+.ai-explain-dialog .explanation-text .ai-md-table {
+  border-color: var(--ai-border) !important;
+}
+
+.ai-explain-dialog .explanation-text .ai-md-table th,
+.ai-explain-dialog .explanation-text .ai-md-table td {
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-explain-dialog .explanation-text .ai-md-table th {
+  background-color: var(--ai-surface-bg) !important;
+}
+
+.ai-explain-dialog .explanation-text .ai-md-table tr:nth-child(even) {
+  background-color: var(--ai-surface-bg-alt) !important;
+}
+
 .ai-explain-dialog .followup-input {
   background-color: var(--ai-code-bg) !important;
   border-color: var(--ai-border) !important;
   color: var(--ai-text) !important;
 }
 
-.ai-explain-dialog .followup-question {
+.ai-explain-dialog .explanation-text .followup-question {
   color: var(--ai-link) !important;
 }
 
-.ai-explain-dialog .followup-answer {
+.ai-explain-dialog .explanation-text .followup-question strong {
+  color: var(--ai-link) !important;
+}
+
+.ai-explain-dialog .explanation-text .followup-answer,
+.ai-explain-dialog .explanation-text .followup-answer-content {
   color: var(--ai-text) !important;
 }
 

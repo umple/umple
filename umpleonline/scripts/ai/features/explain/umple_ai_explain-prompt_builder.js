@@ -11,6 +11,9 @@ const ExplainPromptBuilder = (() => {
   const block = (title, content, opts) => (Tags && Tags.block) ? Tags.block(title, content, opts) : String(content || "").trim();
   const joinBlocks = (blocks, opts) => (Tags && Tags.joinBlocks) ? Tags.joinBlocks(blocks, opts) : (blocks || []).filter(Boolean).join("\n\n");
 
+  // Use shared markdown renderer if available
+  const Markdown = (typeof AiMarkdownUtils !== "undefined") ? AiMarkdownUtils : null;
+
   // ============================================================================
   // CONSTANTS
   // ============================================================================
@@ -59,18 +62,6 @@ const ExplainPromptBuilder = (() => {
   ]);
 
   // ============================================================================
-  // MARKDOWN REGEX PATTERNS
-  // ============================================================================
-
-  const MARKDOWN_PATTERNS = {
-    codeBlock: /```(\w+)?\s*([\s\S]*?)```/g,
-    inlineCode: /`([^`]+)`/g,
-    bold: /\*\*([^*]+)\*\*/g,
-    italic: /\*([^*]+)\*/g,
-    lineBreak: /\n/g
-  };
-
-  // ============================================================================
   // PUBLIC API
   // ============================================================================
 
@@ -112,17 +103,9 @@ const ExplainPromptBuilder = (() => {
      * @returns {string} Formatted HTML
      */
     formatExplanation(explanationText) {
-      let formatted = this.escapeHtml(explanationText);
-
-      // Apply markdown transformations in order
-      formatted = formatted
-        .replace(MARKDOWN_PATTERNS.codeBlock, "<pre><code>$2</code></pre>")
-        .replace(MARKDOWN_PATTERNS.inlineCode, "<code>$1</code>")
-        .replace(MARKDOWN_PATTERNS.bold, "<strong>$1</strong>")
-        .replace(MARKDOWN_PATTERNS.italic, "<em>$1</em>")
-        .replace(MARKDOWN_PATTERNS.lineBreak, "<br/>");
-
-      return formatted;
+      return (Markdown && typeof Markdown.render === "function")
+        ? Markdown.render(explanationText)
+        : (explanationText || "");
     },
 
     /**
