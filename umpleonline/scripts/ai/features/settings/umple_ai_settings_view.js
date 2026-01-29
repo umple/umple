@@ -561,6 +561,7 @@ const AiSettingsView = {
     }
 
     if (section) section.classList.remove("is-hidden");
+    if (resetButton) resetButton.classList.remove("is-hidden");
 
     const total = this._formatTokens(usage.totalTokens);
     const input = this._formatTokens(usage.inputTokens);

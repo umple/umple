@@ -1274,8 +1274,13 @@ $output = $dataHandle->readData('model.ump');
             <input type="password" style="position: absolute; left: -9999px; opacity: 0;" tabindex="-1" autocomplete="new-password"/>
             <div class="api-key-input-wrapper">
               <input id="inputAiApiKey" type="password" placeholder="Enter API key" autocomplete="new-password" data-form-type="other" class="button api-key-input"/>
-              <button type="button" id="toggleApiKeyVisibility" class="api-key-toggle" tabindex="0">
-                <span class="eye-icon">👁</span>
+              <button type="button" id="toggleApiKeyVisibility" class="api-key-toggle" tabindex="0" aria-label="Toggle API key visibility">
+                <span class="eye-icon" aria-hidden="true">
+                <svg class="ai-eye-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                </span>
               </button>
             </div>
             <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget ai-verify-button" tabindex="0" role="button">Verify</div>
