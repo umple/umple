@@ -25,16 +25,12 @@ const AiRequirements = {
   },
 
   abortActiveStream() {
-    try {
-      this.activeStream?.abort?.();
-    } catch (e) {
-    } finally {
-      this.activeStream = null;
-    }
+    AiStreamUtils?.abort?.(this.activeStream);
+    this.activeStream = null;
   },
 
   checkApiConfig() {
-    return AiConfigValidation.checkApiConfig({ requireVerified: false });
+    return AiConfigValidation.checkApiConfig({ requireVerified: true });
   },
 
   buildPrompt(requirements, generationType) {
@@ -163,15 +159,19 @@ const AiRequirements = {
 
       RequirementsDialog.setStatusMessage(statusDiv, "LLM", `Generating ${genType === "classdiagram" ? "class diagram" : "state machine"}...`);
       RequirementsDialog.appendRequirementsOutput(`Generating ${genType === "classdiagram" ? "class diagram" : "state machine"}...`);
-      let streamedText = "";
       codeArea.value = "";
       codeContainer.style.display = "block";
       btnInsert.style.display = "none";
+      const streamRenderer = AiStreamUtils.createBufferedTextRenderer({
+        updateIntervalMs: 40,
+        onRender: text => {
+          codeArea.value = text;
+          codeArea.scrollTop = codeArea.scrollHeight;
+        }
+      });
       this.activeStream = AiApi.chatStream(generation.prompt, generation.systemPrompt, {}, {
         onDelta: (deltaText) => {
-          streamedText += deltaText;
-          codeArea.value = streamedText;
-          codeArea.scrollTop = codeArea.scrollHeight;
+          streamRenderer.append(deltaText);
         },
         onTruncated: () => {
           tokenLimitTruncated = true;
@@ -180,6 +180,7 @@ const AiRequirements = {
 
       const response = await this.activeStream.done;
       this.activeStream = null;
+      streamRenderer.flush({ force: true });
       RequirementsDialog.appendRequirementsOutput("Generated initial Umple block from AI.");
 
       if (tokenLimitTruncated) {
@@ -224,17 +225,22 @@ const AiRequirements = {
               systemPrompt: generation.systemPrompt
             };
 
-          let repairedText = "";
+          const streamRenderer = AiStreamUtils.createBufferedTextRenderer({
+            updateIntervalMs: 40,
+            onRender: text => {
+              codeArea.value = text;
+              codeArea.scrollTop = codeArea.scrollHeight;
+            }
+          });
           this.activeStream = AiApi.chatStream(repairResult.prompt, repairResult.systemPrompt, {}, {
             onDelta: (deltaText) => {
-              repairedText += deltaText;
-              codeArea.value = repairedText;
-              codeArea.scrollTop = codeArea.scrollHeight;
+              streamRenderer.append(deltaText);
             }
           });
 
           responseText = await this.activeStream.done;
           this.activeStream = null;
+          streamRenderer.flush({ force: true });
           RequirementsDialog.appendRequirementsOutput("Output format repair completed.");
 
           const remainingErrors = RequirementsPromptBuilder.validateResponseFormat(responseText);
@@ -253,21 +259,33 @@ const AiRequirements = {
         codeArea.value = "";
         codeArea.placeholder = "Self-correction in progress...";
         const originalEditorCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
-        try {
-          const corrected = await RequirementsSelfCorrection.run({
-            originalCode: originalEditorCode,
-            generatedBlock: umpleCode,
-            requirements: selectedReqs,
-            generationType: genType,
-            systemPrompt: generation.systemPrompt,
-            dialog,
-            statusDiv,
-            expectedRequirementIds: generation.expectedRequirementIds
-          });
-          if (corrected && typeof corrected.block === "string" && corrected.block.trim()) {
-            umpleCode = corrected.block.trim();
-            dialog.generationContext.umpleCode = umpleCode;
-          }
+          try {
+            const corrected = await RequirementsSelfCorrection.run({
+              originalCode: originalEditorCode,
+              generatedBlock: umpleCode,
+              requirements: selectedReqs,
+              generationType: genType,
+              systemPrompt: generation.systemPrompt,
+              expectedRequirementIds: generation.expectedRequirementIds,
+              log: line => RequirementsDialog.appendRequirementsOutput(line),
+              setStatus: (label, message, color) => RequirementsDialog.setStatusMessage(statusDiv, label, message, color),
+              shouldStop: () => !!dialog.stopped,
+              setActiveStream: handle => {
+                this.activeStream = handle;
+              },
+              onRepairTextReset: placeholder => {
+                codeArea.value = "";
+                codeArea.placeholder = placeholder || "";
+              },
+              onRepairTextUpdate: text => {
+                codeArea.value = text;
+                codeArea.scrollTop = codeArea.scrollHeight;
+              }
+            });
+            if (corrected && typeof corrected.block === "string" && corrected.block.trim()) {
+              umpleCode = corrected.block.trim();
+              dialog.generationContext.umpleCode = umpleCode;
+            }
         } catch (e) {
           RequirementsDialog.appendRequirementsOutput(`Self-correction failed: ${e.message}`);
         }

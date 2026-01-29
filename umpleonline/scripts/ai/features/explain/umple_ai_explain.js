@@ -23,7 +23,7 @@ const AiExplain = {
    * @returns {Object} {configured: boolean, message: string}
    */
   checkApiConfig() {
-    return AiConfigValidation.checkApiConfig({ requireVerified: false });
+    return AiConfigValidation.checkApiConfig({ requireVerified: true });
   },
 
 
@@ -36,13 +36,8 @@ const AiExplain = {
   },
 
   abortActiveStream() {
-    try {
-      this.activeStream?.abort?.();
-    } catch (e) {
-      // ignore
-    } finally {
-      this.activeStream = null;
-    }
+    AiStreamUtils?.abort?.(this.activeStream);
+    this.activeStream = null;
     this.stopThinkingAnimation();
   },
 
@@ -87,59 +82,6 @@ const AiExplain = {
     if (this.conversationHistory.length > 10) {
       this.conversationHistory = this.conversationHistory.slice(-10);
     }
-  },
-
-  _createBufferedStreamRenderer({ targetElement, scrollContainer = null, format, onFirstChunk = null, updateIntervalMs = 120 }) {
-    let buffer = "";
-    let updateTimer = null;
-    let hasReceivedFirstChunk = false;
-
-    const renderNow = () => {
-      if (!targetElement) return;
-      targetElement.innerHTML = format(buffer);
-      if (scrollContainer) {
-        scrollContainer.scrollTop = scrollContainer.scrollHeight;
-      }
-    };
-
-    const scheduleUpdate = () => {
-      if (updateTimer) return;
-      updateTimer = setTimeout(() => {
-        updateTimer = null;
-        renderNow();
-      }, updateIntervalMs);
-    };
-
-    return {
-      append(chunk) {
-        if (!hasReceivedFirstChunk) {
-          hasReceivedFirstChunk = true;
-          if (typeof onFirstChunk === "function") {
-            onFirstChunk();
-          }
-        }
-        buffer += chunk;
-        scheduleUpdate();
-      },
-      hasContent() {
-        return !!buffer.trim();
-      },
-      flush() {
-        if (updateTimer) {
-          clearTimeout(updateTimer);
-          updateTimer = null;
-        }
-        if (buffer.trim()) {
-          renderNow();
-        }
-      },
-      clearTimer() {
-        if (updateTimer) {
-          clearTimeout(updateTimer);
-          updateTimer = null;
-        }
-      }
-    };
   },
 
   /**
@@ -355,10 +297,13 @@ const AiExplain = {
     // Start thinking animation
     this.startThinkingAnimation(explanationText);
 
-    const renderer = this._createBufferedStreamRenderer({
-      targetElement: explanationText,
-      format: text => ExplainPromptBuilder.formatExplanation(text),
-      onFirstChunk: () => this.stopThinkingAnimation()
+    const buffered = AiStreamUtils.createBufferedTextRenderer({
+      onFirstChunk: () => this.stopThinkingAnimation(),
+      onRender: text => {
+        if (!explanationText) return;
+        explanationText.innerHTML = ExplainPromptBuilder.formatExplanation(text);
+      },
+      updateIntervalMs: 120
     });
 
     try {
@@ -369,14 +314,14 @@ const AiExplain = {
       // Call AI API (stream)
       this.activeStream = AiApi.chatStream(prompt, systemPrompt, {}, {
         onDelta: chunk => {
-          renderer.append(chunk);
+          buffered.append(chunk);
         }
       });
 
       const explanation = await this.activeStream.done;
       this.activeStream = null;
       this.stopThinkingAnimation();
-      renderer.clearTimer();
+      buffered.clearTimer();
       // Validate explanation
       const validation = ExplainPromptBuilder.validateExplanation(explanation);
       if (!validation.valid) {
@@ -405,20 +350,20 @@ const AiExplain = {
     } catch (error) {
       if (error?.name === "AbortError") {
         this.stopThinkingAnimation();
-        if (!renderer.hasContent()) {
+        if (!buffered.hasContent()) {
           explanationText.textContent = "stopped";
         }
         return;
       }
       this.stopThinkingAnimation();
-      if (!renderer.hasContent()) {
+      if (!buffered.hasContent()) {
         explanationText.textContent = "";
       }
       console.error("Error explaining code:", error);
       statusDiv.textContent = `Error: ${error.message}`;
       statusDiv.className = "status-message ai-status--error";
     } finally {
-      renderer.flush();
+      buffered.flush();
     }
   },
 
@@ -482,11 +427,16 @@ const AiExplain = {
       answerTarget = aContent;
       aDiv.appendChild(aContent);
 
-      renderer = this._createBufferedStreamRenderer({
-        targetElement: aContent,
-        scrollContainer: explanationText,
-        format: text => ExplainPromptBuilder.formatExplanation(text),
-        onFirstChunk: () => this.stopThinkingAnimation()
+      renderer = AiStreamUtils.createBufferedTextRenderer({
+        onFirstChunk: () => this.stopThinkingAnimation(),
+        onRender: text => {
+          if (!aContent) return;
+          aContent.innerHTML = ExplainPromptBuilder.formatExplanation(text);
+          if (explanationText) {
+            explanationText.scrollTop = explanationText.scrollHeight;
+          }
+        },
+        updateIntervalMs: 120
       });
 
       qaWrapper.appendChild(qDiv);

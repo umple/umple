@@ -111,6 +111,7 @@ document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_pr
 document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_prompt_utils.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_text_utils.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_markdown_utils.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_stream_utils.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_config_validation.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_compiler_service.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_providers.js"></script>');
@@ -124,6 +125,8 @@ document.write('<script type="text/javascript" src="scripts/ai/features/requirem
 document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/explain/umple_ai_explain-prompt_builder.js"></script>');
 document.write('<script type="text/javascript" src="scripts/ai/features/explain/umple_ai_explain.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/fix/umple_ai_fix-prompt_builder.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/fix/umple_ai_fix.js"></script>');
 
 //Umple System
 document.write('<script type="text/javascript" src="scripts/umple_page.js"></script>');

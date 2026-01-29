@@ -13,17 +13,12 @@ const AiFix = {
   highlightHandler: null,
 
   checkApiConfig() {
-    return AiConfigValidation.checkApiConfig({ requireVerified: false });
+    return AiConfigValidation.checkApiConfig({ requireVerified: true });
   },
 
   abortActiveRequest() {
-    try {
-      this.activeRequest?.abort?.();
-    } catch (e) {
-      // ignore
-    } finally {
-      this.activeRequest = null;
-    }
+    AiStreamUtils?.abort?.(this.activeRequest);
+    this.activeRequest = null;
   },
 
   decorateErrorOutput(container, errorHtml) {
@@ -135,15 +130,20 @@ const AiFix = {
       await FixPromptBuilder.preloadGuidance();
       const { prompt, systemPrompt } = FixPromptBuilder.buildGuidancePrompt(issueWithContext, errorHtml);
 
-      let buffer = "";
+      const streamRenderer = AiStreamUtils.createBufferedTextRenderer({
+        updateIntervalMs: 120,
+        onRender: text => {
+          guidanceBullet.textContent = `- ${text}`;
+        }
+      });
       this.activeRequest = AiApi.chatStream(prompt, systemPrompt, { maxTokens: 500 }, {
         onDelta: chunk => {
-          buffer += chunk;
-          guidanceBullet.textContent = `- ${buffer}`;
+          streamRenderer.append(chunk);
         }
       });
 
       const resultText = await this.activeRequest.done;
+      streamRenderer.flush({ force: true });
       const cleaned = FixPromptBuilder.cleanGuidanceText(resultText);
       const formatted = FixPromptBuilder.formatGuidanceHtml(cleaned || "No guidance produced.");
       guidanceBullet.innerHTML = `- ${formatted}`;

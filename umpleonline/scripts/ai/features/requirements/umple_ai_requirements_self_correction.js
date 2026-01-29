@@ -42,11 +42,22 @@ const RequirementsSelfCorrection = {
     requirements,
     generationType,
     systemPrompt,
-    dialog,
-    statusDiv,
     expectedRequirementIds,
+    log = null,
+    setStatus = null,
+    shouldStop = null,
+    setActiveStream = null,
+    onRepairTextReset = null,
+    onRepairTextUpdate = null,
     onStreamDelta
   } = {}) {
+    const safeLog = typeof log === "function" ? log : () => {};
+    const safeSetStatus = typeof setStatus === "function" ? setStatus : () => {};
+    const safeShouldStop = typeof shouldStop === "function" ? shouldStop : () => false;
+    const safeSetActiveStream = typeof setActiveStream === "function" ? setActiveStream : () => {};
+    const safeRepairReset = typeof onRepairTextReset === "function" ? onRepairTextReset : () => {};
+    const safeRepairUpdate = typeof onRepairTextUpdate === "function" ? onRepairTextUpdate : () => {};
+
     const maxPasses = AiCompilerService.getSelfCorrectionMaxPasses();
     let currentBlock = String(generatedBlock || "").trim();
     if (!currentBlock) return { block: currentBlock };
@@ -55,13 +66,13 @@ const RequirementsSelfCorrection = {
     try {
       baseline = await AiCompilerService.compileUmpleWithServer(originalCode);
       if (baseline.issues.length > 0) {
-        RequirementsDialog.appendRequirementsOutput("Baseline compile: the original model already has issues:");
-        RequirementsDialog.appendRequirementsOutput(AiCompilerService.formatIssuesForLog(baseline.issues));
+        safeLog("Baseline compile: the original model already has issues:");
+        safeLog(AiCompilerService.formatIssuesForLog(baseline.issues));
       } else {
-        RequirementsDialog.appendRequirementsOutput("Baseline compile: no issues in original model.");
+        safeLog("Baseline compile: no issues in original model.");
       }
     } catch (e) {
-      RequirementsDialog.appendRequirementsOutput(`Baseline compile failed: ${e.message}`);
+      safeLog(`Baseline compile failed: ${e.message}`);
     }
 
     const seenBlocks = new Set();
@@ -76,18 +87,18 @@ const RequirementsSelfCorrection = {
       try {
         await RequirementsPromptBuilder.preloadRepairGuidance(generationType);
       } catch (e) {
-        RequirementsDialog.appendRequirementsOutput(`Repair guidance preload failed (continuing anyway): ${e.message}`);
+        safeLog(`Repair guidance preload failed (continuing anyway): ${e.message}`);
       }
     }
 
     for (let pass = 1; pass <= maxPasses; pass++) {
-      if (dialog?.stopped) {
-        RequirementsDialog.appendRequirementsOutput(`\nSelf-correction stopped by user at pass ${pass}.`);
+      if (safeShouldStop()) {
+        safeLog(`\nSelf-correction stopped by user at pass ${pass}.`);
         break;
       }
 
-      RequirementsDialog.setStatusMessage(statusDiv, "Compiler", `Self-correction pass ${pass}/${maxPasses}: compiling...`);
-      RequirementsDialog.appendRequirementsOutput(`\nSelf-correction pass ${pass}: compiling merged model...`);
+      safeSetStatus("Compiler", `Self-correction pass ${pass}/${maxPasses}: compiling...`);
+      safeLog(`\nSelf-correction pass ${pass}: compiling merged model...`);
 
       const merged = this.buildMergedCode(originalCode, currentBlock);
       const insertedStartLine = AiTextUtils.computeLineNumberAtIndex(merged.mergedText, merged.highlightFrom);
@@ -98,7 +109,7 @@ const RequirementsSelfCorrection = {
       try {
         compiled = await AiCompilerService.compileUmpleWithServer(mergedText);
       } catch (e) {
-        RequirementsDialog.appendRequirementsOutput(`Compile failed: ${e.message}`);
+        safeLog(`Compile failed: ${e.message}`);
         break;
       }
 
@@ -111,7 +122,7 @@ const RequirementsSelfCorrection = {
           generationType
         });
         if (validationErrors.length > 0) {
-          RequirementsDialog.appendRequirementsOutput(`Validation issues found: ${validationErrors.map(e => e.message).join(", ")}`);
+          safeLog(`Validation issues found: ${validationErrors.map(e => e.message).join(", ")}`);
           issues.unshift(...validationErrors);
         }
       }
@@ -119,7 +130,7 @@ const RequirementsSelfCorrection = {
       const errorIssues = issues.filter(issue => issue.severity === "Error");
       if (errorIssues.length === 0) {
         const warningCount = issues.filter(issue => issue.severity === "Warning").length;
-        RequirementsDialog.appendRequirementsOutput(
+        safeLog(
           warningCount > 0
             ? `Compiler reports no errors (${warningCount} warning(s) ignored for self-correction).`
             : "Compiler reports no errors."
@@ -137,11 +148,11 @@ const RequirementsSelfCorrection = {
         : errorIssues;
 
       if (baselineIssueKeys.size > 0) {
-        RequirementsDialog.appendRequirementsOutput(`Baseline issues: ${baselineIssues.length}`);
+        safeLog(`Baseline issues: ${baselineIssues.length}`);
       }
 
       if (baselineIssueKeys.size > 0 && nonBaselineErrors.length === 0) {
-        RequirementsDialog.appendRequirementsOutput("Only baseline errors remain; stopping self-correction.");
+        safeLog("Only baseline errors remain; stopping self-correction.");
         return { block: currentBlock };
       }
 
@@ -158,7 +169,7 @@ const RequirementsSelfCorrection = {
       }
 
       if (stagnantIssueCount >= 3) {
-        RequirementsDialog.appendRequirementsOutput("Compiler issues did not change after 3 repair attempts; stopping self-correction.");
+        safeLog("Compiler issues did not change after 3 repair attempts; stopping self-correction.");
         break;
       }
 
@@ -167,14 +178,14 @@ const RequirementsSelfCorrection = {
       const errorSummary = [];
       if (compilerErrorCount > 0) errorSummary.push(`${compilerErrorCount} compiler`);
       if (validationErrorCount > 0) errorSummary.push(`${validationErrorCount} validation`);
-      RequirementsDialog.appendRequirementsOutput(`Found ${errorSummary.join(" + ")} error(s) in merged model.`);
+      safeLog(`Found ${errorSummary.join(" + ")} error(s) in merged model.`);
 
       if (inInsertedRange.length > 0) {
-        RequirementsDialog.appendRequirementsOutput(`Focusing on ${inInsertedRange.length} issue(s) within the inserted block (lines ${insertedStartLine}-${insertedEndLine}).`);
+        safeLog(`Focusing on ${inInsertedRange.length} issue(s) within the inserted block (lines ${insertedStartLine}-${insertedEndLine}).`);
       } else {
-        RequirementsDialog.appendRequirementsOutput("No issues were located within the inserted block line range; attempting to fix by adjusting the generated block anyway.");
+        safeLog("No issues were located within the inserted block line range; attempting to fix by adjusting the generated block anyway.");
       }
-      RequirementsDialog.appendRequirementsOutput(AiCompilerService.formatIssuesForLog(focusIssues));
+      safeLog(AiCompilerService.formatIssuesForLog(focusIssues));
 
       const compilerIssuesText = focusIssues.map(issue => {
         const codeSuffix = issue.errorCode ? ` (${issue.errorCode})` : "";
@@ -208,71 +219,69 @@ const RequirementsSelfCorrection = {
           systemPrompt
         };
 
-      RequirementsDialog.setStatusMessage(statusDiv, "LLM", `Repairing errors (compiler + validation) in block (pass ${pass}/${maxPasses})...`);
-      RequirementsDialog.appendRequirementsOutput("Asking AI to repair the generated block...");
+      safeSetStatus("LLM", `Repairing errors (compiler + validation) in block (pass ${pass}/${maxPasses})...`);
+      safeLog("Asking AI to repair the generated block...");
 
       let repairedResponse;
       try {
-        const codeArea = document.getElementById("generatedCodeArea");
-        let repairedText = "";
-        if (codeArea) {
-          codeArea.value = "";
-          codeArea.placeholder = "Repairing generated block...";
-        }
+        safeRepairReset("Repairing generated block...");
+        const streamRenderer = AiStreamUtils.createBufferedTextRenderer({
+          updateIntervalMs: 40,
+          onRender: text => {
+            safeRepairUpdate(text);
+          }
+        });
 
         const activeStream = AiApi.chatStream(repairResult.prompt, repairResult.systemPrompt, {}, {
           onDelta: (deltaText) => {
-            repairedText += deltaText;
-            if (codeArea) {
-              codeArea.value = repairedText;
-              codeArea.scrollTop = codeArea.scrollHeight;
-            }
+            streamRenderer.append(deltaText);
             if (onStreamDelta) onStreamDelta(deltaText);
           }
         });
 
-        if (typeof AiRequirements !== "undefined") {
-          AiRequirements.activeStream = activeStream;
-        }
+        safeSetActiveStream(activeStream);
 
         repairedResponse = await activeStream.done;
+        streamRenderer.flush({ force: true });
+        safeSetActiveStream(null);
 
-        if (typeof AiRequirements !== "undefined") {
-          AiRequirements.activeStream = null;
-        }
-
-        if (dialog?.stopped) {
-          RequirementsDialog.appendRequirementsOutput("\nSelf-correction stopped by user.");
+        if (safeShouldStop()) {
+          safeLog("\nSelf-correction stopped by user.");
           break;
         }
       } catch (e) {
-        RequirementsDialog.appendRequirementsOutput(`AI repair failed: ${e.message}`);
+        safeSetActiveStream(null);
+        if (e?.name === "AbortError" || safeShouldStop()) {
+          safeLog("\nSelf-correction stopped by user.");
+          break;
+        }
+        safeLog(`AI repair failed: ${e.message}`);
         break;
       }
 
       const repairedBlock = String(AiTextUtils.extractUmpleCode(repairedResponse) || "").trim();
       if (!repairedBlock) {
-        RequirementsDialog.appendRequirementsOutput("AI repair produced empty output; stopping.");
+        safeLog("AI repair produced empty output; stopping.");
         break;
       }
 
       if (repairedBlock.trim() === String(currentBlock || "").trim()) {
-        RequirementsDialog.appendRequirementsOutput("AI repair repeated the current output; stopping.");
+        safeLog("AI repair repeated the current output; stopping.");
         break;
       }
 
       if (seenBlocks.has(repairedBlock)) {
-        RequirementsDialog.appendRequirementsOutput("AI repair repeated an earlier output; stopping.");
+        safeLog("AI repair repeated an earlier output; stopping.");
         break;
       }
 
       currentBlock = repairedBlock;
       seenBlocks.add(repairedBlock);
 
-      RequirementsDialog.appendRequirementsOutput("Retrying compile with repaired block...");
+      safeLog("Retrying compile with repaired block...");
     }
 
-    RequirementsDialog.appendRequirementsOutput("Self-correction stopped before reaching a clean compile.");
+    safeLog("Self-correction stopped before reaching a clean compile.");
     return { block: currentBlock };
   }
 };
