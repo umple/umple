@@ -113,6 +113,105 @@ div.syncNeededMessage{ color: Gray; margin-left: 5px;}
 .generatedDiagram { padding: 10px; overflow-x:auto; border: 1px solid gray; }
 .generatedCode { overflow-x: hidden; border: 1px solid gray; }
 
+/* CRUD UI */
+.crud-instance-panel {
+  margin-top: 10px;
+  padding: 8px 12px 12px 18px; 
+}
+
+.crud-class-item {
+  display: inline-block;
+  margin: 4px;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.crud-class-item .crud-class-name {
+  font-weight: normal;
+}
+
+.crud-field {
+  margin: 6px 0;
+}
+
+.crud-field-label,
+.crud-nested-label {
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* Limit tooltip hover area to the label text itself */
+.crud-tooltip-target {
+  display: inline-block;
+}
+
+/* Extra visual hint for class-typed attributes */
+.crud-field-label-class {
+  padding-left: 16px; 
+  font-style: italic;
+}
+
+/* further indent nested class attributes */
+.crud-nested {
+  margin-left: 26px; 
+  margin-top: 2px;
+}
+
+.crud-nested-field {
+  margin: 4px 0;
+}
+
+/* Arrays of class types */
+.crud-class-array {
+  margin-top: 2px;
+}
+
+.crud-class-array-items {
+  margin: 2px 0 4px 0;
+  font-size: 9pt;
+}
+
+.crud-class-array-item {
+  margin: 2px 0;
+}
+
+.crud-class-array-item-summary {
+  margin-right: 6px;
+}
+
+.crud-class-array-item button {
+  margin-left: 4px;
+}
+
+.crud-class-array-editor {
+  margin-top: 2px;
+}
+
+.crud-class-array-buttons {
+  margin-top: 4px;
+}
+
+.crud-boolean label {
+  margin-right: 8px;
+}
+
+.crud-instance-row {
+  margin: 4px 0;
+}
+
+.crud-instance-summary {
+  margin-left: 8px;
+}
+
+.crud-form-actions {
+  margin-top: 8px;
+}
+
+.crud-unsupported-type {
+  font-style: italic;
+  color: #666;
+}
+
 /* UMPLE PALETTE */
 .center-children { text-align: center; }
 div.paletteWrapper { 
