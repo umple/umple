@@ -61,6 +61,7 @@ For developers
  pumple
   - Propagates the umple jars to umpleonline.
   - Ensures changed javascript is minified correctly
+  - Rebuilds JavaScript bundles (CodeMirror6, OpenAI SDK)
   - Builds other aspects needed to run umpleonline such as the Docker images used for execution
   - Must be run after any changes to a local version of UmpleOnline
   - not done as part of a full build so must be done separately

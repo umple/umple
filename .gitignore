@@ -16,6 +16,7 @@ umpleonline/ump/ATempCrash*
 umpleonline/ump/index.html
 umpleonline/ump/aalertMessage.txt
 umpleonline/scripts/codemirror6/node_modules
+umpleonline/scripts/openai-sdk/node_modules
 
 umpleonline/scripts/codemirror6-plugins/collaboration-test-client/node_modules
 

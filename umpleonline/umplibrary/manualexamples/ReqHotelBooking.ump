@@ -1,0 +1,61 @@
+// The following is a (partial) set of requirements for
+// a hotel booking that can be used to experiment
+// with generating class diagrams and state machines in Umple // using AI,
+// or merely as an example of how requirements can be
+// specified in Umple.=
+// Req H008 was used in the following thesis by Parva Pathak
+// https://ruor.uottawa.ca/items/b3679a91-5445-45ce-b289-bfddba3010f6
+
+req H001 {
+  The hotel chain keeps a list of hotels in the system, each 
+  with their address and set of rooms
+}
+
+req H002 {
+  There can be various types of rooms, characterized by
+  quality of the view (Number of guests allowed, Excellent, 
+  good, poor), Number of Queen beds, Number of King beds, 
+  Number of Single beds., whether there is a safe, whether 
+  there is a pullout couch, and whether it is a suite such 
+  that the bedroom is behind a separate door)
+}
+
+req H003 {
+  Each type of room is given a price that will be advertised 
+  for it for each day. Prices are set up 9 months in 
+  advanced, but can be changed dynamically.
+}
+
+req H004 {
+  Each room has a type.
+}
+
+req H005 {
+  On any given day (overnight from one night to the following 
+  morning), each room can be either available, allocated to a 
+  guest, or unavailable due to maintenance.
+}
+
+req H006 {
+  When a room is booked, the price each day for the booking 
+  is confirmed (it will be the room-type price, or less if 
+  discounts are given).
+}
+
+req H007 {
+  A booking has a start date, an end date, a number of adults and a number of children.
+}
+
+req H008 {
+  The hotel runs a system that allows users to book rooms online, providing the following operations:
+  {
+    The user can optionally login to the hotel website
+    The user can choose a location
+    The user can choose a hotel
+    The user can choose the number of guests
+    The user can choose the date range of the visit
+    The user can choose a room type
+    The user can pay for the hotel
+    The user can cancel the booking
+  }
+}

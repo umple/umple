@@ -1,0 +1,26 @@
+Requirements Examples
+Comments and Requirements
+noreferences
+@@tooltip Examples of requirements you can load into UmpleOnline.
+
+@@description Examples of requirements documents in Umple that can be used to generate code
+
+<p>This page provides some examples of Umple requirements specified using plain text. They show possible styles for specifying requirements. They can be used to guide you to specify requirements in Umple before manually creating a model, or to use UmpleOnline AI capabilities to generate actual Umple code.</p>
+
+<br />
+
+@@example  @@caption Hotel booking requirements for creating class diagrams or state machines @@endcaption
+@@source manualexamples/ReqHotelBooking.ump
+@@endexample
+
+@@example @@caption Drivers license system requirements for creating class diagrams or state machines @@endcaption
+@@source manualexamples/ReqDriversLicence.ump
+@@endexample
+
+@@example @@caption Blackjack game requirements for state machine generation @@endcaption
+@@source manualexamples/ReqBlackjack.ump
+@@endexample
+
+@@example @@caption Very simple credit card approval partial requirements @@endcaption
+@@source manualexamples/ReqCreditCardApproval.ump
+@@endexample

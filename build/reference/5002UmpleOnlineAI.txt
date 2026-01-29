@@ -1,0 +1,54 @@
+UmpleOnline AI Capabilities
+AI
+noreferences
+@@tooltip Capabilities within UmpleOnline to ask LLMs to generate Umple models from requirements.
+@@description
+
+<p><b>This page describes the AI capabilities built in to UmpleOnline. As of early 2026 this is a beta feature.</b></p>
+
+<p>The AI capability can use various large language models (LLMs) to generate class diagrams and state machines from <a href="Requirements.html">requirements specified in Umple</a>. Before using this feature you will need to create a  set of requirements, or <a href="RequirementsExamples.html">load an example set of requirements, such as one of the examples in this manual</a>.</p>
+
+<ul>
+
+<li><b>AI setup.</b> UmpleOnline uses a <b>BYOK (bring-your-own-key)</b> approach for AI features. Your API key is stored locally in your browser's local storage and is never sent to our servers. All AI requests are made directly from your browser to the selected provider.
+  <ul>
+    <li><p><b>AI settings dialog.</b> In UmpleOnline, open the AI settings from the AI menu which appears at the bottom of the central menu. When you open this for the first time, click where it says 'Not Configured'</p></li>
+    <li><p><b>Select a provider.</b> Currently, the supported providers are <a target="openai" href="https://platform.openai.com/api-keys">OpenAI</a>, <a target="googlecloud" href="https://cloud.google.com/apis">Google Gemini</a>, and <a target="openrouter" href="https://openrouter.ai/settings/keys">OpenRouter</a>.</p></li>
+    <li><p><b>Enter API key.</b></p>
+      <ul>
+        <li>If you already have an API key, enter it in the field.</li>
+        <li>If you don't have one, click the "Get API Key" link next to the provider selection to obtain a key from your provider.</li>
+      </ul>
+    </li>
+    <li><p><b>Verify API key.</b> Click the Verify button. The system checks the key's validity with the provider. If verification succeeds, a list of available models is displayed.</p></li>
+    <li><p><b>Select a model.</b> Choose a model from the dropdown list. Free models are listed at the top, followed by paid models grouped by provider. The cost per million tokens (input and output) is displayed below the selection dropdown.</p></li>
+  </ul>
+</li>
+
+<br />
+
+<li><b>Status indicator.</b> The AI status indicator in the sidebar shows the current configuration status. Once a model is selected, the indicator displays the model name and provider name. AI preferences (provider, model, verification, usage) are stored in your browser's local storage.</li>
+
+<br />
+
+<li><b>Explain code.</b> Open the AI Explain tool. The dialog analyzes the entire editor content and streams the explanation. You can use the follow-up input to ask questions about the same model, as the dialog maintains a short conversation history for context. If the editor is empty, an alert dialog will prompt you to enter Umple code first.</li>
+
+<br />
+
+<li><b>Fix guidance.</b> After compiling your model, when errors appear, each issue is shown in the bottom pane. Click the AI fix icon beside an issue to generate guidance. The tool highlights the relevant line in the editor and returns a short fix suggestion. Note that this feature provides guidance only and does not auto-edit your code.</li>
+
+<br />
+
+<li><b>Generate from requirements.</b> Add requirement blocks to your model with the syntax <code>req ID { ... }</code>. <a href="Requirements.html">Learn more about requirements</a>. Open the AI Requirements dialog. If multiple requirements exist, choose to use all or select specific ones. Select a generation type (state machine or class diagram) and click Generate. The result is streamed into the dialog, where you can stop generation, review the output, and insert it into the editor. When enabled, the system runs a compiler-based self-correction loop to repair issues in the generated block before insertion.</li>
+
+<br />
+
+<li><b>Troubleshooting.</b>
+  <ul>
+    <li><p>If AI actions are disabled, ensure you have selected a provider, entered an API key, verified it successfully, and selected a model.</p></li>
+    <li><p>If no requirements are found, confirm your model contains <code>req ... { ... }</code> blocks.</p></li>
+    <li><p>If a generated block fails to compile, review the error list and re-run generation with fewer or clearer requirements.</p></li>
+  </ul>
+</li>
+
+</ul>
