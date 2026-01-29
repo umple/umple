@@ -100,16 +100,6 @@ Rules:
     return PROMPT_LOADERS[key];
   }
 
-  function formatFewShotExamples(examples) {
-    if (!examples || examples.length === 0) return "";
-    return examples
-      .map(ex => {
-        const title = (ex && ex.title) ? `Example: ${ex.title}` : "Example:";
-        return `${title}\n\n\`\`\`umple\n${(ex && ex.code) ? ex.code : ""}\n\`\`\``;
-      })
-      .join("\n\n");
-  }
-
   return {
     getBaseSystemPrompt() {
       return BASE_SYSTEM_PROMPT;
@@ -117,10 +107,6 @@ Rules:
 
     getUmpleCheatSheet() {
       return UMPLE_CHEAT_SHEET;
-    },
-
-    formatFewShotExamples(examples) {
-      return formatFewShotExamples(examples);
     },
 
     getPromptText(url) {

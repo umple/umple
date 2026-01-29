@@ -418,5 +418,4 @@ const AiRequirements = {
   }
 };
 
-if (typeof Page !== "undefined") {
-}
+

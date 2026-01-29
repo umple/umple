@@ -5872,12 +5872,7 @@ Action.updateUmpleDiagramCallback = function(response)
   //Show the error message
   if(errorMessage != "")
   {
-    Action.lastCompilerErrorHtml = errorMessage;
     Page.showGeneratedCode(errorMessage, "diagramUpdate");
-  }
-  else
-  {
-    Action.lastCompilerErrorHtml = "";
   }
   
   Page.hideLoading();

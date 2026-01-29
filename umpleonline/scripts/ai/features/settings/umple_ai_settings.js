@@ -16,14 +16,6 @@ const AiSettings = {
     element.addEventListener(eventName, handler);
   },
 
-  /**
-   * Check if AI settings are configured
-   * @returns {Object} {configured: boolean, message: string}
-   */
-  checkApiConfig() {
-    return AiConfigValidation.checkApiConfig({ requireVerified: true });
-  },
-
   init() {
     this.elements = AiSettingsView.initElements();
 
@@ -237,14 +229,6 @@ const AiSettings = {
     AiSettingsView.clearStatus();
   },
 
-  showModelSelection() {
-    AiSettingsView.showModelSelection();
-  },
-
-  hideModelSelection() {
-    AiSettingsView.hideModelSelection();
-  },
-
   updateStatusIndicator() {
     const provider = AiApi.getProvider();
     const apiKey = AiApi.getApiKey(provider);
@@ -262,13 +246,6 @@ const AiSettings = {
     setTimeout(() => this.restoreSavedModel(), 100);
     this.refreshUsage();
     this.updateStatusIndicator();
-  },
-
-  /**
-   * Show the AI settings dialog (alias for showSettingsModal to match feature pattern)
-   */
-  showDialog() {
-    this.showSettingsModal();
   },
 
   hideSettingsModal() {
@@ -294,11 +271,8 @@ const AiSettings = {
   async loadModels(provider, apiKey, callback) {
     AiSettingsView.setModelsLoading();
 
-    // For OpenRouter, we can fetch without API key
-    const keyToUse = (provider === "openrouter" && !apiKey) ? null : apiKey;
-
     try {
-      const response = await AiApi.fetchModels(provider, keyToUse);
+      const response = await AiApi.fetchModels(provider, apiKey);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));

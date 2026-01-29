@@ -88,46 +88,6 @@ const AiStorage = {
   },
 
   /**
-   * Sanitize usage map entries before storage
-   * @param {Object} usageMap - Map of provider -> usage data
-   * @returns {Object} Sanitized map
-   */
-  _sanitizeUsageMap(usageMap) {
-    if (!usageMap || typeof usageMap !== "object") return {};
-
-    const sanitized = {};
-    Object.entries(usageMap).forEach(([provider, data]) => {
-      if (!provider || !data || typeof data !== "object") return;
-
-      const entry = {};
-      const toNumber = value => {
-        const num = Number(value);
-        return Number.isFinite(num) ? num : null;
-      };
-
-      const requests = toNumber(data.requests);
-      const inputTokens = toNumber(data.inputTokens);
-      const outputTokens = toNumber(data.outputTokens);
-      const totalTokens = toNumber(data.totalTokens);
-      const costUsd = toNumber(data.costUsd);
-      const lastUsedAt = data.lastUsedAt ? String(data.lastUsedAt) : "";
-
-      if (requests != null) entry.requests = Math.max(0, Math.floor(requests));
-      if (inputTokens != null) entry.inputTokens = Math.max(0, Math.floor(inputTokens));
-      if (outputTokens != null) entry.outputTokens = Math.max(0, Math.floor(outputTokens));
-      if (totalTokens != null) entry.totalTokens = Math.max(0, Math.floor(totalTokens));
-      if (costUsd != null) entry.costUsd = Math.max(0, costUsd);
-      if (lastUsedAt) entry.lastUsedAt = lastUsedAt;
-
-      if (Object.keys(entry).length > 0) {
-        sanitized[provider] = entry;
-      }
-    });
-
-    return sanitized;
-  },
-
-  /**
    * Get provider data map from localStorage
    * @returns {Object} Map of provider -> { apiKey, model, verified, usage }
    */
@@ -167,17 +127,6 @@ const AiStorage = {
       },
       "Error saving provider data map:"
     ) ?? false;
-  },
-
-  /**
-   * Get usage data for a specific provider
-   * @param {string} provider - Provider name
-   * @returns {Object} Usage data or empty object
-   */
-  getUsage(provider) {
-    if (!provider) return {};
-    const providerData = this.getProviderDataMap();
-    return providerData[provider]?.usage || {};
   },
 
   /**

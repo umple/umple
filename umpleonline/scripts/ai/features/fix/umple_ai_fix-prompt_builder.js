@@ -20,8 +20,6 @@ const FixPromptBuilder = (() => {
     blockTitle: "umple_compiler_error_diagnosis_and_fix_guidance"
   };
 
-  const MAX_TOKENS = 500;
-
   // ============================================================================
   // CACHING
   // ============================================================================

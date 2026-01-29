@@ -9,9 +9,6 @@ const AiExplain = {
   // Conversation history for follow-up context
   conversationHistory: [],
 
-  // Current explanation for context
-  currentExplanation: null,
-
   // Active stream handle (for abort)
   activeStream: null,
 
@@ -32,7 +29,6 @@ const AiExplain = {
    */
   resetConversation() {
     this.conversationHistory = [];
-    this.currentExplanation = null;
   },
 
   abortActiveStream() {
@@ -328,8 +324,7 @@ const AiExplain = {
         console.warn("Explanation validation warnings:", validation.errors);
       }
 
-      // Store explanation and update history
-      this.currentExplanation = explanation;
+      // Update history
       this.addToHistory("assistant", explanation);
 
       // Display explanation with markdown-like formatting

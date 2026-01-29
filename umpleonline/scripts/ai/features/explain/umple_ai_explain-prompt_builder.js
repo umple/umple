@@ -109,25 +109,6 @@ const ExplainPromptBuilder = (() => {
     },
 
     /**
-     * Build custom prompt with template
-     * @param {string} template - Prompt template with {{code}} placeholder
-     * @param {string} umpleCode - The Umple code
-     * @param {Object} additionalVariables - Additional template variables (optional)
-     * @returns {string} Custom prompt with all variables replaced
-     */
-    buildCustomPrompt(template, umpleCode, additionalVariables = {}) {
-      let prompt = template.replace(/\{\{code\}\}/g, umpleCode);
-
-      // Replace additional template variables
-      Object.entries(additionalVariables).forEach(([key, value]) => {
-        const placeholderPattern = new RegExp(`\\{\\{${key}\\}\\}`, "g");
-        prompt = prompt.replace(placeholderPattern, value);
-      });
-
-      return prompt;
-    },
-
-    /**
      * Validate explanation response
      * @param {string} explanation - Generated explanation text
      * @returns {Object} Validation result with valid flag and errors array
@@ -155,16 +136,6 @@ const ExplainPromptBuilder = (() => {
       return conversationHistory
         .map(message => `${message.role}: ${message.content}`)
         .join("\n\n");
-    },
-
-    /**
-     * Escape HTML special characters to prevent XSS
-     * @private
-     * @param {string} text - Text to escape
-     * @returns {string} HTML-escaped text
-     */
-    escapeHtml(text) {
-      return AiTextUtils.escapeHtml(text);
     },
 
     /**

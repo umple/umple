@@ -1524,8 +1524,7 @@ Page.showGeneratedCode = function(code,language,tabnumber)
       const isVerified = (typeof AiApi !== "undefined" && AiApi.isVerified) ? AiApi.isVerified() : false;
       if (isVerified)
       {
-        const html = (typeof Action !== "undefined" && Action.lastCompilerErrorHtml) ? Action.lastCompilerErrorHtml : errorMarkup;
-        AiFix.decorateErrorOutput(container.get(0), html);
+        AiFix.decorateErrorOutput(container.get(0), errorMarkup);
       }
     }
   }

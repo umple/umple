@@ -160,20 +160,6 @@ const AiErrors = {
   },
 
   /**
-   * Create network error
-   * @param {string} message - Error message
-   * @param {Error} originalError - Original error object
-   * @returns {Error} Structured error object
-   */
-  createNetworkError(message, originalError = null) {
-    return this.createError(
-      this.types.NETWORK_ERROR,
-      message,
-      { originalError: originalError?.message }
-    );
-  },
-
-  /**
    * Create API error from response
    * @param {Response} response - Fetch response object
    * @param {Object} errorData - Parsed error data
@@ -215,14 +201,4 @@ const AiErrors = {
     );
   },
 
-  /**
-   * Create error from API response
-   * @param {Response} response - Fetch response object
-   * @param {string} defaultMsg - Default error message
-   * @returns {Promise<Error>} Structured error object
-   */
-  async fromResponse(response, defaultMsg = "API request failed") {
-    const errorData = await response.json().catch(() => ({}));
-    return this.createApiError(response, errorData, defaultMsg);
-  }
 };

@@ -209,12 +209,6 @@ const RequirementsPromptBuilder = (() => {
     ];
   }
 
-  function buildCommonGuidanceBlocks(generationType) {
-    return [
-      block("umple_quick_reference", getCheatSheet(), { allowEmpty: true })
-    ];
-  }
-
   function buildOutputContract({ generationType, expectedRequirementIds }) {
     return [
       ...buildCommonOutputRules(),

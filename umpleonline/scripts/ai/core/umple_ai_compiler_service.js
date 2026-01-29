@@ -134,19 +134,6 @@ const AiCompilerService = {
   },
 
   /**
-   * Format issues for AI prompt
-   * @param {Array<Object>} issues - Array of issues
-   * @returns {string} Formatted prompt string
-   */
-  formatIssuesForPrompt(issues) {
-    return (issues || []).map(i => {
-      const codeSuffix = i.errorCode ? ` (${i.errorCode})` : "";
-      const lineText = Number.isFinite(i.line) ? i.line : "?";
-      return `- ${i.severity}${codeSuffix} on line ${lineText}: ${i.message}`;
-    }).join("\n");
-  },
-
-  /**
    * Compile Umple code with server
    * @param {string} umpleCode - Umple code to compile
    * @returns {Promise<Object>} Promise resolving to {errorHtml, issues}

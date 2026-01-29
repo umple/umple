@@ -78,25 +78,6 @@ const AiProviderAdapters = {
   },
 
   /**
-   * Clear cached client for a provider (useful when API key changes)
-   * @param {string} provider - Provider name
-   * @param {string} apiKey - API key
-   */
-  clearClient(provider, apiKey) {
-    const cacheKey = `${provider}:${apiKey}`;
-    this._clients.delete(cacheKey);
-  },
-
-  /**
-   * Get endpoint configuration for a provider (delegates to AiConfig)
-   * @param {string} provider - Provider name
-   * @returns {Object|null} Endpoint configuration or null
-   */
-  getEndpoint(provider) {
-    return AiConfig.getProviderConfig(provider);
-  },
-
-  /**
    * Verify API key by making an authenticated request
    * @param {string} provider - Provider name
    * @param {string} apiKey - API key
@@ -111,8 +92,6 @@ const AiProviderAdapters = {
     }
 
     try {
-      const client = this._getClient(provider, apiKey);
-
       if (provider === "openrouter") {
         // Use OpenRouter's key endpoint to verify without consuming model tokens.
         const response = await fetch("https://openrouter.ai/api/v1/key", {
@@ -131,6 +110,7 @@ const AiProviderAdapters = {
         return { valid: true };
       }
 
+      const client = this._getClient(provider, apiKey);
       await client.models.list();
       return { valid: true };
     } catch (error) {
@@ -238,8 +218,6 @@ const AiProviderAdapters = {
       if (retriedResponse !== response) {
         response = retriedResponse;
         this._recordUsage(provider, response?.usage, response);
-      } else {
-        response = retriedResponse;
       }
 
       const content = response.choices?.[0]?.message?.content;
