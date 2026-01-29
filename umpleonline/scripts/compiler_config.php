@@ -331,7 +331,7 @@ function generateMenu($buttonSuffix)
             <option id=\"genstatetables\" value=\"html:StateTables\">State Tables</option>
             <option id=\"geneventsequence\" value=\"html:EventSequence\">Event Sequence</option>
             <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>
-            <option id=\"genuigu2\" value=\"Uigu2:Uigu2\">CRUD User Interface</option>            
+            <option id=\"genuigu2\" value=\"crudJson:Json\">CRUD User Interface</option>            
             <option value=\"java:Json\">Json</option>
             <option id=\"gensql\" value=\"sql:Sql\">Sql</option>
             <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple Metrics</option>
