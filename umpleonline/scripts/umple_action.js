@@ -953,7 +953,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery("#buttonShowGvClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvClass');
     jQuery(".view_opt_class").show();
-
+    jQuery(".view_opt_class_palette").show();
   }
   else if(newDiagramType.type == "GvState") {
     if(Page.useGvStateDiagram) return;
