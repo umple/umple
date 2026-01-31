@@ -16,7 +16,8 @@ const AiMarkdownUtils = (() => {
     inlineCode: /`([^`]+)`/g,
     bold: /\*\*([^*]+)\*\*/g,
     italic: /\*([^*]+)\*/g,
-    lineBreak: /\n/g
+    lineBreak: /\n/g,
+    header: /^(#{1,6})\s+(.+)$/gm
   };
 
   // Table detection patterns (strict GFM)
@@ -162,7 +163,7 @@ const AiMarkdownUtils = (() => {
   return {
     /**
      * Render markdown text to HTML
-     * Supports: code blocks, inline code, bold, italic, tables, line breaks
+     * Supports: headers, code blocks, inline code, bold, italic, tables, line breaks
      * @param {string} text - Markdown text to render
      * @returns {string} Rendered HTML
      */
@@ -185,6 +186,10 @@ const AiMarkdownUtils = (() => {
 
       // Apply remaining markdown transformations
       formatted = formatted
+        .replace(MARKDOWN_PATTERNS.header, (match, hashes, content) => {
+          const level = hashes.length;
+          return `<h${level}>${content.trim()}</h${level}>`;
+        })
         .replace(MARKDOWN_PATTERNS.inlineCode, "<code>$1</code>")
         .replace(MARKDOWN_PATTERNS.bold, "<strong>$1</strong>")
         .replace(MARKDOWN_PATTERNS.italic, "<em>$1</em>")
