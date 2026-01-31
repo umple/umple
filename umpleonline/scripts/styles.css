@@ -1498,6 +1498,96 @@ textarea#umpleLayoutEditorText {
   color: #3383bb;
 }
 
+/* AI Explain Dialog Header with Minimize Button */
+.ai-explain-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.ai-explain-header h3 {
+  margin: 0;
+  flex: 1;
+}
+
+.ai-explain-minimize-btn {
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  color: #666;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1;
+  padding: 2px 8px;
+  margin-left: 10px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.ai-explain-minimize-btn:hover {
+  background-color: #f0f0f0;
+  border-color: #999;
+  color: #333;
+}
+
+.ai-explain-minimize-btn:focus {
+  outline: 1px solid #4a90d9;
+  outline-offset: 1px;
+}
+
+/* Custom tooltip for minimize button */
+.ai-explain-tooltip {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  transform: translateY(6px);
+  background-color: #333;
+  color: #fff;
+  font-size: 9pt;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  z-index: 10003;
+  pointer-events: none;
+  font-weight: normal;
+  line-height: 1.4;
+}
+
+.ai-explain-tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  right: 10px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #333 transparent;
+}
+
+.ai-explain-minimize-btn:hover .ai-explain-tooltip,
+.ai-explain-minimize-btn:focus .ai-explain-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Explain Button Indicator - Green circle for ongoing conversation */
+#buttonExplain {
+  position: relative;
+}
+
+.explain-button-indicator {
+  color: #4caf50;
+  font-size: 8px;
+  margin-left: 3px;
+  vertical-align: super;
+  line-height: 1;
+  display: inline-block;
+}
+
 .ai-explain-dialog .status-message.ai-status--success {
   color: #2e7d32;
 }

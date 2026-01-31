@@ -755,6 +755,33 @@ select {
   color: var(--ai-muted) !important;
 }
 
+/* AI Explain Dialog Minimize Button - Dark Mode */
+.ai-explain-minimize-btn {
+  border-color: var(--ai-border) !important;
+  color: var(--ai-muted) !important;
+}
+
+.ai-explain-minimize-btn:hover {
+  background-color: #3a3a3a !important;
+  border-color: #666 !important;
+  color: var(--ai-text) !important;
+}
+
+/* AI Explain Dialog Tooltip - Dark Mode */
+.ai-explain-tooltip {
+  background-color: #444 !important;
+  color: #fff !important;
+}
+
+.ai-explain-tooltip::after {
+  border-color: transparent transparent #444 transparent !important;
+}
+
+/* Explain Button Indicator - Dark Mode */
+.explain-button-indicator {
+  color: #69db7c !important;
+}
+
 #executionMessage,
 #executionMessage * {
   color: #ddd !important;

@@ -15,6 +15,9 @@ const AiExplain = {
   // Thinking animation state
   thinkingInterval: null,
 
+  // Minimized state
+  isMinimized: false,
+
   /**
    * Check if API key and model are configured
    * @returns {Object} {configured: boolean, message: string}
@@ -29,6 +32,38 @@ const AiExplain = {
    */
   resetConversation() {
     this.conversationHistory = [];
+    this.updateExplainButtonIndicator();
+  },
+
+  /**
+   * Check if there's an ongoing conversation
+   * @returns {boolean}
+   */
+  hasOngoingConversation() {
+    return this.conversationHistory.length > 0;
+  },
+
+  /**
+   * Update the indicator on the Explain button
+   */
+  updateExplainButtonIndicator() {
+    const explainButton = document.getElementById("buttonExplain");
+    if (!explainButton) return;
+
+    let indicator = document.getElementById("explainButtonIndicator");
+
+    if (this.hasOngoingConversation()) {
+      if (!indicator) {
+        indicator = document.createElement("span");
+        indicator.id = "explainButtonIndicator";
+        indicator.className = "explain-button-indicator";
+        indicator.textContent = "●";
+        indicator.title = "Ongoing conversation";
+        explainButton.appendChild(indicator);
+      }
+    } else if (indicator) {
+      indicator.remove();
+    }
   },
 
   abortActiveStream() {
@@ -78,12 +113,28 @@ const AiExplain = {
     if (this.conversationHistory.length > 10) {
       this.conversationHistory = this.conversationHistory.slice(-10);
     }
+
+    // Update the indicator on the Explain button
+    this.updateExplainButtonIndicator();
   },
 
   /**
    * Show the explain dialog and start explaining immediately
    */
   async showDialog() {
+    // If dialog exists and is minimized, restore it first (before any validation)
+    // This ensures users can always get back to their minimized conversation
+    const existingDialog = document.getElementById("aiExplainDialog");
+    if (existingDialog && this.isMinimized) {
+      this.restoreDialog();
+      return;
+    }
+
+    // If dialog exists with content but not minimized, just focus it
+    if (existingDialog && !this.isMinimized) {
+      return;
+    }
+
     // Get current Umple code
     const umpleCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
 
@@ -105,8 +156,11 @@ const AiExplain = {
     // Create and show dialog with loading state
     this.createDialog();
 
-    // Reset conversation and start explaining immediately
-    this.resetConversation();
+    // Only reset conversation if there isn't one already
+    // (Allows resuming minimized conversations)
+    if (!this.hasOngoingConversation()) {
+      this.resetConversation();
+    }
     await this.performExplanation(umpleCode);
   },
 
@@ -134,10 +188,29 @@ const AiExplain = {
     const content = document.createElement("div");
     content.className = "dialog-content";
 
-    // Title
+    // Header with title and minimize button
+    const header = document.createElement("div");
+    header.className = "ai-explain-header";
+
     const title = document.createElement("h3");
     title.textContent = "Explain Code";
-    content.appendChild(title);
+    header.appendChild(title);
+
+    // Minimize button
+    const btnMinimize = document.createElement("button");
+    btnMinimize.id = "btnMinimizeExplain";
+    btnMinimize.className = "ai-explain-minimize-btn";
+    btnMinimize.innerHTML = "&#8211;"; // En dash for minimize icon
+    btnMinimize.setAttribute("aria-label", "Minimize dialog");
+    header.appendChild(btnMinimize);
+
+    // Tooltip for minimize button (custom tooltip to ensure it appears above dialog)
+    const minimizeTooltip = document.createElement("span");
+    minimizeTooltip.className = "ai-explain-tooltip";
+    minimizeTooltip.textContent = "Minimize (conversation will be saved)";
+    btnMinimize.appendChild(minimizeTooltip);
+
+    content.appendChild(header);
 
     // Status message (shown first)
     const statusDiv = document.createElement("div");
@@ -213,61 +286,140 @@ const AiExplain = {
   },
 
   /**
+   * Minimize the dialog (preserve content and history)
+   */
+  minimizeDialog() {
+    const dialog = document.getElementById("aiExplainDialog");
+    if (!dialog) return;
+
+    // Store minimized state
+    this.isMinimized = true;
+
+    // Hide the full dialog to allow interaction with the page
+    dialog.style.display = "none";
+
+    // Update status to indicate minimized state
+    if (typeof AiController !== "undefined" && AiController.updateStatus) {
+      AiController.updateStatus("Explanation minimized. Click Explain to resume.");
+    }
+  },
+
+  /**
+   * Restore the minimized dialog
+   */
+  restoreDialog() {
+    const dialog = document.getElementById("aiExplainDialog");
+    if (!dialog) return;
+
+    // Show the dialog
+    dialog.style.display = "";
+    this.isMinimized = false;
+
+    // Focus the follow-up input if container is visible
+    const followUpContainer = document.getElementById("followUpContainer");
+    const followUpInput = document.getElementById("followUpInput");
+    if (followUpInput && followUpContainer && followUpContainer.style.display !== "none") {
+      followUpInput.focus();
+    }
+  },
+
+  /**
    * Set up event listeners for the dialog
    * @param {HTMLElement} dialog - The dialog element
    */
   setupDialogEvents(dialog) {
+    // Minimize button
+    const btnMinimize = document.getElementById("btnMinimizeExplain");
+    if (btnMinimize && !btnMinimize.dataset.aiEventsBound) {
+      btnMinimize.dataset.aiEventsBound = "true";
+      const minimizeHandler = event => {
+        event.preventDefault();
+        this.minimizeDialog();
+      };
+      btnMinimize.addEventListener("click", minimizeHandler);
+    }
+
     // Ask button (follow-up)
     const btnAsk = document.getElementById("btnAsk");
-    const askHandler = event => {
-      event.preventDefault();
-      this.handleFollowUp(dialog);
-    };
-    btnAsk.addEventListener("click", askHandler);
-    btnAsk.addEventListener("keypress", event => {
-      if (event.key === "Enter" || event.key === " ") askHandler(event);
-    });
+    if (btnAsk && !btnAsk.dataset.aiEventsBound) {
+      btnAsk.dataset.aiEventsBound = "true";
+      const askHandler = event => {
+        event.preventDefault();
+        this.handleFollowUp(dialog);
+      };
+      btnAsk.addEventListener("click", askHandler);
+      btnAsk.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          askHandler(event);
+        }
+      });
+    }
 
     // Enter key on follow-up input
     const followUpInput = document.getElementById("followUpInput");
-    followUpInput.addEventListener("keypress", event => {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        this.handleFollowUp(dialog);
-      }
-    });
+    if (followUpInput && !followUpInput.dataset.aiEventsBound) {
+      followUpInput.dataset.aiEventsBound = "true";
+      followUpInput.addEventListener("keypress", event => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          this.handleFollowUp(dialog);
+        }
+      });
+    }
 
     // New Conversation button
     const btnNewConversation = document.getElementById("btnNewConversation");
-    const newConvHandler = event => {
-      event.preventDefault();
-      this.abortActiveStream();
-      dialog.remove();
-      this.showDialog();
-    };
-    btnNewConversation.addEventListener("click", newConvHandler);
-    btnNewConversation.addEventListener("keypress", event => {
-      if (event.key === "Enter" || event.key === " ") newConvHandler(event);
-    });
+    if (btnNewConversation && !btnNewConversation.dataset.aiEventsBound) {
+      btnNewConversation.dataset.aiEventsBound = "true";
+      const newConvHandler = event => {
+        event.preventDefault();
+        this.abortActiveStream();
+        this.isMinimized = false;
+        this.resetConversation();
+        dialog.remove();
+        this.showDialog();
+      };
+      btnNewConversation.addEventListener("click", newConvHandler);
+      btnNewConversation.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          newConvHandler(event);
+        }
+      });
+    }
 
     // Cancel button
     const btnCancel = document.getElementById("btnCancel");
-    const cancelHandler = event => {
-      event.preventDefault();
-      this.abortActiveStream();
-      dialog.remove();
-    };
-    btnCancel.addEventListener("click", cancelHandler);
-    btnCancel.addEventListener("keypress", event => {
-      if (event.key === "Enter" || event.key === " ") cancelHandler(event);
-    });
+    if (btnCancel && !btnCancel.dataset.aiEventsBound) {
+      btnCancel.dataset.aiEventsBound = "true";
+      const cancelHandler = event => {
+        event.preventDefault();
+        this.abortActiveStream();
+        this.isMinimized = false;
+        this.resetConversation();
+        dialog.remove();
+      };
+      btnCancel.addEventListener("click", cancelHandler);
+      btnCancel.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          cancelHandler(event);
+        }
+      });
+    }
 
-    // Close on overlay click
+    // Close on overlay click - only bind once per dialog
     const overlay = dialog.querySelector(".dialog-overlay");
-    overlay.addEventListener("click", () => {
-      this.abortActiveStream();
-      dialog.remove();
-    });
+    if (overlay && !overlay.dataset.aiEventsBound) {
+      overlay.dataset.aiEventsBound = "true";
+      overlay.addEventListener("click", () => {
+        this.abortActiveStream();
+        this.isMinimized = false;
+        this.resetConversation();
+        dialog.remove();
+      });
+    }
   },
 
   /**
