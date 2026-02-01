@@ -559,6 +559,62 @@ select {
   color: var(--ai-muted) !important;
 }
 
+/* Searchable Model Dropdown - Dark Mode */
+.ai-model-dropdown-trigger {
+  background: var(--ai-surface-bg) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-model-dropdown-trigger.disabled {
+  background: var(--ai-surface-bg-alt) !important;
+  opacity: 0.6;
+}
+
+.ai-model-dropdown-menu {
+  background: var(--ai-surface-bg) !important;
+  border-color: var(--ai-border) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+.ai-model-dropdown-search {
+  border-bottom-color: var(--ai-border) !important;
+}
+
+.ai-model-dropdown-search input {
+  background: var(--ai-surface-bg-alt) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-model-search-icon {
+  color: var(--ai-muted) !important;
+}
+
+.ai-model-dropdown-group-label {
+  background: var(--ai-surface-bg-alt) !important;
+  color: var(--ai-muted) !important;
+  border-bottom-color: var(--ai-border) !important;
+}
+
+.ai-model-dropdown-option {
+  color: var(--ai-text) !important;
+  border-bottom-color: var(--ai-border) !important;
+}
+
+.ai-model-dropdown-option:hover,
+.ai-model-dropdown-option.highlighted {
+  background: var(--ai-hover) !important;
+}
+
+.ai-model-dropdown-option.selected {
+  background: var(--ai-active) !important;
+}
+
+.ai-model-dropdown-no-results {
+  color: var(--ai-muted) !important;
+}
+
 .api-key-empty-hint {
   background-color: #3a2a1a;
   border-color: #c07a28;

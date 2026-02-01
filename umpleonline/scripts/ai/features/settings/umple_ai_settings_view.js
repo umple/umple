@@ -178,11 +178,22 @@ const AiSettingsView = {
    * Set model select to loading state
    */
   setModelsLoading() {
+    const trigger = document.getElementById("aiModelDropdownTrigger");
+    const selected = document.getElementById("aiModelDropdownSelected");
     const modelSelect = this._getElement("selectAiModel", "modelSelect");
+
+    if (selected) {
+      selected.textContent = "Loading models...";
+    }
+    if (trigger) {
+      trigger.classList.add("disabled");
+      trigger.setAttribute("aria-disabled", "true");
+    }
     if (modelSelect) {
       this._setSelectSingleOption(modelSelect, "Loading models...");
       modelSelect.disabled = true;
     }
+    this._closeDropdown();
   },
 
   /**
@@ -190,11 +201,22 @@ const AiSettingsView = {
    * @param {string} message - Error message to display
    */
   setModelsError(message) {
+    const trigger = document.getElementById("aiModelDropdownTrigger");
+    const selected = document.getElementById("aiModelDropdownSelected");
     const modelSelect = this._getElement("selectAiModel", "modelSelect");
+
+    if (selected) {
+      selected.textContent = message;
+    }
+    if (trigger) {
+      trigger.classList.remove("disabled");
+      trigger.setAttribute("aria-disabled", "false");
+    }
     if (modelSelect) {
       this._setSelectSingleOption(modelSelect, message);
       modelSelect.disabled = false;
     }
+    this._closeDropdown();
   },
 
   /**
@@ -203,17 +225,30 @@ const AiSettingsView = {
    */
   setModelsOptions(models) {
     const modelSelect = this._getElement("selectAiModel", "modelSelect");
-    if (!modelSelect) return;
+    const trigger = document.getElementById("aiModelDropdownTrigger");
+    const selected = document.getElementById("aiModelDropdownSelected");
+    const optionsContainer = document.getElementById("aiModelDropdownOptions");
+
+    if (!modelSelect || !optionsContainer) return;
+
+    // Enable the dropdown trigger
+    if (trigger) {
+      trigger.classList.remove("disabled");
+      trigger.setAttribute("aria-disabled", "false");
+    }
 
     if (models.length === 0) {
       this._setSelectSingleOption(modelSelect, "No models available");
       modelSelect.disabled = false;
+      if (selected) selected.textContent = "No models available";
       this.updateModelCostDisplay(null);
+      this._renderDropdownOptions([]);
       return;
     }
 
     // Store model data for pricing lookup
     this._modelsData = new Map(models.map(m => [m.value, m]));
+    this._modelsList = models;
 
     // Check if models have provider information (OpenRouter only)
     const hasProviderInfo = models.some(m => m.modelProvider);
@@ -226,6 +261,7 @@ const AiSettingsView = {
       return inputCost === 0 && outputCost === 0;
     };
 
+    // Clear and populate the hidden select for form submission/storage
     this._clearChildren(modelSelect);
     const fragment = document.createDocumentFragment();
 
@@ -235,6 +271,9 @@ const AiSettingsView = {
       option.textContent = (labelOverride ?? model.label ?? "").toString();
       parent.appendChild(option);
     };
+
+    // Organize models for the dropdown
+    let organizedModels = [];
 
     if (hasProviderInfo) {
       // Separate free models from paid models
@@ -259,20 +298,23 @@ const AiSettingsView = {
 
       // Free models section at the top
       if (freeModels.length > 0) {
-        const optGroup = document.createElement("optgroup");
-        optGroup.label = `🆓 Free Models (${freeModels.length})`;
-        freeModels.forEach(model => appendOption(optGroup, model));
-        fragment.appendChild(optGroup);
+        organizedModels.push({
+          type: "group",
+          label: `🆓 Free Models (${freeModels.length})`,
+          models: freeModels
+        });
+        freeModels.forEach(model => appendOption(fragment, model));
       }
 
       // Paid models grouped by provider
       providers.forEach(provider => {
         const providerModels = groupedPaidModels[provider];
-        const count = providerModels.length;
-        const optGroup = document.createElement("optgroup");
-        optGroup.label = `${provider} (${count})`;
-        providerModels.forEach(model => appendOption(optGroup, model));
-        fragment.appendChild(optGroup);
+        organizedModels.push({
+          type: "group",
+          label: `${provider} (${providerModels.length})`,
+          models: providerModels
+        });
+        providerModels.forEach(model => appendOption(fragment, model));
       });
     } else {
       // No provider info: simple list (OpenAI, Google)
@@ -290,10 +332,24 @@ const AiSettingsView = {
         const label = isFree ? `🆓 ${model.label}` : model.label;
         appendOption(fragment, model, label);
       });
+
+      organizedModels = allModels.map(m => ({ type: "model", ...m }));
     }
 
     modelSelect.appendChild(fragment);
     modelSelect.disabled = false;
+
+    // Store organized models for dropdown rendering
+    this._organizedModels = organizedModels;
+
+    // Render dropdown options
+    this._renderDropdownOptions(organizedModels);
+
+    // Setup dropdown event listeners (once)
+    if (!this._dropdownListenersSetup) {
+      this._setupDropdownListeners();
+      this._dropdownListenersSetup = true;
+    }
 
     // Add change listener for pricing display
     if (!this._modelChangeListener) {
@@ -303,6 +359,276 @@ const AiSettingsView = {
 
     // Update pricing for currently selected model after loading
     this._onModelChange();
+  },
+
+  /**
+   * Render dropdown options
+   * @param {Array} organizedModels - Organized model data
+   * @param {string} filter - Optional filter text
+   */
+  _renderDropdownOptions(organizedModels, filter = "") {
+    const optionsContainer = document.getElementById("aiModelDropdownOptions");
+    if (!optionsContainer) return;
+
+    this._clearChildren(optionsContainer);
+
+    // Handle undefined or empty models
+    if (!organizedModels || !Array.isArray(organizedModels) || organizedModels.length === 0) {
+      const noResults = document.createElement("div");
+      noResults.className = "ai-model-dropdown-no-results";
+      noResults.textContent = "No models available";
+      optionsContainer.appendChild(noResults);
+      return;
+    }
+
+    const filterLower = filter.toLowerCase().trim();
+    let hasResults = false;
+
+    const isFreeModel = (model) => {
+      if (!model.pricing) return false;
+      return model.pricing.input === 0 && model.pricing.output === 0;
+    };
+
+    const matchesFilter = (text) => text.toLowerCase().includes(filterLower);
+
+    organizedModels.forEach(item => {
+      if (item.type === "group") {
+        // Filter models within the group
+        const filteredModels = filterLower
+          ? item.models.filter(m => matchesFilter(m.label) || matchesFilter(item.label))
+          : item.models;
+
+        if (filteredModels.length === 0) return;
+
+        hasResults = true;
+
+        const groupEl = document.createElement("div");
+        groupEl.className = "ai-model-dropdown-group";
+
+        const labelEl = document.createElement("div");
+        labelEl.className = "ai-model-dropdown-group-label";
+        labelEl.textContent = item.label;
+        groupEl.appendChild(labelEl);
+
+        filteredModels.forEach(model => {
+          const optionEl = document.createElement("div");
+          optionEl.className = "ai-model-dropdown-option";
+          optionEl.setAttribute("role", "option");
+          optionEl.setAttribute("data-value", model.value);
+          optionEl.textContent = isFreeModel(model) ? `🆓 ${model.label}` : model.label;
+          optionEl.addEventListener("click", () => this._selectModel(model.value));
+          groupEl.appendChild(optionEl);
+        });
+
+        optionsContainer.appendChild(groupEl);
+      } else if (item.type === "model" || item.value) {
+        // Flat list model
+        const model = item.type === "model" ? item : item;
+        if (filterLower && !matchesFilter(model.label)) return;
+
+        hasResults = true;
+
+        const optionEl = document.createElement("div");
+        optionEl.className = "ai-model-dropdown-option";
+        optionEl.setAttribute("role", "option");
+        optionEl.setAttribute("data-value", model.value);
+        optionEl.textContent = isFreeModel(model) ? `🆓 ${model.label}` : model.label;
+        optionEl.addEventListener("click", () => this._selectModel(model.value));
+        optionsContainer.appendChild(optionEl);
+      }
+    });
+
+    if (!hasResults) {
+      const noResults = document.createElement("div");
+      noResults.className = "ai-model-dropdown-no-results";
+      noResults.textContent = "No models found";
+      optionsContainer.appendChild(noResults);
+    }
+  },
+
+  /**
+   * Setup dropdown event listeners
+   */
+  _setupDropdownListeners() {
+    const trigger = document.getElementById("aiModelDropdownTrigger");
+    const menu = document.getElementById("aiModelDropdownMenu");
+    const searchInput = document.getElementById("aiModelSearchInput");
+
+    if (!trigger || !menu) return;
+
+    // Toggle dropdown on trigger click
+    trigger.addEventListener("click", (e) => {
+      if (trigger.classList.contains("disabled")) return;
+      e.stopPropagation();
+      this._toggleDropdown();
+    });
+
+    // Keyboard navigation for trigger
+    trigger.addEventListener("keydown", (e) => {
+      if (trigger.classList.contains("disabled")) return;
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        this._toggleDropdown();
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        this._openDropdown();
+        this._focusFirstOption();
+      }
+    });
+
+    // Search input filtering
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        this._renderDropdownOptions(this._organizedModels, e.target.value);
+      });
+
+      searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          this._closeDropdown();
+          trigger.focus();
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          this._focusFirstOption();
+        }
+      });
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!trigger.contains(e.target) && !menu.contains(e.target)) {
+        this._closeDropdown();
+      }
+    });
+
+    // Close on escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && this._isDropdownOpen()) {
+        this._closeDropdown();
+      }
+    });
+  },
+
+  /**
+   * Toggle dropdown open/closed
+   */
+  _toggleDropdown() {
+    if (this._isDropdownOpen()) {
+      this._closeDropdown();
+    } else {
+      this._openDropdown();
+    }
+  },
+
+  /**
+   * Check if dropdown is open
+   * @returns {boolean}
+   */
+  _isDropdownOpen() {
+    const menu = document.getElementById("aiModelDropdownMenu");
+    return menu && !menu.classList.contains("is-hidden");
+  },
+
+  /**
+   * Open the dropdown
+   */
+  _openDropdown() {
+    const trigger = document.getElementById("aiModelDropdownTrigger");
+    const menu = document.getElementById("aiModelDropdownMenu");
+    const searchInput = document.getElementById("aiModelSearchInput");
+
+    if (!menu || !trigger) return;
+
+    menu.classList.remove("is-hidden");
+    trigger.setAttribute("aria-expanded", "true");
+
+    // Focus search input when opening
+    if (searchInput) {
+      setTimeout(() => searchInput.focus(), 10);
+    }
+
+    // Highlight current selection
+    this._highlightCurrentSelection();
+  },
+
+  /**
+   * Close the dropdown
+   */
+  _closeDropdown() {
+    const trigger = document.getElementById("aiModelDropdownTrigger");
+    const menu = document.getElementById("aiModelDropdownMenu");
+    const searchInput = document.getElementById("aiModelSearchInput");
+
+    if (menu) menu.classList.add("is-hidden");
+    if (trigger) trigger.setAttribute("aria-expanded", "false");
+
+    // Clear search when closing
+    if (searchInput) {
+      searchInput.value = "";
+      if (this._organizedModels) {
+        this._renderDropdownOptions(this._organizedModels, "");
+      }
+    }
+  },
+
+  /**
+   * Focus the first option in the dropdown
+   */
+  _focusFirstOption() {
+    const optionsContainer = document.getElementById("aiModelDropdownOptions");
+    if (!optionsContainer) return;
+
+    const firstOption = optionsContainer.querySelector(".ai-model-dropdown-option");
+    if (firstOption) {
+      firstOption.classList.add("highlighted");
+      firstOption.scrollIntoView({ block: "nearest" });
+    }
+  },
+
+  /**
+   * Highlight the currently selected option
+   */
+  _highlightCurrentSelection() {
+    const modelSelect = this._getElement("selectAiModel", "modelSelect");
+    const optionsContainer = document.getElementById("aiModelDropdownOptions");
+    if (!modelSelect || !optionsContainer) return;
+
+    const currentValue = modelSelect.value;
+    const options = optionsContainer.querySelectorAll(".ai-model-dropdown-option");
+
+    options.forEach(opt => {
+      opt.classList.remove("selected", "highlighted");
+      if (opt.getAttribute("data-value") === currentValue) {
+        opt.classList.add("selected");
+        opt.scrollIntoView({ block: "nearest" });
+      }
+    });
+  },
+
+  /**
+   * Select a model
+   * @param {string} value - Model value to select
+   */
+  _selectModel(value) {
+    const modelSelect = this._getElement("selectAiModel", "modelSelect");
+    const selected = document.getElementById("aiModelDropdownSelected");
+
+    if (modelSelect) {
+      modelSelect.value = value;
+      modelSelect.dispatchEvent(new Event("change"));
+    }
+
+    if (selected) {
+      const modelData = this._modelsData?.get(value);
+      selected.textContent = modelData?.label || value;
+    }
+
+    this._closeDropdown();
+
+    // Update the trigger element for accessibility
+    const trigger = document.getElementById("aiModelDropdownTrigger");
+    if (trigger) {
+      trigger.focus();
+    }
   },
 
   /**
@@ -370,18 +696,19 @@ const AiSettingsView = {
    */
   restoreSavedModel(getModel, saveModel, retryCount = 0) {
     const modelSelect = this._getElement("selectAiModel", "modelSelect");
+    const selected = document.getElementById("aiModelDropdownSelected");
     if (!modelSelect) return;
 
     // Prevent race condition - skip if restoration already in progress
     if (this.modelRestoreInProgress) return;
-    
+
     // Check if models are actually loaded (not just "Loading..." or empty)
-    const hasModels = modelSelect.options.length > 0 && 
-                      modelSelect.options[0].value !== "" && 
+    const hasModels = modelSelect.options.length > 0 &&
+                      modelSelect.options[0].value !== "" &&
                       !modelSelect.options[0].text.includes("Loading") &&
                       !modelSelect.options[0].text.includes("Error") &&
                       !modelSelect.options[0].text.includes("No models");
-    
+
     if (!hasModels) {
       // Set flag to prevent other calls from also retrying
       this.modelRestoreInProgress = true;
@@ -400,25 +727,36 @@ const AiSettingsView = {
 
     // Get saved model from localStorage (no UI fallback)
     const savedModel = getModel(false);
+    let modelToSelect = null;
+
     if (savedModel) {
       // Check if the saved model exists in the options
       const optionExists = Array.from(modelSelect.options).some(option => option.value === savedModel);
       if (optionExists) {
         modelSelect.value = savedModel;
-        this.updateModelCostDisplay(modelSelect.value);
-        return;
+        modelToSelect = savedModel;
+      } else {
+        console.warn(`Saved model "${savedModel}" not found in available models`);
       }
-
-      console.warn(`Saved model "${savedModel}" not found in available models`);
     }
 
     // Initialize or recover by saving the current selection
-    const fallbackModel = modelSelect.value || modelSelect.options[0]?.value || "";
-    if (fallbackModel) {
-      modelSelect.value = fallbackModel;
-      saveModel(fallbackModel);
-      this.updateModelCostDisplay(modelSelect.value);
+    if (!modelToSelect) {
+      const fallbackModel = modelSelect.value || modelSelect.options[0]?.value || "";
+      if (fallbackModel) {
+        modelSelect.value = fallbackModel;
+        saveModel(fallbackModel);
+        modelToSelect = fallbackModel;
+      }
     }
+
+    // Update the dropdown display
+    if (modelToSelect && selected) {
+      const modelData = this._modelsData?.get(modelToSelect);
+      selected.textContent = modelData?.label || modelToSelect;
+    }
+
+    this.updateModelCostDisplay(modelSelect.value);
   },
 
   /**

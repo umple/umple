@@ -1289,9 +1289,28 @@ $output = $dataHandle->readData('model.ump');
         </div>
         <div id="ttAiModel" class="setting-row is-hidden">
           <label for="selectAiModel">Model:</label>
-          <select id="selectAiModel" class="button">
-            <option value="">Select model...</option>
-          </select>
+          <div class="ai-model-dropdown">
+            <div id="aiModelDropdownTrigger" class="ai-model-dropdown-trigger button" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+              <span id="aiModelDropdownSelected">Select model...</span>
+              <svg class="ai-model-dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div id="aiModelDropdownMenu" class="ai-model-dropdown-menu is-hidden" role="listbox">
+              <div class="ai-model-dropdown-search">
+                <input type="text" id="aiModelSearchInput" placeholder="Search models..." autocomplete="off">
+                <svg class="ai-model-search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div id="aiModelDropdownOptions" class="ai-model-dropdown-options">
+              </div>
+            </div>
+            <select id="selectAiModel" class="is-hidden">
+              <option value="">Select model...</option>
+            </select>
+          </div>
         </div>
         <div class="setting-row ai-usage-section">
           <label>Usage:</label>
