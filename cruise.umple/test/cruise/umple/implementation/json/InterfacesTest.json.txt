@@ -36,4 +36,5 @@
  "isAbstract": "false",
  "displayColor": "" ,
  "isInterface": "true"}],
- "umpleAssociations":[] }
+ "umpleAssociations":[],
+"enums":[] }

@@ -23,4 +23,5 @@
  "isAbstract": "false",
  "displayColor": "" ,
  "isInterface": "false"}],
- "umpleAssociations":[] }
+ "umpleAssociations":[],
+"enums":[] }

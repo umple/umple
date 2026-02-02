@@ -46,4 +46,5 @@
  "isRightNavigable":"true",
  "isLeftComposition":"false",
  "isRightComposition":"false",
- "isSymmetricReflexive":"false"}] }
+ "isSymmetricReflexive":"false"}],
+"enums":[] }

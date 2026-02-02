@@ -20,4 +20,5 @@
  "id": "Student",
  "name": "Student" ,
  "isInterface": "false"}],
- "umpleAssociations":[] }
+ "umpleAssociations":[],
+"enums":[] }

@@ -83,4 +83,5 @@
  "isLeftComposition":"false",
  "isRightComposition":"false",
  "isSymmetricReflexive":"false",
- "isTraced":"black"}] }
+ "isTraced":"black"}],
+"enums":[] }
