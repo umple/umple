@@ -15,4 +15,7 @@ startexecdocker
 echo rebuilding the codemirror6 tech
 cd $UMPLEROOT/umpleonline/scripts/codemirror6
 npm start
+echo rebuilding the openai sdk bundle
+cd $UMPLEROOT/umpleonline/scripts/openai-sdk
+npm start
 

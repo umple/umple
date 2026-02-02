@@ -1,0 +1,17 @@
+{
+  "name": "openai-sdk",
+  "version": "1.0.0",
+  "description": "OpenAI SDK browser bundle for UmpleOnline",
+  "scripts": {
+    "start": "npm install && rollup -c"
+  },
+  "dependencies": {
+    "openai": "^4.104.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.4",
+    "@rollup/plugin-node-resolve": "^15.2.1",
+    "@rollup/plugin-json": "^6.0.0",
+    "rollup": "^3.29.5"
+  }
+}
