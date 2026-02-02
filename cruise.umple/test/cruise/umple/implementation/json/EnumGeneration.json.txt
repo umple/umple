@@ -1,0 +1,48 @@
+{"umpleClasses":[{
+"position": {
+"x": 50,
+ "y": 30,
+ "width": 109,
+ "height": 45},
+ "attributes": [{
+ "type" : "Difficulty",
+ "name" : "difficulty",
+ "modifier" : "",
+ "traceColor" : "black" }, {
+ "type" : "Priority",
+ "name" : "priority",
+ "modifier" : "",
+ "traceColor" : "black" }, {
+ "type" : "Type",
+ "name" : "type",
+ "modifier" : "",
+ "traceColor" : "black" }, {
+ "type" : "Status",
+ "name" : "status",
+ "modifier" : "",
+ "traceColor" : "black" }],
+"methods": [],
+ "id": "Task",
+ "name": "Task",
+ "isAbstract": "false",
+ "displayColor": "" ,
+ "isInterface": "false"}],
+ "umpleAssociations":[],
+"enums":[
+"Status":[
+"Active",
+"Inactive",
+"Archived"],
+"Priority":[
+"Low",
+"Medium",
+"High"],
+"Type":[
+"Bug",
+"Feature",
+"Documentation"],
+"Difficulty":[
+"Easy",
+"Medium",
+"Hard"]
+] }
