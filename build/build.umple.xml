@@ -367,6 +367,24 @@
       <fileset file="${scriptPath}/inlineeditor.js"/>
       <fileset dir="${scriptPath}/dropbox" includes="*.js"/>
       <fileset dir="${scriptPath}" includes="umple_*.js"/>
+      <!-- Core AI modules - must be in dependency order -->
+      <fileset dir="${scriptPath}/ai/utils" includes="**/*.js"/>
+      <fileset file="${scriptPath}/ai/config/umple_ai_config.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_errors.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_storage.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_providers.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_controller.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_config_validation.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_compiler_service.js"/>
+      <fileset file="${scriptPath}/ai/prompts/umple_ai_base_prompt.js"/>
+      <!-- Features - include settings view and controller explicitly, then other features -->
+      <fileset file="${scriptPath}/ai/features/settings/umple_ai_settings_view.js"/>
+      <fileset file="${scriptPath}/ai/features/settings/umple_ai_settings.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements-prompt_builder.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements_dialog.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements_self_correction.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements.js"/>
+      <fileset dir="${scriptPath}/ai/features" includes="**/*.js" excludes="settings/*.js,requirements/*.js"/>
       <fileset file="${scriptPath}/structureDiagram.js"/>
       <fileset file="${scriptPath}/statetable/state_table_colourer.js"/>
     </concat>

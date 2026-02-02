@@ -181,6 +181,10 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   jQuery(document).ready(function() {
     DropboxInitializer.initializeDropbox();
     ToolTips.initTooltips();
+    // Initialize AI controller after DOM is ready so modal elements exist
+    if (window.AiSettings && window.AiSettings.init) {
+      window.AiSettings.init();
+    }
   });
 
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
@@ -619,7 +623,7 @@ Page.initCodeMirrorEditor = function() {
     Action.umpleCodeMirrorCursorActivity();
    });
 
-  Page.codeMirrorOn = true;  
+  Page.codeMirrorOn = true;
 }
 
 // Function to make the E G S icons in UmpleOnline context senstive (#1400)
@@ -1508,6 +1512,21 @@ Page.showGeneratedCode = function(code,language,tabnumber)
     jQuery("#downloadArea").html(errorMarkup);
   } else {
     jQuery("#messageArea").html(errorMarkup);
+  }
+
+  // Add AI fix actions to compiler errors.
+  if (language == "diagramUpdate")
+  {
+    const container = (tabnumber == "") ? jQuery("#downloadArea") : jQuery("#messageArea");
+    if (typeof AiFix !== "undefined" && AiFix.decorateErrorOutput)
+    {
+      // Only add AI fix buttons if the API key is verified
+      const isVerified = (typeof AiApi !== "undefined" && AiApi.isVerified) ? AiApi.isVerified() : false;
+      if (isVerified)
+      {
+        AiFix.decorateErrorOutput(container.get(0), errorMarkup);
+      }
+    }
   }
 
   //Set the generated content

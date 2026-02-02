@@ -13,6 +13,30 @@ cat \
  inlineeditor.js \
  dropbox/*.js \
  umple_*.js \
+ ai/utils/umple_ai_constants.js \
+ ai/utils/umple_ai_provider_utils.js \
+ ai/utils/umple_ai_prompt_utils.js \
+ ai/utils/umple_ai_text_utils.js \
+ ai/utils/umple_ai_markdown_utils.js \
+ ai/utils/umple_ai_stream_utils.js \
+ ai/config/umple_ai_config.js \
+ ai/core/umple_ai_errors.js \
+ ai/core/umple_ai_storage.js \
+ ai/core/umple_ai_providers.js \
+ ai/core/umple_ai_controller.js \
+ ai/core/umple_ai_config_validation.js \
+ ai/core/umple_ai_compiler_service.js \
+ ai/prompts/umple_ai_base_prompt.js \
+ ai/features/settings/umple_ai_settings_view.js \
+ ai/features/settings/umple_ai_settings.js \
+ ai/features/requirements/umple_ai_requirements-prompt_builder.js \
+ ai/features/requirements/umple_ai_requirements_dialog.js \
+ ai/features/requirements/umple_ai_requirements_self_correction.js \
+ ai/features/requirements/umple_ai_requirements.js \
+ ai/features/explain/umple_ai_explain-prompt_builder.js \
+ ai/features/explain/umple_ai_explain.js \
+ ai/features/fix/umple_ai_fix-prompt_builder.js \
+ ai/features/fix/umple_ai_fix.js \
  structureDiagram.js \
  statetable/state_table_colourer.js \
  | esbuild --minify > allumple-min.js

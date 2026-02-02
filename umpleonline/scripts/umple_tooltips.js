@@ -44,11 +44,16 @@ ToolTips.tooltipEntries = {
   buttonRequestAllZip: ["li", "Create a zip file to download, containing all submissions for this task."],
   ttDropboxSaver: ["li", "Click to save your model to dropbox"],
 
+ // AI section tooltips
+ ttAiStatus: ["li", "Click to configure AI settings including provider selection, API key, and model selection.<br/><br/>Free models (e.g., on OpenRouter) are shown at the top of the model list. You need to set up your AI provider and verify your API key before using AI features."],
+ ttGenerateFromReq: ["li", "Generate Umple code from requirements defined in your code editor.<br/><br/>1. Define requirements in your Umple code using <code>req ID { text }</code> syntax.<br/>2. Click to open a dialog showing all parsed requirements.<br/>3. Select which requirements to use for code generation.<br/>4. AI generates Umple code (class diagrams or state machines) with <code>implementsReq</code> tags linking back to your selected requirements.<br/><br/>See https://cruise.umple.org/umple/Requirements.html for syntax details.<br/><br/><b>Estimated Token Usage:</b><br/>• Initial generation: ~2,000 tokens<br/>• Each self-correction pass: ~1,800 tokens<br/><br/><i>Note: Actual usage varies with requirement text length and the model you use. Reasoning models (e.g., o1, o3) may consume significantly more tokens due to internal reasoning processes.</i><br/><br/>You must configure your AI settings first."],
+ ttExplain: ["li", "Get an AI-powered explanation of your current Umple code.<br/><br/><b>Estimated Token Usage:</b><br/>• Initial explanation: ~600 tokens<br/>• Each follow-up question: ~700 tokens<br/><br/><i>Note: Actual usage varies with code size and the model you use. Reasoning models (e.g., o1, o3) may consume significantly more tokens due to internal reasoning processes.</i><br/><br/>You must configure your AI settings first."],
+
   // start over tooltips
   //ttStartOver: ["li", "Click to clear the text editor and the diagram. Once clicked, all of your saved works will be lost."],
   ttShowRefreshUmpleCompletely: ["li", "Click to erase your work and completely restart UmpleOnline.<br/><br/>Use this only if UmpleOnline gets into a state where things seem messed up. After doing this you will NOT be able to use the undo command to restore the model. The text and diagrams will be permanently erased. You should select 'Download Files' above first to back up your work.<br/><br/>For safety, this is a two-step process: A confirmation link will appear below that you must click on after you click on this."],
-  ttLoadBlankModel: ["li", "Click to load a blank model.<br/><br/>This can be undone using the undo command in Tools. This is the best way to start new work, but you may want to download your files first (above) to back them up."],  
-  
+  ttLoadBlankModel: ["li", "Click to load a blank model.<br/><br/>This can be undone using the undo command in Tools. This is the best way to start new work, but you may want to download your files first (above) to back them up."],
+
   // load example tooltips
   ttDropboxChooser: ["li", "Click to load an example from dropbox"],
 
@@ -82,12 +87,12 @@ ToolTips.tooltipEntries = {
   SHD_button: ['a', "Show/hide diagram pane on right - <b> ctrl-D</b>"],
   SHA_button: ['a', "Show/hide attributes in class diagrams - <b>shift-ctrl-A</b>"],
   SHM_button: ['a', "Show/hide methods in class diagrams - <b>ctrl-M</b>"],
-  
+
   // Filter values and related
   filtervalues: ['input', "You can choose to display a subset of classes by naming them, separated by spaces.<br/><br/>You can use glob wildcards to specify patterns matching several classes.<br/><br/> So * matches any number of characters in a class name and ? matches any single character.<br/><br/> Preceding a pattern with a ~ indicates to skip classes matching the pattern.<br/><br/> Superclasses of any selected classes will always also appear (even if ~ is used)<br/><br/> The above is a shortcut for including a filter directive in the code.<br/><br/> using the notation filter {include Classpattern;}<br/><br/> Filters in the code will take precedence.<br/><br/> No class pattern starting with 'gv' can be used as these match the suboptions below.<br/><br/>You can also use an integer such as 1 or 2 to also add classees that are connected by an association 1 or 2 (or any number of ) hops away from selected classes.<br/><br/>You can also widen (or narrow) the spacing of nodes by using an expression like gvseparator=1.7 , where 1.0 is the default spacing."],
   buttonCopyMix: ['li', "Click on this to add Umple mixset code to the copy buffer that you can then paste into the code. The code will contain instructions to filter and lay out the code with the gv options and the filter text above. The mixset will have a randomly generated name which you should rename to something meaningful. Then you will see the mixset appear in the options above so you can switch it on and off as often as you like."],
 
-  
+
   // diagram type tooltips
   ttShowEditableClassDiagram: ["li", "Display a graphically editable class diagram </br><b>Shortcut: [ctrl+e]</b>"],
   ttShowJointJSClassDiagram: ["li", "Display a graphically editable class diagram displayed using joint.js </br><b>Shortcut: [ctrl+j]</b>"],
@@ -99,11 +104,11 @@ ToolTips.tooltipEntries = {
   ECD_button: ['a', "Class diagram where the user can Edit the layout - <b>ctrl-E</b>"],
   GCD_button: ['a', "Graphviz Class diagram (the default as of 2026), automatically laid out - editable using a contextual menu (double-click or right-click to display it) when pointing to a class, association or attribute - <b>ctrl-G</b>"],
   SD_button: ['a', "State diagram - editable using a contextual menu (double-click or right-click to display it) when pointing to  a state or transition  - <b>ctrl-S</b>"],
-  
+
   GenJavaButton:['a',"Generate Java from this Umple model ... To generate other outputs such as Python, C++, PhP, ER Diagrams and Formal Methods, use the Generate menu in Tools"],
 //  topBookmarkable: ['a',"You can reconnect to your last collaboration session at any time."],
   topBookmarkable: ['a',"Click to copy the URL and save it so you can come back to it later.<br/> <br/>You can do this just so you remember the location of your model.<br/><br/>The following describes BETA capabilities. Please report any issues: <br/><br/> You can also share the URL with other people to collaborate in real time on a model.<br/> <br/>When more than one person is working on a model, a collaborator who has stopped editing may time out after a while and would then have to reconnect. Before reconnecting the model would temporarily be read-only for them."],
-  
+
   collabDisconnect: ['a',"You can disconnect from your collaboration session with this button."],
   ttSaveNCollab: ["a", "Click to save this model for ongoing editing.<br/><br/>After clicking this, you will need to use your browser's functionality to copy or bookmark the newly-created semi-permanent URL.<br/><br/>As you make further edits at the new URL, they will be instantly saved. You will be able to come back any time to continue editing.<br/><br/>The URL and its model will continue to be available for up to a year from the last time you edited it.<br/><br/>Do not use the new URL as a safe backup: If you (or anyone else who you give the URL) modifies or deletes the text, then your work would be lost. <br/><br/>The following describes BETA capabilities. Please report any issues:  <br/><br/>You can share the URL with others, or open multiple tabs with it by yourself. As you type, the text will change simultaneously in all open browsers or browser tabs."],
 
@@ -206,7 +211,7 @@ ToolTips.initTooltips = function()
         this.tooltipEntries,
         id,
         "below"
-      );   
+      );
     }
     else{
       // Tooltips that should appear to the left (which is all in the central menu)
@@ -225,7 +230,7 @@ ToolTips.initTooltips = function()
         this.dropDownTooltips,
         id,
         "above"
-      );   
+      );
   }
 
   // Sets the rest of the tooltips using the styling provided by the jQuery style.

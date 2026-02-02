@@ -437,8 +437,8 @@ $output = $dataHandle->readData('model.ump');
             }
           ?>
         </span>
-        <span id="gdprtext" class="pretext">        
-          This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="https://umple.org/privacy" target="privacy">Click to learn about privacy.</a>
+        <span id="gdprtext" class="pretext">
+          This tool stores your data in cookies and on a server. For the AI feature, your API key is never sent to our server backend. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="https://umple.org/privacy" target="privacy">Click to learn about privacy.</a>
         <br/></span>  
 
         
@@ -586,6 +586,7 @@ $output = $dataHandle->readData('model.ump');
     <span style="font-size: 30%; white-space:nowrap;">
     <a id="GenJavaButton" class="button2" href="javascript:Action.generateCode('java','Java');">Generate Java</a>&nbsp;
     </span>    
+
 
     <!-- disabling the save as URL feature and activating collaboration feature-->
     <!--
@@ -1138,6 +1139,34 @@ $output = $dataHandle->readData('model.ump');
 
       </div>
 
+      <!-- AI SECTION -->
+      <h3><a href="#ai">AI</a></h3>
+      
+      <div class="section">
+        <ul class="first center-children">
+          <li id="ttAiStatus">
+            <div class="ai-status-row" id="buttonAiSettings" role="button" tabindex="0" title="Configure AI Settings">
+              <svg class="ai-settings-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <span id="aiStatusText" class="ai-status-text">Not configured</span>
+              <span id="aiStatusIndicator" class="ai-status-indicator not-ready" title="AI not configured">●</span>
+            </div>
+          </li>
+        </ul>
+        
+        <ul class="second center-children">
+          <li class="subtitle">Generate</li>
+          <li id="ttGenerateFromReq">
+            <div id="buttonGenerateFromReq" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button" onclick="AiRequirements.showDialog()">By Requirements</div>
+          </li>
+          <li id="ttExplain">
+            <div id="buttonExplain" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button" onclick="AiExplain.showDialog()">Explain</div>
+          </li>
+        </ul>
+      </div>
+
       </div> 
     </div>
    
@@ -1221,6 +1250,80 @@ $output = $dataHandle->readData('model.ump');
     </div>
   <?php } ?>
 
+  <!-- AI Settings Modal (hidden by default) -->
+  <div id="aiSettingsModal" class="ai-settings-modal is-hidden">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3>AI Settings</h3>
+      <div class="ai-settings-form">
+        <div class="setting-row">
+          <label for="selectAiProvider">Provider:</label>
+          <div class="ai-settings-field ai-provider-field">
+            <select id="selectAiProvider" class="button">
+              <option value="openrouter" selected>OpenRouter</option>
+              <option value="openai">OpenAI</option>
+              <option value="google">Google</option>
+            </select>
+            <a id="aiProviderLink" class="ai-provider-link is-hidden" href="" target="_blank" rel="noopener noreferrer"></a>
+          </div>
+        </div>
+        <div class="setting-row">
+          <label for="inputAiApiKey">API Key:</label>
+          <div class="ai-settings-field">
+            <!-- Hidden dummy field to prevent browser password autofill -->
+            <input type="password" style="position: absolute; left: -9999px; opacity: 0;" tabindex="-1" autocomplete="new-password"/>
+            <div class="api-key-input-wrapper">
+              <input id="inputAiApiKey" type="password" placeholder="Enter API key" autocomplete="new-password" data-form-type="other" class="button api-key-input"/>
+              <button type="button" id="toggleApiKeyVisibility" class="api-key-toggle" tabindex="0" aria-label="Toggle API key visibility">
+                <span class="eye-icon" aria-hidden="true">
+                <svg class="ai-eye-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                </span>
+              </button>
+            </div>
+            <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget ai-verify-button" tabindex="0" role="button">Verify</div>
+          </div>
+          <div id="apiKeyStatus" class="ai-key-status-message is-hidden"></div>
+        </div>
+        <div id="ttAiModel" class="setting-row is-hidden">
+          <label for="selectAiModel">Model:</label>
+          <div class="ai-model-dropdown">
+            <div id="aiModelDropdownTrigger" class="ai-model-dropdown-trigger button" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+              <span id="aiModelDropdownSelected">Select model...</span>
+              <svg class="ai-model-dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div id="aiModelDropdownMenu" class="ai-model-dropdown-menu is-hidden" role="listbox">
+              <div class="ai-model-dropdown-search">
+                <input type="text" id="aiModelSearchInput" placeholder="Search models..." autocomplete="off">
+                <svg class="ai-model-search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div id="aiModelDropdownOptions" class="ai-model-dropdown-options">
+              </div>
+            </div>
+            <select id="selectAiModel" class="is-hidden">
+              <option value="">Select model...</option>
+            </select>
+          </div>
+        </div>
+        <div class="setting-row ai-usage-section">
+          <label>Usage:</label>
+          <div id="aiUsageSummary" class="ai-usage-summary">
+          </div>
+        </div>
+      </div>
+      <div class="dialog-buttons">
+        <div id="buttonResetAiUsage" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Reset Usage</div>
+        <div id="btnCloseAiSettings" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Close</div>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>
