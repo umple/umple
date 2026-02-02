@@ -12,7 +12,24 @@ cat \
  shBrush*.js \
  inlineeditor.js \
  dropbox/*.js \
- umple_*.js \
+ umple_page.js \
+ umple_layout.js \
+ umple_action.js \
+ umple_position.js \
+ umple_line.js \
+ umple_system.js \
+ umple_class.js \
+ umple_association.js \
+ umple_generalization.js \
+ umple_transition.js \
+ umple_attribute.js \
+ umple_method.js \
+ umple_history.js \
+ umple_restore.js \
+ umple_action_diagram.js \
+ umple_tooltips.js \
+ umple_tab_control.js \
+ umple_crudui.js \
  ai/utils/umple_ai_constants.js \
  ai/utils/umple_ai_provider_utils.js \
  ai/utils/umple_ai_prompt_utils.js \
