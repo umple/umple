@@ -21,9 +21,13 @@ class JsonGenerator
 
   public void generate()
   {
+
     String jsonForClasses = StringFormatter.format("{0}umpleClasses{0}:[", "\"");
     String jsonForInterfaces = StringFormatter.format("{0}umpleInterfaces{0}:[", "\"");
     String jsonForAssociations = StringFormatter.format("{0}umpleAssociations{0}:[", "\"");
+    String jsonForEnums = StringFormatter.format("{0}enums{0}:[", "\"");
+
+    List<UmpleEnumeration> umpleEnums = new ArrayList<>(model.getEnums());
 
     boolean isFirst = true;
     for (UmpleClass aClass : model.getUmpleClasses())
@@ -75,6 +79,20 @@ class JsonGenerator
             modifier,
             traceColor);
         
+      }
+
+      // Catching enums with no `enum` keyword
+      for (StateMachine aStateMachine : aClass.getStateMachines()) {
+        UmpleEnumeration newEnum = new UmpleEnumeration(aStateMachine.getName());
+        aClass.addEnum(newEnum);
+
+        for (State aState : aStateMachine.getStates()) {
+          newEnum.addEnumValue(aState.getName());
+        }
+      }
+
+      for (UmpleEnumeration anEnum : aClass.getEnums()) {
+        umpleEnums.add(anEnum);
       }
 
       for(Method method : aClass.getMethods())
@@ -171,6 +189,39 @@ class JsonGenerator
 
       isFirst = false;
     }
+
+  Iterator<UmpleEnumeration> enumIterator = umpleEnums.iterator();
+  boolean isFirstEnum = true;
+
+  while (enumIterator.hasNext()) {
+    UmpleEnumeration anEnum = enumIterator.next();
+    String enumName = anEnum.getName();
+    String[] enumValues = anEnum.getEnumValues();
+    String enumFormatted = "";
+    if (isFirstEnum) {
+      enumFormatted += StringFormatter.format("\n{0}{1}{0}:[", "\"", enumName);
+    } else {
+      enumFormatted += StringFormatter.format("{0}{1}{0}:[", "\"", enumName);
+    }
+
+    int numberOfEnumValues = enumValues.length;
+    for (int i = 0; i < numberOfEnumValues; i++) {
+      
+      if (i == numberOfEnumValues - 1) {
+        enumFormatted += StringFormatter.format("\n{0}{1}{0}", "\"", enumValues[i]);    
+      } else {
+        enumFormatted += StringFormatter.format("\n{0}{1}{0},", "\"", enumValues[i]);    
+      }
+    }
+
+    if (enumIterator.hasNext()) {
+      enumFormatted += "],\n";
+    } else {
+      enumFormatted += "]\n";
+    }
+    isFirstEnum = false;
+    jsonForEnums += enumFormatted;
+  }
 
     boolean isFirstInterface = true;
     for (UmpleInterface aInterface : model.getUmpleInterfaces())
@@ -361,11 +412,13 @@ class JsonGenerator
       index += 1;
     }
 
+
+    jsonForEnums += "]";
     jsonForClasses += "]";
     jsonForAssociations += "]";
     jsonForInterfaces += "]";
     //String json = "{" + jsonForClasses + ", " + jsonForInterfaces + ", " + jsonForAssociations + " }";
-    String json = "{" + jsonForClasses  + ",\n " + jsonForAssociations + " }";
+    String json = "{" + jsonForClasses  + ",\n " + jsonForAssociations + ",\n" + jsonForEnums + " }";
     model.setCode(json);
   }
 
