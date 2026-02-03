@@ -697,13 +697,13 @@
   </target>
 
   <target name="deployUmpleonlineJars" >
-    <copy file="${dist.dir}/${dist.umple.sync.jar}"   tofile="${basedir}/umpleonline/scripts/umplesync.jar" overwrite="true" />
-    <copy file="${dist.dir}/${dist.umple.jar}"        tofile="${basedir}/umpleonline/scripts/umple.jar"     overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="${basedir}/umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.jar}" tofile="${basedir}/umpleonline/scripts/umple.jar"     overwrite="true" />
   </target>
 
   <target name="deployUpdatedLib">
-    <copy file="${dist.dir}/${dist.umple.sync.jar}"   tofile="lib/umplesync.jar"  overwrite="true" />
-    <copy file="${dist.dir}/${dist.umple.jar}"        tofile="lib/umple.jar"      overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="lib/umplesync.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.jar}" tofile="lib/umple.jar" overwrite="true" />
   </target>
 
   <target name="deployUmpleonline" >
