@@ -489,8 +489,10 @@
   </target>
 
   <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
-    <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
-    <copy file="${dist.dir}/${dist.umple.jar}" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
+    <echo message="Copying ${dist.dir}/umplesync.jar to umpleonline/scripts/umplesync.jar for new server" />
+    <copy file="${dist.dir}/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <echo message="Copying ${dist.dir}/umple.jar to umpleonline/scripts/umple.jar for new downloadable CLI" />
+    <copy file="${dist.dir}/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
     <copy file="UmpleToPython/txl/umpleJavaToPython.ctxl" tofile="umpleonline/scripts/txl/umpleJavaToPython.ctxl" overwrite="true" />
     <antcall target="compressAllScripts"/>
   </target>
@@ -600,6 +602,8 @@
         <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
       </manifest>
     </jar>
+    <echo message="Making symbolic link so it can be run as umplesync.jar" />    
+    <symlink link="${dist.dir}/umplesync.jar" resource="${dist.dir}/${dist.umple.sync.jar}" overwrite="true" failonerror="false" />
   </target>
 
   <target name="packageDocJar">
@@ -688,25 +692,24 @@
   ``````````````````````````` -->
 
   <target name="deploy" if="${shouldDeploy}">
-    <echo message="Deploying Version: ${umple.version}" />
-    <antcall target="deployUmpleonlineJars" />
-    <antcall target="deployUpdatedLib" />
+    <echo message="READY TO DEPLOY Version: ${umple.version} NOW RUN pumple then dumple" />
+    <!-- restore so git does not have changed version and so next git pull and build are clean -->
   </target>
 
   <target name="deployUmpleonlineJars" >
-    <copy file="${dist.dir}/${dist.umple.sync.jar}"   tofile="/h/ralph/sites/www/html/umpleonline/scripts/umplesync.jar" overwrite="true" />
-    <copy file="${dist.dir}/${dist.umple.jar}"        tofile="/h/ralph/sites/www/html/umpleonline/scripts/umple.jar"     overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="${basedir}/umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.jar}" tofile="${basedir}/umpleonline/scripts/umple.jar"     overwrite="true" />
   </target>
 
   <target name="deployUpdatedLib">
-    <copy file="${dist.dir}/${dist.umple.sync.jar}"   tofile="lib/umplesync.jar"  overwrite="true" />
-    <copy file="${dist.dir}/${dist.umple.jar}"        tofile="lib/umple.jar"      overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="lib/umplesync.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.jar}" tofile="lib/umple.jar" overwrite="true" />
   </target>
 
   <target name="deployUmpleonline" >
     <antcall target="deployUmpleonlineJars" />
     <antcall target="deployUmpleDocs" />
-    <copy todir="/h/ralph/sites/www/html/umpleonline">
+    <copy todir="${basedir}/umpleonline">
       <fileset dir="umpleonline">
         <exclude name=".git"/>
         <exclude name="ump"/>
@@ -716,7 +719,7 @@
 
   <target name="deployUmpleDocs" >
     <antcall target="packageDocs" />
-    <copy todir="/h/ralph/sites/www/html/umple">
+    <copy todir="${basedir}/umple">
       <fileset dir="${dist.dir}/cruise.umple/reference">
         <exclude name=".git"/>
       </fileset>
