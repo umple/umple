@@ -600,6 +600,8 @@
         <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
       </manifest>
     </jar>
+    <echo message="Making symbolic link so it can be run as umplesync.jar" />    
+    <symlink link="${dist.dir}/umplesync.jar" resource="${dist.dir}/${dist.umple.sync.jar}" overwrite="true" failonerror="false" />    
   </target>
 
   <target name="packageDocJar">
@@ -688,9 +690,8 @@
   ``````````````````````````` -->
 
   <target name="deploy" if="${shouldDeploy}">
-    <echo message="Deploying Version: ${umple.version}" />
-    <antcall target="deployUmpleonlineJars" />
-    <antcall target="deployUpdatedLib" />
+    <echo message="READY TO DEPLOY Version: ${umple.version} NOW RUN pumple then dumple" />
+    <!-- restore so git does not have changed version and so next git pull and build are clean -->
   </target>
 
   <target name="deployUmpleonlineJars" >
