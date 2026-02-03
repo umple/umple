@@ -1,0 +1,54 @@
+Help with AI keys
+AI
+noreferences
+@@tooltip Explains AI API keys, Providers integrations.
+@@description
+
+<p>This page helps you understand how AI keys work in UmpleOnline, and what to do when you see errors such as <i>Provider error</i> or <i>Rate limited</i>.</p>
+
+<p><b>Important:</b> UmpleOnline uses a <b>BYOK (bring-your-own-key)</b> approach. Your AI key is stored in your browser's local storage and is never sent to Umple servers. Your browser sends requests directly to the AI provider you selected.</p>
+
+<br/>
+
+<p><b>1. What does "Verify key" do?</b></p>
+
+<ul>
+  <li><b>Verify key</b> checks that the key you entered is accepted by the selected provider.</li>
+  <li>If verification succeeds, UmpleOnline enables the model list and lets you choose a model.</li>
+  <li>Verification status is stored in your browser's <b>local storage</b>. In normal browsing mode it should persist across page reloads and future sessions on the same browser/computer.</li>
+</ul>
+
+<p><b>2. Common errors and what they mean</b></p>
+
+<ul>
+  <li>
+    <p><b>Authentication failed. Please check your API key.</b></p>
+    <p>The provider rejected your key. Common causes:</p>
+    <ul>
+      <li>The key was pasted incorrectly (extra spaces, missing characters).</li>
+      <li>The key belongs to a different provider than the one selected.</li>
+      <li>The key was revoked or expired in the provider dashboard.</li>
+    </ul>
+  </li>
+
+  <li>
+    <p><b>Rate limited (...). Please retry shortly.</b></p>
+    <p>This means the provider (or an upstream provider behind OpenRouter) temporarily rejected requests because too many requests are happening in a short time. What to do:</p>
+    <ul>
+      <li>Wait and retry.</li>
+      <li>Switch to a different model (often the fastest fix).</li>
+      <li>OpenRouter may prompt you to set up your own <b>integration key</b>. This means the upstream provider behind OpenRouter is rate-limiting requests. Users are being asked for a <b>BYOK</b> setup because it is assumed that no providers are currently available for the selected model. Consequently, users must upload an API key from their own chosen provider to continue using it.</li>
+    </ul>
+  </li>
+
+</ul>
+
+<p><b>3. Tips for reliable use</b></p>
+
+<ul>
+  <li><b>Providers prefer paid users:</b> Free tier users might reach their threshold easily compared to paid users.</li>
+  <li><b>Switch models when blocked:</b> With OpenRouter, multiple upstream providers may exist behind a model, and availability can change minute-to-minute.</li>
+  <li><b>If verification seems to "reset":</b> check whether your browser is clearing local storage (private mode, strict tracking protection, storage cleaners, etc.).</li>
+</ul>
+
+<br/>

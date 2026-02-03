@@ -46,6 +46,7 @@ noreferences
 <li><b>Troubleshooting.</b>
   <ul>
     <li><p>If AI actions are disabled, ensure you have selected a provider, entered an API key, verified it successfully, and selected a model.</p></li>
+    <li><p>If you see messages such as <i>Rate limited</i> or <i>Provider error</i>, or if you are unsure about keys and OpenRouter integrations, see <a href="HelpwithAIkeys.html">Help with AI keys</a>.</p></li>
     <li><p>If no requirements are found, confirm your model contains <code>req ... { ... }</code> blocks.</p></li>
     <li><p>If a generated block fails to compile, review the error list and re-run generation with fewer or clearer requirements.</p></li>
   </ul>
