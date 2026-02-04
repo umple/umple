@@ -22,27 +22,48 @@
  "modifier" : "",
  "traceColor" : "black" }],
 "methods": [],
+ "enums": [
+ "Priority":[
+ "Low",
+ "Medium",
+ "High"],
+ "Type":[
+ "Bug",
+ "Feature",
+ "Documentation"],
+ "Difficulty":[
+ "Easy",
+ "Medium",
+ "Hard"]],
  "id": "Task",
  "name": "Task",
  "isAbstract": "false",
  "displayColor": "" ,
+ "isInterface": "false"}, {
+"position": {
+"x": 50,
+ "y": 130,
+ "width": 109,
+ "height": 45},
+ "attributes": [{
+ "type" : "OrderType",
+ "name" : "order",
+ "modifier" : "",
+ "traceColor" : "black" }],
+"methods": [],
+ "enums": [
+ "Type":[
+ "Online",
+ "In-store",
+ "Pickup"]],
+ "id": "Order",
+ "name": "Order",
+ "isAbstract": "false",
+ "displayColor": "" ,
  "isInterface": "false"}],
  "umpleAssociations":[],
-"enums":[
-"Status":[
-"Active",
-"Inactive",
-"Archived"],
-"Priority":[
-"Low",
-"Medium",
-"High"],
-"Type":[
-"Bug",
-"Feature",
-"Documentation"],
-"Difficulty":[
-"Easy",
-"Medium",
-"Hard"]
-] }
+ "globalEnums":[
+ "Status":[
+ "Active",
+ "Inactive",
+ "Archived"]] }

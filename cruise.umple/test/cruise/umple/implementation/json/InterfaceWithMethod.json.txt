@@ -17,4 +17,4 @@
  "displayColor": "" ,
  "isInterface": "true"}],
  "umpleAssociations":[],
-"enums":[] }
+ "globalEnums":[] }

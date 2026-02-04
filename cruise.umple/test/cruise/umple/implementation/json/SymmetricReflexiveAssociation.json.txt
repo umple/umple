@@ -6,6 +6,7 @@
  "height": 0},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "TesterClass",
  "name": "TesterClass",
  "isAbstract": "false",
@@ -36,4 +37,4 @@
  "isRightComposition":"false",
  "isSymmetricReflexive":"true",
  "isTraced":"black"}],
-"enums":[] }
+ "globalEnums":[] }

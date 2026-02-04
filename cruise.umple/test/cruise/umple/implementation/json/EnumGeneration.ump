@@ -30,3 +30,13 @@ class Task {
   Type type;
   Status status;
 }
+
+class Order {
+  enum Type {
+    Online,
+    In-store,
+    Pickup
+  }
+
+  OrderType order;
+}
