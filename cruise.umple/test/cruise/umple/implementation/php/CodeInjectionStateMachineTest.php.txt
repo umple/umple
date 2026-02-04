@@ -60,19 +60,7 @@ class Example
 
   private function setLight($aLight)
   {
-    // line 14 "CodeInjectionStateMachineTest.ump"
-    
-    // END OF UMPLE BEFORE INJECTION
-    // line 21 "CodeInjectionStateMachineTest.ump"
-    
-    // END OF UMPLE BEFORE INJECTION
     $this->light = $aLight;
-    // line 10 "CodeInjectionStateMachineTest.ump"
-    
-    // END OF UMPLE AFTER INJECTION
-    // line 17 "CodeInjectionStateMachineTest.ump"
-    
-    // END OF UMPLE AFTER INJECTION
   }
 
   public function equals($compareTo)
