@@ -4,12 +4,16 @@ Page.crudData = { classes: {} };
 // Lookup of class definitions (attributes) by class name for nested types
 Page.crudClassDefs = {};
 
+// Association metadata resolved from Json (per navigable end, grouped by class)
+Page.crudAssociationsByClass = {};
+
 // Container used for inline CRUD panel rendering
 Page.currentCrudContainer = null;
 
 Page.resetCrudData = function() {
   Page.crudData = { classes: {} };
   Page.crudClassDefs = {};
+  Page.crudAssociationsByClass = {};
 };
 
 // Updates instance count for each class
@@ -43,6 +47,179 @@ Page.buildCrudTooltip = function(attrName, rawType, inheritedFrom) {
     tooltip += "\n. This is an inherited attribute from " + inheritedFrom + ".";
   }
   return tooltip;
+};
+
+// Parse a multiplicity string like "1", "0..1", "1..*", "3..*", "0..2" into
+// a numeric range { min, max } where max === null means unbounded.
+Page.parseCrudMultiplicity = function(multiplicity) {
+  var s = (multiplicity || "").toString().trim();
+  var result = { min: 0, max: null };
+
+  if (s === "") {
+    return result;
+  }
+
+  // Simple forms: "*" or a single integer
+  if (s.indexOf("..") === -1) {
+    if (s === "*") {
+      return { min: 0, max: null };
+    }
+    var n = parseInt(s, 10);
+    if (!isNaN(n)) {
+      return { min: n, max: n };
+    }
+    return result;
+  }
+
+  // Range form: "a..b", where b may be "*"
+  var parts = s.split("..");
+  var lowerRaw = (parts[0] || "").trim();
+  var upperRaw = (parts[1] || "").trim();
+
+  var min = 0;
+  if (lowerRaw !== "") {
+    var lower = parseInt(lowerRaw, 10);
+    if (!isNaN(lower) && lower >= 0) {
+      min = lower;
+    }
+  }
+
+  var max = null;
+  if (upperRaw !== "" && upperRaw !== "*") {
+    var upper = parseInt(upperRaw, 10);
+    if (!isNaN(upper) && upper >= min) {
+      max = upper;
+    }
+  }
+
+  return { min: min, max: max };
+};
+
+// For hierarchical self-reflexive associations where each instance can have at
+// most one parent (e.g., FunctionalArea parent/child), verify that assigning
+// parentIndex as the parent of childIndex does not create a cycle.
+Page.checkCrudReflexiveHierarchyCycle = function(className, instances, end, childIndex, parentIndex, errors) {
+  if (end.fromClass !== end.toClass) {
+    return;
+  }
+
+  // We only treat patterns like * to 0..1 as hierarchical parent/child.
+  var fromHasStar = (end.fromMultiplicity || "").indexOf("*") !== -1;
+  var toRange = { min: typeof end.toMin === "number" ? end.toMin : 0, max: end.toMax };
+  if (!fromHasStar || (toRange.max !== null && toRange.max !== 1)) {
+    return;
+  }
+
+  if (typeof parentIndex !== "number" || parentIndex < 0 || parentIndex >= instances.length) {
+    return;
+  }
+
+  var fieldName = end.storageKey;
+  var visited = {};
+  var current = parentIndex;
+
+  while (typeof current === "number" && current >= 0 && current < instances.length) {
+    if (current === childIndex) {
+      errors.push("Cycle detected in association " + end.assocName + ": a " + className + " cannot be its own ancestor.");
+      return;
+    }
+    if (visited[current]) {
+      return; // already walked this path
+    }
+    visited[current] = true;
+
+    var inst = instances[current] || {};
+    var next = inst[fieldName];
+    if (Array.isArray(next)) {
+      next = next.length ? next[0] : null;
+    }
+    if (typeof next !== "number") {
+      var n = parseInt(next, 10);
+      next = isNaN(n) ? null : n;
+    }
+    current = next;
+  }
+};
+
+// Keep reverse association ends in sync for bidirectional associations. When
+// editing an instance of className at position index and updating a navigable
+// end, this ensures the corresponding reverse end on the target class's
+// instances reflects the new links.
+Page.syncCrudReverseAssociationsForEnd = function(className, index, end, newValue) {
+  if (!Page.crudAssociationsByClass || !Page.crudData || !Page.crudData.classes) {
+    return;
+  }
+
+  var fromClass = end.fromClass;
+  var toClass = end.toClass;
+  if (fromClass !== className) {
+    return;
+  }
+
+  var targetInfo = Page.crudData.classes[toClass];
+  if (!targetInfo) {
+    return;
+  }
+  var targetInstances = targetInfo.instances || [];
+
+  // Find reverse end: same association id, from the target class back to
+  // this class.
+  var reverseEnd = null;
+  var candidates = Page.crudAssociationsByClass[toClass] || [];
+  for (var i = 0; i < candidates.length; i++) {
+    var cand = candidates[i];
+    if (cand.assocId === end.assocId && cand.toClass === fromClass) {
+      reverseEnd = cand;
+      break;
+    }
+  }
+  if (!reverseEnd) {
+    return;
+  }
+
+  var revKey = reverseEnd.storageKey;
+  var revMultiple = reverseEnd.toMultiplicity && reverseEnd.toMultiplicity.indexOf("*") !== -1;
+
+  // Helper to know whether the edited instance should be linked to a given
+  // target index according to newValue.
+  var isLinked;
+  if (Array.isArray(newValue)) {
+    var set = {};
+    for (var s = 0; s < newValue.length; s++) {
+      var v = newValue[s];
+      if (typeof v === "number" && v >= 0) {
+        set[v] = true;
+      }
+    }
+    isLinked = function(tIdx) { return !!set[tIdx]; };
+  } else if (typeof newValue === "number" && newValue >= 0) {
+    isLinked = function(tIdx) { return newValue === tIdx; };
+  } else {
+    isLinked = function() { return false; };
+  }
+
+  for (var tIdx = 0; tIdx < targetInstances.length; tIdx++) {
+    var tInst = targetInstances[tIdx] || {};
+    var linked = isLinked(tIdx);
+
+    if (revMultiple) {
+      var arr = Array.isArray(tInst[revKey]) ? tInst[revKey].slice() : [];
+      var pos = arr.indexOf(index);
+      if (linked && pos === -1) {
+        arr.push(index);
+      }
+      if (!linked && pos !== -1) {
+        arr.splice(pos, 1);
+      }
+      tInst[revKey] = arr;
+    } else {
+      if (linked) {
+        tInst[revKey] = index;
+      } else if (tInst[revKey] === index) {
+        tInst[revKey] = null;
+      }
+    }
+  }
 };
 
 // Builds the HTML input(s) for a single field given its type
@@ -477,11 +654,39 @@ Page.openCrudDialogForClass = function(className) {
   var classInfo = Page.crudData.classes[className];
   var attrs = classInfo.attributes || [];
   var instances = classInfo.instances || [];
+  var assocEnds = (Page.crudAssociationsByClass && Page.crudAssociationsByClass[className]) || [];
   var container = Page.currentCrudContainer || jQuery("#innerGeneratedCodeRow");
   var $panel = container.find(".crud-instance-panel");
   if ($panel.length === 0) {
     $panel = jQuery("<div class='crud-instance-panel' style='margin-top:10px;'></div>");
     container.append($panel);
+  }
+
+  // If this class has mandatory (multiplicity 1) navigable associations to other
+  // classes (min bound > 0), and there are currently too few instances of those
+  // target classes to ever satisfy the multiplicity, prevent creating instances
+  // and instruct the user to create required ones first.
+  if (assocEnds.length > 0) {
+    var missingRequiredTargets = [];
+    assocEnds.forEach(function(end) {
+      var minRequired = (typeof end.toMin === "number") ? end.toMin : 0;
+      if (minRequired <= 0) { return; }
+      var targetInfo = Page.crudData.classes[end.toClass];
+      var targetInstances = (targetInfo && targetInfo.instances) || [];
+      if (targetInstances.length < minRequired) {
+        if (missingRequiredTargets.indexOf(end.toClass) === -1) {
+          missingRequiredTargets.push(end.toClass);
+        }
+      }
+    });
+    if (missingRequiredTargets.length > 0 && instances.length === 0) {
+      var msgHtml = "<div class='crud-dialog-content'>";
+      msgHtml += "<h3>" + className + "</h3>";
+      msgHtml += "<p>To create " + className + " instances, first create the following: " + missingRequiredTargets.join(", ") + ".</p>";
+      msgHtml += "</div>";
+      $panel.html(msgHtml);
+      return;
+    }
   }
 
   var html = "<div class='crud-dialog-content'>";
@@ -518,6 +723,9 @@ Page.openCrudDialogForClass = function(className) {
       }
 
       html += "<button type='button' class='crud-edit-instance' data-index='" + idx + "' style='margin-left:8px;'>Edit</button>";
+      if (assocEnds.length > 0) {
+        html += "<button type='button' class='crud-see-associations' data-index='" + idx + "' style='margin-left:4px;'>See Associations</button>";
+      }
       html += "</div>";
     });
   }
@@ -541,11 +749,120 @@ Page.openCrudDialogForClass = function(className) {
     html += "</div>";
   });
 
+  var assocSelectorEnds = [];
+  var seenReflexiveAssoc = {};
+  assocEnds.forEach(function(end) {
+    var multTo = end.toMultiplicity || "";
+    var multFrom = end.fromMultiplicity || "";
+    var toHasStar = multTo.indexOf("*") !== -1;
+    var fromHasStar = multFrom.indexOf("*") !== -1;
+
+    // Hide the reverse of a one-to-many: if the target side allows many (*),
+    // but the source side does not, it is clearer to edit links from the
+    // opposite end. Example: Employee -> Accident when Accident -> Employee
+    // is 1..*.
+    if (toHasStar && !fromHasStar) {
+      return;
+    }
+
+    // For self-reflexive associations (fromClass === toClass), we can end up
+    // with two navigable ends that look identical from the UI perspective.
+    // Only keep one per association id so we don't render duplicate groups
+    // (e.g., Territory[*] borders Territory[*]).
+    if (end.fromClass === end.toClass) {
+      var key = (end.assocId || end.assocName || "") + "::" + end.toClass;
+      if (seenReflexiveAssoc[key]) {
+        return;
+      }
+      seenReflexiveAssoc[key] = true;
+    }
+
+    // Otherwise (including many-to-many where both sides use *), show it.
+    assocSelectorEnds.push(end);
+  });
+
+  if (assocSelectorEnds.length > 0) {
+    html += "<h4>Associations</h4>";
+    assocSelectorEnds.forEach(function(end) {
+      var targetClass = end.toClass;
+      var targetInfo = Page.crudData.classes[targetClass];
+      var targetInstances = (targetInfo && targetInfo.instances) || [];
+      var fieldName = end.storageKey;
+
+      html += "<div class='crud-field'>";
+      var labelText = targetClass;
+      var minRequired = (typeof end.toMin === "number") ? end.toMin : 0;
+      if (minRequired > 0) {
+        labelText += " (required)";
+      }
+      html += "<label class='crud-field-label'>" + labelText + "</label>";
+
+      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+      if (multiple) {
+        // Multi-valued end: render a checkbox list so users can easily
+        // add/remove multiple associated instances (e.g., many-to-many).
+        html += "<div class='crud-assoc-multi' data-field='" + fieldName + "'>";
+        targetInstances.forEach(function(inst, idx) {
+          var optionLabel = targetClass + "[" + (idx + 1) + "]";
+          var targetAttrs = (Page.crudData.classes[targetClass] && Page.crudData.classes[targetClass].attributes) || [];
+          var parts = [];
+          targetAttrs.forEach(function(attr) {
+            var aName = attr.name;
+            if (!aName) { return; }
+            var v = inst[aName];
+            if (typeof v === "undefined" || v === null || v === "") { return; }
+            parts.push(aName + "=" + v);
+          });
+          var tooltip = parts.length ? (optionLabel + " - " + parts.join(", ")) : optionLabel;
+          html += "<label style='margin-right:8px;'>" +
+                  "<input type='checkbox' name='" + fieldName + "' value='" + idx + "' title='" + tooltip.replace(/\"/g, "&quot;") + "'> " +
+                  optionLabel + "</label>";
+        });
+        html += "</div>";
+      } else {
+        // Single-valued end: render radio buttons (with an explicit None
+        // option when the multiplicity allows 0) instead of a dropdown.
+        html += "<div class='crud-assoc-single' data-field='" + fieldName + "'>";
+        if (minRequired === 0) {
+          html += "<label style='margin-right:8px;'><input type='radio' name='" + fieldName + "' value=''> None</label>";
+        }
+
+        targetInstances.forEach(function(inst, idx) {
+          var optionLabel = targetClass + "[" + (idx + 1) + "]";
+          var targetAttrs = (Page.crudData.classes[targetClass] && Page.crudData.classes[targetClass].attributes) || [];
+          var parts = [];
+          targetAttrs.forEach(function(attr) {
+            var aName = attr.name;
+            if (!aName) { return; }
+            var v = inst[aName];
+            if (typeof v === "undefined" || v === null || v === "") { return; }
+            parts.push(aName + "=" + v);
+          });
+          var tooltip = parts.length ? (optionLabel + " - " + parts.join(", ")) : optionLabel;
+          html += "<label style='margin-right:8px;'>" +
+                  "<input type='radio' name='" + fieldName + "' value='" + idx + "' title='" + tooltip.replace(/\"/g, "&quot;") + "'> " +
+                  optionLabel + "</label>";
+        });
+        html += "</div>";
+      }
+
+      // If there are no target instances and multiplicity requires one, hint to create them first
+      if (targetInstances.length < minRequired && minRequired > 0) {
+        html += "<div class='crud-association-hint' style='margin-top:4px;color:#a00;'>" +
+                "Not enough " + targetClass + " instances exist. Create more before adding " + className + "." +
+                "</div>";
+      }
+
+      html += "</div>";
+    });
+  }
+
   html += "<div class='crud-form-actions' style='margin-top:8px;'>";
   html += "<button type='button' id='crud-save-instance' style='margin-right:8px;'>Save</button>";
   html += "<button type='button' id='crud-clear-instances'>Clear all " + className + "</button>";
   html += "</div>";
   html += "</form>";
+  html += "<div class='crud-related-instances' style='margin-top:8px;'></div>";
   html += "</div>";
 
   $panel.html(html);
@@ -620,6 +937,203 @@ Page.openCrudDialogForClass = function(className) {
         $form.find("input[name='" + attrName + "']").val(inputValue);
       }
     });
+
+    // Pre-populate association selectors based on stored links on the instance
+    assocEnds.forEach(function(end) {
+      var fieldName = end.storageKey;
+      var stored = inst[fieldName];
+      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+      var minRequired = (typeof end.toMin === "number") ? end.toMin : 0;
+
+      if (multiple) {
+        var $checks = $form.find("input[type='checkbox'][name='" + fieldName + "']");
+        $checks.prop("checked", false);
+        if (Array.isArray(stored)) {
+          $checks.each(function() {
+            var v = jQuery(this).val();
+            var idx = parseInt(v, 10);
+            if (!isNaN(idx) && stored.indexOf(idx) !== -1) {
+              jQuery(this).prop("checked", true);
+            }
+          });
+        }
+      } else {
+        var $radios = $form.find("input[type='radio'][name='" + fieldName + "']");
+        $radios.prop("checked", false);
+        if (stored === undefined || stored === null || stored === "") {
+          // If there is an explicit None option (minRequired === 0), select it
+          // so the user can clearly see that "no association" is a choice.
+          if (minRequired === 0) {
+            $radios.each(function() {
+              if (jQuery(this).val() === "") {
+                jQuery(this).prop("checked", true);
+              }
+            });
+          }
+        } else {
+          var targetVal = Array.isArray(stored) ? (stored[0] || "") : stored;
+          $radios.each(function() {
+            var v = jQuery(this).val();
+            if (v === "") { return; }
+            var idx = parseInt(v, 10);
+            if (!isNaN(idx) && idx === targetVal) {
+              jQuery(this).prop("checked", true);
+            }
+          });
+        }
+      }
+    });
+
+    // Show related instances from other classes that are linked to this one
+    var $related = $panel.find(".crud-related-instances");
+    if ($related.length > 0) {
+      var relatedHtml = "";
+      var assocByClass = Page.crudAssociationsByClass || {};
+      for (var sourceClass in assocByClass) {
+        if (!assocByClass.hasOwnProperty(sourceClass)) { continue; }
+        var endsFromSource = assocByClass[sourceClass] || [];
+        var seenAssocIds = {};
+        endsFromSource.forEach(function(end) {
+          // Only show reverse-linked instances for bidirectional associations
+          if (!end.isBidirectional) { return; }
+          if (end.toClass !== className) { return; }
+          // Avoid duplicate groups for self-reflexive associations where two
+          // navigable ends correspond to the same logical relationship.
+          if (end.fromClass === end.toClass) {
+            var key = end.assocId || end.assocName || "";
+            if (seenAssocIds[key]) { return; }
+            seenAssocIds[key] = true;
+          }
+          var sourceInfo = Page.crudData.classes[sourceClass];
+          var sourceInstances = (sourceInfo && sourceInfo.instances) || [];
+          if (sourceInstances.length === 0) { return; }
+          var matches = [];
+          sourceInstances.forEach(function(sInst, sIdx) {
+            var val = sInst[end.storageKey];
+            if (val === undefined || val === null) { return; }
+            if (Array.isArray(val)) {
+              if (val.indexOf(index) !== -1) {
+                matches.push({ inst: sInst, idx: sIdx });
+              }
+            } else if (val === index) {
+              matches.push({ inst: sInst, idx: sIdx });
+            }
+          });
+          if (matches.length > 0) {
+            relatedHtml += "<div class='crud-related-group' style='margin-top:4px;'>";
+            relatedHtml += "<div><strong>" + sourceClass + " linked to this " + className + ":</strong></div>";
+            var srcAttrs = (Page.crudData.classes[sourceClass] && Page.crudData.classes[sourceClass].attributes) || [];
+            matches.forEach(function(match) {
+              var label = sourceClass + "[" + (match.idx + 1) + "]";
+              var parts = [];
+              srcAttrs.forEach(function(attr) {
+                var aName = attr.name;
+                if (!aName) { return; }
+                var v = match.inst[aName];
+                if (typeof v === "undefined" || v === null || v === "") { return; }
+                parts.push(aName + "=" + v);
+              });
+              var summary = parts.length ? " - " + parts.join(", ") : "";
+              relatedHtml += "<div style='margin-left:10px;'>" + label + summary + "</div>";
+            });
+            relatedHtml += "</div>";
+          }
+        });
+      }
+      $related.html(relatedHtml);
+    }
+  });
+
+  // Show associations for a specific instance in the list
+  $panel.on("click", ".crud-see-associations", function() {
+    var index = parseInt(jQuery(this).data("index"), 10);
+    if (isNaN(index) || index < 0 || index >= instances.length) {
+      return;
+    }
+    var inst = instances[index] || {};
+    var $row = jQuery(this).closest(".crud-instance-row");
+    var $assoc = $row.find(".crud-instance-associations");
+    // Toggle visibility: if an associations panel already exists and is visible,
+    // hide it and stop. Otherwise, ensure a container exists and (re)build it.
+    if ($assoc.length && $assoc.is(":visible")) {
+      $assoc.hide();
+      return;
+    }
+    if ($assoc.length === 0) {
+      $assoc = jQuery("<div class='crud-instance-associations' style='margin-top:4px;margin-left:10px;'></div>");
+      $row.append($assoc);
+    }
+
+    var assocHtml = "";
+    var hasContent = false;
+
+    // Forward associations: navigable ends from this class
+    var seenAssocIdsForward = {};
+    assocEnds.forEach(function(end) {
+      var fieldName = end.storageKey;
+      var val = inst[fieldName];
+      var targetClass = end.toClass;
+      var targetInfo = Page.crudData.classes[targetClass];
+      var targetInstances = (targetInfo && targetInfo.instances) || [];
+      var targetAttrs = (targetInfo && targetInfo.attributes) || [];
+
+      if (val === undefined || val === null) {
+        return;
+      }
+
+      // Avoid duplicate groups for self-reflexive associations where two
+      // navigable ends correspond to the same logical relationship.
+      if (end.fromClass === end.toClass) {
+        var keyF = end.assocId || end.assocName || "";
+        if (seenAssocIdsForward[keyF]) { return; }
+        seenAssocIdsForward[keyF] = true;
+      }
+
+      var items = [];
+      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+      if (multiple) {
+        if (!Array.isArray(val) || val.length === 0) { return; }
+        val.forEach(function(idx) {
+          if (typeof idx !== "number" || idx < 0 || idx >= targetInstances.length) { return; }
+          items.push({ inst: targetInstances[idx], idx: idx });
+        });
+      } else {
+        var idxSingle = val;
+        if (typeof idxSingle !== "number") {
+          idxSingle = parseInt(idxSingle, 10);
+        }
+        if (isNaN(idxSingle) || idxSingle < 0 || idxSingle >= targetInstances.length) { return; }
+        items.push({ inst: targetInstances[idxSingle], idx: idxSingle });
+      }
+
+      if (items.length === 0) {
+        return;
+      }
+
+      hasContent = true;
+      assocHtml += "<div class='crud-related-group' style='margin-top:4px;'>";
+      assocHtml += "<div><strong>" + targetClass + " associated with this " + className + ":</strong></div>";
+      items.forEach(function(item) {
+        var label = targetClass + "[" + (item.idx + 1) + "]";
+        var parts = [];
+        targetAttrs.forEach(function(attr) {
+          var aName = attr.name;
+          if (!aName) { return; }
+          var v = item.inst[aName];
+          if (typeof v === "undefined" || v === null || v === "") { return; }
+          parts.push(aName + "=" + v);
+        });
+        var summary = parts.length ? " - " + parts.join(", ") : "";
+        assocHtml += "<div style='margin-left:10px;'>" + label + summary + "</div>";
+      });
+      assocHtml += "</div>";
+    });
+
+    if (!hasContent) {
+      assocHtml = "<em>No associations linked for this instance.</em>";
+    }
+
+    $assoc.html(assocHtml).show();
   });
 
   // Save instance (new or edited)
@@ -673,10 +1187,107 @@ Page.openCrudDialogForClass = function(className) {
       }
     });
 
+    // Associations: enforce multiplicity rules and capture selected links
+    assocEnds.forEach(function(end) {
+      var fieldName = end.storageKey;
+      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+      var minRequired = (typeof end.toMin === "number") ? end.toMin : 0;
+      var maxAllowed = (typeof end.toMax === "number") ? end.toMax : null;
+
+      if (multiple) {
+        // Checkbox-based UI for multi-valued ends
+        var selectedArray = [];
+        var $checks = $form.find("input[type='checkbox'][name='" + fieldName + "']:checked");
+        $checks.each(function() {
+          selectedArray.push(jQuery(this).val());
+        });
+        var indices = [];
+        selectedArray.forEach(function(v) {
+          if (v === "") { return; }
+          var idx = parseInt(v, 10);
+          if (!isNaN(idx)) {
+            indices.push(idx);
+          }
+        });
+
+        // Reflexive constraint: prevent self-reference in many-valued
+        // self-associations (e.g., Territory borders itself).
+        if (end.fromClass === end.toClass) {
+          var selfPos = indices.indexOf(index);
+          if (selfPos !== -1) {
+            indices.splice(selfPos, 1);
+            errors.push("An instance of " + className + " cannot be associated with itself for association " + end.assocName + ".");
+          }
+        }
+
+        newInst[fieldName] = indices;
+
+        var count = indices.length;
+        if (minRequired > 0 && count < minRequired) {
+          errors.push("Please select at least " + minRequired + " " + end.toClass + " instance(s) for association " + end.assocName + ".");
+        }
+        if (maxAllowed !== null && count > maxAllowed) {
+          errors.push("Please select at most " + maxAllowed + " " + end.toClass + " instance(s) for association " + end.assocName + ".");
+        }
+      } else {
+        // Radio-based UI for single-valued ends
+        var $radio = $form.find("input[type='radio'][name='" + fieldName + "']:checked");
+        var val = $radio.length ? $radio.val() : "";
+        if (!val || val === "") {
+          // If min bound is >= 1, this link is mandatory
+          if (minRequired >= 1) {
+            errors.push("Please select a " + end.toClass + " for association " + end.assocName + ".");
+          }
+          newInst[fieldName] = null;
+        } else {
+          var idxSingle = parseInt(val, 10);
+          if (isNaN(idxSingle)) {
+            if (minRequired >= 1) {
+              errors.push("Invalid selection for association " + end.assocName + ".");
+            }
+            newInst[fieldName] = null;
+          } else {
+            // Reflexive constraint: prevent self-reference.
+            if (end.fromClass === end.toClass && idxSingle === index) {
+              errors.push("An instance of " + className + " cannot be associated with itself for association " + end.assocName + ".");
+              newInst[fieldName] = null;
+            } else {
+            newInst[fieldName] = idxSingle;
+              // With a single-select, we can only ever have 0 or 1; enforce
+              // any max bound < 1 as an error, and otherwise accept.
+              if (maxAllowed !== null && maxAllowed < 1) {
+                errors.push("Multiplicity for association " + end.assocName + " does not allow any linked " + end.toClass + " instances.");
+              }
+            }
+          }
+        }
+      }
+    });
+
+    // For hierarchical self-reflexive associations (like FunctionalArea
+    // parent/child), ensure that choosing a parent does not introduce a
+    // parent-child cycle.
+    assocEnds.forEach(function(end) {
+      if (end.fromClass !== end.toClass) { return; }
+      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+      if (multiple) { return; }
+      var value = newInst[end.storageKey];
+      if (typeof value !== "number") { return; }
+      Page.checkCrudReflexiveHierarchyCycle(className, instances, end, index, value, errors);
+    });
+
     if (errors.length > 0) {
       $error.text(errors.join(" ")).show();
       return;
     }
+
+    // Keep reverse association ends consistent for bidirectional associations
+    // using the newly computed link values on this instance.
+    assocEnds.forEach(function(end) {
+      var fieldName = end.storageKey;
+      var newVal = newInst[fieldName];
+      Page.syncCrudReverseAssociationsForEnd(className, index, end, newVal);
+    });
 
     if (isEdit) {
       instances[index] = newInst;
@@ -871,10 +1482,11 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
   try {
     var data = JSON.parse(jsonText);
     var classes = data.umpleClasses || [];
+    var associations = data.umpleAssociations || [];
 
     // Resets in-memory CRUD data each time we (re)render CRUD UI
     Page.resetCrudData();
-    // Builds a quick lookup for inheritance resolution
+    // Builds a quick lookup for inheritance resolution and association navigation
     var crudMetaByClass = {};
     classes.forEach(function(cls) {
       var className = cls.name || cls.id;
@@ -967,6 +1579,63 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
       resolvedAttr[className] = result;
       return result;
     };
+
+    // Build association navigation metadata per class (based on navigability and multiplicity)
+    Page.crudAssociationsByClass = {};
+    associations.forEach(function(assoc) {
+      var classOneId = assoc.classOneId;
+      var classTwoId = assoc.classTwoId;
+      if (!classOneId || !classTwoId) { return; }
+
+      var classOneName = (crudMetaByClass[classOneId] && crudMetaByClass[classOneId].name) || classOneId;
+      var classTwoName = (crudMetaByClass[classTwoId] && crudMetaByClass[classTwoId].name) || classTwoId;
+
+      var multOne = assoc.multiplicityOne || ""; // multiplicity at classOne end
+      var multTwo = assoc.multiplicityTwo || ""; // multiplicity at classTwo end
+
+      var leftNav = assoc.isLeftNavigable === true || assoc.isLeftNavigable === "true";
+      var rightNav = assoc.isRightNavigable === true || assoc.isRightNavigable === "true";
+
+      // A bidirectional association means both ends are navigable
+      var isBidirectional = leftNav && rightNav;
+
+      var assocName = assoc.name || (classOneName + "__" + classTwoName);
+
+      var registerEnd = function(fromClass, toClass, fromMult, toMult, direction) {
+        if (!fromClass || !toClass) { return; }
+        if (!Page.crudAssociationsByClass[fromClass]) {
+          Page.crudAssociationsByClass[fromClass] = [];
+        }
+        var toRange = Page.parseCrudMultiplicity ? Page.parseCrudMultiplicity(toMult) : { min: 0, max: null };
+        var fromRange = Page.parseCrudMultiplicity ? Page.parseCrudMultiplicity(fromMult) : { min: 0, max: null };
+        // Storage key used on instances and form fields for this navigable end
+        var storageKey = "__assoc__" + assocName + "__" + toClass;
+        Page.crudAssociationsByClass[fromClass].push({
+          assocName: assocName,
+          assocId: assoc.id || assocName,
+          fromClass: fromClass,
+          toClass: toClass,
+          fromMultiplicity: fromMult,
+          toMultiplicity: toMult,
+          direction: direction,
+          isBidirectional: isBidirectional,
+          toMin: toRange.min,
+          toMax: toRange.max,
+          fromMin: fromRange.min,
+          fromMax: fromRange.max,
+          storageKey: storageKey
+        });
+      };
+
+      // isRightNavigable true means classOne can navigate to classTwo
+      if (rightNav) {
+        registerEnd(classOneName, classTwoName, multOne, multTwo, "one-to-two");
+      }
+      // isLeftNavigable true means classTwo can navigate to classOne
+      if (leftNav) {
+        registerEnd(classTwoName, classOneName, multTwo, multOne, "two-to-one");
+      }
+    });
 
     // Creates forms for each class using resolved attrs
     classes.forEach(function(cls) {
