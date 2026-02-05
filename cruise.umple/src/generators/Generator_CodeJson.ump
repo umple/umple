@@ -141,7 +141,7 @@ class JsonGenerator
         int numberOfEnumValues = enumValues.length;
 
         if (isFirstEnum) {
-          enumFormatted += StringFormatter.format("\n {0}{1}{0}:[", "\"", enumName);
+          enumFormatted += StringFormatter.format("{\n {0}{1}{0}:[", "\"", enumName);
         } else {
           enumFormatted += StringFormatter.format(" {0}{1}{0}:[", "\"", enumName);
         }
@@ -157,7 +157,7 @@ class JsonGenerator
         if (enumIterator.hasNext()) {
           enumFormatted += "],\n";
         } else {
-          enumFormatted += "]";
+          enumFormatted += "]}";
         }
 
         isFirstEnum = false;
@@ -229,7 +229,7 @@ class JsonGenerator
     String[] enumValues = anEnum.getEnumValues();
     String enumFormatted = "";
     if (isFirstEnum) {
-      enumFormatted += StringFormatter.format("\n {0}{1}{0}:[", "\"", enumName);
+      enumFormatted += StringFormatter.format("{\n {0}{1}{0}:[", "\"", enumName);
     } else {
       enumFormatted += StringFormatter.format(" {0}{1}{0}:[", "\"", enumName);
     }
@@ -247,7 +247,7 @@ class JsonGenerator
     if (enumIterator.hasNext()) {
       enumFormatted += "],\n";
     } else {
-      enumFormatted += "]";
+      enumFormatted += "]}";
     }
     isFirstEnum = false;
     jsonForGlobalEnums += enumFormatted;

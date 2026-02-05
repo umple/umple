@@ -22,7 +22,7 @@
  "modifier" : "",
  "traceColor" : "black" }],
 "methods": [],
- "enums": [
+ "enums": [{
  "Priority":[
  "Low",
  "Medium",
@@ -34,7 +34,7 @@
  "Difficulty":[
  "Easy",
  "Medium",
- "Hard"]],
+ "Hard"]}],
  "id": "Task",
  "name": "Task",
  "isAbstract": "false",
@@ -51,19 +51,19 @@
  "modifier" : "",
  "traceColor" : "black" }],
 "methods": [],
- "enums": [
+ "enums": [{
  "Type":[
  "Online",
  "In-store",
- "Pickup"]],
+ "Pickup"]}],
  "id": "Order",
  "name": "Order",
  "isAbstract": "false",
  "displayColor": "" ,
  "isInterface": "false"}],
  "umpleAssociations":[],
- "globalEnums":[
+ "globalEnums":[{
  "Status":[
  "Active",
  "Inactive",
- "Archived"]] }
+ "Archived"]}] }
