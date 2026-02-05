@@ -31,56 +31,26 @@ class Student
   public function foo(int $a)
   {
 
-    // line 36 "model.ump"
-    
-    // END OF UMPLE BEFORE INJECTION
-    // line 39 "model.ump"
     System.out.println("Starting foo with argument: " + a);
-    // END OF UMPLE BEFORE INJECTION
     if ($a < 0) {        
-        // line 44 "model.ump"
-        
-        // END OF UMPLE AFTER INJECTION
-        // line 47 "model.ump"
         System.out.println("Returning from foo!");
-        // END OF UMPLE AFTER INJECTION
         return 0;
     } else if ($a == 1) {        
-        // line 44 "model.ump"
-        
-        // END OF UMPLE AFTER INJECTION
-        // line 47 "model.ump"
         System.out.println("Returning from foo!");
-        // END OF UMPLE AFTER INJECTION
         return -1;
     } else {        
-        // line 44 "model.ump"
-        
-        // END OF UMPLE AFTER INJECTION
-        // line 47 "model.ump"
         System.out.println("Returning from foo!");
-        // END OF UMPLE AFTER INJECTION
         return 4;
     }
 
     for ($i = 0; $i < $a; $i++) {
         // TODO: call foo()
         if ($i == $a / 4) {            
-            // line 44 "model.ump"
-            
-            // END OF UMPLE AFTER INJECTION
-            // line 47 "model.ump"
             System.out.println("Returning from foo!");
-            // END OF UMPLE AFTER INJECTION
             return $a;
         }
     }    
-    // line 44 "model.ump"
-    
-    // END OF UMPLE AFTER INJECTION
-    // line 47 "model.ump"
     System.out.println("Returning from foo!");
-    // END OF UMPLE AFTER INJECTION
     return 4;
 
   }
