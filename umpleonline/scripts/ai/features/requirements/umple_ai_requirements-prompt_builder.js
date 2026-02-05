@@ -287,7 +287,13 @@ const RequirementsPromptBuilder = (() => {
     if (!hasClassOrAssoc) errors.push("No class or association definition found");
 
     if (generationType === "statemachine") {
-      const hasSm = /\b(sm|state|status|flow)\s*\{/.test(code);
+      // Accept regular/queued/pooled forms, with optional state-machine names.
+      // Examples matched:
+      // - sm { ... }
+      // - queued sm { ... }
+      // - queued sm Lifecycle { ... }
+      // - state Engine { ... }
+      const hasSm = /\b(?:(?:queued|pooled)\s+)?(?:sm|state|status|flow)\b(?:\s+[A-Za-z_][A-Za-z0-9_]*)?\s*\{/.test(code);
       if (!hasSm) errors.push("No state machine block found (expected state/status/sm/flow)");
     }
 

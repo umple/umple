@@ -7,31 +7,29 @@
 const AiPrompting = (() => {
   "use strict";
 
-  const BASE_SYSTEM_PROMPT = `You are an expert in Umple (https://cruise.umple.org/umple/): its textual modeling syntax for classes, associations, and state machines.
+  const BASE_SYSTEM_PROMPT = `You are an expert in Umple (https://cruise.umple.org/umple/), a textual modeling language for classes, associations, and state machines.
 
 Rules:
-- Do not invent Umple syntax or project context.
-- If something is ambiguous, choose the simplest valid Umple and note assumptions inside Umple comments.
+- Use only valid Umple syntax and only context provided in the prompt.
+- If ambiguous, choose the simplest compilable model and add one inline comment: // Assumption: ...
 - Follow the output contract exactly.
-- When the user prompt includes tagged sections like <tag> ... </tag>, read each section only from its opening tag to its matching closing tag and do not merge content across blocks.
-- Never name attributes identical to the class name.`;
+- When tagged blocks like <tag>...</tag> appear, read each block independently from opening to matching closing tag.
+- Never name an attribute the same as its class.`;
 
-  const UMPLE_CHEAT_SHEET = `Umple quick reference (non-exhaustive):
+  const UMPLE_CHEAT_SHEET = `Umple quick reference (minimal):
 
-- Classes: \`class Name { Type a; Type a = default; method(p){ ... } isA Super, I, Trait; }\`
-- Interfaces/Traits: \`interface I { Type m(p); }\`  \`trait T { ... }\`  \`class C { isA I, T; }\`
+- Classes/attributes: \`class Name { Type a; Type b = value; isA Super, I, Trait; }\`
+- Interfaces/traits: \`interface I { Type m(p); }\`  \`trait T { ... }\`
 - Enums: \`enum E { A, B }\`
-- Associations: \`1 -- * Other;\`  \`* role -- 0..1 Other otherRole;\`  \`1 -> * Other;\`  \`association { 1 A -> * B; }\`
+- Associations: \`1 -- * B;\`  \`1 -> * B;\`  \`association { 1 A -> * B; }\`  composition: \`1 <@>- * Part;\`
 - Multiplicity: \`1\`  \`0..1\`  \`*\`  \`1..*\`  \`m..n\`
-- Constraints: \`[booleanExpr]\` on model/attr/assoc/transition
-- State machines: \`sm { S1 { e -> S2; } }\`  \`state { initial { -> S1; } S1 { e -> S2; } }\`  \`status { S1 { e(p) [g] / { a; } -> S2; } }\`
-- State actions: \`entry / { ... }\`  \`exit / { ... }\`  \`do { ... }\`
-- Auto-transition: \`S { -> Next; }\`
-- Timed transitions: \`after(msExpr) -> Next;\`  \`afterEvery(msExpr) -> State;\`
-- Orthogonal regions: \`Composite { R1 { ... } || R2 { ... } }\`
-- Reusable SM: \`statemachine SM { ... }\`  \`class C { st as SM; }\`
+- State machine: \`sm { S1 { e(p) [g] / { a; } -> S2; } S2 {} }\`
+- State actions: \`entry / { ... }\`  \`exit / { ... }\`  \`do { ... }\`  auto: \`-> Next;\`
+- Advanced SM: \`queued sm { ... }\`  \`pooled sm { ... }\`  regions: \`A { ... } || B { ... }\`  history: \`Parent.H\` / \`Parent.HStar\`
+- Final states: \`-> Final;\` or \`final Done {}\`
+- Reuse SM: \`statemachine M { ... }\`  \`class C { x as M; }\`
 - Requirements: \`req R1 { text }\`  \`implementsReq R1, R2;\`
-- Composition/features: \`use "file.ump";\`  \`use Mixset;\`  \`use !Mixset;\`  \`require MixsetA;\`  \`generate Target;\`
+- External type: \`external Type {}\`
 `;
 
   const PROMPT_TEXT_CACHE = Object.create(null);
