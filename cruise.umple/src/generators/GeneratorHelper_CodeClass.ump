@@ -54,64 +54,76 @@ class GeneratorHelper
     }  
   }  
   
-  public static String toCode(List<CodeInjection> allCodeInjections)
-  {
-    String asCode = null;
-    if (allCodeInjections != null)
-    {
-      for (CodeInjection inject : allCodeInjections)
-      {
-        mixset Mixset {
-	      if(inject.hasCodeLabel())
-          continue;// handle the case when labels are used. // Do nothing  
-        }
-        String comment = "//";
-        mixset RubyGeneratorIntMixset {
-          comment = RubyGenerator.class.isInstance(generator)?"#":"//";
-        }
-        String positionString = "";
-        Position p = inject.getPosition();
-        Position codeP = inject.getCodePosition();
-        String injectFooter = "";
-        String injectType = inject.getType();
-        if (codeP != null) {
-            positionString =  comment + " line " + codeP.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
-            if (injectType != null) {
-                injectFooter = "\n"+ comment +" END OF UMPLE " + injectType.toUpperCase() + " INJECTION";
-            }
-        }
-        else if (p != null) {
-            positionString =  comment +" line " + p.getLineNumber() + " \"" + inject.getUmpleClassifier().getRelativePath( p.getFilename(), inject.getUmpleClassifier().getSourceModel().getDefaultGenerate() ) + "\"\n";
-            if (injectType != null) {
-                injectFooter = "\n"+ comment +" END OF UMPLE " + injectType.toUpperCase() + " INJECTION";
-            }
-        }
-        if (asCode == null)
-        {
-          if(inject.getConstraintTree()!=null&&generator!=null)
-          {
-            asCode = positionString + inject.getConstraintCode(generator) + injectFooter;
-          }
-          
-          else asCode = (inject.getCode()!=null)?positionString + inject.getCode() + injectFooter:positionString + injectFooter;
+public static String toCode(List<CodeInjection> allCodeInjections) {
+  CodeTranslator gen = null;
+  if (GeneratorHelper.generator instanceof CodeTranslator) {
+    gen = (CodeTranslator) GeneratorHelper.generator;
+  }
+  return toCode(allCodeInjections, gen);
+}
 
-        }
-        else
-        {
-          if(inject.getConstraintTree()!=null&&generator!=null)
-          {
-            asCode = StringFormatter.format("{0}\n{1}{2}{3}",asCode,positionString,inject.getConstraintCode(generator), injectFooter);
-          }
-          else asCode = StringFormatter.format("{0}\n{1}{2}{3}",asCode,positionString,inject.getCode(), injectFooter);
-        }
+// Implementation with the fix for #2263
+public static String toCode(List<CodeInjection> allCodeInjections, CodeTranslator generator) {
+  String asCode = null;
+  if (allCodeInjections == null) return null;
+
+  for (CodeInjection inject : allCodeInjections) {
+
+    mixset Mixset {
+      if (inject.hasCodeLabel()) continue;
+    }
+
+    String comment = "//";
+    mixset RubyGeneratorIntMixset {
+      comment = (generator != null && RubyGenerator.class.isInstance(generator)) ? "#" : "//";
+    }
+
+    String injectedCode;
+
+    if (generator != null && inject.getConstraintTree() != null) {
+      injectedCode = inject.getConstraintCode(generator);
+      
+      // If the constraint returned nothing, we must fall back to getCode() 
+      // instead of just continuing, otherwise PHP tests will be empty.
+      if (injectedCode == null || injectedCode.isEmpty()) {
+        injectedCode = inject.getCode();
+      }
+    } else {
+      injectedCode = inject.getCode();
+    }
+
+    // Now, only skip if both attempts resulted in null
+    if (injectedCode == null) {
+      continue;
+    }
+
+    String positionString = "";
+    String injectFooter = "";
+    String injectType = inject.getType();
+    Position posToUse = (inject.getCodePosition() != null)
+      ? inject.getCodePosition()
+      : inject.getPosition();
+
+    if (posToUse != null) {
+      positionString = comment + " line " + posToUse.getLineNumber() + " \"" +
+        inject.getUmpleClassifier().getRelativePath(
+          posToUse.getFilename(),
+          inject.getUmpleClassifier().getSourceModel().getDefaultGenerate()
+        ) + "\"\n";
+      if (injectType != null) {
+        injectFooter = "\n" + comment + " END OF UMPLE " + injectType.toUpperCase() + " INJECTION";
       }
     }
-    if (asCode == null)
-    {
-      return null;
+    if (asCode == null) {
+      asCode = positionString + injectedCode + injectFooter;
+    } else {
+      asCode = StringFormatter.format("{0}\n{1}{2}{3}",
+        asCode, positionString, injectedCode, injectFooter);
     }
-    return asCode;
-  }  
+  }
+
+  return asCode;
+}
 
   public static String doIndent(String code, String indents)
   {

@@ -29,73 +29,28 @@ class JavaPhpRubyNoNullMethodInjection
 
   # injection 1
   def method1 ()
-    // line 8 "model.ump"
-    
-    // END OF UMPLE BEFORE INJECTION
-    // line 10 "model.ump"
-    
-    // END OF UMPLE BEFORE INJECTION
-    // line 13 "model.ump"
     #Ruby
-    // END OF UMPLE BEFORE INJECTION
     
-    // line 17 "model.ump"
     
-    // END OF UMPLE AFTER INJECTION
-    // line 19 "model.ump"
-    
-    // END OF UMPLE AFTER INJECTION
-    // line 22 "model.ump"
     #Ruby
-    // END OF UMPLE AFTER INJECTION
   end
 
 
   # injection 2
   def method2 ()
-    // line 29 "model.ump"
-    
-    // END OF UMPLE BEFORE INJECTION
-    // line 32 "model.ump"
     #Ruby
-    // END OF UMPLE BEFORE INJECTION
-    // line 36 "model.ump"
     
-    // END OF UMPLE BEFORE INJECTION
     
-    // line 38 "model.ump"
-    
-    // END OF UMPLE AFTER INJECTION
-    // line 41 "model.ump"
     #Ruby
-    // END OF UMPLE AFTER INJECTION
-    // line 45 "model.ump"
-    
-    // END OF UMPLE AFTER INJECTION
   end
 
 
   # injection 3
   def method3 ()
-    // line 51 "model.ump"
     #Ruby
-    // END OF UMPLE BEFORE INJECTION
-    // line 55 "model.ump"
     
-    // END OF UMPLE BEFORE INJECTION
-    // line 57 "model.ump"
     
-    // END OF UMPLE BEFORE INJECTION
-    
-    // line 60 "model.ump"
     #Ruby
-    // END OF UMPLE AFTER INJECTION
-    // line 64 "model.ump"
-    
-    // END OF UMPLE AFTER INJECTION
-    // line 66 "model.ump"
-    
-    // END OF UMPLE AFTER INJECTION
   end
 
 

@@ -65,15 +65,9 @@ public class Example
     // line 14 "CodeInjectionStateMachineTest.ump"
     System.out.println("About to flip");
     // END OF UMPLE BEFORE INJECTION
-    // line 21 "CodeInjectionStateMachineTest.ump"
-    
-    // END OF UMPLE BEFORE INJECTION
     light = aLight;
     // line 10 "CodeInjectionStateMachineTest.ump"
     System.out.println("Just flipped");
-    // END OF UMPLE AFTER INJECTION
-    // line 17 "CodeInjectionStateMachineTest.ump"
-    
     // END OF UMPLE AFTER INJECTION
   }
 

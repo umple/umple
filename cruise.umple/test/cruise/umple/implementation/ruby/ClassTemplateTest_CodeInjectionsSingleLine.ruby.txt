@@ -27,19 +27,7 @@ class Student
   end
 
   def foo (a)
-    // line 35 "ClassTemplateTest_CodeInjectionsSingleLine.ump"
     
-    // END OF UMPLE BEFORE INJECTION
-    // line 38 "ClassTemplateTest_CodeInjectionsSingleLine.ump"
-    
-    // END OF UMPLE BEFORE INJECTION
-    
-    // line 43 "ClassTemplateTest_CodeInjectionsSingleLine.ump"
-    
-    // END OF UMPLE AFTER INJECTION
-    // line 46 "ClassTemplateTest_CodeInjectionsSingleLine.ump"
-    
-    // END OF UMPLE AFTER INJECTION
   end
 
 
