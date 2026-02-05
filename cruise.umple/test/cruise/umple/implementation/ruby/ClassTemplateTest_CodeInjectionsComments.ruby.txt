@@ -27,13 +27,7 @@ class Student
   end
 
   def foo (a)
-    // line 18 "model.ump"
     
-    // END OF UMPLE BEFORE INJECTION
-    
-    // line 22 "model.ump"
-    
-    // END OF UMPLE AFTER INJECTION
   end
 
 
