@@ -6,6 +6,7 @@
  "height": 4},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "Relationship",
  "name": "Relationship",
  "isAbstract": "false",
@@ -18,6 +19,7 @@
  "height": 8},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "Student",
  "name": "Student",
  "isAbstract": "false",
@@ -30,6 +32,7 @@
  "height": 12},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "Mentor",
  "name": "Mentor",
  "isAbstract": "false",
@@ -83,4 +86,5 @@
  "isLeftComposition":"false",
  "isRightComposition":"false",
  "isSymmetricReflexive":"false",
- "isTraced":"black"}] }
+ "isTraced":"black"}],
+ "globalEnums":[] }

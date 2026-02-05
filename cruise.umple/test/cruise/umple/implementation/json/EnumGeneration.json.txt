@@ -1,0 +1,69 @@
+{"umpleClasses":[{
+"position": {
+"x": 50,
+ "y": 30,
+ "width": 109,
+ "height": 45},
+ "attributes": [{
+ "type" : "Difficulty",
+ "name" : "difficulty",
+ "modifier" : "",
+ "traceColor" : "black" }, {
+ "type" : "Priority",
+ "name" : "priority",
+ "modifier" : "",
+ "traceColor" : "black" }, {
+ "type" : "Type",
+ "name" : "type",
+ "modifier" : "",
+ "traceColor" : "black" }, {
+ "type" : "Status",
+ "name" : "status",
+ "modifier" : "",
+ "traceColor" : "black" }],
+"methods": [],
+ "enums": [{
+ "Priority":[
+ "Low",
+ "Medium",
+ "High"],
+ "Type":[
+ "Bug",
+ "Feature",
+ "Documentation"],
+ "Difficulty":[
+ "Easy",
+ "Medium",
+ "Hard"]}],
+ "id": "Task",
+ "name": "Task",
+ "isAbstract": "false",
+ "displayColor": "" ,
+ "isInterface": "false"}, {
+"position": {
+"x": 50,
+ "y": 130,
+ "width": 109,
+ "height": 45},
+ "attributes": [{
+ "type" : "OrderType",
+ "name" : "order",
+ "modifier" : "",
+ "traceColor" : "black" }],
+"methods": [],
+ "enums": [{
+ "Type":[
+ "Online",
+ "In-store",
+ "Pickup"]}],
+ "id": "Order",
+ "name": "Order",
+ "isAbstract": "false",
+ "displayColor": "" ,
+ "isInterface": "false"}],
+ "umpleAssociations":[],
+ "globalEnums":[{
+ "Status":[
+ "Active",
+ "Inactive",
+ "Archived"]}] }

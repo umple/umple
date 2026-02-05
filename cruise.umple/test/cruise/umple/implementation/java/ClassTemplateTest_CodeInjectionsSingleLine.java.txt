@@ -1,10 +1,9 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.23.0-3bd2bc7 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
 
 
-// line 2 "model.ump"
-// line 50 "model.ump"
+// line 1 "model.ump"
 public class Student
 {
 
@@ -26,38 +25,26 @@ public class Student
   public void delete()
   {}
 
-  // line 4 "model.ump"
+  // line 3 "model.ump"
   public String foo(int a){
-    // line 30 "model.ump"
+    // line 35 "model.ump"
     System.out.println("Starting foo with argument: " + a);
     // END OF UMPLE BEFORE INJECTION
-    // line 33 "model.ump"
-    
-    // END OF UMPLE BEFORE INJECTION
     if(a < 0) {      
-      // line 38 "model.ump"
+      // line 43 "model.ump"
       System.out.println("Returning from foo!");
-      // END OF UMPLE AFTER INJECTION
-      // line 41 "model.ump"
-      
       // END OF UMPLE AFTER INJECTION
       return 0;
     }
     else if(a == 1) {      
-      // line 38 "model.ump"
+      // line 43 "model.ump"
       System.out.println("Returning from foo!");
-      // END OF UMPLE AFTER INJECTION
-      // line 41 "model.ump"
-      
       // END OF UMPLE AFTER INJECTION
       return -1;
     }
     else {      
-      // line 38 "model.ump"
+      // line 43 "model.ump"
       System.out.println("Returning from foo!");
-      // END OF UMPLE AFTER INJECTION
-      // line 41 "model.ump"
-      
       // END OF UMPLE AFTER INJECTION
       return 4;
     }
@@ -65,20 +52,14 @@ public class Student
     for(int i = 0; i < a; i++) {
       // TODO: call foo()
       if(i == a/4) {        
-        // line 38 "model.ump"
+        // line 43 "model.ump"
         System.out.println("Returning from foo!");
-        // END OF UMPLE AFTER INJECTION
-        // line 41 "model.ump"
-        
         // END OF UMPLE AFTER INJECTION
         return a;
       }
     }    
-    // line 38 "model.ump"
+    // line 43 "model.ump"
     System.out.println("Returning from foo!");
-    // END OF UMPLE AFTER INJECTION
-    // line 41 "model.ump"
-    
     // END OF UMPLE AFTER INJECTION
     return 4;
   }
