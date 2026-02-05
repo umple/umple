@@ -156,6 +156,17 @@ Page.syncCrudReverseAssociationsForEnd = function(className, index, end, newValu
     return;
   }
 
+  // For hierarchical self-reflexive associations (e.g., FunctionalArea
+  // parent/child where one side is many and the other is single), we do
+  // not maintain explicit reverse links. Children store a parent reference,
+  // and parents derive their children by scanning those references. If we
+  // tried to sync reverse links here, we would end up writing back into the
+  // same field on other instances (since fromClass === toClass) and make it
+  // appear as though parents have parents they do not actually own.
+  if (fromClass === toClass && end.reflexiveHierarchy) {
+    return;
+  }
+
   var targetInfo = Page.crudData.classes[toClass];
   if (!targetInfo) {
     return;
@@ -654,7 +665,26 @@ Page.openCrudDialogForClass = function(className) {
   var classInfo = Page.crudData.classes[className];
   var attrs = classInfo.attributes || [];
   var instances = classInfo.instances || [];
-  var assocEnds = (Page.crudAssociationsByClass && Page.crudAssociationsByClass[className]) || [];
+
+  // Gather association ends for this class, including any inherited from
+  // its superclasses, using the extends map built from the JSON.
+  var assocEnds = [];
+  if (Page.crudAssociationsByClass) {
+    var seenAssocKeysForClass = {};
+    var currentClassName = className;
+    while (currentClassName) {
+      var ends = Page.crudAssociationsByClass[currentClassName] || [];
+      ends.forEach(function(end) {
+        if (!end) { return; }
+        var key = (end.assocId || "") + "::" + (end.toClass || "") + "::" + (end.direction || "");
+        if (seenAssocKeysForClass[key]) { return; }
+        seenAssocKeysForClass[key] = true;
+        assocEnds.push(end);
+      });
+      var extendsMap = Page.crudExtendsByClass || {};
+      currentClassName = extendsMap[currentClassName] || null;
+    }
+  }
   var container = Page.currentCrudContainer || jQuery("#innerGeneratedCodeRow");
   var $panel = container.find(".crud-instance-panel");
   if ($panel.length === 0) {
@@ -749,6 +779,12 @@ Page.openCrudDialogForClass = function(className) {
     html += "</div>";
   });
 
+  // Association selectors for navigable ends from this class
+  // We generally render selectors for all navigable ends, but we hide the
+  // "reverse" side of one-to-many associations (e.g., Employee -> Accident)
+  // to avoid large multi-selects when a clearer owner side exists. For true
+  // many-to-many (* to *) associations, we still show selectors so links can
+  // be edited from each navigable side.
   var assocSelectorEnds = [];
   var seenReflexiveAssoc = {};
   assocEnds.forEach(function(end) {
@@ -761,7 +797,10 @@ Page.openCrudDialogForClass = function(className) {
     // but the source side does not, it is clearer to edit links from the
     // opposite end. Example: Employee -> Accident when Accident -> Employee
     // is 1..*.
-    if (toHasStar && !fromHasStar) {
+    // Only apply this when the association is truly bidirectional; for
+    // unidirectional associations, this is the only navigable end and must
+    // remain visible (including when inherited by subclasses).
+    if (end.isBidirectional && toHasStar && !fromHasStar) {
       return;
     }
 
@@ -795,7 +834,15 @@ Page.openCrudDialogForClass = function(className) {
       if (minRequired > 0) {
         labelText += " (required)";
       }
-      html += "<label class='crud-field-label'>" + labelText + "</label>";
+      var assocTooltip = "";
+      if (end.inheritedFrom) {
+        assocTooltip = "This is an inherited association from " + end.inheritedFrom + ".";
+      }
+      if (assocTooltip) {
+        html += "<label class='crud-field-label'><span class='crud-tooltip-target' title='" + assocTooltip.replace(/\"/g, "&quot;") + "'>" + labelText + "</span></label>";
+      } else {
+        html += "<label class='crud-field-label'>" + labelText + "</label>";
+      }
 
       var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
       if (multiple) {
@@ -813,10 +860,12 @@ Page.openCrudDialogForClass = function(className) {
             if (typeof v === "undefined" || v === null || v === "") { return; }
             parts.push(aName + "=" + v);
           });
-          var tooltip = parts.length ? (optionLabel + " - " + parts.join(", ")) : optionLabel;
-          html += "<label style='margin-right:8px;'>" +
-                  "<input type='checkbox' name='" + fieldName + "' value='" + idx + "' title='" + tooltip.replace(/\"/g, "&quot;") + "'> " +
-                  optionLabel + "</label>";
+            var tooltip = parts.length ? (optionLabel + " - " + parts.join(", ")) : optionLabel;
+            var tooltipEsc = tooltip.replace(/\"/g, "&quot;");
+            html += "<label style='margin-right:8px;'>" +
+              "<input type='checkbox' name='" + fieldName + "' value='" + idx + "'> " +
+              "<span class='crud-tooltip-target' title='" + tooltipEsc + "'>" + optionLabel + "</span>" +
+              "</label>";
         });
         html += "</div>";
       } else {
@@ -838,10 +887,12 @@ Page.openCrudDialogForClass = function(className) {
             if (typeof v === "undefined" || v === null || v === "") { return; }
             parts.push(aName + "=" + v);
           });
-          var tooltip = parts.length ? (optionLabel + " - " + parts.join(", ")) : optionLabel;
-          html += "<label style='margin-right:8px;'>" +
-                  "<input type='radio' name='" + fieldName + "' value='" + idx + "' title='" + tooltip.replace(/\"/g, "&quot;") + "'> " +
-                  optionLabel + "</label>";
+            var tooltip = parts.length ? (optionLabel + " - " + parts.join(", ")) : optionLabel;
+            var tooltipEsc = tooltip.replace(/\"/g, "&quot;");
+            html += "<label style='margin-right:8px;'>" +
+              "<input type='radio' name='" + fieldName + "' value='" + idx + "'> " +
+              "<span class='crud-tooltip-target' title='" + tooltipEsc + "'>" + optionLabel + "</span>" +
+              "</label>";
         });
         html += "</div>";
       }
@@ -1488,6 +1539,7 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
     Page.resetCrudData();
     // Builds a quick lookup for inheritance resolution and association navigation
     var crudMetaByClass = {};
+    Page.crudExtendsByClass = {};
     classes.forEach(function(cls) {
       var className = cls.name || cls.id;
       if (!className) { return; }
@@ -1497,6 +1549,7 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
         extendsClass: cls.extendsClass || null,
         isAbstract: cls.isAbstract === true || cls.isAbstract === "true"
       };
+      Page.crudExtendsByClass[className] = cls.extendsClass || null;
     });
 
     // Resolve attributes for a class, including inherited ones, and mark
@@ -1580,7 +1633,8 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
       return result;
     };
 
-    // Build association navigation metadata per class (based on navigability and multiplicity)
+    // Build association navigation metadata per class (based on navigability and multiplicity).
+    // Associations are also inherited along the extends hierarchy, similar to attributes.
     Page.crudAssociationsByClass = {};
     associations.forEach(function(assoc) {
       var classOneId = assoc.classOneId;
@@ -1600,6 +1654,16 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
       var isBidirectional = leftNav && rightNav;
 
       var assocName = assoc.name || (classOneName + "__" + classTwoName);
+
+      // For self-reflexive associations, detect hierarchical patterns
+      // where one end is many and the other is single (e.g.,
+      // FunctionalArea child * <-> 0..1 parent). These should not have
+      // symmetric reverse links in the CRUD UI; children store a parent,
+      // while parents derive their children.
+      var isReflexive = (classOneName === classTwoName);
+      var multOneHasStar = multOne && multOne.indexOf("*") !== -1;
+      var multTwoHasStar = multTwo && multTwo.indexOf("*") !== -1;
+      var isReflexiveHierarchy = isReflexive && (multOneHasStar !== multTwoHasStar);
 
       var registerEnd = function(fromClass, toClass, fromMult, toMult, direction) {
         if (!fromClass || !toClass) { return; }
@@ -1623,7 +1687,13 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
           toMax: toRange.max,
           fromMin: fromRange.min,
           fromMax: fromRange.max,
-          storageKey: storageKey
+          storageKey: storageKey,
+          // Track where this association end was declared so we can
+          // propagate it to subclasses as an inherited association.
+          declaringClass: fromClass,
+          // Mark hierarchical self-reflexive associations so that reverse
+          // sync can treat them specially (no symmetric links).
+          reflexiveHierarchy: isReflexiveHierarchy
         });
       };
 
@@ -1634,6 +1704,103 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
       // isLeftNavigable true means classTwo can navigate to classOne
       if (leftNav) {
         registerEnd(classTwoName, classOneName, multTwo, multOne, "two-to-one");
+      }
+    });
+
+    // Resolve associations for a class, including inherited ones, and mark
+    // where inherited associations come from (by declaringClass or parent).
+    var resolvedAssoc = {};
+    var resolveCrudAssociations = function(className, visited) {
+      if (!className || !crudMetaByClass[className]) {
+        return Page.crudAssociationsByClass[className] || [];
+      }
+      if (resolvedAssoc[className]) {
+        return resolvedAssoc[className];
+      }
+
+      visited = visited || {};
+      if (visited[className]) {
+        // Cycle guard: fall back to this class's own associations only
+        var ownOnly = Page.crudAssociationsByClass[className] || [];
+        resolvedAssoc[className] = ownOnly;
+        return ownOnly;
+      }
+      visited[className] = true;
+
+      var metaA = crudMetaByClass[className];
+      var resultA = [];
+      var seenKeys = {};
+
+      var makeKey = function(end) {
+        if (!end) { return ""; }
+        if (end.storageKey) { return end.storageKey; }
+        return (end.assocId || "") + "::" + (end.toClass || "") + "::" + (end.direction || "");
+      };
+
+      // First, pull in parent's associations (if any) and mark them as inherited
+      var parentNameA = metaA.extendsClass;
+      if (parentNameA && crudMetaByClass[parentNameA]) {
+        var parentEnds = resolveCrudAssociations(parentNameA, visited);
+        parentEnds.forEach(function(e) {
+          if (!e) { return; }
+          var key = makeKey(e);
+          if (seenKeys[key]) { return; }
+          var inheritedCopy = {};
+          for (var k in e) {
+            if (e.hasOwnProperty(k)) {
+              inheritedCopy[k] = e[k];
+            }
+          }
+          if (!inheritedCopy.inheritedFrom) {
+            if (inheritedCopy.declaringClass) {
+              inheritedCopy.inheritedFrom = inheritedCopy.declaringClass;
+            } else {
+              inheritedCopy.inheritedFrom = parentNameA;
+            }
+          }
+          seenKeys[key] = true;
+          resultA.push(inheritedCopy);
+        });
+      }
+
+      // Then add this class's own association ends; mark declaringClass so
+      // deeper descendants can still know the original class.
+      var ownEndsA = Page.crudAssociationsByClass[className] || [];
+      ownEndsA.forEach(function(e) {
+        if (!e) { return; }
+        var key = makeKey(e);
+        var ownCopy = {};
+        for (var k in e) {
+          if (e.hasOwnProperty(k)) {
+            ownCopy[k] = e[k];
+          }
+        }
+        ownCopy.declaringClass = className;
+        if (seenKeys[key]) {
+          // Override inherited end with same logical key
+          for (var i = 0; i < resultA.length; i++) {
+            var existing = resultA[i];
+            if (makeKey(existing) === key) {
+              resultA[i] = ownCopy;
+              break;
+            }
+          }
+        } else {
+          seenKeys[key] = true;
+          resultA.push(ownCopy);
+        }
+      });
+
+      resolvedAssoc[className] = resultA;
+      return resultA;
+    };
+
+    // Apply resolved (inherited) associations back onto the shared map so
+    // the rest of the CRUD UI can consume them directly.
+    Object.keys(crudMetaByClass).forEach(function(cn) {
+      var resolvedForClass = resolveCrudAssociations(cn, {});
+      if (resolvedForClass && resolvedForClass.length) {
+        Page.crudAssociationsByClass[cn] = resolvedForClass;
       }
     });
 
