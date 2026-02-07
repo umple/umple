@@ -100,7 +100,7 @@ const AiRequirements = {
     RequirementsDialog.clearRequirementsOutput();
     RequirementsDialog.appendRequirementsOutput(`Generation type: ${genType}`);
 
-    dialog.generationContext = { selectedReqs, genType, generation: null, umpleCode: "" };
+    dialog.generationContext = { selectedReqs, genType, generation: null, umpleCode: "", chatContext: null };
     let tokenLimitTruncated = false;
 
     try {
@@ -111,8 +111,10 @@ const AiRequirements = {
       }
 
       const generation = RequirementsPromptBuilder.buildGeneration(selectedReqs, genType);
+      const chatContext = AiChatContext.create(generation.systemPrompt);
 
       dialog.generationContext.generation = generation;
+      dialog.generationContext.chatContext = chatContext;
 
       RequirementsDialog.setStatusMessage(statusDiv, "LLM", `Generating ${genType === "classdiagram" ? "class diagram" : "state machine"}...`);
       RequirementsDialog.appendRequirementsOutput(`Generating ${genType === "classdiagram" ? "class diagram" : "state machine"}...`);
@@ -126,7 +128,8 @@ const AiRequirements = {
           codeArea.scrollTop = codeArea.scrollHeight;
         }
       });
-      this.activeStream = AiApi.chatStream(generation.prompt, generation.systemPrompt, {}, {
+      AiChatContext.addUser(chatContext, generation.prompt);
+      this.activeStream = AiApi.chatStream(chatContext, {}, {
         onDelta: (deltaText) => {
           streamRenderer.append(deltaText);
         },
@@ -138,6 +141,9 @@ const AiRequirements = {
       const response = await this.activeStream.done;
       this.activeStream = null;
       streamRenderer.flush({ force: true });
+      if (response && response.trim()) {
+        AiChatContext.addAssistant(chatContext, response);
+      }
       RequirementsDialog.appendRequirementsOutput("Generated initial Umple block from AI.");
 
       if (tokenLimitTruncated) {
@@ -155,52 +161,6 @@ const AiRequirements = {
       }
 
       let responseText = response || "";
-      if (typeof RequirementsPromptBuilder !== "undefined" && RequirementsPromptBuilder.validateResponseFormat) {
-        const formatErrors = RequirementsPromptBuilder.validateResponseFormat(responseText);
-        if (formatErrors.length > 0 && !dialog.stopped) {
-          RequirementsDialog.appendRequirementsOutput(`Output contract violations: ${formatErrors.join("; ")}`);
-          RequirementsDialog.setStatusMessage(statusDiv, "LLM", "Repairing output format...");
-          RequirementsDialog.appendRequirementsOutput("Attempting format-only repair...");
-          codeArea.value = "";
-          codeArea.placeholder = "Repairing output format...";
-          codeContainer.style.display = "block";
-
-          const originalEditorCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
-          const invalidBlock = this.extractUmpleCode(responseText);
-          const compilerIssuesText = formatErrors.map(err => `- Validation Error: ${err}`).join("\n");
-
-          const repairResult = RequirementsPromptBuilder.repair_buildGeneration({
-            generationType: genType,
-            requirements: selectedReqs,
-            originalCode: originalEditorCode,
-            invalidBlock,
-            compilerIssuesText
-          });
-
-          const streamRenderer = AiStreamUtils.createBufferedTextRenderer({
-            updateIntervalMs: 40,
-            onRender: text => {
-              codeArea.value = text;
-              codeArea.scrollTop = codeArea.scrollHeight;
-            }
-          });
-          this.activeStream = AiApi.chatStream(repairResult.prompt, repairResult.systemPrompt, {}, {
-            onDelta: (deltaText) => {
-              streamRenderer.append(deltaText);
-            }
-          });
-
-          responseText = await this.activeStream.done;
-          this.activeStream = null;
-          streamRenderer.flush({ force: true });
-          RequirementsDialog.appendRequirementsOutput("Output format repair completed.");
-
-          const remainingErrors = RequirementsPromptBuilder.validateResponseFormat(responseText);
-          if (remainingErrors.length > 0) {
-            RequirementsDialog.appendRequirementsOutput(`Output contract still violated: ${remainingErrors.join("; ")}`);
-          }
-        }
-      }
 
       dialog.generationContext.umpleCode = this.extractUmpleCode(responseText);
       let umpleCode = dialog.generationContext.umpleCode;
@@ -214,10 +174,10 @@ const AiRequirements = {
           try {
             const corrected = await RequirementsSelfCorrection.run({
               originalCode: originalEditorCode,
-              generatedBlock: umpleCode,
+              generatedResponse: responseText,
               requirements: selectedReqs,
               generationType: genType,
-              systemPrompt: generation.systemPrompt,
+              chatContext,
               expectedRequirementIds: generation.expectedRequirementIds,
               log: line => RequirementsDialog.appendRequirementsOutput(line),
               setStatus: (label, message, color) => RequirementsDialog.setStatusMessage(statusDiv, label, message, color),

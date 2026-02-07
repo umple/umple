@@ -118,7 +118,7 @@ const RequirementsPromptBuilder = (() => {
       .join("\n\n");
   }
 
-  function getSystemPrompt(generationType, expectedRequirementIds = []) {
+  function getSystemPrompt(generationType, requirementsText = "") {
     const base = (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
       ? AiPrompting.getBaseSystemPrompt()
       : "You are an expert in Umple modeling language.";
@@ -127,9 +127,9 @@ const RequirementsPromptBuilder = (() => {
       block("system", base, { allowEmpty: true }),
       ...getSystemGuidanceBlocksForGenerationType(generationType),
       ...getGuidanceBlocksForGenerationType(generationType),
-      block("umple_quick_reference", getCheatSheet(), { allowEmpty: true }),
-      block("output_contract", buildOutputContract({ generationType, expectedRequirementIds })),
-      block("directive", "Your job is to generate ONLY valid Umple code.")
+      block("how_to_use_requirements_in_umple", getGuidanceText("requirements"), { allowEmpty: true }),
+      block("requirements", requirementsText, { allowEmpty: true }),
+      block("umple_quick_reference", getCheatSheet(), { allowEmpty: true })
     ]);
   }
 
@@ -153,13 +153,10 @@ const RequirementsPromptBuilder = (() => {
         : "";
   }
 
-  function getRequirementRule(expectedRequirementIds, mode = "initial") {
+  function getRequirementRule(expectedRequirementIds) {
     const reqs = (expectedRequirementIds || []).join(", ");
-    if (mode === "repair" && !reqs) {
-      return "- If requirement IDs are provided, include implementsReq for them.";
-    }
-    const verb = mode === "repair" ? "need to" : "MUST";
-    return `- You ${verb} include implementsReq for: ${reqs} (on the generated class(es) and/or association/sm as appropriate).`;
+    if (!reqs) return "";
+    return `- You MUST include implementsReq for: ${reqs} (on the generated class(es) and/or association/sm as appropriate).`;
   }
 
   function buildCommonOutputRules() {
@@ -185,22 +182,26 @@ const RequirementsPromptBuilder = (() => {
   function buildOutputContract({ generationType, expectedRequirementIds }) {
     return [
       ...buildCommonOutputRules(),
-      getRequirementRule(expectedRequirementIds, "initial"),
+      getRequirementRule(expectedRequirementIds),
       getTypeRule(generationType),
       ...buildCommonConstraintRules()
     ].filter(Boolean).join("\n");
   }
 
-  function repair_buildOutputContract({ generationType, expectedRequirementIds }) {
+  function buildRepairTaskBlock() {
     return [
-      ...buildCommonOutputRules(),
-      getRequirementRule(expectedRequirementIds, "repair"),
-      getTypeRule(generationType),
-      "- Do NOT re-output any req { ... } blocks.",
-      "- Do NOT repeat the user's existing code; output ONLY the corrected generated block.",
-      "- Do NOT change or reference line-numbered edits in the user's original code; fix only the generated block.",
-      "- If you must assume something, add a single-line comment inside the code: // Assumption: ..."
-    ].filter(Boolean).join("\n");
+      "You are debugging Umple code. Follow this workflow:",
+      "",
+      "1. Read the compiler_issues_errors_warnings",
+      "2. Review the previous conversation for the generated block that needs fixing and the original model context",
+      "3. Read the requirements and output_contract",
+      "4. Generate corrected block that satisfies all constraints",
+      "",
+      "Important:",
+      "- Output ONLY the corrected generated block, not the user's entire model",
+      "- Do NOT change or reference line-numbered edits in the user's original code",
+      "- Fix only the generated block from the conversation history"
+    ].join("\n");
   }
 
   function validateResponseFormat(response) {
@@ -331,41 +332,28 @@ const RequirementsPromptBuilder = (() => {
 
       const prompt = joinBlocks([
         block("task", getTaskLine(generationType)),
-        block("requirements", reqText, { allowEmpty: true }),
-        block("how_to_use_requirements_in_umple", getGuidanceText("requirements"), { allowEmpty: true }),
         block("output_contract", buildOutputContract({ generationType, expectedRequirementIds }))
       ]);
 
-      return { prompt, systemPrompt: getSystemPrompt(generationType, expectedRequirementIds), expectedRequirementIds };
+      return { prompt, systemPrompt: getSystemPrompt(generationType, reqText), expectedRequirementIds };
     },
 
-    repair_buildGeneration({ generationType, requirements, originalCode, invalidBlock, compilerIssuesText } = {}) {
+    repair_buildGeneration({ generationType, requirements, compilerIssuesText } = {}) {
       const expectedRequirementIds = (requirements || []).map(r => r.id).filter(Boolean);
       const reqText = formatRequirements(requirements);
-
-      const original = (originalCode || "").trim();
-      const originalTrimmed = original.length > 8000
-        ? `${original.slice(0, 8000)}\n\n// Assumption: Original model truncated for prompt size.`
-        : original;
 
       const issues = (compilerIssuesText || "").trim();
       const issuesText = issues ? `Errors (compiler and validation) with code snippets:\n${issues}` : "- (No details provided)";
 
       const prompt = joinBlocks([
-        block(
-          "task",
-          "You are debugging Umple code. Follow this workflow:\n\n1. Read the current_generated_block_to_fix\n2. Read the compiler_issues_errors_warnings\n3. Read the troubleshooting information\n4. Read the requirements and output_contract\n5. Generate corrected block that satisfies all constraints"
-        ),
+        block("task", buildRepairTaskBlock()),
         block("compiler_issues_errors_warnings", issuesText),
-        block("current_generated_block_to_fix", `\`\`\`umple\n${(invalidBlock || "").trim()}\n\`\`\``),
-        block("original_model_read_only_context", `\`\`\`umple\n${originalTrimmed}\n\`\`\``),
-        block("requirements", reqText, { allowEmpty: true }),
-        block("output_contract", repair_buildOutputContract({ generationType, expectedRequirementIds }))
+        block("output_contract", buildOutputContract({ generationType, expectedRequirementIds }))
       ]);
 
       return {
         prompt,
-        systemPrompt: getSystemPrompt(generationType, expectedRequirementIds),
+        systemPrompt: getSystemPrompt(generationType, reqText),
         expectedRequirementIds
       };
     }

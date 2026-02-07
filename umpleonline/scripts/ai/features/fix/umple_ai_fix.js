@@ -136,7 +136,10 @@ const AiFix = {
           guidanceBullet.textContent = `- ${text}`;
         }
       });
-      this.activeRequest = AiApi.chatStream(prompt, systemPrompt, { maxTokens: 500 }, {
+      const chatContext = AiChatContext.create(systemPrompt);
+      AiChatContext.addUser(chatContext, prompt);
+
+      this.activeRequest = AiApi.chatStream(chatContext, { maxTokens: 500 }, {
         onDelta: chunk => {
           streamRenderer.append(chunk);
         }

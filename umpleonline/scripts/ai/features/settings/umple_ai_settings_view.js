@@ -725,8 +725,8 @@ const AiSettingsView = {
       return;
     }
 
-    // Get saved model from localStorage (no UI fallback)
-    const savedModel = getModel(false);
+    // Get saved model from localStorage
+    const savedModel = getModel();
     let modelToSelect = null;
 
     if (savedModel) {

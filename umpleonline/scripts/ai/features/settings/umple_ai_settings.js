@@ -232,7 +232,7 @@ const AiSettings = {
   updateStatusIndicator() {
     const provider = AiApi.getProvider();
     const apiKey = AiApi.getApiKey(provider);
-    const model = AiApi.getModel(false, provider);
+    const model = AiApi.getModel(provider);
     const verified = AiApi.isVerified(provider);
 
     AiSettingsView.updateStatusIndicator({ provider, apiKey, model, verified });
@@ -257,7 +257,7 @@ const AiSettings = {
   restoreSavedModel(provider = null) {
     const providerToUse = provider || AiApi.getProvider();
     AiSettingsView.restoreSavedModel(
-      () => AiApi.getModel(false, providerToUse),
+      () => AiApi.getModel(providerToUse),
       model => AiApi.saveModel(model, providerToUse)
     );
   },
