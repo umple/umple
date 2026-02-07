@@ -112,15 +112,6 @@ const RequirementsPromptBuilder = (() => {
     await Promise.all(keys.map(k => ensureGuidanceLoaded(k)));
   }
 
-  async function preloadRepairGuidance(generationType) {
-    const keys = [
-      "requirements",
-      ...getGuidanceKeysForGenerationType(generationType),
-      ...getSystemGuidanceKeysForGenerationType(generationType)
-    ];
-    await Promise.all(keys.map(k => ensureGuidanceLoaded(k)));
-  }
-
   function formatRequirements(requirements) {
     return (requirements || [])
       .map(r => `Requirement ${r.id}:\n${(r.text || "").trim()}`)
@@ -139,24 +130,6 @@ const RequirementsPromptBuilder = (() => {
       block("umple_quick_reference", getCheatSheet(), { allowEmpty: true }),
       block("output_contract", buildOutputContract({ generationType, expectedRequirementIds })),
       block("directive", "Your job is to generate ONLY valid Umple code.")
-    ]);
-  }
-
-  function getRepairSystemPrompt(generationType) {
-    const base = (typeof AiPrompting !== "undefined" && AiPrompting.getBaseSystemPrompt)
-      ? AiPrompting.getBaseSystemPrompt()
-      : "You are an expert in Umple modeling language.";
-
-    return joinBlocks([
-      block("system", base, { allowEmpty: true }),
-      block("role", "You are debugging Umple code. Your task is to FIX compiler errors in a generated block so it compiles cleanly when inserted into the user's existing model."),
-      ...getSystemGuidanceBlocksForGenerationType(generationType),
-      ...getGuidanceBlocksForGenerationType(generationType),
-      block("umple_quick_reference", getCheatSheet(), { allowEmpty: true }),
-      block("repair_strategy", [
-        "1. Analyze the compiler error message carefully",
-        "2. Identify the root cause of the error in the code block",
-      ].join("\n"))
     ]);
   }
 
@@ -305,10 +278,6 @@ const RequirementsPromptBuilder = (() => {
       return preloadGuidance(generationType);
     },
 
-    preloadRepairGuidance(generationType) {
-      return preloadRepairGuidance(generationType);
-    },
-
     /**
      * Validate generated Umple code.
      * Checks: empty code, balanced braces, expected structure, implementsReq tags.
@@ -396,7 +365,7 @@ const RequirementsPromptBuilder = (() => {
 
       return {
         prompt,
-        systemPrompt: getRepairSystemPrompt(generationType),
+        systemPrompt: getSystemPrompt(generationType, expectedRequirementIds),
         expectedRequirementIds
       };
     }
