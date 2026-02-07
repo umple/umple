@@ -84,20 +84,6 @@ const ExplainPromptBuilder = (() => {
     },
 
     /**
-     * Build follow-up prompt with conversation context
-     * @param {Array<Object>} conversationHistory - Array of conversation messages
-     * @param {string} userQuestion - User's follow-up question
-     * @returns {string} Complete prompt for follow-up
-     */
-    buildFollowUpPrompt(conversationHistory, userQuestion) {
-      const formattedHistory = this.formatConversationHistory(conversationHistory);
-
-      return FOLLOW_UP_PROMPT_TEMPLATE
-        .replace(/\{\{conversationHistory\}\}/g, formattedHistory)
-        .replace(/\{\{userQuestion\}\}/g, userQuestion);
-    },
-
-    /**
      * Format explanation with basic markdown-like formatting
      * @param {string} explanationText - Explanation text to format
      * @returns {string} Formatted HTML
@@ -125,18 +111,6 @@ const ExplainPromptBuilder = (() => {
     // ==========================================================================
     // PRIVATE HELPERS
     // ==========================================================================
-
-    /**
-     * Format conversation history into text format
-     * @private
-     * @param {Array<Object>} conversationHistory - Array of conversation messages
-     * @returns {string} Formatted conversation history
-     */
-    formatConversationHistory(conversationHistory) {
-      return conversationHistory
-        .map(message => `${message.role}: ${message.content}`)
-        .join("\n\n");
-    },
 
     /**
      * Collect validation errors for explanation text
