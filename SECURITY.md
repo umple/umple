@@ -12,8 +12,8 @@ we will only support security issues in the latest official release and subseque
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 29.1.x  | :white_check_mark: |
-| < 29.1  | :x:                |
+| 35.0.x  | :white_check_mark: |
+| < 35.0  | :x:                |
 
 ## Reporting a Vulnerability
 

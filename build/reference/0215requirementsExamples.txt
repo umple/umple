@@ -24,3 +24,7 @@ noreferences
 @@example @@caption Very simple credit card approval partial requirements @@endcaption
 @@source manualexamples/ReqCreditCardApproval.ump
 @@endexample
+
+@@example @@caption Agent loop system requirements for state machine generation @@endcaption
+@@source manualexamples/ReqAgentLoop.ump
+@@endexample

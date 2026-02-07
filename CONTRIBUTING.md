@@ -9,14 +9,12 @@ Use the issues tracker for:
 
 * [bug reports](#bug-reports)
 * [submitting pull requests](#pull-requests)
+* [submitting feature requests](#feature-requests)
 
-Please **do not** use the issue tracker for feature requests. Support requests should be sent to:
-
-* [the umple-dev mailing list](https://groups.google.com/forum/#!forum/umple-dev)
+Please **check carefully** to see if a bug report or feature request has already been submitted before adding a new one.
 
 We do our best to keep the issue tracker tidy and organized, making it useful
-for everyone. For example, we classify open issues per application and perceived
-difficulty of the issue, making it easier for developers to
+for everyone. For example, we tag open issues by difficulty, urgency, component, and feature making it easier for developers to
 [contribute to Umple](#contributing).
 
 ## Bug reports
@@ -26,8 +24,7 @@ Good bug reports are extremely helpful - thank you!
 
 Guidelines for bug reports:
 
-1. **Use the GitHub issue search** &mdash; [check if the issue has already been
-   reported](https://github.com/umple/umple/search?type=Issues).
+1. **Use the GitHub issue search** &mdash; [check if the issue has already been reported](https://github.com/umple/umple/search?type=Issues).
 
 2. **Check if the issue has been fixed** &mdash; try to reproduce it using the
    `master` branch in the repository.
@@ -73,15 +70,9 @@ about the code.
 
 The umple project is split into many smaller subproject, the folder hierarchy is explained below to better describe the structure.
 
-* `build` - All build related scripts
+* `build` - All build related scripts. Also the source files for the user manual are found in the reference subdirectory
 
-* `cruise.umple` - Umple compiler, containers it's own ReadMe.txt, as well as `UmpleTo*` below
-
-* `cruise.umple.eclipse` - *Eclipse plugins*
-
-* `cruise.umplificator` - *Converting outside code to Umple*
-
-* `cruise.umple.validator` - Used by `cruise.umplificator` for validating an umplified project
+* `cruise.umple` - Umple compiler, contains it's own ReadMe.txt, as well as `UmpleTo*` below. The core compiler source code is in the src directory and its subdirectories, and the core compiler tests are below the test subdirectory.
 
 * `cruise.umple.nebula` - Infrastructure used for real-time C++
 
@@ -94,13 +85,7 @@ The umple project is split into many smaller subproject, the folder hierarchy is
   * umple.jar *Command-line Compiler* (a symbolic link to the latest version
   * umpledocs.n.n.jar *User manual generator*
   * umplestats.n.n.jar *Statistics generation*
-  * umplesync.n.n.jar *UmpleOnline tool to to synchronize graphical form*
-  * vml.b.b.jar * Extension for variability modeling*
-
-* `examples` - Developer curated examples
-* `externalexamples` - External projects that are used for testing
-
-* `ExternalTextEditorPlugins` - Plugins for external editors, Notepad++, etc
+  * umplesync.n.n.jar *UmpleOnline tool to run the internal server of UmpleOnline*
 
 * `sandbox` - A sample project for testing Continuous Integration server
 
@@ -123,23 +108,17 @@ The umple project is split into many smaller subproject, the folder hierarchy is
 * `UmpleToTemplate` - Template for creating new code generation subprojects*
 
 * `umpleonline` - The UmpleOnline web application
-  * UmpleOnline allows generation of code from Umple directly in a web browser, and also editing of Umple both graphically and textually. Available at https://try.umple.org
+  * UmpleOnline allows generation of code from Umple directly in a web browser, and also editing of Umple both graphically and textually. Available at https://try.umple.org. There is an umplibrary subdirectory that contains many examples, including those that appear in the user manual and UmpleOnline itself.
 
-* `Umplificator` - Reverse engineer code to Umple
-
-* `umplificatoronline` - Online tool for converting code to Umple
-
-* `umpleUI` - Projects for the UIGU tooling
-  * Projects for generating a UI through UIGU from Umple. These need work to incorporate them into UmpleOnline
+* `Umplificator` - Reverse engineer code to Umple. Has not been modified for some years.
 
 * `umplewww` - Core files from the Umple.org web pages
-  * Includes items such as the user manual that are moved at build time into the appropriate place
+  * Includes items used in the user manual that are moved at build time into the appropriate place
 
 You will want to ensure you have a [proper development environment](https://github.com/umple/umple/wiki/DevelopmentSetUp),
 and that you are familiar with running the build using our [build cheat sheet](https://github.com/umple/umple/wiki/CheatSheet)
 
-After your changes are done, please remember to run the full suite with
-`cd build && ant -Dmyenv=local`.
+After your changes are done, please remember to run the full suite with the bumple script found in dev-tools
 
 You can check [the build status on Jenkins](https://jenkins.umple.org).
 
@@ -152,7 +131,7 @@ Good pull requests - patches, improvements, new features - are a fantastic
 help. They should remain focused in scope and avoid containing unrelated
 commits.
 
-**IMPORTANT**: By submitting a patch, you agree that your work will be
+**IMPORTANT**: By submitting a PR, you agree that your work will be
 licensed under the license used by the project.
 
 If you have any large pull request in mind (e.g. implementing features,
@@ -165,75 +144,16 @@ accurate comments, etc.) and don't forget to add your own tests and
 documentation. When working with Git, we recommend the following process
 in order to craft an excellent pull request:
 
-1. [Fork](https://help.github.com/fork-a-repo/) the project, clone your fork,
-  and configure the remotes:
+1. Clone the project. Do not fork it.
 
-  ```sh
-  # Clone your fork of the repo into the current directory
-  git clone https://github.com/<your-username>/umple
-  # Navigate to the newly cloned directory
-  cd umple
-  # Assign the original repo to a remote called "upstream"
-  git remote add upstream https://github.com/umple/umple
-  ```
+2. If you cloned a while ago, get the latest changes from upstream by doing git pull.
 
-2. If you cloned a while ago, get the latest changes from upstream:
-
-  ```sh
-  git checkout master
-  git pull upstream master
-  ```
-
-3. Create a new topic branch (off of `master`) to contain your feature, change,
-  or fix.
-
-  **IMPORTANT**: Making changes in `master` is discouraged. You should always
-  keep your local `master` in sync with upstream `master` and make your
-  changes in topic branches.
-
-  ```sh
-  git checkout -b <topic-branch-name>
-  ```
+3. Create a new topic branch (off `master`) to contain your feature, change, or fix. Name it with the issue number it is fixing, plus a few words. Do a PR from this branch as soon as possible to help everyone know what you are working on. Mark the PR as DRAFT until you feel it is ready for review.
 
 4. Commit your changes in logical chunks. Keep your commit messages organized,
-  with a short description in the first line and more detailed information on
-  the following lines. Feel free to use Git's
-  [interactive rebase](https://help.github.com/articles/interactive-rebase)
-  feature to tidy up your commits before making them public.
+  with a short description.
 
-5. Make sure all the tests are still passing.
+5. Make sure all the tests are still passing by doing a full build and checking that all tests are passing (Don't rely on a SUCCESS message).
 
-  ```sh
-  cd build 
-  ant Dmyenv=local
-  ```
-  Don't forget to use ant -Dmyenv=wlocal if you're on Windows.
-
-  This command will compile the code in your branch and use that
-  version of Umple to run the tests. This is needed to ensure your changes can
-  pass all the tests.
-
-6. Push your topic branch up to your fork:
-
-  ```sh
-  git push origin <topic-branch-name>
-  ```
-
-7. [Open a Pull Request](https://help.github.com/articles/using-pull-requests/)
-  with a clear title and description.
-
-8. If you haven't updated your pull request for a while, you should consider
-  rebasing on master and resolving any conflicts.
-
-  **IMPORTANT**: _Never ever_ merge upstream `master` into your branches. You
-  should always `git rebase` on `master` to bring your changes up to date when
-  necessary.
-
-  ```sh
-  git checkout master
-  git pull upstream master
-  git checkout <your-topic-branch>
-  git rebase master
-  ```
 
 Thank you for your contributions!
