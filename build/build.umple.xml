@@ -365,8 +365,26 @@
       <fileset file="${scriptPath}/shCore.js"/>
       <fileset dir="${scriptPath}" includes="shBrush*.js"/>
       <fileset file="${scriptPath}/inlineeditor.js"/>
-      <fileset dir="${scriptPath}/dropbox" includes="*.js"/>
-      <fileset dir="${scriptPath}" includes="umple_*.js"/>
+      <!--fileset dir="${scriptPath}/dropbox" includes="*.js"/-->
+      <fileset file="${scriptPath}/umple_page.js"/>
+      <fileset file="${scriptPath}/umple_layout.js"/>
+      <fileset file="${scriptPath}/umple_action.js"/>
+      <fileset file="${scriptPath}/umple_position.js"/>
+      <fileset file="${scriptPath}/umple_line.js"/>
+      <fileset file="${scriptPath}/umple_system.js"/>
+      <fileset file="${scriptPath}/umple_class.js"/>
+      <fileset file="${scriptPath}/umple_association.js"/>
+      <fileset file="${scriptPath}/umple_generalization.js"/>
+      <fileset file="${scriptPath}/umple_transition.js"/>
+      <fileset file="${scriptPath}/umple_attribute.js"/>
+      <fileset file="${scriptPath}/umple_method.js"/>
+      <fileset file="${scriptPath}/umple_history.js"/>
+      <fileset file="${scriptPath}/umple_restore.js"/>
+      <fileset file="${scriptPath}/umple_action_diagram.js"/>
+      <fileset file="${scriptPath}/umple_tooltips.js"/>
+      <fileset file="${scriptPath}/umple_tab_control.js"/>
+      <!-- CRUD UI -->
+      <fileset file="${scriptPath}/umple_crudui.js"/>      
       <!-- Core AI modules - must be in dependency order -->
       <fileset dir="${scriptPath}/ai/utils" includes="**/*.js"/>
       <fileset file="${scriptPath}/ai/config/umple_ai_config.js"/>
