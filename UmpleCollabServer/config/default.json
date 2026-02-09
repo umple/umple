@@ -1,6 +1,6 @@
 {
     "collab_server": {
         "port": 8000,
-        "path": "/collabapitest"
+        "path": "/collabapi"
     }
 }
