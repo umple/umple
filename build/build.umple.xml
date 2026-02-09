@@ -372,6 +372,7 @@
       <fileset file="${scriptPath}/ai/config/umple_ai_config.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_errors.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_storage.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_chat_context.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_providers.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_controller.js"/>
       <fileset file="${scriptPath}/ai/core/umple_ai_config_validation.js"/>

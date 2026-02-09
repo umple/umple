@@ -183,20 +183,14 @@ const AiProviderAdapters = {
    * @param {string} provider - Provider name
    * @param {string} apiKey - API key
    * @param {string} model - Model name
-   * @param {string} prompt - User prompt
-   * @param {string} systemPrompt - System prompt (optional)
+   * @param {{systemPrompt: string, messages: Array<{role: string, content: string}>}} context - Chat context
    * @param {Object} options - {maxTokens}
    * @returns {Promise<string>} Generated text response
    */
-  async chat(provider, apiKey, model, prompt, systemPrompt = "", options = {}) {
+  async chat(provider, apiKey, model, context, options = {}) {
     const client = this._getClient(provider, apiKey);
     const params = AiConfig.getGenerationParams(options);
-
-    const messages = [];
-    if (systemPrompt) {
-      messages.push({ role: "system", content: systemPrompt });
-    }
-    messages.push({ role: "user", content: prompt });
+    const messages = AiChatContext.contextToMessages(context);
 
     const requestParams = {
       model,
@@ -232,27 +226,21 @@ const AiProviderAdapters = {
    * @param {string} provider - Provider name
    * @param {string} apiKey - API key
    * @param {string} model - Model name
-   * @param {string} prompt - User prompt
-   * @param {string} systemPrompt - System prompt (optional)
+   * @param {{systemPrompt: string, messages: Array<{role: string, content: string}>}} context - Chat context
    * @param {Object} options - {maxTokens}
    * @param {Object} callbacks - {onDelta, onTruncated}
    * @returns {{abort: Function, done: Promise<string>}} Stream handle
    */
-  chatStream(provider, apiKey, model, prompt, systemPrompt = "", options = {}, callbacks = {}) {
+  chatStream(provider, apiKey, model, context, options = {}, callbacks = {}) {
     const controller = new AbortController();
     const client = this._getClient(provider, apiKey);
     const params = AiConfig.getGenerationParams(options);
+    const messages = AiChatContext.contextToMessages(context);
     const onDelta = callbacks?.onDelta;
     const onTruncated = callbacks?.onTruncated;
 
     const done = (async () => {
       try {
-        const messages = [];
-        if (systemPrompt) {
-          messages.push({ role: "system", content: systemPrompt });
-        }
-        messages.push({ role: "user", content: prompt });
-
         const requestParams = {
           model,
           messages,

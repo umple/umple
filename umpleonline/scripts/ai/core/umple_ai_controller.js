@@ -5,11 +5,9 @@
 // AI Controller - Core API facade for storage and provider operations
 
 const AiApi = {
-  // Expose storage keys for backward compatibility
   STORAGE_KEY_PROVIDER_DATA: AiStorage.STORAGE_KEY_PROVIDER_DATA,
   STORAGE_KEY_PROVIDER: AiStorage.STORAGE_KEY_PROVIDER,
 
-  // Storage methods - delegate to AiStorage
   saveApiKey(provider, apiKey) {
     return AiStorage.saveApiKey(provider, apiKey);
   },
@@ -32,8 +30,7 @@ const AiApi = {
     return AiStorage.saveModel(model, provider);
   },
 
-  getModel(checkUI = false, provider = null) {
-    // checkUI retained for backward compatibility; selection is stored on change.
+  getModel(provider = null) {
     const providerToUse = provider || this.getProvider();
     if (!providerToUse) return "";
     return AiStorage.getModel(providerToUse);
@@ -47,7 +44,6 @@ const AiApi = {
     return AiStorage.setVerified(verified, provider);
   },
 
-  // Provider methods - delegate to AiProviderAdapters
   async verifyKey(provider, apiKey) {
     return AiProviderAdapters.verifyKey(provider, apiKey);
   },
@@ -61,13 +57,12 @@ const AiApi = {
   },
 
   /**
-   * Send a chat completion request to the configured AI provider
-   * @param {string} prompt - The user prompt to send
-   * @param {string} systemPrompt - Optional system prompt (ignored by some providers)
+   * Send a chat completion request using a chat context
+   * @param {{systemPrompt: string, messages: Array<{role: string, content: string}>}} context
    * @param {Object} options - Optional configuration {maxTokens}
    * @returns {Promise<string>} The generated text response
    */
-  async chat(prompt, systemPrompt = "", options = {}) {
+  async chat(context, options = {}) {
     const provider = this.getProvider();
     const apiKey = this.getApiKey(provider);
     const model = this.getModel();
@@ -76,18 +71,17 @@ const AiApi = {
     if (!apiKey) throw AiErrors.createConfigurationError("API_KEY_NOT_CONFIGURED");
     if (!model) throw AiErrors.createConfigurationError("MODEL_NOT_CONFIGURED");
 
-    return AiProviderAdapters.chat(provider, apiKey, model, prompt, systemPrompt, options);
+    return AiProviderAdapters.chat(provider, apiKey, model, context, options);
   },
 
   /**
-   * Stream a chat completion response to the configured AI provider
-   * @param {string} prompt - The user prompt to send
-   * @param {string} systemPrompt - Optional system prompt
-    * @param {Object} options - Optional configuration {maxTokens}
-   * @param {Object} callbacks - Optional callbacks {onDelta}
+   * Stream a chat completion response using a chat context
+   * @param {{systemPrompt: string, messages: Array<{role: string, content: string}>}} context
+   * @param {Object} options - Optional configuration {maxTokens}
+   * @param {Object} callbacks - Optional callbacks {onDelta, onTruncated}
    * @returns {{abort: Function, done: Promise<string>}} Stream handle
    */
-  chatStream(prompt, systemPrompt = "", options = {}, callbacks = {}) {
+  chatStream(context, options = {}, callbacks = {}) {
     const provider = this.getProvider();
     const apiKey = this.getApiKey(provider);
     const model = this.getModel();
@@ -96,6 +90,6 @@ const AiApi = {
     if (!apiKey) throw AiErrors.createConfigurationError("API_KEY_NOT_CONFIGURED");
     if (!model) throw AiErrors.createConfigurationError("MODEL_NOT_CONFIGURED");
 
-    return AiProviderAdapters.chatStream(provider, apiKey, model, prompt, systemPrompt, options, callbacks);
+    return AiProviderAdapters.chatStream(provider, apiKey, model, context, options, callbacks);
   }
 };

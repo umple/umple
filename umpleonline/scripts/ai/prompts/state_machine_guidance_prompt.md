@@ -1,136 +1,42 @@
-Umple state machines (compressed, feature-complete)
+Umple state machine guidance (agent-focused)
 
-Placement
-```umple
-class C { sm { S1 { e -> S2; } S2 {} } }                 // inline
-class A { st as M; }  statemachine M { S1{e->S2;} S2{} }  // standalone + reuse
-```
+Goal: Generate concise, valid Umple state machines that compile on first pass.
 
-Core
+Hard syntax constraints
+- Place machines inside classes (`sm`, `state`, `status`, or `flow`) unless intentionally reusable via `statemachine Name { ... }` + `x as Name;`.
+- Every transition ends with `;`.
+- Transition form: `event(args) [guard] / { action } -> Target;`
+- Auto-transition form: `-> Target;`
+- State actions: `entry / { ... }`, `exit / { ... }`, `do { ... }`
+- Same event name in one machine must use the same parameter signature everywhere.
+- Target must be an existing state, `Final`, or `State.H` / `State.HStar`.
+- Do not define a user state named `Final`; use `final Done {}` for named final states.
 
-```umple
-State { ... }          // state block
-event -> Target;       // transition (semicolon required)
-```
+Semantic guidance
+- `sm`: synchronous/default.
+- `queued sm`: FIFO queue; head event waits until handleable.
+- `pooled sm`: may process later handleable events before earlier unhandleable ones.
+- `unspecified -> Error;` catches otherwise-unhandled events in regular/queued machines; in pooled machines it behaves like a normal event.
+- Regions use `||`; a composite completes when each region reaches a final state.
+- Use nesting to avoid repeating shared transitions.
+- Use history for interrupted composite behavior: `.H` (shallow), `.HStar` (deep).
 
-Guards, actions, entry/exit/do
+Modeling checklist
+1. Start with explicit lifecycle states and distinct names.
+2. Ensure each non-final state has meaningful outgoing behavior.
+3. Avoid duplicate unguarded same-event transitions from the same state.
+4. Use mutually exclusive guards when one event branches.
+5. Keep transition/entry/exit actions short; place long-running work in `do`.
+6. Add at least one recovery path for unexpected events.
+7. If assumptions are needed, add one inline comment: `// Assumption: ...`.
 
-* Guard: `[boolean]`
-* Action: `/ { code }` (either side of `->`)
-
-```umple
-e [cond] / { act(); } -> S2;
-e -> / { act(); } S2;
-```
-
-* Entry/exit:
-
-```umple
-S { entry / { onEnter(); }  exit / { onExit(); } }
-```
-
-* Do activity (long-running; interrupted on exit): `do { ... }`
-* Rule: keep entry/exit/transition fast; long work in `do`.
-
-Auto-transitions (eventless)
-
-```umple
--> Next;
-```
-
-* Fires after entry, or after `do` completes; can include guards/actions.
-
-Event parameters
-
-```umple
-S { e(int x) [x > 0] -> T; }
-```
-
-* Constraint: same event name ⇒ same parameter types everywhere.
-
-`unspecified` (catch-all)
-
-```umple
-S { unspecified -> Error; }
-```
-
-* Catches unhandled events.
-* In pooled machines, treated as a normal event.
-
-Threading / ordering
-
-* regular (default): synchronous.
-* `queued sm { ... }`: enqueue events FIFO; waits until the head event is handleable.
-* `pooled sm { ... }`: may process later events first if they’re handleable.
-
-```umple
-queued sm { ... }
-pooled sm { ... }
-```
-
-Final states
-
-* `Final` (capital): implicit top-level final target.
-
-```umple
-go -> Final;
-```
-
-* `final` keyword: named finals (multiple allowed).
-
-```umple
-final Done {}  final Failed {}
-```
-
-Concurrency (orthogonal regions)
-
-* Use `||` inside a composite state; composite completes when all regions reach final.
-
-```umple
-S { A { ... final Af {} }  ||  B { ... final Bf {} } }
-```
-
-Reuse + extension (`as`)
-
-```umple
-class X { st as M; }               // reuse standalone machine
-class X { st as M {                // extend inline
-  cancel S1 -> S0;
-  New { go -> S2; }
-  S0 { entry / { reset(); } }
-}; }
-```
-
-Composition / split definitions
-
-* Can extend a machine across multiple class declarations; standalone transitions allowed.
-
-```umple
-class X { sm { A { e1 -> B; }  e2 B -> A; } }
-class X { sm { e3 A -> B; } }
-```
-
-Minimal template
-
+Minimal pattern
 ```umple
 class Device {
-  Boolean ok = true;
-
   queued sm {
-    Idle {
-      start(int x) [x > 0] / { init(x); } -> Active;
-      unspecified -> Error;
-    }
-    Active {
-      entry / { on(); }
-      do { work(); }
-      [!ok] -> Error;
-      stop -> Final;
-    }
-    Error {
-      entry / { recover(); }
-      ready -> Idle;
-    }
+    Idle { start(int x) [x > 0] -> Active; unspecified -> Error; }
+    Active { stop -> Final; }
+    Error { reset -> Idle; }
   }
 }
 ```

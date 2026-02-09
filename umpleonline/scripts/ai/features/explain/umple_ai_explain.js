@@ -6,8 +6,8 @@
 // Explains Umple code with follow-up conversation support
 
 const AiExplain = {
-  // Conversation history for follow-up context
-  conversationHistory: [],
+  // Chat context for follow-up conversation
+  chatContext: null,
 
   // Active stream handle (for abort)
   activeStream: null,
@@ -31,7 +31,7 @@ const AiExplain = {
    * Reset conversation history
    */
   resetConversation() {
-    this.conversationHistory = [];
+    this.chatContext = null;
     this.updateExplainButtonIndicator();
   },
 
@@ -40,7 +40,7 @@ const AiExplain = {
    * @returns {boolean}
    */
   hasOngoingConversation() {
-    return this.conversationHistory.length > 0;
+    return !!(this.chatContext && Array.isArray(this.chatContext.messages) && this.chatContext.messages.length > 0);
   },
 
   /**
@@ -99,23 +99,6 @@ const AiExplain = {
       clearInterval(this.thinkingInterval);
       this.thinkingInterval = null;
     }
-  },
-
-  /**
-   * Add message to conversation history
-   * @param {string} role - Role ('user' or 'assistant')
-   * @param {string} content - Message content
-   */
-  addToHistory(role, content) {
-    this.conversationHistory.push({ role, content });
-
-    // Keep only last 10 messages to manage token usage
-    if (this.conversationHistory.length > 10) {
-      this.conversationHistory = this.conversationHistory.slice(-10);
-    }
-
-    // Update the indicator on the Explain button
-    this.updateExplainButtonIndicator();
   },
 
   /**
@@ -202,6 +185,7 @@ const AiExplain = {
     btnMinimize.className = "ai-explain-minimize-btn";
     btnMinimize.innerHTML = "&#8211;"; // En dash for minimize icon
     btnMinimize.setAttribute("aria-label", "Minimize dialog");
+    btnMinimize.setAttribute("title", "Minimize (conversation will be saved)");
     header.appendChild(btnMinimize);
 
     // Tooltip for minimize button (custom tooltip to ensure it appears above dialog)
@@ -242,6 +226,7 @@ const AiExplain = {
     followUpInput.id = "followUpInput";
     followUpInput.className = "followup-input";
     followUpInput.placeholder = "Ask a follow-up question...";
+    followUpInput.setAttribute("title", "Ask a follow-up question about this explanation");
     followUpContainer.appendChild(followUpInput);
 
     content.appendChild(followUpContainer);
@@ -255,6 +240,8 @@ const AiExplain = {
     btnNewConversation.className = "jQuery-palette-button unselectable ui-button ui-corner-all ui-widget";
     btnNewConversation.tabIndex = 0;
     btnNewConversation.setAttribute("role", "button");
+    btnNewConversation.setAttribute("aria-label", "Start a new conversation");
+    btnNewConversation.setAttribute("title", "Start a new explanation using the current editor code");
     btnNewConversation.style.display = "none";
     btnNewConversation.textContent = "New Conversation";
     buttonsDiv.appendChild(btnNewConversation);
@@ -264,6 +251,8 @@ const AiExplain = {
     btnAsk.className = "jQuery-palette-button unselectable ui-button ui-corner-all ui-widget";
     btnAsk.tabIndex = 0;
     btnAsk.setAttribute("role", "button");
+    btnAsk.setAttribute("aria-label", "Ask follow-up question");
+    btnAsk.setAttribute("title", "Send your follow-up question to the AI");
     btnAsk.style.display = "none";
     btnAsk.textContent = "Ask";
     buttonsDiv.appendChild(btnAsk);
@@ -273,6 +262,8 @@ const AiExplain = {
     btnCancel.className = "jQuery-palette-button unselectable ui-button ui-corner-all ui-widget";
     btnCancel.tabIndex = 0;
     btnCancel.setAttribute("role", "button");
+    btnCancel.setAttribute("aria-label", "Close explanation dialog");
+    btnCancel.setAttribute("title", "Close this dialog and clear the conversation");
     btnCancel.textContent = "Close";
     buttonsDiv.appendChild(btnCancel);
 
@@ -455,12 +446,15 @@ const AiExplain = {
     });
 
     try {
-      // Build prompt using ExplainPromptBuilder
-      const prompt = ExplainPromptBuilder.buildInitialPrompt(umpleCode);
-      const systemPrompt = ExplainPromptBuilder.getSystemPrompt();
+      // Append raw Umple code to context (system prompt defines explainer role)
+      if (!this.chatContext) {
+        this.chatContext = AiChatContext.create(ExplainPromptBuilder.getSystemPrompt());
+      }
+      AiChatContext.addUser(this.chatContext, umpleCode);
+      this.updateExplainButtonIndicator();
 
       // Call AI API (stream)
-      this.activeStream = AiApi.chatStream(prompt, systemPrompt, {}, {
+      this.activeStream = AiApi.chatStream(this.chatContext, {}, {
         onDelta: chunk => {
           buffered.append(chunk);
         }
@@ -477,7 +471,10 @@ const AiExplain = {
       }
 
       // Update history
-      this.addToHistory("assistant", explanation);
+      if (String(explanation || "").trim()) {
+        AiChatContext.addAssistant(this.chatContext, explanation);
+        this.updateExplainButtonIndicator();
+      }
 
       // Display explanation with markdown-like formatting
       explanationText.innerHTML = ExplainPromptBuilder.formatExplanation(explanation);
@@ -545,15 +542,12 @@ const AiExplain = {
     let answerTarget = null;
 
     try {
-      // Add user question to history
-      this.addToHistory("user", userQuestion);
-
-      // Build follow-up prompt using ExplainPromptBuilder
-      const prompt = ExplainPromptBuilder.buildFollowUpPrompt(
-        this.conversationHistory,
-        userQuestion
-      );
-      const systemPrompt = ExplainPromptBuilder.getSystemPrompt();
+      // Append raw follow-up question to context
+      if (!this.chatContext) {
+        this.chatContext = AiChatContext.create(ExplainPromptBuilder.getSystemPrompt());
+      }
+      AiChatContext.addUser(this.chatContext, userQuestion);
+      this.updateExplainButtonIndicator();
 
       // Append placeholder Q/A
       const qaWrapper = document.createElement("div");
@@ -598,7 +592,7 @@ const AiExplain = {
       // Start thinking animation for the answer
       this.startThinkingAnimation(aContent);
 
-      this.activeStream = AiApi.chatStream(prompt, systemPrompt, {}, {
+      this.activeStream = AiApi.chatStream(this.chatContext, {}, {
         onDelta: chunk => {
           renderer?.append(chunk);
         }
@@ -611,7 +605,10 @@ const AiExplain = {
       renderer?.clearTimer();
 
       // Add answer to history
-      this.addToHistory("assistant", answer);
+      if (String(answer || "").trim()) {
+        AiChatContext.addAssistant(this.chatContext, answer);
+        this.updateExplainButtonIndicator();
+      }
 
       // Final formatting pass for the answer
       aContent.innerHTML = ExplainPromptBuilder.formatExplanation(answer);
