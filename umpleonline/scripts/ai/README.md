@@ -124,18 +124,29 @@ const messages = AiChatContext.contextToMessages(context);
 // [{role: "system", content: "..."}, {role: "user", content: "..."}, ...]
 ```
 
+## Prompt Prefix Reuse and Caching
+
+Explain and Requirements Generate both use an append-only `AiChatContext` to keep request prefixes stable across turns.
+
+- Explain flow: first user turn is raw Umple code; follow-ups append only the new question and assistant answer.
+- Generate flow: initial generation and each self-correction pass run in the same context; repair prompts append only compiler/validation deltas, while original guidance and requirements remain in the stable prefix.
+
+Why this matters:
+
+- Many providers/models can cache repeated prompt prefixes and reduce billed input tokens on later turns.
+- Cache behavior is provider/model specific (and may depend on TTL/minimum-prefix rules), so cache savings are opportunistic rather than guaranteed.
+
 ## Provider Interface
 
 All features use a unified provider interface:
 
 ```javascript
-const stream = await AiProviders.streamChat({
-  provider,
-  model,
-  messages,
-  apiKey,
-  abortSignal
+const stream = AiApi.chatStream(context, { maxTokens: 800 }, {
+  onDelta: chunk => {
+    // Streamed text chunk
+  }
 });
+const fullText = await stream.done;
 ```
 
 Supported providers: OpenAI, Google Gemini, OpenRouter.

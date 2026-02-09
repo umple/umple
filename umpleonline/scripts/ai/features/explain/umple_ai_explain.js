@@ -185,6 +185,7 @@ const AiExplain = {
     btnMinimize.className = "ai-explain-minimize-btn";
     btnMinimize.innerHTML = "&#8211;"; // En dash for minimize icon
     btnMinimize.setAttribute("aria-label", "Minimize dialog");
+    btnMinimize.setAttribute("title", "Minimize (conversation will be saved)");
     header.appendChild(btnMinimize);
 
     // Tooltip for minimize button (custom tooltip to ensure it appears above dialog)
@@ -225,6 +226,7 @@ const AiExplain = {
     followUpInput.id = "followUpInput";
     followUpInput.className = "followup-input";
     followUpInput.placeholder = "Ask a follow-up question...";
+    followUpInput.setAttribute("title", "Ask a follow-up question about this explanation");
     followUpContainer.appendChild(followUpInput);
 
     content.appendChild(followUpContainer);
@@ -238,6 +240,8 @@ const AiExplain = {
     btnNewConversation.className = "jQuery-palette-button unselectable ui-button ui-corner-all ui-widget";
     btnNewConversation.tabIndex = 0;
     btnNewConversation.setAttribute("role", "button");
+    btnNewConversation.setAttribute("aria-label", "Start a new conversation");
+    btnNewConversation.setAttribute("title", "Start a new explanation using the current editor code");
     btnNewConversation.style.display = "none";
     btnNewConversation.textContent = "New Conversation";
     buttonsDiv.appendChild(btnNewConversation);
@@ -247,6 +251,8 @@ const AiExplain = {
     btnAsk.className = "jQuery-palette-button unselectable ui-button ui-corner-all ui-widget";
     btnAsk.tabIndex = 0;
     btnAsk.setAttribute("role", "button");
+    btnAsk.setAttribute("aria-label", "Ask follow-up question");
+    btnAsk.setAttribute("title", "Send your follow-up question to the AI");
     btnAsk.style.display = "none";
     btnAsk.textContent = "Ask";
     buttonsDiv.appendChild(btnAsk);
@@ -256,6 +262,8 @@ const AiExplain = {
     btnCancel.className = "jQuery-palette-button unselectable ui-button ui-corner-all ui-widget";
     btnCancel.tabIndex = 0;
     btnCancel.setAttribute("role", "button");
+    btnCancel.setAttribute("aria-label", "Close explanation dialog");
+    btnCancel.setAttribute("title", "Close this dialog and clear the conversation");
     btnCancel.textContent = "Close";
     buttonsDiv.appendChild(btnCancel);
 

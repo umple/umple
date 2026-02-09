@@ -31,6 +31,10 @@ noreferences
 
 <br />
 
+<li><b>Prompt caching and token usage.</b> Prompt caching reuses previously computed prompt prefixes. Cache hits require exact prefix matches, so stable/repeated content should be placed first and request-specific content last. UmpleOnline sends AI requests as chat messages and appends new turns, which helps preserve a reusable prefix across related requests. When cache hits occur, billed input tokens and latency can drop, but cache behavior is provider/model dependent and not guaranteed on every request. For details and examples (including OpenAI's automatic caching behavior, token thresholds, and the <code>cached_tokens</code> usage metric), see <a target="openaipromptcaching" href="https://platform.openai.com/docs/guides/prompt-caching">OpenAI Prompt Caching</a>.</li>
+
+<br />
+
 <li><b>Explain code.</b> Open the AI Explain tool. The dialog analyzes the entire editor content and streams the explanation. You can use the follow-up input to ask questions about the same model, as the dialog maintains a short conversation history for context. If the editor is empty, an alert dialog will prompt you to enter Umple code first.</li>
 
 <br />
