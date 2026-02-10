@@ -233,6 +233,71 @@ Page.syncCrudReverseAssociationsForEnd = function(className, index, end, newValu
   }
 };
 
+// Remove an instance and reindex association links that point to this class.
+Page.removeCrudInstance = function(className, index) {
+  if (!Page.crudData || !Page.crudData.classes || !Page.crudData.classes[className]) {
+    return;
+  }
+  var classInfo = Page.crudData.classes[className];
+  var instances = classInfo.instances || [];
+  if (index < 0 || index >= instances.length) {
+    return;
+  }
+
+  // Remove the instance
+  instances.splice(index, 1);
+
+  // Reindex any association links that point to this class
+  var assocByClass = Page.crudAssociationsByClass || {};
+  for (var sourceClass in assocByClass) {
+    if (!assocByClass.hasOwnProperty(sourceClass)) { continue; }
+    var ends = assocByClass[sourceClass] || [];
+    if (!ends.length) { continue; }
+    var sourceInfo = Page.crudData.classes[sourceClass];
+    if (!sourceInfo) { continue; }
+    var sourceInstances = sourceInfo.instances || [];
+
+    ends.forEach(function(end) {
+      if (!end || end.toClass !== className) { return; }
+      var key = end.storageKey;
+      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+
+      sourceInstances.forEach(function(inst) {
+        var val = inst[key];
+        if (multiple) {
+          var arr = Array.isArray(val) ? val.slice() : [];
+          var changed = false;
+          var newArr = [];
+          arr.forEach(function(v) {
+            if (typeof v !== "number") { return; }
+            if (v === index) { changed = true; return; }
+            if (v > index) {
+              newArr.push(v - 1);
+              changed = true;
+            } else {
+              newArr.push(v);
+            }
+          });
+          if (changed) {
+            inst[key] = newArr;
+          }
+        } else {
+          var v2 = val;
+          if (typeof v2 !== "number") {
+            v2 = parseInt(v2, 10);
+            if (isNaN(v2)) { return; }
+          }
+          if (v2 === index) {
+            inst[key] = null;
+          } else if (v2 > index) {
+            inst[key] = v2 - 1;
+          }
+        }
+      });
+    });
+  }
+};
+
 // Builds the HTML input(s) for a single field given its type
 Page.buildCrudInputHtml = function(attrName, typeInfo) {
   var baseType = typeInfo.base;
@@ -806,6 +871,7 @@ Page.openCrudDialogForClass = function(className) {
       }
 
       html += "<button type='button' class='crud-edit-instance' data-index='" + idx + "' style='margin-left:8px;'>Edit</button>";
+      html += "<button type='button' class='crud-delete-instance' data-index='" + idx + "' style='margin-left:4px;'>Delete</button>";
       if (assocEnds.length > 0) {
         html += "<button type='button' class='crud-see-associations' data-index='" + idx + "' style='margin-left:4px;'>See Associations</button>";
       }
@@ -1151,6 +1217,17 @@ Page.openCrudDialogForClass = function(className) {
       }
       $related.html(relatedHtml);
     }
+  });
+
+  // Delete existing instance
+  $panel.on("click", ".crud-delete-instance", function() {
+    var index = parseInt(jQuery(this).data("index"), 10);
+    if (isNaN(index) || index < 0 || index >= instances.length) {
+      return;
+    }
+    Page.removeCrudInstance(className, index);
+    Page.updateCrudClassCount(className);
+    Page.openCrudDialogForClass(className);
   });
 
   // Show associations for a specific instance in the list
