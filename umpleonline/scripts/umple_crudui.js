@@ -292,6 +292,21 @@ Page.buildCrudInputHtml = function(attrName, typeInfo) {
     return "<input type='text' name='" + attrName + "' style='padding:2px 4px;margin-right:8px;' />";
   }
 
+  // Enum types: rendered as dropdowns. Enums may be defined locally on a
+  // class (umpleClasses[].enums) or globally (globalEnums).
+  var enumOptions = Page.resolveCrudEnumOptions && Page.resolveCrudEnumOptions(rawType);
+  if (enumOptions && enumOptions.length) {
+    var html = "<select name='" + attrName + "' style='padding:2px 4px;margin-right:8px;'>";
+    html += "<option value=''>-- select --</option>";
+    enumOptions.forEach(function(opt) {
+      if (opt === null || typeof opt === "undefined") { return; }
+      var val = opt.toString();
+      html += "<option value='" + val.replace(/\"/g, "&quot;") + "'>" + val + "</option>";
+    });
+    html += "</select>";
+    return html;
+  }
+
   return Page.buildCrudForClassType(attrName, typeInfo);
 };
 
@@ -372,6 +387,32 @@ Page.getAttributeType = function(rawType) {
   // Strips array suffix if present, e.g., "GPSCoord[]" -> "GPSCoord"
   var key = t.replace(/\[\]/g, "");
   return Page.crudClassDefs[key] || null;
+};
+
+// Resolve enum options for a given type name, preferring class-local enums
+// for the current crudClassSelected if available, otherwise falling back to
+// globalEnums.
+Page.resolveCrudEnumOptions = function(rawType) {
+  var t = (rawType || "").toString();
+  if (!t) { return null; }
+  // Strip any array suffix;
+  var name = t.replace(/\[\]/g, "");
+
+  // Prefer local enums on the currently edited class, if present
+  var currentClass = Page.crudClassSelected;
+  if (currentClass && Page.crudEnumsByClass && Page.crudEnumsByClass[currentClass]) {
+    var localMap = Page.crudEnumsByClass[currentClass];
+    if (localMap[name] && Array.isArray(localMap[name])) {
+      return localMap[name];
+    }
+  }
+
+  // Fall back to global enums
+  if (Page.crudGlobalEnums && Page.crudGlobalEnums[name] && Array.isArray(Page.crudGlobalEnums[name])) {
+    return Page.crudGlobalEnums[name];
+  }
+
+  return null;
 };
 
 // Formats time value (e.g., "19:50") as 12-hour with AM/PM (e.g., "7:50 PM")
@@ -488,9 +529,17 @@ Page.parseCrudFieldValue = function($form, attrName, typeInfo, errors) {
     return "";
   }
 
-  var $input = $form.find("input[name='" + attrName + "']");
-  var raw = $input.val();
-  var trimmed = jQuery.trim(raw);
+  // Prefer a <select> element when present (used for enums). If there is no
+  // select, fall back to a plain input field.
+  var $select = $form.find("select[name='" + attrName + "']");
+  var raw;
+  if ($select.length > 0) {
+    raw = $select.val();
+  } else {
+    var $input = $form.find("input[name='" + attrName + "']");
+    raw = $input.val();
+  }
+  var trimmed = jQuery.trim(raw == null ? "" : raw);
 
   // Empty value: treat as empty string or empty array, no error
   if (trimmed === "") {
@@ -661,6 +710,10 @@ Page.openCrudDialogForClass = function(className) {
   if (!Page.crudData || !Page.crudData.classes || !Page.crudData.classes[className]) {
     return;
   }
+
+  // Remember which class is currently being edited so enum resolution can
+  // first look for enums defined locally on this class.
+  Page.crudClassSelected = className;
 
   var classInfo = Page.crudData.classes[className];
   var attrs = classInfo.attributes || [];
@@ -985,7 +1038,12 @@ Page.openCrudDialogForClass = function(className) {
         falseInput.prop("checked", value === false || value === "false");
       } else {
         var inputValue = Page.formatCrudInputValue(value, typeInfo);
-        $form.find("input[name='" + attrName + "']").val(inputValue);
+        var $selectField = $form.find("select[name='" + attrName + "']");
+        if ($selectField.length > 0) {
+          $selectField.val(inputValue);
+        } else {
+          $form.find("input[name='" + attrName + "']").val(inputValue);
+        }
       }
     });
 
@@ -1534,6 +1592,7 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
     var data = JSON.parse(jsonText);
     var classes = data.umpleClasses || [];
     var associations = data.umpleAssociations || [];
+    var globalEnums = data.globalEnums || [];
 
     // Resets in-memory CRUD data each time we (re)render CRUD UI
     Page.resetCrudData();
@@ -1550,7 +1609,41 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
         isAbstract: cls.isAbstract === true || cls.isAbstract === "true"
       };
       Page.crudExtendsByClass[className] = cls.extendsClass || null;
+
+      // Capture local enums defined inside this class, if any
+      var localEnums = (cls.enums && Array.isArray(cls.enums)) ? cls.enums : [];
+      if (localEnums.length > 0) {
+        if (!Page.crudEnumsByClass) {
+          Page.crudEnumsByClass = {};
+        }
+        if (!Page.crudEnumsByClass[className]) {
+          Page.crudEnumsByClass[className] = {};
+        }
+        localEnums.forEach(function(enumObj) {
+          if (!enumObj) { return; }
+          for (var enumName in enumObj) {
+            if (!enumObj.hasOwnProperty(enumName)) { continue; }
+            var values = enumObj[enumName];
+            if (!Array.isArray(values)) { continue; }
+            Page.crudEnumsByClass[className][enumName] = values.slice();
+          }
+        });
+      }
     });
+
+    // Capture global enums from the JSON payload, if any
+    Page.crudGlobalEnums = {};
+    if (Array.isArray(globalEnums)) {
+      globalEnums.forEach(function(enumObj) {
+        if (!enumObj) { return; }
+        for (var enumName in enumObj) {
+          if (!enumObj.hasOwnProperty(enumName)) { continue; }
+          var values = enumObj[enumName];
+          if (!Array.isArray(values)) { continue; }
+          Page.crudGlobalEnums[enumName] = values.slice();
+        }
+      });
+    }
 
     // Resolve attributes for a class, including inherited ones, and mark
     // where inherited attributes come from.
