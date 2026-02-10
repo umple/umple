@@ -22,6 +22,10 @@ const defaultInactivitywarningTime = 540000; // 9 minutes
 const defaultInactivityTimeTest = 10000; // 10 seconds
 const defaultInactivitywarningTimeTest = 6000; // 6 seconds
 
+// defaults for collab server connection
+const defaultServerURL = "https://cruise.umple.org"; 
+const defaultServerPath = "/collabapi";
+
 let inactivityTime = defaultInactivityTime; // 10 minutes
 let inactivitywarningTime = defaultInactivitywarningTime; // 9 minutes
 let diff = (inactivityTime - inactivitywarningTime)/1000; // 60 seconds
@@ -79,15 +83,19 @@ updateConnectionStatus();
   document.getElementById('inputExampleType').disabled = true;
   document.getElementById('inputExample').disabled = true;
 
+  const collabServerConfigExists = typeof CollabServerConfig !== 'undefined';
+
     // DEBUG
     if(collabClientDebugFlag){
       console.log("Current Page is Bookmark URL --- connecting to Collab Server!");
+      console.log("CollabServerConfig: ", collabServerConfigExists ? CollabServerConfig : "CollabServerConfig is not defined");
     }
 
-    // setup default values CollabServerConfig is not set by creating collab-server-config.js
-    // The client will try to connect to serverURL: https://cruise.umple.org and serverPath: /collabapi
-    const serverURL = typeof CollabServerConfig !== 'undefined' ? CollabServerConfig.serverURL : "https://cruise.umple.org"
-    const serverPath = typeof CollabServerConfig !== 'undefined' ? CollabServerConfig.serverPath : "/collabapi" 
+    // To change from the default serverURL and serverPath, create a collab-server-config.js 
+    // file based on the collab-server-config.js.template file and update the serverURL and 
+    // serverPath to connect to your desired collab server instance
+    const serverURL = collabServerConfigExists ? CollabServerConfig.serverURL : defaultServerURL;
+    const serverPath = collabServerConfigExists ? CollabServerConfig.serverPath : defaultServerPath;
     
     // DEBUG
     if(collabClientDebugFlag){

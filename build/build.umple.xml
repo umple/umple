@@ -356,6 +356,7 @@
     <property name="scriptPath" value="${basedir}/umpleonline/scripts"/>
     <property name="tmpScript" value="${scriptPath}/tmpAllUmple.js"/>
     <concat destfile="${tmpScript}" fixlastline="yes">
+      <fileset file="${scriptPath}/collab-server-config.js"/>
       <fileset file="${scriptPath}/prototype.js"/>
       <fileset file="${scriptPath}/dom.js"/>
       <fileset file="${scriptPath}/ajax.js"/>
