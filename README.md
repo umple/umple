@@ -22,6 +22,8 @@ Cite the overall project as: Timothy C. Lethbridge, Andrew Forward, Omar Badredd
 
 Cite latest software release as: University of Ottawa, Umple, https://umple.org/releases  https://doi.org/10.5281/zenodo.4677562   [![DOI](https://zenodo.org/badge/41397174.svg)](https://zenodo.org/badge/latestdoi/41397174)
 
+Releases are created 1-4 times a year, but UmpleOnline always has the latest version.
+
 ## Development Process
 Umple is developed in itself, guaranteeing robustness; the most recent version of the compiler must be used to compile itself. See the wiki for development setup: https://umple.org/devsetup
 
