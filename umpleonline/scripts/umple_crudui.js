@@ -244,11 +244,49 @@ Page.removeCrudInstance = function(className, index) {
     return;
   }
 
-  // Remove the instance
+  var assocByClass = Page.crudAssociationsByClass || {};
+  var inst = instances[index];
+
+  // First, handle composition: if this class is the composition owner for
+  // any association ends, delete the composed (part) instances referenced
+  // from this instance, regardless of multiplicity.
+  var endsFromThis = assocByClass[className] || [];
+  endsFromThis.forEach(function(end) {
+    if (!end || !end.cascadeDeleteTargets) { return; }
+    var key = end.storageKey;
+    var val = inst[key];
+    if (val === undefined || val === null) { return; }
+
+    var targetIndices = [];
+    if (Array.isArray(val)) {
+      val.forEach(function(v) {
+        if (typeof v !== "number") { v = parseInt(v, 10); }
+        if (!isNaN(v) && v >= 0) {
+          targetIndices.push(v);
+        }
+      });
+    } else {
+      var v2 = val;
+      if (typeof v2 !== "number") { v2 = parseInt(v2, 10); }
+      if (!isNaN(v2) && v2 >= 0) {
+        targetIndices.push(v2);
+      }
+    }
+
+    if (!targetIndices.length) { return; }
+
+    // Delete targets in descending order so that earlier indices remain
+    // valid as we remove later ones.
+    targetIndices.sort(function(a, b) { return b - a; });
+    targetIndices.forEach(function(tIdx) {
+      Page.removeCrudInstance(end.toClass, tIdx);
+    });
+  });
+
+  // Remove the instance itself
   instances.splice(index, 1);
 
   // Reindex any association links that point to this class
-  var assocByClass = Page.crudAssociationsByClass || {};
   for (var sourceClass in assocByClass) {
     if (!assocByClass.hasOwnProperty(sourceClass)) { continue; }
     var ends = assocByClass[sourceClass] || [];
@@ -260,12 +298,11 @@ Page.removeCrudInstance = function(className, index) {
     ends.forEach(function(end) {
       if (!end || end.toClass !== className) { return; }
       var key = end.storageKey;
-      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
 
       sourceInstances.forEach(function(inst) {
         var val = inst[key];
-        if (multiple) {
-          var arr = Array.isArray(val) ? val.slice() : [];
+        if (Array.isArray(val)) {
+          var arr = val.slice();
           var changed = false;
           var newArr = [];
           arr.forEach(function(v) {
@@ -295,6 +332,13 @@ Page.removeCrudInstance = function(className, index) {
         }
       });
     });
+  }
+
+  // Update the visible instance count for this class so that any
+  // header buttons (ClassName [count]) stay in sync after deletes,
+  // including those triggered via composition cascades.
+  if (Page.updateCrudClassCount) {
+    Page.updateCrudClassCount(className);
   }
 };
 
@@ -957,13 +1001,23 @@ Page.openCrudDialogForClass = function(className) {
       if (end.inheritedFrom) {
         assocTooltip = "This is an inherited association from " + end.inheritedFrom + ".";
       }
+      if (end.cascadeDeleteTargets) {
+        var compText = className + " composes " + targetClass + " (deleting " + className + " will also delete its " + targetClass + " instances).";
+        assocTooltip = assocTooltip ? (assocTooltip + " " + compText) : compText;
+      }
       if (assocTooltip) {
         html += "<label class='crud-field-label'><span class='crud-tooltip-target' title='" + assocTooltip.replace(/\"/g, "&quot;") + "'>" + labelText + "</span></label>";
       } else {
         html += "<label class='crud-field-label'>" + labelText + "</label>";
       }
 
-      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+      // Use checkbox list whenever the target multiplicity allows more than
+      // one associated instance (e.g., 2..4, 0..*, 1..*). Radio buttons are
+      // reserved for strictly single-valued ends where max === 1.
+      var multiple = true;
+      if (typeof end.toMax === "number" && end.toMax <= 1) {
+        multiple = false;
+      }
       if (multiple) {
         // Multi-valued end: render a checkbox list so users can easily
         // add/remove multiple associated instances (e.g., many-to-many).
@@ -1117,7 +1171,12 @@ Page.openCrudDialogForClass = function(className) {
     assocEnds.forEach(function(end) {
       var fieldName = end.storageKey;
       var stored = inst[fieldName];
-      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+      // Keep multiplicity interpretation consistent with rendering/saving:
+      // multi-valued when max bound allows more than one.
+      var multiple = true;
+      if (typeof end.toMax === "number" && end.toMax <= 1) {
+        multiple = false;
+      }
       var minRequired = (typeof end.toMin === "number") ? end.toMin : 0;
 
       if (multiple) {
@@ -1276,7 +1335,12 @@ Page.openCrudDialogForClass = function(className) {
       }
 
       var items = [];
-      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+      // Align multiplicity interpretation with form rendering/saving: treat
+      // an end as multi-valued when its max bound allows more than one.
+      var multiple = true;
+      if (typeof end.toMax === "number" && end.toMax <= 1) {
+        multiple = false;
+      }
       if (multiple) {
         if (!Array.isArray(val) || val.length === 0) { return; }
         val.forEach(function(idx) {
@@ -1376,7 +1440,13 @@ Page.openCrudDialogForClass = function(className) {
     // Associations: enforce multiplicity rules and capture selected links
     assocEnds.forEach(function(end) {
       var fieldName = end.storageKey;
-      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+      // Treat an end as multi-valued whenever its max bound allows
+      // more than one linked instance. This covers ranges like 2..4,
+      // 0..* and 1..* in addition to explicit "*".
+      var multiple = true;
+      if (typeof end.toMax === "number" && end.toMax <= 1) {
+        multiple = false;
+      }
       var minRequired = (typeof end.toMin === "number") ? end.toMin : 0;
       var maxAllowed = (typeof end.toMax === "number") ? end.toMax : null;
 
@@ -1409,11 +1479,16 @@ Page.openCrudDialogForClass = function(className) {
         newInst[fieldName] = indices;
 
         var count = indices.length;
+        var relationLabel = end.cascadeDeleteTargets ? "composition" : "association";
         if (minRequired > 0 && count < minRequired) {
-          errors.push("Please select at least " + minRequired + " " + end.toClass + " instance(s) for association " + end.assocName + ".");
+          var remaining = minRequired - count;
+          if (remaining > 0) {
+            var instanceLabel = remaining === 1 ? " instance" : " instances";
+            errors.push("Please select " + remaining + " more " + end.toClass + instanceLabel + " for " + relationLabel + " " + end.assocName + ".");
+          }
         }
         if (maxAllowed !== null && count > maxAllowed) {
-          errors.push("Please select at most " + maxAllowed + " " + end.toClass + " instance(s) for association " + end.assocName + ".");
+          errors.push("Please select at most " + maxAllowed + " " + end.toClass + " instance(s) for " + relationLabel + " " + end.assocName + ".");
         }
       } else {
         // Radio-based UI for single-valued ends
@@ -1422,27 +1497,31 @@ Page.openCrudDialogForClass = function(className) {
         if (!val || val === "") {
           // If min bound is >= 1, this link is mandatory
           if (minRequired >= 1) {
-            errors.push("Please select a " + end.toClass + " for association " + end.assocName + ".");
+            var relationLabelSingle = end.cascadeDeleteTargets ? "composition" : "association";
+            errors.push("Please select a " + end.toClass + " for " + relationLabelSingle + " " + end.assocName + ".");
           }
           newInst[fieldName] = null;
         } else {
           var idxSingle = parseInt(val, 10);
           if (isNaN(idxSingle)) {
             if (minRequired >= 1) {
-              errors.push("Invalid selection for association " + end.assocName + ".");
+              var relationLabelInvalid = end.cascadeDeleteTargets ? "composition" : "association";
+              errors.push("Invalid selection for " + relationLabelInvalid + " " + end.assocName + ".");
             }
             newInst[fieldName] = null;
           } else {
             // Reflexive constraint: prevent self-reference.
             if (end.fromClass === end.toClass && idxSingle === index) {
-              errors.push("An instance of " + className + " cannot be associated with itself for association " + end.assocName + ".");
+              var relationLabelSelf = end.cascadeDeleteTargets ? "composition" : "association";
+              errors.push("An instance of " + className + " cannot be associated with itself for " + relationLabelSelf + " " + end.assocName + ".");
               newInst[fieldName] = null;
             } else {
             newInst[fieldName] = idxSingle;
               // With a single-select, we can only ever have 0 or 1; enforce
               // any max bound < 1 as an error, and otherwise accept.
               if (maxAllowed !== null && maxAllowed < 1) {
-                errors.push("Multiplicity for association " + end.assocName + " does not allow any linked " + end.toClass + " instances.");
+                var relationLabelMult = end.cascadeDeleteTargets ? "composition" : "association";
+                errors.push("Multiplicity for " + relationLabelMult + " " + end.assocName + " does not allow any linked " + end.toClass + " instances.");
               }
             }
           }
@@ -1455,7 +1534,10 @@ Page.openCrudDialogForClass = function(className) {
     // parent-child cycle.
     assocEnds.forEach(function(end) {
       if (end.fromClass !== end.toClass) { return; }
-      var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+      var multiple = true;
+      if (typeof end.toMax === "number" && end.toMax <= 1) {
+        multiple = false;
+      }
       if (multiple) { return; }
       var value = newInst[end.storageKey];
       if (typeof value !== "number") { return; }
@@ -1820,6 +1902,10 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
       var leftNav = assoc.isLeftNavigable === true || assoc.isLeftNavigable === "true";
       var rightNav = assoc.isRightNavigable === true || assoc.isRightNavigable === "true";
 
+      // Composition flags from the JSON definition
+      var leftComp = assoc.isLeftComposition === true || assoc.isLeftComposition === "true";
+      var rightComp = assoc.isRightComposition === true || assoc.isRightComposition === "true";
+
       // A bidirectional association means both ends are navigable
       var isBidirectional = leftNav && rightNav;
 
@@ -1842,6 +1928,17 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
         }
         var toRange = Page.parseCrudMultiplicity ? Page.parseCrudMultiplicity(toMult) : { min: 0, max: null };
         var fromRange = Page.parseCrudMultiplicity ? Page.parseCrudMultiplicity(fromMult) : { min: 0, max: null };
+
+        // Determine whether deleting an instance of fromClass should also
+        // delete its associated toClass instances for this end (composition).
+        var cascadeDeleteTargets = false;
+        if (leftComp && fromClass === classOneName && toClass === classTwoName) {
+          cascadeDeleteTargets = true;
+        }
+        if (rightComp && fromClass === classTwoName && toClass === classOneName) {
+          cascadeDeleteTargets = true;
+        }
+
         // Storage key used on instances and form fields for this navigable end
         var storageKey = "__assoc__" + assocName + "__" + toClass;
         Page.crudAssociationsByClass[fromClass].push({
@@ -1863,7 +1960,10 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
           declaringClass: fromClass,
           // Mark hierarchical self-reflexive associations so that reverse
           // sync can treat them specially (no symmetric links).
-          reflexiveHierarchy: isReflexiveHierarchy
+          reflexiveHierarchy: isReflexiveHierarchy,
+          // For composition ends where this class is the owner (whole),
+          // indicate that deleting fromClass should cascade to toClass.
+          cascadeDeleteTargets: cascadeDeleteTargets
         });
       };
 
