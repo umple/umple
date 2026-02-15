@@ -179,7 +179,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Page.initSourceCodeArea();
   Page.initCodeExecutionArea();
   jQuery(document).ready(function() {
-    DropboxInitializer.initializeDropbox();
+    // DropboxInitializer.initializeDropbox();
     ToolTips.initTooltips();
     // Initialize AI controller after DOM is ready so modal elements exist
     if (window.AiSettings && window.AiSettings.init) {
