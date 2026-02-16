@@ -156,6 +156,63 @@ const AiMarkdownUtils = (() => {
     return result.join('\n');
   }
 
+  const CODE_BLOCK_PLACEHOLDER_REGEX = /^\x00CODE_BLOCK_\d+\x00$/;
+  const HEADER_BLOCK_REGEX = /^<h[1-6]>.*<\/h[1-6]>$/i;
+  const TABLE_BLOCK_REGEX = /^<div class="ai-md-table-wrap">[\s\S]*<\/div>$/;
+
+  function isStandaloneBlockLine(line) {
+    const trimmed = String(line || "").trim();
+    if (!trimmed) return false;
+
+    return CODE_BLOCK_PLACEHOLDER_REGEX.test(trimmed)
+      || HEADER_BLOCK_REGEX.test(trimmed)
+      || TABLE_BLOCK_REGEX.test(trimmed);
+  }
+
+  /**
+   * Render markdown lines into block-aware HTML.
+   * - Blank lines separate paragraphs.
+   * - Single line breaks inside paragraphs become <br/>.
+   * - Standalone block lines (headers, tables, code placeholders) stay block-level.
+   * @private
+   * @param {string} text - Text after inline markdown transformations
+   * @returns {string} HTML with paragraph and line-break handling
+   */
+  function renderParagraphsAndBreaks(text) {
+    const lines = text.split('\n');
+    const blocks = [];
+    let paragraphLines = [];
+
+    function flushParagraph() {
+      if (paragraphLines.length === 0) return;
+
+      const paragraphHtml = paragraphLines
+        .join('\n')
+        .replace(MARKDOWN_PATTERNS.lineBreak, "<br/>");
+
+      blocks.push(`<p>${paragraphHtml}</p>`);
+      paragraphLines = [];
+    }
+
+    lines.forEach(line => {
+      if (/^\s*$/.test(line)) {
+        flushParagraph();
+        return;
+      }
+
+      if (isStandaloneBlockLine(line)) {
+        flushParagraph();
+        blocks.push(line.trim());
+        return;
+      }
+
+      paragraphLines.push(line);
+    });
+
+    flushParagraph();
+    return blocks.join('\n');
+  }
+
   // ============================================================================
   // PUBLIC API
   // ============================================================================
@@ -163,7 +220,7 @@ const AiMarkdownUtils = (() => {
   return {
     /**
      * Render markdown text to HTML
-     * Supports: headers, code blocks, inline code, bold, italic, tables, line breaks
+     * Supports: headers, code blocks, inline code, bold, italic, tables, paragraphs, line breaks
      * @param {string} text - Markdown text to render
      * @returns {string} Rendered HTML
      */
@@ -192,8 +249,10 @@ const AiMarkdownUtils = (() => {
         })
         .replace(MARKDOWN_PATTERNS.inlineCode, "<code>$1</code>")
         .replace(MARKDOWN_PATTERNS.bold, "<strong>$1</strong>")
-        .replace(MARKDOWN_PATTERNS.italic, "<em>$1</em>")
-        .replace(MARKDOWN_PATTERNS.lineBreak, "<br/>");
+        .replace(MARKDOWN_PATTERNS.italic, "<em>$1</em>");
+
+      // Render paragraphs and line breaks in a block-aware way
+      formatted = renderParagraphsAndBreaks(formatted);
 
       // Restore code blocks
       codeBlocks.forEach((block, i) => {
