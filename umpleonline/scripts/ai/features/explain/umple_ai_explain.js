@@ -137,14 +137,14 @@ const AiExplain = {
     }
 
     // Create and show dialog with loading state
-    this.createDialog();
+    const dialog = this.createDialog();
 
     // Only reset conversation if there isn't one already
     // (Allows resuming minimized conversations)
     if (!this.hasOngoingConversation()) {
       this.resetConversation();
     }
-    await this.performExplanation(umpleCode);
+    await this.performExplanation(dialog, umpleCode);
   },
 
   /**
@@ -274,6 +274,8 @@ const AiExplain = {
 
     // Set up event listeners
     this.setupDialogEvents(dialog);
+
+    return dialog;
   },
 
   /**
@@ -415,16 +417,20 @@ const AiExplain = {
 
   /**
    * Perform the explanation
+   * @param {HTMLElement} dialog - The dialog element
    * @param {string} umpleCode - The Umple code to explain
    */
-  async performExplanation(umpleCode) {
-    const statusDiv = document.getElementById("explainStatusMessage");
-    const explanationContainer = document.getElementById("explanationContainer");
-    const explanationText = document.getElementById("explanationText");
-    const followUpContainer = document.getElementById("followUpContainer");
-    const btnAsk = document.getElementById("btnAsk");
-    const btnNewConversation = document.getElementById("btnNewConversation");
-    const followUpInput = document.getElementById("followUpInput");
+  async performExplanation(dialog, umpleCode) {
+    const statusDiv = dialog?.querySelector("#explainStatusMessage");
+    const explanationText = dialog?.querySelector("#explanationText");
+    const followUpContainer = dialog?.querySelector("#followUpContainer");
+    const btnAsk = dialog?.querySelector("#btnAsk");
+    const btnNewConversation = dialog?.querySelector("#btnNewConversation");
+    const followUpInput = dialog?.querySelector("#followUpInput");
+
+    if (!statusDiv || !explanationText || !followUpContainer || !btnAsk || !btnNewConversation || !followUpInput) {
+      return;
+    }
 
     // Update status
     statusDiv.textContent = "Analyzing your code...";
@@ -516,10 +522,14 @@ const AiExplain = {
    * @param {HTMLElement} dialog - The dialog element
    */
   async handleFollowUp(dialog) {
-    const statusDiv = document.getElementById("explainStatusMessage");
-    const btnAsk = document.getElementById("btnAsk");
-    const followUpInput = document.getElementById("followUpInput");
-    const explanationText = document.getElementById("explanationText");
+    const statusDiv = dialog?.querySelector("#explainStatusMessage");
+    const btnAsk = dialog?.querySelector("#btnAsk");
+    const followUpInput = dialog?.querySelector("#followUpInput");
+    const explanationText = dialog?.querySelector("#explanationText");
+
+    if (!statusDiv || !btnAsk || !followUpInput || !explanationText) {
+      return;
+    }
 
     const userQuestion = followUpInput.value.trim();
 

@@ -5,17 +5,20 @@
 // AI Requirements Dialog - Dialog UI for requirements generation
 
 const RequirementsDialog = {
-  getRequirementsOutputArea() {
+  getRequirementsOutputArea(dialog = null) {
+    if (dialog && typeof dialog.querySelector === "function") {
+      return dialog.querySelector("#requirementsOutputArea");
+    }
     return document.getElementById("requirementsOutputArea");
   },
 
-  clearRequirementsOutput() {
-    const area = this.getRequirementsOutputArea();
+  clearRequirementsOutput(dialog = null) {
+    const area = this.getRequirementsOutputArea(dialog);
     if (area) area.value = "";
   },
 
-  appendRequirementsOutput(line) {
-    const area = this.getRequirementsOutputArea();
+  appendRequirementsOutput(line, dialog = null) {
+    const area = this.getRequirementsOutputArea(dialog);
     if (!area) return;
     const text = String(line || "");
     area.value = area.value ? `${area.value}\n${text}` : text;
