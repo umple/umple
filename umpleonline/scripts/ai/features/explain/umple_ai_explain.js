@@ -258,7 +258,7 @@ const AiExplain = {
     buttonsDiv.appendChild(btnAsk);
 
     const btnCancel = document.createElement("div");
-    btnCancel.id = "btnCancel";
+    btnCancel.id = "btnCancelExplain";
     btnCancel.className = "jQuery-palette-button unselectable ui-button ui-corner-all ui-widget";
     btnCancel.tabIndex = 0;
     btnCancel.setAttribute("role", "button");
@@ -307,8 +307,8 @@ const AiExplain = {
     this.isMinimized = false;
 
     // Focus the follow-up input if container is visible
-    const followUpContainer = document.getElementById("followUpContainer");
-    const followUpInput = document.getElementById("followUpInput");
+    const followUpContainer = dialog.querySelector("#followUpContainer");
+    const followUpInput = dialog.querySelector("#followUpInput");
     if (followUpInput && followUpContainer && followUpContainer.style.display !== "none") {
       followUpInput.focus();
     }
@@ -320,7 +320,7 @@ const AiExplain = {
    */
   setupDialogEvents(dialog) {
     // Minimize button
-    const btnMinimize = document.getElementById("btnMinimizeExplain");
+    const btnMinimize = dialog.querySelector("#btnMinimizeExplain");
     if (btnMinimize && !btnMinimize.dataset.aiEventsBound) {
       btnMinimize.dataset.aiEventsBound = "true";
       const minimizeHandler = event => {
@@ -331,7 +331,7 @@ const AiExplain = {
     }
 
     // Ask button (follow-up)
-    const btnAsk = document.getElementById("btnAsk");
+    const btnAsk = dialog.querySelector("#btnAsk");
     if (btnAsk && !btnAsk.dataset.aiEventsBound) {
       btnAsk.dataset.aiEventsBound = "true";
       const askHandler = event => {
@@ -348,7 +348,7 @@ const AiExplain = {
     }
 
     // Enter key on follow-up input
-    const followUpInput = document.getElementById("followUpInput");
+    const followUpInput = dialog.querySelector("#followUpInput");
     if (followUpInput && !followUpInput.dataset.aiEventsBound) {
       followUpInput.dataset.aiEventsBound = "true";
       followUpInput.addEventListener("keypress", event => {
@@ -360,7 +360,7 @@ const AiExplain = {
     }
 
     // New Conversation button
-    const btnNewConversation = document.getElementById("btnNewConversation");
+    const btnNewConversation = dialog.querySelector("#btnNewConversation");
     if (btnNewConversation && !btnNewConversation.dataset.aiEventsBound) {
       btnNewConversation.dataset.aiEventsBound = "true";
       const newConvHandler = event => {
@@ -381,7 +381,7 @@ const AiExplain = {
     }
 
     // Cancel button
-    const btnCancel = document.getElementById("btnCancel");
+    const btnCancel = dialog.querySelector("#btnCancelExplain");
     if (btnCancel && !btnCancel.dataset.aiEventsBound) {
       btnCancel.dataset.aiEventsBound = "true";
       const cancelHandler = event => {
