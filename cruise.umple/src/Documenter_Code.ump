@@ -354,6 +354,70 @@ class Documenter
         "<span class=\"notranslate\" translate=\"no\">" +
         videoURLHtml+ "</span>");
     }
+
+    String theMarkdownURLIfAny = selectedContent.getMarkdownURL();
+    if (theMarkdownURLIfAny == null)
+    {
+      htmlOutput = htmlOutput.replace("@@MARKDOWNURL@@", "");
+    }
+    else
+    {
+      int retval=0;
+      String htmlFromMarkdown="<p>Unable to read "+theMarkdownURLIfAny+"</p>";
+      try {
+        Process p = Runtime.getRuntime().exec("pandoc --lua-filter=build/filters/remove-attr.lua -f markdown-auto_identifiers -t html "+ theMarkdownURLIfAny);
+        BufferedReader reader=new BufferedReader(new InputStreamReader(p.getInputStream())); 
+
+        // All output of the above should go to standard output
+        try {
+          retval=p.waitFor();
+        }
+        catch (InterruptedException e) {}
+      
+        if(retval !=0) {
+          String pandocProbMsg="Unable to read input markdown file "+theMarkdownURLIfAny+" for "+selectedContent.getTitle()+". Return value from pandoc is: "+retval;
+          System.err.println(pandocProbMsg+" cwd="+System.getProperty("user.dir"));
+          htmlFromMarkdown = "<p>"+pandocProbMsg+"</p>\n";
+        }
+        else {
+          String line="";
+          if(reader.ready()) {
+            line = reader.readLine();
+          }
+
+          StringBuilder builder = new StringBuilder();
+
+          while (line!=null) {
+            builder.append(line+"\n");
+            if(reader.ready()) {
+              line = reader.readLine();
+            }
+            else {
+              line = null;
+            }
+          }
+          htmlFromMarkdown = builder.toString();
+        }
+      } catch (IOException e) {
+        htmlFromMarkdown = "<p>IO Exception reading input markdown file "+theMarkdownURLIfAny+"</p>\n";
+      }
+      
+      // Tidy up the page
+      htmlFromMarkdown=htmlFromMarkdown.replace("<h2","<br /><h2");
+      htmlFromMarkdown=htmlFromMarkdown.replace("<h3","<br /><h3");
+      htmlFromMarkdown=htmlFromMarkdown.replace("<pre><code>","<span class=\"notranslate\" translate=\"no\"><pre name=\"code\" class=\"c-sharp\">");      
+      htmlFromMarkdown=htmlFromMarkdown.replace("</code></pre>","</pre></span>");
+      
+      // Determine user editable page unless this was a wiki page
+      if (!theMarkdownURLIfAny.contains("wiki")) {
+        String nonRawPage=theMarkdownURLIfAny.replace("raw.githubusercontent.com","github.com");
+        nonRawPage=nonRawPage.replace("refs/heads/master","blob/master");
+        htmlFromMarkdown=htmlFromMarkdown+"<br /><p><i>Original markdown source for this page: <a href=\""+nonRawPage+"\" target=\"originalmg\">"+nonRawPage+"</a></i></p>";
+      }
+      
+      String markdownURLHtml = Template.MarkdownURLTemplate.replace("@@MARKDOWN_URL@@",htmlFromMarkdown);      
+      htmlOutput = htmlOutput.replace("@@MARKDOWNURL@@", markdownURLHtml);
+    }
     
     String exampleOutput = "";
     for (ManualExample manualExample : selectedContent.getExamples())
@@ -495,7 +559,7 @@ class ContentParser
   private int init()
   {
     addRule("groupOrder : ( [**group] ; )*");
-    addRule("content : [*title] [*group] [=noreferences]? (@@tooltip [**tooltip])?  @@description [**description] (@@videoURL [**videoURL])? (@@syntax [**syntax])? [[example]]* @@Filename [*filename]");
+    addRule("content : [*title] [*group] [=noreferences]? (@@tooltip [**tooltip])? (@@markdownURL [**markdownURL])?   @@description [**description] (@@videoURL [**videoURL])? (@@syntax [**syntax])? [[example]]* @@Filename [*filename]");
     addRule("example- : @@example ( @@caption [**caption] @@endcaption )? [**example] @@endexample");
     init += 1;
     return init;
@@ -531,7 +595,11 @@ class ContentParser
         if(t.getValue("videoURL") != null) {
           content.setVideoURL(t.getValue("videoURL"));
         }
-        
+
+        if(t.getValue("markdownURL") != null) {
+          content.setMarkdownURL(t.getValue("markdownURL"));
+        }
+
         if (t.getValue("noreferences") != null)
         {
           content.setShouldIncludeReferences(false);
@@ -674,6 +742,13 @@ class Template
     return template;
   }  
   
+  private static String markdownURLTemplate()
+  {
+    // The markdown will be converted to html when the template is invoked
+    // This template allows surrounding html to be added if this proves useful, such as a span with formatting
+    String template = "@@MARKDOWN_URL@@";
+    return template;
+  }  
 
   private static String htmlTemplate()
   {
@@ -800,6 +875,7 @@ class Template
         "      <h1><font size=\"+1\">@@TITLE@@</font></h1>" + "\n" +
         "      <p class=\"description\">@@DESCRIPTION@@</p>" + "\n" +
         "" + "\n" +
+        "@@MARKDOWNURL@@" + "\n" +
         "@@EXAMPLE@@" + "\n" +
         "@@VIDEOURL@@" + "\n" +
         "@@SYNTAX@@" + "\n";
