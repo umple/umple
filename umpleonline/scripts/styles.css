@@ -1619,6 +1619,14 @@ textarea#umpleLayoutEditorText {
   line-height: 1.5;
 }
 
+.ai-explain-dialog .explanation-text p {
+  margin: 0 0 10px;
+}
+
+.ai-explain-dialog .explanation-text p:last-child {
+  margin-bottom: 0;
+}
+
 .ai-explain-dialog .explanation-text pre {
   background-color: #f0f0f0;
   border: #ccc solid 1px;
