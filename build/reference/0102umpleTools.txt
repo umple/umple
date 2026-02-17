@@ -5,41 +5,65 @@ noreferences
 
 @@description
 
-<p>Umple files conventionally use the extension .ump. To create a model or 
-a system you would use one or more of the following tools to view, edit 
-and compile .ump files.</p>
+<p>Umple files conventionally use the extension .ump. You use one or more of the following tools to edit, view 
+and compile sets of .ump files.</p>
 
 <ul>
 
 <li><b>UmpleOnline.</b> <a href="https://try.umple.org">UmpleOnline</a> 
 allows you to instantly experiment with Umple on the web. You can explore 
 examples or create your own and save them in the "cloud". You can generate 
-code as well as several other outputs. <a href="UsingUmpleOnline.html">The UmpleOnline
+diagrams, code in several languages and several other outputs. <a href="UsingUmpleOnline.html">The UmpleOnline
 section of this User manual describes how to use UmpleOnline</a>. Note that UmpleOnline
 can be run locally on your machine by using a Docker image. <a href="https://hub.docker.com/r/umple/umpleonline/">See the DockerHub page for information.</a></li>
 
-<li><b>Eclipse.</b> To use Umple with Eclipse, you need to load an Umple 
+<br />
+
+<li><b>Command-line based compiler</b> You can use Umple from the 
+command line. The following are some ways to install it:
+
+<ul>
+  <li><i>Latest version:</i> <a href="https://try.umple.org/scripts/umple.jar">Download this to run same Umple version as on UmpleOnline</a>; it is typically updated a few times each month. After downloading, run using Java 11 or later using <pre>java -jar umple.jar filename.ump</pre></li>
+
+  <br />
+
+  <li><i>Stable release:</i></a> <a href="https://github.com/umple/umple/releases/latest">Download this if you want to use our latest official release</a>; typically updated 1-4 times per year.</li>
+
+  <br />
+
+  <li><i>Homebrew installation:</i></a>Run <pre>brew install umple</pre> on a Mac (also available for Linux). This will install the latest stable release, and will update automatically after any new release. Once installed, run as <pre>umple filename.ump</pre></li>
+
+  <br />
+
+  <li>Windows versions on chocolatey and Linux versions under apt may be available.</li>
+</ul>
+
+  <br />
+
+  The command line compiler has numerous options, including: to obtain help (--help), to generate any of Umple's possible outputs (-g), to compile the generated code to an executable (-c -), to specify suboptions to control details of generated code (-s), and to specify umple code to compile directly on the command line (rather than from a file) (-u). The command line compiler can handle thousands of files and millions of lines of Umple code if needed (Umple is written in itself, demonstrating this works well). The command line compiler can be incorporated into product toolchains using technology like Gradle or ant.
+
+</li>
+
+<br />
+
+<li>Plugin for the <b>Zed text editor</b>. <a href="Zed.html">See the Zed page in this user manual.</a>.</li>
+
+
+<br />
+
+<li>Plugin for <b>Visual Studio Code</b>. This plugin allows basic <a href="https://marketplace.visualstudio.com/items?itemName=digized.umple">editing and compilation of Umple in Visual Studio Code</a>. This will be replaced by a superior plugin soon.</li>
+
+<br />
+
+<li>Plugin for <b>Sublime Text</b>. Try this <a href="https://github.com/umple/umple.sublime">Umple Plugin if you use Sublime Text</a>.</li>
+
+<br />
+
+<li>Plugin for <b>Eclipse.</b> To use Umple with Eclipse, you need to load an Umple 
 Eclipse plugin. This can be obtained from our <a 
-href="https://umple.org/dl">downloads site</a>.</li>
+href="https://umple.org/dl">downloads site</a>. It has not been maintained recently and support may be dropped.</li>
 
-<br />
 
-<li><b>Command-line based compiler</b> You can always use Umple from the 
-command line, typically from an ant script. Simply <a
-href="https://github.com/umple/umple/releases/latest">download the latest 
-officially released version of the umple jar</a>, and run it as "java -jar umple.jar *.ump".  A shell script called umple is also available in the dev-tools directory to make the preceding easier. The dev-tools directory also has other tools to automate useful tasks for building and using Umple. Additionally you can download and install the Umple jar file and the umple shell script using chocolatey (Windows), or brew (Mac). </li>
-
-<br />
-
-<li><a href="https://try.umple.org/scripts/umple.jar">For the adventurous, the bleeding-edge continuous build version of the Umple command-line compiler can be obtained here</a>.</li>
-
-<br />
-
-<li><b>Plugin for Microsoft Visual Studio Code</b>. This plugin allows basic <a href="https://marketplace.visualstudio.com/items?itemName=digized.umple">editing and compilation of Umple in Visual Studio Code</a>.</li>
-
-<br />
-
-<li><b>Plugin for Sublime Text</b>. Try this <a href="https://github.com/umple/umple.sublime">Umple Plugin if you use Sublime Text</a>.</li>
 
 </ul>
 

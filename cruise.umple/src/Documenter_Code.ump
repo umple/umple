@@ -365,7 +365,7 @@ class Documenter
       int retval=0;
       String htmlFromMarkdown="<p>Unable to read "+theMarkdownURLIfAny+"</p>";
       try {
-        Process p = Runtime.getRuntime().exec("pandoc -f markdown -t html "+ theMarkdownURLIfAny);
+        Process p = Runtime.getRuntime().exec("pandoc --lua-filter=build/filters/remove-attr.lua -f markdown-auto_identifiers -t html "+ theMarkdownURLIfAny);
         BufferedReader reader=new BufferedReader(new InputStreamReader(p.getInputStream())); 
 
         // All output of the above should go to standard output
@@ -375,7 +375,9 @@ class Documenter
         catch (InterruptedException e) {}
       
         if(retval !=0) {
-          htmlFromMarkdown = "<p>Unable to read input markdown file "+theMarkdownURLIfAny+"</p>\n";
+          String pandocProbMsg="Unable to read input markdown file "+theMarkdownURLIfAny+" for "+selectedContent.getTitle()+". Return value from pandoc is: "+retval;
+          System.err.println(pandocProbMsg+" cwd="+System.getProperty("user.dir"));
+          htmlFromMarkdown = "<p>"+pandocProbMsg+"</p>\n";
         }
         else {
           String line="";
@@ -401,6 +403,13 @@ class Documenter
       }
       htmlFromMarkdown=htmlFromMarkdown.replace("<h2","<br /><h2");
       htmlFromMarkdown=htmlFromMarkdown.replace("<h3","<br /><h3");
+      htmlFromMarkdown=htmlFromMarkdown.replace("<pre><code>","<span class=\"notranslate\" translate=\"no\"><pre name=\"code\" class=\"c-sharp\">");      
+      htmlFromMarkdown=htmlFromMarkdown.replace("</code></pre>","</pre></span>");
+      
+      
+      String nonRawPage=theMarkdownURLIfAny.replace("raw.githubusercontent.com","github.com");
+      nonRawPage=nonRawPage.replace("refs/heads/master","blob/master");
+      htmlFromMarkdown=htmlFromMarkdown+"<br /><p><i>Original markdown source for this page: <a href=\""+nonRawPage+"\" target=\"originalmg\">"+nonRawPage+"</a></i></p>";
       
       String markdownURLHtml = Template.MarkdownURLTemplate.replace("@@MARKDOWN_URL@@",htmlFromMarkdown);      
       htmlOutput = htmlOutput.replace("@@MARKDOWNURL@@", markdownURLHtml);
@@ -732,7 +741,7 @@ class Template
   private static String markdownURLTemplate()
   {
     // The markdown will be converted to html when the template is invoked
-    // This template allows surrounding html to be added if this proves useful
+    // This template allows surrounding html to be added if this proves useful, such as a span with formatting
     String template = "@@MARKDOWN_URL@@";
     return template;
   }  
