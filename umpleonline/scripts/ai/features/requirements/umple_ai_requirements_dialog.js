@@ -5,17 +5,20 @@
 // AI Requirements Dialog - Dialog UI for requirements generation
 
 const RequirementsDialog = {
-  getRequirementsOutputArea() {
+  getRequirementsOutputArea(dialog = null) {
+    if (dialog && typeof dialog.querySelector === "function") {
+      return dialog.querySelector("#requirementsOutputArea");
+    }
     return document.getElementById("requirementsOutputArea");
   },
 
-  clearRequirementsOutput() {
-    const area = this.getRequirementsOutputArea();
+  clearRequirementsOutput(dialog = null) {
+    const area = this.getRequirementsOutputArea(dialog);
     if (area) area.value = "";
   },
 
-  appendRequirementsOutput(line) {
-    const area = this.getRequirementsOutputArea();
+  appendRequirementsOutput(line, dialog = null) {
+    const area = this.getRequirementsOutputArea(dialog);
     if (!area) return;
     const text = String(line || "");
     area.value = area.value ? `${area.value}\n${text}` : text;
@@ -141,7 +144,8 @@ const RequirementsDialog = {
   },
 
   updateSelectedDisplay(dialog, requirements) {
-    const displayDiv = document.getElementById("selectedReqText");
+    const displayDiv = dialog.querySelector("#selectedReqText");
+    if (!displayDiv) return;
     const checkboxes = dialog.querySelectorAll(".req-checkbox:checked");
     const selectedIds = Array.from(checkboxes).map(cb => cb.value);
 
@@ -278,7 +282,7 @@ const RequirementsDialog = {
     buttonsDiv.appendChild(btnInsert);
 
     const btnCancel = document.createElement("div");
-    btnCancel.id = "btnCancel";
+    btnCancel.id = "btnCancelRequirements";
     btnCancel.className = "jQuery-palette-button unselectable ui-button ui-corner-all ui-widget";
     btnCancel.tabIndex = 0;
     btnCancel.setAttribute("role", "button");
@@ -304,8 +308,10 @@ const RequirementsDialog = {
     modeRadios.forEach(radio => {
       radio.addEventListener("change", e => {
         const mode = e.target.value;
-        const multipleDiv = document.getElementById("multipleReqSelection");
-        const displayDiv = document.getElementById("selectedReqText");
+        const multipleDiv = dialog.querySelector("#multipleReqSelection");
+        const displayDiv = dialog.querySelector("#selectedReqText");
+
+        if (!multipleDiv || !displayDiv) return;
 
         if (mode === "all") {
           multipleDiv.style.display = "none";
@@ -324,7 +330,7 @@ const RequirementsDialog = {
       });
     });
 
-    const btnGenerate = document.getElementById("btnGenerate");
+    const btnGenerate = dialog.querySelector("#btnGenerate");
     const generateHandler = event => {
       event.preventDefault();
       if (callbacks.onGenerate) callbacks.onGenerate();
@@ -334,7 +340,7 @@ const RequirementsDialog = {
       if (event.key === "Enter" || event.key === " ") generateHandler(event);
     });
 
-    const btnStop = document.getElementById("btnStop");
+    const btnStop = dialog.querySelector("#btnStop");
     const stopHandler = event => {
       event.preventDefault();
       if (callbacks.onStop) callbacks.onStop();
@@ -344,7 +350,7 @@ const RequirementsDialog = {
       if (event.key === "Enter" || event.key === " ") stopHandler(event);
     });
 
-    const btnInsert = document.getElementById("btnInsert");
+    const btnInsert = dialog.querySelector("#btnInsert");
     const insertHandler = event => {
       event.preventDefault();
       if (callbacks.onInsert) callbacks.onInsert();
@@ -354,7 +360,7 @@ const RequirementsDialog = {
       if (event.key === "Enter" || event.key === " ") insertHandler(event);
     });
 
-    const btnCancel = document.getElementById("btnCancel");
+    const btnCancel = dialog.querySelector("#btnCancelRequirements");
     const cancelHandler = event => {
       event.preventDefault();
       if (callbacks.onCancel) callbacks.onCancel();
