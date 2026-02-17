@@ -401,15 +401,19 @@ class Documenter
       } catch (IOException e) {
         htmlFromMarkdown = "<p>IO Exception reading input markdown file "+theMarkdownURLIfAny+"</p>\n";
       }
+      
+      // Tidy up the page
       htmlFromMarkdown=htmlFromMarkdown.replace("<h2","<br /><h2");
       htmlFromMarkdown=htmlFromMarkdown.replace("<h3","<br /><h3");
       htmlFromMarkdown=htmlFromMarkdown.replace("<pre><code>","<span class=\"notranslate\" translate=\"no\"><pre name=\"code\" class=\"c-sharp\">");      
       htmlFromMarkdown=htmlFromMarkdown.replace("</code></pre>","</pre></span>");
       
-      
-      String nonRawPage=theMarkdownURLIfAny.replace("raw.githubusercontent.com","github.com");
-      nonRawPage=nonRawPage.replace("refs/heads/master","blob/master");
-      htmlFromMarkdown=htmlFromMarkdown+"<br /><p><i>Original markdown source for this page: <a href=\""+nonRawPage+"\" target=\"originalmg\">"+nonRawPage+"</a></i></p>";
+      // Determine user editable page unless this was a wiki page
+      if (!theMarkdownURLIfAny.contains("wiki")) {
+        String nonRawPage=theMarkdownURLIfAny.replace("raw.githubusercontent.com","github.com");
+        nonRawPage=nonRawPage.replace("refs/heads/master","blob/master");
+        htmlFromMarkdown=htmlFromMarkdown+"<br /><p><i>Original markdown source for this page: <a href=\""+nonRawPage+"\" target=\"originalmg\">"+nonRawPage+"</a></i></p>";
+      }
       
       String markdownURLHtml = Template.MarkdownURLTemplate.replace("@@MARKDOWN_URL@@",htmlFromMarkdown);      
       htmlOutput = htmlOutput.replace("@@MARKDOWNURL@@", markdownURLHtml);
