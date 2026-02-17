@@ -18,6 +18,7 @@ Distribution%Capabilities to generate code for components that will run on diffe
 Composite Structure%Capabilities to define components with nested elements and communication channels;
 Tracing%Capabilities to specify run-time tracing of API calls for attributes, associations, state machines and methods;
 UmpleOnline%Capabilities of the Umple web-based interface that runs at try.umple.org and in Docker;
+IDEs and Text Editors%Umple support in IDEs and text editors such as VSCode and Zed;
 AI%Capabilities for AI-assisted modeling in UmpleOnline;
 Generators%Capabilities of Umple to generate code;
 Persistence%Capabilities to load and save instances of Umple classes;

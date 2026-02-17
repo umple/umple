@@ -1,0 +1,7 @@
+Philosophy
+User Manual Basics
+noreferences
+@@tooltip Principles guiding Umple
+@@markdownURL https://raw.githubusercontent.com/wiki/umple/umple/PhilosophyAndVision.md
+@@description
+<!-- No description as the description will be loaded from markdown conversion -->
