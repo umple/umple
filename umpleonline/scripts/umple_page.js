@@ -111,6 +111,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.setDiagramTypeIconState('GvClass');
     Page.useGvFeatureDiagram = false;
     jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
 
   }
   else if(diagramType.toLowerCase() == "gvclasstrait")
