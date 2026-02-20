@@ -7086,3 +7086,16 @@ Action.reindent = function(lines, cursorPos)
 
   Page.codeMirrorEditor6.focus();
 }
+
+// TEST DEBUG
+
+Action.setLiveView = function(viewNameToSet)
+{
+  Page.catFeedbackMessage("DEBUG:"+viewNameToSet);
+  if (viewNameToSet=="ecd") { Page.clickShowEditableClassDiagram(); }
+  else if (viewNameToSet=="gcd") { Page.clickShowGvClassDiagram(); }
+  else if (viewNameToSet=="sd") { Page.clickShowGvStateDiagram(); }
+  else Page.catFeedbackMessage("DEBUG bad selection!!!");
+}
+
+
