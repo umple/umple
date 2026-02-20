@@ -20,6 +20,7 @@ Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
 Action.neighbors=[];
+Action.currentLiveView = "default";
 
 const clientDebuggerFlag = false;
 
@@ -5499,13 +5500,21 @@ Action.updateUmpleLayoutEditorCallback = function(response)
 }
 
 Action.updateUmpleDiagram = function() {
- return Action.updateUmpleDiagramForce(true)
-}
+  if (Action.currentLiveView && Action.currentLiveView !== "default") 
+  {
+    Action.updateLiveView();
+    return;
+  } 
+  return Action.updateUmpleDiagramForce(true);
+};
 
-Action.updateUmpleDiagramForce = function(forceUpdate)
-{
-  // DEBUG
-  // console.log("Inside updateUmpleDiagramForce")
+Action.updateUmpleDiagramForce = function(forceUpdate) {
+  // Break the loop: If we are in Live View, do NOT call updateLiveView here.
+  // Just exit and let Action.updateUmpleDiagram handle it.
+  if (Action.currentLiveView && Action.currentLiveView !== "default") {
+    return; 
+  }
+
   var canonical = Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());
   if(!forceUpdate) {
     if(canonical == Action.savedCanonical)
@@ -7086,3 +7095,73 @@ Action.reindent = function(lines, cursorPos)
 
   Page.codeMirrorEditor6.focus();
 }
+
+
+Action.setLiveView = function(viewName) {
+  Action.currentLiveView = viewName;
+  if (viewName === "default") {
+    // Hide the text view and show the original SVG children
+    jQuery("#liveViewContent").hide();
+    jQuery("#umpleCanvasColumn").children().not("#liveViewContent").show();
+    Action.updateUmpleDiagramForce(true); 
+  } else {
+    Action.updateLiveView();
+  }
+};
+
+Action.updateLiveView = function() {
+  Page.showCanvasLoading(true);
+
+  // 1. Target the right-hand diagram column directly
+  let canvasColumn = jQuery("#umpleCanvasColumn");
+  
+  // 2. Look for our content area INSIDE the canvas column
+  let liveViewDiv = jQuery("#liveViewContent");
+  if (liveViewDiv.length === 0) {
+    // Create it as a child of the column so it stays in the right-hand layout
+    liveViewDiv = jQuery("<div id='liveViewContent' style='display:none; width:100%; height:100%; overflow:auto; background:white; color:black;'></div>");
+    canvasColumn.append(liveViewDiv);
+  }
+  
+  // 3. Hide all other children of the column (like the SVG) but show our Live View
+  canvasColumn.children().not("#liveViewContent").hide();
+  liveViewDiv.show();
+
+  liveViewDiv.html(
+    '<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:400px; width:100%; color:#666;">' +
+    '<div class="loader"></div>' + 
+    '<p style="margin-top:10px; font-family:Verdana;">Updating ' + Action.currentLiveView + '...</p></div>'
+  );
+
+  var lang = Page.getLanguage() || "Java"; 
+  var params = format("umpleCode={0}&generate={1}&language={2}", 
+                      encodeURIComponent(Page.getUmpleCode()), 
+                      Action.currentLiveView,
+                      lang);
+                      
+  Ajax.sendRequest("scripts/compiler.php", Action.updateLiveViewCallback, params);
+};
+Action.updateLiveViewCallback = function(response) {
+  Page.showCanvasLoading(false);
+  
+  jQuery("#umpleCanvasColumn").hide(); 
+  
+  let liveViewDiv = jQuery("#liveViewContent");
+  let content = response.responseText;
+
+  if (content.includes("URL_SPLIT")) {
+      var parts = content.split("%%");
+      content = parts[parts.length - 1]; 
+  }
+
+  var headerHtml = 
+    "<div style='background:#f0f0f0; padding:10px; border-bottom:1px solid #ccc; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1001;'>" +
+      "<span style='color:black;'><strong>Live Mode:</strong> " + Action.currentLiveView + "</span>" +
+      "<button onclick='Action.setLiveView(\"default\");' style='cursor:pointer; padding:5px 10px; background:#d9534f; color:white; border:none; border-radius:4px;'>✕ Close</button>" +
+    "</div>";
+  var formatted = "<pre style='margin:0; padding:20px; white-space:pre-wrap; background:white; color:black; font-family:monospace; font-size:10pt;'>" + 
+                  content.trim() + 
+                  "</pre>";
+
+  liveViewDiv.show().html(headerHtml + formatted);
+};

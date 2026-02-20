@@ -1837,3 +1837,63 @@ textarea#umpleLayoutEditorText {
 .ai-explain-dialog .status-message.ai-status--error {
   color: #DD0033;
 }
+
+/* LIVE VIEW CONTENT STYLING */
+#liveViewContent {
+  background-color: #ffffff; /* Contrast for light-scheme tables */
+  color: #000000;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+/* Style the compiler-generated tables (CRUD, State Tables) */
+#liveViewContent table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#liveViewContent th {
+  background-color: #3383bb; /* Matching your header blue */
+  color: #ffffff;
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ccc;
+  font-size: 10pt;
+}
+
+#liveViewContent td {
+  padding: 8px;
+  border: 1px solid #ddd;
+  font-size: 9pt;
+}
+
+#liveViewContent tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+#liveViewContent pre {
+  font-family: monospace;
+  font-size: 9.5pt;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+.loader {
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

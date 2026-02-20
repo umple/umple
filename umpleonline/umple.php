@@ -279,7 +279,21 @@ $output = $dataHandle->readData('model.ump');
     background-color: #e021cd !important;
     transition: background-color 0.2s ease !important;
 }
-
+#liveViewContent table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white; /* Ensure readability for black text from compiler */
+  color: black;
+  margin-top: 10px;
+}
+#liveViewContent th, #liveViewContent td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+}
+#liveViewContent th {
+  background-color: #f0f0f0;
+}
 
 
 /* .modal-container{
@@ -569,7 +583,20 @@ $output = $dataHandle->readData('model.ump');
     <a id="GCD_button" class="button2 active" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
     <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()">S</a>&nbsp;
     </span>
- 
+    <span style="font-size: 12px; margin-left: 10px; font-weight: bold;">
+  Live View:
+  <select id="liveViewSelector"
+          onchange="Action.setLiveView(this.value)"
+          style="font-size: 11px; border-radius: 4px; padding: 2px;">
+    <option value="default">Standard (E/G/S)</option>
+    <option value="gvEntityRelationDiagram">ERD</option>
+    <option value="gvFeature">Feature Diagram</option>
+    <option value="crud">CRUD Matrix</option>
+    <option value="stateTables">State Tables</option>
+    <option value="eventSequence">Event Sequence</option>
+    <option value="instanceTables">Instance Diagram</option>
+  </select>
+</span>
     &nbsp; 
     <span style="font-size: 30%">
     <a id="SHT_button" class="button2 active" href="javascript:Page.clickShowHideText()">T</a>&nbsp;

@@ -138,7 +138,7 @@ else if (isset($_REQUEST["umpleCode"]))
 {
   //file_put_contents("/home/jpan/test.html", "BBBBBBBBBBBBBBBBBBBB", FILE_APPEND);
   $input = $_REQUEST["umpleCode"];
-  $fulllanguage = $_REQUEST["language"];
+  $fulllanguage = isset($_REQUEST["language"]) ? $_REQUEST["language"] : "Java";
   
   // If there are suboptions in the language string, parse them out
   // Language stringh could be cpp or cpp.opt1.opt2.opt3
