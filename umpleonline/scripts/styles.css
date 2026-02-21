@@ -4,7 +4,7 @@ body {
   color-scheme: light;
 }
 p, ol, ul, div, h1, h2, h3, h4, b { 
-   font-size: 10pt; color: #000000; 
+  font-size: 10pt; color: #000000; 
 }
 
 /* Theme-aware compiler message colors (used by compiler.php error/warning output) */
@@ -1674,6 +1674,146 @@ textarea#umpleLayoutEditorText {
 
 .ai-explain-dialog .explanation-text .ai-md-table tr:nth-child(even) {
   background-color: #f5f5f5;
+}
+
+/* CRUD JSON UI instance table */
+.crud-instance-table-wrap {
+  overflow-x: auto;
+}
+
+.crud-instance-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9pt;
+  border: #ccc solid 1px;
+}
+
+.crud-instance-table th,
+.crud-instance-table td {
+  border: #ccc solid 1px;
+  padding: 4px 6px;
+  text-align: left;
+}
+
+.crud-instance-row > td {
+  font-weight: bold;
+}
+
+.crud-instance-table th {
+  background-color: #e8e8e8;
+  font-weight: bold;
+}
+
+.crud-instance-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.crud-assoc-table-wrap {
+  overflow-x: auto;
+  margin: 6px 12px 4px 12px;
+  background-color: #ffffff; 
+  border-radius: 3px;
+  padding: 4px 6px;
+  border: 1px solid #cccccc; 
+  border-left-width: 4px;     
+}
+
+.crud-assoc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9pt;
+  border: #cccccc solid 1px;
+  background-color: #ffffff; 
+  font-weight: normal; 
+}
+
+.crud-assoc-table th,
+.crud-assoc-table td {
+  border: #cccccc solid 1px;
+  padding: 3px 5px;
+  text-align: left;
+  font-weight: normal; 
+}
+
+.crud-assoc-table th {
+  background-color: #f2f2f2; 
+  font-weight: normal; 
+}
+
+.crud-assoc-table tr:nth-child(odd) td {
+  background-color: #ffffff;
+}
+
+.crud-assoc-table tr:nth-child(even) td {
+  background-color: #f9f9f9; 
+}
+
+.crud-form-actions .crud-form-button {
+  letter-spacing: 0.1px;
+  height: 25px;
+  margin: 0 4px 0 0;
+  padding: 0 10px;
+  line-height: 25px;
+  font-weight: bold;
+  font-size: 14px;
+  font-family: 'Lucida Grande', Helvetica, Arial, Sans-Serif;
+  border-top: 1px solid #d3bc8f;
+  border: 1px solid #b06c5b;
+  background-color: #d8a695;
+  background-image: -webkit-linear-gradient(top, #e5bcae, #d8a695);
+  background-image: -moz-linear-gradient(top, #e5bcae, #d8a695);
+  background-image: -ms-linear-gradient(top, #e5bcae, #d8a695);
+  background-image: -o-linear-gradient(top, #e5bcae, #d8a695);
+  background-image: linear-gradient(to bottom, #e5bcae, #d8a695);
+  border-radius: 4px;
+  color: #ffffff;
+  text-shadow: rgba(0,0,0,.4) 0 1px 0;
+}
+
+.crud-form-actions .crud-form-button.primary {
+  color: #ffffff;
+}
+
+.crud-instance-table-wrap {
+  overflow-x: auto;
+}
+
+.crud-instance-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 9pt;
+  border: #ccc solid 1px;
+}
+
+.crud-instance-table th,
+.crud-instance-table td {
+  border: #ccc solid 1px;
+  padding: 4px 6px;
+  text-align: left;
+}
+
+.crud-instance-table th {
+  background-color: #e8e8e8;
+  font-weight: bold;
+}
+
+.crud-instance-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.crud-instance-table tbody tr:hover td {
+  background-color: #e5f2ff; 
+}
+
+.crud-instance-row:hover + .crud-instance-associations-row > td,
+.crud-instance-associations-row:hover > td {
+  background-color: #e5f2ff; 
+}
+
+.crud-instance-row:hover + .crud-instance-associations-row .crud-assoc-table-wrap,
+.crud-instance-associations-row:hover .crud-assoc-table-wrap {
+  background-color: #e5f2ff;
+  border-color: #a3c4e5;
 }
 
 .ai-explain-dialog .followup-container {
