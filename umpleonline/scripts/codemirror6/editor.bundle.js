@@ -25008,6 +25008,7 @@ var cm6 = (function (exports) {
 
    // Create a compartment for editable state
    const editableCompartment = new Compartment();
+   const skipDebouncedTypingAnnotation = Annotation.define();
 
    // Code keyword highlighting style
    const myHighlightStyle = HighlightStyle.define([
@@ -25218,15 +25219,19 @@ var cm6 = (function (exports) {
      update(update) {
        
        if (update.docChanged) {
-           
-           const newContent = update.state.doc.toString();
-           
-           if (newContent !== this.lastContent) {
+
+         const newContent = update.state.doc.toString();
+         const shouldSkipDebouncedTyping = update.transactions.some(transaction =>
+           transaction.annotation(skipDebouncedTypingAnnotation));
+
+         if (newContent !== this.lastContent) {
            const currentPositionofCursor = this.view.state.selection.main.head;
 
            this.lastContent = newContent;
 
-           debouncedProcessTyping("newEditor", false ,currentPositionofCursor); // call the debounced function
+           if (!shouldSkipDebouncedTyping) {
+             debouncedProcessTyping("newEditor", false ,currentPositionofCursor); // call the debounced function
+           }
          }
        }
        Action.updateLineNumberDisplay();
@@ -25253,10 +25258,12 @@ var cm6 = (function (exports) {
    exports.getSyncedVersion = getSyncedVersion;
    exports.onDarkModePreferenceChange = onDarkModePreferenceChange;
    exports.prefersDarkMode = prefersDarkMode;
+   exports.programmaticChangeAnnotation = skipDebouncedTypingAnnotation;
    exports.receiveUpdates = receiveUpdates;
    exports.sendableUpdates = sendableUpdates;
    exports.setDarkMode = setDarkMode;
    exports.setDarkModePreference = setDarkModePreference;
+   exports.skipDebouncedTypingAnnotation = skipDebouncedTypingAnnotation;
 
    return exports;
 
