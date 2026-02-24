@@ -1337,6 +1337,46 @@ Action.drawInputState = function(inputType,stateCode,stateName){
         }
       }
     });
+  } else if(inputType=="colorState") {
+
+    if (clientDebuggerFlag){
+      console.log("Changing State Color ...");
+    }
+
+    // Change the input to a color picker
+    input.type = "color";
+    input.style.width = "30px";
+
+    label.appendChild(document.createTextNode("Color - "));
+
+    // Add a clickable arrow like the class color UI
+    var arrow = document.createElement("span");
+    arrow.innerHTML = "&#8594;";
+    arrow.style.cursor = "pointer";
+    arrow.style.paddingLeft = "5px";
+
+    var applyColor = function(){
+      Action.setColorState(unsanitizedState, stateName, input.value);
+
+      document.removeEventListener("mousedown", hider);
+      prompt.remove();
+      Action.removeContextMenu();
+
+      // Save history (consistent with other menu actions)
+      TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
+    };
+
+    input.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        applyColor();
+      }
+    });
+
+    arrow.addEventListener("click", function(){
+      applyColor();
+    });
+
+    prompt.appendChild(arrow);
   }
   // Add the prompt to the page
   prompt.appendChild(label);
@@ -1344,6 +1384,40 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   document.body.appendChild(prompt);
   input.focus();
 }
+
+Action.setColorState = function(stateCode, stateName, colorValue) {
+
+  // Get full code from editor
+  var orig = Page.codeMirrorEditor6.state.doc.toString();
+
+  // Find where the state appears in the text
+  var startIndex = orig.indexOf(stateCode);
+
+  if(startIndex === -1){
+    console.log("State not found in editor.");
+    return;
+  }
+
+  var endIndex = startIndex + stateCode.length;
+
+  // Remove closing brace
+  var trimmedState = stateCode.substring(0, stateCode.lastIndexOf("}"));
+
+  // Insert color line before closing brace
+  var updatedState = trimmedState + "  displayColor " + colorValue + ";\n}";
+
+  // Replace in full document
+  var newText = orig.substring(0, startIndex)
+              + updatedState
+              + orig.substring(endIndex);
+
+  // Update editor
+  Page.setCodeMirror6Text(newText);
+
+  // Trigger diagram refresh
+  setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+};
+
 //Deletes a target state within the specific SM and Class, as well any transitions to/from target state
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.deleteState = function(stateCode,className,smName,stateName){
@@ -1412,10 +1486,16 @@ Action.drawStateMenu = function(){
   }
   //this section generates the context menu, grabbing option names and associated functions from the vars below 
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Rename State","Delete State","Add Substate","Add Transition"];
+  var rowContent = ["Rename State","Delete State","Add Substate","Add Transition","Change Color"];
   //need to sanitize any linebreaks or quotes that could break the generated HTML
   var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
-  var rowFuncs = ["Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")","Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.drawInputState(\"transition\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"];
+  var rowFuncs = [
+    "Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")",
+    "Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")",
+    "Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")",
+    "Action.drawInputState(\"transition\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")",
+    "Action.drawInputState(\"colorState\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"
+  ]; 
   menu.style.zIndex = "1000";
   menu.style.border = "1px solid #ccc";
   menu.style.backgroundColor = "#f8f8f8";
