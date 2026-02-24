@@ -608,15 +608,21 @@ Page.initCodeMirrorEditor = function() {
       });
   }
       
-  // Sets the codemirror 6 text without any change trigger (hopefully)
-  Page.setCodeMirror6Text = function (textToSet) {
-    Page.codeMirrorEditor6.dispatch({ 
+  // Sets CodeMirror 6 text; optionally skip debounced typing processing.
+  Page.setCodeMirror6Text = function (textToSet, skipDebouncedTyping) {
+    var dispatchPayload = { 
       changes: { 
         from: 0, 
         to: Page.codeMirrorEditor6.state.doc.length, 
         insert: textToSet
         }
-    } )
+    };
+    if (skipDebouncedTyping
+      && cm6.skipDebouncedTypingAnnotation
+      && typeof cm6.skipDebouncedTypingAnnotation.of === "function") {
+      dispatchPayload.annotations = cm6.skipDebouncedTypingAnnotation.of(true);
+    }
+    Page.codeMirrorEditor6.dispatch(dispatchPayload);
   }
 
    Page.codeMirrorEditor6.dom.addEventListener('mousedown', function () {
@@ -1114,7 +1120,7 @@ Page.splitUmpleCode = function(umpleCode)
 // Called by fuunctions such as loadExampeCallback and loadFileCallback
 // Also called by updateUmpleTextCallback which is triggered by diagram edit by directUpdateCommandCallback  
 // Updates all text editors, and then can call a function called reason
-Page.setUmpleCode = function(umpleCode, reason)
+Page.setUmpleCode = function(umpleCode, reason, skipDebouncedTyping)
 {
   // DEBUG
   // console.log("Inside Page.setUmpleCode() ...")
@@ -1128,13 +1134,13 @@ Page.setUmpleCode = function(umpleCode, reason)
     // issue#1409  Do not Set the umple code if codeChange is false(i.e. reason is false)
     if (!((typeof reason === 'boolean') && reason == false))
     {
-      Page.setCodeMirror6Text(modelAndPositioning[0]);
+      Page.setCodeMirror6Text(modelAndPositioning[0], skipDebouncedTyping);
     }
   }
   // Refactoring definitive text location
   // Update Codemirror 6 and the backup variable
   // console.log("Setting modelCode to codeMirror 6 ...")
-  Action.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0]);
+  Action.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0], skipDebouncedTyping);
 
   if (typeof reason === 'function'){
     reason();
