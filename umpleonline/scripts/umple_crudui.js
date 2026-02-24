@@ -40,13 +40,24 @@ Page.getCrudTypeInfo = function(rawType) {
   };
 };
 
-// Build tooltip text to help user know what the data type is for a class attribute
+// Build tooltip HTML to help user know what the data type is for a class attribute
+// and whether it is inherited. We return an HTML string that will be used with a
+// per-element jQuery UI tooltip (via data-crud-tooltip-html) so that we can
+// render line breaks using <br/>.
 Page.buildCrudTooltip = function(attrName, rawType, inheritedFrom) {
-  var tooltip = attrName + ": " + (rawType || "");
+  var typeText = rawType || "";
+  var lines = [];
+
+  lines.push(attrName + " : " + typeText);
+
   if (inheritedFrom) {
-    tooltip += "\n. This is an inherited attribute from " + inheritedFrom + ".";
+    lines.push("This is an inherited attribute from " + inheritedFrom + ".");
   }
-  return tooltip;
+
+  var html = lines.join("<br/>");
+
+  // Escape double quotes so the HTML can be safely embedded in an attribute
+  return html.replace(/"/g, "&quot;");
 };
 
 // Parse a multiplicity string like "1", "0..1", "1..*", "3..*", "0..2" into
@@ -433,9 +444,9 @@ Page.buildCrudForClassType = function(attrName, typeInfo) {
       var subName = subAttr.name;
       if (!subName) { return; }
       var subTypeInfo = Page.getCrudTypeInfo(subAttr.type);
-      var tooltip = Page.buildCrudTooltip(subName, subAttr.type, subAttr.inheritedFrom);
+      var tooltipHtml = Page.buildCrudTooltip(subName, subAttr.type, subAttr.inheritedFrom);
       nestedHtml += "<div class='crud-nested-field'>";
-      nestedHtml += "<label class='crud-nested-label'><span class='crud-tooltip-target' title='" + tooltip + "'>" + subName + "</span></label>";
+      nestedHtml += "<label class='crud-nested-label'><span class='crud-tooltip-target' data-crud-tooltip-html=\"" + tooltipHtml + "\">" + subName + "</span></label>";
       nestedHtml += Page.buildCrudInputHtml(attrName + "." + subName, subTypeInfo);
       nestedHtml += "</div>";
     });
@@ -462,10 +473,10 @@ Page.buildCrudClassArrayHtml = function(attrName, classDef) {
     var subName = subAttr.name;
     if (!subName) { return; }
     var subTypeInfo = Page.getCrudTypeInfo(subAttr.type);
-    var tooltip = Page.buildCrudTooltip(subName, subAttr.type, subAttr.inheritedFrom);
+    var tooltipHtml = Page.buildCrudTooltip(subName, subAttr.type, subAttr.inheritedFrom);
     var fieldName = attrName + "." + subName;
     html += "<div class='crud-nested-field'>";
-    html += "<label class='crud-nested-label'><span class='crud-tooltip-target' title='" + tooltip + "'>" + subName + "</span></label>";
+    html += "<label class='crud-nested-label'><span class='crud-tooltip-target' data-crud-tooltip-html=\"" + tooltipHtml + "\">" + subName + "</span></label>";
     html += Page.buildCrudInputHtml(fieldName, subTypeInfo);
     html += "</div>";
   });
@@ -828,6 +839,18 @@ Page.openCrudDialogForClass = function(className) {
   var attrs = classInfo.attributes || [];
   var instances = classInfo.instances || [];
 
+  // Simple HTML escaper for safely rendering attribute values in the
+  // instance summary table.
+  function escapeHtml(str) {
+    if (str === null || str === undefined) { return ""; }
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   // Gather association ends for this class, including any inherited from
   // its superclasses, using the extends map built from the JSON.
   var assocEnds = [];
@@ -889,11 +912,23 @@ Page.openCrudDialogForClass = function(className) {
   if (instances.length === 0) {
     html += "<p>No instances yet.</p>";
   } else {
-    instances.forEach(function(inst, idx) {
-      html += "<div class='crud-instance-row' data-index='" + idx + "' style='margin:4px 0;'>";
-      html += "<span class='crud-instance-label'>" + className + "[" + (idx + 1) + "]</span>";
+    // Render instances as a dedicated CRUD table with its own CSS
+    html += "<div class='crud-instance-table-wrap'>";
+    html += "<table class='crud-instance-table'>";
+    html += "<thead><tr>";
+    html += "<th>Instance</th>";
+    attrs.forEach(function(attr) {
+      var name = attr.name;
+      if (!name) { return; }
+      html += "<th>" + escapeHtml(name) + "</th>";
+    });
+    html += "<th>Actions</th>";
+    html += "</tr></thead><tbody>";
 
-      var summary = [];
+    instances.forEach(function(inst, idx) {
+      html += "<tr class='crud-instance-row' data-index='" + idx + "'>";
+      html += "<td class='crud-instance-label'>" + className + "[" + (idx + 1) + "]</td>";
+
       attrs.forEach(function(attr) {
         var name = attr.name;
         if (!name) { return; }
@@ -901,26 +936,40 @@ Page.openCrudDialogForClass = function(className) {
         var typeInfo = Page.getCrudTypeInfo(attr.type);
         var classDef = Page.getAttributeType && Page.getAttributeType(attr.type);
         var displayVal = Page.formatCrudDisplayValue(val, typeInfo);
-        if (displayVal !== "") {
+        if (displayVal !== "" && classDef && !typeInfo.isArray) {
           // Class-typed primitive attributes: wrap their key=value pairs in braces
-          if (classDef && !typeInfo.isArray) {
-            summary.push(name + "={" + displayVal + "}");
-          } else {
-            summary.push(name + "=" + displayVal);
-          }
+          displayVal = "{" + displayVal + "}";
         }
+        var cellText = displayVal === "" ? "" : escapeHtml(displayVal);
+        // Use a non-breaking space for empty cells so borders render correctly
+        html += "<td>" + (cellText || "&nbsp;") + "</td>";
       });
-      if (summary.length > 0) {
-        html += "<span class='crud-instance-summary' style='margin-left:8px;'> " + summary.join(", ") + "</span>";
+
+      html += "<td>";
+      // Action dropdown for each instance
+      html += "<select class='crud-instance-action' data-index='" + idx + "'>";
+      html += "<option value=''>Select action...</option>";
+      html += "<option value='edit'>Edit</option>";
+      html += "<option value='delete'>Delete</option>";
+      if (assocEnds.length > 0) {
+        html += "<option value='associations'>See Associations</option>";
+      }
+      html += "</select>";
+
+      // Hidden buttons so we can reuse existing click handlers for
+      // edit/delete/see-associations without duplicating logic.
+      html += "<button type='button' class='crud-edit-instance' data-index='" + idx + "' style='display:none;'></button>";
+      html += "<button type='button' class='crud-delete-instance' data-index='" + idx + "' style='display:none;'></button>";
+      if (assocEnds.length > 0) {
+        html += "<button type='button' class='crud-see-associations' data-index='" + idx + "' style='display:none;'></button>";
       }
 
-      html += "<button type='button' class='crud-edit-instance' data-index='" + idx + "' style='margin-left:8px;'>Edit</button>";
-      html += "<button type='button' class='crud-delete-instance' data-index='" + idx + "' style='margin-left:4px;'>Delete</button>";
-      if (assocEnds.length > 0) {
-        html += "<button type='button' class='crud-see-associations' data-index='" + idx + "' style='margin-left:4px;'>See Associations</button>";
-      }
-      html += "</div>";
+      html += "</td>";
+
+      html += "</tr>";
     });
+
+    html += "</tbody></table></div>";
   }
   html += "</div>";
 
@@ -935,8 +984,8 @@ Page.openCrudDialogForClass = function(className) {
     var typeInfo = Page.getCrudTypeInfo(attr.type);
     if (!attrName) { return; }
     html += "<div class='crud-field'>";
-    var tooltip = Page.buildCrudTooltip(attrName, attr.type, attr.inheritedFrom);
-    html += "<label class='crud-field-label'><span class='crud-tooltip-target' title='" + tooltip + "'>" + attrName + "</span></label>";
+    var tooltipHtml = Page.buildCrudTooltip(attrName, attr.type, attr.inheritedFrom);
+    html += "<label class='crud-field-label'><span class='crud-tooltip-target' data-crud-tooltip-html=\"" + tooltipHtml + "\">" + attrName + "</span></label>";
     html += Page.buildCrudInputHtml(attrName, typeInfo);
 
     html += "</div>";
@@ -993,6 +1042,9 @@ Page.openCrudDialogForClass = function(className) {
 
       html += "<div class='crud-field'>";
       var labelText = targetClass;
+      if (end.fromClass === end.toClass && end.roleName) {
+        labelText += " (" + end.roleName + ")";
+      }
       var minRequired = (typeof end.toMin === "number") ? end.toMin : 0;
       if (minRequired > 0) {
         labelText += " (required)";
@@ -1018,6 +1070,49 @@ Page.openCrudDialogForClass = function(className) {
       if (typeof end.toMax === "number" && end.toMax <= 1) {
         multiple = false;
       }
+
+      // Build a richer tooltip for each association option including
+      // class name, role (for reflexive associations), attribute list,
+      // and the record's attribute values.
+      var buildAssocOptionTooltip = function(endMeta, targetClassName, optionLabel, instObj, targetAttrs) {
+        var lines = [];
+        lines.push("<b>Class:</b> " + targetClassName);
+        if (endMeta.fromClass === endMeta.toClass && endMeta.roleName) {
+          lines.push("<b>Role from this " + endMeta.fromClass + ":</b> " + endMeta.roleName);
+        }
+
+        var attrDescs = [];
+        targetAttrs.forEach(function(attr) {
+          if (attr && attr.name) {
+            var desc = attr.name;
+            if (attr.type) {
+              desc += ":" + attr.type;
+            }
+            attrDescs.push(desc);
+          }
+        });
+        if (attrDescs.length) {
+          lines.push("<b>Attributes:</b> " + attrDescs.join(", "));
+        }
+
+        var parts = [];
+        targetAttrs.forEach(function(attr) {
+          var aName = attr.name;
+          if (!aName) { return; }
+          var v = instObj[aName];
+          if (typeof v === "undefined" || v === null || v === "") { return; }
+          parts.push(aName + "=" + v);
+        });
+        if (parts.length) {
+          lines.push("<b>Record:</b> " + parts.join(", "));
+        } else {
+          lines.push("<b>Record:</b> (no attribute values set)");
+        }
+
+        var tooltipHtml = lines.join("<br/>");
+        return tooltipHtml.replace(/\"/g, "&quot;");
+      };
+
       if (multiple) {
         // Multi-valued end: render a checkbox list so users can easily
         // add/remove multiple associated instances (e.g., many-to-many).
@@ -1025,20 +1120,11 @@ Page.openCrudDialogForClass = function(className) {
         targetInstances.forEach(function(inst, idx) {
           var optionLabel = targetClass + "[" + (idx + 1) + "]";
           var targetAttrs = (Page.crudData.classes[targetClass] && Page.crudData.classes[targetClass].attributes) || [];
-          var parts = [];
-          targetAttrs.forEach(function(attr) {
-            var aName = attr.name;
-            if (!aName) { return; }
-            var v = inst[aName];
-            if (typeof v === "undefined" || v === null || v === "") { return; }
-            parts.push(aName + "=" + v);
-          });
-            var tooltip = parts.length ? (optionLabel + " - " + parts.join(", ")) : optionLabel;
-            var tooltipEsc = tooltip.replace(/\"/g, "&quot;");
-            html += "<label style='margin-right:8px;'>" +
-              "<input type='checkbox' name='" + fieldName + "' value='" + idx + "'> " +
-              "<span class='crud-tooltip-target' title='" + tooltipEsc + "'>" + optionLabel + "</span>" +
-              "</label>";
+          var tooltipEsc = buildAssocOptionTooltip(end, targetClass, optionLabel, inst, targetAttrs);
+          html += "<label style='margin-right:8px;'>" +
+            "<input type='checkbox' name='" + fieldName + "' value='" + idx + "'> " +
+            "<span class='crud-tooltip-target' data-crud-tooltip-html=\"" + tooltipEsc + "\">" + optionLabel + "</span>" +
+            "</label>";
         });
         html += "</div>";
       } else {
@@ -1052,20 +1138,11 @@ Page.openCrudDialogForClass = function(className) {
         targetInstances.forEach(function(inst, idx) {
           var optionLabel = targetClass + "[" + (idx + 1) + "]";
           var targetAttrs = (Page.crudData.classes[targetClass] && Page.crudData.classes[targetClass].attributes) || [];
-          var parts = [];
-          targetAttrs.forEach(function(attr) {
-            var aName = attr.name;
-            if (!aName) { return; }
-            var v = inst[aName];
-            if (typeof v === "undefined" || v === null || v === "") { return; }
-            parts.push(aName + "=" + v);
-          });
-            var tooltip = parts.length ? (optionLabel + " - " + parts.join(", ")) : optionLabel;
-            var tooltipEsc = tooltip.replace(/\"/g, "&quot;");
-            html += "<label style='margin-right:8px;'>" +
-              "<input type='radio' name='" + fieldName + "' value='" + idx + "'> " +
-              "<span class='crud-tooltip-target' title='" + tooltipEsc + "'>" + optionLabel + "</span>" +
-              "</label>";
+          var tooltipEsc = buildAssocOptionTooltip(end, targetClass, optionLabel, inst, targetAttrs);
+          html += "<label style='margin-right:8px;'>" +
+            "<input type='radio' name='" + fieldName + "' value='" + idx + "'> " +
+            "<span class='crud-tooltip-target' data-crud-tooltip-html=\"" + tooltipEsc + "\">" + optionLabel + "</span>" +
+            "</label>";
         });
         html += "</div>";
       }
@@ -1082,8 +1159,8 @@ Page.openCrudDialogForClass = function(className) {
   }
 
   html += "<div class='crud-form-actions' style='margin-top:8px;'>";
-  html += "<button type='button' id='crud-save-instance' style='margin-right:8px;'>Save</button>";
-  html += "<button type='button' id='crud-clear-instances'>Clear all " + className + "</button>";
+  html += "<button type='button' id='crud-save-instance' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button primary' style='margin-right:8px;'>Save</button>";
+  html += "<button type='button' id='crud-clear-instances' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button'>Clear all " + className + "</button>";
   html += "</div>";
   html += "</form>";
   html += "<div class='crud-related-instances' style='margin-top:8px;'></div>";
@@ -1091,10 +1168,60 @@ Page.openCrudDialogForClass = function(className) {
 
   $panel.html(html);
 
+  // Initialize HTML-based tooltips for CRUD association options that
+  // provided rich HTML content via data-crud-tooltip-html. We attach
+  // per-element jQuery UI tooltips here so we can use <br> and other
+  // markup in the tooltip body 
+  $panel.find(".crud-tooltip-target[data-crud-tooltip-html]").each(function() {
+    var htmlContent = jQuery(this).attr("data-crud-tooltip-html");
+    if (!htmlContent) { return; }
+    jQuery(this).tooltip({
+      items: this.tagName.toLowerCase(),
+      content: htmlContent,
+      show: { delay: 1000 },
+      // Prevent the global dwell-time animation from auto-hiding CRUD
+      // tooltips; we want them to disappear only on mouseleave.
+      open: function(event, ui) {
+        if (ui && ui.tooltip) {
+          ui.tooltip.css({
+            animation: "none",
+            "-webkit-animation": "none",
+            "-moz-animation": "none",
+            "-o-animation": "none"
+          });
+        }
+      }
+    });
+  });
+
   // Remove previous handlers to avoid duplicates
   $panel.off();
 
-  // Edit existing instance
+  // Handle action dropdown selection for each instance row
+  $panel.on("change", ".crud-instance-action", function() {
+    var action = jQuery(this).val();
+    var index = jQuery(this).data("index");
+    if (!action) {
+      return;
+    }
+
+    if (action === "edit") {
+      $panel.find(".crud-edit-instance[data-index='" + index + "']").trigger("click");
+    } else if (action === "delete") {
+      $panel.find(".crud-delete-instance[data-index='" + index + "']").trigger("click");
+    } else if (action === "associations") {
+      $panel.find(".crud-see-associations[data-index='" + index + "']").trigger("click");
+    }
+
+    // For Edit, keep the dropdown showing Edit to reflect current mode.
+    // For other actions, reset back to the placeholder.
+    if (action === "edit") {
+      jQuery(this).val("edit");
+    } else {
+      jQuery(this).val("");
+    }
+  });
+
   $panel.on("click", ".crud-edit-instance", function() {
     var index = parseInt(jQuery(this).data("index"), 10);
     if (isNaN(index) || index < 0 || index >= instances.length) {
@@ -1290,23 +1417,36 @@ Page.openCrudDialogForClass = function(className) {
   });
 
   // Show associations for a specific instance in the list
-  $panel.on("click", ".crud-see-associations", function() {
+  $panel.on("click", ".crud-see-associations", function(event) {
+    // Prevent this click from bubbling back up to the row handler,
+    // which would otherwise retrigger this handler and recurse.
+    if (event && typeof event.stopPropagation === "function") {
+      event.stopPropagation();
+    }
     var index = parseInt(jQuery(this).data("index"), 10);
     if (isNaN(index) || index < 0 || index >= instances.length) {
       return;
     }
     var inst = instances[index] || {};
     var $row = jQuery(this).closest(".crud-instance-row");
-    var $assoc = $row.find(".crud-instance-associations");
-    // Toggle visibility: if an associations panel already exists and is visible,
-    // hide it and stop. Otherwise, ensure a container exists and (re)build it.
-    if ($assoc.length && $assoc.is(":visible")) {
-      $assoc.hide();
-      return;
-    }
-    if ($assoc.length === 0) {
-      $assoc = jQuery("<div class='crud-instance-associations' style='margin-top:4px;margin-left:10px;'></div>");
-      $row.append($assoc);
+    // For the table layout, render associations in a dedicated row
+    // immediately following the instance row, spanning all columns.
+    var $table = $row.closest("table");
+    var colCount = $table.find("thead th").length || ($row.children("td").length || 1);
+    var $assocRow = $row.next(".crud-instance-associations-row");
+    var $assoc;
+
+    // Toggle visibility if an associations row already exists
+    if ($assocRow.length) {
+      $assoc = $assocRow.find(".crud-instance-associations");
+      if ($assocRow.is(":visible")) {
+        $assocRow.hide();
+        return;
+      }
+    } else {
+      $assocRow = jQuery("<tr class='crud-instance-associations-row'><td colspan='" + colCount + "'><div class='crud-instance-associations' style='margin-top:4px;'></div></td></tr>");
+      $row.after($assocRow);
+      $assoc = $assocRow.find(".crud-instance-associations");
     }
 
     var assocHtml = "";
@@ -1361,22 +1501,106 @@ Page.openCrudDialogForClass = function(className) {
       }
 
       hasContent = true;
+      var headerLabel = targetClass;
+      if (end.fromClass === end.toClass && end.roleName) {
+        headerLabel += " (" + end.roleName + ")";
+      }
+
       assocHtml += "<div class='crud-related-group' style='margin-top:4px;'>";
-      assocHtml += "<div><strong>" + targetClass + " associated with this " + className + ":</strong></div>";
+      assocHtml += "<div>" + headerLabel + " associated with this " + className + ":</div>";
+      assocHtml += "<div class='crud-assoc-table-wrap'>";
+      assocHtml += "<table class='crud-assoc-table'>";
+      assocHtml += "<thead><tr><th>Instance</th>";
+      targetAttrs.forEach(function(attr) {
+        var aName = attr.name;
+        if (!aName) { return; }
+        assocHtml += "<th>" + aName + "</th>";
+      });
+      assocHtml += "</tr></thead><tbody>";
+
       items.forEach(function(item) {
         var label = targetClass + "[" + (item.idx + 1) + "]";
-        var parts = [];
+        assocHtml += "<tr><td>" + label + "</td>";
         targetAttrs.forEach(function(attr) {
           var aName = attr.name;
           if (!aName) { return; }
           var v = item.inst[aName];
-          if (typeof v === "undefined" || v === null || v === "") { return; }
-          parts.push(aName + "=" + v);
+          var text = (typeof v === "undefined" || v === null || v === "") ? "" : v;
+          assocHtml += "<td>" + (text === "" ? "&nbsp;" : String(text)) + "</td>";
         });
-        var summary = parts.length ? " - " + parts.join(", ") : "";
-        assocHtml += "<div style='margin-left:10px;'>" + label + summary + "</div>";
+        assocHtml += "</tr>";
       });
-      assocHtml += "</div>";
+
+      assocHtml += "</tbody></table></div></div>";
+    });
+
+    // For hierarchical self-reflexive associations where only one side
+    // stores the link (e.g., child -> parent), also show the reverse
+    // perspective in this panel: from a parent record, list its children
+    // without modifying any stored associations.
+    assocEnds.forEach(function(end) {
+      if (!end.reflexiveHierarchy) { return; }
+      if (end.fromClass !== end.toClass) { return; }
+
+      var fieldName = end.storageKey;
+      var classInfo = Page.crudData.classes[className];
+      var allInstances = (classInfo && classInfo.instances) || [];
+      if (!allInstances.length) { return; }
+
+      var children = [];
+      allInstances.forEach(function(otherInst, otherIdx) {
+        if (otherIdx === index) { return; }
+        var linkVal = otherInst[fieldName];
+        if (linkVal === undefined || linkVal === null) { return; }
+        var parentIdx = linkVal;
+        if (Array.isArray(parentIdx)) {
+          // Hierarchical patterns should store a single parent index, but
+          // handle arrays defensively by checking membership.
+          if (parentIdx.indexOf(index) === -1) { return; }
+        } else {
+          if (typeof parentIdx !== "number") {
+            parentIdx = parseInt(parentIdx, 10);
+          }
+          if (isNaN(parentIdx) || parentIdx !== index) { return; }
+        }
+        children.push({ inst: otherInst, idx: otherIdx });
+      });
+
+      if (!children.length) { return; }
+
+      hasContent = true;
+      var revHeader = className;
+      if (end.oppositeRoleName) {
+        revHeader += " (" + end.oppositeRoleName + ")";
+      }
+
+      assocHtml += "<div class='crud-related-group' style='margin-top:4px;'>";
+      assocHtml += "<div>" + revHeader + " associated with this " + className + ":</div>";
+      assocHtml += "<div class='crud-assoc-table-wrap'>";
+      assocHtml += "<table class='crud-assoc-table'>";
+      assocHtml += "<thead><tr><th>Instance</th>";
+      var attrsForClass = (classInfo && classInfo.attributes) || [];
+      attrsForClass.forEach(function(attr) {
+        var aName = attr.name;
+        if (!aName) { return; }
+        assocHtml += "<th>" + aName + "</th>";
+      });
+      assocHtml += "</tr></thead><tbody>";
+
+      children.forEach(function(child) {
+        var label = className + "[" + (child.idx + 1) + "]";
+        assocHtml += "<tr><td>" + label + "</td>";
+        attrsForClass.forEach(function(attr) {
+          var aName = attr.name;
+          if (!aName) { return; }
+          var v = child.inst[aName];
+          var text = (typeof v === "undefined" || v === null || v === "") ? "" : v;
+          assocHtml += "<td>" + (text === "" ? "&nbsp;" : String(text)) + "</td>";
+        });
+        assocHtml += "</tr>";
+      });
+
+      assocHtml += "</tbody></table></div></div>";
     });
 
     if (!hasContent) {
@@ -1941,6 +2165,34 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
 
         // Storage key used on instances and form fields for this navigable end
         var storageKey = "__assoc__" + assocName + "__" + toClass;
+        // Determine the role name for this navigable end. For non-reflexive
+        // associations, roleOne applies to the classOne end and roleTwo to
+        // classTwo. For reflexive associations, we still distinguish by
+        // direction so that UIs can show role names like parent/child. We
+        // also capture the opposite role name so that reverse views (e.g.,
+        // a parent showing its children) can display the correct role.
+        var roleName = "";
+        var oppositeRoleName = "";
+        if (!isReflexive) {
+          if (fromClass === classOneName) {
+            roleName = assoc.roleOne || "";
+            oppositeRoleName = assoc.roleTwo || "";
+          } else if (fromClass === classTwoName) {
+            roleName = assoc.roleTwo || "";
+            oppositeRoleName = assoc.roleOne || "";
+          }
+        } else {
+          if (direction === "one-to-two") {
+            // From classOne to classTwo
+            roleName = assoc.roleTwo || assoc.roleOne || "";
+            oppositeRoleName = assoc.roleOne || assoc.roleTwo || "";
+          } else if (direction === "two-to-one") {
+            // From classTwo to classOne
+            roleName = assoc.roleOne || assoc.roleTwo || "";
+            oppositeRoleName = assoc.roleTwo || assoc.roleOne || "";
+          }
+        }
+
         Page.crudAssociationsByClass[fromClass].push({
           assocName: assocName,
           assocId: assoc.id || assocName,
@@ -1955,6 +2207,8 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
           fromMin: fromRange.min,
           fromMax: fromRange.max,
           storageKey: storageKey,
+          roleName: roleName,
+          oppositeRoleName: oppositeRoleName,
           // Track where this association end was declared so we can
           // propagate it to subclasses as an inherited association.
           declaringClass: fromClass,
