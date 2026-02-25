@@ -98,3 +98,10 @@ hs_err_pid*
 .gradle
 
 __pycache__/
+
+# Python venv
+.venv/*
+venv/*
+
+# Direnv local SHELL ENV settings
+/.envrc
