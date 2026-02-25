@@ -1,0 +1,9 @@
+classDiagram
+  class Foo {
+    String someStrings
+    Integer numbers
+    Token objects
+  }
+  class Token {
+    String attr
+  }

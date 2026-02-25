@@ -1,0 +1,6 @@
+class Door {
+  status {
+    Closed { unspecified -> Open; }
+    Open { close -> Closed; }
+  }
+}

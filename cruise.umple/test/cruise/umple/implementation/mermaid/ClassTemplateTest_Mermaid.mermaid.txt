@@ -1,0 +1,4 @@
+classDiagram
+  class NewClass {
+    String name
+  }

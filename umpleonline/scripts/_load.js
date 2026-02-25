@@ -92,6 +92,7 @@ document.write('<script type="text/javascript" src="scripts/shBrushCpp.js"></scr
 document.write('<script type="text/javascript" src="scripts/shBrushAlloy.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushNuSMV.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushXml.js"></script>');
+document.write('<script type="text/javascript" src="scripts/shBrushMermaid.js"></script>');
 
 //INLINE EDITING
 document.write('<script type="text/javascript" src="scripts/inlineeditor.js"></script>');

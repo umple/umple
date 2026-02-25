@@ -1,0 +1,11 @@
+classDiagram
+  class Mentor {
+    String name
+  }
+  class Student {
+    String number
+  }
+  class Course {
+  }
+  Mentor "1..*" -- "0..1" Student : student
+  Student "*" -- "*" Course : courses

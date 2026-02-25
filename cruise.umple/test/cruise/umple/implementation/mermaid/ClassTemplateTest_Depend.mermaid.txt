@@ -1,0 +1,6 @@
+classDiagram
+  class Mentor {
+  }
+  class IMentor {
+    <<interface>>
+  }
