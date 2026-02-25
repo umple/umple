@@ -121,35 +121,42 @@ class ChoiceRule
   */
   public Position findPosition(int lookfor, ParserDataPackage data)
   {
+    // Create a position object that has the correct line number for the lookfor character
+    // This uses the ParsDataPackage that has a mapping from key (characters) to value (lines)
+    // The first character position and line number is always zero
+    // The second key will be the character minus 1 of the start of line 2
+    //  ... the minus 1 is due to zero-based indexing
+
     String input = data.getInput();
-	while(lookfor<input.length()-1&&(input.charAt(lookfor)+"").matches("\\s")){
-		++lookfor;
-	}
-	if(lookfor>=input.length()){
-	  lookfor=input.length()-1;
-	}
+    while(lookfor<input.length()-1&&(input.charAt(lookfor)+"").matches("\\s")){
+      ++lookfor;
+    }
+    if(lookfor>=input.length()){
+      lookfor=input.length()-1;
+    }
     Set<Integer> keys = data.getLinenumbers().keySet();
     int offset = 0;
     int linenumber = 0;
-    int offsetend = 0;
-    int linenumberend = 0;
     int previous = 0;
+
+    // Loop through all the character positions  (keys),
+    // setting linenumber if we go past it
     for(Integer key:keys)
     {
       if(key-1>=lookfor)
       {
         offset = lookfor-previous;
-        linenumber = data.getLinenumbers().get(key);        
+        linenumber = data.getLinenumbers().get(key);
         break;
       }
       previous = key;
     }
-    Boolean first = true;
+
     if(linenumber==0)
     {
-      linenumber = 1;
-      offset = lookfor;
-      first = true;
+      // Fix to issue #2279 ... used to set line number to 1
+      linenumber = data.getLinenumbers().get(previous)+1; // Set to last line
+      offset = lookfor-previous;
     }
     return new Position(
         data.getFilename(),
