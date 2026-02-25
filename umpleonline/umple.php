@@ -569,6 +569,24 @@ $output = $dataHandle->readData('model.ump');
     <a id="GCD_button" class="button2 active" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
     <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()">S</a>&nbsp;
     </span>
+    <span style="font-size: 12px; margin-left: 10px; font-weight: bold;">
+  Live View:
+  <select id="liveViewSelector"
+          onchange="Action.setLiveView(this.value)"
+          style="font-size: 11px; border-radius: 4px; padding: 2px;">
+    <option value="gcd" id="menu-set-gcd" >Gv Class Diagram</option>
+    <option value="ecd" id="menu-set-ecd">E Class Diagram</option>
+    <option value="sd" id="menu-set-sd">State Diagram</option>  
+    <option value="std" id="menu-set-std">Structure Diagram</option>  
+    <option value="gfd" id="menu-set-gfd">Feature Diagram</option>
+    <option value="erd" id="buttonShowGvEntityRelationshipDiagram">ERD</option>
+    <!--option value="gvFeature">Feature Diagram</option>
+    <option value="crud">CRUD Matrix</option>
+    <option value="stateTables">State Tables</option>
+    <option value="eventSequence">Event Sequence</option>
+    <option value="instanceTables">Instance Diagram</option-->
+  </select>
+</span>
  
     &nbsp; 
     <span style="font-size: 30%">

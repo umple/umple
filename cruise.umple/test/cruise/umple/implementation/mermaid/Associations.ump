@@ -1,0 +1,5 @@
+class Course {}
+class Student {
+  1..* -- * Course courses;
+  0..1 mentor -> * Student mentees;
+}

@@ -1,0 +1,11 @@
+classDiagram
+  class Mentor {
+    String name
+  }
+  class SubMentor {
+  }
+  Mentor <|-- SubMentor
+  class SubMentor2 {
+    String subName
+  }
+  Mentor <|-- SubMentor2

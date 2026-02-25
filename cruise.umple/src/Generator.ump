@@ -103,7 +103,7 @@ use EventSequenceGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  Simulate
 use XtextGenerator,  JsonGenerator,  JsonMixedGenerator,  StructureDiagramGenerator , GvStateDiagramGenerator;
 use StateTableGenerator, SuperGvGeneratorGenerator, HtmlGenerator, UmpleModelWalkerGenerator,  CodeAnalysisGenerator;
 use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, PlainRequirementsDocGenerator, CodeGvClassDiagramGenerator, ExternalGrammarGenerator;
-use UmpleAnnotaiveToCompositionGenerator, InstanceDiagramGenerator, WordBank;
+use UmpleAnnotaiveToCompositionGenerator, InstanceDiagramGenerator, WordBank, MermaidGenerator;
 //End 
 
 // Base case generator, allows compilation without generation for testing command line, since Java is default
@@ -156,5 +156,5 @@ mixset UmpleModelWalkerGenerator{ use generators/Generator_UmpleModelWalker.ump;
 mixset CodeAnalysisGenerator{ use generators/Generator_CodeAnalysis.ump;}
 mixset PlainRequirementsDocGenerator{ use generators/Generator_CodePlainRequirementsDoc.ump; }
 mixset UmpleAnnotaiveToCompositionGenerator { use generators/Generator_CodeAnnotaiveToComposition.ump; }
+mixset MermaidGenerator{ use generators/Generator_CodeMermaid.ump; }
 //End
-

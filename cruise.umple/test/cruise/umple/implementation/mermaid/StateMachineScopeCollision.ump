@@ -1,0 +1,11 @@
+class Device {
+  power {
+    Idle { turnOn -> On; }
+    On { turnOff -> Idle; }
+  }
+
+  connectivity {
+    Idle { connect -> Online; }
+    Online { disconnect -> Idle; }
+  }
+}

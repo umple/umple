@@ -1,0 +1,13 @@
+stateDiagram-v2
+  state "Class Device" as Class_Device {
+    state "Idle" as Device_power_Idle
+    state "On" as Device_power_On
+    [*] --> Device_power_Idle
+    Device_power_Idle --> Device_power_On : turnOn
+    Device_power_On --> Device_power_Idle : turnOff
+    state "Idle" as Device_connectivity_Idle
+    state "Online" as Device_connectivity_Online
+    [*] --> Device_connectivity_Idle
+    Device_connectivity_Idle --> Device_connectivity_Online : connect
+    Device_connectivity_Online --> Device_connectivity_Idle : disconnect
+  }

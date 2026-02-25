@@ -419,6 +419,12 @@ else if (isset($_REQUEST["umpleCode"]))
       $archivelink = $workDir->makePermalink($language.'FromUmple.zip');
       echo "<a href=\"$archivelink\" class=\"zipDownloadLink\" title=\"Download the generated code as a zip file. You can then unzip the result, compile it and run it on your own computer.\">Download the following Papyrus project as a zip file</a >";
     }
+    elseif ($language == "Mermaid") {
+      $sourceCode = executeCommand("java -jar umplesync.jar -generate Mermaid {$filename}{$suboptions} 2> {$errorFilename}");
+      if (trim($sourceCode) == "") {
+        $sourceCode = "Error generating Mermaid diagrams.";
+      }
+    }
     else {
       $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
     }

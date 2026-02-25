@@ -1,0 +1,6 @@
+classDiagram
+  class Person {
+  }
+  class Student {
+  }
+  Person <|-- Student
