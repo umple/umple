@@ -4436,7 +4436,7 @@ Action.setExampleType = function setExampleType()
 
 Action.loadExample = function loadExample()
 {
-  var diagramType = this.dataset['diagramType'];
+  var requestDiagramType = this.dataset['diagramType'];
   var $option = jQuery(' option:selected', this);
   if ($option.hasClass('openUmprOption')) {
     // user wants to open the umpr repository
@@ -4467,9 +4467,11 @@ Action.loadExample = function loadExample()
   }
   else {
     diagramType="&diagramtype=GvClass";
+    if (typeof Action.setLiveView === "function") {
     // This calls the logic we already have at the bottom of umple_action.js
     Action.setLiveView("gcd");
     //jQuery("#genjava").prop("selected",true);
+    }
   }
   
   var largerSelector = "#buttonLarger";
@@ -4478,21 +4480,21 @@ Action.loadExample = function loadExample()
   
   umpleCanvasWidth = jQuery(canvasSelector).width();
   umpleCanvasHeight = jQuery(canvasSelector).height();
-  
-  var sel = Page.getSelectedExample();
-  
+
+  var shortExampleName, newURL;
   if (exampleName.startsWith("https")) {
-    var shortExampleName=exampleName.split("/").pop();
-    var newURL="?filename="+exampleName.substr(8)+".ump"+diagramType;
+    shortExampleName=exampleName.split("/").pop();
+    newURL="?filename="+exampleName.substr(8)+".ump"+diagramType;
   }
   else
   {
-    var shortExampleName=exampleName;
-    var newURL="?example="+shortExampleName+diagramType;
-    window.history.pushState({}, "", newURL);
+    shortExampleName=exampleName;
+    newURL="?example="+shortExampleName+diagramType;
   }
+    Page.setSelectExample(shortExampleName + ".ump");
+    window.history.pushState({}, "", newURL);
 
-  setTimeout(function () { // Delay so it doesn't get erased
+    setTimeout(function () { // Delay so it doesn't get erased
     Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+shortExampleName+" example</a>");
   }, 3000);
   
@@ -4502,40 +4504,20 @@ Action.loadExample = function loadExample()
 
 Action.loadExampleCallback = function(response)
 {
-  //Force the spinner to stop immediately
-  Page.hideLoading();
   Action.freshLoad = true;
   Action.setjustUpdatetoSaveLater(true);
-
-  //Safely get the name
-  var exampleName = Page.getSelectedExample().replace(".ump", "");
-
-  //Update the Tab UI without calling the server
-  if (typeof TabControl !== 'undefined' && TabControl.activeTab) {
-    var tabId = TabControl.activeTab.id;
-    var tabLabel = jQuery("#tabName" + tabId);
-    
-    if (tabLabel.length > 0) {
-      tabLabel.text(exampleName); // Direct UI update
-      TabControl.tabs[tabId].name = exampleName;
-      TabControl.tabs[tabId].nameIsEphemeral = false;
-    }
-  }
-
+  
   //Update the code editor
   Page.setUmpleCode(response.responseText, function(){
+    Page.hideLoading();
     Action.updateUmpleDiagram();
   }, true);
+ 
+  Action.setCaretPosition("0");
+  Action.updateLineNumberDisplay();
+  TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
+};
 
-  //Wrap history in a try/catch to prevent the "Stream Destroyed" error
-  try {
-    if (TabControl.getCurrentHistory()) {
-      TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
-    }
-  } catch (e) {
-    console.warn("History save skipped: Server stream is closed.");
-  }
-}
 Action.customSizeTyped = function()
 {
   if (Action.oldTimeout != null)
