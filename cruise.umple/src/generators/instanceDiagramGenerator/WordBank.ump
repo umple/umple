@@ -5,11 +5,11 @@ class WordBank
 {
 
     static String[] nouns = {
-            "hobby", "driving", "front", "shoe", "home", "plot", "stick", "truck", "amusement", "cable", "wash", "existence", "arithmetic", "use", "stone", "knot", "lace", "cheese", "test", "tin", "laugh", "railway", "transport", "shake", "attack", "afterthought", "reading", "quill", "distribution", "bone", "wealth", "straw", "achiever", "flower", "aftermath", "deer", "shock", "riddle", "drain", "jam", "way", "beginner", "plate", "branch", "route", "coat", "mass", "mice", "window", "doll", "truck"
+            "hobby", "front", "shoe", "home", "plot", "stick", "truck", "amusement", "cable", "wash", "existence", "arithmetic", "use", "stone", "knot", "lace", "cheese", "test", "tin", "laugh", "railway", "transport", "shake", "afterthought", "reading", "quill", "distribution", "bone", "wealth", "straw", "achiever", "flower", "aftermath", "deer", "shock", "riddle", "drain", "jam", "way", "beginner", "plate", "branch", "route", "coat", "mass", "mice", "window", "doll", "truck", "maple" , "rocket" , "window" , "lantern" , "river" , "forest" , "planet" , "mirror" , "button" , "garden" , "castle" , "silver" , "basket" , "tunnel" , "cloud" , "pencil" , "carpet" , "bridge" , "island" , "guitar" , "shadow" , "bottle" , "engine" , "harbor" , "meadow" , "signal" , "rocket" , "flower" , "valley" , "pocket"
     };
 
     static String[] adjectives = {
-            "troubled", "rampant", "fierce", "slow" , "feigned", "angry", "automatic", "concerned", "mountainous", "chief", "standing", "quizzical", "royal", "capable", "unwritten", "uninterested", "ruddy", "frantic", "ragged", "terrible", "special", "exciting", "vengeful", "endurable", "loutish", "wandering", "nappy", "brief", "obnoxious", "shut", "null", "past", "melted", "thinkable", "noiseless", "rabid", "resolute", "plausible", "sedate", "bustling", "abiding", "sassy", "observant"
+            "slow" , "feigned", "angry", "automatic", "concerned", "mountainous", "chief", "standing", "quizzical", "royal", "capable", "unwritten", "uninterested", "frantic", "ragged", "special", "exciting", "endurable", "wandering", "brief", "shut", "null", "past", "melted", "thinkable", "noiseless", "resolute", "plausible", "sedate", "bustling", "abiding", "observant", "big" , "red" , "tall" , "dark" , "bright" , "silent" , "ancient" , "modern" , "silver" , "golden" , "wooden" , "little" , "giant" , "rapid" , "calm" , "fresh" , "sweet" , "sharp" , "rough" , "smooth" , "warm" , "cold" , "brave" , "proud" , "green" , "blue" , "white" , "black" , "round" , "clear"
     };
 
     public static int getSizeNoun(){

@@ -284,12 +284,16 @@ Action.clicked = function(event)
     Layout.showHideTextEditor();
     Page.showText = !Page.showText;
     Page.setShowHideIconState('SHT_button');
+    // After toggling Text (T) - doesn't change visibility rule, but keeps things consistent
+    if (typeof Action.updateLiveViewVisibility === 'function') { Action.updateLiveViewVisibility(); }
   }
   else if (action == "ShowHideCanvas")
   {
     Layout.showHideCanvas();
     Page.showCanvas = !Page.showCanvas;
     Page.setShowHideIconState('SHD_button');
+    // After toggling Diagram (D)
+    if (typeof Action.updateLiveViewVisibility === 'function') { Action.updateLiveViewVisibility(); }
   }
   else if (action == "ShowEditableClassDiagram")
   {
@@ -981,7 +985,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvEntityRelationshipDiagram = true;
     changedType = true;
     jQuery("#buttonShowGvEntityRelationshipDiagram").prop('checked', 'checked');
-    Page.setDiagramTypeIconState('entityRelationshipDiagram');
+    Page.setDiagramTypeIconState('none');
     jQuery(".view_opt_class").show();
     Page.initExamples();
 
@@ -7153,8 +7157,6 @@ Action.reindent = function(lines, cursorPos)
   Page.codeMirrorEditor6.focus();
 }
 
-// TEST DEBUG
-
 Action.setLiveView = function(viewNameToSet)
 {
   //Page.catFeedbackMessage("DEBUG:"+viewNameToSet);
@@ -7173,3 +7175,53 @@ Action.syncLiveViewSelector = function(viewCode) {
     selector.value = viewCode;
   }
 };
+
+// --- Live View visibility helpers ---
+// Requirement: if Diagram (D) is off, Live View control disappears;
+// it reappears when D is on again.
+Action.setLiveViewMenuVisible = function(isVisible) {
+  try {
+    var $selector = jQuery("#liveViewSelector");
+    if ($selector.length === 0) return;
+
+    //Prefer an explicit wrapper if present.
+    var $wrapper = jQuery("#liveViewWrapper, #liveViewContainer, .liveViewContainer").filter(function() {
+      return jQuery(this).find("#liveViewSelector").length > 0;
+    }).first();
+
+    //Otherwise, use the smallest nearby container that looks like the Live View control.
+    if ($wrapper.length === 0) {
+      $wrapper = $selector.parents("span,div").filter(function() {
+        var txt = (jQuery(this).text() || "").toLowerCase();
+        return txt.indexOf("live view") !== -1 && jQuery(this).find("#liveViewSelector").length > 0;
+      }).first();
+    }
+
+    // If we found a safe wrapper, hide/show it (label + select together).
+    if ($wrapper.length > 0) {
+      $wrapper.toggle(!!isVisible);
+      return;
+    }
+
+    // Fallback: hide/show the selector + any associated label.
+    $selector.toggle(!!isVisible);
+    var $label = jQuery("label[for='liveViewSelector'], #liveViewLabel");
+    if ($label.length) $label.toggle(!!isVisible);
+  } catch (e) {
+    // Fail silently; do not break the UI if DOM differs.
+  }
+};
+
+Action.updateLiveViewVisibility = function() {
+  // Diagram visibility is tracked by Page.showCanvas in UmpleOnline.
+  // When D is toggled, Page.showCanvas flips true/false.
+  var diagramVisible = !!Page.showCanvas;
+  Action.setLiveViewMenuVisible(diagramVisible);
+};
+
+// Ensure Live View visibility is correct on initial page load.
+jQuery(function() {
+  if (typeof Action.updateLiveViewVisibility === "function") {
+    Action.updateLiveViewVisibility();
+  }
+});

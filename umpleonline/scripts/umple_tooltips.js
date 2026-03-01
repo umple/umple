@@ -101,6 +101,9 @@ ToolTips.tooltipEntries = {
   ttShowStructureDiagram: ["li", "Display a graphically editable composite structure diagram </br><b>Shortcut: [ctrl+l]</b>"],
   ttShowGvFeatureDiagram: ["li", "Display a feature diagram rendered using GraphViz </br>"],
 
+    // Live View tooltip
+  liveViewSelector: ["Select", "Select the diagram type to display (Class Diagram, ERD, State Diagram, Feature Diagram, or Structure Diagram)</br><br>"],
+
   ECD_button: ['a', "Class diagram where the user can Edit the layout - <b>ctrl-E</b>"],
   GCD_button: ['a', "Graphviz Class diagram (the default as of 2026), automatically laid out - editable using a contextual menu (double-click or right-click to display it) when pointing to a class, association or attribute - <b>ctrl-G</b>"],
   SD_button: ['a', "State diagram - editable using a contextual menu (double-click or right-click to display it) when pointing to  a state or transition  - <b>ctrl-S</b>"],
@@ -204,6 +207,7 @@ ToolTips.initTooltips = function()
         ||id=="ttSaveNCollab"
         ||id=="collabDisconnect"
         ||id=="topBookmarkable"
+        ||id=="liveViewSelector"
     )
     {
       // Tooltips selected above should appear below (which is all in the top buttons
