@@ -145,14 +145,12 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.setDiagramTypeIconState('structureDiagram');
     Page.useGvFeatureDiagram = false;
   }
-  else if(diagramType.toLowerCase() == "gventityrelationshipdiagram"
-  || diagramType.toLowerCase() == "gventity"
-  || diagramType.toLowerCase() == "erd")
+  else if(diagramType.toLowerCase() == "gventityrelationshipdiagram")
   {
     Page.useGvEntityRelationshipDiagram = true;
     Page.useStructureDiagram = false;
     Page.useEditableClassDiagram = false;  
-    Page.setDiagramTypeIconState('entityRelationshipDiagram');
+    Page.setDiagramTypeIconState('none');
     Page.useGvFeatureDiagram = false;
   }
   else
@@ -665,8 +663,6 @@ Page.setDiagramTypeIconState = function(diagramType){
     document.getElementById('ECD_button').className = "button2 active";
     break;
     case 'GvClass':
-    case 'entityRelationshipDiagram': // Map ERD to the 'G' button
-    case 'GvEntity': 
     document.getElementById('GCD_button').className = "button2 active";
     break;
     case 'GvState':

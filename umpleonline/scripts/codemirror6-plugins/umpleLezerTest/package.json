@@ -8,7 +8,7 @@
     "@lezer/lr": "^1.3.3",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "codemirror": "^6.0.1",
-    "rollup": "^3.29.5"
+    "rollup": "^3.30.0"
   },
   "type": "module",
   "devDependencies": {

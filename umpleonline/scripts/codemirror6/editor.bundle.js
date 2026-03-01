@@ -25258,7 +25258,6 @@ var cm6 = (function (exports) {
    exports.getSyncedVersion = getSyncedVersion;
    exports.onDarkModePreferenceChange = onDarkModePreferenceChange;
    exports.prefersDarkMode = prefersDarkMode;
-   exports.programmaticChangeAnnotation = skipDebouncedTypingAnnotation;
    exports.receiveUpdates = receiveUpdates;
    exports.sendableUpdates = sendableUpdates;
    exports.setDarkMode = setDarkMode;

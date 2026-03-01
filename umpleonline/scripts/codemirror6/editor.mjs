@@ -271,6 +271,5 @@ export { createEditorState, createEditorView,
   EditorView, ViewPlugin, ViewUpdate, Text, ChangeSet, StateEffect,
   receiveUpdates, sendableUpdates, collab, getSyncedVersion, Compartment,editableCompartment,
   prefersDarkMode, onDarkModePreferenceChange, setDarkMode, setDarkModePreference,
-  skipDebouncedTypingAnnotation,
-  skipDebouncedTypingAnnotation as programmaticChangeAnnotation
+  skipDebouncedTypingAnnotation
 }
