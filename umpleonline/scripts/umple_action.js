@@ -17,7 +17,6 @@ Action.diagramInSync = true;
 Action.freshLoad = false;
 Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
-Action.generatedOutputCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
 Action.neighbors=[];
@@ -37,32 +36,6 @@ let justUpdatetoSaveLaterForTextCallback = false;
 
 Action.setjustUpdatetoSaveLaterForTextCallback = function(state){
   justUpdatetoSaveLaterForTextCallback = state;
-}
-
-Action.getCanonicalUmpleCode = function()
-{
-  return Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());
-}
-
-Action.updateGeneratedOutputCanonical = function(generatedCanonical)
-{
-  if (typeof generatedCanonical === "string")
-  {
-    Action.generatedOutputCanonical = generatedCanonical;
-  }
-  else
-  {
-    Action.generatedOutputCanonical = Action.getCanonicalUmpleCode();
-  }
-}
-
-Action.isGeneratedOutputStale = function()
-{
-  if (!Action.generatedOutputCanonical)
-  {
-    return false;
-  }
-  return Action.getCanonicalUmpleCode() !== Action.generatedOutputCanonical;
 }
 
 Action.clicked = function(event)
@@ -311,12 +284,16 @@ Action.clicked = function(event)
     Layout.showHideTextEditor();
     Page.showText = !Page.showText;
     Page.setShowHideIconState('SHT_button');
+    // After toggling Text (T) - doesn't change visibility rule, but keeps things consistent
+    if (typeof Action.updateLiveViewVisibility === 'function') { Action.updateLiveViewVisibility(); }
   }
   else if (action == "ShowHideCanvas")
   {
     Layout.showHideCanvas();
     Page.showCanvas = !Page.showCanvas;
     Page.setShowHideIconState('SHD_button');
+    // After toggling Diagram (D)
+    if (typeof Action.updateLiveViewVisibility === 'function') { Action.updateLiveViewVisibility(); }
   }
   else if (action == "ShowEditableClassDiagram")
   {
@@ -1008,7 +985,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvEntityRelationshipDiagram = true;
     changedType = true;
     jQuery("#buttonShowGvEntityRelationshipDiagram").prop('checked', 'checked');
-    Page.setDiagramTypeIconState('entityRelationshipDiagram');
+    Page.setDiagramTypeIconState('none');
     jQuery(".view_opt_class").show();
     Page.initExamples();
 
@@ -4098,7 +4075,6 @@ Action.generateCode = function(languageStyle, languageName)
   var generateCodeSelector = "#buttonGenerateCode";
   var actualLanguage = languageName;
   var additionalCallback;
-  var canonicalAtGenerateRequest = Action.getCanonicalUmpleCode();
   if (Page.getAdvancedMode() == 0 && (languageName === "Cpp"))
   {
     actualLanguage = "Experimental-"+languageName;
@@ -4136,9 +4112,7 @@ Action.generateCode = function(languageStyle, languageName)
 
   Action.ajax(
     function(response) {
-      Action.generateCodeCallback(
-        response, languageStyle, additionalCallback, canonicalAtGenerateRequest
-      );
+      Action.generateCodeCallback(response, languageStyle, additionalCallback);
     },
     format("language={0}&languageStyle={1}", actualLanguage, languageStyle),
     "true"
@@ -4170,11 +4144,10 @@ Action.executeCodeCallback = function(response)
   window.location.href='#codeExecutionArea';
 }
 
-Action.generateCodeCallback = function(response, language, optionalCallback, generatedCanonical)
+Action.generateCodeCallback = function(response, language, optionalCallback)
 {
   Page.showGeneratedCode(response.responseText,language);
   Page.hideExecutionArea();
-  Action.updateGeneratedOutputCanonical(generatedCanonical);
   Action.gentime = new Date().getTime();
 
   if(optionalCallback !== undefined)
@@ -5646,9 +5619,7 @@ Action.updateUmpleDiagramCallback = function(response)
     }
 
     Page.setFeedbackMessage("");
-    if (Action.isGeneratedOutputStale()) {
-      Page.hideGeneratedCode();
-    }
+    Page.hideGeneratedCode();
 
     // Enable dynamic checkboxes of mixsets and named filters
     // Find any phrases describing
@@ -7456,8 +7427,6 @@ Action.reindent = function(lines, cursorPos)
   Page.codeMirrorEditor6.focus();
 }
 
-// TEST DEBUG
-
 Action.setLiveView = function(viewNameToSet)
 {
   //Page.catFeedbackMessage("DEBUG:"+viewNameToSet);
@@ -7477,3 +7446,52 @@ Action.syncLiveViewSelector = function(viewCode) {
   }
 };
 
+// --- Live View visibility helpers ---
+// Requirement: if Diagram (D) is off, Live View control disappears;
+// it reappears when D is on again.
+Action.setLiveViewMenuVisible = function(isVisible) {
+  try {
+    var $selector = jQuery("#liveViewSelector");
+    if ($selector.length === 0) return;
+
+    //Prefer an explicit wrapper if present.
+    var $wrapper = jQuery("#liveViewWrapper, #liveViewContainer, .liveViewContainer").filter(function() {
+      return jQuery(this).find("#liveViewSelector").length > 0;
+    }).first();
+
+    //Otherwise, use the smallest nearby container that looks like the Live View control.
+    if ($wrapper.length === 0) {
+      $wrapper = $selector.parents("span,div").filter(function() {
+        var txt = (jQuery(this).text() || "").toLowerCase();
+        return txt.indexOf("live view") !== -1 && jQuery(this).find("#liveViewSelector").length > 0;
+      }).first();
+    }
+
+    // If we found a safe wrapper, hide/show it (label + select together).
+    if ($wrapper.length > 0) {
+      $wrapper.toggle(!!isVisible);
+      return;
+    }
+
+    // Fallback: hide/show the selector + any associated label.
+    $selector.toggle(!!isVisible);
+    var $label = jQuery("label[for='liveViewSelector'], #liveViewLabel");
+    if ($label.length) $label.toggle(!!isVisible);
+  } catch (e) {
+    // Fail silently; do not break the UI if DOM differs.
+  }
+};
+
+Action.updateLiveViewVisibility = function() {
+  // Diagram visibility is tracked by Page.showCanvas in UmpleOnline.
+  // When D is toggled, Page.showCanvas flips true/false.
+  var diagramVisible = !!Page.showCanvas;
+  Action.setLiveViewMenuVisible(diagramVisible);
+};
+
+// Ensure Live View visibility is correct on initial page load.
+jQuery(function() {
+  if (typeof Action.updateLiveViewVisibility === "function") {
+    Action.updateLiveViewVisibility();
+  }
+});
