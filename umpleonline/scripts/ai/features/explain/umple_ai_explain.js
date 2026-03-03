@@ -105,24 +105,25 @@ const AiExplain = {
    * Show the explain dialog and start explaining immediately
    */
   async showDialog() {
-    // If dialog exists and is minimized, restore it first (before any validation)
-    // This ensures users can always get back to their minimized conversation
-    const existingDialog = document.getElementById("aiExplainDialog");
-    if (existingDialog && this.isMinimized) {
-      this.restoreDialog();
-      return;
-    }
+    // Determine the code to explain (snippet or full model)
+    const editorState = Page.codeMirrorEditor6?.state;
+    let umpleCode = "";
 
-    // If dialog exists with content but not minimized, just focus it
-    if (existingDialog && !this.isMinimized) {
-      return;
+    if (editorState) {
+      const selection = editorState.selection.main;
+      const selectedText = editorState.sliceDoc(selection.from, selection.to).trim();
+      
+      if (selectedText.length > 0) {
+        umpleCode = selectedText;
+        console.log("[AI Explain] Explaining selected snippet only.");
+      } else {
+        umpleCode = editorState.doc.toString();
+        console.log("[AI Explain] Explaining full model.");
+      }
     }
-
-    // Get current Umple code
-    const umpleCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
 
     if (!umpleCode.trim()) {
-      alert("No code in the editor to explain. Please enter some Umple code first.");
+      alert("No code in the editor to explain. Please enter or select some Umple code first.");
       return;
     }
 
@@ -136,14 +137,25 @@ const AiExplain = {
       return;
     }
 
-    // Create and show dialog with loading state
-    const dialog = this.createDialog();
+    const existingDialog = document.getElementById("aiExplainDialog");
 
-    // Only reset conversation if there isn't one already
-    // (Allows resuming minimized conversations)
-    if (!this.hasOngoingConversation()) {
+    // Handle existing dialog (Dynamic Refresh)
+    if (existingDialog) {
+      // If minimized, restore it first
+      if (this.isMinimized) {
+        this.restoreDialog();
+      }
+      
+      // Reset the conversation and start a new explanation immediately
+      // This allows updating the explanation without closing/opening the dialog
       this.resetConversation();
+      await this.performExplanation(existingDialog, umpleCode);
+      return;
     }
+
+    // Create new dialog if it doesn't exist
+    const dialog = this.createDialog();
+    this.resetConversation();
     await this.performExplanation(dialog, umpleCode);
   },
 
