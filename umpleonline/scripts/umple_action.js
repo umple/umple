@@ -923,6 +923,15 @@ Action.saveNewFileCallback = function(response)
 
 Action.changeDiagramType = function(newDiagramType)
 {
+  // If we’re already in the requested mode, return
+  if (newDiagramType.type === "editableClass" && Page.useEditableClassDiagram) return;
+  if (newDiagramType.type === "JointJSClass"  && Page.useJointJSClassDiagram) return;
+  if (newDiagramType.type === "GvClass"       && Page.useGvClassDiagram) return;
+  if (newDiagramType.type === "GvState"       && Page.useGvStateDiagram) return;
+  if (newDiagramType.type === "GvFeature"     && Page.useGvFeatureDiagram) return;
+  if ((newDiagramType.type === "GvEntity" || newDiagramType.type === "GvEntityRelationshipDiagram") && Page.useGvEntityRelationshipDiagram) return;
+  if (newDiagramType.type === "structure"     && Page.useStructureDiagram) return;
+
   var changedType = false;
   jQuery(".layoutListItem").hide();
 
@@ -4464,7 +4473,7 @@ Action.loadExample = function loadExample()
     shortExampleName=exampleName;
     newURL="?example="+shortExampleName+diagramType;
   }
-    Page.setSelectExample(shortExampleName + ".ump");
+    //Page.setSelectExample(shortExampleName + ".ump");
     window.history.pushState({}, "", newURL);
 
     setTimeout(function () { // Delay so it doesn't get erased
@@ -7055,6 +7064,8 @@ Action.setLiveView = function(viewNameToSet)
   else if (viewNameToSet=="gfd") { Page.clickShowGvFeatureDiagram();}
   //else Page.catFeedbackMessage("DEBUG bad selection!!!");
 }
+
+
 
 Action.syncLiveViewSelector = function(viewCode) {
   var selector = document.getElementById("liveViewSelector");
