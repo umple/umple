@@ -19,6 +19,7 @@ class PlainRequirementsDocGenerator
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.parser.Token;
+	depend java.util.regex.*;
   
   
   UmpleModel model = null;
@@ -52,8 +53,9 @@ class PlainRequirementsDocGenerator
     for (Requirement req : ReqTreeSet){
     	if (req.hasReqImplementations() || !hasreqHideNotImpl) {
     	  // Below string stores the requirement statement and language and translates to html
-    	  String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
-    	  doc.createParagraphElement("<b>"+"" + req.getIdentifier() + ": " + mainReqText+"</b>", false);
+				String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+				mainReqText = linkifyHttpUrls(mainReqText);
+				doc.createParagraphElement("<b>" + req.getIdentifier() + ": " + mainReqText + "</b>", false);
     	  // Check if the requirement is implemented
           if(req.hasReqImplementations()) {
             // Append the text with this prompt
@@ -347,7 +349,27 @@ class PlainRequirementsDocGenerator
     writeModel();
     return;
   }
-  
+	String linkifyHttpUrls(String htmlish){
+		if (htmlish == null || htmlish.length() == 0) { return ""; }
+
+		// Match either normal "https://" OR entity-encoded "https:&#47;&#47;"
+		Pattern p = Pattern.compile("\\b(https?:\\/\\/[^\\s<>\"]+|https?:&#47;&#47;[^\\s<>\"]+)");
+		Matcher m = p.matcher(htmlish);
+
+		StringBuffer out = new StringBuffer();
+		while (m.find()){
+			String shown = m.group(1);
+
+			// Build a real href by decoding the encoded slashes (minimum needed for GitHub URLs)
+			String href = shown.replace("&#47;", "/").replace("\"","%22");
+
+			String a = "<a href=\"" + href + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + shown + "</a>";
+			m.appendReplacement(out, Matcher.quoteReplacement(a));
+		}
+		m.appendTail(out);
+		return out.toString();
+	}
+
   void writeModel(){
     try {
       String path = model.getUmpleFile().getPath();
