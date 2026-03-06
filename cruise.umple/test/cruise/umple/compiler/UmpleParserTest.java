@@ -1864,7 +1864,12 @@ public class UmpleParserTest
 
   @Test
   public void TestInvalidAssociationRoleNameError120() {
-          assertFailedParse("2341_invalidAssociationRoleName.ump",120);
+    assertFailedParse("2341_invalidAssociationRoleName.ump",120);
+  }
+
+  @Test
+  public void TestAssociationRoleNameWarning121() {
+      assertHasWarningsParse("2341_roleNameUppercaseWarning.ump",121);
   }
 
   @Test
