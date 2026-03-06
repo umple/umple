@@ -58,7 +58,7 @@ const RequirementsDialog = {
 
     const textDiv = document.createElement("div");
     textDiv.className = "requirement-text";
-    textDiv.textContent = requirement.text;
+    this.renderTextWithLinks(textDiv, requirement.text);
     display.appendChild(textDiv);
 
     container.appendChild(display);
@@ -118,7 +118,14 @@ const RequirementsDialog = {
       strong.textContent = req.id;
       span.appendChild(strong);
       const summaryText = req.text.substring(0, 100) + (req.text.length > 100 ? "..." : "");
-      span.appendChild(document.createTextNode(`: ${summaryText}`));
+      const linkifiedNode = document.createElement("span");
+      span.appendChild(linkifiedNode);
+      if(req.text.length <= 100) {
+        this.renderTextWithLinks(linkifiedNode,`: ${summaryText}`);
+      }
+      else {
+        linkifiedNode.appendChild(document.createTextNode(`: ${summaryText}`));
+      }
       label.appendChild(span);
 
       multipleDiv.appendChild(label);
