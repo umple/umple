@@ -143,6 +143,44 @@ const RequirementsDialog = {
     return container;
   },
 
+  renderTextWithLinks(container, text) {
+    // Clear safely
+    container.textContent = "";
+
+    if (!text) return;
+
+    // Basic http/https URL matcher
+    const urlRegex = /(https?:\/\/[^\s<>"')\]]+)/g;
+
+    let lastIndex = 0;
+    let match;
+
+    while ((match = urlRegex.exec(text)) !== null) {
+      const url = match[0];
+      const start = match.index;
+
+      // Text before the URL
+      if (start > lastIndex) {
+        container.appendChild(document.createTextNode(text.slice(lastIndex, start)));
+      }
+
+      // The URL as a link
+      const a = document.createElement("a");
+      a.href = url;
+      a.textContent = url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      container.appendChild(a);
+
+      lastIndex = start + url.length;
+    }
+
+    // Remaining text
+    if (lastIndex < text.length) {
+      container.appendChild(document.createTextNode(text.slice(lastIndex)));
+    }
+  },
+
   updateSelectedDisplay(dialog, requirements) {
     const displayDiv = dialog.querySelector("#selectedReqText");
     if (!displayDiv) return;
@@ -150,10 +188,11 @@ const RequirementsDialog = {
     const selectedIds = Array.from(checkboxes).map(cb => cb.value);
 
     if (selectedIds.length === 0) {
-      displayDiv.textContent = "No requirements selected";
+      this.renderTextWithLinks(displayDiv, "No requirements selected");
     } else {
       const selectedReqs = requirements.filter(r => selectedIds.includes(r.id));
-      displayDiv.textContent = selectedReqs.map(r => `${r.id}: ${r.text}`).join("\n\n");
+      const content = selectedReqs.map(r => `${r.id}: ${r.text}`).join("\n\n");
+      this.renderTextWithLinks(displayDiv, content);
     }
   },
 
@@ -315,7 +354,7 @@ const RequirementsDialog = {
 
         if (mode === "all") {
           multipleDiv.style.display = "none";
-          displayDiv.textContent = `All requirements (${requirements.length})`;
+          this.renderTextWithLinks(displayDiv, `All requirements (${requirements.length})`);
         } else if (mode === "multiple") {
           multipleDiv.style.display = "block";
           this.updateSelectedDisplay(dialog, requirements);
