@@ -413,12 +413,12 @@ class InstanceDiagramGenerator
 
     } else if (type.equals("Integer")){
 
-      int randomInt = attributeRandomGen.nextInt(1000) - 500;
+      int randomInt = attributeRandomGen.nextInt(1000);
       return Integer.toString(randomInt);
 
     } else if (type.equals("Double") || type.equals("Float")){
 
-      Float randomFloat = attributeRandomGen.nextFloat()* 1000 - 500;
+      Float randomFloat = attributeRandomGen.nextFloat()* 1000;
       String randomFloatString = randomFloat.toString();
       return randomFloatString.substring(0, 6);
 
