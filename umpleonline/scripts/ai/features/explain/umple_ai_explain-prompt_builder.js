@@ -36,7 +36,9 @@ const ExplainPromptBuilder = (() => {
         "- Only summary-style content should have bullet points; avoid bullet points in most cases"
       ]),
       block("examples", [
-        "User: class Student { name; }\nAssistant: ## Overall Purpose\nThis snippet defines a basic entity for a student.\n## Structural Elements\n- **Student**: A class containing a single `String` attribute `name`."
+        "User: class Student { name; }\nAssistant: ## Overall Purpose\nThis snippet defines a basic entity for a student.\n## Structural Elements\n- **Student**: A class containing a single `String` attribute `name`.",
+        "\n",
+        "User: <full_model>class Student { name; id; } class Course { title; } -- Student * -- * Course;</full_model>\n<selected_snippet>class Student { name; id; }</selected_snippet>\nAssistant: ## Overall Purpose\nThe selected snippet defines the `Student` entity within a larger model.\n## Structural Elements\n- **Student**: A class with two `String` attributes: `name` and `id`. In the full model, `Student` participates in a many-to-many association with `Course`."
       ])
     ]);
   })();
@@ -44,6 +46,16 @@ const ExplainPromptBuilder = (() => {
   return {
     getSystemPrompt() {
       return SYSTEM_PROMPT;
+    },
+
+    buildUserMessage(fullCode, selectedText) {
+      if (selectedText) {
+        return joinBlocks([
+          block("full_model", fullCode),
+          block("selected_snippet", selectedText)
+        ]);
+      }
+      return fullCode;
     },
 
     formatExplanation(explanationText) {

@@ -105,27 +105,32 @@ const AiExplain = {
    * Show the explain dialog and start explaining immediately
    */
   async showDialog() {
-    // Determine the code to explain (snippet or full model)
-    const editorState = Page.codeMirrorEditor6?.state;
-    let umpleCode = "";
-
-    if (editorState) {
-      const selection = editorState.selection.main;
-      const selectedText = editorState.sliceDoc(selection.from, selection.to).trim();
-      
-      if (selectedText.length > 0) {
-        umpleCode = selectedText;
-        console.log("[AI Explain] Explaining selected snippet only.");
-      } else {
-        umpleCode = editorState.doc.toString();
-        console.log("[AI Explain] Explaining full model.");
-      }
-    }
-
-    if (!umpleCode.trim()) {
-      alert("No code in the editor to explain. Please enter or select some Umple code first.");
+    // If dialog exists and is minimized, restore it first (before any validation)
+    // This ensures users can always get back to their minimized conversation
+    const existingDialog = document.getElementById("aiExplainDialog");
+    if (existingDialog && this.isMinimized) {
+      this.restoreDialog();
       return;
     }
+
+    // If dialog exists with content but not minimized, just focus it
+    if (existingDialog && !this.isMinimized) {
+      return;
+    }
+
+    // Determine the code to explain (snippet or full model)
+    const editorState = Page.codeMirrorEditor6?.state;
+    const fullCode = editorState?.doc.toString() || "";
+
+    if (!fullCode.trim()) {
+      alert("No code in the editor to explain. Please enter some Umple code first.");
+      return;
+    }
+
+    const selection = editorState.selection.main;
+    const selectedText = editorState.sliceDoc(selection.from, selection.to).trim();
+    const hasSelection = selectedText.length > 0;
+    const umpleCode = ExplainPromptBuilder.buildUserMessage(fullCode, hasSelection ? selectedText : null);
 
     // Check API configuration
     const apiConfig = this.checkApiConfig();
@@ -137,26 +142,15 @@ const AiExplain = {
       return;
     }
 
-    const existingDialog = document.getElementById("aiExplainDialog");
-
-    // Handle existing dialog (Dynamic Refresh)
-    if (existingDialog) {
-      // If minimized, restore it first
-      if (this.isMinimized) {
-        this.restoreDialog();
-      }
-      
-      // Reset the conversation and start a new explanation immediately
-      // This allows updating the explanation without closing/opening the dialog
-      this.resetConversation();
-      await this.performExplanation(existingDialog, umpleCode);
-      return;
-    }
-
-    // Create new dialog if it doesn't exist
+    // Create and show dialog with loading state
     const dialog = this.createDialog();
-    this.resetConversation();
-    await this.performExplanation(dialog, umpleCode);
+
+    // Only reset conversation if there isn't one already
+    // (Allows resuming minimized conversations)
+    if (!this.hasOngoingConversation()) {
+      this.resetConversation();
+    }
+    await this.performExplanation(dialog, umpleCode, hasSelection);
   },
 
   /**
@@ -431,8 +425,9 @@ const AiExplain = {
    * Perform the explanation
    * @param {HTMLElement} dialog - The dialog element
    * @param {string} umpleCode - The Umple code to explain
+   * @param {boolean} hasSelection - Whether the user selected a snippet
    */
-  async performExplanation(dialog, umpleCode) {
+  async performExplanation(dialog, umpleCode, hasSelection) {
     const statusDiv = dialog?.querySelector("#explainStatusMessage");
     const explanationText = dialog?.querySelector("#explanationText");
     const followUpContainer = dialog?.querySelector("#followUpContainer");
@@ -445,7 +440,9 @@ const AiExplain = {
     }
 
     // Update status
-    statusDiv.textContent = "Analyzing your code...";
+    statusDiv.textContent = hasSelection
+      ? "Analyzing your selected snippet..."
+      : "Analyzing your code...";
     statusDiv.className = "status-message ai-status--info";
 
     this.abortActiveStream();
