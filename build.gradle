@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-  id 'org.ajoberstar.grgit' version '3.0.0'
+  id 'org.ajoberstar.grgit' version '5.3.3'
   id 'nebula.ospackage' version '9.1.1'
 }
 
