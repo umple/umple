@@ -29,7 +29,8 @@ cat \
  umple_action_diagram.js \
  umple_tooltips.js \
  umple_tab_control.js \
- umple_crudui.js \
+ crud/umple_crudui.js \
+ crud/umple_crud_json_persistence.js \
  ai/utils/umple_ai_constants.js \
  ai/utils/umple_ai_provider_utils.js \
  ai/utils/umple_ai_prompt_utils.js \
