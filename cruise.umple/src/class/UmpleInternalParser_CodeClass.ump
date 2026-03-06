@@ -4537,7 +4537,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     AssociationEnd firstEnd = createPreliminaryAssociationEnd(myEndToken, defaultMyType);
     AssociationEnd secondEnd = createPreliminaryAssociationEnd(yourEndToken, defaultMyType);
     if(firstEnd == null || secondEnd == null){
-        setFailedPosition(associationToken.getPosition(), 8, name);
+        if(isAssociationClass){
+          setFailedPosition(associationToken.getPosition(), 8, name);
+        }
         return null;
     }
     
@@ -4650,6 +4652,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if (!mult.isValid()){
         String invalidBound = bound == null ? lowerBound + ".." + upperBound : bound;
         setFailedPosition(associationEndToken.getPosition(), 4, invalidBound);
+        return null;
+      }
+      if(roleName != null && !"".equals(roleName) && !Token.isValidIdentifier(roleName)){
+        setFailedPosition(associationEndToken.getPosition("roleName"), 120, roleName);
         return null;
       }
       if(type == null){

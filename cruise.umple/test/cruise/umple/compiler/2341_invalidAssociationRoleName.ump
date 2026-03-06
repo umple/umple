@@ -1,0 +1,13 @@
+class X {
+  implementsReq R1%R3;
+  agt;
+}
+
+req R1%R3 {test}
+
+class Y {
+  1 -- * X Df-dfd;
+  public static void main() {
+    System.out.println ("Aha!")
+  }
+}

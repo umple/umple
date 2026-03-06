@@ -1863,6 +1863,11 @@ public class UmpleParserTest
   }
 
   @Test
+  public void TestInvalidAssociationRoleNameError120() {
+          assertFailedParse("2341_invalidAssociationRoleName.ump",120);
+  }
+
+  @Test
   public void associationClass2()
   {
     String input = SampleFileWriter.readContent(new File(pathToInput, "010_associationClass2.ump"));
