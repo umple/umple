@@ -1064,7 +1064,14 @@ class ClassInstanceCountSet {
     // Build result object
     InstanceDiagramResult result = new InstanceDiagramResult();
     result.statusCode = classInstanceResult.statusCode;
-    result.diagramIsEmpty = classInstanceResult.diagramIsEmpty();
+    // Only probe diagram emptiness when the computation succeeded.
+    // For error states, some trueInstances values may be null, so
+    // calling diagramIsEmpty() would throw a NullPointerException.
+    if (result.statusCode == 0) {
+      result.diagramIsEmpty = classInstanceResult.diagramIsEmpty();
+    } else {
+      result.diagramIsEmpty = false;
+    }
 
     // Always compute loop scores and inheritance diagnostics for error reporting
     if (classInstanceResult.loopScores == null) {
