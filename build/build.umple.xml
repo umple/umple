@@ -386,7 +386,8 @@
       <fileset file="${scriptPath}/umple_tooltips.js"/>
       <fileset file="${scriptPath}/umple_tab_control.js"/>
       <!-- CRUD UI -->
-      <fileset file="${scriptPath}/umple_crudui.js"/>      
+      <fileset file="${scriptPath}/crud/umple_crudui.js"/>
+      <fileset file="${scriptPath}/crud/umple_crud_json_persistence.js"/>        
       <!-- Core AI modules - must be in dependency order -->
       <fileset dir="${scriptPath}/ai/utils" includes="**/*.js"/>
       <fileset file="${scriptPath}/ai/config/umple_ai_config.js"/>
