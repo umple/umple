@@ -777,6 +777,84 @@ Page.initCrudUi = function(tabnumber) {
   // Remember current container for inline CRUD panel rendering
   Page.currentCrudContainer = container;
 
+   // Add JSON persistence controls once per container
+  if (container.find(".crud-json-actions").length === 0) {
+    var jsonHtml = "<div class='crud-json-actions' style='margin:6px 0 10px 0;'>" +
+      "<button type='button' id='crud-generate-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Generate JSON</button>" +
+      "<button type='button' id='crud-generate-random-data' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Generate Random Data</button>" +
+      "<button type='button' id='crud-load-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button'>Load JSON</button>" +
+      "<input type='file' id='crud-load-json-file' accept='application/json,.json' style='display:none;' />" +
+      "</div>";
+    container.prepend(jsonHtml);
+
+    // Wire up JSON buttons
+    container.find("#crud-generate-json").off("click").on("click", function() {
+      if (typeof Page.crudJsonDownload === "function") {
+        Page.crudJsonDownload();
+      }
+    });
+
+    // Ask the backend Instance Diagram generator for random data and
+    // import the returned JSON using the same path as "Load JSON".
+    container.find("#crud-generate-random-data").off("click").on("click", function() {
+      if (typeof Page.getUmpleCode !== "function") {
+        console.warn("No Umple code available for random data generation.");
+        return;
+      }
+      var code = Page.getUmpleCode() || "";
+      if (!code) {
+        console.warn("Umple code is empty; cannot generate random data.");
+        return;
+      }
+
+      jQuery.ajax({
+        url: "scripts/crud_random_data.php",
+        method: "POST",
+        data: {
+          code: code
+          // Additional tuning parameters for random generation could be
+          // threaded through via a 'suboptions' field in future.
+        },
+        dataType: "text",
+        success: function(resp) {
+          if (typeof Page.crudJsonImportFromText === "function") {
+            Page.crudJsonImportFromText(resp);
+            // After import, refresh the currently open CRUD dialog, if any
+            if (Page.crudClassSelected) {
+              Page.openCrudDialogForClass(Page.crudClassSelected);
+            }
+            
+          } 
+        },
+        error: function(xhr, status, err) {
+          console.error("Failed to generate random instance data:", status, err, xhr && xhr.responseText);
+        }
+      });
+    });
+
+    container.find("#crud-load-json").off("click").on("click", function() {
+      container.find("#crud-load-json-file").trigger("click");
+    });
+
+    container.find("#crud-load-json-file").off("change").on("change", function(evt) {
+      var file = evt.target.files && evt.target.files[0];
+      if (!file) { return; }
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        if (typeof Page.crudJsonImportFromText === "function") {
+          Page.crudJsonImportFromText(e.target.result);
+          // After import, refresh the currently open CRUD dialog, if any
+          if (Page.crudClassSelected) {
+            Page.openCrudDialogForClass(Page.crudClassSelected);
+          }
+        }
+      };
+      reader.readAsText(file);
+      // Reset the input so the same file can be chosen again later
+      jQuery(this).val("");
+    });
+  }
+
   container.find(".crud-form").each(function() {
     var $form = jQuery(this);
     var className = $form.data("class");
@@ -1985,11 +2063,24 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
     classes.forEach(function(cls) {
       var className = cls.name || cls.id;
       if (!className) { return; }
+
+      var methods = cls.methods || [];
+      var hasMain = false;
+      methods.forEach(function(m) {
+        if (!m) { return; }
+        // Treat any concrete method named "main" as an indicator that
+        // this class is a main/root class for JSON export purposes.
+        if (m.name === "main" && (m.isAbstract === false || m.isAbstract === "false" || typeof m.isAbstract === "undefined")) {
+          hasMain = true;
+        }
+      });
+
       crudMetaByClass[className] = {
         name: className,
         rawAttributes: cls.attributes || [],
         extendsClass: cls.extendsClass || null,
-        isAbstract: cls.isAbstract === true || cls.isAbstract === "true"
+        isAbstract: cls.isAbstract === true || cls.isAbstract === "true",
+        hasMain: hasMain
       };
       Page.crudExtendsByClass[className] = cls.extendsClass || null;
 
@@ -2348,7 +2439,10 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
       Page.crudData.classes[className] = {
         attributes: attrs,
         instances: [],
-        isAbstract: isAbstract
+        isAbstract: isAbstract,
+        // Mark whether this class declares a main() method so that the
+        // CRUD JSON exporter can treat it as a root/main class.
+        isMain: !!meta.hasMain
       };
 
       formHtml += "</form>";

@@ -4544,7 +4544,8 @@ Action.loadExample = function loadExample()
     shortExampleName=exampleName;
     newURL="?example="+shortExampleName+diagramType;
   }
-    Page.setSelectExample(shortExampleName + ".ump");
+    // COMMENTED OUT SUBJECT TO INVESTIGATION
+    // Page.setSelectExample(shortExampleName + ".ump");
     window.history.pushState({}, "", newURL);
 
     setTimeout(function () { // Delay so it doesn't get erased
