@@ -27,6 +27,7 @@ class GvStateDiagramGenerator
 {
   Boolean hideActions = false;
   Boolean hideGuards = false;
+  Boolean hideNaturalLanguage = false;
   Boolean showTransitionLabels = false;
   Boolean showGuardLabels = false;
   internal String display_language = "";
@@ -71,6 +72,7 @@ digraph "<<=filename>>" {
     
     hideActions = hasSuboption("hideactions");
     hideGuards = hasSuboption("hideguards");
+    hideNaturalLanguage = hasSuboption("hidenaturallanguage");
     showTransitionLabels = hasSuboption("showtransitionlabels");
     showGuardLabels = hasSuboption("showguardlabels");
     display_language = getDisplayLanguage();
@@ -458,26 +460,9 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
            transitionLabel = "   t"+getObjectIdentity( root, t )+": ";
         }       
         
-        if(event.isAutoTransition()) 
+        if(!event.isAutoTransition())
         {
-          transitionLabel += "";
-        } 
-        else {
-          if (event.getIsTimer()) 
-          {
-            transitionLabel += "after("+event.getTimerInSeconds()+")";
-          }
-          else 
-          {
-            if(event.getArgs() == null || event.getArgs() == "") 
-            {
-              transitionLabel += event.getName();
-            }
-            else 
-            {
-              transitionLabel += event.getName()+"("+event.getArgs()+")";
-            }
-          }
+          transitionLabel += getTriggerDescription(event);
         }
         
         if (action == null || getAvailableActionCode(action) == "" || hideActions) 
@@ -508,7 +493,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
           else guardString = " [";
 
           //guardString += guard.getCondition(gen).replaceAll("\"","&quot;") + "]";
-	      guardString += guard.getExpression().replaceAll("\"","&quot;") + "]"+guardLabel;
+	      guardString += getEscapedGuardExpression(guard) + "]"+guardLabel;
         }
         
         String orig = getTransitionNameForState(t.getFromState(),uClass,true);
@@ -632,19 +617,18 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
 	
     // Set transition event information
     String tooltip = "From "+tooltipFromState+" to "+tooltipToState;
-    if (!event.isAutoTransition()) 
+    if (event.isAutoTransition())
     {
-      if (event.getIsTimer()) // Timed transition
-        tooltip = tooltip+" after("+event.getTimerInSeconds()+")";
-      else if(event.getArgs() == null || event.getArgs() == "") 
-        tooltip = tooltip+" on "+event.getName();
-      else 
-        tooltip = tooltip+" on "+event.getName()+"("+event.getArgs()+")";
+      tooltip = tooltip+" automatically";
+    }
+    else if (event.getIsTimer())
+    {
+      tooltip = tooltip+" "+getTriggerDescription(event);
     }
     else
     {
-      tooltip = tooltip+" automatically";
-	}
+      tooltip = tooltip+" on "+getTriggerDescription(event);
+    }
 	
     // Get guard code for transition
     if (guardString != "" && !hideGuards)
@@ -652,7 +636,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
       tooltip = tooltip+"&#13;"+"Guard: "+guardString;
     }
 	
-    // Get action code for transition	
+    // Get action code for transition
     Action action = t.getAction();
     String transitionAction = "";
     if (action != null)
@@ -660,11 +644,62 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
       transitionAction = getAvailableActionCode(action);
     }
     if (transitionAction != "" && !hideActions)
-    {	
+    {
       transitionAction = transitionAction.replaceAll("\"","&quot;");
       tooltip = tooltip+"&#13;"+"Transition Action:\n"+retFiveLines(transitionAction);
     }
-	
+
+    // Add natural language description
+    if (!hideNaturalLanguage)
+    {
+      boolean isSelfTransition = t.getFromState() == t.getNextState();
+      String nlTransition;
+      if (event.isAutoTransition())
+      {
+        if (isSelfTransition)
+        {
+          nlTransition = "Automatically loops back to " + tooltipFromState;
+        }
+        else
+        {
+          nlTransition = "Automatically transitions from " + tooltipFromState + " to " + tooltipToState;
+        }
+      }
+      else if (event.getIsTimer())
+      {
+        nlTransition = "After " + event.getTimerInSeconds() + " second(s) in state " + tooltipFromState;
+        if (isSelfTransition)
+        {
+          nlTransition += ", loops back to self";
+        }
+        else
+        {
+          nlTransition += ", transitions to " + tooltipToState;
+        }
+      }
+      else
+      {
+        nlTransition = "When " + getTriggerDescription(event) + " occurs in state " + tooltipFromState;
+        if (isSelfTransition)
+        {
+          nlTransition += ", loops back to self";
+        }
+        else
+        {
+          nlTransition += ", transitions to " + tooltipToState;
+        }
+      }
+
+      Guard guard = t.getGuard();
+      if (guard != null && !hideGuards)
+      {
+        nlTransition += " if guard [" + getEscapedGuardExpression(guard) + "]";
+      }
+      nlTransition += ".";
+
+      tooltip = tooltip + "&#13;&#13;" + nlTransition;
+    }
+
     return tooltip;
   }
 
@@ -703,10 +738,205 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
       String activityCode = activity.getCodeblock().toString().replaceAll("\"","&quot;");
       tooltip = tooltip+"&#13;"+"Activity:\n"+retFiveLines(activityCode);
     }
-	
+
+    // Add natural language description
+    if (!hideNaturalLanguage)
+    {
+      tooltip = tooltip + buildNaturalLanguageStateDescription(sm, st);
+    }
+
     return tooltip;
   }
   
+  // Get the natural language trigger description for an event
+  private String getTriggerDescription(Event event)
+  {
+    if (event.getIsTimer())
+    {
+      return "after(" + event.getTimerInSeconds() + ")";
+    }
+    if (event.getArgs() == null || event.getArgs().equals(""))
+    {
+      return event.getName();
+    }
+    return event.getName() + "(" + event.getArgs() + ")";
+  }
+
+  // Get the guard expression with quotes escaped for HTML tooltip display
+  private String getEscapedGuardExpression(Guard guard)
+  {
+    return guard.getExpression().replaceAll("\"","&quot;");
+  }
+
+  // Build a natural language description of a state's behavior
+  private String buildNaturalLanguageStateDescription(StateMachine sm, State st)
+  {
+    StringBuilder nl = new StringBuilder();
+
+    // 1. Initial state detection
+    if (st == sm.getState(0))
+    {
+      if (sm.getParentState() == null)
+      {
+        nl.append("&#13;This is the default initial state and is entered when the object is created.");
+      }
+      else
+      {
+        State parentState = sm.getParentState();
+        String[] parentInfo = getStatePath(parentState.getStateMachine(), parentState.getName());
+        nl.append("&#13;This is the default initial state when entering state ").append(parentInfo[1]);
+        if (isEnteredOnCreation(st))
+        {
+          nl.append(" and is entered when the object is created");
+        }
+        nl.append(".");
+      }
+    }
+
+    // 2. Incoming transitions (direct and via parent for initial substates)
+    for (Transition t : st.getNextTransition())
+    {
+      appendIncomingTransitionNL(nl, t);
+    }
+    // For initial substates, also include transitions entering parent states
+    if (st == sm.getState(0) && sm.getParentState() != null)
+    {
+      addParentIncomingTransitionsNL(nl, sm.getParentState());
+    }
+
+    // 3. Entry actions
+    boolean hasEntry = false;
+    boolean hasExit = false;
+    for (Action action : st.getActions())
+    {
+      if ("entry".equals(action.getActionType())) hasEntry = true;
+      if ("exit".equals(action.getActionType())) hasExit = true;
+      if (hasEntry && hasExit) break;
+    }
+
+    if (hasEntry)
+    {
+      nl.append("&#13;On entry into this state an entry action is executed.");
+    }
+
+    // 4. Do activities
+    if (st.numberOfActivities() > 0)
+    {
+      nl.append("&#13;A do activity runs in a separate thread until completion or state exit.");
+    }
+
+    // 5. Outgoing transitions
+    for (Transition t : st.getTransitions())
+    {
+      String[] toInfo = getStatePath(t.getNextState().getStateMachine(), t.getNextState().getName());
+      String toPath = toInfo[1];
+      Event event = t.getEvent();
+      Guard guard = t.getGuard();
+      boolean isSelfTransition = t.getFromState() == t.getNextState();
+
+      if (event.isAutoTransition())
+      {
+        nl.append("&#13;Exits automatically");
+      }
+      else if (event.getIsTimer())
+      {
+        nl.append("&#13;After ").append(event.getTimerInSeconds()).append(" second(s)");
+      }
+      else
+      {
+        nl.append("&#13;On ").append(getTriggerDescription(event));
+      }
+
+      if (guard != null && !hideGuards)
+      {
+        nl.append(" if guard [").append(getEscapedGuardExpression(guard)).append("]");
+      }
+
+      if (isSelfTransition)
+      {
+        nl.append(", loops back to self.");
+      }
+      else
+      {
+        nl.append(", transitions to ").append(toPath).append(".");
+      }
+    }
+
+    // 6. Exit actions
+    if (hasExit)
+    {
+      nl.append("&#13;On exit from this state an exit action is executed.");
+    }
+
+    if (nl.length() > 0)
+    {
+      return "&#13;" + nl.toString();
+    }
+    return "";
+  }
+
+  // Append a natural language description of an incoming transition to a state
+  private void appendIncomingTransitionNL(StringBuilder nl, Transition t)
+  {
+    String[] fromInfo = getStatePath(t.getFromState().getStateMachine(), t.getFromState().getName());
+    String fromPath = fromInfo[1];
+    Event event = t.getEvent();
+    Guard guard = t.getGuard();
+
+    if (event.isAutoTransition())
+    {
+      nl.append("&#13;This state is entered automatically from ").append(fromPath);
+      if (guard != null && !hideGuards)
+      {
+        nl.append(" when guard [").append(getEscapedGuardExpression(guard)).append("] is true");
+      }
+    }
+    else if (event.getIsTimer())
+    {
+      nl.append("&#13;This state is entered after ").append(event.getTimerInSeconds()).append(" second(s)");
+      nl.append(" while in state ").append(fromPath);
+      if (guard != null && !hideGuards)
+      {
+        nl.append(" when guard [").append(getEscapedGuardExpression(guard)).append("] is true");
+      }
+    }
+    else
+    {
+      nl.append("&#13;This state is entered when event ").append(getTriggerDescription(event)).append(" occurs");
+      nl.append(" while in state ").append(fromPath);
+      if (guard != null && !hideGuards)
+      {
+        nl.append(" when guard [").append(getEscapedGuardExpression(guard)).append("] is true");
+      }
+    }
+    nl.append(".");
+  }
+
+  // Recursively add incoming transitions from parent states for initial substates
+  // If the parent state is itself the initial state of its SM, recurse further up
+  private void addParentIncomingTransitionsNL(StringBuilder nl, State parentState)
+  {
+    for (Transition t : parentState.getNextTransition())
+    {
+      appendIncomingTransitionNL(nl, t);
+    }
+    StateMachine parentSm = parentState.getStateMachine();
+    if (parentState == parentSm.getState(0) && parentSm.getParentState() != null)
+    {
+      addParentIncomingTransitionsNL(nl, parentSm.getParentState());
+    }
+  }
+
+  // Check if a state is entered when the object is created
+  // (i.e., it is the initial state in a chain from the root state machine)
+  private boolean isEnteredOnCreation(State st)
+  {
+    StateMachine sm = st.getStateMachine();
+    if (st != sm.getState(0)) return false;
+    if (sm.getParentState() == null) return true;
+    return isEnteredOnCreation(sm.getParentState());
+  }
+
   // Get the smallest space indent in the code
   private int getMinSpace(String[] parts)
   {

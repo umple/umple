@@ -1,0 +1,33 @@
+digraph "NLTimerGuardEntry" {
+  compound = true;
+
+  // Class: A
+
+    // Top and Bottom Level StateMachine: sm
+    
+    // Start states are shown as a black circle
+    node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
+    start_A_sm [ tooltip = "Class A, SM sm, State start" ];
+    
+        
+    // Format for normal states
+    node [ratio="auto" shape = rectangle, width=1,style=rounded];
+    
+      // State: s1
+
+      A_sm_s1 [label = s1, tooltip = "Class A, SM sm, State s1&#13;Entry:
+   doEntry();&#13;&#13;This is the default initial state and is entered when the object is created.&#13;On entry into this state an entry action is executed.&#13;After 5 second(s) if guard [isReady()], transitions to s2.", URL="javascript:Action.stateClicked(\"A^*^sm^*^s1\")"];
+      // End State: s1
+
+      // State: s2
+
+      A_sm_s2 [label = s2, tooltip = "Class A, SM sm, State s2&#13;&#13;This state is entered after 5 second(s) while in state s1 when guard [isReady()] is true.", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2\")"];
+      // End State: s2
+    // End Top and Bottom Level StateMachine: sm
+
+  // All transitions
+    start_A_sm -> A_sm_s1 [  tooltip = "start to s1", URL="javascript:Action.transitionClicked(\"null\")" ] ;
+    A_sm_s1 -> A_sm_s2 [  label = "after(5) [isReady()]", tooltip = "From s1 to s2 after(5)&#13;Guard:  [isReady()]&#13;&#13;After 5 second(s) in state s1, transitions to s2 if guard [isReady()].", URL="javascript:Action.transitionClicked(\"A*^*sm*^*after(5)*^*s1*^*s2*^* [isReady()]\")" ] ;
+  
+
+}

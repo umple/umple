@@ -32,7 +32,7 @@ digraph "NestedState" {
       
         // State: s2a
 
-        A_smS2_s2a [label = s2a, tooltip = "Class A, SM sm, State s2.s2a", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2.s2a\")"];
+        A_smS2_s2a [label = s2a, tooltip = "Class A, SM sm, State s2.s2a&#13;&#13;This is the default initial state when entering state s2 and is entered when the object is created.", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2.s2a\")"];
         // End State: s2a
       // End Bottom Level StateMachine: s2
      }

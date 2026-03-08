@@ -52,7 +52,14 @@ public class GvSdGeneratorTest extends TemplateTest {
     SampleFileWriter.destroy(pathToInput + "/gv/ParameterTransition.gv");
     
     SampleFileWriter.destroy(pathToInput + "/gv/IncreaseStateSep.gv");
-    
+
+    // Natural language tests
+    SampleFileWriter.destroy(pathToInput + "/gv/NLInitialState.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/NLMultipleTransitions.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/NLTimerGuardEntry.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/NLHideNaturalLanguage.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/NLDeeplyNestedState.gv");
+
   }
 
   /********* STATE TESTS **********/
@@ -256,6 +263,42 @@ public class GvSdGeneratorTest extends TemplateTest {
   {
     language = null;
     assertUmplePartialTemplateFor("gv/IncreaseStateSep.ump","gv/IncreaseStateSep.gv.txt");
+  }
+
+  /********* NATURAL LANGUAGE TESTS **********/
+  @Test
+  public void nl_initial_state()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/NLInitialState.ump","gv/NLInitialState.gv.txt");
+  }
+
+  @Test
+  public void nl_multiple_transitions()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/NLMultipleTransitions.ump","gv/NLMultipleTransitions.gv.txt");
+  }
+
+  @Test
+  public void nl_timer_guard_entry()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/NLTimerGuardEntry.ump","gv/NLTimerGuardEntry.gv.txt");
+  }
+
+  @Test
+  public void nl_hide_natural_language()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/NLHideNaturalLanguage.ump","gv/NLHideNaturalLanguage.gv.txt");
+  }
+
+  @Test
+  public void nl_deeply_nested_state()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/NLDeeplyNestedState.ump","gv/NLDeeplyNestedState.gv.txt");
   }
 
 }

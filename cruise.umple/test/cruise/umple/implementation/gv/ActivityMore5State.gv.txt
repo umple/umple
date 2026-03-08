@@ -21,7 +21,7 @@ digraph "ActivityMore5State" {
    doThisContinuouslyWhileOn3();
    doThisContinuouslyWhileOn4();
    doThisContinuouslyWhileOn5();
-   ...", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2\")"];
+   ...&#13;&#13;This is the default initial state and is entered when the object is created.&#13;A do activity runs in a separate thread until completion or state exit.", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2\")"];
       // End State: s2
     // End Top and Bottom Level StateMachine: sm
 
