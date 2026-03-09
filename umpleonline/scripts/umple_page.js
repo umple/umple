@@ -770,6 +770,30 @@ Page.clickAllowPinch = function() {
   jQuery('#buttonAllowPinch').trigger('click');
 }
 
+Page.currentZoom = 0.4; // default start zoom see also pinchtozoom
+
+Page.zoomToCurrentZoom = function() {
+  zoomDiv=document.getElementById('svgCanvas');
+  theBBox=zoomDiv.getBBox();
+  newWidth=theBBox.width*(1+Page.currentZoom);
+  newHeight=theBBox.height*(1+Page.currentZoom);
+  zoomDiv.setAttribute('viewBox', `0 0 ${newWidth} ${newHeight}`);
+}
+
+Page.zoomIn = function() {
+  // If further zooming was allowed, then cropping would occur
+  // If the default start zoom and this was to be changed, then the
+  // generators would need to be adjusted
+  if(Page.currentZoom > 0.01) {
+    Page.currentZoom -= 0.1;
+    Page.zoomToCurrentZoom();
+  }
+}
+
+Page.zoomOut = function() {
+  Page.currentZoom += 0.1;
+  Page.zoomToCurrentZoom();
+}
 
 Page.isPhotoReady = function()
 {
