@@ -29,9 +29,16 @@ const ExplainPromptBuilder = (() => {
         "- Your audience are familiar with modeling and have basic coding background",
         "- Be precise and accurate in your explanations",
         "- Do not assume missing context",
-        "- Keep output concise but complete",
+        "- Scale your explanation: provide a concise 2-sentence summary for short snippets, and a deep architectural analysis for large models",
+        "- Stay grounded: never explain features, classes, or associations not present in the provided code",
+        "- Follow Umple's natural hierarchy in your structure: 1. Purpose, 2. Structural elements (Classes, Traits, Attributes, Inheritance), 3. Behavioral elements (State Machines, Methods), 4. Associations",
         "- Use markdown syntax (level 2 headings `##` for all section titles)",
         "- Only summary-style content should have bullet points; avoid bullet points in most cases"
+      ]),
+      block("examples", [
+        "User: class Student { name; }\nAssistant: ## Overall Purpose\nThis snippet defines a basic entity for a student.\n## Structural Elements\n- **Student**: A class containing a single `String` attribute `name`.",
+        "\n",
+        "User: <full_model>class Student { name; id; } class Course { title; } -- Student * -- * Course;</full_model>\n<selected_snippet>class Student { name; id; }</selected_snippet>\nAssistant: ## Overall Purpose\nThe selected snippet defines the `Student` entity within a larger model.\n## Structural Elements\n- **Student**: A class with two `String` attributes: `name` and `id`. In the full model, `Student` participates in a many-to-many association with `Course`."
       ])
     ]);
   })();
@@ -39,6 +46,16 @@ const ExplainPromptBuilder = (() => {
   return {
     getSystemPrompt() {
       return SYSTEM_PROMPT;
+    },
+
+    buildUserMessage(fullCode, selectedText) {
+      if (selectedText) {
+        return joinBlocks([
+          block("full_model", fullCode),
+          block("selected_snippet", selectedText)
+        ]);
+      }
+      return fullCode;
     },
 
     formatExplanation(explanationText) {
