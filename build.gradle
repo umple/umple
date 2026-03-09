@@ -10,8 +10,21 @@ buildscript {
 }
 
 plugins {
-  id 'org.ajoberstar.grgit' version '3.0.0'
   id 'nebula.ospackage' version '9.1.1'
+}
+
+String runGit(List<String> args, String fallback) {
+    // The Ant script uses the git command to get version info data. Use the same behavior here.
+    def output = new ByteArrayOutputStream()
+    def result = project.exec {
+        commandLine = ['git'] + args
+        standardOutput = output
+        ignoreExitValue = true
+    }
+
+    def value = output.toString().trim()
+    // The Ant has a fallback. Follow the same one.
+    return result.exitValue == 0 && value ? value : fallback
 }
 
 ext {
@@ -19,7 +32,7 @@ ext {
     umpleMajorVersionFile = new File("${rootProject.projectDir.toString()}/build/umpleversion.txt")
     umpleLastVersion = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleLastVersionFile.newInputStream()).version
     umpleMajorVersion = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleMajorVersionFile.newInputStream()).version
-    umpleCurrentVersion = "${rootProject.ext.umpleMajorVersion}.${grgit.log().size()}.${grgit.head().getAbbreviatedId(9)}"
+    umpleCurrentVersion = "${rootProject.ext.umpleMajorVersion}.${runGit(['rev-list', '--count', 'master'], 'x')}.${runGit(['rev-parse', '--short', 'master'], 'dev')}"
     umpleCurrentJarBase = "umple-${rootProject.ext.umpleCurrentVersion}"
     umpleCurrentJar = "${rootProject.projectDir.toString()}/dist/gradle/libs/${rootProject.ext.umpleCurrentJarBase}.jar"
     umpleJarRemoteSource = "https://cruise.umple.org/umpleonline/scripts/umple.jar"
