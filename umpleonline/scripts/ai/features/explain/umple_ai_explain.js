@@ -118,13 +118,19 @@ const AiExplain = {
       return;
     }
 
-    // Get current Umple code
-    const umpleCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
+    // Determine the code to explain (snippet or full model)
+    const editorState = Page.codeMirrorEditor6?.state;
+    const fullCode = editorState?.doc.toString() || "";
 
-    if (!umpleCode.trim()) {
+    if (!fullCode.trim()) {
       alert("No code in the editor to explain. Please enter some Umple code first.");
       return;
     }
+
+    const selection = editorState.selection.main;
+    const selectedText = editorState.sliceDoc(selection.from, selection.to).trim();
+    const hasSelection = selectedText.length > 0;
+    const umpleCode = ExplainPromptBuilder.buildUserMessage(fullCode, hasSelection ? selectedText : null);
 
     // Check API configuration
     const apiConfig = this.checkApiConfig();
@@ -144,7 +150,7 @@ const AiExplain = {
     if (!this.hasOngoingConversation()) {
       this.resetConversation();
     }
-    await this.performExplanation(dialog, umpleCode);
+    await this.performExplanation(dialog, umpleCode, hasSelection);
   },
 
   /**
@@ -419,8 +425,9 @@ const AiExplain = {
    * Perform the explanation
    * @param {HTMLElement} dialog - The dialog element
    * @param {string} umpleCode - The Umple code to explain
+   * @param {boolean} hasSelection - Whether the user selected a snippet
    */
-  async performExplanation(dialog, umpleCode) {
+  async performExplanation(dialog, umpleCode, hasSelection) {
     const statusDiv = dialog?.querySelector("#explainStatusMessage");
     const explanationText = dialog?.querySelector("#explanationText");
     const followUpContainer = dialog?.querySelector("#followUpContainer");
@@ -433,7 +440,9 @@ const AiExplain = {
     }
 
     // Update status
-    statusDiv.textContent = "Analyzing your code...";
+    statusDiv.textContent = hasSelection
+      ? "Analyzing your selected snippet..."
+      : "Analyzing your code...";
     statusDiv.className = "status-message ai-status--info";
 
     this.abortActiveStream();

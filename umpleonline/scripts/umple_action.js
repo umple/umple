@@ -5833,6 +5833,7 @@ Action.updateUmpleDiagramCallback = function(response)
     {
       theCanvas.html(format('{0}', diagramCode));
       theCanvas.children().first().attr("id", "svgCanvas");
+      Page.zoomToCurrentZoom();
 
       // If gv class mode is gvmanual then we need to update all the umple 
       // positioning information given the diagram locations
@@ -6421,6 +6422,10 @@ Action.toggleGuardLabels = function()
 Action.allowPinch = function()
 {
   Page.allowPinch = !Page.allowPinch;
+  if (Page.allowPinch == false) {
+     // has been turned off
+     Action.removePinch();
+  }
   Action.redrawDiagram();
 }
 Action.toggleFeatureDependency = function()

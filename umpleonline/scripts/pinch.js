@@ -10,8 +10,16 @@
 Action.svgChangeCount=0;
 
 Action.removePinch = function() {
-  // Functionality needs to be added to remove
-  // the event listeners when allowPinch is switched off.
+  // Remove the event listeners when allowPinch is switched off.
+  var parentNode = document.querySelector("#umpleCanvas"); 
+  parentNode.removeEventListener('wheel',
+    Action.wheelPinchFunction);
+  parentNode.removeEventListener("gesturestart",
+    Action.gesturestartPinchFunction);
+  parentNode.removeEventListener("gesturechange",
+    Action.gesturechangePinchFunction);
+  parentNode.removeEventListener("gestureend",
+    Action.gestureendPinchFunction);
 }
 
 Action.setupPinch = function()
@@ -34,7 +42,8 @@ Action.setupPinch = function()
   
   var svgPosX=0;
   var posY=0;
-  var scale=1;
+  // Default zoom is 0.4 set in umple_page; default scale is 1
+  var scale = Page.currentZoom * 2.5;
 
   // The area currently dedicated to the canvas
   var fullArea = document.querySelector("#umpleCanvasColumn");
@@ -136,42 +145,48 @@ Action.setupPinch = function()
   
   }
 
-  parentNode.addEventListener('wheel', (e) => {
-    e.preventDefault();
+//  parentNode.addEventListener('wheel', (e) => {
+//    e.preventDefault();
 
+  Action.wheelPinchFunction = function (e) {
     if (e.ctrlKey) {
       scale -= e.deltaY * 0.01;
+      Page.currentZoom = scale * 0.4;
     } else {
       svgPosX -= e.deltaX * 2;
       posY -= e.deltaY * 2;
     }
 
     render();
-  });
+  };
+  parentNode.addEventListener('wheel',Action.wheelPinchFunction);
 
-  parentNode.addEventListener("gesturestart", function (e) {
+  Action.gesturestartPinchFunction = function (e) {
     e.preventDefault();
     startX = e.pageX - svgPosX;
     startY = e.pageY - posY;
     gestureStartRotation = rotation;
     gestureStartScale = scale;
-  });
+  };
+  parentNode.addEventListener('gesturestart',Action.gesturestartPinchFunction);
 
-  parentNode.addEventListener("gesturechange", function (e) {
+  Action.gesturechangePinchFunction = function (e) {
     e.preventDefault();
   
     rotation = gestureStartRotation + e.rotation;
     scale = gestureStartScale * e.scale;
+    Page.currentZoom = scale * 0.4;    
 
     svgPosX = e.pageX - startX;
     posY = e.pageY - startY; 
 
     render();
 
-  })
+  };
+  parentNode.addEventListener('gesturechange',Action.gesturechangePinchFunction);
 
-  parentNode.addEventListener("gestureend", function (e) {
+  Action.gesturechangePinchFunction = function (e) {
     e.preventDefault();
-  });
-
+  };
+  parentNode.addEventListener('gestureend',Action.gestureendPinchFunction);
 }
