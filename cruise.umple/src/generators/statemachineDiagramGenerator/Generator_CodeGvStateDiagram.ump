@@ -667,7 +667,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
       }
       else if (event.getIsTimer())
       {
-        nlTransition = "After " + event.getTimerInSeconds() + " second(s) in state " + tooltipFromState;
+        nlTransition = "After " + (int)(Double.parseDouble(event.getTimerInSeconds()) * 1000) + " millisecond(s) in state " + tooltipFromState;
         if (isSelfTransition)
         {
           nlTransition += ", loops back to self";
@@ -840,7 +840,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
       }
       else if (event.getIsTimer())
       {
-        nl.append("&#13;After ").append(event.getTimerInSeconds()).append(" second(s)");
+        nl.append("&#13;After ").append((int)(Double.parseDouble(event.getTimerInSeconds()) * 1000)).append(" millisecond(s)");
       }
       else
       {
@@ -893,7 +893,7 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
     }
     else if (event.getIsTimer())
     {
-      nl.append("&#13;This state is entered after ").append(event.getTimerInSeconds()).append(" second(s)");
+      nl.append("&#13;This state is entered after ").append((int)(Double.parseDouble(event.getTimerInSeconds()) * 1000)).append(" millisecond(s)");
       nl.append(" while in state ").append(fromPath);
       if (guard != null && !hideGuards)
       {
