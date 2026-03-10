@@ -649,6 +649,12 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
       tooltip = tooltip+"&#13;"+"Transition Action:\n"+retFiveLines(transitionAction);
     }
 
+    // Add user comments
+    if (t.numberOfComments() > 0)
+    {
+      tooltip = tooltip + "&#13;" + SuperGvGenerator.appendTooltipComment(t.getComments(), false);
+    }
+
     // Add natural language description
     if (!hideNaturalLanguage)
     {
@@ -737,6 +743,12 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
     {
       String activityCode = activity.getCodeblock().toString().replaceAll("\"","&quot;");
       tooltip = tooltip+"&#13;"+"Activity:\n"+retFiveLines(activityCode);
+    }
+
+    // Add user comments
+    if (st.numberOfComments() > 0)
+    {
+      tooltip = tooltip + "&#13;" + SuperGvGenerator.appendTooltipComment(st.getComments(), false);
     }
 
     // Add natural language description

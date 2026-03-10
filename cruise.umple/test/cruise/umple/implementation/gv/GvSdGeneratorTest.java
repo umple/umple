@@ -59,6 +59,7 @@ public class GvSdGeneratorTest extends TemplateTest {
     SampleFileWriter.destroy(pathToInput + "/gv/NLTimerGuardEntry.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/NLHideNaturalLanguage.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/NLDeeplyNestedState.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/NLStateComments.gv");
 
   }
 
@@ -299,6 +300,13 @@ public class GvSdGeneratorTest extends TemplateTest {
   {
     language = null;
     assertUmplePartialTemplateFor("gv/NLDeeplyNestedState.ump","gv/NLDeeplyNestedState.gv.txt");
+  }
+
+  @Test
+  public void nl_state_comments()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/NLStateComments.ump","gv/NLStateComments.gv.txt");
   }
 
 }
