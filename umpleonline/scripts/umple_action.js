@@ -376,6 +376,10 @@ Action.clicked = function(event)
   {
     Action.toggleGuardLabels();
   }
+  else if (action == "ToggleNaturalLanguage")
+  {
+    Action.toggleNaturalLanguage();
+  }
   else if (action == "AllowPinch")
   {
     Action.allowPinch();
@@ -6339,6 +6343,11 @@ Action.toggleGuardLabels = function()
   Page.showGuardLabels = !Page.showGuardLabels;
   Action.redrawDiagram();
 }
+Action.toggleNaturalLanguage = function()
+{
+  Page.showNaturalLanguage = !Page.showNaturalLanguage;
+  Action.redrawDiagram();
+}
 Action.allowPinch = function()
 {
   Page.allowPinch = !Page.allowPinch;
@@ -6832,6 +6841,7 @@ Action.getLanguage = function()
     if(Page.showTransitionLabels) language=language+".showtransitionlabels";
     if(!Page.showGuards) language=language+".hideguards";    
     if(Page.showGuardLabels) language=language+".showguardlabels";
+    if(!Page.showNaturalLanguage) language=language+".hidenaturallanguage";
     language=language+"."+$("inputGenerateCode").value.split(":")[1];
   }
   // append any suboptions needed for GvClassDiagram

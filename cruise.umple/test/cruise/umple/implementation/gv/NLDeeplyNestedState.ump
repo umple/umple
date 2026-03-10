@@ -1,0 +1,20 @@
+generate GvStateDiagram;
+namespace example;
+
+class A {
+  sm {
+    s1 {
+      e1 -> s2;
+    }
+    s2 {
+      s2a {
+        s2a1 {
+          e2 -> s2a2;
+        }
+        s2a2 {
+          e3 -> s1;
+        }
+      }
+    }
+  }
+}
