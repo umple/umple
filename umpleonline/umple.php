@@ -1048,6 +1048,9 @@ $output = $dataHandle->readData('model.ump');
             <li id="ttToggleFeatureDependencyLabels" class="layoutListItem view_opt_feature"> 
               <input id="buttonToggleFeatureDependency" class="checkbox" type="checkbox"/> 
               <a id="labelToggleFeatureDependencyLabels" class="buttonExtend">Feature Dependency</a> 
+            <li id="ttZoomInOut" class="copyMix" >
+            &nbsp;Zoom <button onclick="Page.zoomIn()">In</button>
+<button onclick="Page.zoomOut()">Out</button>
             </li>
             <li id="ttAllowPinch">
               <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
