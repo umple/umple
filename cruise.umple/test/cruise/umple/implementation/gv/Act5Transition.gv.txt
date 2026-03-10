@@ -15,12 +15,12 @@ digraph "Act5Transition" {
     
       // State: s1
 
-      A_sm_s1 [label = s1, tooltip = "Class A, SM sm, State s1", URL="javascript:Action.stateClicked(\"A^*^sm^*^s1\")"];
+      A_sm_s1 [label = s1, tooltip = "Class A, SM sm, State s1&#13;&#13;This is the default initial state and is entered when the object is created.&#13;On e1, transitions to s2.", URL="javascript:Action.stateClicked(\"A^*^sm^*^s1\")"];
       // End State: s1
 
       // State: s2
 
-      A_sm_s2 [label = s2, tooltip = "Class A, SM sm, State s2", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2\")"];
+      A_sm_s2 [label = s2, tooltip = "Class A, SM sm, State s2&#13;&#13;This state is entered when event e1 occurs while in state s1.", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2\")"];
       // End State: s2
     // End Top and Bottom Level StateMachine: sm
 
@@ -31,7 +31,7 @@ digraph "Act5Transition" {
    doTransition2();
    doTransition3();
    doTransition4();
-   doTransition5();", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e1*^*s1*^*s2*^*\")" ] ;
+   doTransition5();&#13;&#13;When e1 occurs in state s1, transitions to s2.", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e1*^*s1*^*s2*^*\")" ] ;
   
 
 }
