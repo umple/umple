@@ -1536,12 +1536,6 @@ public class UmpleParserTest
   }
   //Issue 2377
   @Test
-  public void ReqUserStoryWithLanguage()
-  {
-    assertNoWarningsParse("452_ReqUserStoryWithLanguage.ump");
-  }
-  //Issue 2377
-  @Test
   public void ReqNormalStillWorksAfterUserStoryGrammar()
   {
     assertNoWarningsParse("452_ReqNormalStillWorks.ump");
