@@ -1037,13 +1037,20 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonToggleGuards" class="checkbox" type="checkbox"/> 
               <a id="labelToggleGuards" class="buttonExtend">Guards</a> 
             </li>
-            <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state"> 
-              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
+            <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state">
+              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/>
+              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a>
+            </li>
+            <li id="ttToggleNaturalLanguage" class="layoutListItem view_opt_state">
+              <input id="buttonToggleNaturalLanguage" class="checkbox" type="checkbox"/>
+              <a id="labelToggleNaturalLanguage" class="buttonExtend">Natural Language</a>
             </li>
             <li id="ttToggleFeatureDependencyLabels" class="layoutListItem view_opt_feature"> 
               <input id="buttonToggleFeatureDependency" class="checkbox" type="checkbox"/> 
               <a id="labelToggleFeatureDependencyLabels" class="buttonExtend">Feature Dependency</a> 
+            <li id="ttZoomInOut" class="copyMix" >
+            &nbsp;Zoom <button onclick="Page.zoomIn()">In</button>
+<button onclick="Page.zoomOut()">Out</button>
             </li>
             <li id="ttAllowPinch">
               <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
