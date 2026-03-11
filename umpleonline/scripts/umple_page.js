@@ -1152,7 +1152,7 @@ Page.getEncodedURL = function()
 {
   var server=window.location.href.split("?")[0];
   if(server.substr(0,37)=="https://cruise.umple.org/umpleonline/") {
-    server = "http://try.umple.org/";
+    server = "https://try.umple.org/";
   }
   return server+"?text=" + encodeURIComponent(Page.getUmpleCode());
 }
