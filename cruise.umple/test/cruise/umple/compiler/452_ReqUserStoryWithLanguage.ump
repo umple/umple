@@ -1,3 +1,0 @@
-req US2 userStory text {
-  As an administrator, I want to manage users so that I can maintain the system.
-}
