@@ -102,7 +102,7 @@ ToolTips.tooltipEntries = {
   ttShowGvFeatureDiagram: ["li", "Display a feature diagram rendered using GraphViz </br>"],
 
     // Live View tooltip
-  liveViewSelector: ["Select", "Select the diagram type to display (Class Diagram, ERD, State Diagram, Feature Diagram, or Structure Diagram)</br><br>"],
+  liveViewSelector: ["Select", "Select the diagram type to display</br><br>"],
 
   ECD_button: ['a', "Class diagram where the user can Edit the layout - <b>ctrl-E</b>"],
   GCD_button: ['a', "Graphviz Class diagram (the default as of 2026), automatically laid out - editable using a contextual menu (double-click or right-click to display it) when pointing to a class, association or attribute - <b>ctrl-G</b>"],
