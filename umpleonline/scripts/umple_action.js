@@ -1425,35 +1425,39 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 }
 
 Action.setColorState = function(stateCode, stateName, colorValue) {
-
-  // Get full code from editor
   var orig = Page.codeMirrorEditor6.state.doc.toString();
-
-  // Find where the state appears in the text
   var startIndex = orig.indexOf(stateCode);
 
-  if(startIndex === -1){
+  if (startIndex === -1) {
     console.log("State not found in editor.");
     return;
   }
 
   var endIndex = startIndex + stateCode.length;
+  var updatedState = stateCode;
 
-  // Remove closing brace
-  var trimmedState = stateCode.substring(0, stateCode.lastIndexOf("}"));
+  // Replace existing displayColor if present
+  if (updatedState.includes("displayColor")) {
+    updatedState = updatedState.replace(
+      /displayColor\s+#[0-9a-fA-F]{6}\s*;/,
+      "displayColor " + colorValue + ";"
+    );
+  } 
+  // Otherwise insert a new displayColor line inside the state block
+  else {
+    var braceIndex = updatedState.indexOf("{");
+    if (braceIndex >= 0) {
+      updatedState =
+        updatedState.slice(0, braceIndex + 1) +
+        "\n  displayColor " + colorValue + ";\n" +
+        updatedState.slice(braceIndex + 1);
+    }
+  }
 
-  // Insert color line before closing brace
-  var updatedState = trimmedState + "  displayColor " + colorValue + ";\n}";
+  Page.codeMirrorEditor6.dispatch({
+    changes: { from: startIndex, to: endIndex, insert: updatedState }
+  });
 
-  // Replace in full document
-  var newText = orig.substring(0, startIndex)
-              + updatedState
-              + orig.substring(endIndex);
-
-  // Update editor
-  Page.setCodeMirror6Text(newText);
-
-  // Trigger diagram refresh
   setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 };
 
