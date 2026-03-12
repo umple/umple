@@ -424,12 +424,15 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         if (!getColor.equals("")) {
         bgroundColor = "style = \"filled, rounded\" fillcolor =" + getColor;
         }
+        tooltip = getStateTooltip(sm, s, className);
         appendSpaces(code,  indentLevel+1);
         code.append("subgraph "+sName+" {\n");
         appendSpaces(code,  indentLevel+2);
         code.append("label = \""+sLabel+"\";\n");
         appendSpaces(code,  indentLevel+2);
         code.append(bgroundColor + " \n");
+        appendSpaces(code,  indentLevel+2);
+        code.append("tooltip = \""+tooltip+"\";\n");
         appendSpaces(code,  indentLevel+2);
         code.append("URL=\"javascript:Action.stateClicked(\\\""+jsStr+"\\\")\";\n");
       }
