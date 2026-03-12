@@ -442,11 +442,8 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
 
     const arrowPath = document.createElementNS(ns, "path");
     // Up-pointing hollow triangle; tip at (5,0)
+    arrowPath.setAttribute("class", "gv-rubberband-arrow");
     arrowPath.setAttribute("d", "M 5 0 L 10 10 L 0 10 Z");
-    arrowPath.setAttribute("fill", "none");
-    arrowPath.setAttribute("stroke", "#e6e6e6");
-    arrowPath.setAttribute("stroke-width", "1");
-    arrowPath.setAttribute("stroke-linejoin", "miter");
 
     marker.appendChild(arrowPath);
     defs.appendChild(marker);
@@ -454,11 +451,7 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
 
     const path = document.createElementNS(ns, "path");
     path.setAttribute("class", "gv-rubberband");
-    path.setAttribute("fill", "none");
-    path.setAttribute("stroke", "#e6e6e6");
-    path.setAttribute("stroke-width", "1");
     path.removeAttribute("stroke-dasharray");
-    path.setAttribute("opacity", "1");
 
     layer.appendChild(path);
     svg.appendChild(layer);
@@ -504,16 +497,10 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
     RB.path.setAttribute("d", `M ${start.x} ${start.y} L ${end.x} ${end.y}`);
   }
 
-  // E-mode-ish generalization rubber band:
-  // 1) go vertical first
-  // 2) overshoot slightly past the cursor Y
-  // 3) go horizontal
-  // 4) go back up to cursor so the triangle tip sits at the cursor
+  // E-mode-ish generalization rubber band: vertical down from start, horizontal to end.x, then vertical to end.y, with a dip in the middle
   function setPathGeneralizationEStyle(start, end) {
     if (!RB.path) return;
 
-    // Most browsers/SVGs: increasing y goes down on screen.
-    // If it looks reversed in your setup, change + to - here.
     const yOvershoot = end.y + GEN_Y_OVERSHOOT;
 
     RB.path.setAttribute(
@@ -539,7 +526,7 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
     RB.startPt = null;
     RB.startNode = null;
 
-    // Always clear marker so we don't “carry over” between modes
+    // Always clear marker so we don't carry over between modes
     if (RB.path) RB.path.removeAttribute("marker-end");
 
     hide();
