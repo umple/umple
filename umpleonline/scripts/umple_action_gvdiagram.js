@@ -159,7 +159,7 @@ GvDiagramEdit.handlePaletteAssociation = function(domEvent, nodeEl) {
     Action.selectClass(clickedClass);
 
     // start rubber band from the clicked node
-    GvDiagramEdit.rubberBand.start(nodeEl, "association", event);
+    GvDiagramEdit.rubberBand.start(nodeEl, "association", domEvent);
 
     Page.setFeedbackMessage("Association: select target class for " + clickedClass);
     return true;
@@ -208,7 +208,7 @@ GvDiagramEdit.handlePaletteGeneralization = function(domEvent, nodeEl) {
     GvDiagramEdit.state.genChildClass = clickedClass;
     Action.selectClass(clickedClass);
 
-    GvDiagramEdit.rubberBand.start(nodeEl, "generalization", event);
+    GvDiagramEdit.rubberBand.start(nodeEl, "generalization", domEvent);
 
     Page.setFeedbackMessage("Generalization: select parent class for " + clickedClass);
     return true;
