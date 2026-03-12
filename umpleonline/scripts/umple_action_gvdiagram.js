@@ -159,7 +159,7 @@ GvDiagramEdit.handlePaletteAssociation = function(domEvent, nodeEl) {
     Action.selectClass(clickedClass);
 
     // start rubber band from the clicked node
-    GvDiagramEdit.rubberBand.start(nodeEl, "association");
+    GvDiagramEdit.rubberBand.start(nodeEl, "association", event);
 
     Page.setFeedbackMessage("Association: select target class for " + clickedClass);
     return true;
@@ -208,7 +208,7 @@ GvDiagramEdit.handlePaletteGeneralization = function(domEvent, nodeEl) {
     GvDiagramEdit.state.genChildClass = clickedClass;
     Action.selectClass(clickedClass);
 
-    GvDiagramEdit.rubberBand.start(nodeEl, "generalization");
+    GvDiagramEdit.rubberBand.start(nodeEl, "generalization", event);
 
     Page.setFeedbackMessage("Generalization: select parent class for " + clickedClass);
     return true;
@@ -473,31 +473,12 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
     return { x: p.x, y: p.y };
   }
 
-  // Pick an anchor point for a node (center of its bbox in SVG coords)
-  function nodeAnchorPoint(nodeEl) {
-    const svg = getSvgRootFromAny(nodeEl);
-    if (!svg) return { x: 0, y: 0 };
-
-    const bbox = nodeEl.getBBox();
-    const cx = bbox.x + bbox.width / 2;
-    const cy = bbox.y + bbox.height / 2;
-
-    const pt = svg.createSVGPoint();
-    pt.x = cx;
-    pt.y = cy;
-
-    const m = nodeEl.getCTM();
-    if (!m) return { x: cx, y: cy };
-    const p = pt.matrixTransform(m);
-    return { x: p.x, y: p.y };
-  }
-
   function setPath(start, end) {
     if (!RB.path) return;
     RB.path.setAttribute("d", `M ${start.x} ${start.y} L ${end.x} ${end.y}`);
   }
 
-  // E-mode-ish generalization rubber band: vertical down from start, horizontal to end.x, then vertical to end.y, with a dip in the middle
+  // E-mode generalization rubber band: vertical down from start, horizontal to end.x, then vertical to end.y, with a dip in the middle
   function setPathGeneralizationEStyle(start, end) {
     if (!RB.path) return;
 
@@ -548,7 +529,7 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
     cancelInternal();
   };
 
-  RB.start = function(nodeEl, mode) {
+  RB.start = function(nodeEl, mode, event) {
     const svg = getSvgRootFromAny(nodeEl);
     if (!svg) return;
 
@@ -557,7 +538,6 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
     RB.active = true;
     RB.mode = mode || "generic";
 
-    // Style per mode
     if (RB.mode === "generalization") {
       RB.path.setAttribute("marker-end", "url(#gvRubberBandArrowUp)");
     } else {
@@ -565,9 +545,13 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
     }
 
     RB.startNode = nodeEl;
-    RB.startPt = nodeAnchorPoint(nodeEl);
 
-    // Initialize so it's visible immediately
+    if (event && typeof event.clientX === "number" && typeof event.clientY === "number") {
+      RB.startPt = clientToSvgPoint(svg, event.clientX, event.clientY);
+    } else {
+      RB.startPt = nodeAnchorPoint(nodeEl);
+    }
+
     if (RB.mode === "generalization") {
       setPathGeneralizationEStyle(RB.startPt, RB.startPt);
     } else {
@@ -575,7 +559,6 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
     }
     show();
 
-    // Track cursor globally while active
     RB._onMove = function(e) {
       if (!RB.active || !RB.svg || !RB.startPt) return;
       const end = clientToSvgPoint(RB.svg, e.clientX, e.clientY);
@@ -588,7 +571,6 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
     };
     document.addEventListener("mousemove", RB._onMove, true);
 
-    // ESC cancels
     RB._onKeyDown = function(e) {
       if (!RB.active) return;
       if (e.key === "Escape") {
@@ -596,7 +578,6 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
         e.stopPropagation();
         RB.cancel();
 
-        // Also clear any part-one state your tools are holding
         if (GvDiagramEdit && GvDiagramEdit.state) {
           GvDiagramEdit.state.assocSourceClass = null;
           GvDiagramEdit.state.genChildClass = null;
