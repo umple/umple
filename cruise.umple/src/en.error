@@ -118,8 +118,8 @@
 111: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Interface name '{0}' should start with a capital letter ;
 112: 2, "https://manual.umple.org/?E112DuplicateConstantsinInterface.html", Interface '{0}' has duplicate constant name {1} ;
 
-# [TODO - issue 337] 120: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Association role name '{0}' must be alphanumeric and start with a letter ;
-# [TODO - issue 337] 121: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Association role name '{0}' should start with a lower-case letter ;
+120: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Association role name '{0}' must be alphanumeric and start with a letter ;
+121: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Association role name '{0}' should start with a lower-case letter ;
 
 130: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Attribute name '{0}' must {1} ;
 131: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Attribute name '{0}' should start with a lower-case letter ;

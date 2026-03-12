@@ -4536,8 +4536,20 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
     AssociationEnd firstEnd = createPreliminaryAssociationEnd(myEndToken, defaultMyType);
     AssociationEnd secondEnd = createPreliminaryAssociationEnd(yourEndToken, defaultMyType);
+    // If createPreliminaryAssociationEnd() fails validation (e.g., an invalid role name),
+    // it reports the error and returns null for that association end.
+    //
+    // Without the guard below, analyzeAssociation() would also report error 8
+    // ("Association class is missing an end") whenever one end is null.
+    // This would create a misleading cascading error, since the real issue
+    // (such as error 120 for an invalid identifier) has already been reported.
+    //
+    // Error 8 should only apply to AssociationClasses that actually lack an end,
+    // so we restrict it to those cases using the isAssociationClass check.
     if(firstEnd == null || secondEnd == null){
-        setFailedPosition(associationToken.getPosition(), 8, name);
+        if(isAssociationClass){
+          setFailedPosition(associationToken.getPosition(), 8, name);
+        }
         return null;
     }
     
@@ -4651,6 +4663,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         String invalidBound = bound == null ? lowerBound + ".." + upperBound : bound;
         setFailedPosition(associationEndToken.getPosition(), 4, invalidBound);
         return null;
+      }
+      if(roleName != null && !"".equals(roleName) && !Token.isValidIdentifier(roleName)){
+        setFailedPosition(associationEndToken.getPosition("roleName"), 120, roleName);
+        return null;
+      }
+      if(roleName != null && roleName.length() > 0 && Character.isUpperCase(roleName.charAt(0))){
+          getParseResult().addErrorMessage(
+              new ErrorMessage(121, associationEndToken.getPosition("roleName"), roleName)
+          );
       }
       if(type == null){
           type = defaultType;

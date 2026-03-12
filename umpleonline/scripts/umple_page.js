@@ -62,6 +62,7 @@ Page.showTraits = false;
 Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
 Page.showGuards = true;
+Page.showNaturalLanguage = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
 
@@ -344,6 +345,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleTransitionLabels");
   Page.initHighlighter("buttonToggleGuards");
   Page.initHighlighter("buttonToggleGuardLabels");
+  Page.initHighlighter("buttonToggleNaturalLanguage");
   Page.initHighlighter("buttonToggleTraits");
   Page.initHighlighter("buttonToggleFeatureDependency");
   Page.initHighlighter("buttonAllowPinch");
@@ -429,6 +431,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuards");
   Page.initAction("buttonToggleGuardLabels");
+  Page.initAction("buttonToggleNaturalLanguage");
   Page.initAction("buttonAllowPinch");
     
   Page.initLabels();
@@ -490,6 +493,7 @@ Page.initOptions = function()
   jQuery("#buttonToggleTransitionLabels").prop('checked',false);
   jQuery("#buttonToggleGuards").prop('checked',true);  
   jQuery("#buttonToggleGuardLabels").prop('checked',false);
+  jQuery("#buttonToggleNaturalLanguage").prop('checked',true);
   jQuery("#buttonToggleTraits").prop('checked',Page.showTraits);
   jQuery("#buttonToggleFeatureDependency").prop('checked',false);
   jQuery("#buttonAllowPinch").prop('checked',false);
@@ -877,6 +881,30 @@ Page.clickAllowPinch = function() {
   jQuery('#buttonAllowPinch').trigger('click');
 }
 
+Page.currentZoom = 0.4; // default start zoom see also pinchtozoom
+
+Page.zoomToCurrentZoom = function() {
+  zoomDiv=document.getElementById('svgCanvas');
+  theBBox=zoomDiv.getBBox();
+  newWidth=theBBox.width*(1+Page.currentZoom);
+  newHeight=theBBox.height*(1+Page.currentZoom);
+  zoomDiv.setAttribute('viewBox', `0 0 ${newWidth} ${newHeight}`);
+}
+
+Page.zoomIn = function() {
+  // If further zooming was allowed, then cropping would occur
+  // If the default start zoom and this was to be changed, then the
+  // generators would need to be adjusted
+  if(Page.currentZoom > 0.01) {
+    Page.currentZoom -= 0.1;
+    Page.zoomToCurrentZoom();
+  }
+}
+
+Page.zoomOut = function() {
+  Page.currentZoom += 0.1;
+  Page.zoomToCurrentZoom();
+}
 
 Page.isPhotoReady = function()
 {
@@ -1280,7 +1308,7 @@ Page.getEncodedURL = function()
 {
   var server=window.location.href.split("?")[0];
   if(server.substr(0,37)=="https://cruise.umple.org/umpleonline/") {
-    server = "http://try.umple.org/";
+    server = "https://try.umple.org/";
   }
   return server+"?text=" + encodeURIComponent(Page.getUmpleCode());
 }

@@ -396,6 +396,10 @@ Action.clicked = function(event)
   {
     Action.toggleGuardLabels();
   }
+  else if (action == "ToggleNaturalLanguage")
+  {
+    Action.toggleNaturalLanguage();
+  }
   else if (action == "AllowPinch")
   {
     Action.allowPinch();
@@ -4604,7 +4608,8 @@ Action.loadExample = function loadExample()
     shortExampleName=exampleName;
     newURL="?example="+shortExampleName+diagramType;
   }
-    Page.setSelectExample(shortExampleName + ".ump");
+    // COMMENTED OUT SUBJECT TO INVESTIGATION
+    // Page.setSelectExample(shortExampleName + ".ump");
     window.history.pushState({}, "", newURL);
 
     setTimeout(function () { // Delay so it doesn't get erased
@@ -5892,6 +5897,7 @@ Action.updateUmpleDiagramCallback = function(response)
     {
       theCanvas.html(format('{0}', diagramCode));
       theCanvas.children().first().attr("id", "svgCanvas");
+      Page.zoomToCurrentZoom();
 
       // If gv class mode is gvmanual then we need to update all the umple 
       // positioning information given the diagram locations
@@ -6513,9 +6519,18 @@ Action.toggleGuardLabels = function()
   Page.showGuardLabels = !Page.showGuardLabels;
   Action.redrawDiagram();
 }
+Action.toggleNaturalLanguage = function()
+{
+  Page.showNaturalLanguage = !Page.showNaturalLanguage;
+  Action.redrawDiagram();
+}
 Action.allowPinch = function()
 {
   Page.allowPinch = !Page.allowPinch;
+  if (Page.allowPinch == false) {
+     // has been turned off
+     Action.removePinch();
+  }
   Action.redrawDiagram();
 }
 Action.toggleFeatureDependency = function()
@@ -7027,6 +7042,7 @@ Action.getLanguage = function()
     if(Page.showTransitionLabels) language=language+".showtransitionlabels";
     if(!Page.showGuards) language=language+".hideguards";    
     if(Page.showGuardLabels) language=language+".showguardlabels";
+    if(!Page.showNaturalLanguage) language=language+".hidenaturallanguage";
     language=language+"."+$("inputGenerateCode").value.split(":")[1];
   }
   // append any suboptions needed for GvClassDiagram

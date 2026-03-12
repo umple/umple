@@ -83,6 +83,7 @@ ToolTips.tooltipEntries = {
   ttToggleGuards: ['li', "Show/Hide guards in state diagrams (hide to simplify)"],
   ttToggleTransitionLabels: ['li', "Show/Hide transition labels in state diagrams (t1, t2 etc.) to allow reference"],
   ttToggleGuardLabels: ['li', "Show/Hide guard labels on the state diagrams (g1, g2 etc.) to allow reference"],
+  ttToggleNaturalLanguage: ['li', "Show/Hide natural language descriptions in state diagram tooltips (hover text explaining states and transitions in plain English)"],
   SHT_button: ['a', "Show/Hide the text editor - <b>" + toggleTextEditor +"</b>" ],
   SHD_button: ['a', "Show/hide diagram pane on right - <b> ctrl-D</b>"],
   SHA_button: ['a', "Show/hide attributes in class diagrams - <b>shift-ctrl-A</b>"],
