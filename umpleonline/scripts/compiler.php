@@ -1033,14 +1033,54 @@ function getErrorHtml($errorFilename, $offset = 1)
               $textcolor = "<span class=\"umple-message-error\">";
             }
             $msg = htmlspecialchars($result["message"]);
+            $filename = "";
+            if (array_key_exists("filename", $result) && $result["filename"] != null && $result["filename"] !== "") {
+              $filename = htmlspecialchars($result["filename"], ENT_QUOTES);
+            }
+            $lowerFn = strtolower($filename);
+            $showFilename = ($filename !== "" && $lowerFn !== "model.ump");
+            $filePrefix = ($showFilename)
+              ? " <span class=\"umple-err-file\" data-filename=\"{$filename}\">in <strong>{$filename}</strong> </span>"
+              : "";
                         
-            $errhtml .= $textcolor." {$severity} on <a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a> : {$msg}.</span> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
+            $errhtml .= $textcolor." {$severity}{$filePrefix} on <a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a> : {$msg}.</span> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
         }
      }
     
      $errhtml .= "</div>";
         
-     $errhtml .= "<script type=\"text/javascript\">jQuery(\"#errorClick\").click(function(a){a.preventDefault();jQuery(\"#errorRow\").toggle();});</script>";
+     $errhtml .= "<script type=\"text/javascript\">
+      jQuery(\"#errorClick\").click(function(a){
+        a.preventDefault();
+        jQuery(\"#errorRow\").toggle();
+      });
+
+      (function(){
+        function norm(name){
+          if(!name) return \"\";
+          name = String(name).trim();
+          name = name.split('/').pop();
+          name = name.replace(/\\.ump\\s*$/i, '');
+          return name;
+        }
+
+        var tabLis = document.querySelectorAll('li[id^=\"tab\"]');
+        var tabCount = tabLis.length;
+
+        var activeEl = document.querySelector('li[id^=\"tab\"].selected a.tabname');
+        var active = activeEl ? norm(activeEl.textContent || '') : \"\";
+        
+        document.querySelectorAll('.umple-err-file').forEach(function(node){
+          var file = norm(node.getAttribute('data-filename') || '');
+
+          if (tabCount <= 1 || (active && file && active === file)) {
+            node.style.display = 'none';
+          } else {
+            node.style.display = '';
+          }
+        });
+      })();
+    </script>";
      return $errhtml;
   }
   return "";
