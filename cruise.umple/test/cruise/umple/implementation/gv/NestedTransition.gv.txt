@@ -23,6 +23,7 @@ digraph "NestedTransition" {
      subgraph clusterA_sm_s2 {
       label = "s2";
       style = rounded;
+      tooltip = "Class A, SM sm, State s2&#13;&#13;This state is entered when event e1 occurs while in state s1.&#13;On e1, transitions to s1.";
       URL="javascript:Action.stateClicked(\"A^*^sm^*^s2\")";
 
       // Bottom Level StateMachine: s2
