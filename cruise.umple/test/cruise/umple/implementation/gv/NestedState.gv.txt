@@ -18,6 +18,7 @@ digraph "NestedState" {
      subgraph clusterA_sm_s2 {
       label = "s2";
       style = rounded;
+      tooltip = "Class A, SM sm, State s2&#13;&#13;This is the default initial state and is entered when the object is created.";
       URL="javascript:Action.stateClicked(\"A^*^sm^*^s2\")";
 
       // Bottom Level StateMachine: s2

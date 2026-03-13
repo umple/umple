@@ -946,11 +946,29 @@ class UmpleInternalParser
     	isFirst = false;
     else
     	isFirst = true;
-    
+
+    lastComments.clear();
     checkStateMachineForDuplicateEvents(stateMachineToken);
     
     for(Token stateToken : stateMachineToken.getSubTokens())
     {
+      // Collect comments preceding states
+      if (stateToken.is("inlineComment"))
+      {
+        analyzeComment(stateToken, false);
+        continue;
+      }
+      else if (stateToken.is("annotationComment"))
+      {
+        analyzeComment(stateToken, true);
+        continue;
+      }
+      else if (stateToken.is("multilineComment"))
+      {
+        analyzeMultilineComment(stateToken);
+        continue;
+      }
+
       if(stateToken.is("pooled"))
       {
         sm.setPooled(true);
@@ -1000,6 +1018,9 @@ class UmpleInternalParser
       else
       {
         State s = createStateFromDefinition(stateToken,sm);
+        // Attach preceding comments to the state
+        for (Comment c : lastComments) { s.addComment(c); }
+        lastComments.clear();
         s.setFinalState(isFinalState);
         if (isFirst)
         {
@@ -1019,6 +1040,7 @@ class UmpleInternalParser
         }
       }
     }
+    lastComments.clear();
   }
   
   /* Issue 925 - Final states cannot have do activities, exit actions, transitions, 
@@ -1080,7 +1102,9 @@ class UmpleInternalParser
     boolean isConcurrentState = false;
     boolean isFinalState = false;
     String changeType = null;
-    
+
+    lastComments.clear();
+
     if (stateToken.getSubToken("final") != null)
     {
     	boolean foundInvalidElement = analyzeFinalState(stateToken, fromState);
@@ -1096,7 +1120,23 @@ class UmpleInternalParser
     
     for(Token subToken : stateToken.getSubTokens())
     {
-      
+      // Collect comments preceding transitions and nested states
+      if (subToken.is("inlineComment"))
+      {
+        analyzeComment(subToken, false);
+        continue;
+      }
+      else if (subToken.is("annotationComment"))
+      {
+        analyzeComment(subToken, true);
+        continue;
+      }
+      else if (subToken.is("multilineComment"))
+      {
+        analyzeMultilineComment(subToken);
+        continue;
+      }
+
       if (subToken.is("extraCode"))
       {
         if(!subToken.getValue().trim().equals(""))
@@ -1191,6 +1231,9 @@ class UmpleInternalParser
         }
         
         State s = createStateFromDefinition(subToken,nestedStateMachine);
+        // Attach preceding comments to the nested state
+        for (Comment c : lastComments) { s.addComment(c); }
+        lastComments.clear();
         //alignStateDefinitionWithStateMachine(s,nestedStateMachine);
         if (addNewSm)
         {
@@ -1922,7 +1965,11 @@ class UmpleInternalParser
     }
 
     t.setAutoTransition(isAutoTransition);
-    
+
+    // Attach preceding comments to the transition
+    for (Comment c : lastComments) { t.addComment(c); }
+    lastComments.clear();
+
     //Issue 519
     t.setPosition(transitionToken.getPosition());
 

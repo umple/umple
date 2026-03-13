@@ -22,7 +22,8 @@ digraph "ColouredDerivedNestedState" {
 
      subgraph clusterCar_state_Running {
       label = "Running";
-      style = "filled, rounded" fillcolor ="lightgreen" 
+      style = "filled, rounded" fillcolor ="lightgreen"
+      tooltip = "Class Car, SM state, State Running&#13;&#13;This state is entered when event turnOn occurs while in state Off.";
       URL="javascript:Action.stateClicked(\"Car^*^state^*^Running\")";
 
       // StateMachine: Running
@@ -39,7 +40,8 @@ digraph "ColouredDerivedNestedState" {
 
        subgraph clusterCar_stateRunning_state {
         label = "state";
-        style = "filled, rounded" fillcolor ="pink" 
+        style = "filled, rounded" fillcolor ="pink"
+        tooltip = "Class Car, SM state, State Running.state&#13;&#13;This is the default initial state when entering state Running.&#13;This state is entered when event turnOn occurs while in state Off.";
         URL="javascript:Action.stateClicked(\"Car^*^state^*^Running.state\")";
 
         // Bottom Level StateMachine: state
