@@ -211,6 +211,9 @@ function debounce(func, wait) {
 
 // Debounced action function
 const debouncedProcessTyping = debounce((editorName, flag, currentPositionofCursor) => {
+  if (codemirrorDebuggerFlag) {
+    console.log("Debounced processTyping called for editor: ", editorName);
+  }
   Action.processTyping(editorName, flag, currentPositionofCursor); // call the action function
 }, Action.waiting_time);
 

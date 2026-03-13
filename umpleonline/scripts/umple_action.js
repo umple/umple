@@ -5550,8 +5550,16 @@ Action.umpleTypingActivity = function(target) {
   {
     clearTimeout(Action.oldTimeout);
   }
-  if(target == "diagramEdit") Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', 500);
-  else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
+
+  const delay = (target === "diagramEdit") ? 500 : Action.waiting_time;
+
+  const thisTimer = setTimeout(() => {
+    if (Action.oldTimeout !== thisTimer) return;
+    Action.oldTimeout = null;
+    Action.processTyping(target, false);
+  }, delay);
+
+  Action.oldTimeout = thisTimer;
 }
 
 // Called after a 3s delay as controlled by umpleTypingActivity when
