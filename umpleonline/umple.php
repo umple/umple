@@ -136,8 +136,8 @@ if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] != "") {
 
 $output = $dataHandle->readData('model.ump');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="scripts/_load.js" type="text/javascript"></script>
@@ -1037,9 +1037,13 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonToggleGuards" class="checkbox" type="checkbox"/> 
               <a id="labelToggleGuards" class="buttonExtend">Guards</a> 
             </li>
-            <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state"> 
-              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
+            <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state">
+              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/>
+              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a>
+            </li>
+            <li id="ttToggleNaturalLanguage" class="layoutListItem view_opt_state">
+              <input id="buttonToggleNaturalLanguage" class="checkbox" type="checkbox"/>
+              <a id="labelToggleNaturalLanguage" class="buttonExtend">Natural Language</a>
             </li>
             <li id="ttToggleFeatureDependencyLabels" class="layoutListItem view_opt_feature"> 
               <input id="buttonToggleFeatureDependency" class="checkbox" type="checkbox"/> 
@@ -1167,7 +1171,7 @@ $output = $dataHandle->readData('model.ump');
         <ul class="first center-children">
           <li id="ttAiStatus">
             <div class="ai-status-row" id="buttonAiSettings" role="button" tabindex="0" title="Configure AI Settings">
-              <svg class="ai-settings-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg class="ai-settings-icon" xmlns="https://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
                 <circle cx="12" cy="12" r="3"/>
               </svg>
@@ -1297,7 +1301,7 @@ $output = $dataHandle->readData('model.ump');
               <input id="inputAiApiKey" type="password" placeholder="Enter API key" autocomplete="new-password" data-form-type="other" class="button api-key-input"/>
               <button type="button" id="toggleApiKeyVisibility" class="api-key-toggle" tabindex="0" aria-label="Toggle API key visibility">
                 <span class="eye-icon" aria-hidden="true">
-                <svg class="ai-eye-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                <svg class="ai-eye-icon" xmlns="https://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                   <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12"/>
                   <circle cx="12" cy="12" r="3"/>
                 </svg>
@@ -1313,14 +1317,14 @@ $output = $dataHandle->readData('model.ump');
           <div class="ai-model-dropdown">
             <div id="aiModelDropdownTrigger" class="ai-model-dropdown-trigger button" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
               <span id="aiModelDropdownSelected">Select model...</span>
-              <svg class="ai-model-dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg class="ai-model-dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="https://www.w3.org/2000/svg">
                 <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
             <div id="aiModelDropdownMenu" class="ai-model-dropdown-menu is-hidden" role="listbox">
               <div class="ai-model-dropdown-search">
                 <input type="text" id="aiModelSearchInput" placeholder="Search models..." autocomplete="off">
-                <svg class="ai-model-search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="ai-model-search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="https://www.w3.org/2000/svg">
                   <circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.5"/>
                   <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                 </svg>
