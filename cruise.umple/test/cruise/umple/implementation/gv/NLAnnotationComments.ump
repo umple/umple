@@ -1,0 +1,15 @@
+generate GvStateDiagram;
+namespace example;
+
+class X {
+  sm1 {
+    /** Javadoc-style comment for state s1 */
+    s1 {
+      /** Javadoc-style comment for e1 transition */
+      e1 -> s2;
+    }
+    s2 {
+      e2 -> s1;
+    }
+  }
+}

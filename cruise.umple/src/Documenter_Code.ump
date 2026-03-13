@@ -793,7 +793,7 @@ class Template
 // End of code from Google
         "@@NAVIGATION@@" + "\n" +
         "<div class=\"level1\"><a href=\"UmpleUserManualCombined.html\">Combined Version</a></div>\n" +  
-        "<div class=\"level1\"><a title=\"Click here to open an editor in Github on the original source for this manual page.\nYou can submit a pull request after making your changes\" href=\"https://github.com/umple/umple/tree/master/build/reference/@@SRCFILENAME@@\">Edit on Github</a></div>\n" +                
+        "<div class=\"level1\"><a title=\"Click here to open an editor in Github on the original source for this manual page build/reference/@@SRCFILENAME@@.\nYou can submit a pull request after making your changes\" href=\"https://github.com/umple/umple/tree/master/build/reference/@@SRCFILENAME@@\">Edit on Github</a></div>\n" +                
         "<div class=\"level1\">@@PREVNEXT@@</div>\n" +
         "    </td>" + "\n" +
         "" + "\n" +

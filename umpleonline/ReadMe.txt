@@ -1,8 +1,8 @@
 Directory for the UmpleOnline web tool
 
-The public deployment of this can be found at http://try.umple.org
+The public deployment of this can be found at https://try.umple.org
 
-This can also be used via Docker. Go to http://docker.umple.org
+This can also be used via Docker. Go to https://umple.org/docker
 
 Key files and directories means contents created at runtime
 
@@ -29,7 +29,7 @@ Key files and directories means contents created at runtime
 
   scripts - PhP and JavaScript scripts for Umpleonline
 
-  download_umple.html - main page of http://dl.umple.org
+  download_umple.html - former main page of https://umple.org/dl ... now redirects to the user manual
 
   UmpleUpdateSite - website for automatic updating of Eclipse plugin
   
