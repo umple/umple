@@ -394,7 +394,6 @@ function readTemporaryFile($filename)
   }
 
   $handle = fopen($filename, "r");
-  //$contents = fread($handle, filesize($filename));
   $contents = fread($handle, filesize($filename));
   fclose($handle);
   return $contents;
