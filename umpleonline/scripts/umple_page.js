@@ -58,6 +58,7 @@ Page.showTraits = false;
 Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
 Page.showGuards = true;
+Page.showNaturalLanguage = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
 
@@ -268,6 +269,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleTransitionLabels");
   Page.initHighlighter("buttonToggleGuards");
   Page.initHighlighter("buttonToggleGuardLabels");
+  Page.initHighlighter("buttonToggleNaturalLanguage");
   Page.initHighlighter("buttonToggleTraits");
   Page.initHighlighter("buttonToggleFeatureDependency");
   Page.initHighlighter("buttonAllowPinch");
@@ -349,6 +351,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuards");
   Page.initAction("buttonToggleGuardLabels");
+  Page.initAction("buttonToggleNaturalLanguage");
   Page.initAction("buttonAllowPinch");
     
   Page.initLabels();
@@ -410,6 +413,7 @@ Page.initOptions = function()
   jQuery("#buttonToggleTransitionLabels").prop('checked',false);
   jQuery("#buttonToggleGuards").prop('checked',true);  
   jQuery("#buttonToggleGuardLabels").prop('checked',false);
+  jQuery("#buttonToggleNaturalLanguage").prop('checked',true);
   jQuery("#buttonToggleTraits").prop('checked',Page.showTraits);
   jQuery("#buttonToggleFeatureDependency").prop('checked',false);
   jQuery("#buttonAllowPinch").prop('checked',false);
@@ -1148,7 +1152,7 @@ Page.getEncodedURL = function()
 {
   var server=window.location.href.split("?")[0];
   if(server.substr(0,37)=="https://cruise.umple.org/umpleonline/") {
-    server = "http://try.umple.org/";
+    server = "https://try.umple.org/";
   }
   return server+"?text=" + encodeURIComponent(Page.getUmpleCode());
 }
