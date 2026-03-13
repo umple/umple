@@ -1985,3 +1985,22 @@ textarea#umpleLayoutEditorText {
 .ai-explain-dialog .status-message.ai-status--error {
   color: #DD0033;
 }
+
+.gv-rubberband,
+.gv-rubberband-arrow {
+  stroke: #000;
+  stroke-width: 1;
+}
+
+.gv-rubberband-arrow {
+  fill: none;
+  stroke-linejoin: miter;
+}
+
+.gv-rubberband {
+  fill: none;
+}
+
+.gv-rubberband-layer {
+  pointer-events: none;
+}

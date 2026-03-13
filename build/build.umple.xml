@@ -382,6 +382,7 @@
       <fileset file="${scriptPath}/umple_history.js"/>
       <fileset file="${scriptPath}/umple_restore.js"/>
       <fileset file="${scriptPath}/umple_action_diagram.js"/>
+      <fileset file="${scriptPath}/umple_action_gvdiagram.js"/>
       <fileset file="${scriptPath}/umple_tooltips.js"/>
       <fileset file="${scriptPath}/umple_tab_control.js"/>
       <!-- CRUD UI -->
