@@ -329,6 +329,26 @@ Action.clicked = function(event)
     Action.changeDiagramType({type:"GvEntityRelationshipDiagram"});
     Action.syncLiveViewSelector("erd");
   }
+  else if (action == "ShowInstanceDiagram")
+  {
+    Action.changeDiagramType({type:"instanceDiagram"});
+    Action.syncLiveViewSelector("instanceDiagram");
+  }
+  // else if (action == "ShowCRUDUI")
+  // {
+  //   Action.changeDiagramType({type:"crudUI"});
+  //   Action.syncLiveViewSelector("crudUI");
+  // }
+  else if (action == "ShowStateTables")
+  {
+    Action.changeDiagramType({type:"stateTables"});
+    Action.syncLiveViewSelector("stateTables");
+  }
+  else if (action == "ShowEventSequence")
+  {
+    Action.changeDiagramType({type:"eventSequence"});
+    Action.syncLiveViewSelector("eventSequence");
+  }
   else if (action == "ShowHideLayoutEditor")
   {
     Layout.showHideLayoutEditor();
@@ -948,6 +968,10 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('editableClass');
@@ -964,6 +988,10 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('JointJSClass');
@@ -979,6 +1007,10 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowGvClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvClass');
@@ -991,11 +1023,14 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvClassDiagram = false;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
-    Page.useGvClassDiagram = false;
     Page.useGvStateDiagram = false;
     Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
     Page.useGvEntityRelationshipDiagram = true;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowGvEntityRelationshipDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('none');
@@ -1013,6 +1048,10 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     Page.useGvFeatureDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowGvStateDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvState');
@@ -1028,6 +1067,10 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     Page.useGvFeatureDiagram = true;
     Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowGvFeatureDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvFeature');
@@ -1044,10 +1087,92 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = true;
     Page.useGvFeatureDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowStructureDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('structure');
   }
+
+  else if(newDiagramType.type == "instanceDiagram") {
+    if(Page.useInstanceDiagram) return;
+     Page.useEditableClassDiagram = false;
+     Page.useJointJSClassDiagram = false;
+     Page.useGvClassDiagram = false;
+     Page.useGvStateDiagram = false;
+     Page.useStructureDiagram = false;
+     Page.useGvFeatureDiagram = false;
+     Page.useGvEntityRelationshipDiagram = false;
+     Page.useInstanceDiagram = true;
+    //  Page.useCRUDUI = false;
+     Page.useStateTables = false;
+     Page.useEventSequence = false;
+     changedType = true;
+     jQuery("#buttonShowInstanceDiagram").prop('checked', 'checked');
+     Page.setDiagramTypeIconState('none');
+     jQuery(".view_opt_feature").show();
+ 
+ 
+   }
+
+//    else if(newDiagramType.type == "crudUI"){
+//     if(Page.useCRUDUI) return;
+//      Page.useEditableClassDiagram = false;
+//      Page.useJointJSClassDiagram = false;
+//      Page.useGvClassDiagram = false;
+//      Page.useGvStateDiagram = false;
+//      Page.useStructureDiagram = false;
+//      Page.useGvFeatureDiagram = false;
+//      Page.useGvEntityRelationshipDiagram = false;
+//      Page.useInstanceDiagram = false;
+//     //  Page.useCRUDUI = true;
+//      Page.useStateTables = false;
+//      Page.useEventSequence = false;
+//      changedType = true;
+//      jQuery("#buttonShowCRUDUI").prop('checked', 'checked');
+//      Page.setDiagramTypeIconState('none');
+//      jQuery(".view_opt_feature").show();
+// }
+
+   else if(newDiagramType.type == "stateTables"){
+    if(Page.useStateTables) return;
+     Page.useEditableClassDiagram = false;
+     Page.useJointJSClassDiagram = false;
+     Page.useGvClassDiagram = false;
+     Page.useGvStateDiagram = false;
+     Page.useStructureDiagram = false;
+     Page.useGvFeatureDiagram = false;
+     Page.useGvEntityRelationshipDiagram = false;
+     Page.useInstanceDiagram = false;
+    //  Page.useCRUDUI = false;
+     Page.useStateTables = true;
+     Page.useEventSequence = false;
+     changedType = true;
+     jQuery("#buttonShowStateTables").prop('checked', 'checked');
+     Page.setDiagramTypeIconState('none');
+     jQuery(".view_opt_feature").show();
+   }
+
+   else if(newDiagramType.type == "eventSequence"){
+    if(Page.useEventSequence) return;
+     Page.useEditableClassDiagram = false;
+     Page.useJointJSClassDiagram = false;
+     Page.useGvClassDiagram = false;
+     Page.useGvStateDiagram = false;
+     Page.useStructureDiagram = false;
+     Page.useGvFeatureDiagram = false;
+     Page.useGvEntityRelationshipDiagram = false;
+     Page.useInstanceDiagram = false;
+     //  Page.useCRUDUI = false;
+     Page.useStateTables = false;
+     Page.useEventSequence = true;
+     changedType = true;
+     jQuery("#buttonShowEventSequence").prop('checked', 'checked');
+     Page.setDiagramTypeIconState('none');
+     jQuery(".view_opt_feature").show();
+   }
   if (changedType) {
     Action.redrawDiagram();
   }
@@ -4532,6 +4657,21 @@ Action.loadExample = function loadExample()
     diagramType="&diagramtype=entityRelationshipDiagram";
   }
 
+  else if(Page.useInstanceDiagram) {
+    diagramType="&diagramtype=instanceDiagram";
+  }
+
+  // else if(Page.useCRUDUI) {
+  //   diagramType="&diagramtype=crudJson";
+  // }
+
+  else if(Page.useStateTables) {
+    diagramType="&diagramtype=StateTables";
+  }
+
+  else if(Page.useEventSequence) {
+    diagramType="&diagramtype=eventSequence";
+  }
   else if(Page.useStructureDiagram) {
     diagramType="&diagramtype=structure&generateDefault=cpp";
   }
@@ -5854,7 +5994,7 @@ Action.updateUmpleDiagramCallback = function(response)
 
     }
     // Display static svg diagram
-    else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram )
+    else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram || Page.useInstanceDiagram)
     {
       theCanvas.html(format('{0}', diagramCode));
       theCanvas.children().first().attr("id", "svgCanvas");
@@ -6032,6 +6172,27 @@ Action.updateUmpleDiagramCallback = function(response)
 
       Action.setupPinch();
     }
+    // Display generated HTML output in the right-hand canvas area
+    else if(Page.useEventSequence || Page.useStateTables)
+{
+  theCanvas.html("<div id='htmlCanvas' class='generatedDiagram'></div>");
+  jQuery("#htmlCanvas").html(diagramCode);
+
+  // Apply the same coloring used by the Generate It path
+  if (Page.useStateTables && typeof StateTree !== "undefined" && StateTree.colourStateTables) {
+    StateTree.colourStateTables();
+  }
+
+  if (Page.useEventSequence && typeof StateTree !== "undefined" && StateTree.colourEventSequences) {
+    StateTree.colourEventSequences();
+  }
+}
+
+// else if(Page.useCRUDUI)
+// {
+//   theCanvas.html("<div id='htmlCanvas' class='generatedDiagram'></div>");
+//   Page.showCrudFromJson(diagramCode, "", "#htmlCanvas");
+// }
     //Display structure diagram
     else if(Page.useStructureDiagram)
     {
@@ -6181,7 +6342,7 @@ Action.getDiagramCode = function(responseText)
     if(output == "null") output = "";
     
   }
-  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram)
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram || Page.useInstanceDiagram)
   {
     // The graphviz diagrams are taken from the inner svg tag only. 
     // This allows the website to have a dynamic canvas size around the diagram
@@ -6193,6 +6354,14 @@ Action.getDiagramCode = function(responseText)
       //remove the redundant svg closing tag
       output = output.replace(/<\/svg>$/, "");
     }
+  }
+  else if(/*Page.useCRUDUI ||*/ Page.useEventSequence || Page.useStateTables)
+  {
+    var language = /*Page.useCRUDUI ? "crudJson" :*/
+                   Page.useEventSequence ? "eventSequence" :
+                   "stateTables";
+
+    output = Page.getGeneratedMarkup(responseText, language);
   }
   else if(Page.useStructureDiagram)
   {
@@ -6215,7 +6384,7 @@ Action.getErrorCode = function(responseText)
     
     if(output == "<p>") output = "";
   }
-  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram)
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram || Page.useInstanceDiagram)
   {
     var miscStuffAndErrorMessages = responseText.split('<svg width=')[0];
     var prelimparts = miscStuffAndErrorMessages.split('errorRow');
@@ -6223,7 +6392,14 @@ Action.getErrorCode = function(responseText)
       output = miscStuffAndErrorMessages.split("</script>&nbsp;")[0];
     }
   }
+  else if(/*Page.useCRUDUI ||*/ Page.useEventSequence || Page.useStateTables)
+  {
+    var language = /*Page.useCRUDUI ? "crudJson" :*/
+                   Page.useEventSequence ? "eventSequence" :
+                   "stateTables";
 
+    output = Page.getErrorMarkup(responseText, language);
+  }
   return output;
 }
 
@@ -6612,6 +6788,26 @@ Mousetrap.bind(['ctrl+shift+v'], function(e){
   return false; //equivalent to e.preventDefault();
 });
 
+Mousetrap.bind(['ctrl+shift+c'], function(e){
+  Page.clickShowInstanceDiagram();
+  return false; //equivalent to e.preventDefault();
+});
+
+// Mousetrap.bind(['ctrl+shift+f'], function(e){
+//   Page.clickShowCRUDUI();
+//   return false; //equivalent to e.preventDefault();
+// });
+
+Mousetrap.bind(['ctrl+shift+t'], function(e){
+  Page.clickShowStateTables();
+  return false; //equivalent to e.preventDefault();
+});
+
+Mousetrap.bind(['ctrl+shift+r'], function(e){
+  Page.clickShowEventSequence();
+  return false; //equivalent to e.preventDefault();
+});
+
 Mousetrap.bind(['ctrl+s'], function(e){
   Page.clickShowGvStateDiagram();
   return false; //equivalent to e.preventDefault();
@@ -6821,6 +7017,11 @@ Action.getLanguage = function()
   else if(Page.useGvStateDiagram) {language="language=stateDiagram"}
   else if(Page.useGvEntityRelationshipDiagram) {language="language=entityRelationshipDiagram"}
   else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
+  else if(Page.useInstanceDiagram) {language="language=instanceDiagram"}
+  // else if(Page.useCRUDUI) {language="language=crudJson"}
+  else if(Page.useStateTables) {language="language=StateTables"}
+  else if(Page.useEventSequence) {language="language=eventSequence"}
+ 
  
 
   // append any suboptions needed for GvStateDiagram
@@ -7163,14 +7364,18 @@ Action.reindent = function(lines, cursorPos)
 
 Action.setLiveView = function(viewNameToSet)
 {
-  //Page.catFeedbackMessage("DEBUG:"+viewNameToSet);
+  Page.catFeedbackMessage("DEBUG:"+viewNameToSet);
   if (viewNameToSet=="ecd") { Page.clickShowEditableClassDiagram(); }
   else if (viewNameToSet=="gcd") { Page.clickShowGvClassDiagram(); }
   else if (viewNameToSet=="sd") { Page.clickShowGvStateDiagram(); }
   else if (viewNameToSet=="std") { Page.clickShowStructureDiagram();}
   else if (viewNameToSet=="erd") { Page.clickShowGvEntityRelationshipDiagram();}
   else if (viewNameToSet=="gfd") { Page.clickShowGvFeatureDiagram();}
-  //else Page.catFeedbackMessage("DEBUG bad selection!!!");
+  else if (viewNameToSet=="instanceDiagram") {Page.clickShowInstanceDiagram();}
+  // else if (viewNameToSet == "crudUI") { Page.clickShowCRUDUI();}
+  else if (viewNameToSet == "stateTables") { Page.clickShowStateTables();}
+  else if (viewNameToSet == "eventSequence") { Page.clickShowEventSequence();}
+  else Page.catFeedbackMessage("DEBUG bad selection!!!");
 }
 
 
