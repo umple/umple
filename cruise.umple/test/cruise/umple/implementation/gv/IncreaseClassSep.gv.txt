@@ -17,7 +17,7 @@ digraph "IncreaseClassSep" {
 "];
 
   // Class: Segment
-  "Segment" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    Segment </td></tr><hr/><tr><td align="left" href="" title="Float waterLevel&#13;m above sea level&#13;">  waterLevel : Float  </td></tr></table>>,
+  "Segment" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    Segment </td></tr><hr/><tr><td align="left" href="" title="Float waterLevel&#13;m above sea level">  waterLevel : Float  </td></tr></table>>,
    tooltip="class Segment
 "];
 

@@ -4,7 +4,7 @@ digraph "Attributes" {
      edge [minlen=1 headclip="true"];
 
   // Class: Student
-  "Student" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    Student </td></tr><hr/><tr><td align="left" href="" title="String name&#13;">  name : String  </td></tr><tr><td align="left" href="" title="String studentId&#13;Student Id&#13;">  studentId : String  </td></tr><tr><td align="left" href="" title="Phone[] phoneNumbers&#13;">  phoneNumbers : Phone[]  </td></tr></table>>,
+  "Student" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    Student </td></tr><hr/><tr><td align="left" href="" title="String name&#13;">  name : String  </td></tr><tr><td align="left" href="" title="String studentId&#13;Student Id">  studentId : String  </td></tr><tr><td align="left" href="" title="Phone[] phoneNumbers&#13;">  phoneNumbers : Phone[]  </td></tr></table>>,
    tooltip="class Student
 "];
 
