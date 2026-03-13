@@ -59,6 +59,10 @@ public class GvSdGeneratorTest extends TemplateTest {
     SampleFileWriter.destroy(pathToInput + "/gv/NLTimerGuardEntry.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/NLHideNaturalLanguage.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/NLDeeplyNestedState.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/NLStateComments.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/NLMultilineComments.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/NLNestedStateComments.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/NLAnnotationComments.gv");
 
   }
 
@@ -299,6 +303,34 @@ public class GvSdGeneratorTest extends TemplateTest {
   {
     language = null;
     assertUmplePartialTemplateFor("gv/NLDeeplyNestedState.ump","gv/NLDeeplyNestedState.gv.txt");
+  }
+
+  @Test
+  public void nl_state_comments()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/NLStateComments.ump","gv/NLStateComments.gv.txt");
+  }
+
+  @Test
+  public void nl_multiline_comments()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/NLMultilineComments.ump","gv/NLMultilineComments.gv.txt");
+  }
+
+  @Test
+  public void nl_nested_state_comments()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/NLNestedStateComments.ump","gv/NLNestedStateComments.gv.txt");
+  }
+
+  @Test
+  public void nl_annotation_comments()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/NLAnnotationComments.ump","gv/NLAnnotationComments.gv.txt");
   }
 
 }

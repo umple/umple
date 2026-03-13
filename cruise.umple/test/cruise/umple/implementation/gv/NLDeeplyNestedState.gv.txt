@@ -22,7 +22,8 @@ digraph "NLDeeplyNestedState" {
 
      subgraph clusterA_sm_s2 {
       label = "s2";
-      style = rounded; 
+      style = rounded;
+      tooltip = "Class A, SM sm, State s2&#13;&#13;This state is entered when event e1 occurs while in state s1.";
       URL="javascript:Action.stateClicked(\"A^*^sm^*^s2\")";
 
       // StateMachine: s2
@@ -39,7 +40,8 @@ digraph "NLDeeplyNestedState" {
 
        subgraph clusterA_smS2_s2a {
         label = "s2a";
-        style = rounded; 
+        style = rounded;
+        tooltip = "Class A, SM sm, State s2.s2a&#13;&#13;This is the default initial state when entering state s2.&#13;This state is entered when event e1 occurs while in state s1.";
         URL="javascript:Action.stateClicked(\"A^*^sm^*^s2.s2a\")";
 
         // Bottom Level StateMachine: s2a

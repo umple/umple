@@ -209,7 +209,7 @@ class SuperGvGenerator
   // Add the comment to a tooltip
   public static String appendTooltipComment(List<Comment> comments, boolean title)
   {
-    StringBuilder tooltip = new StringBuilder();;
+    StringBuilder tooltip = new StringBuilder();
     for (Comment uComment : comments) {
       String text;
       if (!title) {
@@ -218,13 +218,9 @@ class SuperGvGenerator
         text = uComment.getText().replace("\"","'");
       }
       text = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"); // Issue1584 and 1587 "Certain kinds of comments (<,>,&) result in failure to generate graphviz"
-      if(text.startsWith(" *")) {
-        tooltip.append(text.substring(2)+"&#13;");
-      }
-      else
-      {
-        tooltip.append(text+"&#13;");
-      }
+      // Strip leading whitespace + * prefix from multiline comment lines (e.g. " * text" or "* text")
+      if (tooltip.length() > 0) tooltip.append("&#13;");
+      tooltip.append(text.replaceFirst("^\\s*\\* ?", ""));
     }
     return tooltip.toString();
   }
