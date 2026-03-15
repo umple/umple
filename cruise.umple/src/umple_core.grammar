@@ -57,7 +57,8 @@ multilineComment- : /* [**multilineComment] */
 
 requirement : req [reqIdentifier] [[plainReq]] | req [reqIdentifier] [[userStory]]
 plainReq- : [reqLanguage]? { [**reqContent] }
-userStory- : [reqLanguage:userStory] { [**reqContent] }
+userStory- : [reqLanguage:userStory] { [[userStoryStructured]] | [**reqContent] }
+userStoryStructured- : ( who { [**whoContent] } )? ( when { [**whenContent] } )? ( what { [**whatContent] } )? ( why { [**whyContent] } )?
 reqImplementation : implementsReq [reqIdentifier] (, [reqIdentifier])* ;
 
 //Matches all forms of Java annotations including those with parentheses and values in quotes
