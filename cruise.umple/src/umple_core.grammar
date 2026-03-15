@@ -55,9 +55,9 @@ comment- : [[inlineComment]] | [[multilineComment]] | [[annotationComment]]
 inlineComment- : // [*inlineComment]
 multilineComment- : /* [**multilineComment] */
 
-requirement- : req [reqIdentifier] [[plainReq]] | req [reqIdentifier] [[userStory]]
-plainReq : [reqLanguage]? { [**reqContent] }
-userStory : [reqLanguage:userStory] { [**reqContent] }
+requirement : req [reqIdentifier] [[plainReq]] | req [reqIdentifier] [[userStory]]
+plainReq- : [reqLanguage]? { [**reqContent] }
+userStory- : [reqLanguage:userStory] { [**reqContent] }
 reqImplementation : implementsReq [reqIdentifier] (, [reqIdentifier])* ;
 
 //Matches all forms of Java annotations including those with parentheses and values in quotes
