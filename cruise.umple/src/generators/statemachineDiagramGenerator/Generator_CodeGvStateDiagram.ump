@@ -424,12 +424,15 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
         if (!getColor.equals("")) {
         bgroundColor = "style = \"filled, rounded\" fillcolor =" + getColor;
         }
+        tooltip = getStateTooltip(sm, s, className);
         appendSpaces(code,  indentLevel+1);
         code.append("subgraph "+sName+" {\n");
         appendSpaces(code,  indentLevel+2);
         code.append("label = \""+sLabel+"\";\n");
         appendSpaces(code,  indentLevel+2);
         code.append(bgroundColor + " \n");
+        appendSpaces(code,  indentLevel+2);
+        code.append("tooltip = \""+tooltip+"\";\n");
         appendSpaces(code,  indentLevel+2);
         code.append("URL=\"javascript:Action.stateClicked(\\\""+jsStr+"\\\")\";\n");
       }
@@ -649,6 +652,12 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
       tooltip = tooltip+"&#13;"+"Transition Action:\n"+retFiveLines(transitionAction);
     }
 
+    // Add user comments
+    if (t.numberOfComments() > 0)
+    {
+      tooltip = tooltip + "&#13;" + SuperGvGenerator.appendTooltipComment(t.getComments(), false);
+    }
+
     // Add natural language description
     if (!hideNaturalLanguage)
     {
@@ -737,6 +746,12 @@ node [ratio="auto" shape = circle, fixedsize = true, width=.3];
     {
       String activityCode = activity.getCodeblock().toString().replaceAll("\"","&quot;");
       tooltip = tooltip+"&#13;"+"Activity:\n"+retFiveLines(activityCode);
+    }
+
+    // Add user comments
+    if (st.numberOfComments() > 0)
+    {
+      tooltip = tooltip + "&#13;" + SuperGvGenerator.appendTooltipComment(st.getComments(), false);
     }
 
     // Add natural language description
