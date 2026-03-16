@@ -1513,15 +1513,33 @@ Action.drawStateMenu = function(){
   }
   // Remove old menu, if any
   Action.removeContextMenu();
-  var targ=event.target;
-  //iterate up to top of graph elements
-  while(targ.parentElement.id!="graph0"){
-    targ=targ.parentNode;
-  }
+  var targ=event.target;//iterate up to top of graph elements
+  while (targ && targ.parentElement && targ.parentElement.id != "graph0") {
+  targ = targ.parentNode;
+}
   //grabs state name
-  var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
-  elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
-  elemText[2]=elemText[2].split(".");
+  var match = targ.outerHTML.match(/stateClicked\("([^"]+)"\)/);
+
+  if (!match) {
+      return;
+  }
+
+  var elemText = match[1].split("^*^").map(function(part) {
+  return part.trim();
+  }); 
+
+  var titleMatch = targ.outerHTML.match(/xlink:title="Class ([^,]+), SM ([^,]+), State ([^"]+)"/);
+
+  if (titleMatch) {
+    elemText[0] = titleMatch[1].trim(); // proper class name casing
+    elemText[1] = titleMatch[2].trim(); // state machine name
+  }
+
+  if (!elemText[2]) {
+    return;
+  }
+
+  elemText[2] = elemText[2].split(".");
   var orig = Page.codeMirrorEditor6.state.doc.toString();
   var chosenStateIndices=Action.selectStateInClassCM6(elemText[0],elemText[1],elemText[2][0]);
   for(let i=1;i<elemText[2].length;i++){
