@@ -5712,6 +5712,14 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
     console.log("Inside Action.processTyping ...", target);
   }
 
+  if (
+    (target == "umpleModelEditorText" || target == "codeMirrorEditor" || target == "newEditor") &&
+    typeof GvDiagramEdit !== "undefined" &&
+    GvDiagramEdit.clearPendingPaletteState
+  ) {
+    GvDiagramEdit.clearPendingPaletteState();
+  }
+
   document.getElementById("newEditor").value = Page.codeMirrorEditor6.state.doc.toString();
 
 

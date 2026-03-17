@@ -17,7 +17,17 @@ GvDiagramEdit.replaceFullText = function(newText) {
   });
 };
 
+GvDiagramEdit.clearPendingPaletteState = function() {
+  GvDiagramEdit.state.assocSourceClass = null;
+  GvDiagramEdit.state.genChildClass = null;
+
+  if (GvDiagramEdit.rubberBand && GvDiagramEdit.rubberBand.isActive()) {
+    GvDiagramEdit.rubberBand.cancel();
+  }
+};
+
 GvDiagramEdit.refreshDiagram = function() {
+  GvDiagramEdit.clearPendingPaletteState();
   setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 };
 
