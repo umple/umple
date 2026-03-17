@@ -192,9 +192,7 @@ GvDiagramEdit.handlePaletteAssociation = function(domEvent, nodeEl) {
   }
 
   GvDiagramEdit.replaceFullText(after);
-
   GvDiagramEdit.refreshDiagram();
-  TabControl.getCurrentHistory().save(after, "menuUpdate");
 
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.setFeedbackMessage("Association added: " + source + " -> " + target);
@@ -245,9 +243,7 @@ GvDiagramEdit.handlePaletteGeneralization = function(domEvent, nodeEl) {
   }
 
   GvDiagramEdit.replaceFullText(after);
-
   GvDiagramEdit.refreshDiagram();
-  TabControl.getCurrentHistory().save(after, "menuUpdate");
 
   if (!Page.repeatToolItem) Page.unselectAllToggleTools();
   Page.setFeedbackMessage("Generalization added: " + child + " isA " + parent);
