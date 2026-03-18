@@ -64,4 +64,38 @@ public class RequirementTest
     Assert.assertEquals("// R01: a\n// R02: a2",output);
   }
 
+  @Test
+  public void structuredFieldsStored()
+  {
+    Requirement req = new Requirement("US1", "As a customer...", "userStory");
+    req.setWho("customer");
+    req.setWhen("password is forgotten");
+    req.setWhat("reset my password");
+    req.setWhy("regain access to my account");
+
+    Assert.assertEquals("customer", req.getWho());
+    Assert.assertEquals("password is forgotten", req.getWhen());
+    Assert.assertEquals("reset my password", req.getWhat());
+    Assert.assertEquals("regain access to my account", req.getWhy());
+  }
+
+  @Test
+  public void deepCopyConstructorCopiesStructuredFields()
+  {
+    Requirement original = new Requirement("US2", "As an administrator...", "userStory");
+    original.setWho("administrator");
+    original.setWhen("account review");
+    original.setWhat("manage users");
+    original.setWhy("maintain the system");
+
+    Requirement copy = new Requirement(original);
+
+    Assert.assertEquals("administrator", copy.getWho());
+    Assert.assertEquals("account review", copy.getWhen());
+    Assert.assertEquals("manage users", copy.getWhat());
+    Assert.assertEquals("maintain the system", copy.getWhy());
+    Assert.assertEquals(original.getStatement(), copy.getStatement());
+    Assert.assertEquals(original.getLanguage(), copy.getLanguage());
+  }
+
 }
