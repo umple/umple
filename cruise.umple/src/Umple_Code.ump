@@ -923,12 +923,20 @@ class Comment
 /*
  */
 class Requirement{
+  public Requirement(String aIdentifier, String aStatement, String aLanguage)
+  {
+    this(aIdentifier, aStatement, null, null, null, null, aLanguage);
+  }
 
   // deep copy constructor
   public Requirement(Requirement aReq)
   {
     identifier = aReq.getIdentifier();
     statement = aReq.getStatement();
+    who = aReq.getWho();
+    when = aReq.getWhen();
+    what = aReq.getWhat();
+    why = aReq.getWhy();
     language = aReq.getLanguage();
   }
   public static List<Comment> convertToComment(List<ReqImplementation> reqSelected,UmpleModel aModel){
