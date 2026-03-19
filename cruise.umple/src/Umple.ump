@@ -1307,6 +1307,12 @@ class Requirement{
   
   // The content of the requirement, expressed in the language
   statement;
+
+  // Structured user story elements
+  who;
+  when;
+  what;
+  why;
   
   // The requirements language used to express this requirement
   // can be blank, then 'text' is assumed
