@@ -29,7 +29,7 @@ public class RequirementTest
   @Test
   public void constructor()
   {
-    Requirement c = new Requirement("R01","blah2","");
+    Requirement c = new Requirement("R01","blah2", null, null, null, null, "");
     Assert.assertEquals("blah2",c.getStatement());
   }
   
@@ -43,7 +43,7 @@ public class RequirementTest
   @Test
   public void format_oneRequirement()
   {
-    Requirement newReq = new Requirement("R01", "a", "");
+    Requirement newReq = new Requirement("R01", "a", null, null, null, null, "");
     model.getAllRequirements().put("R01",newReq);
     allTestRequirementsImpl.add(new ReqImplementation("R01",reqTok));
     String output = Requirement.format("Slashes",allTestRequirementsImpl,model);
@@ -54,8 +54,8 @@ public class RequirementTest
   @Test
   public void format_multipleRequirements()
   {
-    Requirement newReq1 = new Requirement("R01", "a", "");
-    Requirement newReq2 = new Requirement("R02", "a2", "");
+    Requirement newReq1 = new Requirement("R01", "a", null, null, null, null, "");
+    Requirement newReq2 = new Requirement("R02", "a2", null, null, null, null, "");
     model.getAllRequirements().put("R01",newReq1);
     model.getAllRequirements().put("R02",newReq2);
     allTestRequirementsImpl.add(new ReqImplementation("R01",reqTok));
@@ -67,7 +67,7 @@ public class RequirementTest
   @Test
   public void structuredFieldsStored()
   {
-    Requirement req = new Requirement("US1", "As a customer...", "userStory");
+    Requirement req = new Requirement("US1", "As a customer...", null, null, null, null, "userStory");
     req.setWho("customer");
     req.setWhen("password is forgotten");
     req.setWhat("reset my password");
@@ -82,7 +82,7 @@ public class RequirementTest
   @Test
   public void deepCopyConstructorCopiesStructuredFields()
   {
-    Requirement original = new Requirement("US2", "As an administrator...", "userStory");
+    Requirement original = new Requirement("US2", "As an administrator...", null, null, null, null, "userStory");
     original.setWho("administrator");
     original.setWhen("account review");
     original.setWhat("manage users");
