@@ -923,11 +923,6 @@ class Comment
 /*
  */
 class Requirement{
-  public Requirement(String aIdentifier, String aStatement, String aLanguage)
-  {
-    this(aIdentifier, aStatement, null, null, null, null, aLanguage);
-  }
-
   // deep copy constructor
   public Requirement(Requirement aReq)
   {
