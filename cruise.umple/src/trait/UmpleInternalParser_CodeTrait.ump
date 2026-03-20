@@ -366,7 +366,7 @@ class UmpleInternalParser
     {
     // If existing requirement is null
     // create new requirement
-      Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
+      Requirement req = new Requirement(reqID, newContent, null, null, null, null, newLanguage);// Create new requirement
     // Add the new requirement
       req.addReqToken(t);// new addition
       model.getAllRequirements().put(reqID, req);
