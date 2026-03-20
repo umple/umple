@@ -45,60 +45,60 @@ class PlainRequirementsDocGenerator
     ReqTreeSet.addAll(model.getAllRequirements().values());
     // Assigning the suboption to a variable 
     boolean hasreqHideNotImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqHideNotImpl");
+	boolean hasreqOnlyImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqOnlyImpl");
+    boolean hasreqOnlyNotImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqOnlyNotImpl");
     // Assigning a variable to hold the filename so it can be output in the implemented by section
     String fileName = model.getUmpleFile().getSimpleFileName()+".ump";
     // Loop through the sorted reqs in the TreeSet and check if they have an implementation
     List<ReqImplementation> ReqImp = new ArrayList<ReqImplementation>(); 
     ReqImp = model.getReqImplementations();
-    for (Requirement req : ReqTreeSet){
-    	if (req.hasReqImplementations() || !hasreqHideNotImpl) {
-    	  // Below string stores the requirement statement and language and translates to html
-				String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
-				mainReqText = linkifyHttpUrls(mainReqText);
-				doc.createParagraphElement("<b>" + req.getIdentifier() + ": " + mainReqText + "</b>", false);
-    	  // Check if the requirement is implemented
-          if(req.hasReqImplementations()) {
-	        doc.createParagraphElement("&nbsp; <b>IMPLEMENTED BY:</b> ", false);
+    for (Requirement req : ReqTreeSet) {
+    boolean isImplemented = req.hasReqImplementations();
+
+    // --- NEW: FILTERING LOGIC FOR SUB-OPTIONS -s ---
+    if (hasreqOnlyImpl && !isImplemented) continue; // Skip if we only want implemented requirements
+    if (hasreqOnlyNotImpl && isImplemented) continue; // Skip if we only want non-implemented requirements
+    if (hasreqHideNotImpl && !isImplemented) continue; // Skip non-implemented requirements (existing option)
+
+    // If we haven't "continued", we display the requirement
+    String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+    mainReqText = linkifyHttpUrls(mainReqText);
+    doc.createParagraphElement("<b>" + req.getIdentifier() + ": " + mainReqText + "</b>", false);
     
-    // Use a TreeSet to: 1. Remove duplicates, 2. Sort in alphabetical order
-    TreeSet<String> uniqueImpls = new TreeSet<String>();
+    // Check if the requirement is implemented
+    if(isImplemented) {
+        doc.createParagraphElement("&nbsp; <b>IMPLEMENTED BY:</b> ", false);
+        TreeSet<String> uniqueImpls = new TreeSet<String>();
 
-    // Iterate through classes to find which ones implement this requirement (req)
-    for (UmpleClass aClass : getModel().getUmpleClasses()) {
-      for(ReqImplementation reqImplem : req.getReqImplementations()) {
-        
-        // Check if the entire class implements the requirement
-        if(aClass.getReqImplementations().contains(reqImplem)) {
-          uniqueImpls.add("Class: " + aClass.getName() + " (line " + aClass.getPosition(0).getLineNumber() + ")");
-        }
-        
-        // Check if specific attributes implement the requirement
-        for (Attribute att : aClass.getAttributes()) {
-          if(att.getReqImplementations().contains(reqImplem)) {
-            uniqueImpls.add("Attribute: " + att.getName() + " in " + aClass.getName() + " (line " + att.getPosition().getLineNumber() + ")");
-          }
-        }
-        
-        // Check if specific methods implement the requirement
-        for (Method meth : aClass.getMethods()) {
-          if(meth.getReqImplementations().contains(reqImplem)) {
-            uniqueImpls.add("Method: " + meth.getName() + " in " + aClass.getName() + " (line " + meth.getPosition().getLineNumber() + ")");
-          }
-        }
-      }
-    }
-
-    // Display each UNIQUE implementation found
-    for (String s : uniqueImpls) {
-      doc.createParagraphElement("&nbsp;&nbsp;&nbsp;&nbsp; - " + s, false);
-    }
-             }
-         else {
-            // If the requirement does not have an implementation
-            doc.createParagraphElement("&nbsp;"+"NOT IMPLEMENTED.", false);
+        for (UmpleClass aClass : getModel().getUmpleClasses()) {
+            for(ReqImplementation reqImplem : req.getReqImplementations()) {
+                // Check if the entire class implements the requirement
+                if(aClass.getReqImplementations().contains(reqImplem)) {
+                    uniqueImpls.add("Class: " + aClass.getName() + " (line " + aClass.getPosition(0).getLineNumber() + ")");
+                }
+                // Check if specific attributes implement the requirement
+                for (Attribute att : aClass.getAttributes()) {
+                    if(att.getReqImplementations().contains(reqImplem)) {
+                        uniqueImpls.add("Attribute: " + att.getName() + " in " + aClass.getName() + " (line " + att.getPosition().getLineNumber() + ")");
+                    }
+                }
+                // Check if specific methods implement the requirement
+                for (Method meth : aClass.getMethods()) {
+                    if(meth.getReqImplementations().contains(reqImplem)) {
+                        uniqueImpls.add("Method: " + meth.getName() + " in " + aClass.getName() + " (line " + meth.getPosition().getLineNumber() + ")");
+                    }
+                }
             }
-          }
         }
+        
+        // Display each UNIQUE implementation found
+        for (String s : uniqueImpls) {
+            doc.createParagraphElement("&nbsp;&nbsp;&nbsp;&nbsp; - " + s, false);
+        }
+    } else {
+        doc.createParagraphElement("&nbsp; <b>NOT IMPLEMENTED</b>", false);
+    }
+}
     model.setCode(doc.toString());
     writeModel();
     return;
