@@ -456,7 +456,7 @@ class ParseResult
       ret += "\"url\" : \"" + url + "\", ";
       ret += "\"line\" : \"" + line + "\", ";
       ret += "\"filename\" : \"" + file + "\", ";
-      ret += "\"message\" : \"" + message.replace("\"", "\'") + "\"},";
+      ret += "\"message\" : \"" + message + "\"},";
       hasOne = true;
     }
 
