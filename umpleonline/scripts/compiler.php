@@ -1020,7 +1020,6 @@ function getErrorHtml($errorFilename, $offset = 1)
         foreach($results as $result)
         {
             $url = $result["url"];
-            $line = intval($result["line"]) - $offset; 
             $errorCode = $result["errorCode"];
             $severityInt = intval($result["severity"]);
             if($severityInt > 2) {
@@ -1039,11 +1038,18 @@ function getErrorHtml($errorFilename, $offset = 1)
             }
             $lowerFn = strtolower($filename);
             $showFilename = ($filename !== "" && $lowerFn !== "model.ump");
+            $line = intval($result["line"]) - ($showFilename ? 0 : 1);
             $filePrefix = ($showFilename)
               ? " <span class=\"umple-err-file\" data-filename=\"{$filename}\">in <strong>{$filename}</strong> </span>"
               : "";
-                        
-            $errhtml .= $textcolor." {$severity}{$filePrefix} on <a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a> : {$msg}.</span> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
+            
+            $safeFilenameJs = addslashes($filename);
+            if ($showFilename) {
+              $errorAnchor = "<a href=\"javascript:Action.goToCrossFileError('{$safeFilenameJs}',{$line});\">{$filename} on line {$line}</a>";
+            } else {
+              $errorAnchor = "<a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a>";
+            }
+            $errhtml .= $textcolor." {$severity}".($showFilename ? " in " : " on ")." {$errorAnchor} : {$msg}.</span> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
         }
      }
     
