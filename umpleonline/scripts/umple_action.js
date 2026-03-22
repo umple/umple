@@ -4721,7 +4721,7 @@ Action.loadExample = function loadExample()
   }
     // COMMENTED OUT SUBJECT TO INVESTIGATION
     // Page.setSelectExample(shortExampleName + ".ump");
-    window.history.pushState({}, "", newURL);
+    // window.history.pushState({}, "", newURL);
 
     setTimeout(function () { // Delay so it doesn't get erased
     Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+shortExampleName+" example</a>");
