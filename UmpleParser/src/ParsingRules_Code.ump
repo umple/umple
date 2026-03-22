@@ -898,7 +898,8 @@ class BalancedRule
   public static void initialize(String input, ParserDataPackage data)
   {
     data.setCouples(new HashMap<String,ParsingCouple>());
-    for(String[] key:data.getKeys().values())
+    List<String[]> keysCopy = new ArrayList<String[]>(data.getKeys().values());
+    for(String[] key : keysCopy)
     {
       data.getCouples().put(key[0]+key[1],new ParsingCouple(key[0],key[1]).init(input));
     }
