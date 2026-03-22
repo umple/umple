@@ -1528,7 +1528,30 @@ public class UmpleParserTest
   {
           assertNoWarningsParse("451_ReqMixsetOutputGenerated.ump");
   }
-
+  //Issue 2377
+  @Test
+  public void ReqUserStoryBasic()
+  {
+    assertNoWarningsParse("452_ReqUserStoryBasic.ump");
+  }
+  //Issue 2377
+  @Test
+  public void ReqNormalStillWorksAfterUserStoryGrammar()
+  {
+    assertNoWarningsParse("452_ReqNormalStillWorks.ump");
+  }
+  //Issue 2377
+  @Test
+  public void ReqUserStoryStructuredAll()
+  {
+    assertNoWarningsParse("453_ReqUserStoryStructuredAll.ump");
+  }
+  //Issue 2377
+  @Test
+  public void ReqUserStoryStructuredPartial()
+  {
+    assertNoWarningsParse("453_ReqUserStoryStructuredPartial.ump");
+  }
   @Test
   public void associationName()
   {

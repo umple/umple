@@ -259,6 +259,16 @@ subprojects{
     }
     compileUmpleSelf.dependsOn(":downloadUmpleJar")
 
+    // Compile task using the remote stable jar only, never the local built jar.
+    // Used by resetUmpleSelf to break the bootstrap cycle where a locally-built
+    // incomplete jar would generate incomplete src-gen-umple output.
+    task ('compileUmpleRemote') {
+        doLast {
+            runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+        }
+    }
+    compileUmpleRemote.dependsOn(":downloadUmpleJar")
+
     // Copy task for parent project
     def fromPath = "${projectDir.toString()}/${project.ext.umpleOutputDir}"
     def intoPath = project.hasProperty("generationDir") ?
@@ -279,6 +289,7 @@ subprojects{
     }
     compileUmple.finalizedBy copyUmpleOutput
     compileUmpleSelf.finalizedBy copyUmpleOutput
+    compileUmpleRemote.finalizedBy copyUmpleOutput
 
     task copyUmpleTest (type: Copy) {
         from "${projectDir.toString()}/test"
@@ -337,6 +348,13 @@ task ('cleanUpTests') {
 task ('cleanUpUmple') {
  doLast{
     delete "${rootProject.projectDir.toString()}/dist/gradle/src-gen/cruise.umple"
+    // Also clear the local src-gen-umple so stale content from a prior Ant build
+    // does not survive into copyUmpleOutput and cause duplicate classes.
+    delete "${rootProject.projectDir.toString()}/cruise.umple/src-gen-umple"
+    // Remove the cached remote jar so downloadUmpleJar always re-fetches the
+    // real server jar. Prevents a manually-placed incomplete jar from being
+    // used by compileUmpleRemote.
+    delete "${rootProject.projectDir.toString()}/libs/umple-latest.jar"
     }
 }
 
@@ -454,9 +472,43 @@ task copyTxlFile(type: Copy) {
     }
 }
 
+// Parser .ump files are required at runtime by the Umple compiler.
+// Ant copies them explicitly; Gradle must do the same.
+task copyParserUmpFiles(type: Copy) {
+    group = "Custom"
+    description = "Copying parser .ump files that must be included in the umple jar"
+    into rootProject.ext.classfileOutputDir
+    from("UmpleParser/src") {
+        include 'GrammarParsing*.ump'
+        include 'ParseUtilities*.ump'
+        include 'ParsingRules*.ump'
+        include 'TextParser*.ump'
+    }
+    from("cruise.umple/src/util") {
+        include 'FileUtils.ump'
+    }
+    doFirst {
+        [
+            [dir: "UmpleParser/src",       pattern: 'GrammarParsing*.ump'],
+            [dir: "UmpleParser/src",       pattern: 'ParseUtilities*.ump'],
+            [dir: "UmpleParser/src",       pattern: 'ParsingRules*.ump'],
+            [dir: "UmpleParser/src",       pattern: 'TextParser*.ump'],
+            [dir: "cruise.umple/src/util", pattern: 'FileUtils.ump'],
+        ].each { spec ->
+            if (fileTree(spec.dir).include(spec.pattern).isEmpty()) {
+                throw new GradleException(
+                    "copyParserUmpFiles: no files matched '${spec.pattern}' in '${spec.dir}'. " +
+                    "The Umple JAR would be missing required runtime parser files."
+                )
+            }
+        }
+    }
+}
+
 tasks.getByName("compileJava").dependsOn 'copyDocs'
 tasks.getByName("compileJava").dependsOn 'copyReusableUmpLib'
 tasks.getByName("compileJava").dependsOn 'copyTxlFile'
+tasks.getByName("compileJava").dependsOn 'copyParserUmpFiles'
 tasks.getByName("compileJava").dependsOn ':UmpleParser:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToJava:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToPhp:copyUmpleOutput'
@@ -469,7 +521,7 @@ tasks.getByName("compileJava").dependsOn copyRTCppLibs
 tasks.getByName("compileJava").dependsOn getVendorLibs
 
 jar {
-    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data"
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data", "**/*Test.class"
     from rootProject.ext.classfileOutputDir
     // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
     archivesBaseName = rootProject.ext.umpleCurrentJarBase
@@ -483,6 +535,7 @@ jar {
         println("Compiling to ${rootProject.ext.umpleCurrentJar} using " + rootProject.ext.classfileOutputDir)
     }
     dependsOn copyDocs
+    dependsOn copyParserUmpFiles
 }
 
 task createSymbolicLink {
@@ -1012,11 +1065,13 @@ task deploy {
     dependsOn deployUpdatedLib
 }
 
-// Builds self
+// Builds self using the remote stable jar so that the self-hosting step
+// always produces a complete src-gen-umple output regardless of whether
+// a locally-built (potentially incomplete) jar exists.
 task resetUmpleSelf {
     group = "Custom"
-    description = ""
-    dependsOn ':cruise.umple:compileUmpleSelf'
+    description = "Recompiles cruise.umple using the remote stable jar to ensure a complete self-hosted build"
+    dependsOn ':cruise.umple:compileUmpleRemote'
 }
 
 // Generates template code by first attempting to use
@@ -1037,7 +1092,7 @@ task codeGen {
 task umpleParser {
     group = "Custom"
     description = "Compiles the parser to Java"
-    dependsOn ":UmpleParser:compileUmple"
+    dependsOn ":UmpleParser:compileUmpleSelf"
 }
 
 task ('compileXUnitTemplates') {

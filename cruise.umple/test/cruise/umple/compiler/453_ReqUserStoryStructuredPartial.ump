@@ -1,0 +1,4 @@
+req US3 userStory {
+  who { administrator }
+  what { manage users }
+}
