@@ -728,8 +728,20 @@ else if (isset($_REQUEST["umpleCode"]))
       $svgcode = readTemporaryFile("{$thedir}/instanceDiagram.svg");
       $gvlink = $workDir->makePermalink('model'.$generatorType.'.gv');
       $svglink = $workDir->makePermalink('instanceDiagram.svg');
-      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
-      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
+      // Read the CRUD-style JSON sidecar written by the InstanceDiagram
+      // generator in the same pass that produced the GraphViz file.
+      $jsonSidecarPath = $thedir . "/model" . $generatorType . ".instance.json";
+      $instanceJson = '';
+      if (file_exists($jsonSidecarPath)) {
+        $instanceJson = readTemporaryFile($jsonSidecarPath);
+      }
+
+      $html = "<button type=\"button\" id=\"instance-load-into-crud\" class=\"jQuery-palette-button ui-button ui-corner-all ui-widget\" style=\"margin-right:6px;\">Load data into CRUD</button>&nbsp;" .
+        // Embed the JSON as a hidden script tag so the client can
+        // reuse it when \"Load data into CRUD\" is clicked.
+        "<script id=\"instance-diagram-crud-json\" type=\"application/json\">" . $instanceJson . "</script>" .
+        "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
       $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
