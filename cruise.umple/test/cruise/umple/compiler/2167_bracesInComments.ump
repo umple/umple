@@ -1,0 +1,5 @@
+class X {
+  // { this is a comment with brace
+  /* { multi-line comment } */
+  {
+}
