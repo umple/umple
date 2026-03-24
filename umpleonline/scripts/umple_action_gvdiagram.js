@@ -7,6 +7,17 @@ GvDiagramEdit.state = GvDiagramEdit.state || {
   genChildClass: null
 };
 
+GvDiagramEdit.dragCreate = GvDiagramEdit.dragCreate || {
+  active: false,
+  sourceNodeEl: null,
+  sourceClassName: null,
+  startX: 0,
+  startY: 0,
+  dragging: false,
+  threshold: 6,
+  mode: null // "association" | "generalization"
+};
+
 GvDiagramEdit.getFullText = function() {
   return Page.codeMirrorEditor6.state.doc.toString();
 };
@@ -24,6 +35,173 @@ GvDiagramEdit.clearPendingPaletteState = function() {
   if (GvDiagramEdit.rubberBand && GvDiagramEdit.rubberBand.isActive()) {
     GvDiagramEdit.rubberBand.cancel();
   }
+
+  if (GvDiagramEdit.dragCreate) {
+    GvDiagramEdit.resetDragCreate();
+  }
+};
+
+GvDiagramEdit.resetDragCreate = function() {
+  const s = GvDiagramEdit.dragCreate;
+  s.active = false;
+  s.sourceNodeEl = null;
+  s.sourceClassName = null;
+  s.startX = 0;
+  s.startY = 0;
+  s.dragging = false;
+  s.mode = null;
+};
+
+GvDiagramEdit.cancelDragCreate = function() {
+  if (GvDiagramEdit.rubberBand && GvDiagramEdit.rubberBand.isActive()) {
+    GvDiagramEdit.rubberBand.cancel();
+  }
+  GvDiagramEdit.resetDragCreate();
+};
+
+GvDiagramEdit.beginPossibleDragCreate = function(domEvent, nodeEl, mode) {
+  if (!Page.useGvClassDiagram) return false;
+  if (!Action.diagramInSync) return false;
+  if (mode === "association" && Page.selectedItem !== "AddAssociation") return false;
+  if (mode === "generalization" && Page.selectedItem !== "AddGeneralization") return false;
+
+  const className = Action.getGvClassNameFromNode(nodeEl);
+  if (!className) return false;
+
+  const s = GvDiagramEdit.dragCreate;
+  s.active = true;
+  s.sourceNodeEl = nodeEl;
+  s.sourceClassName = className;
+  s.startX = domEvent.clientX;
+  s.startY = domEvent.clientY;
+  s.dragging = false;
+  s.mode = mode;
+
+  return true;
+};
+
+GvDiagramEdit.maybeActivateDragCreate = function(moveEvent) {
+  const s = GvDiagramEdit.dragCreate;
+  if (!s.active || s.dragging || !s.sourceNodeEl || !s.sourceClassName || !s.mode) return;
+
+  const dx = moveEvent.clientX - s.startX;
+  const dy = moveEvent.clientY - s.startY;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist < s.threshold) return;
+
+  s.dragging = true;
+
+  if (s.mode === "association") {
+    GvDiagramEdit.state.assocSourceClass = s.sourceClassName;
+    Action.selectClass(s.sourceClassName);
+    GvDiagramEdit.rubberBand.start(s.sourceNodeEl, "association", moveEvent);
+    Page.setFeedbackMessage("Association: drag to target class for " + s.sourceClassName);
+  } else if (s.mode === "generalization") {
+    GvDiagramEdit.state.genChildClass = s.sourceClassName;
+    Action.selectClass(s.sourceClassName);
+    GvDiagramEdit.rubberBand.start(s.sourceNodeEl, "generalization", moveEvent);
+    Page.setFeedbackMessage("Generalization: drag to parent class for " + s.sourceClassName);
+  }
+};
+
+GvDiagramEdit.finishDragCreateOnNode = function(domEvent, nodeEl) {
+  const s = GvDiagramEdit.dragCreate;
+  if (!s.active) return false;
+
+  const wasDragging = s.dragging;
+  const mode = s.mode;
+  const sourceClass = s.sourceClassName;
+  const targetClass = Action.getGvClassNameFromNode(nodeEl);
+
+  GvDiagramEdit.resetDragCreate();
+
+  if (!wasDragging) return false;
+  if (!sourceClass || !targetClass) {
+    GvDiagramEdit.clearPendingPaletteState();
+    return true;
+  }
+
+  if (mode === "association") {
+    GvDiagramEdit.state.assocSourceClass = null;
+    GvDiagramEdit.rubberBand.finish();
+
+    const before = GvDiagramEdit.getFullText();
+    const after = GvDiagramEdit.insertAssociationIntoSourceClass(before, sourceClass, targetClass);
+
+    if (after == null) {
+      Page.setFeedbackMessage("Couldn't find class block for " + sourceClass + " in editor text.");
+      return true;
+    }
+
+    GvDiagramEdit.replaceFullText(after);
+    GvDiagramEdit.refreshDiagram();
+
+    if (!Page.repeatToolItem) Page.unselectAllToggleTools();
+    Page.setFeedbackMessage("Association added: " + sourceClass + " -> " + targetClass);
+    return true;
+  }
+
+  if (mode === "generalization") {
+    GvDiagramEdit.state.genChildClass = null;
+    GvDiagramEdit.rubberBand.finish();
+
+    if (sourceClass === targetClass) {
+      Page.setFeedbackMessage("Generalization cancelled (same class). Pick a different parent.");
+      return true;
+    }
+
+    const before = GvDiagramEdit.getFullText();
+    const after = GvDiagramEdit.insertGeneralizationIntoChildClass(before, sourceClass, targetClass);
+
+    if (after == null) {
+      Page.setFeedbackMessage("Couldn't find class block for " + sourceClass + " in editor text.");
+      return true;
+    }
+
+    GvDiagramEdit.replaceFullText(after);
+    GvDiagramEdit.refreshDiagram();
+
+    if (!Page.repeatToolItem) Page.unselectAllToggleTools();
+    Page.setFeedbackMessage("Generalization added: " + sourceClass + " isA " + targetClass);
+    return true;
+  }
+
+  return false;
+};
+
+GvDiagramEdit.handleDocumentMouseUpForCreateDrag = function(domEvent) {
+  const s = GvDiagramEdit.dragCreate;
+  if (!s.active) return;
+
+  // If mouseup happened on a class node, let that node's own mouseup handler finish the drag-create first.
+  const releasedOnNode =
+    domEvent.target &&
+    typeof domEvent.target.closest === "function" &&
+    domEvent.target.closest(".node");
+
+  if (releasedOnNode) return;
+
+  // Mouse was released somewhere else (empty canvas / outside canvas), so cancel the in-progress drag-create cleanly.
+  if (s.dragging) {
+    GvDiagramEdit.clearPendingPaletteState();
+    return;
+  }
+
+  GvDiagramEdit.resetDragCreate();
+};
+
+GvDiagramEdit.installCreateDragListeners = function() {
+  if (GvDiagramEdit._createDragListenersInstalled) return;
+  GvDiagramEdit._createDragListenersInstalled = true;
+
+  document.addEventListener("mousemove", function(event) {
+    GvDiagramEdit.maybeActivateDragCreate(event);
+  }, true);
+
+  document.addEventListener("mouseup", function(event) {
+    GvDiagramEdit.handleDocumentMouseUpForCreateDrag(event);
+  });
 };
 
 GvDiagramEdit.refreshDiagram = function() {
@@ -260,6 +438,8 @@ GvDiagramEdit.bindClassDiagram = function(canvasX, canvasY) {
     allowNodeMovement = false;
   }
 
+  GvDiagramEdit.installCreateDragListeners();
+
   const elems = document.getElementsByClassName("node");
 
   for (let i = 0; i < elems.length; i++) {
@@ -290,7 +470,15 @@ GvDiagramEdit.bindClassDiagram = function(canvasX, canvasY) {
       theNode.removeEventListener("mousedown", theNode.__gvAssocDown, true);
     }
     theNode.__gvAssocDown = function(e) {
-        if (GvDiagramEdit.handlePaletteAssociation(e, theNode)) return;
+      if (!Page.useGvClassDiagram) return;
+      if (!Action.diagramInSync) return;
+      if (Page.selectedItem !== "AddAssociation") return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+
+      GvDiagramEdit.beginPossibleDragCreate(e, theNode, "association");
     };
     theNode.addEventListener("mousedown", theNode.__gvAssocDown, true);
 
@@ -299,9 +487,59 @@ GvDiagramEdit.bindClassDiagram = function(canvasX, canvasY) {
       theNode.removeEventListener("mousedown", theNode.__gvGenDown, true);
     }
     theNode.__gvGenDown = function(e) {
-        if (GvDiagramEdit.handlePaletteGeneralization(e, theNode)) return;
+      if (!Page.useGvClassDiagram) return;
+      if (!Action.diagramInSync) return;
+      if (Page.selectedItem !== "AddGeneralization") return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+
+      GvDiagramEdit.beginPossibleDragCreate(e, theNode, "generalization");
     };
     theNode.addEventListener("mousedown", theNode.__gvGenDown, true);
+
+    // ---- Association tool mouseup in GV mode ----
+    if (theNode.__gvAssocUp) {
+      theNode.removeEventListener("mouseup", theNode.__gvAssocUp, true);
+    }
+    theNode.__gvAssocUp = function(e) {
+      if (!Page.useGvClassDiagram) return;
+      if (!Action.diagramInSync) return;
+      if (Page.selectedItem !== "AddAssociation") return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+
+      // If this was a drag-release, commit now and stop.
+      if (GvDiagramEdit.finishDragCreateOnNode(e, theNode)) return;
+
+      // Otherwise this was a click-release, so preserve the two-click flow.
+      GvDiagramEdit.handlePaletteAssociation(e, theNode);
+    };
+    theNode.addEventListener("mouseup", theNode.__gvAssocUp, true);
+
+    // ---- Generalization tool mouseup in GV mode ----
+    if (theNode.__gvGenUp) {
+      theNode.removeEventListener("mouseup", theNode.__gvGenUp, true);
+    }
+    theNode.__gvGenUp = function(e) {
+      if (!Page.useGvClassDiagram) return;
+      if (!Action.diagramInSync) return;
+      if (Page.selectedItem !== "AddGeneralization") return;
+
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+
+      // If this was a drag-release, commit now and stop.
+      if (GvDiagramEdit.finishDragCreateOnNode(e, theNode)) return;
+
+      // Otherwise this was a click-release, so preserve the two-click flow.
+      GvDiagramEdit.handlePaletteGeneralization(e, theNode);
+    };
+    theNode.addEventListener("mouseup", theNode.__gvGenUp, true);
 
     // ---- Drag/move classes in GV manual mode ----
     theNode.addEventListener("mousedown", function(event) {
