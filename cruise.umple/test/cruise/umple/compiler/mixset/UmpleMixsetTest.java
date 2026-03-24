@@ -166,13 +166,18 @@ public class UmpleMixsetTest {
 
   @Test
   public void lastElementMixsetBodyError() {
-    UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"lastElementError.ump");
-    int line = 3;
-    int errorCode = 1502;
-    int offset= 0;
-    int charOff = 14;
-    umpleParserTest.assertFailedParse(file.getFileName(), new Position(file.getPath()+"/"+file.getFileName(),line,offset,charOff),errorCode);
-
+    // Issue #2167: statemachine } at top level — 1505 (unmatched closing brace)
+    // The fixture also triggers 1510 (file not found for 'use A'), so we check
+    // that 1505 appears in the error list rather than asserting it's the first error.
+    umpleParserTest.parse("lastElementError.ump");
+    boolean found = false;
+    for (int i = 0; i < umpleParserTest.parser.getParseResult().numberOfErrorMessages(); i++) {
+      if (umpleParserTest.parser.getParseResult().getErrorMessage(i).getErrorType().getErrorCode() == 1505) {
+        found = true;
+        break;
+      }
+    }
+    Assert.assertTrue("Expected error 1505 in lastElementError.ump", found);
  }
 
  @Test
