@@ -925,6 +925,12 @@ class UmpleInternalParser
       s = new State(stateToken.getValue("stateName"),sm);
       //Issue 492
       s.setPosition(stateToken.getPosition());
+      //Issue 2098
+      for(ReqImplementation reqImp : ReqImpState)
+      {
+        s.addReqImplementation(reqImp);
+      }
+      ReqImpState.clear();
     }
     if (s.getIsHistoryState() || s.getIsDeepHistoryState())
     {
@@ -966,6 +972,12 @@ class UmpleInternalParser
       else if (stateToken.is("multilineComment"))
       {
         analyzeMultilineComment(stateToken);
+        continue;
+      }
+
+      if(stateToken.is("reqImplementation"))
+      {
+        ReqImpState = analyzeStateReqImpl(stateToken);
         continue;
       }
 
@@ -1134,6 +1146,11 @@ class UmpleInternalParser
       else if (subToken.is("multilineComment"))
       {
         analyzeMultilineComment(subToken);
+        continue;
+      }
+      else if (subToken.is("reqImplementation"))
+      {
+        ReqImpState = analyzeStateReqImpl(subToken);
         continue;
       }
 
@@ -1311,6 +1328,13 @@ class UmpleInternalParser
 	    
 	    //Issue 519
 	    t.setPosition(transitionToken.getPosition());
+
+      //Issue 2098
+      for(ReqImplementation reqImp : ReqImpState)
+      {
+        t.addReqImplementation(reqImp);
+      }
+      ReqImpState.clear();
 
 	    String eventName = transitionToken.getValue("event");
 	    String eventTimerAmount = transitionToken.getValue("timer");
@@ -1972,6 +1996,13 @@ class UmpleInternalParser
 
     //Issue 519
     t.setPosition(transitionToken.getPosition());
+
+    //Issue 2098
+    for(ReqImplementation reqImp : ReqImpState)
+    {
+      t.addReqImplementation(reqImp);
+    }
+    ReqImpState.clear();
 
     String eventName = transitionToken.getValue("event");
     String eventTimerAmount = transitionToken.getValue("timer");
