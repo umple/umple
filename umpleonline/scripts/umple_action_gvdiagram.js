@@ -567,6 +567,22 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
 
     RB._onMove = function(e) {
       if (!RB.active || !RB.svg || !RB.startPt) return;
+
+      // Freeze the temporary line when the cursor leaves the diagram frame.
+      const canvasEl = document.getElementById("umpleCanvas");
+      const boundsEl = canvasEl || RB.svg;
+      const rect = boundsEl.getBoundingClientRect();
+
+      const isInsideCanvas =
+        e.clientX >= rect.left &&
+        e.clientX <= rect.right &&
+        e.clientY >= rect.top &&
+        e.clientY <= rect.bottom;
+
+      if (!isInsideCanvas) {
+        return;
+      }
+
       const end = clientToSvgPoint(RB.svg, e.clientX, e.clientY);
 
       if (RB.mode === "generalization") {
