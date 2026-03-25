@@ -1844,10 +1844,10 @@ Page.showGeneratedCode = function(code,language,tabnumber)
 		}
     Page.toggleStructureDiagramLink(false);
   }
-//   else if (language === "crudJson")
-// {
-//   Page.showCrudFromJson(generatedMarkup, tabnumber);
-// }
+  else if (language === "crudJson")
+{
+  Page.showCrudFromJson(generatedMarkup, tabnumber);
+}
   else
   {
     jQuery("#innerGeneratedCodeRow" + tabnumber).html(generatedMarkup);
