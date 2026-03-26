@@ -5563,6 +5563,29 @@ Action.updateLineNumberDisplay = function()
   jQuery("#linenum").val(Action.getCaretPosition());
 }
 
+Action.goToCrossFileError = function(filename, line)
+{
+  var base = filename.split('/').pop().replace(/\.ump\s*$/i, '');
+  var tabId = null;
+
+  Object.keys(TabControl.tabs).forEach(function(id) {
+    if (TabControl.tabs[id].name === base) {
+      tabId = id;
+    }
+  });
+
+  if (tabId !== null && String(tabId) !== String(TabControl.activeTab)) {
+    TabControl.selectTab(tabId);
+  }
+
+  setTimeout(function() {
+    Action.setCaretPosition(parseInt(line, 10));
+    Action.updateLineNumberDisplay();
+  }, 100);
+
+  return false;
+};
+
 Action.umpleTyped = function(eventObject)
 {
   // DEBUG
