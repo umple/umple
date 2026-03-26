@@ -310,6 +310,7 @@ function generateMenu($buttonSuffix)
         <li class=\"subtitle\"> Generate".$buttonSuffix."</li>
         <li id=\"ttGeneratedCodeType\">
           <select id=\"inputGenerateCode".$buttonSuffix."\" name=\"inputLanguage\" class=\"button\">
+          <optgroup label=\"Class Views\">
             <option id=\"genjava\" value=\"java:Java\">Java Code</option>
             <option id=\"genjavadoc\" value=\"javadoc:javadoc\">Java API Doc</option>
             <option id=\"genphp\" value=\"php:Php\">PHP Code</option>
@@ -317,31 +318,43 @@ function generateMenu($buttonSuffix)
             <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code (Beta)</option>
             <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
             <option id=\"genalloy\" value=\"alloy:Alloy\">Alloy Model</option>
-        <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
+            <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
             <option value=\"xml:Ecore\">Ecore</option>
             <option value=\"java:TextUml\">TextUml</option>
-            <option value=\"xml:Scxml\">Scxml (Experimental)</option>
             <option value=\"xml:Papyrus\">Papyrus XMI</option>
             <option value=\"yumlDiagram:yumlDiagram\">Yuml Class Diagram</option>
             <option value=\"classDiagram:classDiagram\">GraphViz Class Diagram (SVG)</option>
-            <option value=\"mermaid:Mermaid\">Mermaid</option>
-            <option value=\"instanceDiagram:instanceDiagram\">Instance Diagram</option>
-            <option value=\"stateDiagram:stateDiagram\">State Diagram (GraphViz SVG)</option>
-            <option value=\"featureDiagram:featureDiagram\">Feature Diagram (GraphViz SVG)</option>
             <option value=\"entityRelationship:entityRelationshipDiagram\">Entity Relationship Diagram (GraphViz SVG)</option>
-            <option id=\"genstatetables\" value=\"html:StateTables\">State Tables</option>
-            <option id=\"geneventsequence\" value=\"html:EventSequence\">Event Sequence</option>
-            <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>
             <option id=\"genuigu2\" value=\"crudJson:Json\">CRUD User Interface</option>            
             <option value=\"java:Json\">Json</option>
+          </optgroup>
+
+          <optgroup label=\"State Views\">
+           <option value=\"stateDiagram:stateDiagram\">State Diagram (GraphViz SVG)</option>
+           <option id=\"genstatetables\" value=\"html:StateTables\">State Tables</option>
+          </optgroup>
+
+          <optgroup label=\"Special Views\">
+            <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>
+            <option value=\"featureDiagram:featureDiagram\">Feature Diagram (GraphViz SVG)</option>
+            <option value=\"mermaid:Mermaid\">Mermaid</option>
+            <option value=\"xml:Scxml\">Scxml (Experimental)</option>
             <option id=\"gensql\" value=\"sql:Sql\">Sql</option>
             <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple Metrics</option>
             <option id=\"genplainrequirementsdoc\" value=\"html:PlainRequirementsDoc\">Plain Requirements Doc</option>
             <option value=\"html:CodeAnalysis\">Code Analysis</option>
+          </optgroup>
+
+          <optgroup label=\"Instance Views\">
+            <option value=\"instanceDiagram:instanceDiagram\">Instance Diagram</option>
+            <option id=\"geneventsequence\" value=\"html:EventSequence\">Event Sequence</option>
+          </optgroup>
+
+          <optgroup label=\"Other\">
             <option value=\"java:USE\">USE Model</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
             <option id=\"genUmpleAnnotaiveToComposition\" value=\"java:UmpleAnnotaiveToComposition\" >Compositional Mixsets from Inline Mixsets </option>
-
+          </optgroup>
           </select>
         </li>
         <li id=\"ttGenerateCode\">
