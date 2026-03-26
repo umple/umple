@@ -1,5 +1,5 @@
 <html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from SortOneReq.ump
-</p><p><b>R1: first requirement.</b>
+</p><p><b>A01: z requirement.</b>
 </p><p>&nbsp; <b>IMPLEMENTED BY:</b> 
-</p><p>&nbsp;&nbsp;&nbsp;&nbsp; - Class: Example (SortOneReq.ump line 6)
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; - Class: Example (line 6)
 </p></html>

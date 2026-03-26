@@ -1,8 +1,8 @@
 <html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from Sort2Reqs.ump
 </p><p><b>A01: z requirement.</b>
 </p><p>&nbsp; <b>IMPLEMENTED BY:</b> 
-</p><p>&nbsp;&nbsp;&nbsp;&nbsp; - Class: Example (Sort2Reqs.ump line 10)
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; - Class: Example (line 10)
 </p><p><b>B01: a is a second requirement statement.</b>
 </p><p>&nbsp; <b>IMPLEMENTED BY:</b> 
-</p><p>&nbsp;&nbsp;&nbsp;&nbsp; - Class: Example (Sort2Reqs.ump line 10)
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; - Class: Example (line 10)
 </p></html>
