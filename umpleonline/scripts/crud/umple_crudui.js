@@ -2636,7 +2636,6 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
           return false;
         });
       }
-
       if (targetClass && typeof Page.openCrudDialogForClass === "function") {
         Page.crudClassSelected = targetClass;
         Page.openCrudDialogForClass(targetClass);
