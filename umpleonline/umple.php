@@ -581,7 +581,7 @@ $output = $dataHandle->readData('model.ump');
     <option value="gfd" id="menu-set-gfd">Feature Diagram</option>
     <option value="erd" id="buttonShowGvEntityRelationshipDiagram">ERD</option>
     <option value="instanceDiagram" id="buttonShowInstanceDiagram">Instance Diagram</option>
-    <!-- <option value="crudUI" id="buttonShowCRUDUI">CRUD UI</option> -->
+    <option value="crudUI" id="buttonShowCRUDUI">CRUD UI</option>
     <option value="eventSequence" id="buttonShowEventSequence">Event Sequence</option>
     <option value="stateTables" id="buttonShowStateTables">State Tables</option>
   </select>

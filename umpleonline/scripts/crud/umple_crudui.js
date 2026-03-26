@@ -771,8 +771,11 @@ Page.showCrudAbstractMessage = function(className) {
 };
 
 // Sets up clickable class headers and hides underlying forms
-Page.initCrudUi = function(tabnumber) {
-  var container = jQuery("#innerGeneratedCodeRow" + tabnumber);
+// If containerSelector is provided, CRUD UI will be initialized inside
+// that container (used for Live View); otherwise it defaults to the
+// bottom generated-code area for the given tabnumber.
+Page.initCrudUi = function(tabnumber, containerSelector) {
+  var container = containerSelector ? jQuery(containerSelector) : jQuery("#innerGeneratedCodeRow" + tabnumber);
 
   // Remember current container for inline CRUD panel rendering
   Page.currentCrudContainer = container;
@@ -2196,8 +2199,10 @@ Page.renderCrudClassArrayItems = function($container, attrName, items) {
   $list.html(html);
 };
 
-// Entry point used by Page.showGeneratedCode when language === "crudJson"
-Page.showCrudFromJson = function(jsonText, tabnumber) {
+// Entry point used by Page.showGeneratedCode when language === "crudJson".
+// Optional containerSelector allows rendering into an arbitrary container
+// (e.g., Live View's htmlCanvas) instead of the default bottom panel.
+Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
   var formHtml = "<div class='crud-ui-forms'>";
   try {
     var data = JSON.parse(jsonText);
@@ -2603,10 +2608,11 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
     formHtml = "<pre>Failed to parse JSON for CRUD UI:\n" + e + "</pre>";
   }
 
-  jQuery("#innerGeneratedCodeRow" + tabnumber).html(formHtml);
+  var targetSelector = containerSelector || ("#innerGeneratedCodeRow" + tabnumber);
+  jQuery(targetSelector).html(formHtml);
 
   // Enhance forms with clickable class headers and popup dialog per class
-  Page.initCrudUi(tabnumber);
+  Page.initCrudUi(tabnumber, containerSelector);
 
   // If instance-data JSON has been prepared via the backend, import it
   // now that the CRUD metadata and forms have been initialized.

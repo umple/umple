@@ -45,7 +45,7 @@ Page.useStructureDiagram = false;
 Page.useFeatureDiagram = false;
 Page.useGvEntityRelationshipDiagram = false;
 Page.useInstanceDiagram = false;
-// Page.useCRUDUI = false;
+Page.useCRUDUI = false;
 Page.useStateTables = false;
 Page.useEventSequence = false;
 Page.showAttributes = true;
@@ -175,7 +175,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   {
     Page.useGvEntityRelationshipDiagram = true;
     Page.useInstanceDiagram = false;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useEventSequence = false;
     Page.useStructureDiagram = false;
@@ -186,7 +186,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   else if(diagramType.toLowerCase() == "instancediagram")
   {
     Page.useInstanceDiagram = true;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useEventSequence = false;
     Page.useGvEntityRelationshipDiagram = false;
@@ -195,22 +195,22 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.setDiagramTypeIconState('none');
     Page.useGvFeatureDiagram = false;
   }
-  // else if(diagramType.toLowerCase() == "crudui" || diagramType.toLowerCase() == "crudjson")
-  // {
-  //   Page.useCRUDUI = true;
-  //   Page.useStateTables = false;
-  //   Page.useEventSequence = false;
-  //   Page.useInstanceDiagram = false;
-  //   Page.useGvEntityRelationshipDiagram = false;
-  //   Page.useStructureDiagram = false;
-  //   Page.useEditableClassDiagram = false;  
-  //   Page.setDiagramTypeIconState('none');
-  //   Page.useGvFeatureDiagram = false;
-  // }
+  else if(diagramType.toLowerCase() == "crudui" || diagramType.toLowerCase() == "crudjson")
+  {
+    Page.useCRUDUI = true;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    Page.useInstanceDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
+    Page.useGvFeatureDiagram = false;
+  }
   else if(diagramType.toLowerCase() == "eventsequence")
   {
     Page.useEventSequence = true;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useInstanceDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
@@ -223,7 +223,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   {
     Page.useStateTables = true;
     Page.useEventSequence = false;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useInstanceDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
     Page.useStructureDiagram = false;
@@ -383,7 +383,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowStructureDiagram");
   Page.initAction("buttonShowGvEntityRelationshipDiagram");
   Page.initAction("buttonShowInstanceDiagram");
-  // Page.initAction("buttonShowCRUDUI");
+  Page.initAction("buttonShowCRUDUI");
   Page.initAction("buttonShowStateTables");
   Page.initAction("buttonShowEventSequence");
   Page.initAction("buttonShowHideLayoutEditor");
@@ -517,8 +517,8 @@ Page.initOptions = function()
   if(Page.useInstanceDiagram)
     jQuery("#buttonShowInstanceDiagram").prop('checked', true);
 
-  // if(Page.useCRUDUI)
-  //   jQuery("#buttonShowCRUDUI").prop('checked', true);
+  if(Page.useCRUDUI)
+    jQuery("#buttonShowCRUDUI").prop('checked', true);
  
   if(Page.useStateTables)
     jQuery("#buttonShowStateTables").prop('checked', true);
@@ -822,9 +822,9 @@ Page.clickShowGvEntityRelationshipDiagram = function() {
 Page.clickShowInstanceDiagram = function() {
   jQuery('#buttonShowInstanceDiagram').trigger('click');
 }
-// Page.clickShowCRUDUI = function() {
-//   jQuery('#buttonShowCRUDUI').trigger('click');
-// }
+Page.clickShowCRUDUI = function() {
+  jQuery('#buttonShowCRUDUI').trigger('click');
+}
 Page.clickShowStateTables = function() {
   jQuery('#buttonShowStateTables').trigger('click');
 }
@@ -1697,16 +1697,16 @@ Page.getSelectedExample = function()
     
     } 
 
-    // else if (theExampleType == "crudModels")
-    // {
-    //    inputExample = jQuery("#inputExample4 option:selected").val(); 
-    //    if( !Page.useCRUDUI) {
-    //      jQuery("#buttonShowCRUDUI").prop('checked', true); 
-    //      Action.changeDiagramType({type: "crudUI"});
+    else if (theExampleType == "crudModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useCRUDUI) {
+         jQuery("#buttonShowCRUDUI").prop('checked', true); 
+         Action.changeDiagramType({type: "crudUI"});
          
-    //   }
+      }
     
-    // } 
+    } 
 
     else if (theExampleType == "stateModels")
     {
@@ -1905,7 +1905,7 @@ Page.getErrorMarkup = function(code, language)
   { // Covers simple right-hand side canvas updates
     output = code.replace(/<p>[\s\S]*/, "");
   }
-  else if(/*language == "crudJson" ||*/ language == "eventSequence" || language == "stateTables")
+  else if(language == "eventSequence" || language == "stateTables")
   {
     // These use URL_SPLIT output, not SVG parsing
     var split = code.split("URL_SPLIT");
@@ -1955,18 +1955,13 @@ Page.getGeneratedMarkup = function(code, language)
     output = jQuery("<div/>").html(output).text();
   }
   else if(language == "eventSequence" || language == "stateTables")
-{
+  {
   var split = code.split("URL_SPLIT");
   output = (split.length > 1) ? split[1] : code;
 
   // Decode escaped HTML so it renders in the right pane
   output = jQuery("<div/>").html(output).text();
-}
-// else if(language == "crudJson")
-// {
-//   var split = code.split("URL_SPLIT");
-//   output = (split.length > 1) ? split[1] : code;
-// }
+  }
   else
   {
     // Covers the rest of the generated languages
