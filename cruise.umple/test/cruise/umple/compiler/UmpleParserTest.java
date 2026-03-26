@@ -10,6 +10,7 @@
 package cruise.umple.compiler;
 
 import java.io.File;
+import cruise.umple.compiler.Requirement;
 import java.util.*;
 
 import org.junit.*;
@@ -1545,12 +1546,30 @@ public class UmpleParserTest
   public void ReqUserStoryStructuredAll()
   {
     assertNoWarningsParse("453_ReqUserStoryStructuredAll.ump");
+
+    Requirement req = model.getAllRequirements().get("US2");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+    Assert.assertEquals("customer", req.getWho());
+    Assert.assertEquals("password is forgotten", req.getWhen());
+    Assert.assertEquals("reset my password", req.getWhat());
+    Assert.assertEquals("regain access to my account", req.getWhy());
   }
   //Issue 2377
   @Test
   public void ReqUserStoryStructuredPartial()
   {
     assertNoWarningsParse("453_ReqUserStoryStructuredPartial.ump");
+
+    Requirement req = model.getAllRequirements().get("US3");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+    Assert.assertEquals("administrator", req.getWho());
+    Assert.assertNull(req.getWhen());
+    Assert.assertEquals("manage users", req.getWhat());
+    Assert.assertNull(req.getWhy());
   }
   @Test
   public void associationName()
