@@ -61,6 +61,114 @@ public class UmpleParserTest
 	  assertFailedParse("011_compositionParseTest_doubleDirected.ump", 1502);
   }
 
+  // Issue #2167: Brace mismatch error position tests
+  // These tests check that analyzeToplevelException emits the right error code.
+  // The parse itself "succeeds" (toplevelException catch-all absorbs malformed input)
+  // but error messages are recorded during analysis.
+  private void assertBraceMismatchError(String filename, int expectedError) {
+    parse(filename);
+    boolean found = false;
+    for (int i = 0; i < parser.getParseResult().numberOfErrorMessages(); i++) {
+      if (parser.getParseResult().getErrorMessage(i).getErrorType().getErrorCode() == expectedError) {
+        found = true;
+        break;
+      }
+    }
+    Assert.assertTrue("Expected error " + expectedError + " in " + filename
+      + " but found errors: " + errorCodesToString(), found);
+  }
+
+  private void assertBraceMismatchErrorAtLine(String filename, int expectedError, int expectedLine) {
+    parse(filename);
+    boolean found = false;
+    for (int i = 0; i < parser.getParseResult().numberOfErrorMessages(); i++) {
+      ErrorMessage em = parser.getParseResult().getErrorMessage(i);
+      if (em.getErrorType().getErrorCode() == expectedError) {
+        Assert.assertEquals("Error " + expectedError + " in " + filename
+          + " expected at line " + expectedLine + " but was at line "
+          + em.getPosition().getLineNumber(),
+          expectedLine, em.getPosition().getLineNumber());
+        found = true;
+        break;
+      }
+    }
+    Assert.assertTrue("Expected error " + expectedError + " in " + filename
+      + " but found errors: " + errorCodesToString(), found);
+  }
+
+  private String errorCodesToString() {
+    StringBuilder sb = new StringBuilder("[");
+    for (int i = 0; i < parser.getParseResult().numberOfErrorMessages(); i++) {
+      if (i > 0) sb.append(", ");
+      ErrorMessage em = parser.getParseResult().getErrorMessage(i);
+      sb.append(em.getErrorType().getErrorCode());
+      sb.append("@L").append(em.getPosition().getLineNumber());
+    }
+    sb.append("]");
+    return sb.toString();
+  }
+
+  @Test
+  public void braceMismatch_extraOpenBrace() {
+    // Extra { on line 10 of the fixture
+    assertBraceMismatchErrorAtLine("2167_extraOpenBrace.ump", 1504, 10);
+  }
+
+  @Test
+  public void braceMismatch_missingCloseBrace() {
+    // Missing } at EOF — falls back to 1502 at construct start (line 1)
+    assertBraceMismatchErrorAtLine("2167_missingCloseBrace.ump", 1502, 1);
+  }
+
+  @Test
+  public void braceMismatch_extraCloseBrace() {
+    // Extra } at top level is caught by checkForUnintendedBracket (1016)
+    assertBraceMismatchError("2167_extraCloseBrace.ump", 1016);
+  }
+
+  @Test
+  public void braceMismatch_twoMalformedClasses() {
+    // Extra { on line 2 of class X
+    assertBraceMismatchErrorAtLine("2167_twoMalformedClasses.ump", 1504, 2);
+  }
+
+  @Test
+  public void braceMismatch_bracesInComments() {
+    // Extra { on line 4 (braces in comments on lines 2-3 are ignored)
+    assertBraceMismatchErrorAtLine("2167_bracesInComments.ump", 1504, 4);
+  }
+
+  @Test
+  public void braceMismatch_bracesInStrings() {
+    // Extra { on line 2
+    assertBraceMismatchErrorAtLine("2167_bracesInStrings.ump", 1504, 2);
+  }
+
+  @Test
+  public void braceMismatch_malformedThenValid() {
+    // Falls back to 1502 at construct start (line 1)
+    assertBraceMismatchErrorAtLine("2167_malformedThenValid.ump", 1502, 1);
+  }
+
+  @Test
+  public void braceMismatch_malformedWithInnerClass() {
+    // Extra { on line 3
+    assertBraceMismatchErrorAtLine("2167_malformedWithInnerClass.ump", 1504, 3);
+  }
+
+  @Test
+  public void braceMismatch_bodyMemberThenExtraBrace() {
+    // Body member "t;" followed by extra { on line 3
+    // Semicolon on toplevelException(t;) prevents false boundary
+    assertBraceMismatchErrorAtLine("2167_bodyMemberThenExtraBrace.ump", 1504, 3);
+  }
+
+  @Test
+  public void braceMismatch_missingOpenBrace() {
+    // Class without { — stray } is an unmatched closing brace
+    assertBraceMismatchErrorAtLine("2167_missingOpenBrace.ump", 1505, 3);
+  }
+
   @Test
   public void toplevelExtracode()
   {

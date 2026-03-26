@@ -777,12 +777,13 @@ Page.initCrudUi = function(tabnumber) {
   // Remember current container for inline CRUD panel rendering
   Page.currentCrudContainer = container;
 
-   // Add JSON persistence controls once per container
+  // Add JSON persistence controls once per container
   if (container.find(".crud-json-actions").length === 0) {
     var jsonHtml = "<div class='crud-json-actions' style='margin:6px 0 10px 0;'>" +
       "<button type='button' id='crud-generate-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Generate JSON</button>" +
       "<button type='button' id='crud-generate-random-data' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Generate Random Data</button>" +
-      "<button type='button' id='crud-load-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button'>Load JSON</button>" +
+    "<button type='button' id='crud-load-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Load JSON</button>" +
+    "<button type='button' id='crud-load-instance-diagram' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button'>Load as Instance Diagram</button>" +
       "<input type='file' id='crud-load-json-file' accept='application/json,.json' style='display:none;' />" +
       "</div>";
     container.prepend(jsonHtml);
@@ -852,6 +853,155 @@ Page.initCrudUi = function(tabnumber) {
       reader.readAsText(file);
       // Reset the input so the same file can be chosen again later
       jQuery(this).val("");
+    });
+
+    // Use the current CRUD instances as input to the Instance Diagram
+    // generator. This works by embedding a small JSON blob of per-class
+    // instance counts into the Umple source as a special comment, then
+    // invoking the InstanceDiagram generator with a custom suboption.
+    container.find("#crud-load-instance-diagram").off("click").on("click", function() {
+      if (typeof Page.getUmpleCode !== "function" || typeof Page.setUmpleCode !== "function") {
+        console.warn("Umple code accessors are unavailable; cannot load instance diagram from CRUD.");
+        return;
+      }
+
+      if (!Page.crudData || !Page.crudData.classes) {
+        Page.setFeedbackMessage && Page.setFeedbackMessage("No CRUD data available to build an instance diagram.");
+        return;
+      }
+
+      var counts = {};
+      var hasAny = false;
+      // Also build a lightweight snapshot of attribute values and
+      // association links per instance so the backend instance diagram
+      // can render exactly what the user sees in the CRUD UI instead
+      // of regenerating random attributes or links.
+      var instanceSnapshot = { instances: [], associations: [] };
+
+      var assocByClass = Page.crudAssociationsByClass || {};
+
+      Object.keys(Page.crudData.classes).forEach(function(className) {
+        var info = Page.crudData.classes[className] || {};
+        var instances = info.instances || [];
+        var count = instances.length || 0;
+        if (count > 0) {
+          counts[className] = count;
+          hasAny = true;
+        }
+
+        if (count > 0) {
+          var attrsMeta = info.attributes || [];
+          // Precompute attribute names for this class so we only
+          // capture real attributes, not internal association fields.
+          var attrNames = [];
+          attrsMeta.forEach(function(a) {
+            if (a && a.name) {
+              attrNames.push(a.name);
+            }
+          });
+
+          var assocEnds = assocByClass[className] || [];
+
+          instances.forEach(function(inst, idx) {
+            if (!inst) { return; }
+            var attrs = {};
+            attrNames.forEach(function(an) {
+              if (Object.prototype.hasOwnProperty.call(inst, an)) {
+                attrs[an] = inst[an];
+              }
+            });
+            instanceSnapshot.instances.push({
+              "class": className,
+              index: idx + 1, // 1-based to match instance diagram numbering
+              attrs: attrs
+            });
+
+            // Capture association links for this instance using the
+            // same index space (1-based) so the backend can build
+            // precise link matrices instead of random ones.
+            assocEnds.forEach(function(end) {
+              if (!end || end.fromClass !== className) { return; }
+              var fieldName = end.storageKey;
+              if (!fieldName) { return; }
+              var rawVal = inst[fieldName];
+              if (rawVal === undefined || rawVal === null || rawVal === "") {
+                return;
+              }
+
+              var multiple = true;
+              if (typeof end.toMax === "number" && end.toMax <= 1) {
+                multiple = false;
+              }
+
+              var targetIndices = [];
+              if (multiple) {
+                if (!Array.isArray(rawVal)) { return; }
+                rawVal.forEach(function(tIdx) {
+                  if (typeof tIdx === "number" && tIdx >= 0) {
+                    targetIndices.push(tIdx);
+                  }
+                });
+              } else {
+                if (typeof rawVal === "number" && rawVal >= 0) {
+                  targetIndices.push(rawVal);
+                }
+              }
+
+              if (targetIndices.length === 0) { return; }
+
+              targetIndices.forEach(function(tIdx) {
+                instanceSnapshot.associations.push({
+                  fromClass: className,
+                  fromIndex: idx + 1,
+                  toClass: end.toClass,
+                  toIndex: tIdx + 1
+                });
+              });
+            });
+          });
+        }
+      });
+
+      if (!hasAny) {
+        Page.setFeedbackMessage && Page.setFeedbackMessage("No instances exist in CRUD to build an instance diagram.");
+        return;
+      }
+
+      var originalCode = Page.getUmpleCode() || "";
+      // Remove any previous CRUD markers to avoid stale data.
+      var cleanedCode = originalCode
+        .replace(/^\/\/ @crudInstanceCounts .*$/gm, "")
+        .replace(/^\/\/ @crudInstanceData .*$/gm, "");
+
+      var jsonCountsText;
+      var jsonDataText;
+      try {
+        jsonCountsText = JSON.stringify(counts);
+        jsonDataText = JSON.stringify(instanceSnapshot);
+      } catch (e) {
+        console.error("Failed to serialize CRUD instance data:", e);
+        Page.setFeedbackMessage && Page.setFeedbackMessage("Unable to serialize CRUD data for instance diagram.");
+        return;
+      }
+
+      // Append markers as single-line comments. The backend will scan
+      // for these and interpret the JSON payloads.
+      var markerLineCounts = "// @crudInstanceCounts " + jsonCountsText;
+      var markerLineData = "// @crudInstanceData " + jsonDataText;
+      var sep = cleanedCode.length && !/\n$/.test(cleanedCode) ? "\n" : "";
+      var newCode = cleanedCode + sep + markerLineCounts + "\n" + markerLineData + "\n";
+
+      Page.setUmpleCode(newCode);
+
+      if (typeof Action !== "undefined" && typeof Action.generateCode === "function") {
+        // Ask the backend to generate an instance diagram using the
+        // CRUD-supplied counts. The compiler will translate
+        // "instanceDiagram.crudUseJson" into an InstanceDiagram
+        // generation with the -s crudUseJson suboption.
+        Action.generateCode("instanceDiagram", "instanceDiagram.crudUseJson");
+      } else {
+        console.warn("Action.generateCode is unavailable; cannot trigger instance diagram generation.");
+      }
     });
   }
 
@@ -2457,4 +2607,38 @@ Page.showCrudFromJson = function(jsonText, tabnumber) {
 
   // Enhance forms with clickable class headers and popup dialog per class
   Page.initCrudUi(tabnumber);
+
+  // If instance-data JSON has been prepared via the backend, import it
+  // now that the CRUD metadata and forms have been initialized.
+  if (Page._pendingCrudInstanceJson && typeof Page.crudJsonImportFromText === "function") {
+    try {
+      Page.crudJsonImportFromText(Page._pendingCrudInstanceJson);
+
+      // After import, automatically open a dialog for a class that
+      // actually has instances, preferring the current selection if
+      // one exists.
+      var targetClass = Page.crudClassSelected || null;
+      if (!targetClass && Page.crudData && Page.crudData.classes) {
+        Object.keys(Page.crudData.classes).some(function(cn) {
+          var info = Page.crudData.classes[cn] || {};
+          if (info.isAbstract) { return false; }
+          var inst = info.instances || [];
+          if (inst.length > 0) {
+            targetClass = cn;
+            return true;
+          }
+          return false;
+        });
+      }
+
+      if (targetClass && typeof Page.openCrudDialogForClass === "function") {
+        Page.crudClassSelected = targetClass;
+        Page.openCrudDialogForClass(targetClass);
+      }
+    } catch (e) {
+      console.error("Failed to import CRUD instances from pending instance-diagram JSON:", e);
+    } finally {
+      Page._pendingCrudInstanceJson = null;
+    }
+  }
 };

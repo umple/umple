@@ -221,7 +221,9 @@
 1500 : 1, "https://manual.umple.org/?E15xxParsingError.html", Parsing error: '{0}' not understood ; 
 1501 : 1, "https://manual.umple.org/?E15xxParsingError.html", Parsing error: Arguments to '{0}' not understood ; 
 1502 : 1, "https://manual.umple.org/?E15xxParsingError.html", Parsing error: Structure of '{0}' invalid ;
-1503 : 1, "https://manual.umple.org/?E15xxParsingError.html", Parsing error: {0}, did you mean {1} ;  
+1503 : 1, "https://manual.umple.org/?E15xxParsingError.html", Parsing error: {0}, did you mean {1} ;
+1504 : 1, "https://manual.umple.org/?E15xxParsingError.html", Parsing error: Unmatched opening brace in '{0}' ;
+1505 : 1, "https://manual.umple.org/?E15xxParsingError.html", Parsing error: Unmatched closing brace in '{0}' ;
 1510 : 3, "https://manual.umple.org/?E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
 
 1511 : 2, "https://manual.umple.org/?E1511InlineMixsetIsNotSupported.html", Inline syntax for the mixset '{0}' is not supported. Please enclose the body of '{0}' with curly brackets. ; 
