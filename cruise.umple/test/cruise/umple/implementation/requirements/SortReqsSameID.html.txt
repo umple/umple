@@ -1,8 +1,8 @@
 <html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from SortReqsSameID.ump
-</p><p><b>R1: requirement 1.</b>
+</p><p><b>A01: z requirement.</b>
 </p><p>&nbsp; <b>IMPLEMENTED BY:</b> 
-</p><p>&nbsp;&nbsp;&nbsp;&nbsp; - Class: Example (SortReqsSameID.ump line 10)
-</p><p><b>R1: requirement 2.</b>
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; - Class: Example (line 10)
+</p><p><b>A02: a is a second requirement statement.</b>
 </p><p>&nbsp; <b>IMPLEMENTED BY:</b> 
-</p><p>&nbsp;&nbsp;&nbsp;&nbsp; - Class: Example (SortReqsSameID.ump line 10)
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp; - Class: Example (line 10)
 </p></html>
