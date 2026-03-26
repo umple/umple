@@ -81,9 +81,9 @@ function AjaxSender(aUrl,aCallback,aPostData)
   
     http.onreadystatechange = 
       function () {
+        // The ready state will always be 4 after request ends. Whatever error or not.
+        if (http.readyState !== 4) { return; }
         try{
-          // The ready state will always be 4 after request ends. Whatever error or not.
-          if (http.readyState !== 4) { return; }
           if (http.status !== 200 && http.status !== 304) { return; }
           // There is no error callback? Looks like the code here don't want to run callback if the status is not success.
           // Keep this behavior here currently
