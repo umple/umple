@@ -598,8 +598,7 @@ $output = $dataHandle->readData('model.ump');
 
   </select>
 </span>
- 
-    &nbsp; 
+     &nbsp; 
     <span style="font-size: 30%">
     <a id="SHT_button" class="button2 active" href="javascript:Page.clickShowHideText()">T</a>&nbsp;
     <a id="SHD_button" class="button2 active" href="javascript:Page.clickShowHideCanvas()">D</a>&nbsp;
