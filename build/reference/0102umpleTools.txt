@@ -22,7 +22,7 @@ and compile sets of .ump files.</p>
 
 <ul class="big-coloured-bullets">
 
-<li><b style="background-color: #A7593D; padding: 2px; color: white">UmpleOnline.</b> <a href="https://try.umple.org">UmpleOnline</a> 
+<li><a href="https://try.umple.org"><b style="background-color: #A7593D; padding: 2px; color: white">UmpleOnline.</b> UmpleOnline</a> 
 allows you to instantly experiment with Umple on the web. You can explore 
 examples or create your own and save them in the "cloud". You can generate 
 diagrams, code in several languages and several other outputs. <a href="UsingUmpleOnline.html">The UmpleOnline
@@ -32,13 +32,28 @@ can be run locally on your machine by using a Docker image. <a href="https://hub
 
 <br />&nbsp;<br />
 
-<li><b style="background-color: #A7593D; padding: 2px; color: white">Visual Studio Code plugin</b>. This plugin allows basic <a href="https://marketplace.visualstudio.com/items?itemName=digized.umple">editing and compilation of Umple in Visual Studio Code</a>. This will be replaced by a superior plugin soon.</li>
+<li><a href="https://marketplace.visualstudio.com/items?itemName=digized.umple"> <b style="background-color: #A7593D; padding: 2px; color: white">Visual Studio Code plugin</b>. This plugin, available in the VSCode marketplace, allows full-featured editing and compilation of Umple, including displaying of diagrams.</a>. It includes Language Server Protocol support. <a href="VSCode.html">See also the VSCode page in this user manual</a>. </li>
 
 <br />&nbsp;<br />
 
-<li><b style="background-color: #A7593D; padding: 2px; color: white">Zed text editor plugin</b>. <a href="Zed.html">See the Zed page in this user manual.</a>.</li>
+<li><a href="BBedit.html"><b style="background-color: #A7593D; padding: 2px; color: white">BBEdit tool support</b>. See the BBEdit page in this user manual.</a>. It includes Language Server Protocol support.</li>
 
 <br />&nbsp;<br />
+
+
+<li><a href="Zed.html"><b style="background-color: #A7593D; padding: 2px; color: white">Zed text editor plugin</b>. See the Zed page in this user manual.</a>.  It includes Language Server Protocol support.</li>
+
+<br />&nbsp;<br />
+
+<li><a href="Neovim.html"><b style="background-color: #A7593D; padding: 2px; color: white">Neovim text editor plugin</b>. See the Neovim page in this user manual.</a>.  It includes Language Server Protocol support.</li>
+
+<br />&nbsp;<br />
+
+
+<li><a href="Sublime.html"><b style="background-color: #A7593D; padding: 2px; color: white">Sublime text editor support</b>. See the Sublime page in this user manual.</a>.  It includes Language Server Protocol support.</li>
+
+<br />&nbsp;<br />
+
 
 
 <li><b style="background-color: #A7593D; padding: 2px; color: white">Command-line based compiler</b> You can use Umple from the 
@@ -85,15 +100,11 @@ Note that homebrew will try to install openjdk as a dependency in homebrew first
 <p>The command line compiler can handle thousands of files and millions of lines of Umple code if needed (Umple is written in itself, demonstrating this works well). The command line compiler can be incorporated into product toolchains using technology like Gradle or ant.</p>
 
 
-&nbsp;<br />&nbsp;<br />
-
-<li><b style="background-color: #A7593D; padding: 2px; color: white">Sublime plugin</b>. Try this <a href="https://github.com/umple/umple.sublime">Umple Plugin if you use Sublime Text</a>.</li>
-
 <br />&nbsp;<br />
 
 <li><b style="background-color: #A7593D; padding: 2px; color: white">Eclipse plugin</b> To use Umple with Eclipse, you need to load an Umple 
-Eclipse plugin. This can be obtained from our <a 
-href="https://umple.org/dl">downloads site</a>. It has not been maintained recently and support may be dropped.</li>
+Eclipse plugin. This can be obtained by pointing Eclipse at our <a 
+href="org.cruise.umple.eclipse.plugin.update.site/site.xml ">update site</a>. It has not been maintained recently and support may be dropped.</li>
 
 
 &nbsp;<br />&nbsp;<br />
