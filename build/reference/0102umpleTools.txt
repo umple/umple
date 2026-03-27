@@ -36,7 +36,7 @@ can be run locally on your machine by using a Docker image. <a href="https://hub
 
 <br />&nbsp;<br />
 
-<li><a href="BBedit.html"><b style="background-color: #A7593D; padding: 2px; color: white">BBEdit tool support</b>. See the BBEdit page in this user manual.</a>. It includes Language Server Protocol support.</li>
+<li><a href="BBEdit.html"><b style="background-color: #A7593D; padding: 2px; color: white">BBEdit tool support</b>. See the BBEdit page in this user manual.</a>. It includes Language Server Protocol support.</li>
 
 <br />&nbsp;<br />
 
