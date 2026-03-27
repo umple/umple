@@ -1,0 +1,85 @@
+#!/bin/bash
+# Start the LSP proxy for local UmpleOnline development (php -S).
+# This is a local developer convenience — Docker is the fully supported path.
+#
+# Prerequisites:
+#   - Node.js (18+)
+#   - umple-lsp-server@0.2.6: npm install -g umple-lsp-server@0.2.6
+#   - lsp-proxy deps: cd umpleonline/scripts/lsp-proxy && npm ci
+#   - umplesync.jar in umpleonline/scripts/ (built via ant packageJars)
+#
+# Usage:
+#   Terminal 1: dev-tools/startlsp
+#   Terminal 2: UMPLE_LSP_WS_URL=ws://127.0.0.1:9999 php -S localhost:8001
+#   Browser:    http://localhost:8001/umpleonline/umple.php
+
+set -e
+
+UMPLEROOT="$(cd "$(dirname "$0")/.." && pwd)"
+LSP_PORT="${LSP_PORT:-9999}"
+REQUIRED_LSP_VERSION="0.2.6"
+
+# --- Preflight checks ---
+
+# Node.js
+if ! command -v node &>/dev/null; then
+  echo "ERROR: Node.js is required but not found."
+  echo "  Install: brew install node (macOS) or apt install nodejs (Linux)"
+  exit 1
+fi
+
+# umple-lsp-server with version check
+if ! command -v umple-lsp-server &>/dev/null; then
+  echo "ERROR: umple-lsp-server is not installed."
+  echo "  Install: npm install -g umple-lsp-server@${REQUIRED_LSP_VERSION}"
+  exit 1
+fi
+
+INSTALLED_VERSION=$(npm list -g umple-lsp-server --depth=0 --json 2>/dev/null \
+  | node -e "try{var d=JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));console.log(d.dependencies['umple-lsp-server'].version)}catch(e){}" 2>/dev/null)
+if [ -z "$INSTALLED_VERSION" ]; then
+  echo "ERROR: Could not detect umple-lsp-server version."
+  echo "  Install: npm install -g umple-lsp-server@${REQUIRED_LSP_VERSION}"
+  exit 1
+elif [ "$INSTALLED_VERSION" != "$REQUIRED_LSP_VERSION" ]; then
+  echo "ERROR: umple-lsp-server version mismatch."
+  echo "  Installed: ${INSTALLED_VERSION}"
+  echo "  Required:  ${REQUIRED_LSP_VERSION}"
+  echo "  Fix: npm install -g umple-lsp-server@${REQUIRED_LSP_VERSION}"
+  exit 1
+fi
+
+# lsp-proxy dependencies
+if [ ! -d "$UMPLEROOT/umpleonline/scripts/lsp-proxy/node_modules" ]; then
+  echo "Installing lsp-proxy dependencies..."
+  cd "$UMPLEROOT/umpleonline/scripts/lsp-proxy"
+  npm ci --production
+  cd "$UMPLEROOT"
+fi
+
+# umplesync.jar
+if [ ! -f "$UMPLEROOT/umpleonline/scripts/umplesync.jar" ]; then
+  echo "ERROR: umpleonline/scripts/umplesync.jar not found."
+  echo "  Build it: cd build && ant -Dmyenv=local -f build.umple.xml packageSyncJar"
+  exit 1
+fi
+
+# --- Start proxy ---
+
+export UMP_BASE_DIR="$UMPLEROOT/umpleonline/ump"
+export LSP_DEV_AUTH=1
+export LSP_PORT
+export UMPLESYNC_JAR_PATH="$UMPLEROOT/umpleonline/scripts/umplesync.jar"
+
+echo "=== UmpleOnline LSP Proxy ==="
+echo "Listening on ws://127.0.0.1:${LSP_PORT}"
+echo ""
+echo "In another terminal, run:"
+echo "  cd $UMPLEROOT"
+echo "  UMPLE_LSP_WS_URL=ws://127.0.0.1:${LSP_PORT} php -S localhost:8001"
+echo ""
+echo "Then open: http://localhost:8001/umpleonline/umple.php"
+echo "Press Ctrl-C to stop."
+echo ""
+
+exec node "$UMPLEROOT/umpleonline/scripts/lsp-proxy/server.js"

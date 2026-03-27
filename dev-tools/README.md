@@ -81,3 +81,11 @@ For developers
   
  startexecdocker
    - Restarts the docker image for umpleonline ... done by pumple so not normally needed to be separately run
+
+ startlsp
+   - Starts the LSP proxy for local UmpleOnline development (php -S)
+   - Provides real-time diagnostics, go-to-definition, rename, etc. in the editor
+   - Requires: Node.js 18+, umple-lsp-server@0.2.6, umplesync.jar
+   - Usage: run dev-tools/startlsp in one terminal, then
+     UMPLE_LSP_WS_URL=ws://127.0.0.1:9999 php -S localhost:8001 in another
+   - Docker users get LSP automatically (no need for this script)
