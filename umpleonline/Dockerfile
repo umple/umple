@@ -9,6 +9,8 @@ FROM --platform=linux/amd64 umple/umpleonline-base:latest
 COPY docker_config/supervisord.conf /etc/supervisord.conf
 COPY docker_config/nginx.conf /etc/nginx/conf.d/default.conf
 COPY docker_config/php-fpm.conf /etc/php7/php-fpm.d/php-fpm.conf
+COPY docker_config/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # For some reason javadoc (and a bunch of other java stuff that
 # is usually available) was not in the search path. This adds
@@ -32,8 +34,11 @@ RUN adduser  -D -H -S docker -G docker \
 # make sure the php files are readable and log files are writable
 # Windows EXE files are being removed
 # as they were triggering certain security warnings
-RUN chown -R :nginx /var/www && \
+RUN mkdir -p /var/www/ump && \
+    chown -R :nginx /var/www && \
     chmod -R g+r /var/www && \
+    chown -R php:nginx /var/www/ump && \
+    chmod -R 770 /var/www/ump && \
     chown -R :nginx /run && \
     chmod -R g+rw /run  && \
     chown -R :nginx /var/run && \
@@ -41,7 +46,7 @@ RUN chown -R :nginx /var/www && \
     chown -R :nginx /var/log && \
     chmod -R g+rw /var/log && \
     chown -R :nginx /var/cache && \
-    chmod -R g+rw /var/cache 
+    chmod -R g+rw /var/cache
 
 # Recently removed the following from the above, since they had been removed from the image
 #&& \
@@ -52,5 +57,5 @@ RUN chown -R :nginx /var/www && \
 #USER nginx:nginx
 
 # this is what runs on container startup
-CMD supervisord --nodaemon --configuration=/etc/supervisord.conf --logfile=/var/log/supervisord.log --pidfile=/var/log/supervisord.pid
+CMD ["/entrypoint.sh"]
 
