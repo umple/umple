@@ -714,6 +714,11 @@ Action.loadFileCallback = function(response)
     Action.updateUmpleDiagram();
     Action.freshLoad = false;
   }
+
+  // LSP: bootstrap after real content is loaded into editor
+  if (typeof Page !== "undefined" && Page.initLspAsync) {
+    Page.initLspAsync();
+  }
 }
 
 Action.loadTask = function(taskName, isBookmark)
@@ -933,10 +938,15 @@ Action.saveNewFile = function()
 {
   var umpleCode = Page.getUmpleCode();
   var filename = Page.getFilename();
-  
+
   if (filename == "")
   {
     Ajax.sendRequest("scripts/compiler.php",Action.saveNewFileCallback,format("save=1&&umpleCode={0}",umpleCode));
+  }
+
+  // LSP: bootstrap for new blank sessions (loadFileCallback doesn't fire)
+  if (typeof Page !== "undefined" && Page.initLspAsync) {
+    Page.initLspAsync();
   }
 }
 

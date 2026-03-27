@@ -1227,6 +1227,27 @@ $output = $dataHandle->readData('model.ump');
 
   <script src="scripts/theme-toggle.js"></script>
 
+  <?php
+  // LSP configuration — generate signed token for WebSocket proxy auth
+  $lspWsUrl = getenv('UMPLE_LSP_WS_URL') ?: '';
+  $lspAuthSecret = getenv('LSP_AUTH_SECRET') ?: '';
+  $lspToken = '';
+  $lspModelId = $dataHandle->getName();
+  if ($lspWsUrl && !$readOnly && $lspModelId) {
+    $mode = 'editable';
+    $expiry = (string)(time() * 1000 + 300000); // 5 min from now in ms
+    $payload = $lspModelId . ':' . $mode . ':' . $expiry;
+    $sig = hash_hmac('sha256', $payload, $lspAuthSecret);
+    $lspToken = rtrim(strtr(base64_encode($payload . ':' . $sig), '+/', '-_'), '=');
+  }
+  ?>
+
+  <script>
+  window.UMPLE_LSP_WS_URL = "<?php echo htmlspecialchars($lspWsUrl, ENT_QUOTES) ?>";
+  window.UMPLE_LSP_TOKEN = "<?php echo htmlspecialchars($lspToken, ENT_QUOTES) ?>";
+  window.UMPLE_UMP_BASE = "<?php echo htmlspecialchars(rootDir() . '/ump', ENT_QUOTES) ?>";
+  </script>
+
   <script>
     Page.init(
       <?php if($showDiagram) { ?> true  <?php } else { ?> false <?php } ?>,

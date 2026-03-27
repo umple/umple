@@ -16,12 +16,29 @@ COPY docker_config/php-fpm.conf /etc/php7/php-fpm.d/php-fpm.conf
 # This is now commented out since seems no longer to be needed
 #RUN ln -s /usr/lib/jvm/default-jvm/bin/javadoc /usr/bin/javadoc
 
+# Install Node.js for LSP proxy and LSP server
+# Node 16 (Alpine 3.15 default) fails to load tree-sitter WASM;
+# nodejs-current provides Node 18+ which works
+RUN apk add --no-cache nodejs-current npm
+
+# Install umple-lsp-server globally (pinned version for reproducible builds)
+RUN npm install -g umple-lsp-server@0.2.6
+
+# LSP is enabled by default. To disable, set UMPLE_LSP_WS_URL=""
+# For production: set LSP_AUTH_SECRET to a random string (HMAC token auth)
+# For local dev: LSP_DEV_AUTH=1 skips auth (set in supervisord.conf)
+ENV UMPLE_LSP_WS_URL="/lsp"
+ENV LSP_AUTH_SECRET=""
+
 # Save the branch so it can be accessed internally
 ARG gitbranch
 RUN echo $gitbranch > /tmp/umplegitbranch.txt
 
 # copy over the website data
 COPY . /var/www
+
+# Install LSP proxy dependencies
+RUN cd /var/www/scripts/lsp-proxy && npm ci --production --ignore-scripts
 RUN mv /var/www/UmpleCodeExecution /var
 RUN sed 's/\(umplePath=\)umpleonline\/ump/\1\/var\/www\/ump/;s/_execution/_executionint/;s/portToUse=4400/portToUse=4409/' /var/UmpleCodeExecution/config.cfg.template > /var/UmpleCodeExecution/config.cfg
 

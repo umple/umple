@@ -1,0 +1,15 @@
+{
+  "name": "umple-lsp-proxy",
+  "version": "1.0.0",
+  "description": "WebSocket proxy bridging browser LSP clients to umple-lsp-server via stdio",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.16.0"
+  }
+}

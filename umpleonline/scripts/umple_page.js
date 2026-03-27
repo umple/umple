@@ -728,7 +728,44 @@ Page.initCodeMirrorEditor = function() {
           effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
       });
   }
-      
+
+  // LSP initialization — called from TabControl.loadAllTabsCallback after tabs are settled
+  Page.initLspAsync = function() {
+    if (!window.UMPLE_LSP_WS_URL || Page.readOnly) return;
+
+    var modelId = Page.getModel();
+    var activeTabName = (TabControl.activeTab && TabControl.activeTab.name) || "model";
+    var umpBasePath = window.UMPLE_UMP_BASE || "/var/www/ump";
+
+    cm6.initLsp(Page.codeMirrorEditor6, {
+      wsUrl: window.UMPLE_LSP_WS_URL,
+      token: window.UMPLE_LSP_TOKEN || "",
+      modelId: modelId,
+      umpBasePath: umpBasePath,
+      activeTabName: activeTabName
+    }).then(function(success) {
+      if (!success) return;
+      // Seed all inactive tabs as passive files for cross-file rename/refs
+      for (var tabId in TabControl.tabs) {
+        var tab = TabControl.tabs[tabId];
+        if (tab !== TabControl.activeTab) {
+          var filename = TabControl.getTabFilename(tab.name);
+          var content = localStorage[filename] || "";
+          cm6.lspAddPassiveFile(tab.name, content);
+        }
+      }
+    }).catch(function(err) {
+      console.warn("[lsp] Init failed:", err);
+    });
+  };
+
+  // Reconnect hook — called by editor.mjs on WebSocket drop
+  window.umpleLspReconnect = function() {
+    if (!window.UMPLE_LSP_WS_URL || Page.readOnly) return;
+    cm6.disconnectLsp();
+    Page.initLspAsync();
+  };
+
   // Sets CodeMirror 6 text; optionally skip debounced typing processing.
   Page.setCodeMirror6Text = function (textToSet, skipDebouncedTyping) {
     var dispatchPayload = { 
