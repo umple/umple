@@ -1229,7 +1229,9 @@ $output = $dataHandle->readData('model.ump');
 
   <?php
   // LSP configuration — generate signed token for WebSocket proxy auth
-  $lspWsUrl = getenv('UMPLE_LSP_WS_URL') ?: '';
+  // Docker sets this to "/lsp" (nginx proxy). For local php -S dev,
+  // fall back to the default lsp-proxy port on loopback.
+  $lspWsUrl = getenv('UMPLE_LSP_WS_URL') ?: 'ws://127.0.0.1:9999';
   $lspAuthSecret = getenv('LSP_AUTH_SECRET') ?: '';
   $lspToken = '';
   $lspModelId = $dataHandle->getName();
