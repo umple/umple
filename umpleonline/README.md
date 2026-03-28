@@ -65,7 +65,7 @@ LSP requires a separate proxy process. If it's not running, the editor works nor
 
 ```bash
 # Prerequisites (one-time):
-npm install -g umple-lsp-server@0.2.6
+npm install -g umple-lsp-server@0.2.7
 cd umpleonline/scripts/lsp-proxy && npm ci --production && cd ../../..
 
 # Terminal 1: start LSP proxy

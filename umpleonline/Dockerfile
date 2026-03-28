@@ -22,7 +22,7 @@ COPY docker_config/php-fpm.conf /etc/php7/php-fpm.d/php-fpm.conf
 RUN apk add --no-cache nodejs-current npm
 
 # Install umple-lsp-server globally (pinned version for reproducible builds)
-RUN npm install -g umple-lsp-server@0.2.6
+RUN npm install -g umple-lsp-server@0.2.7
 
 # LSP is enabled by default. To disable, set UMPLE_LSP_WS_URL=""
 # For production: set LSP_AUTH_SECRET to a random string (HMAC token auth)

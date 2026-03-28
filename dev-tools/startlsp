@@ -4,7 +4,7 @@
 #
 # Prerequisites:
 #   - Node.js (18+)
-#   - umple-lsp-server@0.2.6: npm install -g umple-lsp-server@0.2.6
+#   - umple-lsp-server@0.2.7: npm install -g umple-lsp-server@0.2.7
 #   - lsp-proxy deps: cd umpleonline/scripts/lsp-proxy && npm ci
 #   - umplesync.jar in umpleonline/scripts/ (built via ant packageJars)
 #
@@ -17,7 +17,7 @@ set -e
 
 UMPLEROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LSP_PORT="${LSP_PORT:-9999}"
-REQUIRED_LSP_VERSION="0.2.6"
+REQUIRED_LSP_VERSION="0.2.7"
 
 # --- Preflight checks ---
 
