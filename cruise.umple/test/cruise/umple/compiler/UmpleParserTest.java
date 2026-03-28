@@ -270,6 +270,13 @@ public class UmpleParserTest
 	  assertParse("001_emptyComment.ump");
 	  Assert.assertEquals(1, model.numberOfUmpleClasses());
   }
+  
+  @Test
+   public void pythonStyleEmptyComment()
+   {
+ 	  assertParse("001_pythonStyleEmptyComment.ump");
+ 	  Assert.assertEquals(1, model.numberOfUmpleClasses());
+   }
 
   @Test
   public void multipleEmptyComments()
@@ -395,6 +402,13 @@ public class UmpleParserTest
   }
 
   @Test
+  public void pythonStyleAttributeInlineComment()
+  {
+ 	  assertParse("001_pythonStyleAttributeInlineComment.ump");
+ 	  Assert.assertEquals(1, model.getUmpleClass(0).getAttribute(0).numberOfComments());
+   }
+  
+  @Test
   public void attributeMultilineComment()
   {
 	  assertParse("001_attributeMultilineComment.ump");
@@ -417,6 +431,13 @@ public class UmpleParserTest
   public void associationInlineComment()
   {
 	  assertParse("001_associationInlineComment.ump");
+	  Assert.assertEquals(1, model.getUmpleClass(0).getAssociationVariable(0).numberOfComments());
+  }
+
+  @Test
+  public void pythonStyleAssociationInlineComment()
+  {
+ 	  assertParse("001_pythonStyleAssociationInlineComment.ump");
 	  Assert.assertEquals(1, model.getUmpleClass(0).getAssociationVariable(0).numberOfComments());
   }
 
