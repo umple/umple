@@ -28,6 +28,7 @@ class PlainRequirementsDocGenerator
   HtmlDocument doc = new HtmlDocument(true);
 
   void generate(){
+	doc.createParagraphElement("<style>.impl { color: #555; margin-left: 30px; font-size: 0.9em; }</style>", false);
     doc.createParagraphElement("Plain Requirements Doc from "+model.getUmpleFile().getSimpleFileName()+".ump", false);
     UmpleModelWalker walker = new UmpleModelWalker(model);
     // Intializing the TreeSet
@@ -47,58 +48,320 @@ class PlainRequirementsDocGenerator
     boolean hasreqHideNotImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqHideNotImpl");
 	boolean hasreqOnlyImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqOnlyImpl");
     boolean hasreqOnlyNotImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqOnlyNotImpl");
+	boolean hasreqHideStatus = model.modelHasSuboption("PlainRequirementsDoc", "reqHideStatus");
     // Assigning a variable to hold the filename so it can be output in the implemented by section
     String fileName = model.getUmpleFile().getSimpleFileName()+".ump";
     // Loop through the sorted reqs in the TreeSet and check if they have an implementation
     List<ReqImplementation> ReqImp = new ArrayList<ReqImplementation>(); 
     ReqImp = model.getReqImplementations();
-    for (Requirement req : ReqTreeSet) {
-    boolean isImplemented = req.hasReqImplementations();
-
-    // --- NEW: FILTERING LOGIC FOR SUB-OPTIONS -s ---
-    if (hasreqOnlyImpl && !isImplemented) continue; // Skip if we only want implemented requirements
-    if (hasreqOnlyNotImpl && isImplemented) continue; // Skip if we only want non-implemented requirements
-    if (hasreqHideNotImpl && !isImplemented) continue; // Skip non-implemented requirements (existing option)
-
-    // If we haven't "continued", we display the requirement
-    String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
-    mainReqText = linkifyHttpUrls(mainReqText);
-    doc.createParagraphElement("<b>" + req.getIdentifier() + ": " + mainReqText + "</b>", false);
-    
-    // Check if the requirement is implemented
-    if(isImplemented) {
-        doc.createParagraphElement("&nbsp; <b>IMPLEMENTED BY:</b> ", false);
-        TreeSet<String> uniqueImpls = new TreeSet<String>();
-
-        for (UmpleClass aClass : getModel().getUmpleClasses()) {
-            for(ReqImplementation reqImplem : req.getReqImplementations()) {
-                // Check if the entire class implements the requirement
-                if(aClass.getReqImplementations().contains(reqImplem)) {
-                    uniqueImpls.add("Class: " + aClass.getName() + " (line " + aClass.getPosition(0).getLineNumber() + ")");
+    for (Requirement req : ReqTreeSet){
+		//MIXSET LOGIC: if the requirement is associated with a mixset or file that is not used, it should not be included in the output
+		if (req.getMixsetOrFile() != null && !req.getMixsetOrFile().getIsUsed()) {
+            continue;
+        }
+		// FILTERING LOGIC FOR -s SUBOPTIONS
+		boolean isImplemented = req.hasReqImplementations();
+		if (hasreqOnlyImpl && !isImplemented) continue; 
+		if (hasreqOnlyNotImpl && isImplemented) continue;
+    	if (req.hasReqImplementations() || !hasreqHideNotImpl) {
+    	  // Below string stores the requirement statement and language and translates to html
+				String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+				mainReqText = linkifyHttpUrls(mainReqText);
+				doc.createParagraphElement("<b>" + req.getIdentifier() + ": " + mainReqText + "</b>", false);
+    	  // Check if the requirement is implemented
+          if(req.hasReqImplementations()) {
+			if(!hasreqHideStatus) {
+                    doc.createParagraphElement("&nbsp;"+" IMPLEMENTED BY: ", false);
                 }
-                // Check if specific attributes implement the requirement
-                for (Attribute att : aClass.getAttributes()) {
-                    if(att.getReqImplementations().contains(reqImplem)) {
-                        uniqueImpls.add("Attribute: " + att.getName() + " in " + aClass.getName() + " (line " + att.getPosition().getLineNumber() + ")");
-                    }
-                }
-                // Check if specific methods implement the requirement
-                for (Method meth : aClass.getMethods()) {
-                    if(meth.getReqImplementations().contains(reqImplem)) {
-                        uniqueImpls.add("Method: " + meth.getName() + " in " + aClass.getName() + " (line " + meth.getPosition().getLineNumber() + ")");
-                    }
+            // Append the text with this prompt
+            doc.createParagraphElement("<div class='impl'>", false);
+            // Loop through classes to check for attributes that have implementations
+            for (UmpleClass aClass : getModel().getUmpleClasses())
+   	    {
+   	      for(ReqImplementation classimps : aClass.getReqImplementations())
+   	      {
+   	        for(ReqImplementation reqimps : req.getReqImplementations())
+   	        {
+   	          if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	          {
+		     String classText= ""; 
+		     int classLine=0;
+	             String lineNum="";
+	             for (ReqImplementation reqImpl : ReqImp)
+	            {
+	              if(reqImpl == classimps){
+                      classLine = aClass.getPosition(0).getLineNumber();
+                      }
+	            }
+	            if (aClass instanceof AssociationClass) {
+	             
+	               for(Association ass : aClass.getAssociations())
+                        {
+			   AssociationEnd myEnd = ass.getIsRightNavigable() ? ass.getEnd(0) : ass.getEnd(1);
+		           AssociationEnd theirEnd = ass.getIsRightNavigable() ? ass.getEnd(1) : ass.getEnd(0);
+		           String arrowDirection ="";
+			   if(ass.isIsRightNavigable() && ass.isIsLeftNavigable())
+			   {
+			     arrowDirection = "--"; 
+			   }
+			   else if(ass.isIsLeftNavigable())
+			   {
+			     arrowDirection = "<-";
+			   }
+			   else if(ass.isIsRightNavigable())
+			   {
+			      arrowDirection = "->";
+			   }
+		           String assoStruct = StringFormatter.format("  {0} {1} {5} {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(),theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName(),arrowDirection);
+		           //assoLine = ass.getTokenPosition().getLineNumber();
+			   classText = "&nbsp;"+"&nbsp;"+"association class:"+"&nbsp;"+assoStruct+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+classLine+ " ; ";
+	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false);
+	             }
+	            }
+	            else{
+	              classText = "&nbsp;"+"&nbsp;"+"class:"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+"&nbsp;"+ classLine+ " ; ";
+	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false);
+	            }
+		  }
+   	        }
+   	      
+   	      }
+	      for (Attribute att : aClass.getAttributes())
+	      { 
+	        for(ReqImplementation classimps : att.getReqImplementations())
+   	        {
+   	        for(ReqImplementation reqimps : req.getReqImplementations())
+   	        {
+   	          if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	          {
+	             String attrText= ""; 
+	             int attLine=0;
+	             if(att.hasReqImplementations()){
+	              for (ReqImplementation reqImpl : ReqImp)
+	              {
+	                if(reqImpl == classimps){
+                        attLine = att.getPosition().getLineNumber();
+                        }
+	              }
+	             attrText = "&nbsp;"+"&nbsp;"+"attribute:"+"&nbsp;"+att.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+ attLine+ " ; ";
+	             doc.createParagraphElement("&nbsp;"+"&nbsp;"+attrText, false);
+	              }
+	           }
+	         }
+	        }  
+	      }
+	      // Loop through classes to check for state machines that have implementations
+	      for (StateMachine sm : aClass.getStateMachines())
+	      { 
+	        for(ReqImplementation classimps : sm.getReqImplementations())
+   	        {
+   	          for(ReqImplementation reqimps : req.getReqImplementations())
+   	          {
+   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            {
+	              String smText= ""; 
+	              int smLine=0;
+	                for (ReqImplementation reqImpl : ReqImp)
+	                {
+	                  if(reqImpl.getIdentifier() == classimps.getIdentifier()){
+                          smLine = sm.getPosition().getLineNumber();
+                          }
+	                }
+	               smText = "&nbsp;"+"&nbsp;"+"state machine:"+"&nbsp;"+sm.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+"&nbsp;"+smLine+ " ; ";
+	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+smText, false);
+	            }
+	          }
+	        }
+	      }
+	      // Loop through classes to check for associations that have implementations
+	      for (AssociationVariable as : aClass.getAssociationVariables())
+	      {
+	        for(ReqImplementation classimps : as.getReqImplementations())
+   	        {
+   	          for(ReqImplementation reqimps : req.getReqImplementations())
+   	          {
+   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            {
+	              String assoText= ""; 
+	              int assoLine=0;
+	                for(Association ass : aClass.getAssociations())
+                        {
+			   AssociationEnd myEnd = ass.getIsRightNavigable() ? ass.getEnd(0) : ass.getEnd(1);
+		           AssociationEnd theirEnd = ass.getIsRightNavigable() ? ass.getEnd(1) : ass.getEnd(0);
+		           String arrowDirection ="";
+			   if(ass.isIsRightNavigable() && ass.isIsLeftNavigable())
+			   {
+			     arrowDirection = "--"; 
+			   }
+			   else if(ass.isIsLeftNavigable())
+			   {
+			     arrowDirection = "<-";
+			   }
+			   else if(ass.isIsRightNavigable())
+			   {
+			      arrowDirection = "->";
+			   }
+		           String assoStruct = StringFormatter.format("  {0} {1} {5} {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(),theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName(),arrowDirection);
+		           assoLine = ass.getTokenPosition().getLineNumber();
+			   assoText = "&nbsp;"+"&nbsp;"+"association:"+"&nbsp;"+assoStruct+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+assoLine+ " ; ";
+	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+assoText, false);
+	             }
+	           }
+	         }
+	       }
+	      }
+	      // Loop through classes to check for methods that have implementations
+	       for(Method me : aClass.getMethods())
+	       { 
+	         for(ReqImplementation classimps : me.getReqImplementations())
+   	         {
+   	          for(ReqImplementation reqimps : req.getReqImplementations())
+   	          {
+   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            {
+	              String meText= ""; 
+	              int meLine=0;
+	              for (ReqImplementation reqImpl : ReqImp)
+	              {
+	                 if(reqImpl == classimps){
+                         meLine = me.getPosition().getLineNumber();
+                       }
+	              }
+	           meText = "&nbsp;"+"&nbsp;"+"method:"+"&nbsp;"+me.getName()+"&nbsp;"+"class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+meLine+ " ; ";
+	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+meText, false);
+                     }
+                   }
+                 }
+               }
+	     }
+	    // Loop through model to check for traits that have implementations
+	    for(UmpleTrait tr : model.getUmpleTraits())
+	    {
+	       for(ReqImplementation classimps : tr.getReqImplementations())
+   	         {
+   	            for(ReqImplementation reqimps : req.getReqImplementations())
+   	            {
+   	              if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	              {
+	                String trText= ""; 
+	                int traitLine=0;
+	                for (ReqImplementation reqImpl : ReqImp)
+	                {
+	                  if(reqImpl == classimps){
+                            traitLine = tr.getPosition(0).getLineNumber();
+                          }
+	                }
+	           trText = "&nbsp;"+"&nbsp;"+"trait:"+"&nbsp;"+tr.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+traitLine+ " ; ";
+	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+trText, false);
+                   }
+                 }
+               }
+             }
+             // Loop through model to check for interfaces that have implementations
+             for(UmpleInterface ui : model.getUmpleInterfaces())
+	     {
+	      for(ReqImplementation classimps : ui.getReqImplementations())
+   	        {
+   	          for(ReqImplementation reqimps : req.getReqImplementations())
+   	          {
+   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            {
+	               String uiText= ""; 
+	               int uiLine=0;
+	               for (ReqImplementation reqImpl : ReqImp)
+	               {
+	                 if(reqImpl == classimps){
+                            uiLine = ui.getPosition(0).getLineNumber();
+                         }
+	               }
+	           uiText = "&nbsp;"+"&nbsp;"+"interface:"+"&nbsp;"+ui.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+uiLine+ " ; ";
+	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+uiText, false);
+                  }
+                 }
+               }
+             }
+            // Loop through model to check for trait methods that have implementations
+            for(UmpleTrait tr : model.getUmpleTraits())
+	    {
+	       for(Method aMeth : tr.getMethods())
+		{
+		   for(ReqImplementation classimps : aMeth.getReqImplementations())
+   	            {
+   	               for(ReqImplementation reqimps : req.getReqImplementations())
+   	               {
+   	                 if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	                 {
+	                    String metText= ""; 
+	                    int metLine=0;
+	                    for (ReqImplementation reqImpl : ReqImp)
+	                    {
+	                     if(reqImpl == classimps){
+                                metLine = tr.getPosition(0).getLineNumber();
+                              }
+	                    }
+	           metText = "&nbsp;"+"&nbsp;"+"method:"+"&nbsp;"+aMeth.getName()+"&nbsp;"+"trait"+"&nbsp;"+tr.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+metLine+ " ; ";
+	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+metText, false);
+                     }
+                   }
+                 }
+	       }
+	     }
+	     // Loop through model to check for enums that have implementations
+	     for(UmpleEnumeration ue : model.getEnums())
+	     {
+	        for(ReqImplementation classimps : ue.getReqImplementations())
+   	            {
+   	               for(ReqImplementation reqimps : req.getReqImplementations())
+   	               {
+   	                 if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	                 {
+	                    String ueText= ""; 
+	                    int ueLine=0;
+	                    for (ReqImplementation reqImpl : ReqImp)
+	                    {
+	                     if(reqImpl.getIdentifier() == classimps.getIdentifier()){
+                                ueLine = ue.getPosition().getLineNumber();
+                              }
+	                    }
+	               ueText = "&nbsp;"+"&nbsp;"+"enum:"+"&nbsp;"+ue.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+ueLine+ " ; ";
+	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+ueText, false);
+                       }
+                     }
+                  }
+	        }
+	       
+	       for(MixsetOrFile mix : model.getMixsetOrFiles())
+	       {
+	        for(ReqImplementation classimps : mix.getReqImplementations())
+   	            {
+   	               for(ReqImplementation reqimps : req.getReqImplementations())
+   	               {
+   	                 if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	                 {
+	                    String mixText= ""; 
+	                    int mixLine=0;
+	                    for (ReqImplementation reqImpl : ReqImp)
+	                    {
+	                     if(reqImpl.getIdentifier() == classimps.getIdentifier()){
+                                mixLine = mix.getPosition().getLineNumber();
+                              }
+	                    }
+	               mixText = "&nbsp;"+"&nbsp;"+"mixset:"+"&nbsp;"+mix.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+mixLine+ " ; ";
+				   doc.createParagraphElement(mixText, false);
+                       }
+                     }
+                  }
+	        }
+	        doc.createParagraphElement("</div>", false); 
+             }
+         else {
+            // If the requirement does not have an implementation
+            if(!hasreqHideStatus) {
+                    doc.createParagraphElement("&nbsp;"+"NOT IMPLEMENTED.", false);
                 }
             }
+          }
         }
-        
-        // Display each UNIQUE implementation found
-        for (String s : uniqueImpls) {
-            doc.createParagraphElement("&nbsp;&nbsp;&nbsp;&nbsp; - " + s, false);
-        }
-    } else {
-        doc.createParagraphElement("&nbsp; <b>NOT IMPLEMENTED</b>", false);
-    }
-}
     model.setCode(doc.toString());
     writeModel();
     return;
