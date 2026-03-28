@@ -1,0 +1,63 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+This file generates feature model JSON representation.
+in your umple file, or the command line option
+  -g FeatureModelJson
+
+*/
+
+namespace cruise.umple.compiler;
+
+class FeatureModelJsonGenerator
+{
+    isA CodeGeneratorWithSubptions;
+    depend java.io.*;
+    depend cruise.umple.compiler.exceptions.*;
+
+    UmpleModel model = null;
+    String output = "";
+
+    public void generate()
+    {
+        FeatureModel fm = model.getFeatureModel();
+        if (fm == null)
+        {
+            // for those file do not have the feature model, return a null for the web side to check
+            model.setCode("{\"featureModel\":null}");
+        }
+        else
+        {
+            model.setCode(fm.toJSON());
+        }
+        writeModel();
+    }
+
+    private void writeModel()
+    {
+        try
+        {
+            String path = model.getUmpleFile().getPath();
+            File file = new File(path);
+            file.mkdirs();
+            String modelFilename = path + File.separator
+                + model.getUmpleFile().getSimpleFileName()
+                + "_FeatureModelJson.json";
+            BufferedWriter bw = new BufferedWriter(
+                new FileWriter(modelFilename));
+            bw.write(model.getCode());
+            bw.flush();
+            bw.close();
+        }
+        catch (Exception e)
+        {
+            throw new UmpleCompilerException(
+                "There was a problem with generating Feature Model JSON." + e,
+                e);
+        }
+    }
+}
