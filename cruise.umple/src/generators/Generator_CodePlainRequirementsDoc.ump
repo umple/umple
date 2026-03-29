@@ -36,7 +36,10 @@ class PlainRequirementsDocGenerator
     Comparator<Requirement> defaultComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
     if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")) {
       // If -s reqSortStat is present the comparator is changed to be assigned to statement
-      defaultComparator = (r1, r2) -> r1.getStatement().compareTo(r2.getStatement());
+      defaultComparator = (r1, r2) -> {
+        int res = r1.getStatement().compareTo(r2.getStatement());
+        return (res != 0) ? res : r1.getIdentifier().compareTo(r2.getIdentifier());
+      };
     } 
     // The TreeSet is created based on the chosen comparator
     ReqTreeSet = new TreeSet<>(defaultComparator);
