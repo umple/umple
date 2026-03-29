@@ -25,6 +25,8 @@ public class GvInstanceDiagramGeneratorTest extends TemplateTest
     super.tearDown();
     SampleFileWriter.destroy(pathToInput + "/gv/TooManyAssociationscid.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/InheritanceErrorOnecid.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/InheritanceErrorOnecid.instance.json");
+    SampleFileWriter.destroy(pathToInput + "/gv/TooManyAssociationscid.instance.json");
   }
 
 
