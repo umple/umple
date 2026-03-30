@@ -1925,7 +1925,14 @@ class UmpleInternalParser
     act.setImplementationPositions(implementationPositions);
     act.setPosition(activityToken.getPosition());
     act.setEndPosition(activityToken.getEndPosition());
+    // Issue 2098
+    for(ReqImplementation reqImp : ReqImpState)
+    {
+      act.addReqImplementation(reqImp);
+    }
+    ReqImpState.clear();
     return act;
+
   }
   
   private Action analyzeAction(Token actionToken, State fromState){
@@ -1970,7 +1977,12 @@ class UmpleInternalParser
     action.setPosition(actionToken.getPosition());
     action.setEndPosition(actionToken.getEndPosition());
     action.setActionType(actionToken.getValue("type"));
-        
+    // Issue 2098
+    for(ReqImplementation reqImp : ReqImpState)
+    {
+      action.addReqImplementation(reqImp);
+    }
+    ReqImpState.clear();
     return action;
   }
 

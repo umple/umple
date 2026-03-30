@@ -1528,6 +1528,114 @@ public class UmpleParserTest
   {
           assertNoWarningsParse("451_ReqMixsetOutputGenerated.ump");
   }
+  //Issue 2098
+  @Test
+  public void ImplementsReqState()
+  {
+          assertNoWarningsParse("451_ReqState.ump");
+  }
+  //Issue 2098
+  @Test
+  public void ImplementsReqTransition()
+  {
+          assertNoWarningsParse("451_ReqTransition.ump")	;
+  }
+  //Issue 2098
+  @Test
+  public void ImplementsReqStateMachineNoLeakage()
+  {
+          assertNoWarningsParse("451_ReqStateMachineNoLeakage.ump")	;
+  }
+  //Issue 2098
+  @Test
+  public void ImplementsReqStateMachineMultiple()
+  {
+          assertNoWarningsParse("451_ReqStateMachineMultiple.ump")	;
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActionEntry()
+  {
+          assertNoWarningsParse("451_ReqActionEntry.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActionExit()
+  {
+          assertNoWarningsParse("451_ReqActionExit.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActivityDo()
+  {
+          assertNoWarningsParse("451_ReqActivityDo.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqSubstate()
+  {
+          assertNoWarningsParse("451_ReqSubstate.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActionEntryNoLeakage()
+  {
+    boolean answer = parseWarnings("451_ReqActionEntryNoLeakage.ump");
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
+
+    State state1 = model.getUmpleClass("X").getStateMachine(0).getState(0);
+    State state2 = model.getUmpleClass("X").getStateMachine(0).getState(1);
+
+    Assert.assertEquals(1, state1.numberOfActions());
+    Assert.assertEquals(1, state2.numberOfActions());
+
+    Assert.assertEquals(1, state1.getAction(0).numberOfReqImplementations());
+    Assert.assertEquals(0, state2.getAction(0).numberOfReqImplementations());
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActivityDoNoLeakage()
+  {
+    boolean answer = parseWarnings("451_ReqActivityDoNoLeakage.ump");
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
+
+    State state1 = model.getUmpleClass("X").getStateMachine(0).getState(0);
+    State state2 = model.getUmpleClass("X").getStateMachine(0).getState(1);
+
+    Assert.assertEquals(1, state1.numberOfActivities());
+    Assert.assertEquals(1, state2.numberOfActivities());
+
+    Assert.assertEquals(1, state1.getActivity(0).numberOfReqImplementations());
+    Assert.assertEquals(0, state2.getActivity(0).numberOfReqImplementations());
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqSubstateNoLeakage()
+  {
+    boolean answer = parseWarnings("451_ReqSubstateNoLeakage.ump");
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
+
+    State parent = model.getUmpleClass("X").getStateMachine(0).getState(0);
+    Assert.assertEquals(1, parent.numberOfNestedStateMachines());
+
+    StateMachine nested = parent.getNestedStateMachine(0);
+    State state1a = nested.getState(0);
+    State state1b = nested.getState(1);
+
+    Assert.assertEquals(1, state1a.numberOfReqImplementations());
+    Assert.assertEquals(0, state1b.numberOfReqImplementations());
+  }
+
   //Issue 2377
   @Test
   public void ReqUserStoryBasic()
