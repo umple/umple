@@ -1,0 +1,4 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqUserStoryWhoOnly.ump
+</p><p><b>US4: As customer</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>
