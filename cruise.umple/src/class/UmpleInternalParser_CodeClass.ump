@@ -207,49 +207,105 @@ class UmpleInternalParser
 
 
   private void analyzeRequirement(Token t) {
-    // extract new requirement identifier 
-    String reqID = t.getSubToken("reqIdentifier").getValue(); 
-    String newContent = t.getSubToken("reqContent").getValue();// extract content 
-    // Initialize language
+    String reqID = t.getSubToken("reqIdentifier").getValue();
+
+    String newContent = "";
+    if (!(t.getSubToken("reqContent") == null || t.getSubToken("reqContent").getValue() == null)) {
+      newContent = t.getSubToken("reqContent").getValue();
+    }
+
     String newLanguage = "";
     if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
-        // get the language of the sub token
-        newLanguage = t.getSubToken("reqLanguage").getValue();
+      newLanguage = t.getSubToken("reqLanguage").getValue();
     }
-     // Retrieves any existing requirement with the same identifier from the model
-     Requirement existingRequirement = model.getAllRequirements().get(reqID); 
-    // Checks if a requirement with the same identifier already exists in the model.
-    if (existingRequirement != null) { 
-        // get the language of the existing requirement
-        String existingLanguage = existingRequirement.getLanguage();
-	// return if different languages are encountered
-        if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
-            setFailedPosition(t.getPosition(), 402, reqID,existingLanguage,newLanguage);
-            return;
+
+    String whoContent = null;
+    String whenContent = null;
+    String whatContent = null;
+    String whyContent = null;
+
+    if ("userStory".equals(newLanguage) && !newContent.equals("")) {
+      String[] lines = newContent.split("\\r?\\n");
+      StringBuilder remainingContent = new StringBuilder();
+
+      for (String line : lines) {
+        String trimmed = line.trim();
+
+        if (trimmed.startsWith("who {") && trimmed.endsWith("}")) {
+          whoContent = trimmed.substring(5, trimmed.length() - 1).trim();
         }
-        // retrieve the content of the existing requirement
-        String existingContent = existingRequirement.getStatement();
+        else if (trimmed.startsWith("when {") && trimmed.endsWith("}")) {
+          whenContent = trimmed.substring(6, trimmed.length() - 1).trim();
+        }
+        else if (trimmed.startsWith("what {") && trimmed.endsWith("}")) {
+          whatContent = trimmed.substring(6, trimmed.length() - 1).trim();
+        }
+        else if (trimmed.startsWith("why {") && trimmed.endsWith("}")) {
+          whyContent = trimmed.substring(5, trimmed.length() - 1).trim();
+        }
+        else {
+          if (remainingContent.length() > 0) {
+            remainingContent.append("\n");
+          }
+          remainingContent.append(line.trim());
+        }
+      }
 
+      if (!(whoContent == null && whenContent == null && whatContent == null && whyContent == null)) {
+        newContent = remainingContent.toString().trim();
+      }
+    }
 
-        // Requirement with the same identifier already exists, combine them
-        // Concatenate the content of the existing requirement with the new content
+    Requirement existingRequirement = model.getAllRequirements().get(reqID);
+
+    if (existingRequirement != null) {
+      String existingLanguage = existingRequirement.getLanguage();
+
+      if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
+        setFailedPosition(t.getPosition(), 402, reqID, existingLanguage, newLanguage);
+        return;
+      }
+
+      String existingContent = existingRequirement.getStatement();
+      if (existingContent == null) {
+        existingContent = "";
+      }
+
+      if (newLanguage.equals("")) {
+        newLanguage = existingLanguage;
+      }
+
+      if (existingContent.equals("")) {
+        // keep newContent as is
+      }
+      else if (newContent.equals("")) {
+        newContent = existingContent;
+      }
+      else {
         newContent = existingContent + " " + newContent;
-        if (newLanguage.equals("")) {
-            newLanguage = existingLanguage;
-        }
-        existingRequirement.addReqToken(t);// new addition
-        existingRequirement.setStatement(newContent);
+      }
+
+      existingRequirement.addReqToken(t);
+      existingRequirement.setStatement(newContent);
+
+      if (whoContent != null && !whoContent.equals("")) {
+        existingRequirement.setWho(whoContent);
+      }
+      if (whenContent != null && !whenContent.equals("")) {
+        existingRequirement.setWhen(whenContent);
+      }
+      if (whatContent != null && !whatContent.equals("")) {
+        existingRequirement.setWhat(whatContent);
+      }
+      if (whyContent != null && !whyContent.equals("")) {
+        existingRequirement.setWhy(whyContent);
+      }
     }
-    else
-    {
-    // If existing requirement is null
-    // create new requirement
-      Requirement req = new Requirement(reqID, newContent, null, null, null, null, newLanguage);// Create new requirement
-    // Add the new requirement
-      req.addReqToken(t);// new addition
+    else {
+      Requirement req = new Requirement(reqID, newContent, whoContent, whenContent, whatContent, whyContent, newLanguage);
+      req.addReqToken(t);
       model.getAllRequirements().put(reqID, req);
     }
-
   }
 
   private void analyzeImplementReq(Token t) {
@@ -6014,6 +6070,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     Token top = token;
     Position position = token.getPosition();
     token = token.getSubToken("toplevelExceptionMain");
+    // Known top-level construct keywords for 1502/1503 classification
+    // Derived from directive- and entity- rules in the grammar files
     String[] identifiers = new String[]{
       "unknown",
       "class",
@@ -6022,13 +6080,23 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       "association",
       "associationClass",
       "statemachine",
+      "enum",
+      "trait",
+      "template",
+      "mixset",
+      "before",
+      "after",
+      "around",
+      "filter",
       "glossary",
       "strictness",
       "generate",
       "use",
       "req",
+      "require",
       "implementsReq",
-      "namespace"};
+      "namespace",
+      "top"};
     String identifier = token.getValue("identifier");
     boolean isNotProperIdentifier = true;
     for(String id:identifiers)
@@ -6039,7 +6107,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         break;
       }
     }
-    
+
     if(isNotProperIdentifier)
     {
       int bestScore = -100;
@@ -6075,10 +6143,289 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       setFailedPosition(position,1503,identifier,bestMatch);
     }
-    else 
+    else
     {
-      setFailedPosition(position,1502,identifier);
+      // Issue #2167: Before emitting 1502, try to identify the specific
+      // mismatched brace and report 1504/1505 with the correct position.
+      int[] braceResult = analyzeBraceMismatchForConstruct(top, position);
+      if (braceResult != null)
+      {
+        // braceResult: [errorCode, line, col, offset]
+        Position bracePos = new Position(
+          position.getFilename(), braceResult[1], braceResult[2], braceResult[3]);
+        setFailedPosition(bracePos, braceResult[0], identifier);
+      }
+      else
+      {
+        setFailedPosition(position,1502,identifier);
+      }
     }
+  }
+
+  // Issue #2167: Analyze brace mismatch for a malformed top-level construct.
+  // Returns [errorCode, line, col, offset] if a specific mismatched brace is found,
+  // or null to fall back to error 1502.
+  private int[] analyzeBraceMismatchForConstruct(Token top, Position constructPos)
+  {
+    Token parent = top.getParentToken();
+    if (parent == null || constructPos.getFilename() == null) return null;
+
+    // Find the index of this token among its siblings
+    int myIndex = parent.indexOfSubToken(top);
+    if (myIndex < 0) return null;
+
+    // Step 1: Find boundary — next toplevelException sibling with no extraStuff,
+    // no trailing semicolon, and whose immediately next sibling is any
+    // checkForUnintendedBracket. The semicolon check distinguishes body members
+    // like "t;" (statement with ;) from construct keywords like "mixset M" (no ;
+    // before their opening brace).
+    int boundaryOffset = -1;
+    int numSiblings = parent.numberOfSubTokens();
+    for (int i = myIndex + 1; i < numSiblings; i++)
+    {
+      Token sibling = parent.getSubToken(i);
+      if ("toplevelException".equals(sibling.getName()))
+      {
+        Token extraStuff = sibling.getSubToken("extraStuff");
+        if (extraStuff == null && i + 1 < numSiblings)
+        {
+          // Check if this toplevelException has a trailing semicolon.
+          // If it does, it's a statement (body member), not a construct keyword.
+          boolean hasSemicolon = false;
+          for (Token sub : sibling.getSubTokens())
+          {
+            if (";".equals(sub.getName()) && sub.isStatic())
+            {
+              hasSemicolon = true;
+              break;
+            }
+          }
+          if (!hasSemicolon)
+          {
+            Token nextSibling = parent.getSubToken(i + 1);
+            if ("checkForUnintendedBracket".equals(nextSibling.getName()))
+            {
+              boundaryOffset = sibling.getPosition().getOffset();
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // Step 2: Read source file — resolve filename relative to model path
+    String source;
+    try {
+      File sourceFile = new File(constructPos.getFilename());
+      if (!sourceFile.exists() && model.getUmpleFile() != null)
+      {
+        sourceFile = new File(model.getUmpleFile().getPath(), constructPos.getFilename());
+      }
+      source = SampleFileWriter.readContent(sourceFile);
+    } catch (Exception e) {
+      return null;
+    }
+    if (source == null || source.isEmpty()) return null;
+
+    int scanStart = constructPos.getOffset();
+    int scanEnd = (boundaryOffset > scanStart) ? boundaryOffset : source.length();
+
+    // Step 3: Compute mask spans — all siblings between target and boundary
+    // that are NOT checkForUnintendedBracket and NOT the target itself
+    List<int[]> maskSpans = new ArrayList<int[]>();
+    for (int i = myIndex + 1; i < numSiblings; i++)
+    {
+      Token sibling = parent.getSubToken(i);
+      if (sibling.getPosition() != null && sibling.getPosition().getOffset() >= scanEnd) break;
+      if (!"checkForUnintendedBracket".equals(sibling.getName()))
+      {
+        int sibStart = sibling.getPosition().getOffset();
+        int sibLen = sibling.getLength();
+        if (sibLen > 0)
+        {
+          maskSpans.add(new int[]{sibStart, sibStart + sibLen});
+        }
+      }
+    }
+
+    // Step 4: Scan source for real braces, skipping quotes/comments
+    // Then filter out braces that fall within masked spans
+    List<int[]> braces = findRealBraces(source, scanStart, scanEnd);
+
+    // Filter: remove braces inside masked spans
+    List<int[]> filtered = new ArrayList<int[]>();
+    for (int[] brace : braces)
+    {
+      int braceOffset = brace[3];
+      boolean masked = false;
+      for (int[] span : maskSpans)
+      {
+        if (braceOffset >= span[0] && braceOffset < span[1])
+        {
+          masked = true;
+          break;
+        }
+      }
+      if (!masked) filtered.add(brace);
+    }
+
+    if (filtered.isEmpty()) return null;
+
+    // Step 5: Separate opens and closes
+    List<int[]> opens = new ArrayList<int[]>();
+    List<int[]> closes = new ArrayList<int[]>();
+    for (int[] b : filtered)
+    {
+      if (b[0] == 0) opens.add(b);
+      else closes.add(b);
+    }
+
+    // Step 6: Strip first { (construct opener) and last } (intended closer)
+    if (opens.isEmpty() && closes.isEmpty()) return null;
+
+    if (opens.isEmpty())
+    {
+      // No opener at all — unmatched }
+      return new int[]{1505, closes.get(0)[1], closes.get(0)[2], closes.get(0)[3]};
+    }
+
+    // Strip first { (construct opener)
+    opens.remove(0);
+
+    if (!closes.isEmpty())
+    {
+      // Strip last } (intended closer)
+      closes.remove(closes.size() - 1);
+    }
+    else
+    {
+      // Opener exists but no closer at all — fall back to 1502
+      // (can't point to a better location than the construct start)
+      return null;
+    }
+
+    // Step 7: Rebuild remaining braces in source order and stack-analyze
+    List<int[]> remaining = new ArrayList<int[]>();
+    remaining.addAll(opens);
+    remaining.addAll(closes);
+    remaining.sort((a, b) -> Integer.compare(a[3], b[3]));
+
+    if (remaining.isEmpty()) return null;
+
+    // Stack-based analysis
+    List<int[]> stack = new ArrayList<int[]>();
+    for (int[] b : remaining)
+    {
+      if (b[0] == 0)
+      {
+        // Opening brace
+        stack.add(b);
+      }
+      else
+      {
+        // Closing brace
+        if (stack.isEmpty())
+        {
+          // Unmatched }
+          return new int[]{1505, b[1], b[2], b[3]};
+        }
+        stack.remove(stack.size() - 1);
+      }
+    }
+
+    if (!stack.isEmpty())
+    {
+      // Unmatched { — report the first one on the stack
+      int[] extra = stack.get(0);
+      return new int[]{1504, extra[1], extra[2], extra[3]};
+    }
+
+    // Balanced after strip — fall back to 1502
+    return null;
+  }
+
+  // Scan source text for real curly braces, skipping comments and string/char literals.
+  // Returns list of [type, line, col, offset] where type: 0 = {, 1 = }
+  private List<int[]> findRealBraces(String source, int startOffset, int endOffset)
+  {
+    List<int[]> braces = new ArrayList<int[]>();
+    // Compute initial line and column from start of file to startOffset
+    int line = 1;
+    int col = 0;
+    for (int k = 0; k < startOffset && k < source.length(); k++)
+    {
+      if (source.charAt(k) == '\n') { line++; col = 0; }
+      else { col++; }
+    }
+
+    int i = startOffset;
+    while (i < endOffset && i < source.length())
+    {
+      char c = source.charAt(i);
+
+      // Skip single-line comments
+      if (c == '/' && i + 1 < endOffset && source.charAt(i + 1) == '/')
+      {
+        while (i < endOffset && i < source.length() && source.charAt(i) != '\n') { i++; col++; }
+        continue;
+      }
+
+      // Skip multi-line comments
+      if (c == '/' && i + 1 < endOffset && source.charAt(i + 1) == '*')
+      {
+        i += 2; col += 2;
+        while (i + 1 < endOffset && i + 1 < source.length()
+               && !(source.charAt(i) == '*' && source.charAt(i + 1) == '/'))
+        {
+          if (source.charAt(i) == '\n') { line++; col = 0; } else { col++; }
+          i++;
+        }
+        if (i + 1 < source.length()) { i += 2; col += 2; } // skip */
+        continue;
+      }
+
+      // Skip string literals
+      if (c == '"')
+      {
+        i++; col++;
+        while (i < endOffset && i < source.length() && source.charAt(i) != '"')
+        {
+          if (source.charAt(i) == '\\') { i++; col++; } // skip escaped char
+          if (i < source.length() && source.charAt(i) == '\n') { line++; col = 0; } else { col++; }
+          i++;
+        }
+        if (i < source.length()) { i++; col++; } // skip closing "
+        continue;
+      }
+
+      // Skip char literals
+      if (c == '\'')
+      {
+        i++; col++;
+        while (i < endOffset && i < source.length() && source.charAt(i) != '\'')
+        {
+          if (source.charAt(i) == '\\') { i++; col++; } // skip escaped char
+          if (i < source.length() && source.charAt(i) == '\n') { line++; col = 0; } else { col++; }
+          i++;
+        }
+        if (i < source.length()) { i++; col++; } // skip closing '
+        continue;
+      }
+
+      // Track braces
+      if (c == '{')
+      {
+        braces.add(new int[]{0, line, col, i});
+      }
+      else if (c == '}')
+      {
+        braces.add(new int[]{1, line, col, i});
+      }
+
+      if (c == '\n') { line++; col = 0; } else { col++; }
+      i++;
+    }
+    return braces;
   }
 
   private void checkUnusedNamespaces()

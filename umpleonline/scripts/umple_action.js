@@ -334,11 +334,11 @@ Action.clicked = function(event)
     Action.changeDiagramType({type:"instanceDiagram"});
     Action.syncLiveViewSelector("instanceDiagram");
   }
-  // else if (action == "ShowCRUDUI")
-  // {
-  //   Action.changeDiagramType({type:"crudUI"});
-  //   Action.syncLiveViewSelector("crudUI");
-  // }
+  else if (action == "ShowCRUDUI")
+  {
+    Action.changeDiagramType({type:"crudUI"});
+    Action.syncLiveViewSelector("crudUI");
+  }
   else if (action == "ShowStateTables")
   {
     Action.changeDiagramType({type:"stateTables"});
@@ -969,7 +969,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
     Page.useInstanceDiagram = false;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useEventSequence = false;
     changedType = true;
@@ -989,7 +989,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
     Page.useInstanceDiagram = false;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useEventSequence = false;
     changedType = true;
@@ -1008,7 +1008,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
     Page.useInstanceDiagram = false;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useEventSequence = false;
     changedType = true;
@@ -1028,7 +1028,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useStructureDiagram = false;
     Page.useGvEntityRelationshipDiagram = true;
     Page.useInstanceDiagram = false;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useEventSequence = false;
     changedType = true;
@@ -1049,7 +1049,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
     Page.useInstanceDiagram = false;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useEventSequence = false;
     changedType = true;
@@ -1068,7 +1068,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = true;
     Page.useGvEntityRelationshipDiagram = false;
     Page.useInstanceDiagram = false;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useEventSequence = false;
     changedType = true;
@@ -1088,7 +1088,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvFeatureDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
     Page.useInstanceDiagram = false;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useEventSequence = false;
     changedType = true;
@@ -1106,7 +1106,7 @@ Action.changeDiagramType = function(newDiagramType)
      Page.useGvFeatureDiagram = false;
      Page.useGvEntityRelationshipDiagram = false;
      Page.useInstanceDiagram = true;
-    //  Page.useCRUDUI = false;
+     Page.useCRUDUI = false;
      Page.useStateTables = false;
      Page.useEventSequence = false;
      changedType = true;
@@ -1117,24 +1117,24 @@ Action.changeDiagramType = function(newDiagramType)
  
    }
 
-//    else if(newDiagramType.type == "crudUI"){
-//     if(Page.useCRUDUI) return;
-//      Page.useEditableClassDiagram = false;
-//      Page.useJointJSClassDiagram = false;
-//      Page.useGvClassDiagram = false;
-//      Page.useGvStateDiagram = false;
-//      Page.useStructureDiagram = false;
-//      Page.useGvFeatureDiagram = false;
-//      Page.useGvEntityRelationshipDiagram = false;
-//      Page.useInstanceDiagram = false;
-//     //  Page.useCRUDUI = true;
-//      Page.useStateTables = false;
-//      Page.useEventSequence = false;
-//      changedType = true;
-//      jQuery("#buttonShowCRUDUI").prop('checked', 'checked');
-//      Page.setDiagramTypeIconState('none');
-//      jQuery(".view_opt_feature").show();
-// }
+  else if(newDiagramType.type == "crudUI"){
+   if(Page.useCRUDUI) return;
+    Page.useEditableClassDiagram = false;
+    Page.useJointJSClassDiagram = false;
+    Page.useGvClassDiagram = false;
+    Page.useGvStateDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useGvFeatureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = true;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    changedType = true;
+    jQuery("#buttonShowCRUDUI").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('none');
+    jQuery(".view_opt_feature").show();
+}
 
    else if(newDiagramType.type == "stateTables"){
     if(Page.useStateTables) return;
@@ -1146,7 +1146,7 @@ Action.changeDiagramType = function(newDiagramType)
      Page.useGvFeatureDiagram = false;
      Page.useGvEntityRelationshipDiagram = false;
      Page.useInstanceDiagram = false;
-    //  Page.useCRUDUI = false;
+     Page.useCRUDUI = false;
      Page.useStateTables = true;
      Page.useEventSequence = false;
      changedType = true;
@@ -1165,7 +1165,7 @@ Action.changeDiagramType = function(newDiagramType)
      Page.useGvFeatureDiagram = false;
      Page.useGvEntityRelationshipDiagram = false;
      Page.useInstanceDiagram = false;
-     //  Page.useCRUDUI = false;
+     Page.useCRUDUI = false;
      Page.useStateTables = false;
      Page.useEventSequence = true;
      changedType = true;
@@ -4679,9 +4679,6 @@ Action.loadExample = function loadExample()
     diagramType="&diagramtype=instanceDiagram";
   }
 
-  // else if(Page.useCRUDUI) {
-  //   diagramType="&diagramtype=crudJson";
-  // }
 
   else if(Page.useStateTables) {
     diagramType="&diagramtype=StateTables";
@@ -5581,6 +5578,29 @@ Action.updateLineNumberDisplay = function()
   jQuery("#linenum").val(Action.getCaretPosition());
 }
 
+Action.goToCrossFileError = function(filename, line)
+{
+  var base = filename.split('/').pop().replace(/\.ump\s*$/i, '');
+  var tabId = null;
+
+  Object.keys(TabControl.tabs).forEach(function(id) {
+    if (TabControl.tabs[id].name === base) {
+      tabId = id;
+    }
+  });
+
+  if (tabId !== null && String(tabId) !== String(TabControl.activeTab)) {
+    TabControl.selectTab(tabId);
+  }
+
+  setTimeout(function() {
+    Action.setCaretPosition(parseInt(line, 10));
+    Action.updateLineNumberDisplay();
+  }, 100);
+
+  return false;
+};
+
 Action.umpleTyped = function(eventObject)
 {
   // DEBUG
@@ -6206,11 +6226,11 @@ Action.updateUmpleDiagramCallback = function(response)
   }
 }
 
-// else if(Page.useCRUDUI)
-// {
-//   theCanvas.html("<div id='htmlCanvas' class='generatedDiagram'></div>");
-//   Page.showCrudFromJson(diagramCode, "", "#htmlCanvas");
-// }
+    else if(Page.useCRUDUI)
+    {
+      theCanvas.html("<div id='htmlCanvas' class='generatedDiagram'></div>");
+      Page.showCrudFromJson(diagramCode, "", "#htmlCanvas");
+    }
     //Display structure diagram
     else if(Page.useStructureDiagram)
     {
@@ -6373,9 +6393,9 @@ Action.getDiagramCode = function(responseText)
       output = output.replace(/<\/svg>$/, "");
     }
   }
-  else if(/*Page.useCRUDUI ||*/ Page.useEventSequence || Page.useStateTables)
+  else if(Page.useCRUDUI || Page.useEventSequence || Page.useStateTables)
   {
-    var language = /*Page.useCRUDUI ? "crudJson" :*/
+    var language = Page.useCRUDUI ? "crudJson" :
                    Page.useEventSequence ? "eventSequence" :
                    "stateTables";
 
@@ -6410,12 +6430,11 @@ Action.getErrorCode = function(responseText)
       output = miscStuffAndErrorMessages.split("</script>&nbsp;")[0];
     }
   }
-  else if(/*Page.useCRUDUI ||*/ Page.useEventSequence || Page.useStateTables)
+  else if(Page.useCRUDUI || Page.useEventSequence || Page.useStateTables)
   {
-    var language = /*Page.useCRUDUI ? "crudJson" :*/
+    var language = Page.useCRUDUI ? "crudJson" :
                    Page.useEventSequence ? "eventSequence" :
                    "stateTables";
-
     output = Page.getErrorMarkup(responseText, language);
   }
   return output;
@@ -7036,7 +7055,7 @@ Action.getLanguage = function()
   else if(Page.useGvEntityRelationshipDiagram) {language="language=entityRelationshipDiagram"}
   else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
   else if(Page.useInstanceDiagram) {language="language=instanceDiagram"}
-  // else if(Page.useCRUDUI) {language="language=crudJson"}
+  else if(Page.useCRUDUI) {language="language=Json&languageStyle=crudJson"}
   else if(Page.useStateTables) {language="language=StateTables"}
   else if(Page.useEventSequence) {language="language=eventSequence"}
  
@@ -7390,7 +7409,7 @@ Action.setLiveView = function(viewNameToSet)
   else if (viewNameToSet=="erd") { Page.clickShowGvEntityRelationshipDiagram();}
   else if (viewNameToSet=="gfd") { Page.clickShowGvFeatureDiagram();}
   else if (viewNameToSet=="instanceDiagram") {Page.clickShowInstanceDiagram();}
-  // else if (viewNameToSet == "crudUI") { Page.clickShowCRUDUI();}
+  else if (viewNameToSet == "crudUI") { Page.clickShowCRUDUI();}
   else if (viewNameToSet == "stateTables") { Page.clickShowStateTables();}
   else if (viewNameToSet == "eventSequence") { Page.clickShowEventSequence();}
   else Page.catFeedbackMessage("DEBUG bad selection!!!");
