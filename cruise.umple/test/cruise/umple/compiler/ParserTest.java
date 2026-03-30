@@ -2112,7 +2112,7 @@ public class ParserTest
 	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file1",0,0,0), " \\' "));
 	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file2",0,0,0), " \" "));
 	  
-	  Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file1\", \"message\" : \"Test \\\' \\\\' \\\'\"},{ \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file2\", \"message\" : \"Test \\\' \\\' \\\'\"}]}",pr.toJSON());
+    Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file1\", \"message\" : \"Test \\\" \\\\' \\\"\"},{ \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file2\", \"message\" : \"Test \\\" \\\" \\\"\"}]}",pr.toJSON());
   }
   
   @Test
