@@ -36,6 +36,10 @@ public class RequirementsPlainTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideNotImpl.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqNotImpl.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqMultipleItems.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryPlain.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryStructured.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryStructuredPartial.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryWhoOnly.html");
   }
 
   @Test
@@ -95,5 +99,26 @@ public class RequirementsPlainTest extends TemplateTest
   public void ReqMultipleItems()
   {
     assertUmpleTemplateFor("requirements/ReqMultipleItems.ump","requirements/ReqMultipleItems.html.txt");
+  }
+
+  @Test
+  public void userStoryStructured()
+  {
+    assertUmpleTemplateFor("requirements/ReqUserStoryStructured.ump", "requirements/ReqUserStoryStructured.html.txt");
+  }
+  @Test
+  public void userStoryStructuredPartial()
+  {
+    assertUmpleTemplateFor("requirements/ReqUserStoryStructuredPartial.ump","requirements/ReqUserStoryStructuredPartial.html.txt");
+  }
+  @Test
+  public void userStoryPlain()
+  {
+    assertUmpleTemplateFor("requirements/ReqUserStoryPlain.ump","requirements/ReqUserStoryPlain.html.txt");
+  }
+  @Test
+  public void userStoryWhoOnly()
+  {
+    assertUmpleTemplateFor("requirements/ReqUserStoryWhoOnly.ump","requirements/ReqUserStoryWhoOnly.html.txt");
   }
 }
