@@ -1,0 +1,3 @@
+req US1 userStory {
+  As a customer, I want to reset my password so that I can regain access to my account.
+}
