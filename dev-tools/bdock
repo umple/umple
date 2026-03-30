@@ -1,4 +1,4 @@
-#~/bin/csh -fb
+#!/bin/csh -fb
 # Builds the umpleonline docker image from a local umple directory which you should be in when starting the command
 # If you want to rebuild the base first do
 #  docker build -t "umple/umpleonline-base:local" -f umpleonline/Dockerfile-base .
