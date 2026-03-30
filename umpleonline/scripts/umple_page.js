@@ -45,7 +45,7 @@ Page.useStructureDiagram = false;
 Page.useFeatureDiagram = false;
 Page.useGvEntityRelationshipDiagram = false;
 Page.useInstanceDiagram = false;
-// Page.useCRUDUI = false;
+Page.useCRUDUI = false;
 Page.useStateTables = false;
 Page.useEventSequence = false;
 Page.showAttributes = true;
@@ -175,7 +175,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   {
     Page.useGvEntityRelationshipDiagram = true;
     Page.useInstanceDiagram = false;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useEventSequence = false;
     Page.useStructureDiagram = false;
@@ -186,7 +186,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   else if(diagramType.toLowerCase() == "instancediagram")
   {
     Page.useInstanceDiagram = true;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useEventSequence = false;
     Page.useGvEntityRelationshipDiagram = false;
@@ -195,22 +195,22 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.setDiagramTypeIconState('none');
     Page.useGvFeatureDiagram = false;
   }
-  // else if(diagramType.toLowerCase() == "crudui" || diagramType.toLowerCase() == "crudjson")
-  // {
-  //   Page.useCRUDUI = true;
-  //   Page.useStateTables = false;
-  //   Page.useEventSequence = false;
-  //   Page.useInstanceDiagram = false;
-  //   Page.useGvEntityRelationshipDiagram = false;
-  //   Page.useStructureDiagram = false;
-  //   Page.useEditableClassDiagram = false;  
-  //   Page.setDiagramTypeIconState('none');
-  //   Page.useGvFeatureDiagram = false;
-  // }
+  else if(diagramType.toLowerCase() == "crudui" || diagramType.toLowerCase() == "crudjson")
+  {
+    Page.useCRUDUI = true;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    Page.useInstanceDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
+    Page.useGvFeatureDiagram = false;
+  }
   else if(diagramType.toLowerCase() == "eventsequence")
   {
     Page.useEventSequence = true;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useStateTables = false;
     Page.useInstanceDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
@@ -223,7 +223,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   {
     Page.useStateTables = true;
     Page.useEventSequence = false;
-    // Page.useCRUDUI = false;
+    Page.useCRUDUI = false;
     Page.useInstanceDiagram = false;
     Page.useGvEntityRelationshipDiagram = false;
     Page.useStructureDiagram = false;
@@ -383,7 +383,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowStructureDiagram");
   Page.initAction("buttonShowGvEntityRelationshipDiagram");
   Page.initAction("buttonShowInstanceDiagram");
-  // Page.initAction("buttonShowCRUDUI");
+  Page.initAction("buttonShowCRUDUI");
   Page.initAction("buttonShowStateTables");
   Page.initAction("buttonShowEventSequence");
   Page.initAction("buttonShowHideLayoutEditor");
@@ -517,8 +517,8 @@ Page.initOptions = function()
   if(Page.useInstanceDiagram)
     jQuery("#buttonShowInstanceDiagram").prop('checked', true);
 
-  // if(Page.useCRUDUI)
-  //   jQuery("#buttonShowCRUDUI").prop('checked', true);
+  if(Page.useCRUDUI)
+    jQuery("#buttonShowCRUDUI").prop('checked', true);
  
   if(Page.useStateTables)
     jQuery("#buttonShowStateTables").prop('checked', true);
@@ -822,9 +822,9 @@ Page.clickShowGvEntityRelationshipDiagram = function() {
 Page.clickShowInstanceDiagram = function() {
   jQuery('#buttonShowInstanceDiagram').trigger('click');
 }
-// Page.clickShowCRUDUI = function() {
-//   jQuery('#buttonShowCRUDUI').trigger('click');
-// }
+Page.clickShowCRUDUI = function() {
+  jQuery('#buttonShowCRUDUI').trigger('click');
+}
 Page.clickShowStateTables = function() {
   jQuery('#buttonShowStateTables').trigger('click');
 }
@@ -1697,16 +1697,16 @@ Page.getSelectedExample = function()
     
     } 
 
-    // else if (theExampleType == "crudModels")
-    // {
-    //    inputExample = jQuery("#inputExample4 option:selected").val(); 
-    //    if( !Page.useCRUDUI) {
-    //      jQuery("#buttonShowCRUDUI").prop('checked', true); 
-    //      Action.changeDiagramType({type: "crudUI"});
+    else if (theExampleType == "crudModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useCRUDUI) {
+         jQuery("#buttonShowCRUDUI").prop('checked', true); 
+         Action.changeDiagramType({type: "crudUI"});
          
-    //   }
+      }
     
-    // } 
+    } 
 
     else if (theExampleType == "stateModels")
     {
@@ -1844,10 +1844,10 @@ Page.showGeneratedCode = function(code,language,tabnumber)
 		}
     Page.toggleStructureDiagramLink(false);
   }
-//   else if (language === "crudJson")
-// {
-//   Page.showCrudFromJson(generatedMarkup, tabnumber);
-// }
+  else if (language === "crudJson")
+  {
+    Page.showCrudFromJson(generatedMarkup, tabnumber);
+  }
   else
   {
     jQuery("#innerGeneratedCodeRow" + tabnumber).html(generatedMarkup);
@@ -1905,7 +1905,7 @@ Page.getErrorMarkup = function(code, language)
   { // Covers simple right-hand side canvas updates
     output = code.replace(/<p>[\s\S]*/, "");
   }
-  else if(/*language == "crudJson" ||*/ language == "eventSequence" || language == "stateTables")
+  else if(language == "eventSequence" || language == "stateTables")
   {
     // These use URL_SPLIT output, not SVG parsing
     var split = code.split("URL_SPLIT");
@@ -1955,18 +1955,13 @@ Page.getGeneratedMarkup = function(code, language)
     output = jQuery("<div/>").html(output).text();
   }
   else if(language == "eventSequence" || language == "stateTables")
-{
+  {
   var split = code.split("URL_SPLIT");
   output = (split.length > 1) ? split[1] : code;
 
   // Decode escaped HTML so it renders in the right pane
   output = jQuery("<div/>").html(output).text();
-}
-// else if(language == "crudJson")
-// {
-//   var split = code.split("URL_SPLIT");
-//   output = (split.length > 1) ? split[1] : code;
-// }
+  }
   else
   {
     // Covers the rest of the generated languages
@@ -2037,6 +2032,65 @@ Page.getModel = function()
 {
   return jQuery("#model").val();
 }
+
+// Load instance diagram data back into the CRUD UI.
+//
+// This relies on the backend InstanceDiagram generator to produce
+// CRUD-compatible JSON for the current model/diagram, and then uses
+// the existing CRUD JSON import logic to materialize instances.
+Page.loadCrudFromInstanceDiagram = function() {
+  if (typeof Page.getUmpleCode !== "function") {
+    console.warn("Umple code accessor is unavailable; cannot load CRUD from instance diagram.");
+    return;
+  }
+
+  var code = Page.getUmpleCode() || "";
+  if (!code) {
+    Page.setFeedbackMessage && Page.setFeedbackMessage("No Umple code available to load into CRUD.");
+    return;
+  }
+
+  // Preferred path: if the current instance diagram response already
+  // embedded CRUD-style JSON (via a hidden script tag), reuse that so
+  // we don't need to re-run the generator.
+  var $embedded = jQuery("#instance-diagram-crud-json");
+  if ($embedded.length) {
+    var jsonText = $embedded.text() || "";
+    jsonText = ("" + jsonText).trim();
+    if (jsonText) {
+      Page._pendingCrudInstanceJson = jsonText;
+
+      if (typeof Action !== "undefined" && typeof Action.generateCode === "function") {
+        Action.generateCode("crudJson", "Json");
+      } else {
+        console.warn("Action.generateCode is unavailable; attempting direct CRUD import using embedded JSON.");
+        if (Page.crudData && Page.crudData.classes && typeof Page.crudJsonImportFromText === "function") {
+          try {
+            Page.crudJsonImportFromText(jsonText);
+          } catch (e) {
+            console.error("Failed to import embedded CRUD JSON from instance diagram:", e);
+            Page.setFeedbackMessage && Page.setFeedbackMessage("Unable to load instance diagram data into CRUD.");
+          }
+        }
+      }
+      return;
+    }
+  }
+
+  // If we reach here, no embedded instance JSON is available. Older
+  // diagrams that were generated before JSON embedding was added
+  // cannot be loaded into CRUD.
+  Page.setFeedbackMessage && Page.setFeedbackMessage("This instance diagram does not contain embedded instance data for CRUD.");
+};
+
+// Delegate clicks on the Instance Diagram toolbar button so it works
+// even though the button is injected dynamically by the backend.
+jQuery(document).on("click", "#instance-load-into-crud", function(evt) {
+  evt.preventDefault();
+  if (typeof Page.loadCrudFromInstanceDiagram === "function") {
+    Page.loadCrudFromInstanceDiagram();
+  }
+});
 
 jQuery.fn.selectRange = function(start, end) {
   return this.each(function() 
