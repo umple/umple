@@ -1,0 +1,9 @@
+FeatureModelJson
+Generators
+noreferences
+@@description
+<p>Generates a JSON representation of the feature model defined by require statements and mixset features in an Umple file.</p>
+
+<p>Can be invoked using the command line option <code>-g FeatureModelJson</code> or the directive <code>generate FeatureModelJson;</code> in an Umple file.</p>
+
+<p>If the Umple file does not define any feature model, the output will contain <code>{"featureModel":null}</code>.</p>
