@@ -897,4 +897,22 @@ public class FeatureModelJsonTest
     Assert.assertEquals(restored1.numberOfNode(), restored2.numberOfNode());
     Assert.assertEquals(restored1.numberOfFeaturelink(), restored2.numberOfFeaturelink());
   }
+
+  @Test
+  public void fromJSON_nextIdSyncedAfterDeserialization()
+  {
+    // Deserialize a model with high node IDs
+    String json = "{\"featureModel\":{\"name\":\"M\",\"nodes\":["
+        + "{\"id\":500,\"uniqueName\":\"A\",\"name\":\"A\",\"nodeType\":\"FeatureLeaf\",\"isLeaf\":true,\"isCompoundFeature\":false,\"mixsetOrFileNode\":null},"
+        + "{\"id\":600,\"uniqueName\":\"B\",\"name\":\"B\",\"nodeType\":\"FeatureLeaf\",\"isLeaf\":true,\"isCompoundFeature\":false,\"mixsetOrFileNode\":null}"
+        + "],\"links\":[]}}";
+    FeatureModel model = FeatureModel.fromJSON(json);
+    Assert.assertNotNull(model);
+
+    // Create a new node AFTER deserialization — its ID must not collide
+    FeatureNode newNode = new FeatureNode(model);
+    Assert.assertTrue(
+        "New node ID (" + newNode.getId() + ") must be > 600 to avoid collision with deserialized IDs",
+        newNode.getId() > 600);
+  }
 }

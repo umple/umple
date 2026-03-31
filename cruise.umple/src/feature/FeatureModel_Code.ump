@@ -303,6 +303,8 @@ class FeatureModel
 
         node.setName(nodeJson.getValue("name"));
         node.setId(nodeJson.getIntValue("id"));
+        // Sync static counter to avoid future ID collisions
+        FeatureNode.nextId.updateAndGet(cur -> Math.max(cur, node.getId()));
         idToNode.put(node.getId(), node);
       }
     }
