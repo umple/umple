@@ -1,0 +1,4 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqUserStoryStructuredPartial.ump
+</p><p><b>US3: As administrator<br/>I want manage users</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>

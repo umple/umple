@@ -1637,19 +1637,19 @@ public class UmpleParserTest
   {
           assertNoWarningsParse("451_ReqMixsetOutputGenerated.ump");
   }
-  //Issue 2377
+  //Issue 2377 (User Story)
   @Test
   public void ReqUserStoryBasic()
   {
     assertNoWarningsParse("452_ReqUserStoryBasic.ump");
   }
-  //Issue 2377
+  //Issue 2377 (User Story)
   @Test
   public void ReqNormalStillWorksAfterUserStoryGrammar()
   {
     assertNoWarningsParse("452_ReqNormalStillWorks.ump");
   }
-  //Issue 2377
+  //Issue 2377 (User Story)
   @Test
   public void ReqUserStoryStructuredAll()
   {
@@ -1664,7 +1664,7 @@ public class UmpleParserTest
     Assert.assertEquals("reset my password", req.getWhat());
     Assert.assertEquals("regain access to my account", req.getWhy());
   }
-  //Issue 2377
+  //Issue 2377 (User Story)
   @Test
   public void ReqUserStoryStructuredPartial()
   {
@@ -1678,6 +1678,30 @@ public class UmpleParserTest
     Assert.assertNull(req.getWhen());
     Assert.assertEquals("manage users", req.getWhat());
     Assert.assertNull(req.getWhy());
+  }
+  //Issue 2377 (User Story)
+  @Test
+  public void ReqUserstoryAliasLowercase()
+  {
+    assertNoWarningsParse("454_ReqUserstoryAlias.ump");
+
+    Requirement req = model.getAllRequirements().get("US5");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("customer", req.getWho());
+    Assert.assertEquals("reset password", req.getWhat());
+  }
+  //Issue 2377 (User Story)
+  @Test
+  public void ReqUserstoryAliasCamelCase()
+  {
+    assertNoWarningsParse("454_ReqUserStoryCamelCase.ump");
+
+    Requirement req = model.getAllRequirements().get("US6");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("customer", req.getWho());
+    Assert.assertEquals("reset password", req.getWhat());
   }
   @Test
   public void associationName()
