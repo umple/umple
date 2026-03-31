@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-  id 'nebula.ospackage' version '9.1.1'
+  id 'com.netflix.nebula.ospackage' version '12.3.0'
 }
 
 String runGit(List<String> args, String fallback) {
@@ -397,7 +397,6 @@ sourceSets {
             ]
             exclude '**/*.ump', '**/.git*'
         }
-        java.outputDir = file(rootProject.ext.classfileOutputDir)
     }
     test {
         compileClasspath = files(
@@ -415,10 +414,16 @@ sourceSets {
             ]
             exclude '**/*.ump', '**/.git*'
         }
-        java.outputDir = file(rootProject.ext.testClassfileOutputDir)
     }
 }
 
+tasks.named("compileJava") {
+    destinationDirectory.set(file(rootProject.ext.classfileOutputDir))
+}
+
+tasks.named("compileTestJava") {
+    destinationDirectory.set(file(rootProject.ext.testClassfileOutputDir))
+}
 
 // ===============
 //  Jar packaging
@@ -2069,7 +2074,7 @@ task executeDocJar (type: JavaExec){
     def drop = fileTree ("${rootProject.ext.umpleoscripts}/dropbox") {
       include '*.js'
     }
-   files = files (
+   files = project.files (
      'umpleonline/scripts/prototype.js',
      'umpleonline/scripts/dom.js',
      'umpleonline/scripts/ajax.js', 
