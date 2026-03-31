@@ -18,6 +18,7 @@ class FeatureModelJsonGenerator
     isA CodeGeneratorWithSubptions;
     depend java.io.*;
     depend cruise.umple.compiler.exceptions.*;
+    depend cruise.umple.util.*;
 
     UmpleModel model = null;
     String output = "";
@@ -41,7 +42,8 @@ class FeatureModelJsonGenerator
     {
         try
         {
-            String path = model.getUmpleFile().getPath();
+            String path = StringFormatter.addPathOrAbsolute(
+                model.getUmpleFile().getPath(), getOutput());
             File file = new File(path);
             file.mkdirs();
             String modelFilename = path + File.separator
