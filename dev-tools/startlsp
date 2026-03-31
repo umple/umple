@@ -4,7 +4,7 @@
 #
 # Prerequisites:
 #   - Node.js (18+)
-#   - umple-lsp-server@0.2.7: npm install -g umple-lsp-server@0.2.7
+#   - umple-lsp-server: npm install -g umple-lsp-server
 #   - lsp-proxy deps: cd umpleonline/scripts/lsp-proxy && npm ci
 #   - umplesync.jar in umpleonline/scripts/ (built via ant packageJars)
 #
@@ -17,7 +17,6 @@ set -e
 
 UMPLEROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LSP_PORT="${LSP_PORT:-9999}"
-REQUIRED_LSP_VERSION="0.2.7"
 
 # --- Preflight checks ---
 
@@ -28,24 +27,10 @@ if ! command -v node &>/dev/null; then
   exit 1
 fi
 
-# umple-lsp-server with version check
+# umple-lsp-server
 if ! command -v umple-lsp-server &>/dev/null; then
   echo "ERROR: umple-lsp-server is not installed."
-  echo "  Install: npm install -g umple-lsp-server@${REQUIRED_LSP_VERSION}"
-  exit 1
-fi
-
-INSTALLED_VERSION=$(npm list -g umple-lsp-server --depth=0 --json 2>/dev/null \
-  | node -e "try{var d=JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));console.log(d.dependencies['umple-lsp-server'].version)}catch(e){}" 2>/dev/null)
-if [ -z "$INSTALLED_VERSION" ]; then
-  echo "ERROR: Could not detect umple-lsp-server version."
-  echo "  Install: npm install -g umple-lsp-server@${REQUIRED_LSP_VERSION}"
-  exit 1
-elif [ "$INSTALLED_VERSION" != "$REQUIRED_LSP_VERSION" ]; then
-  echo "ERROR: umple-lsp-server version mismatch."
-  echo "  Installed: ${INSTALLED_VERSION}"
-  echo "  Required:  ${REQUIRED_LSP_VERSION}"
-  echo "  Fix: npm install -g umple-lsp-server@${REQUIRED_LSP_VERSION}"
+  echo "  Install: npm install -g umple-lsp-server"
   exit 1
 fi
 
