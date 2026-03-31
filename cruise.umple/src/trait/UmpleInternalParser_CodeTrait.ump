@@ -340,7 +340,9 @@ class UmpleInternalParser
     if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
       newLanguage = t.getSubToken("reqLanguage").getValue();
     }
-
+    if ("userstory".equals(newLanguage)) {
+      newLanguage = "userStory";
+    }
     String whoContent = null;
     String whenContent = null;
     String whatContent = null;
