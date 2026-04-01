@@ -426,7 +426,7 @@ tasks.named("compileTestJava") {
 }
 
 // ===============
-//  Jar packaging
+//  Jar packaging 
 // ===============
 
 // Grammar and error files also need to be included in the Umple jar
