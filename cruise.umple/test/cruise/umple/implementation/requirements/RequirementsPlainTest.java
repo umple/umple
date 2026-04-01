@@ -40,6 +40,9 @@ public class RequirementsPlainTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryStructured.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryStructuredPartial.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryWhoOnly.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqAssociation.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqAssociationBidir.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqAssociationLeftNav.html");
   }
 
   @Test
@@ -120,5 +123,23 @@ public class RequirementsPlainTest extends TemplateTest
   public void userStoryWhoOnly()
   {
     assertUmpleTemplateFor("requirements/ReqUserStoryWhoOnly.ump","requirements/ReqUserStoryWhoOnly.html.txt");
+  }
+
+  @Test
+  public void ReqAssociation()
+  {
+    assertUmpleTemplateFor("requirements/ReqAssociation.ump","requirements/ReqAssociation.html.txt");
+  }
+
+  @Test
+  public void ReqAssociationBidir()
+  {
+    assertUmpleTemplateFor("requirements/ReqAssociationBidir.ump","requirements/ReqAssociationBidir.html.txt");
+  }
+
+  @Test
+  public void ReqAssociationLeftNav()
+  {
+    assertUmpleTemplateFor("requirements/ReqAssociationLeftNav.ump","requirements/ReqAssociationLeftNav.html.txt");
   }
 }
