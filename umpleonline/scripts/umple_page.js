@@ -1252,6 +1252,8 @@ Page.unselectAllToggleTools = function()
   Page.selectedItem = null;
   Page.repeatToolItem = false;
 
+  Page.updateCanvasCursor();
+
   return unselected;
 }
 
@@ -1273,7 +1275,57 @@ Page.selectToggleTool = function(toolSelected)
   var newSelectedItem = "#button" + toolSelected;
   jQuery(allSelectedItems).removeClass("selected highlight");
   jQuery(newSelectedItem).addClass("selected");
+
+  Page.updateCanvasCursor();
 }
+
+Page.updateCanvasCursor = function()
+{
+  var canvas = document.getElementById("umpleCanvas");
+  if (!canvas) return;
+
+  var isDark =
+    document.body.dataset.theme === "dark" ||
+    (!document.body.dataset.theme &&
+     window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  var cursorValue = "default";
+
+  switch (Page.selectedItem)
+  {
+    case "AddAssociation":
+      cursorValue = isDark
+        ? "url('scripts/assoc_white.png') 8 8, auto"
+        : "url('scripts/assoc.png') 8 8, auto";
+      break;
+
+    case "AddGeneralization":
+      cursorValue = isDark
+        ? "url('scripts/generalization_white.png') 8 8, auto"
+        : "url('scripts/generalization.png') 8 8, auto";
+      break;
+
+    case "AddClass":
+      cursorValue = "url('scripts/class.png') 8 8, auto";
+      break;
+
+    case "DeleteEntity":
+      cursorValue = "url('scripts/delete.png') 8 8, auto";
+      break;
+
+    case "AddTransition":
+      cursorValue = isDark
+        ? "url('scripts/assoc_white.png') 8 8, auto"
+        : "url('scripts/assoc.png') 8 8, auto";
+      break;
+
+    default:
+      cursorValue = "default";
+      break;
+  }
+
+  canvas.style.cursor = cursorValue;
+};
 
 Page.canShowHovers = function()
 {
@@ -1301,7 +1353,7 @@ Page.getUmpleCode = function()
    // prepend namespace cancellation to prevent namespace redefinition errors
     positioning = "\n\nnamespace -;\n"+positioning;
   }
-  var umpleCode = modelCleaned + Page.modelDelimiter + positioning;
+  var umpleCode = modelCleaned + "\n" + Page.modelDelimiter + positioning;
   return umpleCode;
 }
 
