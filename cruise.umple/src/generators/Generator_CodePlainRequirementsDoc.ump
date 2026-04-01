@@ -37,7 +37,7 @@ class PlainRequirementsDocGenerator
     Comparator<Requirement> defaultComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
     if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")) {
       // If -s reqSortStat is present the comparator is changed to be assigned to statement
-      defaultComparator = (r1, r2) -> r1.getStatement().compareTo(r2.getStatement());
+      defaultComparator = (r1, r2) -> (r1.getStatement() + r1.getIdentifier()).compareTo(r2.getStatement() + r2.getIdentifier());
     } 
     // The TreeSet is created based on the chosen comparator
     ReqTreeSet = new TreeSet<>(defaultComparator);
@@ -45,12 +45,15 @@ class PlainRequirementsDocGenerator
     ReqTreeSet.addAll(model.getAllRequirements().values());
     // Assigning the suboption to a variable 
     boolean hasreqHideNotImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqHideNotImpl");
+	boolean hasreqHideImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqHideImpl");
+    boolean hasreqHideStatements = model.modelHasSuboption("PlainRequirementsDoc", "reqHideStatements");
     // Assigning a variable to hold the filename so it can be output in the implemented by section
     String fileName = model.getUmpleFile().getSimpleFileName()+".ump";
     // Loop through the sorted reqs in the TreeSet and check if they have an implementation
     List<ReqImplementation> ReqImp = new ArrayList<ReqImplementation>(); 
     ReqImp = model.getReqImplementations();
     for (Requirement req : ReqTreeSet){
+		if (req.hasReqImplementations() && hasreqHideImpl) continue;
     	if (req.hasReqImplementations() || !hasreqHideNotImpl) {
     	  // Below string stores the requirement statement and language and translates to html
 				String mainReqText = "";
@@ -91,9 +94,14 @@ class PlainRequirementsDocGenerator
 				}
 
 				mainReqText = linkifyHttpUrls(mainReqText);
+				if (hasreqHideStatements) {
+                    doc.createParagraphElement("<b>" + req.getIdentifier() + "</b>", false);
+                } else {
 				doc.createParagraphElement("<b>" + req.getIdentifier() + ": " + mainReqText + "</b>", false);
-    	  // Check if the requirement is implemented
+				}
+		  // Check if the requirement is implemented
           if(req.hasReqImplementations()) {
+			HashSet<String> uniquePrints = new HashSet<String>();
             // Append the text with this prompt
             doc.createParagraphElement("&nbsp;"+" IMPLEMENTED BY: ", false);
             // Loop through classes to check for attributes that have implementations
@@ -103,7 +111,7 @@ class PlainRequirementsDocGenerator
    	      {
    	        for(ReqImplementation reqimps : req.getReqImplementations())
    	        {
-   	          if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	          if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	          {
 		     String classText= ""; 
 		     int classLine=0;
@@ -136,12 +144,12 @@ class PlainRequirementsDocGenerator
 		           String assoStruct = StringFormatter.format("  {0} {1} {5} {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(),theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName(),arrowDirection);
 		           //assoLine = ass.getTokenPosition().getLineNumber();
 			   classText = "&nbsp;"+"&nbsp;"+"association class:"+"&nbsp;"+assoStruct+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+classLine+ " ; ";
-	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false);
+	              if(uniquePrints.add(classText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false); }
 	             }
 	            }
 	            else{
 	              classText = "&nbsp;"+"&nbsp;"+"class:"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+"&nbsp;"+ classLine+ " ; ";
-	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false);
+	              if(uniquePrints.add(classText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false); }
 	            }
 		  }
    	        }
@@ -153,7 +161,7 @@ class PlainRequirementsDocGenerator
    	        {
    	        for(ReqImplementation reqimps : req.getReqImplementations())
    	        {
-   	          if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	          if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	          {
 	             String attrText= ""; 
 	             int attLine=0;
@@ -165,7 +173,7 @@ class PlainRequirementsDocGenerator
                         }
 	              }
 	             attrText = "&nbsp;"+"&nbsp;"+"attribute:"+"&nbsp;"+att.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+ attLine+ " ; ";
-	             doc.createParagraphElement("&nbsp;"+"&nbsp;"+attrText, false);
+	             if(uniquePrints.add(attrText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+attrText, false); }
 	              }
 	           }
 	         }
@@ -178,7 +186,7 @@ class PlainRequirementsDocGenerator
    	        {
    	          for(ReqImplementation reqimps : req.getReqImplementations())
    	          {
-   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	            {
 	              String smText= ""; 
 	              int smLine=0;
@@ -189,7 +197,7 @@ class PlainRequirementsDocGenerator
                           }
 	                }
 	               smText = "&nbsp;"+"&nbsp;"+"state machine:"+"&nbsp;"+sm.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+"&nbsp;"+smLine+ " ; ";
-	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+smText, false);
+	               if(uniquePrints.add(smText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+smText, false); }
 	            }
 	          }
 	        }
@@ -201,7 +209,7 @@ class PlainRequirementsDocGenerator
    	        {
    	          for(ReqImplementation reqimps : req.getReqImplementations())
    	          {
-   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	            {
 	              String assoText= ""; 
 	              int assoLine=0;
@@ -225,7 +233,7 @@ class PlainRequirementsDocGenerator
 		           String assoStruct = StringFormatter.format("  {0} {1} {5} {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(),theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName(),arrowDirection);
 		           assoLine = ass.getTokenPosition().getLineNumber();
 			   assoText = "&nbsp;"+"&nbsp;"+"association:"+"&nbsp;"+assoStruct+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+assoLine+ " ; ";
-	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+assoText, false);
+	              if(uniquePrints.add(assoText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+assoText, false); }
 	             }
 	           }
 	         }
@@ -238,7 +246,7 @@ class PlainRequirementsDocGenerator
    	         {
    	          for(ReqImplementation reqimps : req.getReqImplementations())
    	          {
-   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	            {
 	              String meText= ""; 
 	              int meLine=0;
@@ -249,7 +257,7 @@ class PlainRequirementsDocGenerator
                        }
 	              }
 	           meText = "&nbsp;"+"&nbsp;"+"method:"+"&nbsp;"+me.getName()+"&nbsp;"+"class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+meLine+ " ; ";
-	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+meText, false);
+	           if(uniquePrints.add(meText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+meText, false); }
                      }
                    }
                  }
@@ -262,7 +270,7 @@ class PlainRequirementsDocGenerator
    	         {
    	            for(ReqImplementation reqimps : req.getReqImplementations())
    	            {
-   	              if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	              if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	              {
 	                String trText= ""; 
 	                int traitLine=0;
@@ -273,7 +281,7 @@ class PlainRequirementsDocGenerator
                           }
 	                }
 	           trText = "&nbsp;"+"&nbsp;"+"trait:"+"&nbsp;"+tr.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+traitLine+ " ; ";
-	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+trText, false);
+	           if(uniquePrints.add(trText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+trText, false); }
                    }
                  }
                }
@@ -285,7 +293,7 @@ class PlainRequirementsDocGenerator
    	        {
    	          for(ReqImplementation reqimps : req.getReqImplementations())
    	          {
-   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	            {
 	               String uiText= ""; 
 	               int uiLine=0;
@@ -296,7 +304,7 @@ class PlainRequirementsDocGenerator
                          }
 	               }
 	           uiText = "&nbsp;"+"&nbsp;"+"interface:"+"&nbsp;"+ui.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+uiLine+ " ; ";
-	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+uiText, false);
+	           if(uniquePrints.add(uiText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+uiText, false); }
                   }
                  }
                }
@@ -310,7 +318,7 @@ class PlainRequirementsDocGenerator
    	            {
    	               for(ReqImplementation reqimps : req.getReqImplementations())
    	               {
-   	                 if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	                 if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	                 {
 	                    String metText= ""; 
 	                    int metLine=0;
@@ -321,7 +329,7 @@ class PlainRequirementsDocGenerator
                               }
 	                    }
 	           metText = "&nbsp;"+"&nbsp;"+"method:"+"&nbsp;"+aMeth.getName()+"&nbsp;"+"trait"+"&nbsp;"+tr.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+metLine+ " ; ";
-	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+metText, false);
+	           if(uniquePrints.add(metText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+metText, false); }
                      }
                    }
                  }
@@ -334,7 +342,7 @@ class PlainRequirementsDocGenerator
    	            {
    	               for(ReqImplementation reqimps : req.getReqImplementations())
    	               {
-   	                 if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	                 if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	                 {
 	                    String ueText= ""; 
 	                    int ueLine=0;
@@ -345,7 +353,7 @@ class PlainRequirementsDocGenerator
                               }
 	                    }
 	               ueText = "&nbsp;"+"&nbsp;"+"enum:"+"&nbsp;"+ue.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+ueLine+ " ; ";
-	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+ueText, false);
+	               if(uniquePrints.add(ueText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+ueText, false); }
                        }
                      }
                   }
@@ -357,7 +365,7 @@ class PlainRequirementsDocGenerator
    	            {
    	               for(ReqImplementation reqimps : req.getReqImplementations())
    	               {
-   	                 if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	                 if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	                 {
 	                    String mixText= ""; 
 	                    int mixLine=0;
@@ -368,7 +376,7 @@ class PlainRequirementsDocGenerator
                               }
 	                    }
 	               mixText = "&nbsp;"+"&nbsp;"+"mixset:"+"&nbsp;"+mix.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+mixLine+ " ; ";
-	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+mixText, false);
+	               if(uniquePrints.add(mixText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+mixText, false); }
                        }
                      }
                   }
