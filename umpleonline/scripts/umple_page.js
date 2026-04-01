@@ -1301,7 +1301,7 @@ Page.getUmpleCode = function()
    // prepend namespace cancellation to prevent namespace redefinition errors
     positioning = "\n\nnamespace -;\n"+positioning;
   }
-  var umpleCode = modelCleaned + Page.modelDelimiter + positioning;
+  var umpleCode = modelCleaned + "\n" + Page.modelDelimiter + positioning;
   return umpleCode;
 }
 
