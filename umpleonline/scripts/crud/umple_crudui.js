@@ -2087,7 +2087,12 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
       var sep = cleanedCode.length && !/\n$/.test(cleanedCode) ? "\n" : "";
       var newCode = cleanedCode + sep + markerLineCounts + "\n" + markerLineData + "\n";
 
-      Page.setUmpleCode(newCode);
+      // Update the Umple source with CRUD markers but skip the
+      // debounced typing pipeline so we don't immediately trigger a
+      // second auto-refresh that would overwrite the generated
+      // instance diagram with whatever diagram type was previously
+      // selected in the live view.
+      Page.setUmpleCode(newCode, undefined, true);
 
       if (typeof Action !== "undefined" && typeof Action.generateCode === "function") {
         // Ask the backend to generate an instance diagram using the
