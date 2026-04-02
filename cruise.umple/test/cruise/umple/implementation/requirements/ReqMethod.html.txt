@@ -1,0 +1,5 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqMethod.ump
+</p><p><b>R1: A method requirement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;compute&nbsp;class&nbsp;A&nbsp;ReqMethod.ump&nbsp;line&nbsp;7 ; 
+</p></html>

@@ -574,20 +574,31 @@ $output = $dataHandle->readData('model.ump');
   <select id="liveViewSelector"
           onchange="Action.setLiveView(this.value)"
           style="font-size: 11px; border-radius: 4px; padding: 2px;">
+  <optgroup label="Class Views">
     <option value="gcd" id="menu-set-gcd" >Gv Class Diagram</option>
     <option value="ecd" id="menu-set-ecd">E Class Diagram</option>
-    <option value="sd" id="menu-set-sd">State Diagram</option>  
+    <option value="erd" id="buttonShowGvEntityRelationshipDiagram">ERD</option>
+    <option value="crudUI" id="buttonShowCRUDUI">CRUD UI</option>
+  </optgroup>
+
+  <optgroup label="State Views">
+    <option value="sd" id="menu-set-sd">State Diagram</option>
+    <option value="stateTables" id="buttonShowStateTables">State Tables</option>
+  </optgroup>   
+
+  <optgroup label="Special Views">
     <option value="std" id="menu-set-std">Structure Diagram</option>  
     <option value="gfd" id="menu-set-gfd">Feature Diagram</option>
-    <option value="erd" id="buttonShowGvEntityRelationshipDiagram">ERD</option>
+  </optgroup> 
+
+  <optgroup label="Instance Views">
     <option value="instanceDiagram" id="buttonShowInstanceDiagram">Instance Diagram</option>
-    <!-- <option value="crudUI" id="buttonShowCRUDUI">CRUD UI</option> -->
     <option value="eventSequence" id="buttonShowEventSequence">Event Sequence</option>
-    <option value="stateTables" id="buttonShowStateTables">State Tables</option>
+  </optgroup> 
+
   </select>
 </span>
- 
-    &nbsp; 
+     &nbsp; 
     <span style="font-size: 30%">
     <a id="SHT_button" class="button2 active" href="javascript:Page.clickShowHideText()">T</a>&nbsp;
     <a id="SHD_button" class="button2 active" href="javascript:Page.clickShowHideCanvas()">D</a>&nbsp;

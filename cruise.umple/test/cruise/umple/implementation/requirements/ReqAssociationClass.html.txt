@@ -1,0 +1,8 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqAssociationClass.ump
+</p><p><b>R1: An association class requirement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;association class:&nbsp;  * aCs -- 1..1 P p1;
+&nbsp;in class&nbsp;AC&nbsp;ReqAssociationClass.ump&nbsp;line&nbsp;14 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;association class:&nbsp;  * aCs -- 1..1 Q q1;
+&nbsp;in class&nbsp;AC&nbsp;ReqAssociationClass.ump&nbsp;line&nbsp;14 ; 
+</p></html>

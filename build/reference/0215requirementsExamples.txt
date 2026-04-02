@@ -5,8 +5,7 @@ noreferences
 
 @@description Examples of requirements documents in Umple that can be used to generate code
 
-<p>This page provides some examples of Umple requirements specified using plain text. They show possible styles for specifying requirements. They can be used to guide you to specify requirements in Umple before manually creating a model, or to use UmpleOnline AI capabilities to generate actual Umple code.</p>
-
+<p>This page provides examples of Umple requirements using both plain-text and structured userStory styles. They show possible ways of specifying requirements. They can be used to guide you before manually creating a model, or to use UmpleOnline AI capabilities to generate actual Umple code.</p>
 <br />
 
 @@example  @@caption Hotel booking requirements for creating class diagrams or state machines @@endcaption
@@ -27,4 +26,16 @@ noreferences
 
 @@example @@caption Agent loop system requirements for state machine generation @@endcaption
 @@source manualexamples/ReqAgentLoop.ump
+@@endexample
+
+@@example @@caption Plain-text userStory requirement example @@endcaption
+@@source manualexamples/ReqUserStoryPlain.ump
+@@endexample
+
+@@example @@caption Structured userStory requirement example using who, when, what, and why @@endcaption
+@@source manualexamples/ReqUserStoryStructured.ump
+@@endexample
+
+@@example @@caption Partial structured userStory requirement example @@endcaption
+@@source manualexamples/ReqUserStoryStructuredPartial.ump
 @@endexample
