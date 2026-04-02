@@ -12,6 +12,8 @@ echo restarting the umpleonline server
 quitserver
 echo restarting the docker server for code execution
 startexecdocker
+echo restarting the lsp server
+startlsp
 echo rebuilding the codemirror6 tech
 cd $UMPLEROOT/umpleonline/scripts/codemirror6
 npm start
