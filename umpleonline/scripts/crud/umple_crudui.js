@@ -1735,12 +1735,17 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
 
   // Add JSON persistence controls once per container
   if (container.find(".crud-json-actions").length === 0) {
-    var jsonHtml = "<div class='crud-json-actions' style='margin:6px 0 10px 0;'>" +
-      "<button type='button' id='crud-generate-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Download JSON</button>" +
-      "<button type='button' id='crud-generate-random-data' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Generate Random Data</button>" +
-    "<button type='button' id='crud-load-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Load JSON</button>" +
-    "<button type='button' id='crud-clear-all' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Clear All</button>" +
-    "<button type='button' id='crud-load-instance-diagram' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button'>Load as Instance Diagram</button>" +
+      var jsonHtml = "<div class='crud-json-actions' style='margin:6px 0 10px 0;'>" +
+        "<div class='crud-json-row'>" +
+        "<button type='button' id='crud-generate-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Download JSON</button>" +
+        "<button type='button' id='crud-generate-random-data' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Generate Random Data</button>" +
+      "<button type='button' id='crud-load-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Load JSON</button>" +
+      "<button type='button' id='crud-clear-all' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Clear All</button>" +
+      "<button type='button' id='crud-clear-errors-validate' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Validate data</button>" +
+        "</div>" +
+        "<div class='crud-json-row' style='margin-top:6px;'>" +
+      "<button type='button' id='crud-load-instance-diagram' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button'>Load as Instance Diagram</button>" +
+        "</div>" +
       "<input type='file' id='crud-load-json-file' accept='application/json,.json' style='display:none;' />" +
       "</div>";
     container.prepend(jsonHtml);
@@ -1778,16 +1783,20 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
           if (typeof Page.crudJsonImportFromText === "function") {
             Page.crudJsonImportFromText(resp);
             // After import, (re)open a CRUD dialog. Prefer the class
-            // that was previously expanded; if none, open the first
-            // non-abstract class.
+            // that was previously expanded, but only if it still
+            // exists in the current model and is not abstract;
+            // otherwise open the first non-abstract class.
             var targetClass = Page.crudClassSelected || null;
-            if (!targetClass && Page.crudData && Page.crudData.classes) {
-              Object.keys(Page.crudData.classes).some(function(cn) {
-                var info = Page.crudData.classes[cn] || {};
-                if (info.isAbstract) { return false; }
-                targetClass = cn;
-                return true;
-              });
+            if (Page.crudData && Page.crudData.classes) {
+              if (!targetClass || !Page.crudData.classes[targetClass] || Page.crudData.classes[targetClass].isAbstract) {
+                targetClass = null;
+                Object.keys(Page.crudData.classes).some(function(cn) {
+                  var info = Page.crudData.classes[cn] || {};
+                  if (info.isAbstract) { return false; }
+                  targetClass = cn;
+                  return true;
+                });
+              }
             }
             if (targetClass && typeof Page.openCrudDialogForClass === "function") {
               Page.crudClassSelected = targetClass;
@@ -1804,6 +1813,27 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
 
     container.find("#crud-load-json").off("click").on("click", function() {
       container.find("#crud-load-json-file").trigger("click");
+    });
+
+    // Clear all visible CRUD error banners/messages in this container
+    // and re-run global CRUD validation to show the current state.
+    container.find("#crud-clear-errors-validate").off("click").on("click", function() {
+      var target = container;
+
+      // Clear any existing per-instance and inline errors for this
+      // CRUD view (bottom panel or live-view) so the user starts from
+      // a clean slate.
+      target.find(".crud-error").hide().text("");
+      target.find(".crud-instance-diagram-error").hide().text("");
+      target.find(".crud-global-errors-banner").remove();
+
+      // Optionally reset informational adjustment messages so the
+      // banner only reflects the latest validation pass.
+      Page.crudAdjustmentMessages = [];
+
+      if (typeof Page.renderCrudGlobalErrors === "function") {
+        Page.renderCrudGlobalErrors(target);
+      }
     });
 
     // Clear all CRUD instance data for all classes in the current
@@ -1874,6 +1904,17 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
               targetClass = cn;
               return true;
             });
+          }
+          if (Page.crudData && Page.crudData.classes) {
+            if (!targetClass || !Page.crudData.classes[targetClass] || Page.crudData.classes[targetClass].isAbstract) {
+              targetClass = null;
+              Object.keys(Page.crudData.classes).some(function(cn) {
+                var info = Page.crudData.classes[cn] || {};
+                if (info.isAbstract) { return false; }
+                targetClass = cn;
+                return true;
+              });
+            }
           }
           if (targetClass && typeof Page.openCrudDialogForClass === "function") {
             Page.crudClassSelected = targetClass;
@@ -3932,13 +3973,14 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
   Page.initCrudUi(tabnumber, containerSelector);
 
   // After (re)rendering the CRUD UI for this model, keep the
-  // previously expanded class dialog open when possible. If no class
-  // has been selected yet, default to opening the first non-abstract
-  // class so the user immediately sees a form instead of a collapsed
-  // panel.
+  // previously expanded class dialog open when possible. If that
+  // class no longer exists or is abstract, or if no class has been
+  // selected yet, default to opening the first non-abstract class so
+  // the user immediately sees a form instead of a collapsed panel.
   if (typeof Page.openCrudDialogForClass === "function" && Page.crudData && Page.crudData.classes) {
     var targetClassAuto = Page.crudClassSelected || null;
-    if (!targetClassAuto) {
+    if (!targetClassAuto || !Page.crudData.classes[targetClassAuto] || Page.crudData.classes[targetClassAuto].isAbstract) {
+      targetClassAuto = null;
       Object.keys(Page.crudData.classes).some(function(cn) {
         var info = Page.crudData.classes[cn] || {};
         if (info.isAbstract) { return false; }
@@ -3960,19 +4002,25 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
 
       // After import, automatically open a dialog for a class that
       // actually has instances, preferring the current selection if
-      // one exists.
+      // it still exists and is concrete; otherwise fall back to the
+      // first non-abstract class with instances.
       var targetClass = Page.crudClassSelected || null;
-      if (!targetClass && Page.crudData && Page.crudData.classes) {
-        Object.keys(Page.crudData.classes).some(function(cn) {
-          var info = Page.crudData.classes[cn] || {};
-          if (info.isAbstract) { return false; }
-          var inst = info.instances || [];
-          if (inst.length > 0) {
-            targetClass = cn;
-            return true;
-          }
-          return false;
-        });
+      if (Page.crudData && Page.crudData.classes) {
+        if (!targetClass || !Page.crudData.classes[targetClass] || Page.crudData.classes[targetClass].isAbstract) {
+          targetClass = null;
+        }
+        if (!targetClass) {
+          Object.keys(Page.crudData.classes).some(function(cn) {
+            var info = Page.crudData.classes[cn] || {};
+            if (info.isAbstract) { return false; }
+            var inst = info.instances || [];
+            if (inst.length > 0) {
+              targetClass = cn;
+              return true;
+            }
+            return false;
+          });
+        }
       }
       if (targetClass && typeof Page.openCrudDialogForClass === "function") {
         Page.crudClassSelected = targetClass;
