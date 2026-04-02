@@ -1,0 +1,12 @@
+// Test that a bidirectional association implementing a requirement shows the -- arrow direction
+req R1 {
+  A bidirectional association requirement.
+}
+
+class X {
+  implementsReq R1;
+  1 -- * Y;
+}
+
+class Y {
+}

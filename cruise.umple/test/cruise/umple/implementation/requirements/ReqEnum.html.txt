@@ -1,0 +1,5 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqEnum.ump
+</p><p><b>R1: An enum requirement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;enum:&nbsp;Color&nbsp;ReqEnum.ump&nbsp;line&nbsp;6 ; 
+</p></html>
