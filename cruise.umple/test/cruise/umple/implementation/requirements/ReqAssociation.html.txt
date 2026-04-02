@@ -1,0 +1,6 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqAssociation.ump
+</p><p><b>R1: A unidirectional association requirement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;association:&nbsp;  * as -> * B bs;
+&nbsp;in class&nbsp;A&nbsp;ReqAssociation.ump&nbsp;line&nbsp;9 ; 
+</p></html>

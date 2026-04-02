@@ -173,10 +173,13 @@ task downloadUmpleJar(type: Download) {
     src rootProject.ext.umpleJarRemoteSource
     dest rootProject.ext.umpleJarRemoteFile
 }
+// The following used to download from
+// "https://codeload.github.com/pholser/jopt-simple/zip/jopt-simple-4.4"
+// but was giving CI failures periodically, so using our cached version
 task downloadJOptSimpleVendorZip(type: Download) {
     onlyIfNewer true
     overwrite true
-    src "https://codeload.github.com/pholser/jopt-simple/zip/jopt-simple-4.4"
+    src "https://umple.org/joptsimpledl/jopt-simple-4.4.zip"
     dest "${rootProject.projectDir.toString()}/dist/gradle/libs/vendors/jopt-simple-4.4.zip"
 }
 
