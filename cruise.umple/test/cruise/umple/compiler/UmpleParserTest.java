@@ -1637,7 +1637,7 @@ public class UmpleParserTest
   {
           assertNoWarningsParse("451_ReqMixsetOutputGenerated.ump");
   }
-  // Issue 2098: implementsReq at top level before interface
+  // implementsReq at top level before interface
   @Test
   public void ReqInterface()
   {
@@ -1648,7 +1648,7 @@ public class UmpleParserTest
   {
     assertNoWarningsParse("451_ReqInterfaceNoLeakage.ump");
   }
-  // Issue 2098: implementsReq at top level before associationClass
+  // implementsReq at top level before associationClass
   @Test
   public void ReqAssociationClass()
   {
@@ -1659,7 +1659,7 @@ public class UmpleParserTest
   {
     assertNoWarningsParse("451_ReqAssociationClassNoLeakage.ump");
   }
-  // Issue 2098: implementsReq at top level before trait
+  // implementsReq at top level before trait
   @Test
   public void ReqTrait()
   {
@@ -1670,7 +1670,7 @@ public class UmpleParserTest
   {
     assertNoWarningsParse("451_ReqTraitNoLeakage.ump");
   }
-  // Issue 2098: implementsReq at top level before enum
+  // implementsReq at top level before enum
   @Test
   public void ReqEnum()
   {
@@ -1681,7 +1681,7 @@ public class UmpleParserTest
   {
     assertNoWarningsParse("451_ReqEnumNoLeakage.ump");
   }
-  // Issue 2098: implementsReq at top level before top-level state machine definition
+  // implementsReq at top level before top-level state machine definition
   @Test
   public void ReqTopLevelStateMachine()
   {
@@ -1692,7 +1692,7 @@ public class UmpleParserTest
   {
     assertNoWarningsParse("451_ReqTopLevelSMNoLeakage.ump");
   }
-  // Issue 2098: implementsReq inside mixset before structural elements
+  // implementsReq inside mixset before structural elements
   @Test
   public void ReqInsideMixset()
   {
@@ -1702,6 +1702,70 @@ public class UmpleParserTest
   public void ReqInsideMixsetTrait()
   {
     assertNoWarningsParse("451_ReqInsideMixsetTrait.ump");
+  }
+  @Test
+  public void ReqInsideMixsetInterface()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetInterface.ump");
+  }
+  @Test
+  public void ReqInsideMixsetEnum()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetEnum.ump");
+  }
+  @Test
+  public void ReqInsideMixsetAssocClass()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetAssocClass.ump");
+  }
+  @Test
+  public void ReqInsideMixsetSM()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetSM.ump");
+  }
+  @Test
+  public void ReqInsideMixsetAssocBlock()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetAssocBlock.ump");
+  }
+  @Test
+  public void ReqInsideMixsetReq()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetReq.ump");
+  }
+  // implementsReq at top level before top-level association block
+  @Test
+  public void ReqTopLevelAssociation()
+  {
+    assertNoWarningsParse("451_ReqTopLevelAssociation.ump");
+  }
+  @Test
+  public void ReqTopLevelAssociationNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqTopLevelAssociationNoLeakage.ump");
+  }
+  //implementsReq inside a top-level association block
+  @Test
+  public void ReqInsideAssociationBlock()
+  {
+    assertNoWarningsParse("451_ReqInsideAssociationBlock.ump");
+  }
+  //implementsReq before a req statement (requirement decomposition)
+  @Test
+  public void ReqBeforeReqStatement()
+  {
+    assertNoWarningsParse("451_ReqBeforeReqStatement.ump");
+  }
+  @Test
+  public void ReqBeforeReqStatementNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqBeforeReqStatementNoLeakage.ump");
+  }
+  //implementsReq inside a class before a nested inner class
+  @Test
+  public void ReqInnerClass()
+  {
+    assertNoWarningsParse("451_ReqInnerClass.ump");
   }
   //Issue 2377 (User Story)
   @Test

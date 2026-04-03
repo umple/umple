@@ -1,0 +1,10 @@
+// implementsReq inside a mixset before an enum definition
+// Should not produce a 401 warning
+mixset M {
+  implementsReq A;
+  enum Color { RED, GREEN, BLUE }
+}
+req A text {
+  System must support color values.
+}
+use M;

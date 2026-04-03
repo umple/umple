@@ -1,0 +1,13 @@
+// implementsReq inside a top-level association block before a specific association
+// Should not produce a 401 warning
+class Student {}
+class Course {}
+class Department {}
+association {
+  implementsReq A;
+  * Student -- * Course;
+  * Course -- 1 Department;
+}
+req A text {
+  Students can enroll in courses.
+}
