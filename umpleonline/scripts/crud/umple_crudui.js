@@ -10,10 +10,15 @@ Page.crudAssociationsByClass = {};
 // Container used for inline CRUD panel rendering
 Page.currentCrudContainer = null;
 
+// Informational messages about automatic multiplicity-driven adjustments
+// (e.g., when tightening max bounds causes extra links to be trimmed).
+Page.crudAdjustmentMessages = [];
+
 Page.resetCrudData = function() {
   Page.crudData = { classes: {} };
   Page.crudClassDefs = {};
   Page.crudAssociationsByClass = {};
+  Page.crudAdjustmentMessages = [];
 };
 
 // Updates instance count for each class
@@ -106,6 +111,720 @@ Page.parseCrudMultiplicity = function(multiplicity) {
   return { min: min, max: max };
 };
 
+// Normalize stored association values for multi-valued ends so that they
+// are always represented as an array of numeric indices. This is helpful
+// when a model evolution changes an end from single-valued (radio) to
+// multi-valued (checkbox), since previously stored links may be a single
+// number instead of an array.
+Page.normalizeCrudMultiValuedAssociations = function() {
+  if (!Page.crudAssociationsByClass || !Page.crudData || !Page.crudData.classes) {
+    return;
+  }
+
+  var classesData = Page.crudData.classes;
+
+  Object.keys(Page.crudAssociationsByClass).forEach(function(fromClass) {
+    var ends = Page.crudAssociationsByClass[fromClass] || [];
+    if (!ends.length) { return; }
+
+    var classInfo = classesData[fromClass];
+    if (!classInfo) { return; }
+    var instances = classInfo.instances || [];
+    if (!instances.length) { return; }
+
+    ends.forEach(function(end) {
+      if (!end) { return; }
+      var fieldName = end.storageKey;
+      if (!fieldName) { return; }
+
+      var maxAllowed = (typeof end.toMax === "number") ? end.toMax : null;
+      var isMulti = (maxAllowed === null || maxAllowed > 1);
+      if (!isMulti) { return; }
+
+      for (var i = 0; i < instances.length; i++) {
+        var inst = instances[i];
+        if (!inst) { continue; }
+        var raw = inst[fieldName];
+
+        if (raw === undefined || raw === null || raw === "") {
+          continue;
+        }
+
+        var indices = [];
+        if (Array.isArray(raw)) {
+          raw.forEach(function(v) {
+            var idx = (typeof v === "number") ? v : parseInt(v, 10);
+            if (!isNaN(idx) && idx >= 0) {
+              indices.push(idx);
+            }
+          });
+        } else {
+          var idxSingle = (typeof raw === "number") ? raw : parseInt(raw, 10);
+          if (!isNaN(idxSingle) && idxSingle >= 0) {
+            indices.push(idxSingle);
+          }
+        }
+
+        if (indices.length > 0) {
+          inst[fieldName] = indices;
+        } else {
+          inst[fieldName] = [];
+        }
+      }
+    });
+  });
+};
+
+// When multiplicities are tightened (e.g., from * to 1 or from 5 to 3),
+// ensure that stored association values do not exceed the new maximum.
+// Extra links are trimmed, and an informational message is recorded so
+// users understand what changed.
+Page.adjustCrudAssociationsForTightenedMax = function() {
+  if (!Page.crudAssociationsByClass || !Page.crudData || !Page.crudData.classes) {
+    return;
+  }
+
+  var classesData = Page.crudData.classes;
+
+  Object.keys(Page.crudAssociationsByClass).forEach(function(fromClass) {
+    var ends = Page.crudAssociationsByClass[fromClass] || [];
+    if (!ends.length) { return; }
+
+    var classInfo = classesData[fromClass];
+    if (!classInfo) { return; }
+    var instances = classInfo.instances || [];
+    if (!instances.length) { return; }
+
+    ends.forEach(function(end) {
+      if (!end) { return; }
+      var fieldName = end.storageKey;
+      if (!fieldName) { return; }
+
+      var maxAllowed = (typeof end.toMax === "number") ? end.toMax : null;
+      if (maxAllowed === null || maxAllowed <= 0) {
+        return; // no upper bound to enforce
+      }
+
+      for (var i = 0; i < instances.length; i++) {
+        var inst = instances[i];
+        if (!inst) { continue; }
+        var raw = inst[fieldName];
+
+        if (raw === undefined || raw === null || raw === "") {
+          continue;
+        }
+
+        var indices = [];
+        if (Array.isArray(raw)) {
+          raw.forEach(function(v) {
+            var idx = (typeof v === "number") ? v : parseInt(v, 10);
+            if (!isNaN(idx) && idx >= 0) {
+              indices.push(idx);
+            }
+          });
+        } else {
+          var idxSingle = (typeof raw === "number") ? raw : parseInt(raw, 10);
+          if (!isNaN(idxSingle) && idxSingle >= 0) {
+            indices.push(idxSingle);
+          }
+        }
+
+        if (!indices.length) {
+          // Normalize empty links according to max: scalar null for single,
+          // empty array for multi-valued.
+          inst[fieldName] = (maxAllowed === 1 ? null : []);
+          continue;
+        }
+
+        if (indices.length > maxAllowed) {
+          var kept = indices.slice(0, maxAllowed);
+          var removed = indices.slice(maxAllowed);
+
+          if (maxAllowed === 1) {
+            inst[fieldName] = kept[0];
+          } else {
+            inst[fieldName] = kept;
+          }
+
+          var fromLabel = fromClass + "[" + (i + 1) + "]";
+          var removedCount = removed.length;
+          var maxText = (maxAllowed === 1) ? "one" : String(maxAllowed);
+
+          var msg = "Info: Because the multiplicity for association '" + end.assocName +
+                    "' was tightened to allow at most " + maxText + " " + end.toClass +
+                    " instance(s) per " + fromClass + ", " + removedCount +
+                    " extra " + end.toClass + " link(s) were removed from " + fromLabel + ".";
+
+          if (Array.isArray(Page.crudAdjustmentMessages)) {
+            Page.crudAdjustmentMessages.push(msg);
+          }
+        } else {
+          // Keep representation consistent with the new max bound
+          if (maxAllowed === 1) {
+            inst[fieldName] = indices[0];
+          } else {
+            inst[fieldName] = indices;
+          }
+        }
+      }
+    });
+  });
+};
+
+// Determine whether changing an attribute's type should preserve
+// existing data values or treat them as incompatible and clear them.
+// This is based purely on the old/new type declarations, not the
+// actual runtime values.
+Page.isCrudAttributeTypeChangeCompatible = function(oldTypeInfo, newTypeInfo) {
+  if (!oldTypeInfo || !newTypeInfo) {
+    return false;
+  }
+
+  // Arrays and scalars are never considered compatible with each
+  // other – a change between scalar and array types clears data.
+  if (!!oldTypeInfo.isArray !== !!newTypeInfo.isArray) {
+    return false;
+  }
+
+  var normalizeBase = function(b) {
+    var base = (b || "").toString().toLowerCase();
+    if (base === "integer") { return "int"; }
+    if (base === "bool") { return "boolean"; }
+    if (base === "char") { return "character"; }
+    return base;
+  };
+
+  var oldBase = normalizeBase(oldTypeInfo.base);
+  var newBase = normalizeBase(newTypeInfo.base);
+
+  // No semantic change (including synonyms like Integer -> int).
+  if (oldBase === newBase) {
+    return true;
+  }
+
+  // Any previous type becoming String is always safe: existing values
+  // can be displayed as text without loss of information.
+  if (newBase === "string") {
+    return true;
+  }
+
+  // Integers widening to floating point types (e.g., int -> double or
+  // int -> float) are treated as compatible.
+  var oldIsInt = (oldBase === "int");
+  var newIsFloat = (newBase === "double" || newBase === "float");
+  if (oldIsInt && newIsFloat) {
+    return true;
+  }
+
+  // All other type changes (for example, string -> int or
+  // double -> int) are treated as incompatible.
+  return false;
+};
+
+// Attempt to convert an existing stored value into the new type so
+// that compatible values can be preserved even when the type change
+// as a whole is considered incompatible (for example, String -> int
+// where some strings are numeric). Returns an object of the form
+// { compatible: <bool>, value: <any> }.
+Page.convertCrudValueForNewType = function(value, oldTypeInfo, newTypeInfo) {
+  var result = { compatible: false, value: undefined };
+  if (!newTypeInfo) {
+    return result;
+  }
+
+  var normalizeBase = function(b) {
+    var base = (b || "").toString().toLowerCase();
+    if (base === "integer") { return "int"; }
+    if (base === "bool") { return "boolean"; }
+    if (base === "char") { return "character"; }
+    return base;
+  };
+
+  var newBase = normalizeBase(newTypeInfo.base);
+  var isArray = !!newTypeInfo.isArray;
+
+  // Helper to convert a single scalar value.
+  var convertScalar = function(v) {
+    if (typeof v === "undefined" || v === null || v === "") {
+      return { compatible: false, value: undefined };
+    }
+
+    // Integer target
+    if (newBase === "int") {
+      if (typeof v === "number" && isFinite(v) && Math.floor(v) === v) {
+        return { compatible: true, value: v };
+      }
+      if (typeof v === "string") {
+        var s = v.trim();
+        if (s === "") {
+          return { compatible: false, value: undefined };
+        }
+        if (!/^[-+]?\d+$/.test(s)) {
+          return { compatible: false, value: undefined };
+        }
+        var n = parseInt(s, 10);
+        if (!isNaN(n)) {
+          return { compatible: true, value: n };
+        }
+      }
+      return { compatible: false, value: undefined };
+    }
+
+    // Floating-point target (double/float)
+    if (newBase === "double" || newBase === "float") {
+      if (typeof v === "number" && isFinite(v)) {
+        return { compatible: true, value: v };
+      }
+      if (typeof v === "string") {
+        var s2 = v.trim();
+        if (s2 === "") {
+          return { compatible: false, value: undefined };
+        }
+        var f = parseFloat(s2);
+        if (!isNaN(f)) {
+          return { compatible: true, value: f };
+        }
+      }
+      return { compatible: false, value: undefined };
+    }
+
+    // Boolean target
+    if (newBase === "boolean") {
+      if (typeof v === "boolean") {
+        return { compatible: true, value: v };
+      }
+      if (typeof v === "string") {
+        var s3 = v.trim().toLowerCase();
+        if (s3 === "true") {
+          return { compatible: true, value: true };
+        }
+        if (s3 === "false") {
+          return { compatible: true, value: false };
+        }
+      }
+      return { compatible: false, value: undefined };
+    }
+
+    // For other targets (date, time, enums, etc.), we do not attempt
+    // automatic conversion beyond what the type-compatibility function
+    // already allows.
+    return { compatible: false, value: undefined };
+  };
+
+  // Do not attempt to convert between scalar and array here; those
+  // shape changes are handled by the type-compatibility guard.
+  if (isArray) {
+    if (!Array.isArray(value)) {
+      return result;
+    }
+    var out = [];
+    value.forEach(function(elem) {
+      var conv = convertScalar(elem);
+      if (conv.compatible) {
+        out.push(conv.value);
+      }
+    });
+    if (out.length === 0) {
+      return result;
+    }
+    return { compatible: true, value: out };
+  }
+
+  return convertScalar(value);
+};
+
+// When an attribute has effectively been renamed (old attribute name
+// removed, new attribute name added) and their data types are the
+// same, preserve existing data by moving values from the old name to
+// the new one. If the data type has changed, no values are moved so
+// the new attribute appears blank.
+Page.adjustCrudAttributesForRenames = function(oldCrudData) {
+  if (!oldCrudData || !oldCrudData.classes || !Page.crudData || !Page.crudData.classes) {
+    return;
+  }
+
+  var classesData = Page.crudData.classes;
+
+  Object.keys(classesData).forEach(function(className) {
+    var newInfo = classesData[className];
+    if (!newInfo) { return; }
+    var instances = newInfo.instances || [];
+    if (!instances.length) { return; }
+
+    var oldInfo = oldCrudData.classes[className];
+    if (!oldInfo || !Array.isArray(oldInfo.attributes)) { return; }
+
+    var newAttrs = newInfo.attributes || [];
+    var oldAttrs = oldInfo.attributes || [];
+    if (!newAttrs.length || !oldAttrs.length) { return; }
+
+    var oldByName = {};
+    var newByName = {};
+    oldAttrs.forEach(function(a) {
+      if (!a || !a.name) { return; }
+      oldByName[a.name] = a;
+    });
+    newAttrs.forEach(function(a) {
+      if (!a || !a.name) { return; }
+      newByName[a.name] = a;
+    });
+
+    var oldOnly = [];
+    var newOnly = [];
+
+    oldAttrs.forEach(function(a) {
+      if (!a || !a.name) { return; }
+      if (!newByName[a.name]) {
+        oldOnly.push(a);
+      }
+    });
+    newAttrs.forEach(function(a) {
+      if (!a || !a.name) { return; }
+      if (!oldByName[a.name]) {
+        newOnly.push(a);
+      }
+    });
+
+    if (!oldOnly.length || !newOnly.length) { return; }
+
+    var normalizeBase = function(b) {
+      var base = (b || "").toString().toLowerCase();
+      if (base === "integer") { return "int"; }
+      if (base === "bool") { return "boolean"; }
+      if (base === "char") { return "character"; }
+      return base;
+    };
+
+    var usedOldNames = {};
+
+    newOnly.forEach(function(newAttr) {
+      if (!newAttr || !newAttr.name) { return; }
+      var newName = newAttr.name;
+      var newTypeInfo = Page.getCrudTypeInfo(newAttr.type || "");
+      var newBase = normalizeBase(newTypeInfo.base);
+      var newIsArray = !!newTypeInfo.isArray;
+
+      // Find a single old-only attribute with the same normalized
+      // base type and array-ness. If more than one matches, skip to
+      // avoid guessing.
+      var candidates = [];
+      oldOnly.forEach(function(oldAttr) {
+        if (!oldAttr || !oldAttr.name) { return; }
+        var oldName = oldAttr.name;
+        if (usedOldNames[oldName]) { return; }
+        var oldTypeInfo = Page.getCrudTypeInfo(oldAttr.type || "");
+        var oldBase = normalizeBase(oldTypeInfo.base);
+        var oldIsArray = !!oldTypeInfo.isArray;
+        if (oldBase === newBase && oldIsArray === newIsArray) {
+          candidates.push(oldAttr);
+        }
+      });
+
+      if (candidates.length !== 1) {
+        return; // ambiguous or no clear rename target
+      }
+
+      var chosen = candidates[0];
+      var oldNameChosen = chosen.name;
+      usedOldNames[oldNameChosen] = true;
+
+      var hadAnyValue = false;
+      var movedCount = 0;
+
+      instances.forEach(function(inst) {
+        if (!inst || !Object.prototype.hasOwnProperty.call(inst, oldNameChosen)) {
+          return;
+        }
+        var v = inst[oldNameChosen];
+        if (typeof v === "undefined" || v === null || v === "") {
+          // Remove empty old values so only the new name remains.
+          delete inst[oldNameChosen];
+          return;
+        }
+
+        hadAnyValue = true;
+
+        // Do not overwrite an explicit value on the new attribute if
+        // one already exists on this instance.
+        if (!Object.prototype.hasOwnProperty.call(inst, newName)) {
+          inst[newName] = v;
+        }
+        delete inst[oldNameChosen];
+        movedCount++;
+      });
+
+      if (hadAnyValue && movedCount > 0) {
+        var msg = "Info: Attribute '" + oldNameChosen + "' in class '" + className + "' was renamed to '" + newName + "'. Existing data was preserved because the attribute type did not change.";
+        if (Array.isArray(Page.crudAdjustmentMessages)) {
+          Page.crudAdjustmentMessages.push(msg);
+        }
+      }
+    });
+  });
+};
+
+// When a model evolution changes the declared data type of an
+// attribute but keeps the attribute name the same, decide on a
+// per-attribute basis whether existing values can be kept or should
+// be cleared. Compatible changes (such as int -> double or
+// int -> string) keep values; incompatible changes (such as
+// string -> int or double -> int) remove them. In both cases, an
+// informational message is recorded so users understand what
+// happened to their data.
+Page.adjustCrudAttributesForTypeChanges = function(oldCrudData) {
+  if (!oldCrudData || !oldCrudData.classes || !Page.crudData || !Page.crudData.classes) {
+    return;
+  }
+
+  var classesData = Page.crudData.classes;
+
+  Object.keys(classesData).forEach(function(className) {
+    var newInfo = classesData[className];
+    if (!newInfo) { return; }
+    var instances = newInfo.instances || [];
+    if (!instances.length) { return; }
+
+    var oldInfo = oldCrudData.classes[className];
+    if (!oldInfo || !Array.isArray(oldInfo.attributes)) { return; }
+
+    var newAttrs = newInfo.attributes || [];
+    if (!newAttrs.length) { return; }
+
+    var oldAttrByName = {};
+    oldInfo.attributes.forEach(function(a) {
+      if (!a || !a.name) { return; }
+      oldAttrByName[a.name] = a;
+    });
+
+    newAttrs.forEach(function(attr) {
+      if (!attr || !attr.name) { return; }
+      var attrName = attr.name;
+      var oldAttr = oldAttrByName[attrName];
+      if (!oldAttr) { return; }
+
+      var oldTypeRaw = oldAttr.type || "";
+      var newTypeRaw = attr.type || "";
+      var oldTypeInfo = Page.getCrudTypeInfo(oldTypeRaw);
+      var newTypeInfo = Page.getCrudTypeInfo(newTypeRaw);
+
+      // If the normalized base type and array-ness are effectively
+      // the same, treat this as no meaningful change.
+      var normalizeBase = function(b) {
+        var base = (b || "").toString().toLowerCase();
+        if (base === "integer") { return "int"; }
+        if (base === "bool") { return "boolean"; }
+        if (base === "char") { return "character"; }
+        return base;
+      };
+      var oldBase = normalizeBase(oldTypeInfo.base);
+      var newBase = normalizeBase(newTypeInfo.base);
+      if (oldBase === newBase && !!oldTypeInfo.isArray === !!newTypeInfo.isArray) {
+        return;
+      }
+
+      var compatible = Page.isCrudAttributeTypeChangeCompatible(oldTypeInfo, newTypeInfo);
+
+      // Track whether any existing instances had a concrete value so
+      // we only emit messages when there was something to adjust.
+      var hadAnyValue = false;
+
+      if (!compatible) {
+        var removedCount = 0;
+        var keptCount = 0;
+        instances.forEach(function(inst) {
+          if (!inst || !Object.prototype.hasOwnProperty.call(inst, attrName)) {
+            return;
+          }
+          var vExisting = inst[attrName];
+          if (typeof vExisting === "undefined" || vExisting === null || vExisting === "") {
+            return;
+          }
+          hadAnyValue = true;
+
+          var conv = Page.convertCrudValueForNewType(vExisting, oldTypeInfo, newTypeInfo);
+          if (conv && conv.compatible) {
+            inst[attrName] = conv.value;
+            keptCount++;
+          } else {
+            delete inst[attrName];
+            removedCount++;
+          }
+        });
+
+        if (hadAnyValue) {
+          if (keptCount > 0 && removedCount === 0) {
+            var msgAllKept = "Info: Data type of attribute '" + attrName + "' in class '" + className + "' was updated from " + oldTypeRaw + " to " + newTypeRaw + ". Existing data was kept because its values are compatible with the new type.";
+            if (Array.isArray(Page.crudAdjustmentMessages)) {
+              Page.crudAdjustmentMessages.push(msgAllKept);
+            }
+          } else if (keptCount > 0 && removedCount > 0) {
+            var msgMixed = "Info: Data type of attribute '" + attrName + "' in class '" + className + "' was updated from " + oldTypeRaw + " to " + newTypeRaw + ". Existing data was adjusted: compatible values were kept where possible, and incompatible values were removed from " + removedCount + " instance(s).";
+            if (Array.isArray(Page.crudAdjustmentMessages)) {
+              Page.crudAdjustmentMessages.push(msgMixed);
+            }
+          } else if (removedCount > 0) {
+            var msgRemoved = "Info: Data type of attribute '" + attrName + "' in class '" + className + "' was updated from " + oldTypeRaw + " to " + newTypeRaw + ". Existing data was removed from " + removedCount + " instance(s) because it is not compatible with the new type.";
+            if (Array.isArray(Page.crudAdjustmentMessages)) {
+              Page.crudAdjustmentMessages.push(msgRemoved);
+            }
+          }
+        }
+      } else {
+        instances.forEach(function(inst) {
+          if (!inst || !Object.prototype.hasOwnProperty.call(inst, attrName)) {
+            return;
+          }
+          var v = inst[attrName];
+          if (typeof v === "undefined" || v === null || v === "") {
+            return;
+          }
+          hadAnyValue = true;
+        });
+
+        if (hadAnyValue) {
+          var msgKept = "Info: Data type of attribute '" + attrName + "' in class '" + className + "' was updated from " + oldTypeRaw + " to " + newTypeRaw + ". Existing data was kept because it is compatible with the new type.";
+          if (Array.isArray(Page.crudAdjustmentMessages)) {
+            Page.crudAdjustmentMessages.push(msgKept);
+          }
+        }
+      }
+    });
+  });
+};
+
+// When a class has effectively been renamed (old class name removed,
+// new class name added) and its associations to other classes are the
+// same, preserve existing association links by moving values from the
+// old storage fields (based on the old class name) to the new ones.
+//
+// classRenameNewToOld: map of { newClassName -> oldClassName }
+// oldAssocByClass: snapshot of Page.crudAssociationsByClass from the
+//                   previous model load.
+Page.adjustCrudAssociationsForClassRenames = function(classRenameNewToOld, oldAssocByClass) {
+  if (!classRenameNewToOld || !oldAssocByClass || !Page.crudAssociationsByClass || !Page.crudData || !Page.crudData.classes) {
+    return;
+  }
+
+  var classesData = Page.crudData.classes;
+
+  // For each renamed class, first adjust association fields on its own
+  // instances for navigable ends that originate from this class.
+  Object.keys(classRenameNewToOld).forEach(function(newClassName) {
+    var oldClassName = classRenameNewToOld[newClassName];
+    if (!oldClassName) { return; }
+
+    var classInfo = classesData[newClassName];
+    if (!classInfo || !Array.isArray(classInfo.instances)) { return; }
+    var instances = classInfo.instances;
+    if (!instances.length) { return; }
+
+    var newEndsAll = Page.crudAssociationsByClass[newClassName] || [];
+    var oldEndsAll = oldAssocByClass[oldClassName] || [];
+
+    // Build a lookup of old association ends by (assocId,toClass) so
+    // we can find the corresponding old storage key for each new end.
+    var oldByAssocAndTarget = {};
+    oldEndsAll.forEach(function(e) {
+      if (!e || !e.assocId) { return; }
+      // Only consider navigable ends that originate from the old class
+      // name; inherited ends for subclasses are handled through their
+      // own class entries.
+      if (e.fromClass !== oldClassName) { return; }
+      var key = (e.assocId || "") + "::" + (e.toClass || "");
+      if (!oldByAssocAndTarget[key]) {
+        oldByAssocAndTarget[key] = [];
+      }
+      oldByAssocAndTarget[key].push(e);
+    });
+
+    newEndsAll.forEach(function(end) {
+      if (!end || !end.assocId) { return; }
+      if (end.fromClass !== newClassName) { return; }
+
+      var lookupKey = (end.assocId || "") + "::" + (end.toClass || "");
+      var candidates = oldByAssocAndTarget[lookupKey];
+      if (!candidates || !candidates.length) { return; }
+
+      // Use and remove the first candidate so that multiple ends with
+      // the same signature are paired in a stable way.
+      var oldEnd = candidates.shift();
+      if (!oldEnd || !oldEnd.storageKey) { return; }
+
+      var oldKey = oldEnd.storageKey;
+      var newKey = end.storageKey;
+      if (!newKey || oldKey === newKey) { return; }
+
+      instances.forEach(function(inst) {
+        if (!inst || !Object.prototype.hasOwnProperty.call(inst, oldKey)) {
+          return;
+        }
+        if (!Object.prototype.hasOwnProperty.call(inst, newKey)) {
+          inst[newKey] = inst[oldKey];
+        }
+        delete inst[oldKey];
+      });
+    });
+  });
+
+  // Next, for each renamed class, adjust association fields on other
+  // classes' instances where the renamed class appears on the target
+  // side of a navigable end.
+  Object.keys(classRenameNewToOld).forEach(function(newClassName) {
+    var oldClassName = classRenameNewToOld[newClassName];
+    if (!oldClassName) { return; }
+
+    Object.keys(classesData).forEach(function(sourceClass) {
+      var sourceInfo = classesData[sourceClass];
+      if (!sourceInfo || !Array.isArray(sourceInfo.instances)) { return; }
+      var instances = sourceInfo.instances;
+      if (!instances.length) { return; }
+
+      var newEndsAll = Page.crudAssociationsByClass[sourceClass] || [];
+      var oldEndsAll = oldAssocByClass[sourceClass] || [];
+      if (!newEndsAll.length || !oldEndsAll.length) { return; }
+
+      // Build a lookup of old association ends by assocId where the
+      // renamed class was the target side.
+      var oldByAssocId = {};
+      oldEndsAll.forEach(function(e) {
+        if (!e || !e.assocId) { return; }
+        if (e.toClass !== oldClassName) { return; }
+        var key = e.assocId || "";
+        if (!oldByAssocId[key]) {
+          oldByAssocId[key] = [];
+        }
+        oldByAssocId[key].push(e);
+      });
+
+      if (!Object.keys(oldByAssocId).length) { return; }
+
+      newEndsAll.forEach(function(end) {
+        if (!end || !end.assocId) { return; }
+        if (end.toClass !== newClassName) { return; }
+
+        var list = oldByAssocId[end.assocId || ""];
+        if (!list || !list.length) { return; }
+        var oldEnd = list.shift();
+        if (!oldEnd || !oldEnd.storageKey) { return; }
+
+        var oldKey = oldEnd.storageKey;
+        var newKey = end.storageKey;
+        if (!newKey || oldKey === newKey) { return; }
+
+        instances.forEach(function(inst) {
+          if (!inst || !Object.prototype.hasOwnProperty.call(inst, oldKey)) {
+            return;
+          }
+          if (!Object.prototype.hasOwnProperty.call(inst, newKey)) {
+            inst[newKey] = inst[oldKey];
+          }
+          delete inst[oldKey];
+        });
+      });
+    });
+  });
+};
+
 // For hierarchical self-reflexive associations where each instance can have at
 // most one parent (e.g., FunctionalArea parent/child), verify that assigning
 // parentIndex as the parent of childIndex does not create a cycle.
@@ -149,6 +868,240 @@ Page.checkCrudReflexiveHierarchyCycle = function(className, instances, end, chil
       next = isNaN(n) ? null : n;
     }
     current = next;
+  }
+};
+
+// Validate association multiplicities globally across all classes and
+// instances, taking into account a pending update for a single instance
+// (the instance currently being saved). This allows us to surface
+// conflicts that arise when the model's associations have changed in a
+// way that existing instances no longer satisfy (e.g., adding a new
+// mandatory association to a class that already has instances).
+//
+// pendingUpdate: optional object of the form
+//   {
+//      className: <string>,
+//      index: <number>,     // index within instances[] when editing
+//      isEdit: <boolean>,   // true if editing existing, false if adding
+//      newInst: <object>    // instance snapshot about to be saved
+//   }
+//
+// Returns an array of human-readable error messages. No side effects are
+// performed on Page.crudData.
+Page.validateCrudGlobalModel = function(pendingUpdate) {
+  var errors = [];
+
+  if (!Page.crudAssociationsByClass || !Page.crudData || !Page.crudData.classes) {
+    return errors;
+  }
+
+  var classesData = Page.crudData.classes;
+
+  for (var fromClass in Page.crudAssociationsByClass) {
+    if (!Page.crudAssociationsByClass.hasOwnProperty(fromClass)) { continue; }
+
+    var ends = Page.crudAssociationsByClass[fromClass] || [];
+    if (!ends.length) { continue; }
+
+    var classInfo = classesData[fromClass];
+    if (!classInfo) { continue; }
+
+    var baseInstances = classInfo.instances || [];
+    var baseCount = baseInstances.length;
+
+    var isPendingForClass = !!(pendingUpdate && pendingUpdate.className === fromClass && pendingUpdate.newInst);
+    var virtualExtra = (isPendingForClass && !pendingUpdate.isEdit) ? 1 : 0;
+    var virtualCount = baseCount + virtualExtra;
+
+    ends.forEach(function(end) {
+      if (!end) { return; }
+
+      var fieldName = end.storageKey;
+      if (!fieldName) { return; }
+
+      var minRequired = (typeof end.toMin === "number") ? end.toMin : 0;
+      var maxAllowed = (typeof end.toMax === "number") ? end.toMax : null;
+
+      // If there are no multiplicity constraints, skip this end.
+      if (minRequired <= 0 && (maxAllowed === null || maxAllowed === undefined)) {
+        return;
+      }
+
+      var missingCount = 0;
+      var overMaxCount = 0;
+      var missingInstanceIndices = [];
+      var overMaxInstanceIndices = [];
+
+      for (var i = 0; i < virtualCount; i++) {
+        var inst;
+        if (isPendingForClass) {
+          if (!pendingUpdate.isEdit && i === baseCount) {
+            inst = pendingUpdate.newInst;
+          } else if (pendingUpdate.isEdit && i === pendingUpdate.index) {
+            inst = pendingUpdate.newInst;
+          } else {
+            inst = baseInstances[i];
+          }
+        } else {
+          inst = baseInstances[i];
+        }
+
+        if (!inst) { continue; }
+
+        var rawVal = inst[fieldName];
+        var linkCount = 0;
+
+        if (Array.isArray(rawVal)) {
+          linkCount = rawVal.length;
+        } else if (typeof rawVal === "number") {
+          linkCount = rawVal >= 0 ? 1 : 0;
+        } else if (rawVal !== undefined && rawVal !== null && rawVal !== "") {
+          var parsed = parseInt(rawVal, 10);
+          if (!isNaN(parsed) && parsed >= 0) {
+            linkCount = 1;
+          }
+        }
+
+        if (linkCount < minRequired) {
+          missingCount++;
+          missingInstanceIndices.push(i);
+        }
+        if (maxAllowed !== null && maxAllowed !== undefined && linkCount > maxAllowed) {
+          overMaxCount++;
+          overMaxInstanceIndices.push(i);
+        }
+      }
+
+      if (missingCount > 0) {
+        var targetInfo = classesData[end.toClass];
+        var targetCount = (targetInfo && Array.isArray(targetInfo.instances)) ? targetInfo.instances.length : 0;
+
+        // If the class we are saving is the target side of this
+        // association, include its pending new instance in the target
+        // count so that messages evolve naturally from "create" to
+        // "associate" when the first instance is added.
+        if (pendingUpdate && pendingUpdate.newInst && pendingUpdate.className === end.toClass) {
+          if (!pendingUpdate.isEdit) {
+            targetCount += 1;
+          }
+        }
+
+        if (minRequired >= 1) {
+          if (targetCount === 0) {
+            errors.push(
+              "Conflict: " + fromClass + " cannot exist without " + end.toClass + " according to the updated association. " +
+              "Please create at least one " + end.toClass + " instance and associate it with the existing " + fromClass + " instances."
+            );
+          } else {
+            var countWord = (minRequired === 1) ? "instance" : "instances";
+            var minText;
+
+            if (maxAllowed !== null && maxAllowed === minRequired) {
+              // Exact cardinality, e.g., 3 or 3..3
+              minText = "exactly " + minRequired + " " + end.toClass + " " + countWord;
+            } else if (maxAllowed === null) {
+              // Lower bound only, e.g., 3..*
+              minText = "at least " + minRequired + " " + end.toClass + " " + countWord;
+            } else if (maxAllowed !== null && maxAllowed > minRequired) {
+              // Bounded range, e.g., 1..3 or 2..5
+              var maxCountWord = (maxAllowed === 1) ? "instance" : "instances";
+              if (minRequired === maxAllowed) {
+                minText = "exactly " + minRequired + " " + end.toClass + " " + countWord;
+              } else {
+                minText = "between " + minRequired + " and " + maxAllowed + " " + end.toClass + " " + maxCountWord;
+              }
+            } else {
+              // Fallback: at least minRequired
+              minText = "at least " + minRequired + " " + end.toClass + " " + countWord;
+            }
+            if (missingInstanceIndices.length > 0) {
+              var firstIdx = missingInstanceIndices[0];
+              var label = fromClass + "[" + (firstIdx + 1) + "]";
+              errors.push(
+                "Please associate " + label + " with " + minText + " to satisfy association '" + end.assocName + "'."
+              );
+            } else {
+              errors.push(
+                "Please associate " + fromClass + " with " + minText + " to satisfy association '" + end.assocName + "'."
+              );
+            }
+          }
+        } else {
+          errors.push(
+            "Some " + fromClass + " instances do not satisfy the multiplicity constraints for association '" + end.assocName + "' to " + end.toClass + "."
+          );
+        }
+      }
+
+      if (overMaxCount > 0) {
+        if (overMaxInstanceIndices.length > 0) {
+          var overIdx = overMaxInstanceIndices[0];
+          var overLabel = fromClass + "[" + (overIdx + 1) + "]";
+          var maxText = (maxAllowed === 1) ? "one" : ("" + maxAllowed);
+          errors.push(
+            "Please reduce the number of associated " + end.toClass + " instances for " + overLabel + " to at most " + maxText + " to satisfy association '" + end.assocName + "'."
+          );
+        } else {
+          errors.push(
+            "Some " + fromClass + " instances exceed the maximum allowed number of " + end.toClass + " links for association '" + end.assocName + "'."
+          );
+        }
+      }
+    });
+  }
+
+  // De-duplicate messages so the same textual error is only shown once.
+  var seen = {};
+  var unique = [];
+  errors.forEach(function(msg) {
+    if (!msg || seen[msg]) { return; }
+    seen[msg] = true;
+    unique.push(msg);
+  });
+
+  return unique;
+};
+
+// Render high-level global CRUD validation messages at the top of the
+// CRUD UI container (just under the JSON / Instance Diagram controls).
+// This surfaces association conflicts even when individual class
+// dialogs are not expanded.
+Page.renderCrudGlobalErrors = function(containerSelector) {
+  var container = containerSelector ? jQuery(containerSelector) : (Page.currentCrudContainer || jQuery("#innerGeneratedCodeRow"));
+  if (!container || !container.length) {
+    return;
+  }
+
+  // Remove any existing banner before re-rendering.
+  container.find(".crud-global-errors-banner").remove();
+
+  var infoMessages = Page.crudAdjustmentMessages || [];
+  var validationMessages = Page.validateCrudGlobalModel(null) || [];
+  var messages = infoMessages.concat(validationMessages);
+  if (!messages.length) {
+    return;
+  }
+
+  // Use blue for purely informational messages and red when there are
+  // any actual validation errors.
+  var allInfo = messages.every(function(msg) {
+    return msg && msg.indexOf("Info:") === 0;
+  });
+  var color = allInfo ? "#0074D9" : "red";
+
+  var displayMessages = messages.map(function(msg) {
+    return msg ? msg.replace(/^Info:\s*/, "") : msg;
+  });
+
+  var html = "<div class='crud-global-errors-banner' style='color:" + color + ";margin:6px 0 10px 0;'>" +
+             displayMessages.join(" ") +
+             "</div>";
+
+  var jsonRow = container.find(".crud-json-actions");
+  if (jsonRow.length) {
+    jsonRow.after(html);
+  } else {
+    container.prepend(html);
   }
 };
 
@@ -782,11 +1735,17 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
 
   // Add JSON persistence controls once per container
   if (container.find(".crud-json-actions").length === 0) {
-    var jsonHtml = "<div class='crud-json-actions' style='margin:6px 0 10px 0;'>" +
-      "<button type='button' id='crud-generate-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Generate JSON</button>" +
-      "<button type='button' id='crud-generate-random-data' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Generate Random Data</button>" +
-    "<button type='button' id='crud-load-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Load JSON</button>" +
-    "<button type='button' id='crud-load-instance-diagram' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button'>Load as Instance Diagram</button>" +
+      var jsonHtml = "<div class='crud-json-actions' style='margin:6px 0 10px 0;'>" +
+        "<div class='crud-json-row'>" +
+        "<button type='button' id='crud-generate-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Download JSON</button>" +
+        "<button type='button' id='crud-generate-random-data' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Generate Random Data</button>" +
+      "<button type='button' id='crud-load-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Load JSON</button>" +
+      "<button type='button' id='crud-clear-all' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Clear All</button>" +
+      "<button type='button' id='crud-clear-errors-validate' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Validate data</button>" +
+        "</div>" +
+        "<div class='crud-json-row' style='margin-top:6px;'>" +
+      "<button type='button' id='crud-load-instance-diagram' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button'>Load as Instance Diagram</button>" +
+        "</div>" +
       "<input type='file' id='crud-load-json-file' accept='application/json,.json' style='display:none;' />" +
       "</div>";
     container.prepend(jsonHtml);
@@ -823,9 +1782,25 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
         success: function(resp) {
           if (typeof Page.crudJsonImportFromText === "function") {
             Page.crudJsonImportFromText(resp);
-            // After import, refresh the currently open CRUD dialog, if any
-            if (Page.crudClassSelected) {
-              Page.openCrudDialogForClass(Page.crudClassSelected);
+            // After import, (re)open a CRUD dialog. Prefer the class
+            // that was previously expanded, but only if it still
+            // exists in the current model and is not abstract;
+            // otherwise open the first non-abstract class.
+            var targetClass = Page.crudClassSelected || null;
+            if (Page.crudData && Page.crudData.classes) {
+              if (!targetClass || !Page.crudData.classes[targetClass] || Page.crudData.classes[targetClass].isAbstract) {
+                targetClass = null;
+                Object.keys(Page.crudData.classes).some(function(cn) {
+                  var info = Page.crudData.classes[cn] || {};
+                  if (info.isAbstract) { return false; }
+                  targetClass = cn;
+                  return true;
+                });
+              }
+            }
+            if (targetClass && typeof Page.openCrudDialogForClass === "function") {
+              Page.crudClassSelected = targetClass;
+              Page.openCrudDialogForClass(targetClass);
             }
             
           } 
@@ -840,16 +1815,110 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
       container.find("#crud-load-json-file").trigger("click");
     });
 
+    // Clear all visible CRUD error banners/messages in this container
+    // and re-run global CRUD validation to show the current state.
+    container.find("#crud-clear-errors-validate").off("click").on("click", function() {
+      var target = container;
+
+      // Clear any existing per-instance and inline errors for this
+      // CRUD view (bottom panel or live-view) so the user starts from
+      // a clean slate.
+      target.find(".crud-error").hide().text("");
+      target.find(".crud-instance-diagram-error").hide().text("");
+      target.find(".crud-global-errors-banner").remove();
+
+      // Optionally reset informational adjustment messages so the
+      // banner only reflects the latest validation pass.
+      Page.crudAdjustmentMessages = [];
+
+      if (typeof Page.renderCrudGlobalErrors === "function") {
+        Page.renderCrudGlobalErrors(target);
+      }
+    });
+
+    // Clear all CRUD instance data for all classes in the current
+    // model. This leaves the schema intact but removes every
+    // instance and refreshes counts and global messages.
+    container.find("#crud-clear-all").off("click").on("click", function() {
+      if (!Page.crudData || !Page.crudData.classes) {
+        return;
+      }
+      Object.keys(Page.crudData.classes).forEach(function(className) {
+        var info = Page.crudData.classes[className] || {};
+        info.instances = [];
+        Page.crudData.classes[className] = info;
+        if (typeof Page.updateCrudClassCount === "function") {
+          Page.updateCrudClassCount(className);
+        }
+      });
+
+      // Reset any JSON export ID bookkeeping so future exports start
+      // from a clean slate after clearing all instances.
+      Page._crudJsonIds = {};
+      Page._crudJsonIdCounter = 1;
+
+      // Clear any multiplicity/adjustment messages and re-render the
+      // global banner so the user sees a clean state.
+      Page.crudAdjustmentMessages = [];
+      if (typeof Page.renderCrudGlobalErrors === "function") {
+        Page.renderCrudGlobalErrors(container);
+      }
+
+      // If a class dialog is currently open, refresh it so the empty
+      // instance list is visible immediately.
+      if (Page.crudClassSelected && typeof Page.openCrudDialogForClass === "function") {
+        Page.openCrudDialogForClass(Page.crudClassSelected);
+      }
+    });
+
     container.find("#crud-load-json-file").off("change").on("change", function(evt) {
       var file = evt.target.files && evt.target.files[0];
       if (!file) { return; }
+      // Ensure the selected file has a .json extension; if not, show
+      // a clear message and abort without attempting to read it.
+      var fname = file.name || "";
+      var lowerName = fname.toLowerCase();
+      if (lowerName && lowerName.indexOf(".json", Math.max(0, lowerName.length - 5)) === -1) {
+        var msg = "The selected file ('" + fname + "') is not a .json file and cannot be loaded into CRUD.";
+        if (typeof Page.setFeedbackMessage === "function") {
+          Page.setFeedbackMessage(msg);
+        } else {
+          alert(msg);
+        }
+        // Reset the input so the user can pick another file.
+        jQuery(this).val("");
+        return;
+      }
       var reader = new FileReader();
       reader.onload = function(e) {
         if (typeof Page.crudJsonImportFromText === "function") {
           Page.crudJsonImportFromText(e.target.result);
-          // After import, refresh the currently open CRUD dialog, if any
-          if (Page.crudClassSelected) {
-            Page.openCrudDialogForClass(Page.crudClassSelected);
+          // After import, (re)open a CRUD dialog. Prefer the class
+          // that was previously expanded; if none, open the first
+          // non-abstract class.
+          var targetClass = Page.crudClassSelected || null;
+          if (!targetClass && Page.crudData && Page.crudData.classes) {
+            Object.keys(Page.crudData.classes).some(function(cn) {
+              var info = Page.crudData.classes[cn] || {};
+              if (info.isAbstract) { return false; }
+              targetClass = cn;
+              return true;
+            });
+          }
+          if (Page.crudData && Page.crudData.classes) {
+            if (!targetClass || !Page.crudData.classes[targetClass] || Page.crudData.classes[targetClass].isAbstract) {
+              targetClass = null;
+              Object.keys(Page.crudData.classes).some(function(cn) {
+                var info = Page.crudData.classes[cn] || {};
+                if (info.isAbstract) { return false; }
+                targetClass = cn;
+                return true;
+              });
+            }
+          }
+          if (targetClass && typeof Page.openCrudDialogForClass === "function") {
+            Page.crudClassSelected = targetClass;
+            Page.openCrudDialogForClass(targetClass);
           }
         }
       };
@@ -863,6 +1932,22 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
     // instance counts into the Umple source as a special comment, then
     // invoking the InstanceDiagram generator with a custom suboption.
     container.find("#crud-load-instance-diagram").off("click").on("click", function() {
+      Page.currentCrudContainer = container;
+
+      // If the user is currently editing an *existing* instance in this
+      // CRUD view, commit those changes first so the instance diagram
+      // reflects the latest visible values. When the form is in "add new
+      // instance" mode (no instanceIndex set), we intentionally do NOT
+      // auto-save to avoid creating a new instance implicitly.
+      var $form = container.find(".crud-instance-panel #crud-instance-form").first();
+      var $saveButton = container.find(".crud-instance-panel #crud-save-instance").first();
+      if ($saveButton.length && $form.length) {
+        var idxVal = $form.find("input[name='instanceIndex']").val();
+        if (idxVal !== "") {
+          $saveButton.trigger("click");
+        }
+      }
+
       if (typeof Page.getUmpleCode !== "function" || typeof Page.setUmpleCode !== "function") {
         console.warn("Umple code accessors are unavailable; cannot load instance diagram from CRUD.");
         return;
@@ -908,9 +1993,44 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
           instances.forEach(function(inst, idx) {
             if (!inst) { return; }
             var attrs = {};
+            // Flatten attribute values to simple strings so the backend
+            // JSON parser for @crudInstanceData always sees a predictable
+            // shape and never falls back to randomized values. Include
+            // every declared attribute name (using an empty string when
+            // the CRUD instance has no stored value) so that the backend
+            // does not synthesize random defaults for "missing" fields
+            // on subsequent round-trips.
             attrNames.forEach(function(an) {
-              if (Object.prototype.hasOwnProperty.call(inst, an)) {
-                attrs[an] = inst[an];
+              var v = Object.prototype.hasOwnProperty.call(inst, an) ? inst[an] : "";
+              if (typeof v === "undefined" || v === null) {
+                v = "";
+              }
+
+              if (typeof v === "object") {
+                // For nested objects or arrays, render a concise
+                // summary like "k1=v1, k2=v2" or "v1, v2" so the
+                // instance diagram can still display something
+                // human-readable without introducing complex JSON
+                // structures that the backend parser does not expect.
+                if (Array.isArray(v)) {
+                  var partsArr = [];
+                  v.forEach(function(elem) {
+                    if (typeof elem === "undefined" || elem === null || elem === "") { return; }
+                    partsArr.push(String(elem));
+                  });
+                  attrs[an] = partsArr.length > 0 ? partsArr.join(", ") : "";
+                } else {
+                  var partsObj = [];
+                  for (var k in v) {
+                    if (!Object.prototype.hasOwnProperty.call(v, k)) { continue; }
+                    var vv = v[k];
+                    if (typeof vv === "undefined" || vv === null || vv === "") { continue; }
+                    partsObj.push(k + "=" + vv);
+                  }
+                  attrs[an] = partsObj.length > 0 ? partsObj.join(", ") : "";
+                }
+              } else {
+                attrs[an] = String(v);
               }
             });
             instanceSnapshot.instances.push({
@@ -966,7 +2086,21 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
       });
 
       if (!hasAny) {
-        Page.setFeedbackMessage && Page.setFeedbackMessage("No instances exist in CRUD to build an instance diagram.");
+        var msgNoInstances = "No instances exist in CRUD to build an instance diagram.";
+        // Show this message inline within the CRUD UI container rather than
+        // in the global feedback area at the top of the page.
+        var $existingErr = container.find(".crud-instance-diagram-error");
+        if ($existingErr.length === 0) {
+          var jsonRow = container.find(".crud-json-actions");
+          var htmlErr = "<div class='crud-instance-diagram-error' style='color:red;margin:6px 0 10px 0;'></div>";
+          if (jsonRow.length) {
+            jsonRow.after(htmlErr);
+            $existingErr = container.find(".crud-instance-diagram-error");
+          } else {
+            $existingErr = jQuery(htmlErr).prependTo(container);
+          }
+        }
+        $existingErr.text(msgNoInstances).show();
         return;
       }
 
@@ -994,7 +2128,12 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
       var sep = cleanedCode.length && !/\n$/.test(cleanedCode) ? "\n" : "";
       var newCode = cleanedCode + sep + markerLineCounts + "\n" + markerLineData + "\n";
 
-      Page.setUmpleCode(newCode);
+      // Update the Umple source with CRUD markers but skip the
+      // debounced typing pipeline so we don't immediately trigger a
+      // second auto-refresh that would overwrite the generated
+      // instance diagram with whatever diagram type was previously
+      // selected in the live view.
+      Page.setUmpleCode(newCode, undefined, true);
 
       if (typeof Action !== "undefined" && typeof Action.generateCode === "function") {
         // Ask the backend to generate an instance diagram using the
@@ -1007,6 +2146,11 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
       }
     });
   }
+
+  // After ensuring the JSON controls exist, show any global validation
+  // issues (e.g., strengthened associations that existing instances do
+  // not yet satisfy) so they are visible even when no class is expanded.
+  Page.renderCrudGlobalErrors(container);
 
   container.find(".crud-form").each(function() {
     var $form = jQuery(this);
@@ -1035,6 +2179,17 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
       $form.before(headerHtml);
     }
 
+    // Ensure the visible instance count for this class matches the
+    // current number of instances we are carrying forward.
+    if (!isAbstract) {
+      var info = Page.crudData.classes[className] || {};
+      var count = (info.instances && Array.isArray(info.instances)) ? info.instances.length : 0;
+      var $countSpan = container.find(".crud-class-item[data-class='" + className + "'] .crud-class-count");
+      if ($countSpan.length) {
+        $countSpan.text("[" + count + "]");
+      }
+    }
+
     // Hide the raw form; interaction happens via popup dialog
     $form.hide();
   });
@@ -1044,6 +2199,10 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
     var $item = jQuery(this);
     var className = $item.data("class");
     var isAbstract = $item.data("abstract") === true || $item.data("abstract") === "true";
+
+    // Ensure that subsequent dialog rendering targets the container
+    // that this header belongs to (bottom panel vs live-view canvas).
+    Page.currentCrudContainer = container;
 
     // Visually indicate the selected class header
     container.find(".crud-class-item").removeClass("crud-class-item-active active");
@@ -1183,7 +2342,9 @@ Page.openCrudDialogForClass = function(className) {
       html += "<option value='edit'>Edit</option>";
       html += "<option value='delete'>Delete</option>";
       if (assocEnds.length > 0) {
-        html += "<option value='associations'>See Associations</option>";
+        // Starts as 'Show Associations'; when the associations panel is
+        // visible this option text is toggled to 'Hide Associations'.
+        html += "<option value='associations'>Show Associations</option>";
       }
       html += "</select>";
 
@@ -1454,15 +2615,21 @@ Page.openCrudDialogForClass = function(className) {
   });
 
   $panel.on("click", ".crud-edit-instance", function() {
+    Page.currentCrudContainer = $panel.parent();
+
+    var currentClassInfo = (Page.crudData && Page.crudData.classes && Page.crudData.classes[className]) ? Page.crudData.classes[className] : {};
+    var attrsCurrent = currentClassInfo.attributes || attrs;
+    var instancesCurrent = currentClassInfo.instances || [];
+
     var index = parseInt(jQuery(this).data("index"), 10);
-    if (isNaN(index) || index < 0 || index >= instances.length) {
+    if (isNaN(index) || index < 0 || index >= instancesCurrent.length) {
       return;
     }
-    var inst = instances[index] || {};
+    var inst = instancesCurrent[index] || {};
     var $form = $panel.find("#crud-instance-form");
     $form.find("input[name='instanceIndex']").val(index);
 
-    attrs.forEach(function(attr) {
+    attrsCurrent.forEach(function(attr) {
       var attrName = attr.name;
       var typeInfo = Page.getCrudTypeInfo(attr.type);
       var baseType = typeInfo.base;
@@ -1540,14 +2707,28 @@ Page.openCrudDialogForClass = function(className) {
       if (multiple) {
         var $checks = $form.find("input[type='checkbox'][name='" + fieldName + "']");
         $checks.prop("checked", false);
-        if (Array.isArray(stored)) {
-          $checks.each(function() {
-            var v = jQuery(this).val();
-            var idx = parseInt(v, 10);
-            if (!isNaN(idx) && stored.indexOf(idx) !== -1) {
-              jQuery(this).prop("checked", true);
+        if (stored !== undefined && stored !== null && stored !== "") {
+          var storedArray = [];
+          if (Array.isArray(stored)) {
+            storedArray = stored.slice();
+          } else if (typeof stored === "number") {
+            storedArray = [stored];
+          } else {
+            var parsedStored = parseInt(stored, 10);
+            if (!isNaN(parsedStored)) {
+              storedArray = [parsedStored];
             }
-          });
+          }
+
+          if (storedArray.length > 0) {
+            $checks.each(function() {
+              var v = jQuery(this).val();
+              var idx = parseInt(v, 10);
+              if (!isNaN(idx) && storedArray.indexOf(idx) !== -1) {
+                jQuery(this).prop("checked", true);
+              }
+            });
+          }
         }
       } else {
         var $radios = $form.find("input[type='radio'][name='" + fieldName + "']");
@@ -1575,71 +2756,17 @@ Page.openCrudDialogForClass = function(className) {
         }
       }
     });
-
-    // Show related instances from other classes that are linked to this one
-    var $related = $panel.find(".crud-related-instances");
-    if ($related.length > 0) {
-      var relatedHtml = "";
-      var assocByClass = Page.crudAssociationsByClass || {};
-      for (var sourceClass in assocByClass) {
-        if (!assocByClass.hasOwnProperty(sourceClass)) { continue; }
-        var endsFromSource = assocByClass[sourceClass] || [];
-        var seenAssocIds = {};
-        endsFromSource.forEach(function(end) {
-          // Only show reverse-linked instances for bidirectional associations
-          if (!end.isBidirectional) { return; }
-          if (end.toClass !== className) { return; }
-          // Avoid duplicate groups for self-reflexive associations where two
-          // navigable ends correspond to the same logical relationship.
-          if (end.fromClass === end.toClass) {
-            var key = end.assocId || end.assocName || "";
-            if (seenAssocIds[key]) { return; }
-            seenAssocIds[key] = true;
-          }
-          var sourceInfo = Page.crudData.classes[sourceClass];
-          var sourceInstances = (sourceInfo && sourceInfo.instances) || [];
-          if (sourceInstances.length === 0) { return; }
-          var matches = [];
-          sourceInstances.forEach(function(sInst, sIdx) {
-            var val = sInst[end.storageKey];
-            if (val === undefined || val === null) { return; }
-            if (Array.isArray(val)) {
-              if (val.indexOf(index) !== -1) {
-                matches.push({ inst: sInst, idx: sIdx });
-              }
-            } else if (val === index) {
-              matches.push({ inst: sInst, idx: sIdx });
-            }
-          });
-          if (matches.length > 0) {
-            relatedHtml += "<div class='crud-related-group' style='margin-top:4px;'>";
-            relatedHtml += "<div><strong>" + sourceClass + " linked to this " + className + ":</strong></div>";
-            var srcAttrs = (Page.crudData.classes[sourceClass] && Page.crudData.classes[sourceClass].attributes) || [];
-            matches.forEach(function(match) {
-              var label = sourceClass + "[" + (match.idx + 1) + "]";
-              var parts = [];
-              srcAttrs.forEach(function(attr) {
-                var aName = attr.name;
-                if (!aName) { return; }
-                var v = match.inst[aName];
-                if (typeof v === "undefined" || v === null || v === "") { return; }
-                parts.push(aName + "=" + v);
-              });
-              var summary = parts.length ? " - " + parts.join(", ") : "";
-              relatedHtml += "<div style='margin-left:10px;'>" + label + summary + "</div>";
-            });
-            relatedHtml += "</div>";
-          }
-        });
-      }
-      $related.html(relatedHtml);
-    }
   });
 
   // Delete existing instance
   $panel.on("click", ".crud-delete-instance", function() {
+    Page.currentCrudContainer = $panel.parent();
+
+    var currentClassInfo = (Page.crudData && Page.crudData.classes && Page.crudData.classes[className]) ? Page.crudData.classes[className] : {};
+    var instancesCurrent = currentClassInfo.instances || [];
+
     var index = parseInt(jQuery(this).data("index"), 10);
-    if (isNaN(index) || index < 0 || index >= instances.length) {
+    if (isNaN(index) || index < 0 || index >= instancesCurrent.length) {
       return;
     }
     Page.removeCrudInstance(className, index);
@@ -1665,23 +2792,22 @@ Page.openCrudDialogForClass = function(className) {
     var $table = $row.closest("table");
     var colCount = $table.find("thead th").length || ($row.children("td").length || 1);
     var $assocRow = $row.next(".crud-instance-associations-row");
+    var wasVisible = $assocRow.length && $assocRow.is(":visible");
     var $assoc;
 
-    // Toggle visibility if an associations row already exists
-    if ($assocRow.length) {
-      $assoc = $assocRow.find(".crud-instance-associations");
-      if ($assocRow.is(":visible")) {
-        $assocRow.hide();
-        return;
-      }
+    if (wasVisible) {
+      // Currently visible: hide the row, and we'll update the dropdown
+      // label below to say 'Show Associations'.
+      $assocRow.hide();
     } else {
-      $assocRow = jQuery("<tr class='crud-instance-associations-row'><td colspan='" + colCount + "'><div class='crud-instance-associations' style='margin-top:4px;'></div></td></tr>");
-      $row.after($assocRow);
+      if (!$assocRow.length) {
+        $assocRow = jQuery("<tr class='crud-instance-associations-row'><td colspan='" + colCount + "'><div class='crud-instance-associations' style='margin-top:4px;'></div></td></tr>");
+        $row.after($assocRow);
+      }
       $assoc = $assocRow.find(".crud-instance-associations");
-    }
 
-    var assocHtml = "";
-    var hasContent = false;
+      var assocHtml = "";
+      var hasContent = false;
 
     // Forward associations: navigable ends from this class
     var seenAssocIdsForward = {};
@@ -1713,8 +2839,22 @@ Page.openCrudDialogForClass = function(className) {
         multiple = false;
       }
       if (multiple) {
-        if (!Array.isArray(val) || val.length === 0) { return; }
-        val.forEach(function(idx) {
+        // Support both legacy single-valued storage (a single numeric
+        // index from radio buttons) and the newer array-based storage
+        // used by checkboxes. Normalize into an array of indices.
+        var indices = [];
+        if (Array.isArray(val)) {
+          indices = val.slice();
+        } else if (val !== undefined && val !== null && val !== "") {
+          var idxSingle = (typeof val === "number") ? val : parseInt(val, 10);
+          if (!isNaN(idxSingle)) {
+            indices = [idxSingle];
+          }
+        }
+
+        if (!indices.length) { return; }
+
+        indices.forEach(function(idx) {
           if (typeof idx !== "number" || idx < 0 || idx >= targetInstances.length) { return; }
           items.push({ inst: targetInstances[idx], idx: idx });
         });
@@ -1834,29 +2974,48 @@ Page.openCrudDialogForClass = function(className) {
       assocHtml += "</tbody></table></div></div>";
     });
 
-    if (!hasContent) {
-      assocHtml = "<em>No associations linked for this instance.</em>";
+      if (!hasContent) {
+        assocHtml = "<em>No associations linked for this instance.</em>";
+      }
+
+      $assoc.html(assocHtml).show();
+      $assocRow.show();
     }
 
-    $assoc.html(assocHtml).show();
+    // Update the dropdown option label to reflect the new state: when the
+    // panel is visible, show 'Hide Associations'; otherwise 'Show Associations'.
+    var nowVisible = $assocRow.length && $assocRow.is(":visible");
+    var $select = $row.find(".crud-instance-action");
+    if ($select.length) {
+      var $opt = $select.find("option[value='associations']");
+      if ($opt.length) {
+        $opt.text(nowVisible ? "Hide Associations" : "Show Associations");
+      }
+    }
   });
 
   // Save instance (new or edited)
   $panel.on("click", "#crud-save-instance", function() {
+    Page.currentCrudContainer = $panel.parent();
+
+    var currentClassInfo = (Page.crudData && Page.crudData.classes && Page.crudData.classes[className]) ? Page.crudData.classes[className] : {};
+    var attrsCurrent = currentClassInfo.attributes || attrs;
+    var instancesCurrent = currentClassInfo.instances || [];
+
     var $form = $panel.find("#crud-instance-form");
     var $error = $panel.find(".crud-error");
     $error.hide().text("");
     var errors = [];
     var indexVal = $form.find("input[name='instanceIndex']").val();
     var isEdit = indexVal !== "";
-    var index = isEdit ? parseInt(indexVal, 10) : instances.length;
-    if (isEdit && (isNaN(index) || index < 0 || index >= instances.length)) {
-      index = instances.length;
+    var index = isEdit ? parseInt(indexVal, 10) : instancesCurrent.length;
+    if (isEdit && (isNaN(index) || index < 0 || index >= instancesCurrent.length)) {
+      index = instancesCurrent.length;
       isEdit = false;
     }
 
     var newInst = {};
-    attrs.forEach(function(attr) {
+    attrsCurrent.forEach(function(attr) {
       var attrName = attr.name;
       var typeInfo = Page.getCrudTypeInfo(attr.type);
       if (!attrName) { return; }
@@ -1895,6 +3054,19 @@ Page.openCrudDialogForClass = function(className) {
     // Associations: enforce multiplicity rules and capture selected links
     assocEnds.forEach(function(end) {
       var fieldName = end.storageKey;
+      // If this association end does not have any visible controls in the
+      // current form (for example, when we intentionally hide the reverse
+      // side of a one-to-many), then preserve the existing stored value
+      // when editing and skip any further processing. This avoids
+      // accidentally clearing links for associations the user did not edit
+      var $assocField = $form.find(".crud-assoc-multi[data-field='" + fieldName + "'], .crud-assoc-single[data-field='" + fieldName + "']");
+      if ($assocField.length === 0) {
+        if (isEdit && instancesCurrent[index] && Object.prototype.hasOwnProperty.call(instancesCurrent[index], fieldName)) {
+          newInst[fieldName] = instancesCurrent[index][fieldName];
+        }
+        return;
+      }
+
       // Treat an end as multi-valued whenever its max bound allows
       // more than one linked instance. This covers ranges like 2..4,
       // 0..* and 1..* in addition to explicit "*".
@@ -1996,12 +3168,28 @@ Page.openCrudDialogForClass = function(className) {
       if (multiple) { return; }
       var value = newInst[end.storageKey];
       if (typeof value !== "number") { return; }
-      Page.checkCrudReflexiveHierarchyCycle(className, instances, end, index, value, errors);
+      Page.checkCrudReflexiveHierarchyCycle(className, instancesCurrent, end, index, value, errors);
     });
 
+    // First, show any local validation errors for the currently edited
+    // instance (attributes, association choices, reflexive cycles).
     if (errors.length > 0) {
       $error.text(errors.join(" ")).show();
-      return;
+    }
+
+    // Next, validate the entire CRUD model (all classes and instances)
+    // using a snapshot that includes this pending change. This allows
+    // us to catch conflicts introduced by association updates, such as
+    // adding a new mandatory association for a class that already has
+    // existing instances without those links.
+    var globalErrors = Page.validateCrudGlobalModel({
+      className: className,
+      index: index,
+      isEdit: isEdit,
+      newInst: newInst
+    });
+    if (globalErrors && globalErrors.length > 0) {
+      $error.text(globalErrors.join(" ")).show();
     }
 
     // Keep reverse association ends consistent for bidirectional associations
@@ -2013,18 +3201,30 @@ Page.openCrudDialogForClass = function(className) {
     });
 
     if (isEdit) {
-      instances[index] = newInst;
+      instancesCurrent[index] = newInst;
     } else {
-      instances.push(newInst);
+      instancesCurrent.push(newInst);
+    }
+
+    if (Page.crudData && Page.crudData.classes && Page.crudData.classes[className]) {
+      Page.crudData.classes[className].instances = instancesCurrent;
     }
 
     Page.updateCrudClassCount(className);
     // Re-render inline panel so the new/updated instance appears immediately
     Page.openCrudDialogForClass(className);
+
+    // Refresh the global banner under the JSON / Instance Diagram
+    // controls so that conflict messages reflect the latest instance
+    // counts and links (e.g., after creating the first Witness).
+    if (typeof Page.renderCrudGlobalErrors === "function") {
+      Page.renderCrudGlobalErrors(null);
+    }
   });
 
   // Clear all instances for this class
   $panel.on("click", "#crud-clear-instances", function() {
+    Page.currentCrudContainer = $panel.parent();
     Page.crudData.classes[className].instances = [];
     Page.updateCrudClassCount(className);
     Page.openCrudDialogForClass(className);
@@ -2210,7 +3410,18 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
     var associations = data.umpleAssociations || [];
     var globalEnums = data.globalEnums || [];
 
-    // Resets in-memory CRUD data each time we (re)render CRUD UI
+    // Preserve any existing CRUD instance data so schema-only changes
+    // (e.g., adding classes/attributes) do not wipe user-entered values.
+    // We snapshot the current structure before resetting metadata and then
+    // reuse instances for classes that still exist in the new model.
+    var oldCrudData = (Page.crudData && Page.crudData.classes) ? Page.crudData : null;
+    // Also snapshot the previous association metadata so that we can
+    // detect simple class renames where attributes and associations are
+    // unchanged between versions.
+    var oldCrudAssociationsByClass = Page.crudAssociationsByClass || null;
+
+    // Reset metadata containers (class defs, associations, enums, etc.).
+    // Instance arrays for existing classes will be reattached below.
     Page.resetCrudData();
     // Builds a quick lookup for inheritance resolution and association navigation
     var crudMetaByClass = {};
@@ -2574,6 +3785,105 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
       }
     });
 
+    // Detect simple class renames where an old class name disappears
+    // and a new class appears with the same attributes and the same
+    // associations to other classes. In such cases, we treat this as a
+    // rename and carry existing instances over to the new class name.
+    var classRenameNewToOld = {};
+    if (oldCrudData && oldCrudData.classes) {
+      var oldClassNames = Object.keys(oldCrudData.classes);
+      var newClassNames = Object.keys(crudMetaByClass);
+      var oldOnly = [];
+      var newOnly = [];
+
+      oldClassNames.forEach(function(name) {
+        if (!crudMetaByClass[name]) {
+          oldOnly.push(name);
+        }
+      });
+      newClassNames.forEach(function(name) {
+        if (!oldCrudData.classes[name]) {
+          newOnly.push(name);
+        }
+      });
+
+      if (oldOnly.length && newOnly.length) {
+        var buildAttrSig = function(attrsList) {
+          if (!Array.isArray(attrsList) || !attrsList.length) {
+            return "";
+          }
+          var items = [];
+          attrsList.forEach(function(a) {
+            if (!a || !a.name) { return; }
+            var t = a.type || "";
+            items.push(a.name + ":" + t);
+          });
+          items.sort();
+          return items.join(";");
+        };
+
+        var buildAssocSigForClass = function(className, assocByClass) {
+          var ends = (assocByClass && assocByClass[className]) ? assocByClass[className] : [];
+          if (!Array.isArray(ends) || !ends.length) {
+            return "";
+          }
+          var simplified = [];
+          ends.forEach(function(e) {
+            if (!e) { return; }
+            // Only consider navigable ends originating from this class.
+            if (e.fromClass && e.fromClass !== className) { return; }
+            var toClass = e.toClass || "";
+            var min = (typeof e.toMin === "number") ? e.toMin : 0;
+            var max = (typeof e.toMax === "number") ? e.toMax : null;
+            var maxStr = (max === null || typeof max === "undefined") ? "*" : String(max);
+            var bidir = e.isBidirectional ? "1" : "0";
+            var comp = e.cascadeDeleteTargets ? "1" : "0";
+            simplified.push(toClass + "|" + min + "|" + maxStr + "|" + bidir + "|" + comp);
+          });
+          if (!simplified.length) {
+            return "";
+          }
+          simplified.sort();
+          return simplified.join(";");
+        };
+
+        var usedOldNames = {};
+
+        newOnly.forEach(function(newName) {
+          var newInfoMeta = crudMetaByClass[newName];
+          if (!newInfoMeta) { return; }
+          var newAttrsResolved = resolveCrudAttributes(newName, {});
+          var newAttrSig = buildAttrSig(newAttrsResolved);
+          var newAssocSig = buildAssocSigForClass(newName, Page.crudAssociationsByClass);
+
+          var candidates = [];
+          oldOnly.forEach(function(oldName) {
+            if (usedOldNames[oldName]) { return; }
+            var oldInfo = oldCrudData.classes[oldName];
+            if (!oldInfo) { return; }
+            var oldAttrSig = buildAttrSig(oldInfo.attributes || []);
+            if (oldAttrSig !== newAttrSig) { return; }
+
+            var oldAssocSig = buildAssocSigForClass(oldName, oldCrudAssociationsByClass);
+            if (oldAssocSig !== newAssocSig) { return; }
+
+            candidates.push(oldName);
+          });
+
+          if (candidates.length === 1) {
+            var chosenOld = candidates[0];
+            usedOldNames[chosenOld] = true;
+            classRenameNewToOld[newName] = chosenOld;
+
+            var msgClass = "Info: Class '" + chosenOld + "' was renamed to '" + newName + "'. Existing instances were preserved because its attributes and associations did not change.";
+            if (Array.isArray(Page.crudAdjustmentMessages)) {
+              Page.crudAdjustmentMessages.push(msgClass);
+            }
+          }
+        });
+      }
+    }
+
     // Creates forms for each class using resolved attrs
     classes.forEach(function(cls) {
       var className = cls.name || cls.id;
@@ -2591,9 +3901,24 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
       formHtml += "<form class='crud-form' data-class='" + className + "' data-abstract='" + (isAbstract ? "true" : "false") + "'>";
       formHtml += "<h3>" + className + "</h3>";
 
+      // Reuse existing instances for this class if they exist; if this
+      // is a newly added class, start with an empty instance list. When
+      // a simple class rename has been detected (old name removed, new
+      // name added, same attributes and associations), pull instances
+      // from the old class name instead.
+      var existingInfo = null;
+      if (oldCrudData && oldCrudData.classes) {
+        var sourceClassName = className;
+        if (classRenameNewToOld && classRenameNewToOld[className]) {
+          sourceClassName = classRenameNewToOld[className];
+        }
+        existingInfo = oldCrudData.classes[sourceClassName];
+      }
+      var existingInstances = (existingInfo && Array.isArray(existingInfo.instances)) ? existingInfo.instances : [];
+
       Page.crudData.classes[className] = {
         attributes: attrs,
-        instances: [],
+        instances: existingInstances,
         isAbstract: isAbstract,
         // Mark whether this class declares a main() method so that the
         // CRUD JSON exporter can treat it as a root/main class.
@@ -2602,6 +3927,39 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
 
       formHtml += "</form>";
     });
+    // After reattaching any preserved instances, adjust association
+    // storage fields for simple class renames so that existing links
+    // continue to satisfy the updated association metadata.
+    if (oldCrudAssociationsByClass && classRenameNewToOld && Object.keys(classRenameNewToOld).length) {
+      if (typeof Page.adjustCrudAssociationsForClassRenames === "function") {
+        Page.adjustCrudAssociationsForClassRenames(classRenameNewToOld, oldCrudAssociationsByClass);
+      }
+    }
+    // After reattaching any preserved instances, first handle simple
+    // attribute renames (old attribute removed, new attribute added,
+    // same data type) so that values are carried forward to the new
+    // name. Then reconcile in-place type changes for attributes that
+    // kept the same name.
+    if (oldCrudData && oldCrudData.classes) {
+      if (typeof Page.adjustCrudAttributesForRenames === "function") {
+        Page.adjustCrudAttributesForRenames(oldCrudData);
+      }
+      if (typeof Page.adjustCrudAttributesForTypeChanges === "function") {
+        Page.adjustCrudAttributesForTypeChanges(oldCrudData);
+      }
+    }
+    // After reattaching any preserved instances, first normalize
+    // association fields for multi-valued ends so that they are always
+    // arrays of numeric indices, and then trim any links that exceed new
+    // maximum bounds when multiplicities have been tightened (e.g., from
+    // * to 1). This keeps legacy links consistent with the updated model
+    // while informing users about any automatic adjustments.
+    if (typeof Page.normalizeCrudMultiValuedAssociations === "function") {
+      Page.normalizeCrudMultiValuedAssociations();
+    }
+    if (typeof Page.adjustCrudAssociationsForTightenedMax === "function") {
+      Page.adjustCrudAssociationsForTightenedMax();
+    }
     formHtml += "</div>";
   }
   catch (e) {
@@ -2614,6 +3972,28 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
   // Enhance forms with clickable class headers and popup dialog per class
   Page.initCrudUi(tabnumber, containerSelector);
 
+  // After (re)rendering the CRUD UI for this model, keep the
+  // previously expanded class dialog open when possible. If that
+  // class no longer exists or is abstract, or if no class has been
+  // selected yet, default to opening the first non-abstract class so
+  // the user immediately sees a form instead of a collapsed panel.
+  if (typeof Page.openCrudDialogForClass === "function" && Page.crudData && Page.crudData.classes) {
+    var targetClassAuto = Page.crudClassSelected || null;
+    if (!targetClassAuto || !Page.crudData.classes[targetClassAuto] || Page.crudData.classes[targetClassAuto].isAbstract) {
+      targetClassAuto = null;
+      Object.keys(Page.crudData.classes).some(function(cn) {
+        var info = Page.crudData.classes[cn] || {};
+        if (info.isAbstract) { return false; }
+        targetClassAuto = cn;
+        return true;
+      });
+    }
+    if (targetClassAuto) {
+      Page.crudClassSelected = targetClassAuto;
+      Page.openCrudDialogForClass(targetClassAuto);
+    }
+  }
+
   // If instance-data JSON has been prepared via the backend, import it
   // now that the CRUD metadata and forms have been initialized.
   if (Page._pendingCrudInstanceJson && typeof Page.crudJsonImportFromText === "function") {
@@ -2622,19 +4002,25 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
 
       // After import, automatically open a dialog for a class that
       // actually has instances, preferring the current selection if
-      // one exists.
+      // it still exists and is concrete; otherwise fall back to the
+      // first non-abstract class with instances.
       var targetClass = Page.crudClassSelected || null;
-      if (!targetClass && Page.crudData && Page.crudData.classes) {
-        Object.keys(Page.crudData.classes).some(function(cn) {
-          var info = Page.crudData.classes[cn] || {};
-          if (info.isAbstract) { return false; }
-          var inst = info.instances || [];
-          if (inst.length > 0) {
-            targetClass = cn;
-            return true;
-          }
-          return false;
-        });
+      if (Page.crudData && Page.crudData.classes) {
+        if (!targetClass || !Page.crudData.classes[targetClass] || Page.crudData.classes[targetClass].isAbstract) {
+          targetClass = null;
+        }
+        if (!targetClass) {
+          Object.keys(Page.crudData.classes).some(function(cn) {
+            var info = Page.crudData.classes[cn] || {};
+            if (info.isAbstract) { return false; }
+            var inst = info.instances || [];
+            if (inst.length > 0) {
+              targetClass = cn;
+              return true;
+            }
+            return false;
+          });
+        }
       }
       if (targetClass && typeof Page.openCrudDialogForClass === "function") {
         Page.crudClassSelected = targetClass;

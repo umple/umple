@@ -1,0 +1,3 @@
+req A text {
+  This is a normal requirement.
+}

@@ -2020,8 +2020,8 @@ Page.getGeneratedMarkup = function(code, language)
 {
   var output = "";
   
-  if(language == "classDiagram" || language == "stateDiagram")
-  { // Covers Graphviz class and state diagrams
+  if(language == "classDiagram" || language == "stateDiagram" || language == "instanceDiagram")
+  { // Covers Graphviz class, state, and instance diagrams
     output = code.split("<svg width=")[1];
     output = "<svg width=" + output;
     output = output.replace(/<\/svg>$/, "");

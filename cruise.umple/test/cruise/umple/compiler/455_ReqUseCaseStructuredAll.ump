@@ -1,0 +1,8 @@
+req UC2 useCase {
+  who { customer }
+  when { cart is ready }
+  what { complete checkout }
+  why { purchase selected items }
+  userStep 1 { confirm order }
+  systemResponse 1 { display total price }
+}
