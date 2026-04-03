@@ -40,6 +40,9 @@ public class RequirementsPlainTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryStructured.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryStructuredPartial.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryWhoOnly.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideImpl.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideStatements.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqSortStat.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqAssociation.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqAssociationBidir.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqAssociationLeftNav.html");
@@ -135,6 +138,23 @@ public class RequirementsPlainTest extends TemplateTest
   }
 
   @Test
+  public void ReqHideImpl()
+  {
+    assertUmpleTemplateFor("requirements/ReqHideImpl.ump","requirements/ReqHideImpl.html.txt");
+  }
+
+  @Test
+  public void ReqHideStatements()
+  {
+    assertUmpleTemplateFor("requirements/ReqHideStatements.ump","requirements/ReqHideStatements.html.txt");
+  }
+
+  @Test
+  public void ReqSortStat()
+  {
+    assertUmpleTemplateFor("requirements/ReqSortStat.ump","requirements/ReqSortStat.html.txt");
+  }
+
   public void ReqAssociation()
   {
     assertUmpleTemplateFor("requirements/ReqAssociation.ump","requirements/ReqAssociation.html.txt");

@@ -1,0 +1,4 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqHideImpl.ump
+</p><p><b>A01: unimplemented requirement.</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>
