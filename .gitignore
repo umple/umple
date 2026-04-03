@@ -41,6 +41,7 @@ UmpleCollabServer/config.cfg
 UmpleLsp/config.cfg.bak
 UmpleLsp/config.cfg
 UmpleLsp/umplesync.jar
+UmpleLsp/server.js
 testbed_cpp/test/runAllTests
 
 umpleonline/scripts/collab-server-config.js

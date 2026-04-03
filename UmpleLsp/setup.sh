@@ -38,23 +38,12 @@ else
   touch "$BASEDIR/umplesync.jar"
 fi
 
-# Pack local umple-lsp-server if npm-linked (dev)
-# Dockerfile handles both cases: local tarball if present, registry if not
-rm -f "$BASEDIR/lsp-server.tgz"
-LSP_LINKED=$(npm ls -g umple-lsp-server 2>/dev/null | grep "\->" || true)
-if [ -n "$LSP_LINKED" ]; then
-  LSP_SRC=$(node -e "console.log(require('fs').realpathSync(require('child_process').execSync('npm root -g').toString().trim() + '/umple-lsp-server'))")
-  echo "Using npm-linked umple-lsp-server from $LSP_SRC"
-  npm pack --pack-destination "$BASEDIR" "$LSP_SRC"
-  LSP_TGZ=$(ls -t "$BASEDIR"/umple-lsp-server-*.tgz 2>/dev/null | head -1)
-  if [ -n "$LSP_TGZ" ]; then
-    mv "$LSP_TGZ" "$BASEDIR/lsp-server.tgz"
-  fi
-fi
+# Copy canonical lsp-proxy server.js into build context
+cp "$(cd "$BASEDIR/.."; pwd)/umpleonline/scripts/lsp-proxy/server.js" "$BASEDIR/server.js"
 
 # BUILD DOCKERFILE
 docker build --no-cache -t $containerName .
-rm -f "$BASEDIR/lsp-server.tgz"
+rm -f "$BASEDIR/server.js"
 
 # RUN CONTAINER
 # Mount the ump directory so the LSP server can read .ump files

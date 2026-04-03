@@ -11,6 +11,7 @@ const url = require("url");
 // Configuration (from environment variables with defaults)
 // ---------------------------------------------------------------------------
 const LSP_PORT = parseInt(process.env.LSP_PORT || "9999", 10);
+const LSP_HOST = process.env.LSP_HOST || "127.0.0.1";
 const UMP_BASE_DIR = process.env.UMP_BASE_DIR || "/var/www/ump";
 const LSP_COMMAND = process.env.LSP_COMMAND || "umple-lsp-server";
 const UMPLESYNC_JAR_PATH = process.env.UMPLESYNC_JAR_PATH || "";
@@ -179,11 +180,11 @@ function killSession(modelId, reason) {
 
 const wss = new WebSocketServer({
   port: LSP_PORT,
-  host: "127.0.0.1",
+  host: LSP_HOST,
 });
 
 wss.on("listening", () => {
-  log(`WebSocket server listening on 127.0.0.1:${LSP_PORT}`);
+  log(`WebSocket server listening on ${LSP_HOST}:${LSP_PORT}`);
 });
 
 wss.on("connection", (ws, req) => {

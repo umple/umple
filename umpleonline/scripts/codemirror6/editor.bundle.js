@@ -32041,13 +32041,13 @@ ${text}</tr>
     }
 
     // Called when editor unbinds from a file (tab switch away)
-    // didClose takes URI string. Don't remove from _files — demote to passive.
+    // Keep file open with the server so it stays indexed for use-completion
+    // and cross-file features. Only unbind the view.
     closeFile(uri, view) {
       const file = this.getFile(uri);
       if (!file) return;
-      this.client.didClose(uri);
       file._view = null;
-      file._lspOpen = false;
+      // Don't send didClose — file stays open with server as passive
     }
 
     // Called on connect — re-open active file and any _lspOpen passive files
