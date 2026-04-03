@@ -287,8 +287,9 @@
       return;
     }
 
-    var idMap = {}; // key: fqn#id -> { className, index, data }
-    var instancesByClass = {};
+  var idMap = {}; // key: fqn#id -> { className, index, data }
+  var instancesByClass = {};
+  var anyAllocated = false; // track whether any instances were created for known classes
 
     // Helper to recursively walk a wrapper (and its nested association
     // wrappers) so that composed children and other linked objects are also
@@ -317,6 +318,7 @@
         }
         var index = instancesByClass[className].length;
         instancesByClass[className].push({});
+        anyAllocated = true;
         entry = {
           className: className,
           index: index,
@@ -366,6 +368,27 @@
     objects.forEach(function(wrapper) {
       collectEntitiesFromWrapper(wrapper);
     });
+
+    // If the payload did not yield any instances for classes that
+    // exist in the current CRUD model, treat it as incompatible and
+    // abort without modifying existing CRUD data.
+    if (!anyAllocated) {
+      var msg = "The selected JSON data is not compatible with the current CRUD model and cannot be loaded into CRUD.";
+
+      // Surface this as a CRUD-level error message inside the CRUD UI,
+      // using the same global banner mechanism as other CRUD messages.
+      if (!Array.isArray(Page.crudAdjustmentMessages)) {
+        Page.crudAdjustmentMessages = [];
+      }
+      Page.crudAdjustmentMessages.push(msg);
+
+      if (typeof Page.renderCrudGlobalErrors === "function") {
+        // Let the renderer choose the appropriate container (current
+        // CRUD container or the default bottom panel).
+        Page.renderCrudGlobalErrors(null);
+      }
+      return;
+    }
 
     // Second pass: populate attributes and forward association indices
     Object.keys(instancesByClass).forEach(function(className) {
