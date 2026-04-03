@@ -1703,6 +1703,42 @@ public class UmpleParserTest
     Assert.assertEquals("customer", req.getWho());
     Assert.assertEquals("reset password", req.getWhat());
   }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqUseCaseBasic()
+  {
+    assertNoWarningsParse("454_ReqUseCaseBasic.ump");
+  }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqUsecaseAliasLowercase()
+  {
+    assertNoWarningsParse("454_ReqUsecaseAlias.ump");
+  }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqNormalStillWorksAfterUseCaseGrammar()
+  {
+    assertNoWarningsParse("454_ReqNormalStillWorksAfterUseCase.ump");
+  }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqUseCaseStructuredAll()
+  {
+    assertNoWarningsParse("455_ReqUseCaseStructuredAll.ump");
+  }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqUseCaseStructuredPartial()
+  {
+    assertNoWarningsParse("455_ReqUseCaseStructuredPartial.ump");
+  }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqUseCaseMultipleSteps()
+  {
+    assertNoWarningsParse("455_ReqUseCaseMultipleSteps.ump");
+  }
   @Test
   public void associationName()
   {
