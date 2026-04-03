@@ -1637,6 +1637,72 @@ public class UmpleParserTest
   {
           assertNoWarningsParse("451_ReqMixsetOutputGenerated.ump");
   }
+  // Issue 2098: implementsReq at top level before interface
+  @Test
+  public void ReqInterface()
+  {
+    assertNoWarningsParse("451_ReqInterface.ump");
+  }
+  @Test
+  public void ReqInterfaceNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqInterfaceNoLeakage.ump");
+  }
+  // Issue 2098: implementsReq at top level before associationClass
+  @Test
+  public void ReqAssociationClass()
+  {
+    assertNoWarningsParse("451_ReqAssociationClass.ump");
+  }
+  @Test
+  public void ReqAssociationClassNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqAssociationClassNoLeakage.ump");
+  }
+  // Issue 2098: implementsReq at top level before trait
+  @Test
+  public void ReqTrait()
+  {
+    assertNoWarningsParse("451_ReqTrait.ump");
+  }
+  @Test
+  public void ReqTraitNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqTraitNoLeakage.ump");
+  }
+  // Issue 2098: implementsReq at top level before enum
+  @Test
+  public void ReqEnum()
+  {
+    assertNoWarningsParse("451_ReqEnum.ump");
+  }
+  @Test
+  public void ReqEnumNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqEnumNoLeakage.ump");
+  }
+  // Issue 2098: implementsReq at top level before top-level state machine definition
+  @Test
+  public void ReqTopLevelStateMachine()
+  {
+    assertNoWarningsParse("451_ReqTopLevelSM.ump");
+  }
+  @Test
+  public void ReqTopLevelStateMachineNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqTopLevelSMNoLeakage.ump");
+  }
+  // Issue 2098: implementsReq inside mixset before structural elements
+  @Test
+  public void ReqInsideMixset()
+  {
+    assertNoWarningsParse("451_ReqInsideMixset.ump");
+  }
+  @Test
+  public void ReqInsideMixsetTrait()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetTrait.ump");
+  }
   //Issue 2377 (User Story)
   @Test
   public void ReqUserStoryBasic()

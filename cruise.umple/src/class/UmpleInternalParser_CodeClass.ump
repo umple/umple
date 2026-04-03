@@ -185,6 +185,26 @@ class UmpleInternalParser
     {
       analyzeAllAssociations(t);
     }
+    else if (t.is("traitDefinition"))
+    {
+      // Issue 2098: reqImplementation must be consumed by analyzeTraitToken (which runs after this),
+      // so prevent analyzeClassToken from clearing lastRequirementsImpl prematurely.
+      shouldConsumeRequirementImpl = false;
+    }
+    else if (t.is("stateMachineDefinition"))
+    {
+      // Issue 2098: attach top-level lastRequirementsImpl to the state machine definition.
+      // The StateMachine object was already created by analyzeStateMachineToken at step 1.
+      mixset StateMachine {
+        String smName = t.getValue("name");
+        StateMachine sm = model.getStateMachineDefinition(smName);
+        if (sm != null) {
+          for (ReqImplementation ri : lastRequirementsImpl) {
+            sm.addReqImplementation(ri);
+          }
+        }
+      }
+    }
     else if (t.is("toplevelException"))
     {
       analyzeToplevelException(t);
