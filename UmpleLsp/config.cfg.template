@@ -14,3 +14,7 @@ portToUse=9999
 
 # Docker image and container name.
 containerName=umple_lsp
+
+# Set to true to use npm-linked umple-lsp-server instead of the registry version.
+# Requires: cd <lsp-repo>/packages/server && npm link
+useLinkedLsp=false

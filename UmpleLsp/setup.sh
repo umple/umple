@@ -38,12 +38,32 @@ else
   touch "$BASEDIR/umplesync.jar"
 fi
 
+# Pack npm-linked umple-lsp-server if enabled
+rm -f "$BASEDIR/lsp-server.tgz"
+if [ "$useLinkedLsp" = "true" ]; then
+  LSP_SRC=$(node -e "console.log(require('fs').realpathSync(require('child_process').execSync('npm root -g').toString().trim() + '/umple-lsp-server'))" 2>/dev/null)
+  if [ -n "$LSP_SRC" ]; then
+    echo "Using npm-linked umple-lsp-server from $LSP_SRC"
+    npm pack --pack-destination "$BASEDIR" "$LSP_SRC"
+    LSP_TGZ=$(ls -t "$BASEDIR"/umple-lsp-server-*.tgz 2>/dev/null | head -1)
+    if [ -n "$LSP_TGZ" ]; then
+      mv "$LSP_TGZ" "$BASEDIR/lsp-server.tgz"
+    else
+      echo "ERROR: npm pack failed"
+      exit 1
+    fi
+  else
+    echo "ERROR: umple-lsp-server is not npm-linked globally"
+    exit 1
+  fi
+fi
+
 # Copy canonical lsp-proxy server.js into build context
 cp "$(cd "$BASEDIR/.."; pwd)/umpleonline/scripts/lsp-proxy/server.js" "$BASEDIR/server.js"
 
 # BUILD DOCKERFILE
 docker build --no-cache -t $containerName .
-rm -f "$BASEDIR/server.js"
+rm -f "$BASEDIR/server.js" "$BASEDIR/lsp-server.tgz"
 
 # RUN CONTAINER
 # Mount the ump directory so the LSP server can read .ump files
