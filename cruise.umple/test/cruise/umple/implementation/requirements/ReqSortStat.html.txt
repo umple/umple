@@ -1,0 +1,11 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqSortStat.ump
+</p><p><b>C01: alpha statement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;Example&nbsp;ReqSortStat.ump&nbsp;line&nbsp;15 ; 
+</p><p><b>B01: beta statement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;Example&nbsp;ReqSortStat.ump&nbsp;line&nbsp;15 ; 
+</p><p><b>A01: gamma statement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;Example&nbsp;ReqSortStat.ump&nbsp;line&nbsp;15 ; 
+</p></html>

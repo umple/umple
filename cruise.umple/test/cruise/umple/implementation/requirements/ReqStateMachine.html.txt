@@ -1,0 +1,5 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqStateMachine.ump
+</p><p><b>R1: A state machine requirement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;state machine:&nbsp;sm&nbsp;in class&nbsp;A&nbsp;ReqStateMachine.ump&nbsp;line&nbsp;7 ; 
+</p></html>

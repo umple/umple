@@ -85,6 +85,10 @@
       } catch (err) {
         console.warn("Unable to persist theme preference", err);
       }
+
+      if (window.Page && typeof Page.updateCanvasCursor === "function") {
+        Page.updateCanvasCursor();
+      }
     }
   }
 
