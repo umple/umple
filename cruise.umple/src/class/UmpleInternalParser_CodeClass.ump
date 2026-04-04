@@ -156,6 +156,18 @@ class UmpleInternalParser
     }
     else if (t.is("requirement")){
       analyzeRequirement(t);
+      //attach lastRequirementsImpl to this requirement (req-as-implementsReq-target)
+      if (lastRequirementsImpl.size() > 0) {
+        Token reqIdToken = t.getSubToken("reqIdentifier");
+        if (reqIdToken != null) {
+          Requirement req = model.getAllRequirements().get(reqIdToken.getValue());
+          if (req != null) {
+            for (ReqImplementation ri : lastRequirementsImpl) {
+              req.addReqImplementation(ri);
+            }
+          }
+        }
+      }
     }
     else if (t.is("reqImplementation")){
       analyzeImplementReq(t);   
@@ -183,7 +195,35 @@ class UmpleInternalParser
     }
     else if (t.is("associationDefinition"))
     {
+      // Snapshot unlinkedAssociations count to find associations created by this block
+      int assocCountBefore = unlinkedAssociations.size();
       analyzeAllAssociations(t);
+      // Attach top-level lastRequirementsImpl to all associations created in this block
+      for (int i = assocCountBefore; i < unlinkedAssociations.size(); i++) {
+        for (ReqImplementation ri : lastRequirementsImpl) {
+          unlinkedAssociations.get(i).addReqImplementation(ri);
+        }
+      }
+    }
+    else if (t.is("traitDefinition"))
+    {
+      // reqImplementation must be consumed by analyzeTraitToken (which runs after this),
+      // so prevent analyzeClassToken from clearing lastRequirementsImpl prematurely.
+      shouldConsumeRequirementImpl = false;
+    }
+    else if (t.is("stateMachineDefinition"))
+    {
+      // attach top-level lastRequirementsImpl to the state machine definition.
+      // The StateMachine object was already created by analyzeStateMachineToken at step 1.
+      mixset StateMachine {
+        String smName = t.getValue("name");
+        StateMachine sm = model.getStateMachineDefinition(smName);
+        if (sm != null) {
+          for (ReqImplementation ri : lastRequirementsImpl) {
+            sm.addReqImplementation(ri);
+          }
+        }
+      }
     }
     else if (t.is("toplevelException"))
     {
@@ -1378,15 +1418,27 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private void analyzeAllAssociations(Token associationToken)
   {
     String name = associationToken.getValue("name");
+    //track reqImplementation tokens appearing inside the association block
+    // so they can be attached to the immediately following association.
+    List<ReqImplementation> innerReqImpls = new ArrayList<ReqImplementation>();
 
     // Go through every token that is a child of the current token (all associations part of this association).
     for(Token token : associationToken.getSubTokens()){
       boolean isAssociationToken = token.is("association");
+      //capture implementsReq inside the association block
+      if (token.is("reqImplementation")) {
+        innerReqImpls.clear();
+        String reqImpID = token.getSubToken("reqIdentifier").getValue();
+        ReqImplementation reqImpl = new ReqImplementation(reqImpID, token);
+        model.addReqImplementation(reqImpl);
+        innerReqImpls.add(reqImpl);
+        continue;
+      }
       mixset Mixset {
         if (token.is("mixsetDefinition"))
         {
           analyzeMixsetBodyToken(token);
-        } 
+        }
       }
       //Issue 213/131: [association] elements inside associationClasses generate 2 associations instead of one
       if (isAssociationToken && associationToken.is("associationClassDefinition")) {
@@ -1399,6 +1451,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         Association association = analyzeAssociation(token, "");
         if(isAssociationToken && association != null){
           association.setName(name);
+        }
+        //attach inner reqImplementation to this association
+        if (association != null) {
+          for (ReqImplementation ri : innerReqImpls) {
+            association.addReqImplementation(ri);
+          }
+          innerReqImpls.clear();
         }
       }
       if (!getParseResult().getWasSuccess()) { return; }
