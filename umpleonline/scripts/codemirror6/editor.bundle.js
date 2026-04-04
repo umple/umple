@@ -32193,10 +32193,13 @@ ${text}</tr>
       const uri = this._tabUri(tabName);
       const file = this.getFile(uri);
       if (!file) return;
-      // Close with server if open (active or passively opened)
       if (file._view || file._lspOpen) {
         this.client.didClose(file.uri);
       }
+      // Tell server the file was deleted so it purges symbols
+      this.client.notification("workspace/didChangeWatchedFiles", {
+        changes: [{ uri: uri, type: 3 }]
+      });
       const idx = this._files.indexOf(file);
       if (idx !== -1) {
         this._files.splice(idx, 1);
