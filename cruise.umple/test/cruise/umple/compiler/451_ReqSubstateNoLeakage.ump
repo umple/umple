@@ -1,0 +1,21 @@
+req R1 text { Requirement for first substate only }
+
+class X {
+  status {
+    s1 {
+      e1 -> s2;
+
+      implementsReq R1;
+      s1a {
+        e2 -> s1b;
+      }
+
+      s1b {
+      }
+    }
+
+    s2 {
+      e3 -> s1;
+    }
+  }
+}
