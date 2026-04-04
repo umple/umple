@@ -98,4 +98,46 @@ public class RequirementTest
     Assert.assertEquals(original.getLanguage(), copy.getLanguage());
   }
 
+  @Test
+  public void useCaseStepsStoredInOrder()
+  {
+    Requirement req = new Requirement("UC1", "checkout flow", null, null, null, null, "useCase");
+
+    req.addUseCaseStep(new UseCaseStep("1", "userStep", "select product"));
+    req.addUseCaseStep(new UseCaseStep("1", "systemResponse", "display price"));
+    req.addUseCaseStep(new UseCaseStep("2", "userStep", "enter quantity"));
+
+    Assert.assertEquals(3, req.numberOfUseCaseStep());
+
+    Assert.assertEquals("1", req.getUseCaseStep(0).getId());
+    Assert.assertEquals("userStep", req.getUseCaseStep(0).getStepType());
+    Assert.assertEquals("select product", req.getUseCaseStep(0).getContent());
+
+    Assert.assertEquals("1", req.getUseCaseStep(1).getId());
+    Assert.assertEquals("systemResponse", req.getUseCaseStep(1).getStepType());
+    Assert.assertEquals("display price", req.getUseCaseStep(1).getContent());
+
+    Assert.assertEquals("2", req.getUseCaseStep(2).getId());
+    Assert.assertEquals("userStep", req.getUseCaseStep(2).getStepType());
+    Assert.assertEquals("enter quantity", req.getUseCaseStep(2).getContent());
+  }
+  @Test
+  public void deepCopyConstructorCopiesUseCaseSteps()
+  {
+    Requirement original = new Requirement("UC2", "checkout flow", null, null, null, null, "useCase");
+    original.addUseCaseStep(new UseCaseStep("1", "userStep", "select product"));
+    original.addUseCaseStep(new UseCaseStep("1", "systemResponse", "display price"));
+
+    Requirement copy = new Requirement(original);
+
+    Assert.assertEquals(2, copy.numberOfUseCaseStep());
+
+    Assert.assertEquals("1", copy.getUseCaseStep(0).getId());
+    Assert.assertEquals("userStep", copy.getUseCaseStep(0).getStepType());
+    Assert.assertEquals("select product", copy.getUseCaseStep(0).getContent());
+
+    Assert.assertEquals("1", copy.getUseCaseStep(1).getId());
+    Assert.assertEquals("systemResponse", copy.getUseCaseStep(1).getStepType());
+    Assert.assertEquals("display price", copy.getUseCaseStep(1).getContent());
+  }
 }
