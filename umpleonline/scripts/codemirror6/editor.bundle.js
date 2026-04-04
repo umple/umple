@@ -31582,21 +31582,6 @@ ${text}</tr>
           signatureHelp(),
       ];
   }
-  /**
-  This function bundles all the extensions defined in this package,
-  in a way that can be passed to the
-  [`extensions`](https://codemirror.net/6/docs/ref/#lsp-client.LSPClientConfig.extensions) option to
-  `LSPClient`.
-  */
-  function languageServerExtensions() {
-      return [
-          serverCompletion(),
-          hoverTooltips(),
-          keymap.of([...formatKeymap, ...renameKeymap, ...jumpToDefinitionKeymap, ...findReferencesKeymap]),
-          signatureHelp(),
-          serverDiagnostics()
-      ];
-  }
 
   // Copyright: All contributers to the Umple Project
   // This file is made available subject to the open source license found at:
@@ -32326,7 +32311,7 @@ ${text}</tr>
         currentWorkspace = new UmpleWorkspace(client, umpBasePath, modelId);
         return currentWorkspace;
       },
-      extensions: languageServerExtensions(),
+      extensions: [serverDiagnostics()],
     });
 
     // Connect

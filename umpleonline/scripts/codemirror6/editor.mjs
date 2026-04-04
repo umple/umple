@@ -15,7 +15,7 @@ import { receiveUpdates, sendableUpdates, collab, getSyncedVersion } from "@code
 import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, HighlightStyle } from "@codemirror/language"
 import { SearchCursor, RegExpCursor } from "@codemirror/search";
 import {tags} from "@lezer/highlight";
-import { LSPClient, LSPPlugin, Workspace, languageServerSupport, languageServerExtensions, serverDiagnostics } from "@codemirror/lsp-client";
+import { LSPClient, LSPPlugin, Workspace, languageServerSupport, serverDiagnostics } from "@codemirror/lsp-client";
 
 
 const codemirrorDebuggerFlag = false;
@@ -758,7 +758,7 @@ async function _doInitLsp(view, config) {
       currentWorkspace = new UmpleWorkspace(client, umpBasePath, modelId);
       return currentWorkspace;
     },
-    extensions: languageServerExtensions(),
+    extensions: [serverDiagnostics()],
   });
 
   // Connect
