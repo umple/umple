@@ -1,0 +1,13 @@
+req R1 userStory {
+  who { developer }
+  what { log events }
+}
+
+req R1 quality {
+  Reliability {}
+}
+
+trait Loggable {
+  implementsReq R1;
+  logLevel;
+}

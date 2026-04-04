@@ -140,4 +140,130 @@ public class RequirementTest
     Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, copy.getUseCaseStep(1).getStepType());
     Assert.assertEquals("display price", copy.getUseCaseStep(1).getContent());
   }
+
+  @Test
+  public void qualityClassesStored()
+  {
+    Requirement req = new Requirement("Q1", "", null, null, null, null, "quality");
+    new QualityClass("High", "", req);
+    new QualityClass("Medium", "", req);
+    new QualityClass("Low", "", req);
+
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Medium", req.getQualityClass(1).getName());
+    Assert.assertEquals("Low", req.getQualityClass(2).getName());
+    Assert.assertEquals("", req.getQualityClass(0).getContent());
+  }
+
+  @Test
+  public void deepCopyConstructorCopiesQualityClasses()
+  {
+    Requirement original = new Requirement("Q2", "", null, null, null, null, "quality");
+    new QualityClass("Fast", "", original);
+    new QualityClass("Slow", "", original);
+
+    Requirement copy = new Requirement(original);
+
+    Assert.assertEquals(2, copy.numberOfQualityClasses());
+    Assert.assertEquals("Fast", copy.getQualityClass(0).getName());
+    Assert.assertEquals("Slow", copy.getQualityClass(1).getName());
+    Assert.assertEquals("", copy.getQualityClass(0).getContent());
+    Assert.assertEquals(original.getLanguage(), copy.getLanguage());
+  }
+
+  @Test
+  public void qualityClassSingleEntry()
+  {
+    Requirement req = new Requirement("Q3", "", null, null, null, null, "quality");
+    new QualityClass("Reliability", "", req);
+
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("Reliability", req.getQualityClass(0).getName());
+    Assert.assertEquals("", req.getQualityClass(0).getContent());
+  }
+
+  @Test
+  public void qualityClassNonEmptyContent()
+  {
+    Requirement req = new Requirement("Q4", "", null, null, null, null, "quality");
+    new QualityClass("Performance", "some body", req);
+
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("Performance", req.getQualityClass(0).getName());
+    Assert.assertEquals("some body", req.getQualityClass(0).getContent());
+  }
+
+  @Test
+  public void deepCopyZeroQualityClasses()
+  {
+    Requirement original = new Requirement("Q5", "", null, null, null, null, "quality");
+
+    Requirement copy = new Requirement(original);
+
+    Assert.assertEquals(0, copy.numberOfQualityClasses());
+    Assert.assertEquals("quality", copy.getLanguage());
+  }
+
+  @Test
+  public void deepCopyPreservesNonEmptyContent()
+  {
+    Requirement original = new Requirement("Q6", "", null, null, null, null, "quality");
+    new QualityClass("Scalability", "must handle 1000 users", original);
+
+    Requirement copy = new Requirement(original);
+
+    Assert.assertEquals(1, copy.numberOfQualityClasses());
+    Assert.assertEquals("Scalability", copy.getQualityClass(0).getName());
+    Assert.assertEquals("must handle 1000 users", copy.getQualityClass(0).getContent());
+  }
+
+  @Test
+  public void deepCopyIndependence()
+  {
+    Requirement original = new Requirement("Q7", "", null, null, null, null, "quality");
+    new QualityClass("Usability", "", original);
+
+    Requirement copy = new Requirement(original);
+    new QualityClass("Security", "", copy);
+
+    Assert.assertEquals(1, original.numberOfQualityClasses());
+    Assert.assertEquals("Usability", original.getQualityClass(0).getName());
+    Assert.assertEquals(2, copy.numberOfQualityClasses());
+  }
+
+  @Test
+  public void qualityClassRemoval()
+  {
+    Requirement req = new Requirement("Q8", "", null, null, null, null, "quality");
+    new QualityClass("High", "", req);
+    QualityClass toRemove = new QualityClass("Medium", "", req);
+    new QualityClass("Low", "", req);
+
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+
+    toRemove.delete();
+
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Low", req.getQualityClass(1).getName());
+  }
+
+  @Test
+  public void qualityClassWithLongName()
+  {
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < 150; i++)
+    {
+      sb.append("A");
+    }
+    String longName = sb.toString();
+
+    Requirement req = new Requirement("Q9", "", null, null, null, null, "quality");
+    new QualityClass(longName, "", req);
+
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals(150, req.getQualityClass(0).getName().length());
+    Assert.assertEquals(longName, req.getQualityClass(0).getName());
+  }
 }
