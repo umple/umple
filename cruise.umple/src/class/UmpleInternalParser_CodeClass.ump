@@ -248,8 +248,8 @@ class UmpleInternalParser
 
   private void analyzeRequirement(Token t) {
     String reqID = t.getSubToken("reqIdentifier").getValue();
-    const String INVALID_LANG = "INVALID";
-    const String QUALITY_LANG = "quality";
+    final String INVALID_LANG = "INVALID";
+    final String QUALITY_LANG = "quality";
 
     String newContent = "";
     if (!(t.getSubToken("reqContent") == null || t.getSubToken("reqContent").getValue() == null)) {
@@ -322,6 +322,17 @@ class UmpleInternalParser
             setFailedPosition(t.getPosition(), 403, className, reqID);
           }
           qualityClassData.add(new String[]{className, classContent});
+        }
+        // Check for unmatched leftover content after extracting all valid matches
+        String leftover = p.matcher(newContent).replaceAll("").trim();
+        if (!leftover.isEmpty()) {
+          if (leftover.contains("{")) {
+            setFailedPosition(t.getPosition(), 1504, reqID);
+          } else if (leftover.matches("[A-Za-z0-9_\\s]+")) {
+            setFailedPosition(t.getPosition(), 407, reqID, leftover);
+          } else {
+            setFailedPosition(t.getPosition(), 1500, leftover);
+          }
         }
         newContent = "";
       }
