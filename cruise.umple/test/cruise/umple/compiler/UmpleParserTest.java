@@ -1637,7 +1637,246 @@ public class UmpleParserTest
   {
           assertNoWarningsParse("451_ReqMixsetOutputGenerated.ump");
   }
+  // implementsReq at top level before interface
+  @Test
+  public void ReqInterface()
+  {
+    assertNoWarningsParse("451_ReqInterface.ump");
+  }
+  @Test
+  public void ReqInterfaceNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqInterfaceNoLeakage.ump");
+  }
+  // implementsReq at top level before associationClass
+  @Test
+  public void ReqAssociationClass()
+  {
+    assertNoWarningsParse("451_ReqAssociationClass.ump");
+  }
+  @Test
+  public void ReqAssociationClassNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqAssociationClassNoLeakage.ump");
+  }
+  // implementsReq at top level before trait
+  @Test
+  public void ReqTrait()
+  {
+    assertNoWarningsParse("451_ReqTrait.ump");
+  }
+  @Test
+  public void ReqTraitNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqTraitNoLeakage.ump");
+  }
+  // implementsReq at top level before enum
+  @Test
+  public void ReqEnum()
+  {
+    assertNoWarningsParse("451_ReqEnum.ump");
+  }
+  @Test
+  public void ReqEnumNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqEnumNoLeakage.ump");
+  }
+  // implementsReq at top level before top-level state machine definition
+  @Test
+  public void ReqTopLevelStateMachine()
+  {
+    assertNoWarningsParse("451_ReqTopLevelSM.ump");
+  }
+  @Test
+  public void ReqTopLevelStateMachineNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqTopLevelSMNoLeakage.ump");
+  }
+  // implementsReq inside mixset before structural elements
+  @Test
+  public void ReqInsideMixset()
+  {
+    assertNoWarningsParse("451_ReqInsideMixset.ump");
+  }
+  @Test
+  public void ReqInsideMixsetTrait()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetTrait.ump");
+  }
+  @Test
+  public void ReqInsideMixsetInterface()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetInterface.ump");
+  }
+  @Test
+  public void ReqInsideMixsetEnum()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetEnum.ump");
+  }
+  @Test
+  public void ReqInsideMixsetAssocClass()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetAssocClass.ump");
+  }
+  @Test
+  public void ReqInsideMixsetSM()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetSM.ump");
+  }
+  @Test
+  public void ReqInsideMixsetAssocBlock()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetAssocBlock.ump");
+  }
+  @Test
+  public void ReqInsideMixsetReq()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetReq.ump");
+  }
+  // implementsReq at top level before top-level association block
+  @Test
+  public void ReqTopLevelAssociation()
+  {
+    assertNoWarningsParse("451_ReqTopLevelAssociation.ump");
+  }
+  @Test
+  public void ReqTopLevelAssociationNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqTopLevelAssociationNoLeakage.ump");
+  }
+  //implementsReq inside a top-level association block
+  @Test
+  public void ReqInsideAssociationBlock()
+  {
+    assertNoWarningsParse("451_ReqInsideAssociationBlock.ump");
+  }
+  //implementsReq before a req statement (requirement decomposition)
+  @Test
+  public void ReqBeforeReqStatement()
+  {
+    assertNoWarningsParse("451_ReqBeforeReqStatement.ump");
+  }
+  @Test
+  public void ReqBeforeReqStatementNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqBeforeReqStatementNoLeakage.ump");
+  }
+  //implementsReq inside a class before a nested inner class
+  @Test
+  public void ReqInnerClass()
+  {
+    assertNoWarningsParse("451_ReqInnerClass.ump");
+  }
   //Issue 2377 (User Story)
+  //Issue 2098
+  @Test
+  public void ImplementsReqState()
+  {
+          assertNoWarningsParse("451_ReqState.ump");
+  }
+  //Issue 2098
+  @Test
+  public void ImplementsReqTransition()
+  {
+          assertNoWarningsParse("451_ReqTransition.ump")	;
+  }
+  //Issue 2098
+  @Test
+  public void ImplementsReqStateMachineNoLeakage()
+  {
+          assertNoWarningsParse("451_ReqStateMachineNoLeakage.ump")	;
+  }
+  //Issue 2098
+  @Test
+  public void ImplementsReqStateMachineMultiple()
+  {
+          assertNoWarningsParse("451_ReqStateMachineMultiple.ump")	;
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActionEntry()
+  {
+          assertNoWarningsParse("451_ReqActionEntry.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActionExit()
+  {
+          assertNoWarningsParse("451_ReqActionExit.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActivityDo()
+  {
+          assertNoWarningsParse("451_ReqActivityDo.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqSubstate()
+  {
+          assertNoWarningsParse("451_ReqSubstate.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActionEntryNoLeakage()
+  {
+    boolean answer = parseWarnings("451_ReqActionEntryNoLeakage.ump");
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
+
+    State state1 = model.getUmpleClass("X").getStateMachine(0).getState(0);
+    State state2 = model.getUmpleClass("X").getStateMachine(0).getState(1);
+
+    Assert.assertEquals(1, state1.numberOfActions());
+    Assert.assertEquals(1, state2.numberOfActions());
+
+    Assert.assertEquals(1, state1.getAction(0).numberOfReqImplementations());
+    Assert.assertEquals(0, state2.getAction(0).numberOfReqImplementations());
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActivityDoNoLeakage()
+  {
+    boolean answer = parseWarnings("451_ReqActivityDoNoLeakage.ump");
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
+
+    State state1 = model.getUmpleClass("X").getStateMachine(0).getState(0);
+    State state2 = model.getUmpleClass("X").getStateMachine(0).getState(1);
+
+    Assert.assertEquals(1, state1.numberOfActivities());
+    Assert.assertEquals(1, state2.numberOfActivities());
+
+    Assert.assertEquals(1, state1.getActivity(0).numberOfReqImplementations());
+    Assert.assertEquals(0, state2.getActivity(0).numberOfReqImplementations());
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqSubstateNoLeakage()
+  {
+    boolean answer = parseWarnings("451_ReqSubstateNoLeakage.ump");
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
+
+    State parent = model.getUmpleClass("X").getStateMachine(0).getState(0);
+    Assert.assertEquals(1, parent.numberOfNestedStateMachines());
+
+    StateMachine nested = parent.getNestedStateMachine(0);
+    State state1a = nested.getState(0);
+    State state1b = nested.getState(1);
+
+    Assert.assertEquals(1, state1a.numberOfReqImplementations());
+    Assert.assertEquals(0, state1b.numberOfReqImplementations());
+  }
+
+  //Issue 2377
   @Test
   public void ReqUserStoryBasic()
   {
