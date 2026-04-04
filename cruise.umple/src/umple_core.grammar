@@ -55,6 +55,9 @@ comment- : [[inlineComment]] | [[multilineComment]] | [[annotationComment]]
 inlineComment- : // [*inlineComment]
 multilineComment- : /* [**multilineComment] */
 
+reqIdentifier : [name]
+
+requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[plainReq]] ) )
 requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[plainReq]] ) )
 plainReq- : [reqLanguage]? { [**reqContent] }
 userStory- : [=reqLanguage:userStory|userstory] { ( [[userStoryTags]] | [**reqContent] ) }
