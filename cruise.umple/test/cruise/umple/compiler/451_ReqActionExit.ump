@@ -1,0 +1,15 @@
+req R1 text { System must process exit action }
+
+class X {
+  status {
+    state1 {
+      implementsReq R1;
+      exit / {cleanup();}
+      e -> state2;
+    }
+
+    state2 {
+      e -> state1;
+    }
+  }
+}

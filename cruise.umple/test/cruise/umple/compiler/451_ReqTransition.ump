@@ -1,0 +1,14 @@
+req R1 text { System must handle event }
+
+class X {
+  status {
+    state1 {
+      implementsReq R1;
+      e -> state2;
+    }
+
+    state2 {
+      e -> state1;
+    }
+  }
+}

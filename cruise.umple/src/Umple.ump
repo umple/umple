@@ -1105,6 +1105,8 @@ class Association
 
   before getName { if (!isNamed()) { return this.deriveName(); } }
   after constructor { this.setLeftAndRight(); }
+  // Issue 2098: enable implementsReq to be placed before a top-level association block
+  1 -> * ReqImplementation;
 }
 
 /*
