@@ -75,6 +75,8 @@ UMPLE_LSP_WS_URL=ws://127.0.0.1:9999 php -S localhost:8001
 http://localhost:8001/umple.php
 ```
 
+To develop against a local `umple-lsp-server` (npm-linked), set `useLinkedLsp=true` in `UmpleLsp/config.cfg`.
+
 ## Code Execution
 
 To enable the "Execute" button (runs generated code in a sandbox):
