@@ -1327,13 +1327,19 @@ class Requirement{
   * -> * Token reqToken;
 
   // Ordered structured use case steps such as userStep/systemResponse
-  * -- * UseCaseStep useCaseStep;
+  1 -- * UseCaseStep;
 }
 
 class UseCaseStep
 {
+  enum UseCaseStepType
+  {
+    userStep,
+    systemResponse
+  }
+
   id;
-  stepType;
+  UseCaseStepType stepType;
   content;
 }
 

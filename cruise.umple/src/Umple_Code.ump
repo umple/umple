@@ -934,11 +934,16 @@ class Requirement{
     why = aReq.getWhy();
     language = aReq.getLanguage();
 
-    useCaseStep = new ArrayList<UseCaseStep>();
-    for (int i = 0; i < aReq.numberOfUseCaseStep(); i++)
+    useCaseSteps = new ArrayList<UseCaseStep>();
+    for (int i = 0; i < aReq.numberOfUseCaseSteps(); i++)
     {
       UseCaseStep originalStep = aReq.getUseCaseStep(i);
-      addUseCaseStep(new UseCaseStep(originalStep.getId(), originalStep.getStepType(), originalStep.getContent()));
+      new UseCaseStep(
+        originalStep.getId(),
+        originalStep.getStepType(),
+        originalStep.getContent(),
+        this
+      );
     }
   }
   public static List<Comment> convertToComment(List<ReqImplementation> reqSelected,UmpleModel aModel){
