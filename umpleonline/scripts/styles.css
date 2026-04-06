@@ -2066,3 +2066,42 @@ textarea#umpleLayoutEditorText {
 .cm-lsp-reference-panel {
   font-size: 12px;
 }
+
+/* Editor context menu */
+.cm-context-menu {
+  position: absolute;
+  z-index: 100;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  padding: 4px 0;
+  min-width: 220px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+}
+.cm-context-menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 16px;
+  cursor: pointer;
+  color: #333;
+}
+.cm-context-menu-item:hover {
+  background: #4a90d9;
+  color: #fff;
+}
+.cm-context-menu-shortcut {
+  margin-left: 24px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+.cm-context-menu-item:hover .cm-context-menu-shortcut {
+  opacity: 0.9;
+}
+.cm-context-menu-separator {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 4px 0;
+}

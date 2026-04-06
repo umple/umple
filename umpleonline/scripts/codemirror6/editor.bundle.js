@@ -31742,6 +31742,74 @@ ${text}</tr>
       EditorView.lineWrapping,
       EditorView.domEventHandlers({
         keydown(e, view) {
+        },
+        contextmenu(e, view) {
+          e.preventDefault();
+          removeContextMenu();
+          const menu = document.createElement("div");
+          menu.className = "cm-context-menu";
+          const isMac = /Mac/.test(navigator.platform);
+          const mod = isMac ? "\u2318" : "Ctrl-";
+          const items = [
+            { label: "Go to Definition", key: "F12", action: () => jumpToDefinition(view) },
+            { label: "Find All References", key: "Shift-F12", action: () => findReferences(view) },
+            { label: "Rename Symbol", key: "F2", action: () => renameSymbol(view) },
+            { type: "separator" },
+            { label: "Cut", key: mod + "X", action: () => { document.execCommand("cut"); } },
+            { label: "Copy", key: mod + "C", action: () => { document.execCommand("copy"); } },
+            { label: "Paste", key: mod + "V", action: () => {
+              navigator.clipboard.readText().then(text => {
+                if (text) view.dispatch(view.state.replaceSelection(text));
+              }).catch(() => {});
+            }},
+          ];
+          for (const item of items) {
+            if (item.type === "separator") {
+              const sep = document.createElement("div");
+              sep.className = "cm-context-menu-separator";
+              menu.appendChild(sep);
+              continue;
+            }
+            const row = document.createElement("div");
+            row.className = "cm-context-menu-item";
+            const label = document.createElement("span");
+            label.textContent = item.label;
+            const shortcut = document.createElement("span");
+            shortcut.className = "cm-context-menu-shortcut";
+            shortcut.textContent = item.key;
+            row.appendChild(label);
+            row.appendChild(shortcut);
+            row.addEventListener("mousedown", (ev) => {
+              ev.preventDefault();
+              removeContextMenu();
+              view.focus();
+              item.action();
+            });
+            menu.appendChild(row);
+          }
+          // Position at cursor
+          const rect = view.dom.getBoundingClientRect();
+          menu.style.left = (e.clientX - rect.left) + "px";
+          menu.style.top = (e.clientY - rect.top) + "px";
+          view.dom.appendChild(menu);
+          // Dismiss on click outside or Escape
+          function removeContextMenu() {
+            const old = view.dom.querySelector(".cm-context-menu");
+            if (old) old.remove();
+            document.removeEventListener("mousedown", onDocClick);
+            document.removeEventListener("keydown", onEsc);
+          }
+          function onDocClick(ev) {
+            if (!menu.contains(ev.target)) removeContextMenu();
+          }
+          function onEsc(ev) {
+            if (ev.key === "Escape") removeContextMenu();
+          }
+          setTimeout(() => {
+            document.addEventListener("mousedown", onDocClick);
+            document.addEventListener("keydown", onEsc);
+          }, 0);
+          return true;
         }
       }),
       editableCompartment.of(EditorView.editable.of(true)),
