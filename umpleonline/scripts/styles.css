@@ -1708,6 +1708,105 @@ textarea#umpleLayoutEditorText {
   background-color: #f9f9f9;
 }
 
+.crud-assoc-field {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #d0d0d0;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.crud-assoc-required-asterisk {
+  color: #cc0000;
+  margin-left: 4px;
+  font-weight: 700;
+}
+
+.crud-assoc-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.crud-assoc-field .crud-field-label {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+.crud-assoc-label-selector {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85em;
+  color: #555;
+}
+
+.crud-assoc-label-selector-text {
+  white-space: nowrap;
+}
+
+.crud-assoc-label-select {
+  max-width: 190px;
+  font-size: 0.9em;
+  padding: 2px 4px;
+}
+
+.crud-assoc-options {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.crud-assoc-selection-hint {
+  margin-top: 4px;
+  font-size: 0.8em;
+  color: #666666;
+}
+
+.crud-assoc-option {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.crud-assoc-option input[type="radio"],
+.crud-assoc-option input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.crud-assoc-option-label {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #d0d0d0;
+  background-color: #f9f9f9;
+  font-size: 0.9em;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.crud-assoc-option:hover .crud-assoc-option-label {
+  border-color: #a3c4e5;
+  background-color: #f1f6fd;
+}
+
+.crud-assoc-option input[type="radio"]:checked + .crud-assoc-option-label,
+.crud-assoc-option input[type="checkbox"]:checked + .crud-assoc-option-label {
+  border-color: #4a90e2;
+  background-color: #e5f2ff;
+  color: #154b8b;
+}
+
+.crud-assoc-none-option .crud-assoc-option-label {
+  border-style: dashed;
+  color: #666;
+}
+
 .crud-assoc-table-wrap {
   overflow-x: auto;
   margin: 6px 12px 4px 12px;
