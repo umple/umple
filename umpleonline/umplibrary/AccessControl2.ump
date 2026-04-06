@@ -38,7 +38,7 @@ class User{
 //Access Point: each direction of passage through a door is considered as an access point. 
 class AccessPoint{
   1 controls -- 1 Door;
-  0..1 Autorizer -> * AccessPoint;
+  0..1 authorizer -> * AccessPoint;
   
   lazy String cardIdentification;
  
