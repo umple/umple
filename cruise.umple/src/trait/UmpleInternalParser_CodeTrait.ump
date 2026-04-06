@@ -49,8 +49,12 @@ class UmpleInternalParser
     if (t.is("traitDefinition"))
     {
       analyzeTrait(t);
+      // Issue 2098: analyzeClassToken was asked not to clear lastRequirementsImpl for traitDefinition
+      // (to avoid the ordering bug where it cleared before we could use it here).
+      // So we clear it here after analyzeTrait has consumed the implementations.
+      lastRequirementsImpl.clear();
     }
-    
+
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -328,50 +332,108 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
- private void analyzeRequirement(Token t) {
-    // extract new requirement identifier 
-    String reqID = t.getSubToken("reqIdentifier").getValue(); 
-    String newContent = t.getSubToken("reqContent").getValue();// extract content 
-    // Initialize language
+  private void analyzeRequirement(Token t) {
+    String reqID = t.getSubToken("reqIdentifier").getValue();
+
+    String newContent = "";
+    if (!(t.getSubToken("reqContent") == null || t.getSubToken("reqContent").getValue() == null)) {
+      newContent = t.getSubToken("reqContent").getValue();
+    }
+
     String newLanguage = "";
     if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
-        // get the language of the sub token
-        newLanguage = t.getSubToken("reqLanguage").getValue();
+      newLanguage = t.getSubToken("reqLanguage").getValue();
     }
-     // Retrieves any existing requirement with the same identifier from the model
-     Requirement existingRequirement = model.getAllRequirements().get(reqID); 
-    // Checks if a requirement with the same identifier already exists in the model.
-    if (existingRequirement != null) { 
-        // get the language of the existing requirement
-        String existingLanguage = existingRequirement.getLanguage();
-	// return if different languages are encountered
-        if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
-            setFailedPosition(t.getPosition(), 402, reqID,existingLanguage,newLanguage);
-            return;
+    if ("userstory".equals(newLanguage)) {
+      newLanguage = "userStory";
+    }
+    String whoContent = null;
+    String whenContent = null;
+    String whatContent = null;
+    String whyContent = null;
+
+    if ("userStory".equals(newLanguage) && !newContent.equals("")) {
+      String[] lines = newContent.split("\\r?\\n");
+      StringBuilder remainingContent = new StringBuilder();
+
+      for (String line : lines) {
+        String trimmed = line.trim();
+
+        if (trimmed.startsWith("who {") && trimmed.endsWith("}")) {
+          whoContent = trimmed.substring(5, trimmed.length() - 1).trim();
         }
-        // retrieve the content of the existing requirement
-        String existingContent = existingRequirement.getStatement();
+        else if (trimmed.startsWith("when {") && trimmed.endsWith("}")) {
+          whenContent = trimmed.substring(6, trimmed.length() - 1).trim();
+        }
+        else if (trimmed.startsWith("what {") && trimmed.endsWith("}")) {
+          whatContent = trimmed.substring(6, trimmed.length() - 1).trim();
+        }
+        else if (trimmed.startsWith("why {") && trimmed.endsWith("}")) {
+          whyContent = trimmed.substring(5, trimmed.length() - 1).trim();
+        }
+        else {
+          if (remainingContent.length() > 0) {
+            remainingContent.append("\n");
+          }
+          remainingContent.append(line.trim());
+        }
+      }
 
+      if (!(whoContent == null && whenContent == null && whatContent == null && whyContent == null)) {
+        newContent = remainingContent.toString().trim();
+      }
+    }
 
-        // Requirement with the same identifier already exists, combine them
-        // Concatenate the content of the existing requirement with the new content
+    Requirement existingRequirement = model.getAllRequirements().get(reqID);
+
+    if (existingRequirement != null) {
+      String existingLanguage = existingRequirement.getLanguage();
+
+      if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
+        setFailedPosition(t.getPosition(), 402, reqID, existingLanguage, newLanguage);
+        return;
+      }
+
+      String existingContent = existingRequirement.getStatement();
+      if (existingContent == null) {
+        existingContent = "";
+      }
+
+      if (newLanguage.equals("")) {
+        newLanguage = existingLanguage;
+      }
+
+      if (existingContent.equals("")) {
+        // keep newContent as is
+      }
+      else if (newContent.equals("")) {
+        newContent = existingContent;
+      }
+      else {
         newContent = existingContent + " " + newContent;
-        if (newLanguage.equals("")) {
-            newLanguage = existingLanguage;
-        }
-        existingRequirement.addReqToken(t);// new addition
-        existingRequirement.setStatement(newContent);
+      }
+
+      existingRequirement.addReqToken(t);
+      existingRequirement.setStatement(newContent);
+
+      if (whoContent != null && !whoContent.equals("")) {
+        existingRequirement.setWho(whoContent);
+      }
+      if (whenContent != null && !whenContent.equals("")) {
+        existingRequirement.setWhen(whenContent);
+      }
+      if (whatContent != null && !whatContent.equals("")) {
+        existingRequirement.setWhat(whatContent);
+      }
+      if (whyContent != null && !whyContent.equals("")) {
+        existingRequirement.setWhy(whyContent);
+      }
     }
-    else
-    {
-    // If existing requirement is null
-    // create new requirement
-      Requirement req = new Requirement(reqID, newContent, null, null, null, null, newLanguage);// Create new requirement
-    // Add the new requirement
-      req.addReqToken(t);// new addition
+    else {
+      Requirement req = new Requirement(reqID, newContent, whoContent, whenContent, whatContent, whyContent, newLanguage);
+      req.addReqToken(t);
       model.getAllRequirements().put(reqID, req);
     }
-
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   

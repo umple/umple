@@ -1,0 +1,13 @@
+// implementsReq inside a mixset before a top-level statemachine definition
+// Should not produce a 401 warning
+mixset M {
+  implementsReq A;
+  statemachine LightSM {
+    On { -> Off; }
+    Off {}
+  }
+}
+req A text {
+  The light must toggle between on and off.
+}
+use M;

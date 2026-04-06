@@ -1,0 +1,13 @@
+// implementsReq at top level before trait
+// Req should attach to T only, not to class C
+// Should not produce a 401 warning
+implementsReq A;
+trait T {
+  name;
+}
+class C {
+  age;
+}
+req A text {
+  Trait requirement.
+}

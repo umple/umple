@@ -1,0 +1,12 @@
+// implementsReq at top level before associationClass definition
+// Should not produce a 401 warning
+class Student {}
+class Course {}
+implementsReq A;
+associationClass Enrollment {
+  * Student -- * Course;
+  grade;
+}
+req A text {
+  Students can enroll in courses.
+}
