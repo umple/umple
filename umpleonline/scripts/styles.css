@@ -2103,3 +2103,104 @@ textarea#umpleLayoutEditorText {
 .gv-rubberband-layer {
   pointer-events: none;
 }
+
+/* LSP UI — rename panel, hover tooltips, messages */
+.cm-panel.cm-lsp-rename-panel {
+  font-size: 13px;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cm-panel.cm-lsp-rename-panel label {
+  font-size: 13px;
+  white-space: nowrap;
+}
+.cm-panel.cm-lsp-rename-panel input[name="name"] {
+  font-size: 13px;
+  padding: 4px 8px;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  background: inherit;
+  color: inherit;
+  outline: none;
+  min-width: 200px;
+  opacity: 0.8;
+}
+.cm-panel.cm-lsp-rename-panel input[name="name"]:focus {
+  opacity: 1;
+  border-color: #4a90d9;
+  box-shadow: 0 0 0 2px rgba(74, 144, 217, 0.25);
+}
+.cm-panel.cm-lsp-rename-panel button[type="submit"] {
+  font-size: 12px;
+  padding: 4px 12px;
+  background: #4a90d9;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.cm-panel.cm-lsp-rename-panel button[type="submit"]:hover {
+  background: #3a7bc8;
+}
+.cm-panel.cm-lsp-rename-panel button[name="close"] {
+  font-size: 16px;
+  cursor: pointer;
+}
+.cm-lsp-message {
+  font-size: 13px;
+  padding: 6px 12px;
+}
+.cm-lsp-hover-tooltip {
+  font-size: 13px;
+  max-width: 500px;
+}
+.cm-lsp-hover-tooltip pre {
+  margin: 0;
+  padding: 6px 8px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.cm-lsp-reference-panel {
+  font-size: 12px;
+}
+
+/* Editor context menu */
+.cm-context-menu {
+  position: absolute;
+  z-index: 100;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  padding: 4px 0;
+  min-width: 220px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+}
+.cm-context-menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 16px;
+  cursor: pointer;
+  color: #333;
+}
+.cm-context-menu-item:hover {
+  background: #4a90d9;
+  color: #fff;
+}
+.cm-context-menu-shortcut {
+  margin-left: 24px;
+  font-size: 12px;
+  opacity: 0.6;
+}
+.cm-context-menu-item:hover .cm-context-menu-shortcut {
+  opacity: 0.9;
+}
+.cm-context-menu-separator {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 4px 0;
+}

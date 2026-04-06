@@ -1,0 +1,20 @@
+# UmpleLsp Docker configuration
+# Copy this file to config.cfg and adjust values for your environment.
+# config.cfg is gitignored and overrides these defaults.
+
+# Path to the shared ump model directory on the host.
+# This is mounted into the container so the LSP server can read .ump files.
+# Must match where UmpleOnline stores session files.
+# Relative paths are resolved from the repo root by setup.sh.
+umplePath=umpleonline/ump
+
+# Host port mapped to the container's internal port 9999.
+# All UmpleOnline instances connect to this single port.
+portToUse=9999
+
+# Docker image and container name.
+containerName=umple_lsp
+
+# Set to true to use npm-linked umple-lsp-server instead of the registry version.
+# Requires: cd <lsp-repo>/packages/server && npm link
+useLinkedLsp=false

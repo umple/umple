@@ -382,6 +382,11 @@ TabControl.selectTab = function(tabId)
   Action.setCaretPosition(0);
   Action.updateLineNumberDisplay();
   Action.updateUmpleDiagram();
+
+  // LSP: switch active file URI after text is loaded and diagram refreshed
+  if (typeof cm6 !== "undefined" && cm6.switchLspFile) {
+    cm6.switchLspFile(Page.codeMirrorEditor6, TabControl.activeTab.name);
+  }
 }
 
 /**
@@ -427,6 +432,12 @@ TabControl.loadAllTabsCallback = function(response)
   {
     TabControl.showTabs();
   }
+
+  // LSP: bootstrap for multi-tab sessions (editor has content from selectTab)
+  // Single-tab sessions defer to Action.loadFileCallback where real content loads
+  if (foundRemoteTabs && typeof Page !== "undefined" && Page.initLspAsync) {
+    Page.initLspAsync();
+  }
 }
 
 /**
@@ -457,6 +468,11 @@ TabControl.deleteTab = function(tabId)
     delete TabControl.reservedNames[tabName];
     delete TabControl.tabs[tabId];
     delete localStorage[filename];
+
+    // LSP: remove file from workspace
+    if (typeof cm6 !== "undefined" && cm6.lspRemoveFile) {
+      cm6.lspRemoveFile(tabName);
+    }
 
     // The create button should now be re-enabled
     var createBtn = jQuery("#createTabBtn");
@@ -514,14 +530,22 @@ TabControl.renameTab = function(tabId, newName, updateUI)
   localStorage[newfilename] = localStorage[oldfilename]
   delete localStorage[oldfilename];
 
+  // True optimistic local rename — all layers update together
+  delete TabControl.reservedNames[oldName];
+  TabControl.reservedNames[newName] = true;
+  TabControl.tabs[tabId].name = newName;
+  TabControl.tabs[tabId].nameIsEphemeral = false;
+
+  // LSP: rename file in workspace (+ reconfigure plugin if active)
+  if (typeof cm6 !== "undefined" && cm6.lspRenameFile) {
+    cm6.lspRenameFile(oldName, newName);
+  }
+
   // Only programmatic calls need to update the GUI text again
   if (updateUI)
   {
     TabControl.getTabNameDiv(tabId).text(newName);
   }
-
-  // If a name was renamed, then it is no longer ephemeral
-  TabControl.tabs[tabId].nameIsEphemeral = false;
 
   TabControl.addToRequestQueue(
     "scripts/tab_control.php",
@@ -534,10 +558,9 @@ TabControl.renameTab = function(tabId, newName, updateUI)
 TabControl.renameTabCallback = function(tabId, newName, key)
 {
   return function(response) {
-    delete TabControl.reservedNames[TabControl.tabs[tabId].name];
-    TabControl.reservedNames[newName] = true;
-    TabControl.tabs[tabId].name = newName;
-    delete TabControl.renameInProgress[key];  }
+    // Name already updated locally in renameTab() — callback only clears in-progress flag
+    delete TabControl.renameInProgress[key];
+  }
 }
 
 /**

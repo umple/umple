@@ -22,7 +22,7 @@ cd umpleonline
 # create a temporary copy of the manual and UmpleCodeExecution
 cp -pr ../dist/cruise.umple/reference manual
 cp -pr ../UmpleCodeExecution UmpleCodeExecution
-docker build -t "umple/umpleonline:recentbuild" --build-arg gitbranch=$thebranch ../umpleonline;
+docker build --no-cache -t "umple/umpleonline:recentbuild" --build-arg gitbranch=$thebranch ../umpleonline;
 rm -r manual
 rm -r UmpleCodeExecution
 cd ..

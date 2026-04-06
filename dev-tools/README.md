@@ -81,3 +81,8 @@ For developers
   
  startexecdocker
    - Restarts the docker image for umpleonline ... done by pumple so not normally needed to be separately run
+
+ startlspdocker
+   - Starts the LSP Docker container for UmpleOnline development
+   - Provides real-time diagnostics, go-to-definition, rename, etc. in the editor
+   - Restarts the LSP Docker image ... done by pumple so not normally needed to be separately run
