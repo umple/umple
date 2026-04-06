@@ -1653,27 +1653,16 @@ Action.drawStateMenu = function(){
     targ = targ.parentNode;
   }
   //grabs state name
-  var match = targ.outerHTML.match(/stateClicked\("([^"]+)"\)/);
-
+  var match = targ.outerHTML.match(/stateClicked\((?:&quot;|"|')([^"']+)(?:&quot;|"|')\)/);
+  
   if (!match) {
     return;
   }
-
-  var elemText = match[1].split("^*^").map(function(part) {
-    return part.trim();
-  }); 
-
-  var titleMatch = targ.outerHTML.match(/xlink:title="Class ([^,]+), SM ([^,]+), State ([^"]+)"/);
-
-  if (titleMatch) {
-    elemText[0] = titleMatch[1].trim(); // proper class name casing
-    elemText[1] = titleMatch[2].trim(); // state machine name
-  }
-
+  
+  var elemText = match[1].split("^*^");
   if (!elemText[2]) {
     return;
   }
-  
   elemText[2]=elemText[2].split(".");
   var orig = Page.codeMirrorEditor6.state.doc.toString();
   var chosenStateIndices=Action.selectStateInClassCM6(elemText[0],elemText[1],elemText[2][0]);
