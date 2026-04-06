@@ -1978,6 +1978,69 @@ public class UmpleParserTest
   {
     assertNoWarningsParse("455_ReqUseCaseMultipleSteps.ump");
   }
+  //Issue 2378 (Use Case Parsing)
+  @Test
+  public void ReqUsecaseAliasLowercaseParsed()
+  {
+    assertNoWarningsParse("454_ReqUsecaseAlias.ump");
+    Requirement req = model.getAllRequirements().get("UC1A");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+  }
+
+  //Issue 2378 (Use Case Parsing)
+  @Test
+  public void ReqUseCaseStructuredAllParsed()
+  {
+    assertNoWarningsParse("455_ReqUseCaseStructuredAll.ump");
+    Requirement req = model.getAllRequirements().get("UC2");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals("customer", req.getWho());
+    Assert.assertEquals("cart is ready", req.getWhen());
+    Assert.assertEquals("complete checkout", req.getWhat());
+    Assert.assertEquals("purchase selected items", req.getWhy());
+
+    Assert.assertEquals(2, req.numberOfUseCaseSteps());
+
+    Assert.assertEquals("1", req.getUseCaseStep(0).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.UserStep, req.getUseCaseStep(0).getStepType());
+    Assert.assertEquals("confirm order", req.getUseCaseStep(0).getContent());
+
+    Assert.assertEquals("1", req.getUseCaseStep(1).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(1).getStepType());
+    Assert.assertEquals("display total price", req.getUseCaseStep(1).getContent());
+  }
+
+  //Issue 2378 (Use Case Parsing)
+  @Test
+  public void ReqUseCaseMultipleStepsParsed()
+  {
+    assertNoWarningsParse("455_ReqUseCaseMultipleSteps.ump");
+    Requirement req = model.getAllRequirements().get("UC4");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+
+    Assert.assertEquals(4, req.numberOfUseCaseSteps());
+
+    Assert.assertEquals("1", req.getUseCaseStep(0).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.UserStep, req.getUseCaseStep(0).getStepType());
+    Assert.assertEquals("select product", req.getUseCaseStep(0).getContent());
+
+    Assert.assertEquals("1", req.getUseCaseStep(1).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(1).getStepType());
+    Assert.assertEquals("display price", req.getUseCaseStep(1).getContent());
+
+    Assert.assertEquals("2", req.getUseCaseStep(2).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.UserStep, req.getUseCaseStep(2).getStepType());
+    Assert.assertEquals("enter quantity", req.getUseCaseStep(2).getContent());
+
+    Assert.assertEquals("2", req.getUseCaseStep(3).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(3).getStepType());
+    Assert.assertEquals("update total", req.getUseCaseStep(3).getContent());
+  }
   @Test
   public void associationName()
   {
