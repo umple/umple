@@ -58,36 +58,10 @@ class PlainRequirementsDocGenerator
     	  // Below string stores the requirement statement and language and translates to html
 				String mainReqText = "";
 				if ("userStory".equals(req.getLanguage())) {
-					StringBuilder userStoryText = new StringBuilder();
-
-					if (req.getWho() != null && !req.getWho().equals("")) {
-						userStoryText.append("As ").append(req.getWho());
-					}
-					if (req.getWhen() != null && !req.getWhen().equals("")) {
-						if (userStoryText.length() > 0) {
-							userStoryText.append("<br/>");
-						}
-						userStoryText.append("When ").append(req.getWhen());
-					}
-					if (req.getWhat() != null && !req.getWhat().equals("")) {
-						if (userStoryText.length() > 0) {
-							userStoryText.append("<br/>");
-						}
-						userStoryText.append("I want ").append(req.getWhat());
-					}
-					if (req.getWhy() != null && !req.getWhy().equals("")) {
-						if (userStoryText.length() > 0) {
-							userStoryText.append("<br/>");
-						}
-						userStoryText.append("So that ").append(req.getWhy());
-					}
-
-					if (userStoryText.length() > 0) {
-						mainReqText = Requirement.translateToHTML(userStoryText.toString(), req.getLanguage());
-					}
-					else {
-						mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
-					}
+					mainReqText = Requirement.translateToHTML(
+						req.getUserStoryDisplayText("<br/>"),
+						req.getLanguage()
+					);
 				}
 				else {
 					mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
