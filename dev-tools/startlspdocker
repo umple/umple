@@ -15,4 +15,12 @@ fi
 echo "Starting LSP Docker in $LSPDIR"
 cd "$LSPDIR"
 
-./setup.sh bg
+if [[ "$HOSTNAME" == "cruise" ]]; then
+  echo About to run LSP setup
+  echo On cruise server so running setup with sudo
+  sudo ./setup.sh bg
+else
+  echo About to run LSP setup on local machine
+  ./setup.sh bg
+fi
+

@@ -14,11 +14,23 @@ Page.currentCrudContainer = null;
 // (e.g., when tightening max bounds causes extra links to be trimmed).
 Page.crudAdjustmentMessages = [];
 
+// Total number of global CRUD validation violations across all classes
+// and association ends. This is computed by validateCrudGlobalModel and
+// surfaced in the banner so users can quickly gauge the scope of issues.
+Page.crudGlobalErrorCount = 0;
+
+// Per-target-class preference for how association options are labelled
+// in CRUD forms. Keys are target class names, values are either an
+// attribute name or the special token "__index__" meaning ClassName[index].
+Page.crudAssociationLabelPreference = {};
+
 Page.resetCrudData = function() {
   Page.crudData = { classes: {} };
   Page.crudClassDefs = {};
   Page.crudAssociationsByClass = {};
   Page.crudAdjustmentMessages = [];
+  Page.crudGlobalErrorCount = 0;
+  Page.crudAssociationLabelPreference = {};
 };
 
 // Updates instance count for each class
@@ -186,6 +198,10 @@ Page.adjustCrudAssociationsForTightenedMax = function() {
 
   var classesData = Page.crudData.classes;
 
+  if (!Array.isArray(Page.crudAdjustmentMessages)) {
+    Page.crudAdjustmentMessages = [];
+  }
+
   Object.keys(Page.crudAssociationsByClass).forEach(function(fromClass) {
     var ends = Page.crudAssociationsByClass[fromClass] || [];
     if (!ends.length) { return; }
@@ -204,6 +220,8 @@ Page.adjustCrudAssociationsForTightenedMax = function() {
       if (maxAllowed === null || maxAllowed <= 0) {
         return; // no upper bound to enforce
       }
+
+      var totalRemoved = 0;
 
       for (var i = 0; i < instances.length; i++) {
         var inst = instances[i];
@@ -246,18 +264,7 @@ Page.adjustCrudAssociationsForTightenedMax = function() {
             inst[fieldName] = kept;
           }
 
-          var fromLabel = fromClass + "[" + (i + 1) + "]";
-          var removedCount = removed.length;
-          var maxText = (maxAllowed === 1) ? "one" : String(maxAllowed);
-
-          var msg = "Info: Because the multiplicity for association '" + end.assocName +
-                    "' was tightened to allow at most " + maxText + " " + end.toClass +
-                    " instance(s) per " + fromClass + ", " + removedCount +
-                    " extra " + end.toClass + " link(s) were removed from " + fromLabel + ".";
-
-          if (Array.isArray(Page.crudAdjustmentMessages)) {
-            Page.crudAdjustmentMessages.push(msg);
-          }
+          totalRemoved += removed.length;
         } else {
           // Keep representation consistent with the new max bound
           if (maxAllowed === 1) {
@@ -266,6 +273,17 @@ Page.adjustCrudAssociationsForTightenedMax = function() {
             inst[fieldName] = indices;
           }
         }
+      }
+
+      if (totalRemoved > 0) {
+        var maxText = (maxAllowed === 1) ? "one" : String(maxAllowed);
+        var msg = "Info: Because the multiplicity for association '" + end.assocName +
+                  "' from " + fromClass + " to " + end.toClass +
+                  " was tightened to allow " + maxText + " " + end.toClass +
+                  " instance(s) per " + fromClass + ", " + "one or more " +
+                  " extra " + end.toClass + " link(s) were removed across existing " +
+                  fromClass + " instances.";
+        Page.crudAdjustmentMessages.push(msg);
       }
     });
   });
@@ -891,11 +909,15 @@ Page.checkCrudReflexiveHierarchyCycle = function(className, instances, end, chil
 Page.validateCrudGlobalModel = function(pendingUpdate) {
   var errors = [];
 
+  // Reset global count before each validation run.
+  Page.crudGlobalErrorCount = 0;
+
   if (!Page.crudAssociationsByClass || !Page.crudData || !Page.crudData.classes) {
     return errors;
   }
 
   var classesData = Page.crudData.classes;
+  var totalViolations = 0;
 
   for (var fromClass in Page.crudAssociationsByClass) {
     if (!Page.crudAssociationsByClass.hasOwnProperty(fromClass)) { continue; }
@@ -973,6 +995,7 @@ Page.validateCrudGlobalModel = function(pendingUpdate) {
       }
 
       if (missingCount > 0) {
+        totalViolations += missingCount;
         var targetInfo = classesData[end.toClass];
         var targetCount = (targetInfo && Array.isArray(targetInfo.instances)) ? targetInfo.instances.length : 0;
 
@@ -1034,6 +1057,7 @@ Page.validateCrudGlobalModel = function(pendingUpdate) {
       }
 
       if (overMaxCount > 0) {
+        totalViolations += overMaxCount;
         if (overMaxInstanceIndices.length > 0) {
           var overIdx = overMaxInstanceIndices[0];
           var overLabel = fromClass + "[" + (overIdx + 1) + "]";
@@ -1058,6 +1082,11 @@ Page.validateCrudGlobalModel = function(pendingUpdate) {
     seen[msg] = true;
     unique.push(msg);
   });
+
+  // Expose the total number of individual multiplicity violations so the
+  // global banner can show a quick summary (e.g., "Total 37 validation
+  // errors") even when messages are aggregated.
+  Page.crudGlobalErrorCount = totalViolations;
 
   return unique;
 };
@@ -1092,9 +1121,14 @@ Page.renderCrudGlobalErrors = function(containerSelector) {
   var displayMessages = messages.map(function(msg) {
     return msg ? msg.replace(/^Info:\s*/, "") : msg;
   });
+  var prefix = "";
+  var errorCount = Page.crudGlobalErrorCount || 0;
+  if (!allInfo && errorCount > 0) {
+    prefix = "Total " + errorCount + " validation error" + (errorCount === 1 ? "" : "s") + ". ";
+  }
 
   var html = "<div class='crud-global-errors-banner' style='color:" + color + ";margin:6px 0 10px 0;'>" +
-             displayMessages.join(" ") +
+             prefix + "<br/>" + displayMessages.join(" ") +
              "</div>";
 
   var jsonRow = container.find(".crud-json-actions");
@@ -1582,6 +1616,171 @@ Page.formatCrudInputValue = function(value, typeInfo) {
     return value.toString();
   }
   return value.toString();
+};
+
+// Determine candidate attributes for labelling instances of a given
+// target class in association selectors. Returns an object of the form:
+//   {
+//      attrNames: ["id", "name", ...],       // all attribute names
+//      nonNullAttrs: ["id", ...],             // attributes that have any data
+//      defaultAttrName: "id" | "name" | ...   // best default, or null
+//   }
+Page.getCrudAssociationLabelCandidatesForClass = function(className) {
+  if (!Page.crudData || !Page.crudData.classes || !Page.crudData.classes[className]) {
+    return { attrNames: [], nonNullAttrs: [], defaultAttrName: null };
+  }
+
+  var classInfo = Page.crudData.classes[className];
+  var attrs = classInfo.attributes || [];
+  var instances = classInfo.instances || [];
+
+  var attrNames = [];
+  attrs.forEach(function(attr) {
+    if (attr && attr.name) {
+      attrNames.push(attr.name);
+    }
+  });
+
+  var nonNullAttrs = [];
+  attrNames.forEach(function(name) {
+    var hasData = false;
+    for (var i = 0; i < instances.length; i++) {
+      var v = instances[i] && instances[i][name];
+      if (v !== undefined && v !== null && v !== "") {
+        hasData = true;
+        break;
+      }
+    }
+    if (hasData) {
+      nonNullAttrs.push(name);
+    }
+  });
+
+  var defaultAttrName = null;
+  var pickFrom = nonNullAttrs;
+
+  function findFirstExact(nameLower) {
+    for (var i = 0; i < pickFrom.length; i++) {
+      if (pickFrom[i].toLowerCase() === nameLower) {
+        return pickFrom[i];
+      }
+    }
+    return null;
+  }
+
+  function findFirstMatching(predicate) {
+    for (var i = 0; i < pickFrom.length; i++) {
+      if (predicate(pickFrom[i].toLowerCase())) {
+        return pickFrom[i];
+      }
+    }
+    return null;
+  }
+
+  // 1) Prefer a plain "id" column
+  defaultAttrName = findFirstExact("id");
+
+  // 2) Then id-like names: id_*, *_id, *_id_*
+  if (!defaultAttrName) {
+    defaultAttrName = findFirstMatching(function(lower) {
+      return lower.indexOf("id_") === 0 ||
+             lower.lastIndexOf("_id") === lower.length - 3 ||
+             lower.indexOf("_id_") !== -1;
+    });
+  }
+
+  // 3) Then a plain "name" column
+  if (!defaultAttrName) {
+    defaultAttrName = findFirstExact("name");
+  }
+
+  // 4) Then name-like names: name_*, *_name, *_name_*
+  if (!defaultAttrName) {
+    defaultAttrName = findFirstMatching(function(lower) {
+      return lower.indexOf("name_") === 0 ||
+             lower.lastIndexOf("_name") === lower.length - 5 ||
+             lower.indexOf("_name_") !== -1;
+    });
+  }
+
+  // 5) Finally, fall back to the first attribute with any data
+  if (!defaultAttrName && pickFrom.length > 0) {
+    defaultAttrName = pickFrom[0];
+  }
+
+  return {
+    attrNames: attrNames,
+    nonNullAttrs: nonNullAttrs,
+    defaultAttrName: defaultAttrName
+  };
+};
+
+// Build a human-friendly label for a target instance in an association
+// selector. When preferredKey is an attribute name, we try that first;
+// when it is "__index__" we always use ClassName[index] regardless of
+// attribute values.
+Page.buildCrudAssociationLabelForInstance = function(targetClass, inst, index, labelMeta, preferredKey) {
+  var baseLabel = targetClass + "[" + (index + 1) + "]";
+  if (!inst || !labelMeta) {
+    return baseLabel;
+  }
+
+  var attrNames = labelMeta.attrNames || [];
+
+   // Explicit request to use the positional label only.
+   if (preferredKey === "__index__") {
+     return baseLabel;
+   }
+
+  // If an explicit attribute has been chosen for this class, try it
+  // first, but fall back gracefully when the value is empty.
+  if (preferredKey) {
+    var directVal = inst[preferredKey];
+    if (directVal !== undefined && directVal !== null && directVal !== "") {
+      return String(directVal);
+    }
+  }
+
+  function firstAttrValueMatching(predicate) {
+    for (var i = 0; i < attrNames.length; i++) {
+      var name = attrNames[i];
+      var lower = name.toLowerCase();
+      if (predicate && !predicate(lower)) {
+        continue;
+      }
+      var v = inst[name];
+      if (v !== undefined && v !== null && v !== "") {
+        return String(v);
+      }
+    }
+    return null;
+  }
+
+  // Heuristic per record: id → name → id-like → name-like → first non-empty
+  var val = firstAttrValueMatching(function(lower) { return lower === "id"; });
+  if (val !== null) { return val; }
+
+  val = firstAttrValueMatching(function(lower) { return lower === "name"; });
+  if (val !== null) { return val; }
+
+  val = firstAttrValueMatching(function(lower) {
+    return lower.indexOf("id_") === 0 ||
+           lower.lastIndexOf("_id") === lower.length - 3 ||
+           lower.indexOf("_id_") !== -1;
+  });
+  if (val !== null) { return val; }
+
+  val = firstAttrValueMatching(function(lower) {
+    return lower.indexOf("name_") === 0 ||
+           lower.lastIndexOf("_name") === lower.length - 5 ||
+           lower.indexOf("_name_") !== -1;
+  });
+  if (val !== null) { return val; }
+
+  val = firstAttrValueMatching(function() { return true; });
+  if (val !== null) { return val; }
+
+  return baseLabel;
 };
 
 // Parse the value for a single field from the form, performing type-specific validation
@@ -2432,15 +2631,13 @@ Page.openCrudDialogForClass = function(className) {
       var targetInstances = (targetInfo && targetInfo.instances) || [];
       var fieldName = end.storageKey;
 
-      html += "<div class='crud-field'>";
+      html += "<div class='crud-field crud-assoc-field'>";
       var labelText = targetClass;
       if (end.fromClass === end.toClass && end.roleName) {
         labelText += " (" + end.roleName + ")";
       }
       var minRequired = (typeof end.toMin === "number") ? end.toMin : 0;
-      if (minRequired > 0) {
-        labelText += " (required)";
-      }
+      var isRequired = minRequired > 0;
       var assocTooltip = "";
       if (end.inheritedFrom) {
         assocTooltip = "This is an inherited association from " + end.inheritedFrom + ".";
@@ -2449,11 +2646,61 @@ Page.openCrudDialogForClass = function(className) {
         var compText = className + " composes " + targetClass + " (deleting " + className + " will also delete its " + targetClass + " instances).";
         assocTooltip = assocTooltip ? (assocTooltip + " " + compText) : compText;
       }
+      html += "<div class='crud-assoc-header'>";
       if (assocTooltip) {
-        html += "<label class='crud-field-label'><span class='crud-tooltip-target' title='" + assocTooltip.replace(/\"/g, "&quot;") + "'>" + labelText + "</span></label>";
+        html += "<label class='crud-field-label'>" +
+                 "<span class='crud-tooltip-target' title='" + assocTooltip.replace(/\"/g, "&quot;") + "'>" + labelText + "</span>" +
+                 (isRequired ? "<span class='crud-assoc-required-asterisk' title='Required'>*</span>" : "") +
+                 "</label>";
       } else {
-        html += "<label class='crud-field-label'>" + labelText + "</label>";
+        html += "<label class='crud-field-label'>" + labelText +
+                 (isRequired ? "<span class='crud-assoc-required-asterisk' title='Required'>*</span>" : "") +
+                 "</label>";
       }
+
+      // Determine how to label options for this target class based on
+      // existing attribute data and any user-chosen preference.
+      var labelMeta = Page.getCrudAssociationLabelCandidatesForClass(targetClass);
+      var nonNullAttrs = (labelMeta && labelMeta.nonNullAttrs) || [];
+      var defaultAttrName = labelMeta && labelMeta.defaultAttrName;
+
+      var prefMap = Page.crudAssociationLabelPreference || (Page.crudAssociationLabelPreference = {});
+      var currentPref = prefMap[targetClass] || null;
+
+      // If the stored preference refers to an attribute that no longer has
+      // any data (e.g., column cleared), drop it so we can pick a better
+      // default going forward.
+      if (currentPref && currentPref !== "__index__" && nonNullAttrs.indexOf(currentPref) === -1) {
+        currentPref = null;
+        delete prefMap[targetClass];
+      }
+
+      var effectivePref = currentPref;
+      if (!effectivePref) {
+        if (defaultAttrName) {
+          effectivePref = defaultAttrName;
+        } else {
+          effectivePref = "__index__";
+        }
+      }
+      prefMap[targetClass] = effectivePref;
+
+      // Small dropdown to let the user choose the labelling basis.
+      html += "<div class='crud-assoc-label-selector'>";
+      html += "<span class='crud-assoc-label-selector-text'>Label for " + targetClass + " options: </span>";
+      html += "<select class='crud-assoc-label-select' data-target-class='" + targetClass + "'>";
+
+      var indexSelected = (effectivePref === "__index__");
+      html += "<option value='__index__'" + (indexSelected ? " selected='selected'" : "") + ">" + targetClass + "[instanceNumber]</option>";
+
+      nonNullAttrs.forEach(function(attrName) {
+        var selected = (effectivePref === attrName) ? " selected='selected'" : "";
+        html += "<option value='" + attrName + "'" + selected + ">" + escapeHtml(attrName) + "</option>";
+      });
+
+      html += "</select></div>";
+
+      html += "</div>"; // .crud-assoc-header
 
       // Use checkbox list whenever the target multiplicity allows more than
       // one associated instance (e.g., 2..4, 0..*, 1..*). Radio buttons are
@@ -2461,6 +2708,14 @@ Page.openCrudDialogForClass = function(className) {
       var multiple = true;
       if (typeof end.toMax === "number" && end.toMax <= 1) {
         multiple = false;
+      }
+
+      // Brief hint so users know when they can pick multiple options
+      // for this association. For single-valued associations, we omit
+      // the hint to avoid extra visual noise.
+      var selectionHint = multiple ? "Multiple selection allowed." : "";
+      if (selectionHint) {
+        html += "<div class='crud-assoc-selection-hint'>" + selectionHint + "</div>";
       }
 
       // Build a richer tooltip for each association option including
@@ -2508,32 +2763,35 @@ Page.openCrudDialogForClass = function(className) {
       if (multiple) {
         // Multi-valued end: render a checkbox list so users can easily
         // add/remove multiple associated instances (e.g., many-to-many).
-        html += "<div class='crud-assoc-multi' data-field='" + fieldName + "'>";
+        html += "<div class='crud-assoc-options crud-assoc-multi' data-field='" + fieldName + "'>";
         targetInstances.forEach(function(inst, idx) {
-          var optionLabel = targetClass + "[" + (idx + 1) + "]";
+          var optionLabel = Page.buildCrudAssociationLabelForInstance(targetClass, inst, idx, labelMeta, effectivePref);
           var targetAttrs = (Page.crudData.classes[targetClass] && Page.crudData.classes[targetClass].attributes) || [];
           var tooltipEsc = buildAssocOptionTooltip(end, targetClass, optionLabel, inst, targetAttrs);
-          html += "<label style='margin-right:8px;'>" +
-            "<input type='checkbox' name='" + fieldName + "' value='" + idx + "'> " +
-            "<span class='crud-tooltip-target' data-crud-tooltip-html=\"" + tooltipEsc + "\">" + optionLabel + "</span>" +
+          html += "<label class='crud-assoc-option'>" +
+            "<input type='checkbox' name='" + fieldName + "' value='" + idx + "'>" +
+            "<span class='crud-tooltip-target crud-assoc-option-label' data-target-class='" + targetClass + "' data-index='" + idx + "' data-field='" + fieldName + "' data-crud-tooltip-html=\"" + tooltipEsc + "\">" + escapeHtml(optionLabel) + "</span>" +
             "</label>";
         });
         html += "</div>";
       } else {
         // Single-valued end: render radio buttons (with an explicit None
         // option when the multiplicity allows 0) instead of a dropdown.
-        html += "<div class='crud-assoc-single' data-field='" + fieldName + "'>";
+        html += "<div class='crud-assoc-options crud-assoc-single' data-field='" + fieldName + "'>";
         if (minRequired === 0) {
-          html += "<label style='margin-right:8px;'><input type='radio' name='" + fieldName + "' value=''> None</label>";
+          html += "<label class='crud-assoc-option crud-assoc-none-option'>" +
+                   "<input type='radio' name='" + fieldName + "' value=''>" +
+                   "<span class='crud-assoc-option-label'>None</span>" +
+                   "</label>";
         }
 
         targetInstances.forEach(function(inst, idx) {
-          var optionLabel = targetClass + "[" + (idx + 1) + "]";
+          var optionLabel = Page.buildCrudAssociationLabelForInstance(targetClass, inst, idx, labelMeta, effectivePref);
           var targetAttrs = (Page.crudData.classes[targetClass] && Page.crudData.classes[targetClass].attributes) || [];
           var tooltipEsc = buildAssocOptionTooltip(end, targetClass, optionLabel, inst, targetAttrs);
-          html += "<label style='margin-right:8px;'>" +
-            "<input type='radio' name='" + fieldName + "' value='" + idx + "'> " +
-            "<span class='crud-tooltip-target' data-crud-tooltip-html=\"" + tooltipEsc + "\">" + optionLabel + "</span>" +
+          html += "<label class='crud-assoc-option'>" +
+            "<input type='radio' name='" + fieldName + "' value='" + idx + "'>" +
+            "<span class='crud-tooltip-target crud-assoc-option-label' data-target-class='" + targetClass + "' data-index='" + idx + "' data-field='" + fieldName + "' data-crud-tooltip-html=\"" + tooltipEsc + "\">" + escapeHtml(optionLabel) + "</span>" +
             "</label>";
         });
         html += "</div>";
@@ -2588,6 +2846,53 @@ Page.openCrudDialogForClass = function(className) {
 
   // Remove previous handlers to avoid duplicates
   $panel.off();
+
+  // Allow users to change how association options are labelled (by id,
+  // name, other attributes or the default ClassName[index]) without
+  // re-rendering the entire dialog.
+  $panel.on("change", ".crud-assoc-label-select", function() {
+    var $select = jQuery(this);
+    var targetClass = $select.data("target-class");
+    if (!targetClass) { return; }
+
+    var newPref = $select.val() || "__index__";
+    if (!Page.crudAssociationLabelPreference) {
+      Page.crudAssociationLabelPreference = {};
+    }
+    Page.crudAssociationLabelPreference[targetClass] = newPref;
+
+    var labelMeta = Page.getCrudAssociationLabelCandidatesForClass(targetClass);
+    var nonNullAttrs = (labelMeta && labelMeta.nonNullAttrs) || [];
+    var defaultAttrName = labelMeta && labelMeta.defaultAttrName;
+
+    var effectivePref = newPref;
+    if (effectivePref && effectivePref !== "__index__" && nonNullAttrs.indexOf(effectivePref) === -1) {
+      // Chosen attribute no longer has any data; fall back to the class
+      // default or to the index-based label.
+      if (defaultAttrName && nonNullAttrs.indexOf(defaultAttrName) !== -1) {
+        effectivePref = defaultAttrName;
+      } else {
+        effectivePref = "__index__";
+      }
+      Page.crudAssociationLabelPreference[targetClass] = effectivePref;
+      $select.val(effectivePref);
+    }
+
+    var targetInfo = (Page.crudData && Page.crudData.classes && Page.crudData.classes[targetClass]) ? Page.crudData.classes[targetClass] : null;
+    var instancesForClass = (targetInfo && targetInfo.instances) || [];
+
+    $panel.find(".crud-assoc-option-label[data-target-class='" + targetClass + "']").each(function() {
+      var $span = jQuery(this);
+      var idxStr = $span.attr("data-index");
+      var idx = parseInt(idxStr, 10);
+      if (isNaN(idx) || idx < 0 || idx >= instancesForClass.length) {
+        return;
+      }
+      var inst = instancesForClass[idx];
+      var newLabel = Page.buildCrudAssociationLabelForInstance(targetClass, inst, idx, labelMeta, effectivePref);
+      $span.text(newLabel);
+    });
+  });
 
   // Handle action dropdown selection for each instance row
   $panel.on("change", ".crud-instance-action", function() {
