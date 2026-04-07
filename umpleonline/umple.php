@@ -1243,11 +1243,17 @@ $output = $dataHandle->readData('model.ump');
   // Docker sets this to "/lsp" (nginx proxy). For local php -S dev,
   // fall back to the default lsp-proxy port on loopback.
   // Read LSP port from UmpleLsp/config.cfg if available (supports multiple instances)
+  // Uses line-by-line parsing to match shell-style config format (same as compiler_config.php)
   $lspPort = '9999';
   $lspCfgPath = rootDir() . '/../UmpleLsp/config.cfg';
-  if (file_exists($lspCfgPath)) {
-    $lspCfg = parse_ini_file($lspCfgPath);
-    if (!empty($lspCfg['portToUse'])) $lspPort = $lspCfg['portToUse'];
+  $lspCfgHandle = @fopen($lspCfgPath, "r");
+  if ($lspCfgHandle) {
+    while (($line = fgets($lspCfgHandle)) !== false) {
+      if (substr($line, 0, 10) === "portToUse=") {
+        $lspPort = trim(substr($line, 10));
+      }
+    }
+    fclose($lspCfgHandle);
   }
   $lspWsUrl = getenv('UMPLE_LSP_WS_URL') ?: 'ws://127.0.0.1:' . $lspPort;
   $lspAuthSecret = getenv('LSP_AUTH_SECRET') ?: '';
