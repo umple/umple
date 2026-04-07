@@ -1,7 +1,7 @@
 # Dockerfile for UmpleLsp — standalone LSP container for local development
-FROM --platform=linux/amd64 alpine
+FROM alpine:latest
 
-RUN apk add --no-cache nodejs-current npm openjdk21-jre-headless
+RUN apk add --no-cache nodejs npm openjdk21-jre-headless
 
 WORKDIR /usr/src/app
 
