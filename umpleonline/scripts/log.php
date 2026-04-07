@@ -173,6 +173,25 @@
     }
   }
 
+  echo "<h4 style =\"Color: blue\">UmpleOnline LSP server status</h4>";
+
+  // Obtain the config info and iterate through each config
+  $collabConfigLines = file("../../UmpleLsp/config.cfg");
+  foreach ($collabConfigLines as $line_num => $line) {
+    $words = explode("=", $line);
+    if(sizeof($words) == 2) {
+      if($words[0] == "containerName") {
+        echo "<p>LSP Docker Container: my".$words[1]."</p>\n";
+        echo "\n<p>&nbsp;Stats: ";
+        passthru("docker container stats --no-stream --format json my".$words[1]."  2>&1");
+      }
+      else if($words[0] == "portToUse") {
+        $portToUse = $words[1];
+        echo "<p>Port: ".$portToUse."</p>\n";
+        // TO DO Duplicate healthcheck output here
+      }
+    }
+  }
 
   echo "<h4 style =\"Color: blue\">TODO  Umple execution server status</h4>";
 
