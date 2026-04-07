@@ -933,6 +933,18 @@ class Requirement{
     what = aReq.getWhat();
     why = aReq.getWhy();
     language = aReq.getLanguage();
+
+    useCaseSteps = new ArrayList<UseCaseStep>();
+    for (int i = 0; i < aReq.numberOfUseCaseSteps(); i++)
+    {
+      UseCaseStep originalStep = aReq.getUseCaseStep(i);
+      new UseCaseStep(
+        originalStep.getId(),
+        originalStep.getStepType(),
+        originalStep.getContent(),
+        this
+      );
+    }
   }
   public static List<Comment> convertToComment(List<ReqImplementation> reqSelected,UmpleModel aModel){
     List<Comment> reqTextOnly = new ArrayList<Comment>();

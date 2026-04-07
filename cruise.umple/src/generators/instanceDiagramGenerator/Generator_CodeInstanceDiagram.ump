@@ -1302,8 +1302,23 @@ public String randomStringGen(){
       crudAssociationLinks = null;
       if (encodedData != null && encodedData.length() > 0) {
         try {
+          // The custom JsonParser used here can be sensitive to certain
+          // characters inside string values. User-entered values commonly
+          // contain &, <, >, apostrophes, and embedded quotes. Those are
+          // never part of the JSON syntax itself inside a string literal,
+          // so we can safely normalize them to placeholder tokens before
+          // parsing and then restore them when extracting attribute values.
+          String encodedDataForParse = encodedData
+            .replace("&", "__UMPLE_AMP__")
+            .replace("<", "__UMPLE_LT__")
+            .replace(">", "__UMPLE_GT__")
+            .replace("'", "__UMPLE_APOS__")
+            // Only replace escaped double-quotes inside string values
+            // (\\" in the JSON text), leaving structural quotes intact.
+            .replace("\\\"", "__UMPLE_DQUOTE__");
+
           cruise.umple.util.JsonParser jsonParser = new cruise.umple.util.JsonParser("json");
-          cruise.umple.parser.ParseResult pr = jsonParser.parse("json", encodedData);
+          cruise.umple.parser.ParseResult pr = jsonParser.parse("json", encodedDataForParse);
           if (pr != null && pr.getWasSuccess()) {
             cruise.umple.util.Json root = jsonParser.analyze();
             cruise.umple.util.Json[] instArray = root.getArray("instances");
@@ -1332,10 +1347,57 @@ public String randomStringGen(){
                     continue;
                   }
                   String attrName = comp.getName();
-                  String val = comp.getValue();
-                  if (attrName != null && attrName.length() > 0) {
-                    perInstance.put(attrName, val == null ? "" : val);
+                  if (attrName == null || attrName.length() == 0) {
+                    continue;
                   }
+
+                  // Prefer resolving the attribute value from the parent
+                  // holder so we are resilient to any quirks in how the
+                  // Json parser represents nested objects. In particular,
+                  // this avoids cases where the value for one attribute
+                  // accidentally includes the remainder of the JSON for
+                  // subsequent attributes.
+                  String val = attrsHolder.getValue(attrName);
+                  if (val == null) {
+                    val = comp.getValue();
+                  }
+
+                  if (val != null) {
+                    // Strip a single layer of surrounding quotes if present.
+                    if (val.length() >= 2 && val.startsWith("\"") && val.endsWith("\"")) {
+                      val = val.substring(1, val.length() - 1);
+                    }
+
+                    // If the value was parsed together with the rest of the
+                    // JSON (e.g., "test's acc","date":"1920-11-25",...),
+                    // keep only the first logical string segment before the
+                    // next attribute key.
+                    int sep = val.indexOf("\",\"");
+                    if (sep >= 0) {
+                      val = val.substring(0, sep);
+                    }
+
+                    // Restore any characters that were normalized before
+                    // JSON parsing so the diagram reflects the exact CRUD
+                    // text the user entered.
+                    if (val.indexOf("__UMPLE_AMP__") >= 0) {
+                      val = val.replace("__UMPLE_AMP__", "&");
+                    }
+                    if (val.indexOf("__UMPLE_LT__") >= 0) {
+                      val = val.replace("__UMPLE_LT__", "<");
+                    }
+                    if (val.indexOf("__UMPLE_GT__") >= 0) {
+                      val = val.replace("__UMPLE_GT__", ">");
+                    }
+                    if (val.indexOf("__UMPLE_APOS__") >= 0) {
+                      val = val.replace("__UMPLE_APOS__", "'");
+                    }
+                    if (val.indexOf("__UMPLE_DQUOTE__") >= 0) {
+                      val = val.replace("__UMPLE_DQUOTE__", "\"");
+                    }
+                  }
+
+                  perInstance.put(attrName, val == null ? "" : val);
                 }
                 if (!perInstance.isEmpty()) {
                   Map<Integer, Map<String, String>> byIndex = attrMap.get(className);

@@ -1,0 +1,13 @@
+// Test that an association implementing a requirement shows full association details
+// including multiplicity, role names and arrow direction
+req R1 {
+  A unidirectional association requirement.
+}
+
+class A {
+  implementsReq R1;
+  * -> * B;
+}
+
+class B {
+}

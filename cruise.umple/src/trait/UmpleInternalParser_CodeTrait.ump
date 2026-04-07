@@ -49,8 +49,12 @@ class UmpleInternalParser
     if (t.is("traitDefinition"))
     {
       analyzeTrait(t);
+      // Issue 2098: analyzeClassToken was asked not to clear lastRequirementsImpl for traitDefinition
+      // (to avoid the ordering bug where it cleared before we could use it here).
+      // So we clear it here after analyzeTrait has consumed the implementations.
+      lastRequirementsImpl.clear();
     }
-    
+
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   

@@ -1,0 +1,8 @@
+req R1 {
+  An interface requirement.
+}
+
+implementsReq R1;
+interface IFoo {
+  Integer getValue();
+}

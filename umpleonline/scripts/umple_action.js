@@ -714,6 +714,11 @@ Action.loadFileCallback = function(response)
     Action.updateUmpleDiagram();
     Action.freshLoad = false;
   }
+
+  // LSP: bootstrap after real content is loaded into editor
+  if (typeof Page !== "undefined" && Page.initLspAsync) {
+    Page.initLspAsync();
+  }
 }
 
 Action.loadTask = function(taskName, isBookmark)
@@ -933,10 +938,15 @@ Action.saveNewFile = function()
 {
   var umpleCode = Page.getUmpleCode();
   var filename = Page.getFilename();
-  
+
   if (filename == "")
   {
     Ajax.sendRequest("scripts/compiler.php",Action.saveNewFileCallback,format("save=1&&umpleCode={0}",umpleCode));
+  }
+
+  // LSP: bootstrap for new blank sessions (loadFileCallback doesn't fire)
+  if (typeof Page !== "undefined" && Page.initLspAsync) {
+    Page.initLspAsync();
   }
 }
 
@@ -1649,12 +1659,20 @@ Action.drawStateMenu = function(){
   Action.removeContextMenu();
   var targ=event.target;
   //iterate up to top of graph elements
-  while(targ.parentElement.id!="graph0"){
-    targ=targ.parentNode;
+  while (targ && targ.parentElement && targ.parentElement.id != "graph0") {
+    targ = targ.parentNode;
   }
   //grabs state name
-  var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
-  elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
+  var match = targ.outerHTML.match(/stateClicked\((?:&quot;|"|')([^"']+)(?:&quot;|"|')\)/);
+  
+  if (!match) {
+    return;
+  }
+  
+  var elemText = match[1].split("^*^");
+  if (!elemText[2]) {
+    return;
+  }
   elemText[2]=elemText[2].split(".");
   var orig = Page.codeMirrorEditor6.state.doc.toString();
   var chosenStateIndices=Action.selectStateInClassCM6(elemText[0],elemText[1],elemText[2][0]);
@@ -5730,6 +5748,14 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
 
   if (clientDebuggerFlag){
     console.log("Inside Action.processTyping ...", target);
+  }
+
+  if (
+    (target == "umpleModelEditorText" || target == "codeMirrorEditor" || target == "newEditor") &&
+    typeof GvDiagramEdit !== "undefined" &&
+    GvDiagramEdit.clearPendingPaletteState
+  ) {
+    GvDiagramEdit.clearPendingPaletteState();
   }
 
   document.getElementById("newEditor").value = Page.codeMirrorEditor6.state.doc.toString();

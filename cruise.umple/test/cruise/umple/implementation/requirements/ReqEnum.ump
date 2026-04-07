@@ -1,0 +1,6 @@
+req R1 {
+  An enum requirement.
+}
+
+implementsReq R1;
+enum Color { Red, Green, Blue }

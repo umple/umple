@@ -728,7 +728,44 @@ Page.initCodeMirrorEditor = function() {
           effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
       });
   }
-      
+
+  // LSP initialization — called from TabControl.loadAllTabsCallback after tabs are settled
+  Page.initLspAsync = function() {
+    if (!window.UMPLE_LSP_WS_URL || Page.readOnly) return;
+
+    var modelId = Page.getModel();
+    var activeTabName = (TabControl.activeTab && TabControl.activeTab.name) || "model";
+    var umpBasePath = window.UMPLE_UMP_BASE || "/var/www/ump";
+
+    cm6.initLsp(Page.codeMirrorEditor6, {
+      wsUrl: window.UMPLE_LSP_WS_URL,
+      token: window.UMPLE_LSP_TOKEN || "",
+      modelId: modelId,
+      umpBasePath: umpBasePath,
+      activeTabName: activeTabName
+    }).then(function(success) {
+      if (!success) return;
+      // Seed all inactive tabs as passive files for cross-file rename/refs
+      for (var tabId in TabControl.tabs) {
+        var tab = TabControl.tabs[tabId];
+        if (tab !== TabControl.activeTab) {
+          var filename = TabControl.getTabFilename(tab.name);
+          var content = localStorage[filename] || "";
+          cm6.lspAddPassiveFile(tab.name, content);
+        }
+      }
+    }).catch(function(err) {
+      console.warn("[lsp] Init failed:", err);
+    });
+  };
+
+  // Reconnect hook — called by editor.mjs on WebSocket drop
+  window.umpleLspReconnect = function() {
+    if (!window.UMPLE_LSP_WS_URL || Page.readOnly) return;
+    cm6.disconnectLsp();
+    Page.initLspAsync();
+  };
+
   // Sets CodeMirror 6 text; optionally skip debounced typing processing.
   Page.setCodeMirror6Text = function (textToSet, skipDebouncedTyping) {
     var dispatchPayload = { 
@@ -1252,6 +1289,8 @@ Page.unselectAllToggleTools = function()
   Page.selectedItem = null;
   Page.repeatToolItem = false;
 
+  Page.updateCanvasCursor();
+
   return unselected;
 }
 
@@ -1273,7 +1312,57 @@ Page.selectToggleTool = function(toolSelected)
   var newSelectedItem = "#button" + toolSelected;
   jQuery(allSelectedItems).removeClass("selected highlight");
   jQuery(newSelectedItem).addClass("selected");
+
+  Page.updateCanvasCursor();
 }
+
+Page.updateCanvasCursor = function()
+{
+  var canvas = document.getElementById("umpleCanvas");
+  if (!canvas) return;
+
+  var isDark =
+    document.body.dataset.theme === "dark" ||
+    (!document.body.dataset.theme &&
+     window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  var cursorValue = "default";
+
+  switch (Page.selectedItem)
+  {
+    case "AddAssociation":
+      cursorValue = isDark
+        ? "url('scripts/assoc_white.png') 8 8, auto"
+        : "url('scripts/assoc.png') 8 8, auto";
+      break;
+
+    case "AddGeneralization":
+      cursorValue = isDark
+        ? "url('scripts/generalization_white.png') 8 8, auto"
+        : "url('scripts/generalization.png') 8 8, auto";
+      break;
+
+    case "AddClass":
+      cursorValue = "url('scripts/class.png') 8 8, auto";
+      break;
+
+    case "DeleteEntity":
+      cursorValue = "url('scripts/delete.png') 8 8, auto";
+      break;
+
+    case "AddTransition":
+      cursorValue = isDark
+        ? "url('scripts/assoc_white.png') 8 8, auto"
+        : "url('scripts/assoc.png') 8 8, auto";
+      break;
+
+    default:
+      cursorValue = "default";
+      break;
+  }
+
+  canvas.style.cursor = cursorValue;
+};
 
 Page.canShowHovers = function()
 {
@@ -1301,7 +1390,7 @@ Page.getUmpleCode = function()
    // prepend namespace cancellation to prevent namespace redefinition errors
     positioning = "\n\nnamespace -;\n"+positioning;
   }
-  var umpleCode = modelCleaned + Page.modelDelimiter + positioning;
+  var umpleCode = modelCleaned + "\n" + Page.modelDelimiter + positioning;
   return umpleCode;
 }
 
@@ -1931,8 +2020,8 @@ Page.getGeneratedMarkup = function(code, language)
 {
   var output = "";
   
-  if(language == "classDiagram" || language == "stateDiagram")
-  { // Covers Graphviz class and state diagrams
+  if(language == "classDiagram" || language == "stateDiagram" || language == "instanceDiagram")
+  { // Covers Graphviz class, state, and instance diagrams
     output = code.split("<svg width=")[1];
     output = "<svg width=" + output;
     output = output.replace(/<\/svg>$/, "");

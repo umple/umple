@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "rollup -c",
     "start": "npm install && rollup -c",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,6 +16,7 @@
     "@codemirror/collab": "^6.1.0",
     "@codemirror/lang-javascript": "^6.1.4",
     "@codemirror/language": "^6.6.0",
+    "@codemirror/lsp-client": "^6.2.2",
     "@codemirror/search": "^6.3.0",
     "@codemirror/state": "^6.2.1",
     "@codemirror/view": "^6.17.1",
