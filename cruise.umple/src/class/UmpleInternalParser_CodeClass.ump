@@ -1473,7 +1473,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if( thePosition.getFilename() == null ){
         path = "";
       }else{
-        path = Paths.get(thePosition.getFilename()).getFileName().toString();
+        path = Paths.get(thePosition.getFilename()).toAbsolutePath().toString();
       }
       aClass.addComment(new Comment("@umplesource " + path +" "+thePosition.getLineNumber()));
     }
@@ -1715,7 +1715,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if( thePosition.getFilename() == null ){
         path = "";
       }else{
-        path = Paths.get(thePosition.getFilename()).getFileName().toString();
+        path = Paths.get(thePosition.getFilename()).toAbsolutePath().toString();
       }
       anInterface.addComment(new Comment("@umplesource " + path +" "+thePosition.getLineNumber()));
     }

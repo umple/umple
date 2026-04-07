@@ -85,7 +85,10 @@ class UmpleInternalParser
   // Used to suppress warnings that we do not care about
   1 -> * ErrorType warningsToIgnore;
 
-  after setModel{if(model != null && model.getUmpleFile() != null) { super.setFilename(model.getUmpleFile().getFileName()); super.setRootToken(reset());}}
+  after setModel{
+    if(model != null && model.getUmpleFile() != null) { 
+      super.setFilename(model.getUmpleFile().getPath() + File.separator + model.getUmpleFile().getFileName());
+      super.setRootToken(reset());}}
 }
 
 use UmpleParser.ump;

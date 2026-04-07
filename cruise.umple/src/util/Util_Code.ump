@@ -300,7 +300,7 @@ class ExceptionDumper {
         Integer umpleLineNumber = umpleSourceLine + javaLineNumber - umpleSourceJavaLine - (isInMain?2:0);
         // We must also subtract two for the distance between the umpleSource declaration and the first line of the function declaration
         umpleLineNumber = umpleLineNumber - (isInFunction?2:1);
-        return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFilePath.getFileName().toString(), umpleLineNumber);
+        return new StackTraceElement(javaStack.getClassName(),  javaStack.getMethodName(), umpleFilePath.toAbsolutePath().toString(), umpleLineNumber);
       }
       return null;
     }

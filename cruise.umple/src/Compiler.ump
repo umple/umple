@@ -78,7 +78,7 @@ class CodeCompiler {
     }
     
     String filename = path + File.separator + aClass.getName() + ".py";
-    String modelname = base + File.separator + model.getUmpleFile().getFileName();
+    String modelname = model.getUmpleFile().getFileName();
 
     int retval=0;
 
@@ -719,7 +719,11 @@ class CodeCompiler {
     if(ust==null) {
       return line;
     }
-    return(ust.getFileName()+":"+ust.getLineNumber()+":"+lineParts[2]);
+    String fullPath = ust.getFileName().contains(File.separator)
+  ? ust.getFileName()
+  : new File(ust.getFileName()).getAbsolutePath();
+
+return fullPath + ":" + ust.getLineNumber() + ":" + lineParts[2];
   }
 
   private static void println(String output)

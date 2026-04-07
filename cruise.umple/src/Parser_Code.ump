@@ -361,7 +361,11 @@ class Parser
    */
   public Parser(String aFilename, String aName)
   {
-    filename = aFilename;
+    if (aFilename != null && !"innerParser".equals(aFilename) && !aFilename.trim().isEmpty()) {
+        filename = new File(aFilename).getAbsolutePath();
+    } else {
+        filename = aFilename;
+    }
     name = aName;
     grammarRules = new ArrayList<String>();
     parseResult = new ParseResult(true);

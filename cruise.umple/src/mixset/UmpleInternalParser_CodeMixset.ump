@@ -179,7 +179,7 @@ class UmpleInternalParser
        
       int useLineNumber = t.getPosition().getLineNumber();
       //UmpleFile mixsetUseFile = model.getUmpleFile(); 
-      String fileName = t.getPosition().getFilename();
+      String fileName = Paths.get(t.getPosition().getFilename()).toAbsolutePath().toString();
       UmpleFile mixsetUseFile = new UmpleFile(fileName);
       ArrayList<String> mixsetNames = new ArrayList<String>();
       mixsetNames.add(value); // add first use. 
@@ -274,7 +274,7 @@ class UmpleInternalParser
   
   if(! mixsetFragment.getIsParsed()) // a fragment that is not parsed before. 
   {
-    String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getPath()+"/"+mixsetFragment.getOriginalUmpFile().getFileName();
+    String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getFileName();
     int mixsetFragmentLine = mixsetFragment.getOriginalUmpLine() - 1;
 		
     /* This additon to mixset fragment body becuase init(.....) of ParserDataPackage splits by '\\n', and then its stores the splited string appended with a newline 
@@ -432,7 +432,7 @@ class UmpleInternalParser
     //else
     if(! mixsetFragment.getIsParsed()) // process a fragment that has not been parsed. 
     {
-      String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getPath()+"/"+mixsetFragment.getOriginalUmpFile().getFileName();
+      String mixsetFragmentFile = mixsetFragment.getOriginalUmpFile().getFileName();
       int mixsetFragmentLine = mixsetFragment.getOriginalUmpLine() - 1;
       String mixsetFragmentBodyExtraLine = mixsetFragment.getBody()+"\n;";
       ParseResult parseResultBeforeParseMixset  = getParseResult();

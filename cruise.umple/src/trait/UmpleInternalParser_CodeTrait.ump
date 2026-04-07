@@ -101,7 +101,7 @@ class UmpleInternalParser
       if( thePosition.getFilename() == null ){
         path = "";
       }else{
-        path = Paths.get(thePosition.getFilename()).getFileName().toString();
+        path = Paths.get(thePosition.getFilename()).toAbsolutePath().toString();
       }
       aTrait.addComment(new Comment("@umplesource " + path + " "+thePosition.getLineNumber()));
     }

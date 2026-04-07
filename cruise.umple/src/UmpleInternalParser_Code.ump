@@ -56,7 +56,7 @@ class UmpleInternalParser
   {
     if(model.getUmpleFile() != null)
     {
-      setFilename(model.getUmpleFile().getFileName());
+      setFilename(model.getUmpleFile().getPath() + File.separator + model.getUmpleFile().getFileName());
       setRootToken(reset()); // Makes sure the root token position has the filename
     }
 
@@ -463,7 +463,7 @@ class UmpleInternalParser
       //TODO: parse() should probably be responsible for
       // reading file data, if we refactor it to be as such,
       // then we can get rid of this ugly bit of code
-      setFilename(nextFile);
+      setFilename(new File(nextFile).getAbsolutePath());
       parse("program", input);
       addNecessaryFiles();
     }

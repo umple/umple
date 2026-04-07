@@ -535,7 +535,7 @@ class UmpleClassifier{
     String packageName = getPackageName();
     if (packageName == null || packageName.equals(""))
     { //No package, file is output in current directory
-      return Paths.get(filename).getFileName().toString();
+      return Paths.get(filename).toAbsolutePath().toString();
     } 
     else
     { //Has a package, add appropriate number of ..
@@ -549,7 +549,7 @@ class UmpleClassifier{
       //Add on relative path from generator location
       if (getSourceModel() == null)
       {
-        build.append(Paths.get(filename).getFileName());
+        build.append(Paths.get(filename).toAbsolutePath().toString());
         return deWindowsify(build.toString());
       }
       Path currentPath = Paths.get(getSourceModel().getUmpleFile().getPath()).toAbsolutePath();
@@ -576,7 +576,7 @@ class UmpleClassifier{
       	}
       }
       
-      build.append(Paths.get(filename).getFileName());
+      build.append(Paths.get(filename).toAbsolutePath().toString());
       return deWindowsify(build.toString());
     }
   }  

@@ -13,8 +13,12 @@ class TextParser
 
   public TextParser(String filename, String input)
   {
+    if (filename != null && !"innerParser".equals(filename) && !filename.trim().isEmpty()) {
+        this._filename = new File(filename).getAbsolutePath();
+    } else {
+        this._filename = filename;
+    }
     init(input);
-    _filename = filename;
   }
 
   public TextParser(String input)
