@@ -2099,7 +2099,6 @@ public class ParserTest
 
   }
 
-  @Ignore("Issue #2310: ParseUtilities_Code.ump is loaded from remote umple.jar during Gradle resetUmpleSelf, so the fix is not applied on second pass. Re-enable after jar update.")
   @Test 
   public void jsonMessage()
   {
@@ -2115,6 +2114,36 @@ public class ParserTest
 	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file2",0,0,0), " \" "));
 	  
     Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file1\", \"message\" : \"Test \\\" \\\\' \\\"\"},{ \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file2\", \"message\" : \"Test \\\" \\\" \\\"\"}]}",pr.toJSON());
+  }
+
+  @Test
+  public void jsonMessageQuotedFilenameInParam()
+  {
+    ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
+    ets.clear();
+
+    ets.addErrorType(new ErrorType(1510, 5, "Unable to open {0}", "url"));
+
+    ParseResult pr = new ParseResult(true);
+    
+    pr.addErrorMessage(new ErrorMessage(1510, new Position("source.ump",0,0,0), "\"DOG\""));
+
+    Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1510\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"source.ump\", \"message\" : \"Unable to open \\\"DOG\\\"\"}]}",pr.toJSON());
+  }
+
+  @Test
+  public void jsonMessageBackslashEscape()
+  {
+    ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
+    ets.clear();
+    
+    ets.addErrorType(new ErrorType(1002, 5, "Path {0}", "url"));
+
+    ParseResult pr = new ParseResult(true);
+    
+    pr.addErrorMessage(new ErrorMessage(1002, new Position("f",0,0,0), "C:\\Users"));
+
+    Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"f\", \"message\" : \"Path C:\\\\Users\"}]}",pr.toJSON());
   }
   
   @Test
