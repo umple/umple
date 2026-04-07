@@ -1,6 +1,7 @@
 "use strict";
 
 const { WebSocketServer } = require("ws");
+const http = require("http");
 const { spawn } = require("child_process");
 const path = require("path");
 const fs = require("fs");
@@ -178,13 +179,33 @@ function killSession(modelId, reason) {
 // WebSocket server
 // ---------------------------------------------------------------------------
 
-const wss = new WebSocketServer({
-  port: LSP_PORT,
-  host: LSP_HOST,
+const server = http.createServer((req, res) => {
+  if (req.url === "/healthcheck") {
+    const uptime = process.uptime();
+    const sessions = [];
+    for (const [key, entry] of activeSessions) {
+      sessions.push({ key, pid: entry.process.pid, cleanedUp: entry.cleanedUp });
+    }
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({
+      status: "ok",
+      uptime: Math.floor(uptime),
+      activeSessions: sessions.length,
+      sessions,
+      umpBaseDir: UMP_BASE_DIR,
+      lspCommand: LSP_COMMAND,
+    }));
+    return;
+  }
+  res.writeHead(404);
+  res.end();
 });
 
-wss.on("listening", () => {
+const wss = new WebSocketServer({ server });
+
+server.listen(LSP_PORT, LSP_HOST, () => {
   log(`WebSocket server listening on ${LSP_HOST}:${LSP_PORT}`);
+  log(`Health check at http://${LSP_HOST}:${LSP_PORT}/healthcheck`);
 });
 
 wss.on("connection", (ws, req) => {
