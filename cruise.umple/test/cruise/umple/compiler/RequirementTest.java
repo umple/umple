@@ -266,4 +266,146 @@ public class RequirementTest
     Assert.assertEquals(150, req.getQualityClass(0).getName().length());
     Assert.assertEquals(longName, req.getQualityClass(0).getName());
   }
+
+  @Test
+  public void getDisplayStatement_noQualityClasses()
+  {
+    Requirement req = new Requirement("R10", "plain text", null, null, null, null, "");
+
+    Assert.assertEquals("plain text", req.getDisplayStatement());
+  }
+
+  @Test
+  public void getDisplayStatement_qualityOnlyVariants()
+  {
+    Requirement singleQuality = new Requirement("R11", "", null, null, null, null, "");
+    new QualityClass("Reliability", "", singleQuality);
+
+    Requirement multipleQuality = new Requirement("R12", "", null, null, null, null, "");
+    new QualityClass("Performance", "", multipleQuality);
+    new QualityClass("Security", "", multipleQuality);
+
+    Assert.assertEquals("[Quality: Reliability]", singleQuality.getDisplayStatement());
+    Assert.assertEquals("[Quality: Performance, Security]", multipleQuality.getDisplayStatement());
+  }
+
+  @Test
+  public void getDisplayStatement_plainPlusQuality()
+  {
+    Requirement req = new Requirement("R13", "plain text", null, null, null, null, "");
+    new QualityClass("High", "", req);
+
+    Assert.assertEquals("plain text\n[Quality: High]", req.getDisplayStatement());
+  }
+
+  @Test
+  public void getDisplayStatement_noBodyWithoutQualityVariants()
+  {
+    Requirement emptyStatement = new Requirement("R14", "", null, null, null, null, "");
+    Requirement nullStatement = new Requirement("R15", null, null, null, null, null, "");
+
+    Assert.assertEquals("", emptyStatement.getDisplayStatement());
+    Assert.assertEquals("", nullStatement.getDisplayStatement());
+  }
+
+  @Test
+  public void getDisplayStatement_preservedByDeepCopy()
+  {
+    Requirement original = new Requirement("R16", "track items", null, null, null, null, "");
+    new QualityClass("Performance", "", original);
+    new QualityClass("Security", "", original);
+
+    Requirement copy = new Requirement(original);
+
+    Assert.assertEquals("track items\n[Quality: Performance, Security]", copy.getDisplayStatement());
+  }
+
+  @Test
+  public void getDisplayStatement_nullStatementWithQuality()
+  {
+    Requirement req = new Requirement("R17", null, null, null, null, null, "");
+    new QualityClass("Safety", "", req);
+
+    Assert.assertEquals("[Quality: Safety]", req.getDisplayStatement());
+  }
+
+  @Test
+  public void getDisplayStatement_whitespaceOnlyStatementWithQuality()
+  {
+    Requirement req = new Requirement("R18", "   ", null, null, null, null, "");
+    new QualityClass("Performance", "", req);
+
+    Assert.assertEquals("[Quality: Performance]", req.getDisplayStatement());
+  }
+
+  @Test
+  public void getDisplayStatement_userStoryWithQuality()
+  {
+    Requirement req = new Requirement("US1", "", null, null, null, null, "userStory");
+    req.setWho("developer");
+    req.setWhat("track items");
+    new QualityClass("Performance", "", req);
+    new QualityClass("Security", "", req);
+
+    Assert.assertEquals("As developer\nI want track items\n[Quality: Performance, Security]", req.getDisplayStatement());
+  }
+
+  @Test
+  public void getDisplayStatement_useCaseWithQuality()
+  {
+    Requirement req = new Requirement("UC3", "checkout flow", null, null, null, null, "useCase");
+    new UseCaseStep("1", UseCaseStep.UseCaseStepType.UserStep, "select product", req);
+    new UseCaseStep("1", UseCaseStep.UseCaseStepType.SystemResponse, "display price", req);
+    new QualityClass("Performance", "", req);
+
+    Assert.assertEquals(
+      "checkout flow\nUser step 1: select product\nSystem response 1: display price\n[Quality: Performance]",
+      req.getDisplayStatement()
+    );
+  }
+
+  @Test
+  public void format_requirementWithQualityClasses()
+  {
+    Requirement req = new Requirement("R01", "a", null, null, null, null, "");
+    new QualityClass("Performance", "", req);
+    new QualityClass("Security", "", req);
+    model.getAllRequirements().put("R01", req);
+    allTestRequirementsImpl.add(new ReqImplementation("R01", reqTok));
+
+    String output = Requirement.format("Slashes", allTestRequirementsImpl, model);
+
+    Assert.assertEquals("// R01: a\n// [Quality: Performance, Security]", output);
+  }
+
+  @Test
+  public void format_structuredRequirementWithQuality()
+  {
+    Requirement req = new Requirement("US9", "", null, null, null, null, "userStory");
+    req.setWho("developer");
+    req.setWhat("track items");
+    new QualityClass("Performance", "", req);
+    model.getAllRequirements().put("US9", req);
+    allTestRequirementsImpl.add(new ReqImplementation("US9", reqTok));
+
+    String output = Requirement.format("Slashes", allTestRequirementsImpl, model);
+
+    Assert.assertEquals("// US9: As developer\n// I want track items\n// [Quality: Performance]", output);
+  }
+
+  @Test
+  public void format_multipleRequirementsWithQuality()
+  {
+    Requirement reqWithQuality = new Requirement("R01", "a", null, null, null, null, "");
+    new QualityClass("High", "", reqWithQuality);
+    Requirement reqWithoutQuality = new Requirement("R02", "b", null, null, null, null, "");
+    model.getAllRequirements().put("R01", reqWithQuality);
+    model.getAllRequirements().put("R02", reqWithoutQuality);
+    allTestRequirementsImpl.add(new ReqImplementation("R01", reqTok));
+    allTestRequirementsImpl.add(new ReqImplementation("R02", reqTok1));
+
+    String output = Requirement.format("Slashes", allTestRequirementsImpl, model);
+
+    Assert.assertEquals("// R01: a\n// [Quality: High]\n// R02: b", output);
+  }
 }

@@ -42,7 +42,9 @@ public class RequirementsPlainTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryWhoOnly.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideImpl.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideStatements.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideStatementsQuality.test.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqSortStat.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqSortStatVisibleText.test.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqAssociation.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqAssociationBidir.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqAssociationLeftNav.html");
@@ -55,6 +57,9 @@ public class RequirementsPlainTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqMethodInTrait.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqEnum.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqMixset.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqQualityOnly.test.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqQualityWithUserStory.test.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqQualityWithImplements.test.html");
   }
 
   @Test
@@ -150,9 +155,21 @@ public class RequirementsPlainTest extends TemplateTest
   }
 
   @Test
+  public void ReqHideStatementsQuality()
+  {
+    assertUmpleTemplateFor("requirements/ReqHideStatementsQuality.test.ump","requirements/ReqHideStatementsQuality.test.expectedresult.html");
+  }
+
+  @Test
   public void ReqSortStat()
   {
     assertUmpleTemplateFor("requirements/ReqSortStat.ump","requirements/ReqSortStat.html.txt");
+  }
+
+  @Test
+  public void ReqSortStatVisibleText()
+  {
+    assertUmpleTemplateFor("requirements/ReqSortStatVisibleText.test.ump","requirements/ReqSortStatVisibleText.test.expectedresult.html");
   }
 
   public void ReqAssociation()
@@ -224,5 +241,23 @@ public class RequirementsPlainTest extends TemplateTest
   public void ReqMixset()
   {
     assertUmpleTemplateFor("requirements/ReqMixset.ump","requirements/ReqMixset.html.txt");
+  }
+
+  @Test
+  public void ReqQualityOnly()
+  {
+    assertUmpleTemplateFor("requirements/ReqQualityOnly.test.ump","requirements/ReqQualityOnly.test.expectedresult.html");
+  }
+
+  @Test
+  public void ReqQualityWithUserStory()
+  {
+    assertUmpleTemplateFor("requirements/ReqQualityWithUserStory.test.ump","requirements/ReqQualityWithUserStory.test.expectedresult.html");
+  }
+
+  @Test
+  public void ReqQualityWithImplements()
+  {
+    assertUmpleTemplateFor("requirements/ReqQualityWithImplements.test.ump","requirements/ReqQualityWithImplements.test.expectedresult.html");
   }
 }
