@@ -826,6 +826,9 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="realestate.ump">Real Estate</option>
                 <option name = "optionExample" value="RoutesAndLocations.ump">Routes And Locations</option>
                 <option name = "optionExample" value="School.ump">School</option>
+                
+                <option name = "optionExample" value="https://raw.githubusercontent.com/Smart-Contract-Modelling-uOttawa/Symboleo-JS-Core/refs/heads/main/ontology/ontology.ump">Symboleo Smart Contracts</option>
+                
                 <option name = "optionExample" value="TelephoneSystem.ump">Telephone System</option>
                 <option name = "optionExample" value="UniversitySystem.ump">University System</option>
                 <option name = "optionExample" value="VendingMachineClassDiagram.ump">Vending Machine</option>
