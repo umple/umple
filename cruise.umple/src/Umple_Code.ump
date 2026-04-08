@@ -1073,6 +1073,20 @@ class Requirement{
     }
   }
 
+  public String getQualityClassNamesSummary()
+  {
+    StringBuilder qualityText = new StringBuilder();
+    for (int i = 0; i < numberOfQualityClasses(); i++)
+    {
+      if (i > 0)
+      {
+        qualityText.append(", ");
+      }
+      qualityText.append(getQualityClass(i).getName());
+    }
+    return qualityText.toString();
+  }
+
   public String getDisplayStatement()
   {
     String displayText = getBodyDisplayText("\n");
@@ -1082,22 +1096,13 @@ class Requirement{
       return displayText;
     }
 
-    StringBuilder qualityText = new StringBuilder("[Quality: ");
-    for (int i = 0; i < numberOfQualityClasses(); i++)
-    {
-      if (i > 0)
-      {
-        qualityText.append(", ");
-      }
-      qualityText.append(getQualityClass(i).getName());
-    }
-    qualityText.append("]");
+    String qualityText = "[Quality: " + getQualityClassNamesSummary() + "]";
 
     if (!hasDisplayText(displayText.trim()))
     {
-      return qualityText.toString();
+      return qualityText;
     }
-    return displayText + "\n" + qualityText.toString();
+    return displayText + "\n" + qualityText;
   }
 
   public static List<Comment> convertToComment(List<ReqImplementation> reqSelected,UmpleModel aModel){

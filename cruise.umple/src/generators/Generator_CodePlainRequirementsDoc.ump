@@ -37,7 +37,7 @@ class PlainRequirementsDocGenerator
     Comparator<Requirement> defaultComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
     if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")) {
       // If -s reqSortStat is present the comparator is changed to visible requirement text
-      defaultComparator = (r1, r2) -> (r1.getDisplayStatement() + r1.getIdentifier()).compareTo(r2.getDisplayStatement() + r2.getIdentifier());
+      defaultComparator = (r1, r2) -> (r1.getBodyDisplayText("\n") + r1.getIdentifier()).compareTo(r2.getBodyDisplayText("\n") + r2.getIdentifier());
     } 
     // The TreeSet is created based on the chosen comparator
     ReqTreeSet = new TreeSet<>(defaultComparator);
@@ -68,14 +68,7 @@ class PlainRequirementsDocGenerator
 				doc.createParagraphElement("<b>" + req.getIdentifier() + ": " + mainReqText + "</b>", false);
 				}
 				if (req.hasQualityClasses()) {
-					StringBuilder qualityText = new StringBuilder("&nbsp;Quality: ");
-					for (int i = 0; i < req.numberOfQualityClasses(); i++) {
-						if (i > 0) {
-							qualityText.append(", ");
-						}
-						qualityText.append(req.getQualityClass(i).getName());
-					}
-					doc.createParagraphElement(qualityText.toString(), false);
+					doc.createParagraphElement("&nbsp;Quality: " + req.getQualityClassNamesSummary(), false);
 				}
 		  // Check if the requirement is implemented
           if(req.hasReqImplementations()) {

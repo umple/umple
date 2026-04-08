@@ -1,4 +1,4 @@
-// Test that reqSortStat sorts by visible requirement text, including quality and structured requirements
+// Test that reqSortStat sorts by visible requirement text without including quality metadata
 suboption "reqSortStat";
 
 req A01 {
