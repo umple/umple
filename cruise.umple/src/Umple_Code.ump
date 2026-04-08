@@ -984,6 +984,62 @@ class Requirement{
     return userStoryText.toString();
   }
 
+  // Returns the requirement body text so renderers can output body and quality separately.
+  public String getBodyDisplayText(String separator)
+  {
+    String statement = getStatement();
+    if (statement == null)
+    {
+      statement = "";
+    }
+
+    String reqLanguage = getLanguage();
+    if (reqLanguage == null)
+    {
+      reqLanguage = "";
+    }
+
+    if ("userStory".equals(reqLanguage))
+    {
+      return getUserStoryDisplayText(separator);
+    }
+    else if ("useCase".equals(reqLanguage))
+    {
+      StringBuilder useCaseText = new StringBuilder();
+
+      if (hasStructuredUserStoryFields())
+      {
+        useCaseText.append(getUserStoryDisplayText(separator));
+      }
+      else if (hasDisplayText(statement))
+      {
+        useCaseText.append(statement);
+      }
+
+      for (int i = 0; i < numberOfUseCaseSteps(); i++)
+      {
+        UseCaseStep step = getUseCaseStep(i);
+        if (useCaseText.length() > 0)
+        {
+          useCaseText.append(separator);
+        }
+
+        String prefix = step.getStepType() == UseCaseStep.UseCaseStepType.UserStep
+          ? "User step "
+          : "System response ";
+        useCaseText
+          .append(prefix)
+          .append(step.getId())
+          .append(": ")
+          .append(step.getContent());
+      }
+
+      return useCaseText.toString();
+    }
+
+    return statement;
+  }
+
   // deep copy constructor
   public Requirement(Requirement aReq)
   {
@@ -1019,48 +1075,7 @@ class Requirement{
 
   public String getDisplayStatement()
   {
-    String statement = getStatement()??"";
-
-    String reqLanguage = getLanguage()??"";
-
-    String displayText = statement;
-    if ("userStory".equals(reqLanguage))
-    {
-      displayText = getUserStoryDisplayText("\n");
-    }
-    else if ("useCase".equals(reqLanguage))
-    {
-      StringBuilder useCaseText = new StringBuilder();
-
-      if (hasStructuredUserStoryFields())
-      {
-        useCaseText.append(getUserStoryDisplayText("\n"));
-      }
-      else if (hasDisplayText(statement))
-      {
-        useCaseText.append(statement);
-      }
-
-      for (int i = 0; i < numberOfUseCaseSteps(); i++)
-      {
-        UseCaseStep step = getUseCaseStep(i);
-        if (useCaseText.length() > 0)
-        {
-          useCaseText.append("\n");
-        }
-
-        String prefix = step.getStepType() == UseCaseStep.UseCaseStepType.UserStep
-          ? "User step "
-          : "System response ";
-        useCaseText
-          .append(prefix)
-          .append(step.getId())
-          .append(": ")
-          .append(step.getContent());
-      }
-
-      displayText = useCaseText.toString();
-    }
+    String displayText = getBodyDisplayText("\n");
 
     if (!hasQualityClasses())
     {

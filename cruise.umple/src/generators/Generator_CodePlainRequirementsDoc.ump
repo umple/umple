@@ -36,8 +36,8 @@ class PlainRequirementsDocGenerator
     // This applies to default case including "PlainRequirementsDoc", "reqSortID" 
     Comparator<Requirement> defaultComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
     if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")) {
-      // If -s reqSortStat is present the comparator is changed to be assigned to statement
-      defaultComparator = (r1, r2) -> (r1.getStatement() + r1.getIdentifier()).compareTo(r2.getStatement() + r2.getIdentifier());
+      // If -s reqSortStat is present the comparator is changed to visible requirement text
+      defaultComparator = (r1, r2) -> (r1.getDisplayStatement() + r1.getIdentifier()).compareTo(r2.getDisplayStatement() + r2.getIdentifier());
     } 
     // The TreeSet is created based on the chosen comparator
     ReqTreeSet = new TreeSet<>(defaultComparator);
@@ -55,23 +55,27 @@ class PlainRequirementsDocGenerator
     for (Requirement req : ReqTreeSet){
 		if (req.hasReqImplementations() && hasreqHideImpl) continue;
     	if (req.hasReqImplementations() || !hasreqHideNotImpl) {
-    	  // Below string stores the requirement statement and language and translates to html
-				String mainReqText = "";
-				if ("userStory".equals(req.getLanguage())) {
-					mainReqText = Requirement.translateToHTML(
-						req.getUserStoryDisplayText("<br/>"),
-						req.getLanguage()
-					);
-				}
-				else {
-					mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
-				}
+	    	  // Below string stores the main visible requirement text without the quality summary line
+				String mainReqText = Requirement.translateToHTML(
+					req.getBodyDisplayText("<br/>"),
+					req.getLanguage()
+				);
 
 				mainReqText = linkifyHttpUrls(mainReqText);
 				if (hasreqHideStatements) {
                     doc.createParagraphElement("<b>" + req.getIdentifier() + "</b>", false);
                 } else {
 				doc.createParagraphElement("<b>" + req.getIdentifier() + ": " + mainReqText + "</b>", false);
+				}
+				if (req.hasQualityClasses()) {
+					StringBuilder qualityText = new StringBuilder("&nbsp;Quality: ");
+					for (int i = 0; i < req.numberOfQualityClasses(); i++) {
+						if (i > 0) {
+							qualityText.append(", ");
+						}
+						qualityText.append(req.getQualityClass(i).getName());
+					}
+					doc.createParagraphElement(qualityText.toString(), false);
 				}
 		  // Check if the requirement is implemented
           if(req.hasReqImplementations()) {
@@ -404,4 +408,3 @@ class PlainRequirementsDocGenerator
     }
   }
 }
-
