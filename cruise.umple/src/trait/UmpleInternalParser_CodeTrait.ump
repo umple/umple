@@ -256,7 +256,7 @@ class UmpleInternalParser
     else if (token.is("reqImplementation"))
     {
       analyazeTraitImpl(aTrait);
-      
+
       analyzeImplementReq(token);
       shouldConsumeRequirementImpl = isReqAddedToLast(token);
     }

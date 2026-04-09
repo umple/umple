@@ -980,9 +980,9 @@ class UmpleInternalParser
 
       if(stateToken.is("reqImplementation"))
       {
-        ReqImpState = analyzeStateReqImpl(stateToken);
-        for (ReqImplementation reqImpl : ReqImpState) {
+        for (ReqImplementation reqImpl : analyzeStateReqImpl(stateToken)) {
           model.addReqImplementation(reqImpl);
+          sm.addReqImplementation(reqImpl);
         }
         continue;
       }
@@ -1159,6 +1159,7 @@ class UmpleInternalParser
         ReqImpState = analyzeStateReqImpl(subToken);
         for (ReqImplementation reqImpl : ReqImpState) {
           model.addReqImplementation(reqImpl);
+          fromState.addReqImplementation(reqImpl);
         }
         continue;
       }
