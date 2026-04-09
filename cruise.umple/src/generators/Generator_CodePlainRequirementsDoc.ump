@@ -392,6 +392,8 @@ class PlainRequirementsDocGenerator
       }
     }
     if (qualityReqs.isEmpty()) return;
+    // keep list sorted so the generator can return same result for the test cases
+    qualityReqs.sort(Comparator.comparing(Requirement::getIdentifier));
 
     // Check if any use statement exist
     boolean hasUseStatements = false;
