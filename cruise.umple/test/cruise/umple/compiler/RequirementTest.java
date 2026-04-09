@@ -408,4 +408,39 @@ public class RequirementTest
 
     Assert.assertEquals("// R01: a\n// [Quality: High]\n// R02: b", output);
   }
+
+  @Test
+  public void reqImplementation_qualityClassBinding()
+  {
+    Requirement req = new Requirement("Speed", "", null, null, null, null, "quality");
+    QualityClass high = new QualityClass("High", "", req);
+    new QualityClass("Low", "", req);
+
+    ReqImplementation impl = new ReqImplementation("Speed", reqTok);
+    impl.setQualityClassName("High");
+    impl.setQualityClass(high);
+
+    Assert.assertEquals("High", impl.getQualityClassName());
+    Assert.assertNotNull(impl.getQualityClass());
+    Assert.assertEquals("High", impl.getQualityClass().getName());
+  }
+
+  @Test
+  public void reqImplementation_qualityClassNameWithoutBinding()
+  {
+    ReqImplementation impl = new ReqImplementation("Speed", reqTok);
+    impl.setQualityClassName("High");
+
+    Assert.assertEquals("High", impl.getQualityClassName());
+    Assert.assertNull(impl.getQualityClass());
+  }
+
+  @Test
+  public void reqImplementation_noQualityClassName()
+  {
+    ReqImplementation impl = new ReqImplementation("R1", reqTok);
+
+    Assert.assertNull(impl.getQualityClassName());
+    Assert.assertNull(impl.getQualityClass());
+  }
 }

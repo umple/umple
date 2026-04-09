@@ -11,6 +11,7 @@ package cruise.umple.compiler;
 
 import java.io.File;
 import cruise.umple.compiler.Requirement;
+import cruise.umple.compiler.ReqImplementation;
 import java.util.*;
 
 import org.junit.*;
@@ -2398,6 +2399,8 @@ public class UmpleParserTest
     UmpleClass itemClass = model.getUmpleClass("Item");
     Assert.assertNotNull(itemClass);
     Assert.assertEquals(2, itemClass.numberOfAttributes());
+    Assert.assertEquals(1, itemClass.numberOfReqImplementations());
+    Assert.assertEquals("R1", itemClass.getReqImplementation(0).getIdentifier());
   }
   //Issue 2144 (Quality)
   @Test
@@ -2414,6 +2417,8 @@ public class UmpleParserTest
     UmpleTrait loggable = model.getUmpleTrait("Loggable");
     Assert.assertNotNull(loggable);
     Assert.assertEquals(1, loggable.numberOfAttributes());
+    Assert.assertEquals(1, loggable.numberOfReqImplementations());
+    Assert.assertEquals("R1", loggable.getReqImplementation(0).getIdentifier());
   }
   //Issue 2144 (Quality)
   @Test
@@ -2457,14 +2462,294 @@ public class UmpleParserTest
     UmpleClass customerClass = model.getUmpleClass("Customer");
     Assert.assertNotNull(customerClass);
     Assert.assertEquals(2, customerClass.numberOfAttributes());
+    Assert.assertEquals(1, customerClass.numberOfReqImplementations());
+    Assert.assertEquals("R1", customerClass.getReqImplementation(0).getIdentifier());
 
     UmpleClass orderClass = model.getUmpleClass("Order");
     Assert.assertNotNull(orderClass);
     Assert.assertEquals(1, orderClass.numberOfAttributes());
+    Assert.assertEquals(1, orderClass.numberOfReqImplementations());
+    Assert.assertEquals("R1", orderClass.getReqImplementation(0).getIdentifier());
 
     List<Association> associations = model.getAssociations();
     Assert.assertEquals(1, associations.size());
   }
+
+  //Issue 2144 (Quality - implementsReq with quality class parameter)
+  @Test
+  public void ReqQualityImplReqBasic()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqBasic.ump");
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+
+    // Check that the ReqImplementation has qualityClassName set
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertTrue(impls.size() >= 1);
+    ReqImplementation speedImpl = null;
+    for (ReqImplementation ri : impls) {
+      if ("Speed".equals(ri.getIdentifier())) { speedImpl = ri; break; }
+    }
+    Assert.assertNotNull(speedImpl);
+    Assert.assertEquals("High", speedImpl.getQualityClassName());
+    Assert.assertNotNull(speedImpl.getQualityClass());
+    Assert.assertEquals("High", speedImpl.getQualityClass().getName());
+  }
+
+  //Issue 2144 (Quality - mixed bare and quality class refs)
+  @Test
+  public void ReqQualityImplReqMixed()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqMixed.ump");
+
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertTrue(impls.size() >= 2);
+
+    ReqImplementation r1Impl = null;
+    ReqImplementation speedImpl = null;
+    for (ReqImplementation ri : impls) {
+      if ("R1".equals(ri.getIdentifier())) r1Impl = ri;
+      if ("Speed".equals(ri.getIdentifier())) speedImpl = ri;
+    }
+    Assert.assertNotNull(r1Impl);
+    Assert.assertNull(r1Impl.getQualityClassName());
+
+    Assert.assertNotNull(speedImpl);
+    Assert.assertEquals("High", speedImpl.getQualityClassName());
+    Assert.assertNotNull(speedImpl.getQualityClass());
+  }
+
+  //Issue 2144 (Quality - multiple quality class parameters)
+  @Test
+  public void ReqQualityImplReqMultiQuality()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqMultiQuality.ump");
+
+    ReqImplementation speedImpl = null;
+    ReqImplementation securityImpl = null;
+    for (ReqImplementation ri : model.getReqImplementations()) {
+      if ("Speed".equals(ri.getIdentifier())) speedImpl = ri;
+      if ("Security".equals(ri.getIdentifier())) securityImpl = ri;
+    }
+    Assert.assertNotNull(speedImpl);
+    Assert.assertEquals("High", speedImpl.getQualityClassName());
+    Assert.assertNotNull(speedImpl.getQualityClass());
+
+    Assert.assertNotNull(securityImpl);
+    Assert.assertEquals("Perfect", securityImpl.getQualityClassName());
+    Assert.assertNotNull(securityImpl.getQualityClass());
+  }
+
+  //Issue 2144 (Quality - backward compatibility)
+  @Test
+  public void ReqQualityImplReqBackwardCompat()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqBackwardCompat.ump");
+
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertEquals(1, impls.size());
+    Assert.assertEquals("R1", impls.get(0).getIdentifier());
+    Assert.assertNull(impls.get(0).getQualityClassName());
+  }
+
+  //Issue 2144 (Quality - error 408: no quality classes defined)
+  @Test
+  public void ReqQualityImplReqWarning408()
+  {
+    boolean answer = parseWarnings("456_ReqQualityImplReqWarning408.ump");
+    Assert.assertEquals(false, answer);
+    Assert.assertEquals(408, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+  }
+
+  //Issue 2144 (Quality - error 409: quality class not found)
+  @Test
+  public void ReqQualityImplReqWarning409()
+  {
+    boolean answer = parseWarnings("456_ReqQualityImplReqWarning409.ump");
+    Assert.assertEquals(false, answer);
+    Assert.assertEquals(409, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+  }
+
+  //Issue 2144 (Quality - warning 401 only when req not found, no cascading 408/409)
+  @Test
+  public void ReqQualityImplReqWarning401WithQuality()
+  {
+    assertHasWarningsParse("456_ReqQualityImplReqWarning401WithQuality.ump", 401);
+    // Only warning 401 should fire, no cascading 408/409
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+  }
+
+  //Issue 2144 (Quality - multi-identifier fix)
+  @Test
+  public void ReqQualityImplReqMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqMultiIdentifier.ump");
+
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertEquals(3, impls.size());
+
+    java.util.Set<String> ids = new java.util.HashSet<>();
+    for (ReqImplementation ri : impls) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+    Assert.assertTrue(ids.contains("R3"));
+
+    UmpleClass itemClass = model.getUmpleClass("Item");
+    Assert.assertNotNull(itemClass);
+    Assert.assertEquals(3, itemClass.numberOfReqImplementations());
+
+    ids.clear();
+    for (ReqImplementation ri : itemClass.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+    Assert.assertTrue(ids.contains("R3"));
+  }
+
+  @Test
+  public void ReqImplMixsetSeparateStatements()
+  {
+    assertNoWarningsParse("456_ReqImplMixsetSeparateStatements.ump");
+
+    Mixset designA = model.getMixset("DesignA");
+    Assert.assertNotNull(designA);
+    Assert.assertEquals(2, designA.numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : designA.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
+  @Test
+  public void ReqImplMixsetNoLeakage()
+  {
+    assertNoWarningsParse("456_ReqImplMixsetNoLeakage.ump");
+
+    Mixset designA = model.getMixset("DesignA");
+    Mixset designB = model.getMixset("DesignB");
+    Assert.assertNotNull(designA);
+    Assert.assertNotNull(designB);
+    Assert.assertEquals(1, designA.numberOfReqImplementations());
+    Assert.assertEquals("R1", designA.getReqImplementation(0).getIdentifier());
+    Assert.assertEquals(0, designB.numberOfReqImplementations());
+  }
+
+  @Test
+  public void ReqImplTopLevelAssociationMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplTopLevelAssociationMultiIdentifier.ump");
+
+    List<Association> associations = model.getAssociations();
+    Assert.assertEquals(1, associations.size());
+    Assert.assertEquals(2, associations.get(0).numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : associations.get(0).getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
+  @Test
+  public void ReqImplAssociationBlockMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplAssociationBlockMultiIdentifier.ump");
+
+    List<Association> associations = model.getAssociations();
+    Assert.assertEquals(2, associations.size());
+    Assert.assertEquals(2, associations.get(0).numberOfReqImplementations());
+    Assert.assertEquals(0, associations.get(1).numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : associations.get(0).getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
+  @Test
+  public void ReqImplStateMachineMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplStateMachineMultiIdentifier.ump");
+
+    Assert.assertEquals(4, model.getReqImplementations().size());
+
+    StateMachine sm = model.getUmpleClass("X").getStateMachine(0);
+    State state1 = sm.getState(0);
+    State state2 = sm.getState(1);
+
+    Assert.assertEquals(2, sm.numberOfReqImplementations());
+    Assert.assertEquals(2, state1.numberOfReqImplementations());
+    Assert.assertEquals(0, state2.numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : sm.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+
+    ids.clear();
+    for (ReqImplementation ri : state1.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R3"));
+    Assert.assertTrue(ids.contains("R4"));
+  }
+
+  @Test
+  public void ReqImplTraitMultiIdentifierWithQuality()
+  {
+    assertNoWarningsParse("456_ReqImplTraitMultiIdentifierWithQuality.ump");
+
+    UmpleTrait loggable = model.getUmpleTrait("Loggable");
+    Assert.assertNotNull(loggable);
+    Assert.assertEquals(2, loggable.numberOfReqImplementations());
+
+    ReqImplementation loggingImpl = null;
+    ReqImplementation auditImpl = null;
+    for (ReqImplementation ri : loggable.getReqImplementations()) {
+      if ("Logging".equals(ri.getIdentifier())) loggingImpl = ri;
+      if ("Audit".equals(ri.getIdentifier())) auditImpl = ri;
+    }
+
+    Assert.assertNotNull(loggingImpl);
+    Assert.assertEquals("Reliability", loggingImpl.getQualityClassName());
+    Assert.assertNotNull(loggingImpl.getQualityClass());
+    Assert.assertEquals("Reliability", loggingImpl.getQualityClass().getName());
+
+    Assert.assertNotNull(auditImpl);
+    Assert.assertEquals("Security", auditImpl.getQualityClassName());
+    Assert.assertNotNull(auditImpl.getQualityClass());
+    Assert.assertEquals("Security", auditImpl.getQualityClass().getName());
+  }
+
+  @Test
+  public void ReqImplActiveMethodMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplActiveMethodMultiIdentifier.ump");
+
+    UmpleClass worker = model.getUmpleClass("Worker");
+    Assert.assertNotNull(worker);
+    Assert.assertEquals(1, worker.numberOfActiveMethods());
+
+    ActiveMethod method = worker.getActiveMethod(0);
+    Assert.assertNotNull(method);
+
+    List<ActiveDirectionHandlerBody> requirementBodies = new ArrayList<ActiveDirectionHandlerBody>();
+    for (ActiveDirectionHandlerBody body : method.getMethodBody().getActiveDirectionHandlerBodies()) {
+      if (body.getBodyType() == ActiveDirectionHandlerBody.BodyType.REQUIREMENT) {
+        requirementBodies.add(body);
+      }
+    }
+
+    Assert.assertEquals(2, requirementBodies.size());
+
+    Set<String> ids = new HashSet<String>();
+    for (ActiveDirectionHandlerBody body : requirementBodies) {
+      Assert.assertNotNull(body.getRequirement());
+      ids.add(body.getRequirement().getIdentifier());
+    }
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
   @Test
   public void associationName()
   {
@@ -4727,4 +5012,3 @@ public class UmpleParserTest
 	Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
   }
 }
-

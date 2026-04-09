@@ -7,7 +7,7 @@ req R1 quality {
   Reliability {}
 }
 
+implementsReq R1;
 trait Loggable {
-  implementsReq R1;
   logLevel;
 }

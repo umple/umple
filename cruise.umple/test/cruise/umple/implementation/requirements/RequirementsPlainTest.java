@@ -60,6 +60,7 @@ public class RequirementsPlainTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqQualityOnly.test.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqQualityWithUserStory.test.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqQualityWithImplements.test.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqQualityCompare.test.html");
   }
 
   @Test
@@ -259,5 +260,11 @@ public class RequirementsPlainTest extends TemplateTest
   public void ReqQualityWithImplements()
   {
     assertUmpleTemplateFor("requirements/ReqQualityWithImplements.test.ump","requirements/ReqQualityWithImplements.test.expectedresult.html");
+  }
+
+  @Test
+  public void ReqQualityCompare()
+  {
+    assertUmpleTemplateFor("requirements/ReqQualityCompare.test.ump","requirements/ReqQualityCompare.test.expectedresult.html");
   }
 }

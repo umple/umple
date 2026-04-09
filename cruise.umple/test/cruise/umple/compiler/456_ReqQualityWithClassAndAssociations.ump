@@ -8,14 +8,14 @@ req R1 quality {
   Maintainability {}
 }
 
+implementsReq R1;
 class Customer {
-  implementsReq R1;
   name;
   email;
 }
 
+implementsReq R1;
 class Order {
-  implementsReq R1;
   orderNumber;
   * -- 1 Customer;
 }
