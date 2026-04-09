@@ -67,7 +67,8 @@ userStoryTags- : ( who { [*whoContent] } )? ( when { [*whenContent] } )? ( what 
 useCase- : [=reqLanguage:useCase|usecase] { ( [[useCaseTags]] | [**reqContent] ) }
 useCaseTags- : ( [[userStoryTags]] | [[useCaseStep]] )*
 useCaseStep- : ( userStep [useCaseId] { [*useCaseStepContent] } ) | ( systemResponse [useCaseId] { [*useCaseStepContent] } )
-reqImplementation : implementsReq [reqIdentifier] (, [reqIdentifier])* ;
+reqRef : [reqIdentifier] ( [qualityClassName] )?
+reqImplementation : implementsReq [[reqRef]] (, [[reqRef]])* ;
 
 //Matches all forms of Java annotations including those with parentheses and values in quotes
 annotationComment- : [!annotationComment:@[a-zA-Z_][a-zA-Z0-9_-]*(\((("(\w|\s|-)*")|\w|\s|=|,|\.)*\))?]
