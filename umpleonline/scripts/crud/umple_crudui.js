@@ -33,6 +33,133 @@ Page.resetCrudData = function() {
   Page.crudAssociationLabelPreference = {};
 };
 
+// Validate that key attributes for a single instance (within a class)
+// are not left blank. This is used for per-form validation when saving
+// an instance so that key fields are always populated.
+Page.validateCrudKeysForInstanceLocal = function(className, instance, keyAttributes) {
+  var messages = [];
+
+  if (!instance || !Array.isArray(keyAttributes) || !keyAttributes.length) {
+    return messages;
+  }
+
+  keyAttributes.forEach(function(attrName) {
+    if (!attrName) { return; }
+    var value = instance[attrName];
+    var isEmpty = (typeof value === "undefined" || value === null || value === "");
+    if (!isEmpty && Array.isArray(value)) {
+      isEmpty = value.length === 0;
+    }
+
+    if (isEmpty) {
+      messages.push("Please enter a value for key attribute '" + attrName + "' in class '" + className + "'.");
+    }
+  });
+
+  return messages;
+};
+
+// Validate that the new or edited instance does not duplicate the
+// value of any key within the same class. When a single key attribute
+// is defined, uniqueness is enforced per attribute. When multiple
+// attributes are listed as keys, they form a composite key and
+// uniqueness is enforced on the combination of their values.
+Page.validateCrudKeyUniquenessForClassLocal = function(className, index, isEdit, newInst) {
+  var messages = [];
+
+  if (!Page.crudData || !Page.crudData.classes || !className || !newInst) {
+    return messages;
+  }
+
+  var classInfo = Page.crudData.classes[className];
+  if (!classInfo) { return messages; }
+
+  var keyAttrs = Array.isArray(classInfo.keys) ? classInfo.keys : [];
+  if (!keyAttrs.length) { return messages; }
+
+  var instances = classInfo.instances || [];
+
+  // Helper to normalize a value for key comparison
+  var normalizeVal = function(v) {
+    if (v === undefined || v === null || v === "") { return null; }
+    if (Array.isArray(v)) {
+      return v.length ? v.join(",") : null;
+    }
+    return String(v);
+  };
+
+  // Single-attribute key: preserve existing behaviour
+  if (keyAttrs.length === 1) {
+    var singleAttr = keyAttrs[0];
+    if (!singleAttr) { return messages; }
+    var newValSingle = normalizeVal(newInst[singleAttr]);
+    if (newValSingle === null) {
+      return messages;
+    }
+
+    for (var i = 0; i < instances.length; i++) {
+      if (isEdit && i === index) { continue; }
+      var otherInst = instances[i];
+      if (!otherInst) { continue; }
+      var otherValSingle = normalizeVal(otherInst[singleAttr]);
+      if (otherValSingle === null) { continue; }
+      if (otherValSingle === newValSingle) {
+        var labelSingle = className + "[" + (i + 1) + "]";
+        messages.push(
+          "The value for key attribute '" + singleAttr + "' already exists on " + labelSingle + ". " +
+          "Please enter a unique value because '" + singleAttr + "' is defined as a key."
+        );
+        break;
+      }
+    }
+    return messages;
+  }
+
+  // Composite key: enforce uniqueness on the combination of all key attributes.
+  var keyListText = keyAttrs.join(", ");
+  var newParts = [];
+  for (var k = 0; k < keyAttrs.length; k++) {
+    var aName = keyAttrs[k];
+    if (!aName) { return messages; }
+    var part = normalizeVal(newInst[aName]);
+    if (part === null) {
+      // If any part is missing, rely on the "required key" check instead.
+      return messages;
+    }
+    newParts.push(part);
+  }
+  var newComposite = newParts.join("||");
+
+  for (var j = 0; j < instances.length; j++) {
+    if (isEdit && j === index) { continue; }
+    var otherInstance = instances[j];
+    if (!otherInstance) { continue; }
+    var otherParts = [];
+    var skipOther = false;
+    for (var m = 0; m < keyAttrs.length; m++) {
+      var aNameOther = keyAttrs[m];
+      var partOther = normalizeVal(otherInstance[aNameOther]);
+      if (partOther === null) {
+        skipOther = true;
+        break;
+      }
+      otherParts.push(partOther);
+    }
+    if (skipOther) { continue; }
+    var otherComposite = otherParts.join("||");
+    if (otherComposite === newComposite) {
+      var labelComp = className + "[" + (j + 1) + "]";
+      messages.push(
+        "The combination of key attributes '" + keyListText + "' already exists on " + labelComp + ". " +
+        "Please enter a unique combination because these attributes form a composite key."
+      );
+      break;
+    }
+  }
+
+  return messages;
+};
+
 // Updates instance count for each class
 Page.updateCrudClassCount = function(className) {
   if (!Page.crudData || !Page.crudData.classes || !Page.crudData.classes[className]) {
@@ -710,6 +837,101 @@ Page.adjustCrudAttributesForTypeChanges = function(oldCrudData) {
   });
 };
 
+// When an attribute's type remains an enum but one or more enum literals
+// are removed from the model (for example, "FullTime" is deleted from
+// enum Status { FullTime, PartTime }), clear any existing CRUD values that
+// still reference those removed literals. This prevents stale, now-invalid
+// enum values from lingering in instance data and makes the change visible
+// via an informational adjustment message.
+Page.adjustCrudEnumValuesForRemovedOptions = function() {
+  if (!Page.crudData || !Page.crudData.classes || !Page.resolveCrudEnumOptions) {
+    return;
+  }
+
+  var classesData = Page.crudData.classes;
+
+  Object.keys(classesData).forEach(function(className) {
+    var classInfo = classesData[className];
+    if (!classInfo || !Array.isArray(classInfo.instances) || !Array.isArray(classInfo.attributes)) {
+      return;
+    }
+
+    var instances = classInfo.instances;
+    if (!instances.length) { return; }
+
+    classInfo.attributes.forEach(function(attr) {
+      if (!attr || !attr.name || !attr.type) { return; }
+
+      var attrName = attr.name;
+      var rawType = attr.type;
+      var typeInfo = Page.getCrudTypeInfo(rawType);
+
+      // Only consider non-class enum attributes here. Arrays of enums
+      // are supported by treating the stored value as an array of
+      // strings and dropping any elements that are no longer valid.
+      if (typeInfo && typeInfo.base && !typeInfo.isClass) {
+        var enumOptions = Page.resolveCrudEnumOptions(rawType);
+        if (!enumOptions || !enumOptions.length) {
+          return;
+        }
+
+        var allowed = {};
+        enumOptions.forEach(function(opt) {
+          if (opt !== null && typeof opt !== "undefined") {
+            allowed[String(opt)] = true;
+          }
+        });
+
+        var adjustedInstances = 0;
+
+        instances.forEach(function(inst) {
+          if (!inst || !Object.prototype.hasOwnProperty.call(inst, attrName)) {
+            return;
+          }
+          var v = inst[attrName];
+          if (typeof v === "undefined" || v === null || v === "") {
+            return;
+          }
+
+          if (Array.isArray(v)) {
+            var kept = [];
+            v.forEach(function(elem) {
+              var key = String(elem);
+              if (allowed[key]) {
+                kept.push(elem);
+              }
+            });
+
+            if (kept.length === v.length) {
+              return; // no change for this instance
+            }
+
+            if (kept.length > 0) {
+              inst[attrName] = kept;
+            } else {
+              delete inst[attrName];
+            }
+            adjustedInstances++;
+          } else {
+            var keySingle = String(v);
+            if (allowed[keySingle]) {
+              return; // still valid
+            }
+            delete inst[attrName];
+            adjustedInstances++;
+          }
+        });
+
+        if (adjustedInstances > 0 && Array.isArray(Page.crudAdjustmentMessages)) {
+          var msg = "Info: Enum attribute '" + attrName + "' in class '" + className + "' contained values for removed enum literal(s). " +
+                    "Those values were cleared from " + adjustedInstances + " instance(s).";
+          Page.crudAdjustmentMessages.push(msg);
+        }
+      }
+    });
+  });
+};
+
 // When a class has effectively been renamed (old class name removed,
 // new class name added) and its associations to other classes are the
 // same, preserve existing association links by moving values from the
@@ -919,6 +1141,7 @@ Page.validateCrudGlobalModel = function(pendingUpdate) {
   var classesData = Page.crudData.classes;
   var totalViolations = 0;
 
+  // Association multiplicity validation
   for (var fromClass in Page.crudAssociationsByClass) {
     if (!Page.crudAssociationsByClass.hasOwnProperty(fromClass)) { continue; }
 
@@ -1072,6 +1295,128 @@ Page.validateCrudGlobalModel = function(pendingUpdate) {
         }
       }
     });
+  }
+
+  // Key uniqueness validation: ensure that, for each class, keys are unique.
+  // When a single key attribute is defined, uniqueness is enforced per
+  // attribute. When multiple attributes are listed as keys, they form a
+  // composite key and uniqueness is enforced on the combination of their
+  // values.
+  for (var className in classesData) {
+    if (!classesData.hasOwnProperty(className)) { continue; }
+
+    var classInfoKeys = classesData[className];
+    if (!classInfoKeys) { continue; }
+
+    var keyAttrs = Array.isArray(classInfoKeys.keys) ? classInfoKeys.keys : [];
+    if (!keyAttrs.length) { continue; }
+
+    var baseInstancesK = classInfoKeys.instances || [];
+    var baseCountK = baseInstancesK.length;
+
+    var isPendingForClassK = !!(pendingUpdate && pendingUpdate.className === className && pendingUpdate.newInst);
+    var virtualExtraK = (isPendingForClassK && !pendingUpdate.isEdit) ? 1 : 0;
+    var virtualCountK = baseCountK + virtualExtraK;
+
+    // Helper to normalize a value for key comparison
+    var normalizeValK = function(v) {
+      if (v === undefined || v === null || v === "") { return null; }
+      if (Array.isArray(v) && v.length === 0) { return null; }
+      if (Array.isArray(v)) { return v.join(","); }
+      return String(v);
+    };
+
+    var singleKeyMode = (keyAttrs.length === 1);
+    var seenByAttr = {};
+    var duplicateReportedByAttr = {};
+    var seenComposite = {};
+    var compositeDuplicateReported = false;
+
+    if (singleKeyMode) {
+      var onlyAttr = keyAttrs[0];
+      if (onlyAttr) {
+        seenByAttr[onlyAttr] = {};
+        duplicateReportedByAttr[onlyAttr] = false;
+      }
+    } else {
+      // Composite key mode: use seenComposite map instead of seenByAttr
+      keyAttrs.forEach(function(attrName) {
+        if (!attrName) { return; }
+        // still initialise maps so later code can rely on them if needed
+        seenByAttr[attrName] = {};
+        duplicateReportedByAttr[attrName] = false;
+      });
+    }
+
+    for (var iK = 0; iK < virtualCountK; iK++) {
+      var instK;
+      if (isPendingForClassK) {
+        if (!pendingUpdate.isEdit && iK === baseCountK) {
+          instK = pendingUpdate.newInst;
+        } else if (pendingUpdate.isEdit && iK === pendingUpdate.index) {
+          instK = pendingUpdate.newInst;
+        } else {
+          instK = baseInstancesK[iK];
+        }
+      } else {
+        instK = baseInstancesK[iK];
+      }
+
+      if (!instK) { continue; }
+
+      if (singleKeyMode) {
+        var attrNameSingle = keyAttrs[0];
+        if (attrNameSingle) {
+          var vSingle = normalizeValK(instK[attrNameSingle]);
+          if (vSingle !== null) {
+            var seenMapSingle = seenByAttr[attrNameSingle];
+            if (seenMapSingle && seenMapSingle[vSingle]) {
+              totalViolations += 1;
+              if (!duplicateReportedByAttr[attrNameSingle]) {
+                duplicateReportedByAttr[attrNameSingle] = true;
+                var labelSingleK = className + "[" + (iK + 1) + "]";
+                errors.push(
+                  "The value for key attribute '" + attrNameSingle + "' in " + labelSingleK + " already exists. " +
+                  "Please enter a unique value because '" + attrNameSingle + "' is defined as a key."
+                );
+              }
+            } else if (seenMapSingle) {
+              seenMapSingle[vSingle] = true;
+            }
+          }
+        }
+      } else {
+        // Composite key: build tuple across all key attributes for this instance
+        var partsK = [];
+        var missingPart = false;
+        for (var a = 0; a < keyAttrs.length; a++) {
+          var aNameK = keyAttrs[a];
+          if (!aNameK) { continue; }
+          var vPart = normalizeValK(instK[aNameK]);
+          if (vPart === null) {
+            missingPart = true;
+            break;
+          }
+          partsK.push(vPart);
+        }
+        if (!missingPart && partsK.length === keyAttrs.length) {
+          var tupleKey = partsK.join("||");
+          if (seenComposite[tupleKey]) {
+            totalViolations += 1;
+            if (!compositeDuplicateReported) {
+              compositeDuplicateReported = true;
+              var labelCompK = className + "[" + (iK + 1) + "]";
+              errors.push(
+                "The combination of key attributes '" + keyAttrs.join(", ") + "' in " + labelCompK + " already exists. " +
+                "Please enter a unique combination because these attributes form a composite key."
+              );
+            }
+          } else {
+            seenComposite[tupleKey] = true;
+          }
+        }
+      }
+    }
   }
 
   // De-duplicate messages so the same textual error is only shown once.
@@ -1933,7 +2278,7 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
   Page.currentCrudContainer = container;
 
   // Add JSON persistence controls once per container
-  if (container.find(".crud-json-actions").length === 0) {
+    if (container.find(".crud-json-actions").length === 0) {
       var jsonHtml = "<div class='crud-json-actions' style='margin:6px 0 10px 0;'>" +
         "<div class='crud-json-row'>" +
         "<button type='button' id='crud-generate-json' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:6px;'>Download JSON</button>" +
@@ -1949,6 +2294,28 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
       "</div>";
     container.prepend(jsonHtml);
 
+    // Helper to show or hide an informational message related to
+    // instance-diagram or random-data issues within this CRUD panel.
+    function showInstanceDiagramMessage(message) {
+      var $existingErr = container.find(".crud-instance-diagram-error");
+      if ($existingErr.length === 0) {
+        var jsonRow = container.find(".crud-json-actions");
+        var htmlErr = "<div class='crud-instance-diagram-error' style='color:red;margin:6px 0 10px 0;'></div>";
+        if (jsonRow.length) {
+          jsonRow.after(htmlErr);
+          $existingErr = container.find(".crud-instance-diagram-error");
+        } else {
+          $existingErr = jQuery(htmlErr).prependTo(container);
+        }
+      }
+
+      if (message) {
+        $existingErr.text(message).show();
+      } else {
+        $existingErr.hide().text("");
+      }
+    }
+
     // Wire up JSON buttons
     container.find("#crud-generate-json").off("click").on("click", function() {
       if (typeof Page.crudJsonDownload === "function") {
@@ -1956,18 +2323,12 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
       }
     });
 
-    // Ask the backend Instance Diagram generator for random data and
-    // import the returned JSON using the same path as "Load JSON".
-    container.find("#crud-generate-random-data").off("click").on("click", function() {
-      if (typeof Page.getUmpleCode !== "function") {
-        console.warn("No Umple code available for random data generation.");
-        return;
-      }
-      var code = Page.getUmpleCode() || "";
-      if (!code) {
-        console.warn("Umple code is empty; cannot generate random data.");
-        return;
-      }
+    // Internal helper to call the backend Instance Diagram generator
+    // for random data, with limited automatic retries when the
+    // generator reports an empty diagram.
+    function requestRandomCrudData(code, attempt) {
+      var currentAttempt = attempt || 1;
+      var maxAutoRetries = 2; // one automatic retry after the first failure
 
       jQuery.ajax({
         url: "scripts/crud_random_data.php",
@@ -1979,6 +2340,36 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
         },
         dataType: "text",
         success: function(resp) {
+          var parsed;
+          var isEmptyDiagram = false;
+          try {
+            parsed = JSON.parse(resp);
+            if (parsed && parsed.diagramIsEmpty) {
+              isEmptyDiagram = true;
+            }
+          } catch (e) {
+            // Non-JSON response; fall through to normal import path.
+          }
+
+          if (isEmptyDiagram) {
+            // The Instance Diagram generator did not produce any
+            // instances for this model. Perform a limited automatic
+            // retry without immediately flashing an error message to
+            // avoid flicker when a subsequent attempt succeeds. Only
+            // show the informational message after the final retry
+            // has also failed.
+            if (currentAttempt < maxAutoRetries) {
+              requestRandomCrudData(code, currentAttempt + 1);
+            } else {
+              showInstanceDiagramMessage("There is an issue generating random data. Please try again.");
+            }
+            return;
+          }
+
+          // Successful random data generation: clear any previous
+          // informational message and import using the normal path.
+          showInstanceDiagramMessage("");
+
           if (typeof Page.crudJsonImportFromText === "function") {
             Page.crudJsonImportFromText(resp);
             // After import, (re)open a CRUD dialog. Prefer the class
@@ -2001,13 +2392,28 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
               Page.crudClassSelected = targetClass;
               Page.openCrudDialogForClass(targetClass);
             }
-            
-          } 
+          }
         },
         error: function(xhr, status, err) {
           console.error("Failed to generate random instance data:", status, err, xhr && xhr.responseText);
         }
       });
+    }
+
+    // Ask the backend Instance Diagram generator for random data and
+    // import the returned JSON using the same path as "Load JSON".
+    container.find("#crud-generate-random-data").off("click").on("click", function() {
+      if (typeof Page.getUmpleCode !== "function") {
+        console.warn("No Umple code available for random data generation.");
+        return;
+      }
+      var code = Page.getUmpleCode() || "";
+      if (!code) {
+        console.warn("Umple code is empty; cannot generate random data.");
+        return;
+      }
+
+      requestRandomCrudData(code, 1);
     });
 
     container.find("#crud-load-json").off("click").on("click", function() {
@@ -2466,33 +2872,6 @@ Page.openCrudDialogForClass = function(className) {
     container.append($panel);
   }
 
-  // If this class has mandatory (multiplicity 1) navigable associations to other
-  // classes (min bound > 0), and there are currently too few instances of those
-  // target classes to ever satisfy the multiplicity, prevent creating instances
-  // and instruct the user to create required ones first.
-  if (assocEnds.length > 0) {
-    var missingRequiredTargets = [];
-    assocEnds.forEach(function(end) {
-      var minRequired = (typeof end.toMin === "number") ? end.toMin : 0;
-      if (minRequired <= 0) { return; }
-      var targetInfo = Page.crudData.classes[end.toClass];
-      var targetInstances = (targetInfo && targetInfo.instances) || [];
-      if (targetInstances.length < minRequired) {
-        if (missingRequiredTargets.indexOf(end.toClass) === -1) {
-          missingRequiredTargets.push(end.toClass);
-        }
-      }
-    });
-    if (missingRequiredTargets.length > 0 && instances.length === 0) {
-      var msgHtml = "<div class='crud-dialog-content'>";
-      msgHtml += "<h3>" + className + "</h3>";
-      msgHtml += "<p>To create " + className + " instances, first create the following: " + missingRequiredTargets.join(", ") + ".</p>";
-      msgHtml += "</div>";
-      $panel.html(msgHtml);
-      return;
-    }
-  }
-
   var html = "<div class='crud-dialog-content'>";
   html += "<h3 style='margin-bottom:8px;'>" + className + " instances (" + instances.length + ")</h3>";
 
@@ -2569,14 +2948,22 @@ Page.openCrudDialogForClass = function(className) {
   html += "<div class='crud-error' style='color:red;margin-bottom:6px;display:none;'></div>";
   html += "<form id='crud-instance-form' data-class='" + className + "'>";
   html += "<input type='hidden' name='instanceIndex' value='' />";
+  var keyAttrsForClass = (Page.crudData && Page.crudData.classes && Page.crudData.classes[className] && Array.isArray(Page.crudData.classes[className].keys))
+    ? Page.crudData.classes[className].keys
+    : [];
 
   attrs.forEach(function(attr) {
     var attrName = attr.name;
     var typeInfo = Page.getCrudTypeInfo(attr.type);
     if (!attrName) { return; }
+    var isKeyAttr = keyAttrsForClass.indexOf(attrName) !== -1;
     html += "<div class='crud-field'>";
     var tooltipHtml = Page.buildCrudTooltip(attrName, attr.type, attr.inheritedFrom);
-    html += "<label class='crud-field-label'><span class='crud-tooltip-target' data-crud-tooltip-html=\"" + tooltipHtml + "\">" + attrName + "</span></label>";
+    html += "<label class='crud-field-label'><span class='crud-tooltip-target' data-crud-tooltip-html=\"" + tooltipHtml + "\">" + attrName + "</span>";
+    if (isKeyAttr) {
+      html += "<span class='crud-key-required-asterisk' style='color:red;' title='Key attribute (required and must be unique)'>*</span>";
+    }
+    html += "</label>";
     html += Page.buildCrudInputHtml(attrName, typeInfo);
 
     html += "</div>";
@@ -2800,7 +3187,7 @@ Page.openCrudDialogForClass = function(className) {
       // If there are no target instances and multiplicity requires one, hint to create them first
       if (targetInstances.length < minRequired && minRequired > 0) {
         html += "<div class='crud-association-hint' style='margin-top:4px;color:#a00;'>" +
-                "Not enough " + targetClass + " instances exist. Create more before adding " + className + "." +
+                "Not enough " + targetClass + " instances exist. Create more before adding " + className + ". " + "If this is a cyclic association, please proceed to click Save, the error messages will guide you."+
                 "</div>";
       }
 
@@ -2810,6 +3197,9 @@ Page.openCrudDialogForClass = function(className) {
 
   html += "<div class='crud-form-actions' style='margin-top:8px;'>";
   html += "<button type='button' id='crud-save-instance' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button primary' style='margin-right:8px;'>Save</button>";
+  // Cancel button is initially hidden and is only shown when editing an
+  // existing instance (instanceIndex is non-empty).
+  html += "<button type='button' id='crud-cancel-edit-instance' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button' style='margin-right:8px;display:none;'>Cancel Edit</button>";
   html += "<button type='button' id='crud-clear-instances' class='jQuery-palette-button ui-button ui-corner-all ui-widget crud-form-button'>Clear all " + className + "</button>";
   html += "</div>";
   html += "</form>";
@@ -2896,8 +3286,9 @@ Page.openCrudDialogForClass = function(className) {
 
   // Handle action dropdown selection for each instance row
   $panel.on("change", ".crud-instance-action", function() {
-    var action = jQuery(this).val();
-    var index = jQuery(this).data("index");
+    var $select = jQuery(this);
+    var action = $select.val();
+    var index = $select.data("index");
     if (!action) {
       return;
     }
@@ -2913,9 +3304,12 @@ Page.openCrudDialogForClass = function(className) {
     // For Edit, keep the dropdown showing Edit to reflect current mode.
     // For other actions, reset back to the placeholder.
     if (action === "edit") {
-      jQuery(this).val("edit");
+      // Ensure only the currently edited row shows "Edit" in its
+      // dropdown; reset all others back to the placeholder.
+      $panel.find(".crud-instance-action").not($select).val("");
+      $select.val("edit");
     } else {
-      jQuery(this).val("");
+      $select.val("");
     }
   });
 
@@ -2933,6 +3327,13 @@ Page.openCrudDialogForClass = function(className) {
     var inst = instancesCurrent[index] || {};
     var $form = $panel.find("#crud-instance-form");
     $form.find("input[name='instanceIndex']").val(index);
+
+    // When editing an existing instance, show the Cancel Edit button so
+    // the user has an explicit way to abandon in-progress changes.
+    var $cancelBtn = $panel.find("#crud-cancel-edit-instance");
+    if ($cancelBtn.length) {
+      $cancelBtn.show();
+    }
 
     attrsCurrent.forEach(function(attr) {
       var attrName = attr.name;
@@ -3299,6 +3700,23 @@ Page.openCrudDialogForClass = function(className) {
     }
   });
 
+  // When focus is inside a single-line field (text, number, etc.),
+  // prevent the Enter key from submitting the form or navigating to
+  // a new URL. Saving remains an explicit button click.
+  $panel.on("keydown", "#crud-instance-form input[type='text'], #crud-instance-form input[type='number'], #crud-instance-form input[type='date'], #crud-instance-form input[type='time'], #crud-instance-form input[type='datetime-local'], #crud-instance-form input[type='email'], #crud-instance-form input[type='url'], #crud-instance-form input[type='search'], #crud-instance-form input[type='tel']", function(evt) {
+    if (!evt) { return; }
+    var key = evt.which || evt.keyCode;
+    if (key === 13) { // Enter
+      if (typeof evt.preventDefault === "function") {
+        evt.preventDefault();
+      }
+      if (typeof evt.stopPropagation === "function") {
+        evt.stopPropagation();
+      }
+      return false;
+    }
+  });
+
   // Save instance (new or edited)
   $panel.on("click", "#crud-save-instance", function() {
     Page.currentCrudContainer = $panel.parent();
@@ -3356,6 +3774,21 @@ Page.openCrudDialogForClass = function(className) {
       }
     });
 
+    // Enforce that key attributes are always populated for this
+    // instance before processing associations.
+    var keyAttrsForClass = Array.isArray(currentClassInfo.keys) ? currentClassInfo.keys : [];
+    var keyRequiredErrors = Page.validateCrudKeysForInstanceLocal(className, newInst, keyAttrsForClass);
+    if (keyRequiredErrors.length > 0) {
+      errors = errors.concat(keyRequiredErrors);
+    }
+
+    // Enforce that key attributes remain unique within this class
+    // before processing associations or global validation.
+    var keyDuplicateErrors = Page.validateCrudKeyUniquenessForClassLocal(className, index, isEdit, newInst);
+    if (keyDuplicateErrors.length > 0) {
+      errors = errors.concat(keyDuplicateErrors);
+    }
+
     // Associations: enforce multiplicity rules and capture selected links
     assocEnds.forEach(function(end) {
       var fieldName = end.storageKey;
@@ -3412,13 +3845,8 @@ Page.openCrudDialogForClass = function(className) {
 
         var count = indices.length;
         var relationLabel = end.cascadeDeleteTargets ? "composition" : "association";
-        if (minRequired > 0 && count < minRequired) {
-          var remaining = minRequired - count;
-          if (remaining > 0) {
-            var instanceLabel = remaining === 1 ? " instance" : " instances";
-            errors.push("Please select " + remaining + " more " + end.toClass + instanceLabel + " for " + relationLabel + " " + end.assocName + ".");
-          }
-        }
+        // Do not block save when mandatory associations are underfilled;
+        // rely on global validation to surface multiplicity issues.
         if (maxAllowed !== null && count > maxAllowed) {
           errors.push("Please select at most " + maxAllowed + " " + end.toClass + " instance(s) for " + relationLabel + " " + end.assocName + ".");
         }
@@ -3427,11 +3855,8 @@ Page.openCrudDialogForClass = function(className) {
         var $radio = $form.find("input[type='radio'][name='" + fieldName + "']:checked");
         var val = $radio.length ? $radio.val() : "";
         if (!val || val === "") {
-          // If min bound is >= 1, this link is mandatory
-          if (minRequired >= 1) {
-            var relationLabelSingle = end.cascadeDeleteTargets ? "composition" : "association";
-            errors.push("Please select a " + end.toClass + " for " + relationLabelSingle + " " + end.assocName + ".");
-          }
+          // Leave mandatory-single associations empty locally; global
+          // validation will report missing links.
           newInst[fieldName] = null;
         } else {
           var idxSingle = parseInt(val, 10);
@@ -3463,7 +3888,16 @@ Page.openCrudDialogForClass = function(className) {
 
     // For hierarchical self-reflexive associations (like FunctionalArea
     // parent/child), ensure that choosing a parent does not introduce a
-    // parent-child cycle.
+    // parent-child cycle. Use a snapshot that includes the pending
+    // change for this instance so newly introduced cycles are caught
+    // locally before saving.
+    var instancesForCycleCheck = instancesCurrent.slice();
+    if (isEdit && index >= 0 && index < instancesForCycleCheck.length) {
+      instancesForCycleCheck[index] = newInst;
+    } else if (!isEdit && index === instancesForCycleCheck.length) {
+      instancesForCycleCheck.push(newInst);
+    }
+
     assocEnds.forEach(function(end) {
       if (end.fromClass !== end.toClass) { return; }
       var multiple = true;
@@ -3473,20 +3907,22 @@ Page.openCrudDialogForClass = function(className) {
       if (multiple) { return; }
       var value = newInst[end.storageKey];
       if (typeof value !== "number") { return; }
-      Page.checkCrudReflexiveHierarchyCycle(className, instancesCurrent, end, index, value, errors);
+      Page.checkCrudReflexiveHierarchyCycle(className, instancesForCycleCheck, end, index, value, errors);
     });
 
     // First, show any local validation errors for the currently edited
-    // instance (attributes, association choices, reflexive cycles).
+    // instance (attributes, key constraints, association choices,
+    // reflexive cycles). Local errors block saving.
     if (errors.length > 0) {
       $error.text(errors.join(" ")).show();
+      return;
     }
 
     // Next, validate the entire CRUD model (all classes and instances)
     // using a snapshot that includes this pending change. This allows
-    // us to catch conflicts introduced by association updates, such as
-    // adding a new mandatory association for a class that already has
-    // existing instances without those links.
+    // us to surface conflicts introduced by association updates or
+    // global key constraints. Global errors are reported but do not
+    // prevent saving; they are primarily summarized in the banner.
     var globalErrors = Page.validateCrudGlobalModel({
       className: className,
       index: index,
@@ -3533,6 +3969,59 @@ Page.openCrudDialogForClass = function(className) {
     Page.crudData.classes[className].instances = [];
     Page.updateCrudClassCount(className);
     Page.openCrudDialogForClass(className);
+  });
+
+  // Cancel editing the current instance: clear the form fields, reset
+  // edit state back to "add new" (no instanceIndex), hide the Cancel
+  // button, and reset the per-instance action dropdown.
+  $panel.on("click", "#crud-cancel-edit-instance", function() {
+    var $form = $panel.find("#crud-instance-form");
+    if (!$form.length) { return; }
+
+    // Reset hidden index so Save will create a new instance instead of
+    // overwriting an existing one.
+    $form.find("input[name='instanceIndex']").val("");
+
+    // Clear all attribute inputs within this form.
+    $form.find("input[type='text'], input[type='number'], input[type='date'], input[type='time'], input[type='datetime-local'], input[type='email'], input[type='url'], input[type='search'], input[type='tel'], textarea").val("");
+    $form.find("input[type='checkbox'], input[type='radio']").prop("checked", false);
+    // Reset select elements that store instance attribute/association
+    // values, but do NOT touch the small "Label for {Class} options"
+    // dropdowns that control how association options are labelled
+    // globally (those have class 'crud-assoc-label-select').
+    $form.find("select").not(".crud-assoc-label-select").each(function() {
+      var $sel = jQuery(this);
+      // Prefer an explicit empty option if present; otherwise fall back
+      // to the first option.
+      if ($sel.find("option[value='']").length) {
+        $sel.val("");
+      } else {
+        var firstVal = $sel.find("option").first().val();
+        $sel.val(firstVal);
+      }
+    });
+
+    // Clear any inline error messages for this form.
+    $panel.find(".crud-error").hide().text("");
+
+    // Hide the Cancel button now that we are no longer editing.
+    jQuery(this).hide();
+
+    // Reset any per-row action dropdowns back to the placeholder. Be
+    // explicit about the selected option to avoid any stale UI state
+    // in the browser.
+    $panel.find(".crud-instance-action").each(function() {
+      var $sel = jQuery(this);
+      // Clear current selection and then force-select the placeholder
+      // option (value="").
+      $sel.find("option").prop("selected", false);
+      $sel.val("");
+      $sel.find("option[value='']").prop("selected", true);
+      // Trigger change so any listeners that depend on the value being
+      // cleared can react, but the handler will exit early since the
+      // value is now empty.
+      $sel.trigger("change");
+    });
   });
 
   // ----- Class array (ClassType[]) element management -----
@@ -3755,6 +4244,11 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
       };
       Page.crudExtendsByClass[className] = cls.extendsClass || null;
 
+      // Capture key attributes for this class, if present. The JSON
+      // generator exposes keys as an array of attribute names.
+      var keysRaw = Array.isArray(cls.keys) ? cls.keys : [];
+      crudMetaByClass[className].keys = keysRaw.slice();
+
       // Capture local enums defined inside this class, if any
       var localEnums = (cls.enums && Array.isArray(cls.enums)) ? cls.enums : [];
       if (localEnums.length > 0) {
@@ -3774,6 +4268,63 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
           }
         });
       }
+    });
+
+    // Resolve key attributes for each class, including those inherited
+    // from ancestor classes in the extends hierarchy. This allows,
+    // for example, a key defined on superclass A to be treated as a
+    // key on subclass B that extends A in the CRUD UI.
+    var resolvedKeys = {};
+    var resolveCrudKeys = function(className, visited) {
+      if (!className || !crudMetaByClass[className]) {
+        return [];
+      }
+      if (resolvedKeys[className]) {
+        return resolvedKeys[className];
+      }
+
+      visited = visited || {};
+      if (visited[className]) {
+        // Cycle guard: fall back to this class's own keys only.
+        var ownOnly = Array.isArray(crudMetaByClass[className].keys)
+          ? crudMetaByClass[className].keys.slice()
+          : [];
+        resolvedKeys[className] = ownOnly;
+        return ownOnly;
+      }
+      visited[className] = true;
+
+      var meta = crudMetaByClass[className];
+      var result = [];
+      var seen = {};
+
+      // First, inherit keys from the parent class (if any).
+      var parentName = meta.extendsClass;
+      if (parentName && crudMetaByClass[parentName]) {
+        var parentKeys = resolveCrudKeys(parentName, visited);
+        parentKeys.forEach(function(k) {
+          if (!k || seen[k]) { return; }
+          seen[k] = true;
+          result.push(k);
+        });
+      }
+
+      // Then add this class's own key attributes, avoiding duplicates.
+      var ownKeys = Array.isArray(meta.keys) ? meta.keys : [];
+      ownKeys.forEach(function(k) {
+        if (!k || seen[k]) { return; }
+        seen[k] = true;
+        result.push(k);
+      });
+
+      resolvedKeys[className] = result;
+      return result;
+    };
+
+    Object.keys(crudMetaByClass).forEach(function(cn) {
+      var meta = crudMetaByClass[cn];
+      if (!meta) { return; }
+      meta.keys = resolveCrudKeys(cn, {});
     });
 
     // Capture global enums from the JSON payload, if any
@@ -4017,9 +4568,15 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
       var resultA = [];
       var seenKeys = {};
 
+      // Build a logical key for an association end that is stable across
+      // inheritance and does not collapse distinct directions of the same
+      // association (important for reflexive associations where both
+      // parent->child and child->parent ends exist). We intentionally
+      // avoid using storageKey here because it omits direction and would
+      // cause one end to overwrite the other when both originate from the
+      // same declaring class.
       var makeKey = function(end) {
         if (!end) { return ""; }
-        if (end.storageKey) { return end.storageKey; }
         return (end.assocId || "") + "::" + (end.toClass || "") + "::" + (end.direction || "");
       };
 
@@ -4227,7 +4784,8 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
         isAbstract: isAbstract,
         // Mark whether this class declares a main() method so that the
         // CRUD JSON exporter can treat it as a root/main class.
-        isMain: !!meta.hasMain
+        isMain: !!meta.hasMain,
+        keys: Array.isArray(meta.keys) ? meta.keys.slice() : []
       };
 
       formHtml += "</form>";
@@ -4252,6 +4810,12 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
       if (typeof Page.adjustCrudAttributesForTypeChanges === "function") {
         Page.adjustCrudAttributesForTypeChanges(oldCrudData);
       }
+    }
+    // After reconciling attribute renames and type changes, remove any
+    // enum values that reference literals no longer present in the
+    // current model so that stale values do not linger in CRUD data.
+    if (typeof Page.adjustCrudEnumValuesForRemovedOptions === "function") {
+      Page.adjustCrudEnumValuesForRemovedOptions();
     }
     // After reattaching any preserved instances, first normalize
     // association fields for multi-valued ends so that they are always

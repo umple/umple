@@ -498,6 +498,18 @@
         });
       });
     }
+
+    // Successful import: clear any prior adjustment messages related to
+    // previous incompatible loads and refresh the global CRUD banner so
+    // stale errors (including the compatibility message) are not shown.
+    if (!Array.isArray(Page.crudAdjustmentMessages)) {
+      Page.crudAdjustmentMessages = [];
+    } else if (Page.crudAdjustmentMessages.length) {
+      Page.crudAdjustmentMessages = [];
+    }
+    if (typeof Page.renderCrudGlobalErrors === "function") {
+      Page.renderCrudGlobalErrors(null);
+    }
   };
 
   // Helper to import from a JSON string (used by UI layer)
