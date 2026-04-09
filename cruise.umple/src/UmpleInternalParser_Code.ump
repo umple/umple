@@ -355,8 +355,8 @@ class UmpleInternalParser
          foundRequirement.addReqImplementation(reqImpl);
 
          // Bind quality class
-         String qualityClassName = reqImpl.getQualityClassName()??null;
-         if (!qualityClassName.isEmpty())
+         String qualityClassName = reqImpl.getQualityClassName();
+         if (qualityClassName!=null && !qualityClassName.isEmpty())
          {
            if (!foundRequirement.hasQualityClasses())
            {
