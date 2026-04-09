@@ -201,6 +201,8 @@
 405: 4, "https://manual.umple.org/?PageBeingDeveloped.html", Requirement '{0}' has a quality section but no quality classes are defined ;
 406: 3, "https://manual.umple.org/?PageBeingDeveloped.html", Requirement '{0}' has a quality section without a preceding requirement type definition (e.g. USECASE, USERTYPE) ;
 407: 2, "https://manual.umple.org/?PageBeingDeveloped.html", Quality class '{1}' in requirement '{0}' is missing braces '{}' ;
+408: 2, "https://manual.umple.org/?PageBeingDeveloped.html", Requirement '{0}' has no quality classes defined, but implementsReq specifies quality class name '{1}' ;
+409: 2, "https://manual.umple.org/?PageBeingDeveloped.html", Quality class name '{1}' not found in requirement '{0}'. ;
 
 # Messages relating to deprecated features starting with 901
 901: 4, "https://manual.umple.org/?W901DeprecatedKeywordConstant.html", Keyword "constant" deprecated, please use "const" ;
