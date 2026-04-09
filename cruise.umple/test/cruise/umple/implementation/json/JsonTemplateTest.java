@@ -163,5 +163,11 @@ public class JsonTemplateTest extends TemplateTest
     assertUmpleTemplateFor("json/EnumGeneration.ump", "json/EnumGeneration.json.txt");
   }
 
+  @Test
+  public void KeyAttributeClassTest()
+  {
+    assertUmpleTemplateFor("json/KeyAttributeClass.ump", "json/KeyAttributeClass.json.txt");
+  }
+
 
 }
