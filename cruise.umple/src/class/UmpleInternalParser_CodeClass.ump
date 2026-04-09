@@ -410,13 +410,28 @@ class UmpleInternalParser
     }
   }
 
+  // Shared utility to parse reqRef tokens from a reqImplementation token.
+  // Returns a list of ReqImplementation objects, one per reqRef sub-token.
+  private static List<ReqImplementation> parseReqRefTokens(Token t) {
+    List<ReqImplementation> result = new ArrayList<>();
+    for (Token reqRefToken : t.getSubTokens()) {
+      if (!reqRefToken.is("reqRef")) continue;
+      String reqImpID = reqRefToken.getSubToken("reqIdentifier").getValue();
+      Token qualityToken = reqRefToken.getSubToken("qualityClassName");
+      ReqImplementation reqImpl = new ReqImplementation(reqImpID, t);
+      if (qualityToken != null) {
+        reqImpl.setQualityClassName(qualityToken.getValue());
+      }
+      result.add(reqImpl);
+    }
+    return result;
+  }
+
   private void analyzeImplementReq(Token t) {
-     // Identifier that has been identified 
-     String reqImpID = t.getSubToken("reqIdentifier").getValue();
-     // Instantiate the requirement implementation
-     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
-     model.addReqImplementation(reqImplementation);
-     lastRequirementsImpl.add(reqImplementation); 
+     for (ReqImplementation reqImpl : parseReqRefTokens(t)) {
+       model.addReqImplementation(reqImpl);
+       lastRequirementsImpl.add(reqImpl);
+     }
   }
   
   private void analyzeImplementReq(Token t, UmpleClass aClass) {
@@ -425,22 +440,13 @@ class UmpleInternalParser
   
   private List<ReqImplementation> analyzeEnumImplReq(Token t)
   {
-     List<ReqImplementation> ReqImp= new ArrayList<ReqImplementation>();
-     String reqImpID = t.getSubToken("reqIdentifier").getValue();
-     // Instantiate the requirement implementation
-     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
-     ReqImp.add(reqImplementation); 
-     return ReqImp;
+     return parseReqRefTokens(t);
   }
   
   mixset StateMachine {
     private List<ReqImplementation> analyzeStateReqImpl(Token t)
     {
-      List<ReqImplementation> ReqImp= new ArrayList<ReqImplementation>();
-      String reqImpID = t.getSubToken("reqIdentifier").getValue();
-      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
-      ReqImp.add(reqImplementation);
-      return ReqImp;
+      return parseReqRefTokens(t);
     }
   }
   
@@ -1487,10 +1493,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       //capture implementsReq inside the association block
       if (token.is("reqImplementation")) {
         innerReqImpls.clear();
-        String reqImpID = token.getSubToken("reqIdentifier").getValue();
-        ReqImplementation reqImpl = new ReqImplementation(reqImpID, token);
-        model.addReqImplementation(reqImpl);
-        innerReqImpls.add(reqImpl);
+        for (ReqImplementation reqImpl : parseReqRefTokens(token)) {
+          model.addReqImplementation(reqImpl);
+          innerReqImpls.add(reqImpl);
+        }
         continue;
       }
       mixset Mixset {
