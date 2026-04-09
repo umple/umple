@@ -14,7 +14,7 @@ Umple uses Ant (`build/` directory). Use the dev-tool shortcuts in `dev-tools/`:
 
 See `dev-tools/README.md` for the full list.
 
-- When running `bumple`, use a timeout of at least 15 minutes. 
+- When running `bumple`, use at least 15 minutes for the tool execution timeout(This is not a param of `bumple`. This is a param of tool execution, and param name may be variable based on platform).
 - For testing purposes other than the full pre-PR validation run, prefer the combination of `qbumple` or `qfbumple` followed by `tumple` whenever that combination is sufficient to achieve the goal.
 
 ## Commits and PRs
@@ -30,7 +30,7 @@ See `dev-tools/README.md` for the full list.
 - Run `bumple` before opening a PR
 - Show diff before committing
 - Update user manual in `build/reference/` when changing Umple syntax or semantics
-- For file reads, writes, creates, deletions, searches, and edits, use the system-provided tools such as `read`, `grep`, `search`, `edit`, and `apply_patch`. Unless a developer explicitly approves or requires it, do not use general script execution tools including `bash`, `pwsh`, `python`, or similar mechanisms to bypass those tools for file operations. If a provided file tool rejects a request, follow its error information to determine the next step. If the rejection is clearly caused by a system mechanism such as permissions, do not try to bypass it with script execution tools; instead, reassess whether the action is compliant and necessary, or ask the user for a decision.
+- For file operations such as reading, writing, creating, deleting, searching, and editing, use the system-provided tools such as `read`, `grep`, `search`, `edit`, and `apply_patch`. The tools available may be different based on the model, platform, and agent application. Unless a developer explicitly approves or requires it, do not use general script execution tools including `bash`, `pwsh`, `python`, or similar mechanisms to bypass those tools for file operations. If a provided file tool rejects a request, follow its error information to determine the next step. If the rejection is clearly caused by a system mechanism such as permissions, do not try to bypass it with script execution tools; instead, reassess whether the action is compliant and necessary, or ask the user for a decision.
 - Before running `tumple`, if any file has been modified since the last compile step such as `qfbumple`, `qbumple`, or `bumple`, run `qfbumple` or `qbumple` first, regardless of whether the changes are in project code or tests. If the agent does not know when the last compile happened, or whether any files changed after it, default to running `qfbumple` or `qbumple` before `tumple`.
 
 ## Post-Work
