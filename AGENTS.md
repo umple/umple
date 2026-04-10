@@ -14,12 +14,25 @@ Umple uses Ant (`build/` directory). Use the dev-tool shortcuts in `dev-tools/`:
 
 See `dev-tools/README.md` for the full list.
 
-- When running `bumple`, use at least 15 minutes for the tool execution timeout(This is not a param of `bumple`. This is a param of tool execution, and param name may be variable based on platform).
-- For testing purposes other than the full pre-PR validation run, prefer the combination of `qbumple` or `qfbumple` followed by `tumple` whenever that combination is sufficient to achieve the goal.
+### Compile and Test Guidelines
+
+#### Builds
+- For build and test tasks, agents MUST prefer scripts under `dev-tools/` over direct `Ant` or `Gradle` commands whenever a script covers the task.
+- During development, agents SHOULD use the narrowest `dev-tools/` script that covers the change.
+  - The scripts listed here are examples, not an exhaustive list.
+  - If the right script is not obvious, agents MUST check `dev-tools/README.md` before choosing a compile or package step, and MUST NOT default to `bumple` first.
+  - Typical cases: `qbumple` for changes limited to Java in the main `umple.jar`; `uminify` for JS-only changes; `bumple` only when a full build with tests is required.
+- See `dev-tools/README.md` for the full script list. Additional guidance is available at `https://github.com/umple/umple/wiki/CheatSheet` and `https://github.com/umple/umple/wiki/DevelopmentSetUp`.
+
+#### Tests
+- Before running `tumple`, if any file changed after the last compile step, agents MUST run the appropriate compile step first, even for test-only changes.
+- If the correct compile step is unclear, agents MUST determine it from `dev-tools/README.md`, local context, and recent changes; if still unclear, they MUST ask the user rather than default to `bumple`.
+- When running `bumple`, set the execution-tool timeout to at least 15 minutes. `bumple` already includes `tumple`; do not run it again. Except for full-repo testing or pre-PR validation, prefer a sufficient partial compile followed by `tumple`.
 
 ## Commits and PRs
 
 - Commit format: `type(scope): summary` with issue references (e.g. `fix(parser): handle nested state machines, Fixes #1234`)
+  - Common types: `feat`, `fix`, `docs`, `refactor`, `test`, `chore`
 - Branch naming: `issue#<number>_<short-description>`
 - When making a PR, read `.github/PULL_REQUEST_TEMPLATE.md` for detailed guidelines on PR titles, descriptions, and content requirements.
 - When making an issue, read `.github/ISSUE_TEMPLATE.md` for detailed guidelines.
@@ -30,8 +43,6 @@ See `dev-tools/README.md` for the full list.
 - Run `bumple` before opening a PR
 - Show diff before committing
 - Update user manual in `build/reference/` when changing Umple syntax or semantics
-- For file operations such as reading, writing, creating, deleting, searching, and editing, use the system-provided tools such as `read`, `grep`, `search`, `edit`, and `apply_patch`. The tools available may be different based on the model, platform, and agent application. Unless a developer explicitly approves or requires it, do not use general script execution tools including `bash`, `pwsh`, `python`, or similar mechanisms to bypass those tools for file operations. If a provided file tool rejects a request, follow its error information to determine the next step. If the rejection is clearly caused by a system mechanism such as permissions, do not try to bypass it with script execution tools; instead, reassess whether the action is compliant and necessary, or ask the user for a decision.
-- Before running `tumple`, if any file has been modified since the last compile step such as `qfbumple`, `qbumple`, or `bumple`, run `qfbumple` or `qbumple` first, regardless of whether the changes are in project code or tests. If the agent does not know when the last compile happened, or whether any files changed after it, default to running `qfbumple` or `qbumple` before `tumple`.
 
 ## Post-Work
 
