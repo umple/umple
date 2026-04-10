@@ -9,9 +9,11 @@ echo Do this after qfbumple when resting umpleonline
 ant -DshouldPackageUmpleOnline=true -Dmyenv=local -f build.umple.xml packageUmpleonline
 cd $UMPLEROOT/umpleonline/scripts
 echo restarting the umpleonline server
-quitserver
+$UMPLEROOT/dev-tools/quitserver
 echo restarting the docker server for code execution
-startexecdocker
+$UMPLEROOT/dev-tools/startexecdocker
+echo restarting the lsp docker server
+$UMPLEROOT/dev-tools/startlspdocker
 echo rebuilding the codemirror6 tech
 cd $UMPLEROOT/umpleonline/scripts/codemirror6
 npm start

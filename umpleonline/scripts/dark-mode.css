@@ -851,3 +851,20 @@ select {
 .gv-rubberband-arrow {
   stroke: var(--umple-edge-color);
 }
+
+/* Editor context menu — dark theme */
+.cm-context-menu {
+  background: #2a2a2a;
+  border-color: #555;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.4);
+}
+.cm-context-menu-item {
+  color: #ddd;
+}
+.cm-context-menu-item:hover {
+  background: #4a90d9;
+  color: #fff;
+}
+.cm-context-menu-separator {
+  background: #444;
+}

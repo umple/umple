@@ -12,7 +12,7 @@ export default {
   },
   plugins: [
     resolve({
-      extensions: ['.mjs']
+      extensions: ['.mjs', '.js']
     }),
     commonjs()
   ]

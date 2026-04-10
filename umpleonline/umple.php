@@ -826,6 +826,9 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="realestate.ump">Real Estate</option>
                 <option name = "optionExample" value="RoutesAndLocations.ump">Routes And Locations</option>
                 <option name = "optionExample" value="School.ump">School</option>
+                
+                <option name = "optionExample" value="https://raw.githubusercontent.com/Smart-Contract-Modelling-uOttawa/Symboleo-JS-Core/refs/heads/main/ontology/ontology.ump">Symboleo Smart Contracts</option>
+                
                 <option name = "optionExample" value="TelephoneSystem.ump">Telephone System</option>
                 <option name = "optionExample" value="UniversitySystem.ump">University System</option>
                 <option name = "optionExample" value="VendingMachineClassDiagram.ump">Vending Machine</option>
@@ -1237,6 +1240,42 @@ $output = $dataHandle->readData('model.ump');
   <script src="scripts/pinch.js" type="text/javascript"></script>
 
   <script src="scripts/theme-toggle.js"></script>
+
+  <?php
+  // LSP configuration — generate signed token for WebSocket proxy auth
+  // Docker sets this to "/lsp" (nginx proxy). For local php -S dev,
+  // fall back to the default lsp-proxy port on loopback.
+  // Read LSP port from UmpleLsp/config.cfg if available (supports multiple instances)
+  // Uses line-by-line parsing to match shell-style config format (same as compiler_config.php)
+  $lspPort = '9999';
+  $lspCfgPath = rootDir() . '/../UmpleLsp/config.cfg';
+  $lspCfgHandle = @fopen($lspCfgPath, "r");
+  if ($lspCfgHandle) {
+    while (($line = fgets($lspCfgHandle)) !== false) {
+      if (substr($line, 0, 10) === "portToUse=") {
+        $lspPort = trim(substr($line, 10));
+      }
+    }
+    fclose($lspCfgHandle);
+  }
+  $lspWsUrl = getenv('UMPLE_LSP_WS_URL') ?: 'ws://127.0.0.1:' . $lspPort;
+  $lspAuthSecret = getenv('LSP_AUTH_SECRET') ?: '';
+  $lspToken = '';
+  $lspModelId = $dataHandle->getName();
+  if ($lspWsUrl && !$readOnly && $lspModelId) {
+    $mode = 'editable';
+    $expiry = (string)(time() * 1000 + 300000); // 5 min from now in ms
+    $payload = $lspModelId . ':' . $mode . ':' . $expiry;
+    $sig = hash_hmac('sha256', $payload, $lspAuthSecret);
+    $lspToken = rtrim(strtr(base64_encode($payload . ':' . $sig), '+/', '-_'), '=');
+  }
+  ?>
+
+  <script>
+  window.UMPLE_LSP_WS_URL = "<?php echo htmlspecialchars($lspWsUrl, ENT_QUOTES) ?>";
+  window.UMPLE_LSP_TOKEN = "<?php echo htmlspecialchars($lspToken, ENT_QUOTES) ?>";
+  window.UMPLE_UMP_BASE = "<?php echo htmlspecialchars(rootDir() . '/ump', ENT_QUOTES) ?>";
+  </script>
 
   <script>
     Page.init(
