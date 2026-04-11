@@ -222,6 +222,31 @@ To enable auth: `docker run -e LSP_AUTH_SECRET="$(openssl rand -hex 32)" -e LSP_
 - Browser console: `window.UMPLE_LSP_WS_URL` shows `/lsp`
 - Diagnostics appear as you type
 
+### Disabling LSP
+
+To disable LSP explicitly, make `UMPLE_LSP_WS_URL` empty for that instance.
+
+**Docker**
+```bash
+docker run -e UMPLE_LSP_WS_URL="" ...
+```
+
+**nginx + php-fpm**
+```nginx
+fastcgi_param UMPLE_LSP_WS_URL "";
+```
+
+**Local `php -S`**
+```bash
+UMPLE_LSP_WS_URL="" php -S localhost:8001
+```
+
+**Verify:**
+- Browser console: `window.UMPLE_LSP_WS_URL` shows `""`
+- LSP features such as diagnostics, hover, and go-to-definition are inactive
+
+Note: disabling LSP in the page does not stop the standalone LSP container. If you want it fully off, also stop or remove the `my<standaloneContainerName>` container.
+
 ### Fail-closed behavior
 
 LSP is intentionally disabled when configuration is missing:
