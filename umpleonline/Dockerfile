@@ -38,6 +38,11 @@ RUN echo $gitbranch > /tmp/umplegitbranch.txt
 # Copy over the website data
 COPY . /var/www
 
+# Bootstrap lsp.ini from template if not already present
+RUN if [ ! -f /var/www/config/lsp.ini ]; then \
+      cp /var/www/config/lsp.ini.template /var/www/config/lsp.ini; \
+    fi
+
 # Install lsp-proxy dependencies
 RUN cd /var/www/scripts/lsp-proxy && npm ci --production --ignore-scripts
 

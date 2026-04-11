@@ -5,11 +5,17 @@ echo "Running setup.sh for UmpleLsp in $BASEDIR"
 cd "$BASEDIR"
 
 # Read canonical config from umpleonline/config/lsp.ini
-LSPINI="$(cd "$BASEDIR/.."; pwd)/umpleonline/config/lsp.ini"
+REPOROOT="$(cd "$BASEDIR/.."; pwd)"
+LSPINI="$REPOROOT/umpleonline/config/lsp.ini"
+LSPINI_TEMPLATE="$REPOROOT/umpleonline/config/lsp.ini.template"
 if [ ! -f "$LSPINI" ]; then
-  echo "ERROR: Canonical LSP config not found at $LSPINI"
-  echo "Expected: umpleonline/config/lsp.ini"
-  exit 1
+  if [ -f "$LSPINI_TEMPLATE" ]; then
+    echo "Creating lsp.ini from template"
+    cp "$LSPINI_TEMPLATE" "$LSPINI"
+  else
+    echo "ERROR: No lsp.ini or lsp.ini.template found at $REPOROOT/umpleonline/config/"
+    exit 1
+  fi
 fi
 
 # Parse INI file (handles ; and # comments)

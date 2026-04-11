@@ -50,7 +50,7 @@ UmpleOnline includes Language Server Protocol support, providing:
 
 ### Configuration
 
-All repo-owned LSP settings live in one file: `umpleonline/config/lsp.ini`.
+All repo-owned LSP settings live in one file: `umpleonline/config/lsp.ini`. If missing, create it from `lsp.ini.template`.
 
 | Setting | Description |
 |---------|-------------|
@@ -177,7 +177,7 @@ To enable auth: `docker run -e LSP_AUTH_SECRET="$(openssl rand -hex 32)" -e LSP_
 
 LSP is intentionally disabled when configuration is missing:
 - **`umple.php`**: If `UMPLE_LSP_WS_URL` env is not set and `config/lsp.ini` is missing or incomplete, `window.UMPLE_LSP_WS_URL` is empty and LSP is disabled. A warning is logged via `error_log`.
-- **`UmpleLsp/setup.sh`**: Fails with an error if `config/lsp.ini` is missing or required values (`standaloneHostPort`, `standaloneContainerName`, `standaloneUmpBaseDir`, `maxProcesses`) are absent.
+- **`UmpleLsp/setup.sh`**: Auto-creates `lsp.ini` from `lsp.ini.template` if missing. Fails with an error if neither exists or required values (`standaloneHostPort`, `standaloneContainerName`, `standaloneUmpBaseDir`, `maxProcesses`) are absent.
 - **`server.js`**: Exits with an error if `LSP_HOST`, `LSP_PORT`, or `UMP_BASE_DIR` env vars are missing. Exits if `maxProcesses` is not available from env or `config/lsp.ini`.
 
 ## Code Execution
@@ -211,7 +211,8 @@ docker run --rm -ti --name umpleonline_local \
 
 | Path | Description |
 |------|-------------|
-| `config/lsp.ini` | Canonical LSP configuration (single source of truth) |
+| `config/lsp.ini.template` | LSP configuration template (checked in) |
+| `config/lsp.ini` | LSP runtime configuration (gitignored, created from template) |
 | `umple.php` | Main entry point |
 | `scripts/compiler.php` | Backend compilation endpoint |
 | `scripts/compiler_config.php` | Compiler configuration and execution |
