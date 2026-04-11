@@ -4,12 +4,34 @@ BASEDIR=$(dirname "$0")
 echo "Running setup.sh for UmpleLsp in $BASEDIR"
 cd "$BASEDIR"
 
-if [ ! -f config.cfg ]; then
-  echo "config.cfg not found — creating from config.cfg.template"
-  cp config.cfg.template config.cfg
+# Read canonical config from umpleonline/config/lsp.ini
+LSPINI="$(cd "$BASEDIR/.."; pwd)/umpleonline/config/lsp.ini"
+if [ ! -f "$LSPINI" ]; then
+  echo "ERROR: Canonical LSP config not found at $LSPINI"
+  echo "Expected: umpleonline/config/lsp.ini"
+  exit 1
 fi
 
-. config.cfg
+# Parse INI file (handles ; and # comments)
+while IFS='=' read -r key value; do
+  key=$(echo "$key" | xargs)
+  value=$(echo "$value" | xargs)
+  [[ -z "$key" || "$key" == \;* || "$key" == \#* ]] && continue
+  case "$key" in
+    standaloneUmpBaseDir)   umplePath="$value" ;;
+    standaloneHostPort)     portToUse="$value" ;;
+    standaloneContainerName) containerName="$value" ;;
+    maxProcesses)           maxProcesses="$value" ;;
+    useLinkedLsp)           useLinkedLsp="$value" ;;
+  esac
+done < "$LSPINI"
+
+# Validate required values
+if [ -z "$portToUse" ] || [ -z "$containerName" ] || [ -z "$umplePath" ] || [ -z "$maxProcesses" ]; then
+  echo "ERROR: Missing required values in $LSPINI"
+  echo "Required: standaloneHostPort, standaloneContainerName, standaloneUmpBaseDir, maxProcesses"
+  exit 1
+fi
 
 # Resolve umplePath to absolute if relative
 if [[ "$umplePath" != /* ]]; then
@@ -65,16 +87,23 @@ cp "$(cd "$BASEDIR/.."; pwd)/umpleonline/scripts/lsp-proxy/server.js" "$BASEDIR/
 docker build --no-cache -t $containerName .
 rm -f "$BASEDIR/server.js" "$BASEDIR/lsp-server.tgz"
 
-# RUN CONTAINER
-# Mount the ump directory so the LSP server can read .ump files
+# RUN CONTAINER — pass all config as explicit env vars
 portmap="-p 0.0.0.0:$portToUse:9999"
 
 if [ $# -gt 0 ] && [ "$1" == 'bg' ]; then
   docker run --restart=unless-stopped --name my$containerName \
     -v "$umplePath:$umplePath" \
-    -e UMP_BASE_DIR="$umplePath" $portmap $containerName >/dev/null 2>&1 &
+    -e LSP_HOST="0.0.0.0" \
+    -e LSP_PORT="9999" \
+    -e UMP_BASE_DIR="$umplePath" \
+    -e LSP_MAX_PROCESSES="$maxProcesses" \
+    $portmap $containerName >/dev/null 2>&1 &
 else
   docker run --restart=unless-stopped --name my$containerName \
     -v "$umplePath:$umplePath" \
-    -e UMP_BASE_DIR="$umplePath" $portmap $containerName
+    -e LSP_HOST="0.0.0.0" \
+    -e LSP_PORT="9999" \
+    -e UMP_BASE_DIR="$umplePath" \
+    -e LSP_MAX_PROCESSES="$maxProcesses" \
+    $portmap $containerName
 fi

@@ -69,13 +69,13 @@ dev-tools/pumple
 
 # Start PHP server:
 cd umpleonline
-UMPLE_LSP_WS_URL=ws://127.0.0.1:9999 php -S localhost:8001
+php -S localhost:8001
 
 # Browser:
 http://localhost:8001/umple.php
 ```
 
-To develop against a local `umple-lsp-server` (npm-linked), set `useLinkedLsp=true` in `UmpleLsp/config.cfg`.
+LSP settings are in `umpleonline/config/lsp.ini`. To develop against a local `umple-lsp-server` (npm-linked), set `useLinkedLsp=true` there.
 
 ## Code Execution
 

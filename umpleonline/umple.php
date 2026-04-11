@@ -1242,23 +1242,19 @@ $output = $dataHandle->readData('model.ump');
   <script src="scripts/theme-toggle.js"></script>
 
   <?php
-  // LSP configuration — generate signed token for WebSocket proxy auth
-  // Docker sets this to "/lsp" (nginx proxy). For local php -S dev,
-  // fall back to the default lsp-proxy port on loopback.
-  // Read LSP port from UmpleLsp/config.cfg if available (supports multiple instances)
-  // Uses line-by-line parsing to match shell-style config format (same as compiler_config.php)
-  $lspPort = '9999';
-  $lspCfgPath = rootDir() . '/../UmpleLsp/config.cfg';
-  $lspCfgHandle = @fopen($lspCfgPath, "r");
-  if ($lspCfgHandle) {
-    while (($line = fgets($lspCfgHandle)) !== false) {
-      if (substr($line, 0, 10) === "portToUse=") {
-        $lspPort = trim(substr($line, 10));
-      }
+  // LSP configuration — reads from umpleonline/config/lsp.ini
+  // Precedence: 1. env var  2. canonical config  3. disabled
+  $lspWsUrl = getenv('UMPLE_LSP_WS_URL');
+  if (!$lspWsUrl) {
+    $lspIniPath = rootDir() . '/config/lsp.ini';
+    $lspCfg = file_exists($lspIniPath) ? parse_ini_file($lspIniPath) : false;
+    if ($lspCfg && !empty($lspCfg['standaloneHostPort']) && !empty($lspCfg['localBrowserHost'])) {
+      $lspWsUrl = 'ws://' . $lspCfg['localBrowserHost'] . ':' . $lspCfg['standaloneHostPort'];
+    } else {
+      $lspWsUrl = '';
+      error_log('LSP disabled: config/lsp.ini not found or missing required values');
     }
-    fclose($lspCfgHandle);
   }
-  $lspWsUrl = getenv('UMPLE_LSP_WS_URL') ?: 'ws://127.0.0.1:' . $lspPort;
   $lspAuthSecret = getenv('LSP_AUTH_SECRET') ?: '';
   $lspToken = '';
   $lspModelId = $dataHandle->getName();

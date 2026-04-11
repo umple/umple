@@ -26,6 +26,7 @@ RUN npm install -g umple-lsp-server@latest
 # LSP configuration (override at runtime with -e)
 # UMPLE_LSP_WS_URL: browser WebSocket path (nginx proxies /lsp to lsp-proxy)
 # LSP_AUTH_SECRET: HMAC key for token auth (empty = dev mode when LSP_DEV_AUTH=1)
+# Deployment-specific exceptions (not in canonical lsp.ini)
 ENV UMPLE_LSP_WS_URL="/lsp"
 ENV LSP_AUTH_SECRET=""
 ENV LSP_DEV_AUTH="1"
