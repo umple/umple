@@ -138,18 +138,67 @@ fastcgi_param UMPLE_LSP_WS_URL /lsp;
 
 **4.** Restart nginx: `sudo systemctl restart nginx`
 
-For multiple clones on the same server, add a `map` in the `http` context (outside server blocks):
+**Multi-instance example (3 clones on one server):**
+
+Each web instance emits its own WebSocket path, each nginx path proxies to its own LSP port, and each LSP port belongs to one clone's `ump` directory.
+
+| Instance | Repo path | `standaloneHostPort` | `standaloneContainerName` | Browser path |
+|----------|-----------|---------------------|--------------------------|-------------|
+| Main | `~/umple` | `9999` | `umple_lsp` | `/lsp` |
+| Test 1 | `~/test1` | `4455` | `umple_lsp_test1` | `/lsp-test1` |
+| Test 2 | `~/test2` | `4466` | `umple_lsp_test2` | `/lsp-test2` |
+
+The simplest setup is to keep each instance explicit. Give each site config its own hardcoded WebSocket path instead of routing through nginx variables.
+
+**Main instance**
 ```nginx
-map $request_uri $umple_lsp_ws_url {
-    ~^/test/ /lsp-test;
-    default  /lsp;
+location /lsp {
+    proxy_pass http://127.0.0.1:9999;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
+
+location ~ \.php$ {
+    ...
+    fastcgi_param UMPLE_LSP_WS_URL /lsp;
 }
 ```
-Then use `fastcgi_param UMPLE_LSP_WS_URL $umple_lsp_ws_url;` and add a separate `location /lsp-test` block.
+
+**Test 1**
+```nginx
+location /lsp-test1 {
+    proxy_pass http://127.0.0.1:4455;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
+
+location ~ \.php$ {
+    ...
+    fastcgi_param UMPLE_LSP_WS_URL /lsp-test1;
+}
+```
+
+**Test 2**
+```nginx
+location /lsp-test2 {
+    proxy_pass http://127.0.0.1:4466;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
+
+location ~ \.php$ {
+    ...
+    fastcgi_param UMPLE_LSP_WS_URL /lsp-test2;
+}
+```
 
 **Verify:**
-- Browser console: `window.UMPLE_LSP_WS_URL` shows `/lsp`
-- WebSocket connects via `wss://yourserver.com/lsp`
+- Browser console on each instance: `window.UMPLE_LSP_WS_URL` shows `/lsp`, `/lsp-test1`, or `/lsp-test2`
+- WebSocket connects via `wss://yourserver.com/<path>`
+- `docker ps` shows three containers with distinct names and ports
 
 #### D. All-in-one Docker
 
