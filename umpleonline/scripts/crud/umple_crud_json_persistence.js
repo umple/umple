@@ -111,10 +111,37 @@
       }
     });
 
-    var assocEnds = (Page.crudAssociationsByClass && Page.crudAssociationsByClass[className]) || [];
+    // Resolve association ends that are applicable to this runtime class,
+    // including those declared on superclasses. We treat ends whose
+    // fromClass is a superclass of className as inherited. For hierarchical
+    // self-reflexive associations (e.g., mentee->mentor), only the
+    // single-valued storing side is exported; the multi-valued reverse side
+    // is derived at runtime and should not appear in the JSON.
+    var assocEndsRaw = (Page.crudAssociationsByClass && Page.crudAssociationsByClass[className]) || [];
+    var assocEnds = [];
+    assocEndsRaw.forEach(function(end) {
+      if (!end) { return; }
+      // Only consider ends whose fromClass is this class or one of its
+      // superclasses.
+      if (Page.isCrudSubclass && !Page.isCrudSubclass(className, end.fromClass)) {
+        return;
+      }
+
+      // Skip derived multi-valued side of hierarchical self-reflexive
+      // associations; only the single-valued side actually stores data.
+      if (end.reflexiveHierarchy && end.fromClass === end.toClass) {
+        var toMax = (typeof end.toMax === "number") ? end.toMax : null;
+        var multipleSide = (toMax === null || toMax > 1);
+        if (multipleSide) {
+          return;
+        }
+      }
+
+      assocEnds.push(end);
+    });
 
     assocEnds.forEach(function(end) {
-      if (!end || end.fromClass !== className) { return; }
+      if (!end) { return; }
       var fieldName = end.storageKey;
       if (!fieldName) { return; }
 
@@ -127,17 +154,23 @@
         multiple = false;
       }
 
+      // Normalize association values to typed refs so that we support
+      // both legacy numeric indices and the newer {className,index}
+      // representation (including polymorphic subclasses).
+      var refs = (Page.normalizeCrudAssociationRefs && typeof Page.normalizeCrudAssociationRefs === "function")
+        ? Page.normalizeCrudAssociationRefs(end, val)
+        : [];
+
       if (multiple) {
         var arr = [];
-        if (Array.isArray(val)) {
-          val.forEach(function(targetIdx) {
-            if (typeof targetIdx !== "number") {
-              targetIdx = parseInt(targetIdx, 10);
-            }
-            if (isNaN(targetIdx) || targetIdx < 0) { return; }
+        if (refs && refs.length) {
+          refs.forEach(function(ref) {
+            if (!ref || typeof ref.index !== "number" || ref.index < 0) { return; }
+            var targetClass = ref.className || end.toClass;
+            if (!targetClass) { return; }
             // Always expand forward links; the cycle guard above will turn
             // back-references into ID-only stubs.
-            var child = buildNestedInstance(ns, end.toClass, targetIdx, visited);
+            var child = buildNestedInstance(ns, targetClass, ref.index, visited);
             if (child) {
               arr.push(child);
             }
@@ -145,16 +178,15 @@
         }
         data[propName] = arr;
       } else {
-        if (val === undefined || val === null || val === "") {
+        if (!refs || !refs.length) {
           // Single-valued ends are omitted when there is no link.
           return;
         }
-        var idxSingle = val;
-        if (typeof idxSingle !== "number") {
-          idxSingle = parseInt(idxSingle, 10);
-        }
-        if (isNaN(idxSingle) || idxSingle < 0) { return; }
-        var linked = buildNestedInstance(ns, end.toClass, idxSingle, visited);
+        var refSingle = refs[0];
+        if (!refSingle || typeof refSingle.index !== "number" || refSingle.index < 0) { return; }
+        var targetClassSingle = refSingle.className || end.toClass;
+        if (!targetClassSingle) { return; }
+        var linked = buildNestedInstance(ns, targetClassSingle, refSingle.index, visited);
         if (linked) {
           data[propName] = linked;
         }
@@ -394,7 +426,25 @@
     Object.keys(instancesByClass).forEach(function(className) {
       var info = Page.crudData.classes[className] || {};
       var attrs = info.attributes || [];
-      var assocEnds = (Page.crudAssociationsByClass && Page.crudAssociationsByClass[className]) || [];
+      // Resolve association ends applicable to this class, including those
+      // declared on superclasses, and skip the derived multi-valued side of
+      // hierarchical self-reflexive associations.
+      var assocEndsRaw = (Page.crudAssociationsByClass && Page.crudAssociationsByClass[className]) || [];
+      var assocEnds = [];
+      assocEndsRaw.forEach(function(end) {
+        if (!end) { return; }
+        if (Page.isCrudSubclass && !Page.isCrudSubclass(className, end.fromClass)) {
+          return;
+        }
+        if (end.reflexiveHierarchy && end.fromClass === end.toClass) {
+          var toMax = (typeof end.toMax === "number") ? end.toMax : null;
+          var multipleSide = (toMax === null || toMax > 1);
+          if (multipleSide) {
+            return;
+          }
+        }
+        assocEnds.push(end);
+      });
       var arr = instancesByClass[className];
 
       arr.forEach(function(inst, localIndex) {
@@ -425,7 +475,7 @@
 
         // Associations (forward ends only; reverse ends will be synced later)
         assocEnds.forEach(function(end) {
-          if (!end || end.fromClass !== className) { return; }
+          if (!end) { return; }
           var fieldName = end.storageKey;
           if (!fieldName) { return; }
 
@@ -443,7 +493,7 @@
 
           if (multiple) {
             if (!Array.isArray(rawVal)) { return; }
-            var indices = [];
+            var refsForField = [];
             rawVal.forEach(function(refWrapper) {
               if (!refWrapper || typeof refWrapper !== "object") { return; }
               var keys = Object.keys(refWrapper);
@@ -454,9 +504,12 @@
               if (!rid) { return; }
               var entry = idMap[rfqn + "#" + rid];
               if (!entry) { return; }
-              indices.push(entry.index);
+              refsForField.push({
+                className: entry.className,
+                index: entry.index
+              });
             });
-            inst[fieldName] = indices;
+            inst[fieldName] = refsForField;
           } else {
             if (!rawVal || typeof rawVal !== "object") { return; }
             var keysSingle = Object.keys(rawVal);
@@ -467,7 +520,10 @@
             if (!sid) { return; }
             var sentry = idMap[sfqn + "#" + sid];
             if (!sentry) { return; }
-            inst[fieldName] = sentry.index;
+            inst[fieldName] = {
+              className: sentry.className,
+              index: sentry.index
+            };
           }
         });
       });
@@ -497,6 +553,18 @@
           });
         });
       });
+    }
+
+    // Successful import: clear any prior adjustment messages related to
+    // previous incompatible loads and refresh the global CRUD banner so
+    // stale errors (including the compatibility message) are not shown.
+    if (!Array.isArray(Page.crudAdjustmentMessages)) {
+      Page.crudAdjustmentMessages = [];
+    } else if (Page.crudAdjustmentMessages.length) {
+      Page.crudAdjustmentMessages = [];
+    }
+    if (typeof Page.renderCrudGlobalErrors === "function") {
+      Page.renderCrudGlobalErrors(null);
     }
   };
 
