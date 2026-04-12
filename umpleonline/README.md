@@ -5,38 +5,6 @@ The web-based editor and compiler for the [Umple](https://umple.org) modeling la
 **Live:** https://try.umple.org
 **Docker:** https://hub.docker.com/r/umple/umpleonline
 
-## Quick Start
-
-### Using Docker (recommended)
-
-```bash
-dev-tools/udock
-# opens http://localhost:8000/umple.php
-```
-
-Or manually:
-
-```bash
-docker pull umple/umpleonline
-docker run --rm -ti -p 8000:8000 \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v /tmp/umpleonline-tmp:/var/www/ump \
-  umple/umpleonline
-```
-
-This gives you everything: compiler, diagrams, code execution, and LSP editor features.
-
-### Using PHP built-in server (local development)
-
-See the [wiki setup guide](https://github.com/umple/umple/wiki/SettingUpLocalUmpleOnlineWebServer) for prerequisites.
-
-```bash
-ant -DshouldPackageUmpleOnline=true -Dmyenv=local -f build/build.umple.xml packageUmpleonline
-cd umpleonline
-php -S localhost:8001
-# opens http://localhost:8001/umple.php
-```
-
 ## LSP Editor Features
 
 UmpleOnline includes Language Server Protocol support, providing:
