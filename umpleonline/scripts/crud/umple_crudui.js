@@ -33,6 +33,148 @@ Page.resetCrudData = function() {
   Page.crudAssociationLabelPreference = {};
 };
 
+// Return the inheritance chain (superclasses) for a given class name
+// using the extends map built from the JSON. The array is ordered from
+// immediate parent up to the root. Cycles are guarded against.
+Page.getCrudSuperclasses = function(className) {
+  var result = [];
+  if (!className || !Page.crudExtendsByClass) {
+    return result;
+  }
+  var seen = {};
+  var current = className;
+  while (current) {
+    var parent = Page.crudExtendsByClass[current];
+    if (!parent || seen[parent]) {
+      break;
+    }
+    seen[parent] = true;
+    result.push(parent);
+    current = parent;
+  }
+  return result;
+};
+// Return true if candidateClass is the same as or a (direct or
+// indirect) subclass of rootType according to the extends map
+// built from the JSON.
+Page.isCrudSubclass = function(candidateClass, rootType) {
+  if (!candidateClass || !rootType) {
+    return false;
+  }
+  if (candidateClass === rootType) {
+    return true;
+  }
+  var supers = Page.getCrudSuperclasses(candidateClass);
+  return supers.indexOf(rootType) !== -1;
+};
+
+// Polymorphic target resolution for associations. Given a root type
+// name, return an array of { className, index, instance } for every
+// instance whose runtime type is that class or any of its subclasses.
+// This preserves the existing per-class storage model; it is a
+// read-only aggregation used by the CRUD UI.
+Page.getCrudPolymorphicTargets = function(rootType) {
+  var results = [];
+  if (!rootType || !Page.crudData || !Page.crudData.classes) {
+    return results;
+  }
+  var classesData = Page.crudData.classes;
+  Object.keys(classesData).forEach(function(className) {
+    if (!Page.isCrudSubclass(className, rootType)) {
+      return;
+    }
+    var info = classesData[className] || {};
+    var instances = info.instances || [];
+    for (var i = 0; i < instances.length; i++) {
+      var inst = instances[i];
+      if (!inst) { continue; }
+      results.push({ className: className, index: i, instance: inst });
+    }
+  });
+  return results;
+};
+
+// Association reference helpers
+// -----------------------------
+// A canonical association reference is an object of the form
+//   { className: string, index: number }
+// referring to an instance in Page.crudData.classes[className].instances[index].
+// New CRUD writes always use this shape; legacy numeric values are
+// still supported on read by treating them as indices into end.toClass.
+
+Page.encodeCrudAssocRef = function(ref) {
+  if (!ref || typeof ref.index !== "number" || ref.index < 0 || !ref.className) {
+    return "";
+  }
+  return ref.className + ":" + String(ref.index);
+};
+
+Page.decodeCrudAssocRef = function(value, defaultClassName) {
+  if (value === null || typeof value === "undefined") {
+    return null;
+  }
+  if (typeof value === "object") {
+    var cls = value.className || defaultClassName || null;
+    var idx = value.index;
+    if (typeof idx !== "number") {
+      idx = parseInt(idx, 10);
+    }
+    if (!cls || isNaN(idx) || idx < 0) {
+      return null;
+    }
+    return { className: cls, index: idx };
+  }
+
+  var s = String(value);
+  if (s.indexOf(":") !== -1) {
+    var parts = s.split(":");
+    var clsName = parts[0] || defaultClassName || null;
+    var idxStr = parts[1];
+    var idxNum = parseInt(idxStr, 10);
+    if (!clsName || isNaN(idxNum) || idxNum < 0) {
+      return null;
+    }
+    return { className: clsName, index: idxNum };
+  }
+
+  var idxLegacy = parseInt(s, 10);
+  if (isNaN(idxLegacy) || idxLegacy < 0) {
+    return null;
+  }
+  return {
+    className: defaultClassName || null,
+    index: idxLegacy
+  };
+};
+
+// Normalize any stored association value (number, object, array of
+// either) into a canonical array of {className, index} references for
+// the given association end. Legacy numeric values are interpreted as
+// indices into end.toClass.
+Page.normalizeCrudAssociationRefs = function(end, raw) {
+  var refs = [];
+  if (!end || raw === undefined || raw === null || raw === "") {
+    return refs;
+  }
+  var defClass = end.toClass || null;
+
+  var addRef = function(v) {
+    var r = Page.decodeCrudAssocRef(v, defClass);
+    if (!r || !r.className || typeof r.index !== "number" || r.index < 0) {
+      return;
+    }
+    refs.push(r);
+  };
+
+  if (Array.isArray(raw)) {
+    raw.forEach(function(v) { addRef(v); });
+  } else {
+    addRef(raw);
+  }
+
+  return refs;
+};
+
 // Validate that key attributes for a single instance (within a class)
 // are not left blank. This is used for per-form validation when saving
 // an instance so that key fields are always populated.
@@ -289,23 +431,15 @@ Page.normalizeCrudMultiValuedAssociations = function() {
           continue;
         }
 
-        var indices = [];
-        if (Array.isArray(raw)) {
-          raw.forEach(function(v) {
-            var idx = (typeof v === "number") ? v : parseInt(v, 10);
-            if (!isNaN(idx) && idx >= 0) {
-              indices.push(idx);
-            }
-          });
-        } else {
-          var idxSingle = (typeof raw === "number") ? raw : parseInt(raw, 10);
-          if (!isNaN(idxSingle) && idxSingle >= 0) {
-            indices.push(idxSingle);
-          }
-        }
+        // Normalize to canonical polymorphic refs. This preserves
+        // existing object-based references while upgrading legacy
+        // numeric values into an array form for multi-valued ends.
+        var refs = Page.normalizeCrudAssociationRefs
+          ? Page.normalizeCrudAssociationRefs(end, raw)
+          : [];
 
-        if (indices.length > 0) {
-          inst[fieldName] = indices;
+        if (refs.length > 0) {
+          inst[fieldName] = refs;
         } else {
           inst[fieldName] = [];
         }
@@ -359,31 +493,25 @@ Page.adjustCrudAssociationsForTightenedMax = function() {
           continue;
         }
 
-        var indices = [];
-        if (Array.isArray(raw)) {
-          raw.forEach(function(v) {
-            var idx = (typeof v === "number") ? v : parseInt(v, 10);
-            if (!isNaN(idx) && idx >= 0) {
-              indices.push(idx);
-            }
-          });
-        } else {
-          var idxSingle = (typeof raw === "number") ? raw : parseInt(raw, 10);
-          if (!isNaN(idxSingle) && idxSingle >= 0) {
-            indices.push(idxSingle);
-          }
-        }
+        // Work with canonical polymorphic refs so that both legacy
+        // numeric indices and new {className,index} objects are
+        // handled uniformly.
+        var refs = Page.normalizeCrudAssociationRefs
+          ? Page.normalizeCrudAssociationRefs(end, raw)
+          : [];
 
-        if (!indices.length) {
+        if (!refs.length) {
           // Normalize empty links according to max: scalar null for single,
           // empty array for multi-valued.
           inst[fieldName] = (maxAllowed === 1 ? null : []);
+          // With no forward links, there is nothing to keep in sync on the
+          // reverse side for this instance.
           continue;
         }
 
-        if (indices.length > maxAllowed) {
-          var kept = indices.slice(0, maxAllowed);
-          var removed = indices.slice(maxAllowed);
+        if (refs.length > maxAllowed) {
+          var kept = refs.slice(0, maxAllowed);
+          var removed = refs.slice(maxAllowed);
 
           if (maxAllowed === 1) {
             inst[fieldName] = kept[0];
@@ -395,10 +523,17 @@ Page.adjustCrudAssociationsForTightenedMax = function() {
         } else {
           // Keep representation consistent with the new max bound
           if (maxAllowed === 1) {
-            inst[fieldName] = indices[0];
+            inst[fieldName] = refs[0];
           } else {
-            inst[fieldName] = indices;
+            inst[fieldName] = refs;
           }
+        }
+
+        // Ensure reverse association ends are also updated to reflect any
+        // trimming so that Show Associations never displays links that no
+        // longer exist from this side.
+        if (typeof Page.syncCrudReverseAssociationsForEnd === "function") {
+          Page.syncCrudReverseAssociationsForEnd(fromClass, i, end, inst[fieldName]);
         }
       }
 
@@ -1080,10 +1215,6 @@ Page.checkCrudReflexiveHierarchyCycle = function(className, instances, end, chil
     return;
   }
 
-  if (typeof parentIndex !== "number" || parentIndex < 0 || parentIndex >= instances.length) {
-    return;
-  }
-
   var fieldName = end.storageKey;
   var visited = {};
   var current = parentIndex;
@@ -1099,13 +1230,16 @@ Page.checkCrudReflexiveHierarchyCycle = function(className, instances, end, chil
     visited[current] = true;
 
     var inst = instances[current] || {};
-    var next = inst[fieldName];
-    if (Array.isArray(next)) {
-      next = next.length ? next[0] : null;
-    }
-    if (typeof next !== "number") {
-      var n = parseInt(next, 10);
-      next = isNaN(n) ? null : n;
+    var nextRaw = inst[fieldName];
+    var nextRefs = Page.normalizeCrudAssociationRefs
+      ? Page.normalizeCrudAssociationRefs(end, nextRaw)
+      : [];
+    var next = null;
+    if (nextRefs.length > 0) {
+      var r0 = nextRefs[0];
+      if (r0 && r0.className === className && typeof r0.index === "number") {
+        next = r0.index;
+      }
     }
     current = next;
   }
@@ -1194,18 +1328,10 @@ Page.validateCrudGlobalModel = function(pendingUpdate) {
         if (!inst) { continue; }
 
         var rawVal = inst[fieldName];
-        var linkCount = 0;
-
-        if (Array.isArray(rawVal)) {
-          linkCount = rawVal.length;
-        } else if (typeof rawVal === "number") {
-          linkCount = rawVal >= 0 ? 1 : 0;
-        } else if (rawVal !== undefined && rawVal !== null && rawVal !== "") {
-          var parsed = parseInt(rawVal, 10);
-          if (!isNaN(parsed) && parsed >= 0) {
-            linkCount = 1;
-          }
-        }
+        var refsForCount = Page.normalizeCrudAssociationRefs
+          ? Page.normalizeCrudAssociationRefs(end, rawVal)
+          : [];
+        var linkCount = refsForCount.length;
 
         if (linkCount < minRequired) {
           missingCount++;
@@ -1495,7 +1621,11 @@ Page.syncCrudReverseAssociationsForEnd = function(className, index, end, newValu
 
   var fromClass = end.fromClass;
   var toClass = end.toClass;
-  if (fromClass !== className) {
+  // Only handle updates when the edited instance's runtime class is
+  // the same as or a subclass of the association's fromClass. This
+  // allows subclass-specific forms (e.g., Student isA Person) to keep
+  // reverse links in sync for associations declared on the base type.
+  if (!Page.isCrudSubclass || !Page.isCrudSubclass(className, fromClass)) {
     return;
   }
 
@@ -1510,14 +1640,8 @@ Page.syncCrudReverseAssociationsForEnd = function(className, index, end, newValu
     return;
   }
 
-  var targetInfo = Page.crudData.classes[toClass];
-  if (!targetInfo) {
-    return;
-  }
-  var targetInstances = targetInfo.instances || [];
-
-  // Find reverse end: same association id, from the target class back to
-  // this class.
+  // Find reverse end definition: same association id, from the target
+  // root class back to this class's root type.
   var reverseEnd = null;
   var candidates = Page.crudAssociationsByClass[toClass] || [];
   for (var i = 0; i < candidates.length; i++) {
@@ -1534,45 +1658,125 @@ Page.syncCrudReverseAssociationsForEnd = function(className, index, end, newValu
   var revKey = reverseEnd.storageKey;
   var revMultiple = reverseEnd.toMultiplicity && reverseEnd.toMultiplicity.indexOf("*") !== -1;
 
-  // Helper to know whether the edited instance should be linked to a given
-  // target index according to newValue.
-  var isLinked;
-  if (Array.isArray(newValue)) {
-    var set = {};
-    for (var s = 0; s < newValue.length; s++) {
-      var v = newValue[s];
-      if (typeof v === "number" && v >= 0) {
-        set[v] = true;
+  // Normalize the forward value into canonical refs for this end.
+  var forwardRefs = Page.normalizeCrudAssociationRefs(end, newValue);
+  var sourceRef = { className: className, index: index };
+
+  // For each concrete target class that can play the role of toClass
+  // (i.e., toClass and its subclasses), update the reverse end to
+  // reflect the new forwardRefs.
+  var classesData = Page.crudData.classes;
+  // Track replacements for single-valued reverse ends so that we can
+  // remove stale forward links from any previous source instance.
+  var replacedSingleLinks = [];
+
+  Object.keys(classesData).forEach(function(targetRuntimeClass) {
+    if (!Page.isCrudSubclass(targetRuntimeClass, toClass)) {
+      return;
+    }
+    var targetInfo = classesData[targetRuntimeClass] || {};
+    var targetInstances = targetInfo.instances || [];
+    for (var tIdx = 0; tIdx < targetInstances.length; tIdx++) {
+      var tInst = targetInstances[tIdx] || {};
+
+      var shouldLink = false;
+      for (var r = 0; r < forwardRefs.length; r++) {
+        var fr = forwardRefs[r];
+        if (fr.className === targetRuntimeClass && fr.index === tIdx) {
+          shouldLink = true;
+          break;
+        }
+      }
+
+      var currentRaw = tInst[revKey];
+      var currentRefs = Page.normalizeCrudAssociationRefs(reverseEnd, currentRaw);
+
+      if (revMultiple) {
+        var hasRef = false;
+        var filtered = [];
+        for (var k = 0; k < currentRefs.length; k++) {
+          var cr = currentRefs[k];
+          if (cr.className === sourceRef.className && cr.index === sourceRef.index) {
+            hasRef = true;
+            if (!shouldLink) { continue; }
+          }
+          filtered.push(cr);
+        }
+        if (shouldLink && !hasRef) {
+          filtered.push(sourceRef);
+        }
+        tInst[revKey] = filtered;
+      } else {
+        if (shouldLink) {
+          if (currentRefs.length > 0) {
+            var oldRef = currentRefs[0];
+            if (!(oldRef.className === sourceRef.className && oldRef.index === sourceRef.index)) {
+              // Remember that this target instance is now owned by a
+              // different source so we can strip the target from the
+              // old source's forward association field.
+              replacedSingleLinks.push({
+                oldSource: { className: oldRef.className, index: oldRef.index },
+                targetClassName: targetRuntimeClass,
+                targetIndex: tIdx
+              });
+            }
+          }
+          tInst[revKey] = sourceRef;
+        } else {
+          if (currentRefs.length > 0) {
+            var cr0 = currentRefs[0];
+            if (cr0.className === sourceRef.className && cr0.index === sourceRef.index) {
+              tInst[revKey] = null;
+            }
+          }
+        }
       }
     }
-    isLinked = function(tIdx) { return !!set[tIdx]; };
-  } else if (typeof newValue === "number" && newValue >= 0) {
-    isLinked = function(tIdx) { return newValue === tIdx; };
-  } else {
-    isLinked = function() { return false; };
-  }
+  });
 
-  for (var tIdx = 0; tIdx < targetInstances.length; tIdx++) {
-    var tInst = targetInstances[tIdx] || {};
-    var linked = isLinked(tIdx);
+  // For associations where the reverse end is single-valued, a target
+  // instance can only be linked to one source at a time. When a target
+  // is re-assigned to a new source, also remove that target from the
+  // old source's forward association field so that stale references do
+  // not accumulate.
+  if (!revMultiple && replacedSingleLinks.length > 0) {
+    var forwardKey = end.storageKey;
+    replacedSingleLinks.forEach(function(entry) {
+      var old = entry.oldSource;
+      var targetClassName = entry.targetClassName;
+      var targetIndex = entry.targetIndex;
+      var srcData = classesData[old.className] || {};
+      var srcInstances = srcData.instances || [];
+      if (old.index < 0 || old.index >= srcInstances.length) {
+        return;
+      }
+      var srcInst = srcInstances[old.index] || {};
+      var rawForward = srcInst[forwardKey];
+      var fwdRefs = Page.normalizeCrudAssociationRefs(end, rawForward);
+      if (!fwdRefs.length) {
+        return;
+      }
 
-    if (revMultiple) {
-      var arr = Array.isArray(tInst[revKey]) ? tInst[revKey].slice() : [];
-      var pos = arr.indexOf(index);
-      if (linked && pos === -1) {
-        arr.push(index);
+      var updated;
+      if (Array.isArray(rawForward)) {
+        // Multi-valued forward end: filter out the stolen target.
+        updated = [];
+        for (var i = 0; i < fwdRefs.length; i++) {
+          var fr2 = fwdRefs[i];
+          if (fr2.className === targetClassName && fr2.index === targetIndex) {
+            continue;
+          }
+          updated.push(fr2);
+        }
+        srcInst[forwardKey] = updated;
+      } else {
+        // Single-valued forward end: clear it if it points at this target.
+        var fr0 = fwdRefs[0];
+        if (fr0.className === targetClassName && fr0.index === targetIndex) {
+          srcInst[forwardKey] = null;
+        }
       }
-      if (!linked && pos !== -1) {
-        arr.splice(pos, 1);
-      }
-      tInst[revKey] = arr;
-    } else {
-      if (linked) {
-        tInst[revKey] = index;
-      } else if (tInst[revKey] === index) {
-        tInst[revKey] = null;
-      }
-    }
+    });
   }
 };
 
@@ -1597,39 +1801,41 @@ Page.removeCrudInstance = function(className, index) {
   endsFromThis.forEach(function(end) {
     if (!end || !end.cascadeDeleteTargets) { return; }
     var key = end.storageKey;
-    var val = inst[key];
-    if (val === undefined || val === null) { return; }
+    var rawVal = inst[key];
+    if (rawVal === undefined || rawVal === null) { return; }
 
-    var targetIndices = [];
-    if (Array.isArray(val)) {
-      val.forEach(function(v) {
-        if (typeof v !== "number") { v = parseInt(v, 10); }
-        if (!isNaN(v) && v >= 0) {
-          targetIndices.push(v);
-        }
-      });
-    } else {
-      var v2 = val;
-      if (typeof v2 !== "number") { v2 = parseInt(v2, 10); }
-      if (!isNaN(v2) && v2 >= 0) {
-        targetIndices.push(v2);
+    var refs = Page.normalizeCrudAssociationRefs(end, rawVal);
+    if (!refs.length) { return; }
+
+    // Delete targets in descending index order per concrete runtime
+    // class so that earlier indices remain valid as we remove later
+    // ones.
+    var byClass = {};
+    refs.forEach(function(ref) {
+      if (!ref || typeof ref.index !== "number" || ref.index < 0 || !ref.className) {
+        return;
       }
-    }
+      if (!byClass[ref.className]) {
+        byClass[ref.className] = [];
+      }
+      byClass[ref.className].push(ref.index);
+    });
 
-    if (!targetIndices.length) { return; }
-
-    // Delete targets in descending order so that earlier indices remain
-    // valid as we remove later ones.
-    targetIndices.sort(function(a, b) { return b - a; });
-    targetIndices.forEach(function(tIdx) {
-      Page.removeCrudInstance(end.toClass, tIdx);
+    Object.keys(byClass).forEach(function(targetClass) {
+      var idxs = byClass[targetClass];
+      if (!idxs || !idxs.length) { return; }
+      idxs.sort(function(a, b) { return b - a; });
+      idxs.forEach(function(tIdx) {
+        Page.removeCrudInstance(targetClass, tIdx);
+      });
     });
   });
 
   // Remove the instance itself
   instances.splice(index, 1);
 
-  // Reindex any association links that point to this class
+  // Reindex any association links that may point to this concrete class
+  // through ends whose target type can include this class.
   for (var sourceClass in assocByClass) {
     if (!assocByClass.hasOwnProperty(sourceClass)) { continue; }
     var ends = assocByClass[sourceClass] || [];
@@ -1639,38 +1845,53 @@ Page.removeCrudInstance = function(className, index) {
     var sourceInstances = sourceInfo.instances || [];
 
     ends.forEach(function(end) {
-      if (!end || end.toClass !== className) { return; }
+      if (!end) { return; }
+      if (!Page.isCrudSubclass(className, end.toClass)) { return; }
       var key = end.storageKey;
 
       sourceInstances.forEach(function(inst) {
-        var val = inst[key];
-        if (Array.isArray(val)) {
-          var arr = val.slice();
-          var changed = false;
-          var newArr = [];
-          arr.forEach(function(v) {
-            if (typeof v !== "number") { return; }
-            if (v === index) { changed = true; return; }
-            if (v > index) {
-              newArr.push(v - 1);
-              changed = true;
-            } else {
-              newArr.push(v);
+        var raw = inst[key];
+        var refs = Page.normalizeCrudAssociationRefs(end, raw);
+        if (!refs.length && (raw === null || typeof raw === "undefined")) {
+          return;
+        }
+
+        var multiple = end.toMultiplicity && end.toMultiplicity.indexOf("*") !== -1;
+        var changed = false;
+
+        if (multiple) {
+          var newRefs = [];
+          for (var r = 0; r < refs.length; r++) {
+            var ref = refs[r];
+            if (ref.className === className) {
+              if (ref.index === index) {
+                // Drop refs to the removed instance.
+                changed = true;
+                continue;
+              }
+              if (ref.index > index) {
+                ref = { className: ref.className, index: ref.index - 1 };
+                changed = true;
+              }
             }
-          });
+            newRefs.push(ref);
+          }
           if (changed) {
-            inst[key] = newArr;
+            inst[key] = newRefs;
           }
         } else {
-          var v2 = val;
-          if (typeof v2 !== "number") {
-            v2 = parseInt(v2, 10);
-            if (isNaN(v2)) { return; }
+          if (!refs.length) {
+            return;
           }
-          if (v2 === index) {
-            inst[key] = null;
-          } else if (v2 > index) {
-            inst[key] = v2 - 1;
+          var refSingle = refs[0];
+          if (refSingle.className === className) {
+            if (refSingle.index === index) {
+              inst[key] = null;
+              changed = true;
+            } else if (refSingle.index > index) {
+              inst[key] = { className: refSingle.className, index: refSingle.index - 1 };
+              changed = true;
+            }
           }
         }
       });
@@ -2062,10 +2283,13 @@ Page.getCrudAssociationLabelCandidatesForClass = function(className) {
 
 // Build a human-friendly label for a target instance in an association
 // selector. When preferredKey is an attribute name, we try that first;
-// when it is "__index__" we always use ClassName[index] regardless of
-// attribute values.
-Page.buildCrudAssociationLabelForInstance = function(targetClass, inst, index, labelMeta, preferredKey) {
-  var baseLabel = targetClass + "[" + (index + 1) + "]";
+// when it is "__index__" we always use ClassName[index] based on the
+// runtime class and its own index when available, falling back to the
+// declared targetClass and positional index.
+Page.buildCrudAssociationLabelForInstance = function(targetClass, inst, index, labelMeta, preferredKey, runtimeClass, runtimeIndex) {
+  var classForIndex = runtimeClass || targetClass;
+  var ordinalIndex = (typeof runtimeIndex === "number" && runtimeIndex >= 0) ? runtimeIndex : index;
+  var baseLabel = classForIndex + "[" + (ordinalIndex + 1) + "]";
   if (!inst || !labelMeta) {
     return baseLabel;
   }
@@ -2849,6 +3073,11 @@ Page.openCrudDialogForClass = function(className) {
   // Gather association ends for this class, including any inherited from
   // its superclasses, using the extends map built from the JSON.
   var assocEnds = [];
+  // Map from storageKey to the association end that is actually rendered
+  // in the form for this class. This keeps the save logic aligned with
+  // the UI (e.g., picking the single-valued end for a reflexive
+  // association like mentor instead of the many-valued opposite).
+  var assocEndByField = {};
   if (Page.crudAssociationsByClass) {
     var seenAssocKeysForClass = {};
     var currentClassName = className;
@@ -2943,8 +3172,9 @@ Page.openCrudDialogForClass = function(className) {
   }
   html += "</div>";
 
-  // Add/Edit form
-  html += "<h4>Add / Edit Instance</h4>";
+  // Add/Edit form. The heading starts in "Add" mode and is updated to
+  // "Edit Class[index] Instance" when an existing instance is selected.
+  html += "<h4 class='crud-instance-form-heading'>Add Instance</h4>";
   html += "<div class='crud-error' style='color:red;margin-bottom:6px;display:none;'></div>";
   html += "<form id='crud-instance-form' data-class='" + className + "'>";
   html += "<input type='hidden' name='instanceIndex' value='' />";
@@ -2969,53 +3199,62 @@ Page.openCrudDialogForClass = function(className) {
     html += "</div>";
   });
 
-  // Association selectors for navigable ends from this class
-  // We generally render selectors for all navigable ends, but we hide the
-  // "reverse" side of one-to-many associations (e.g., Employee -> Accident)
-  // to avoid large multi-selects when a clearer owner side exists. For true
-  // many-to-many (* to *) associations, we still show selectors so links can
-  // be edited from each navigable side.
+  // Association selectors for navigable ends from this class.
+  // Render selectors for every navigable end so that for a
+  // bidirectional association (A -- C), links are editable from
+  // both classes A and C. For self-reflexive associations we may
+  // have two navigable ends with the same storageKey; in that case
+  // choose a single canonical end (preferring single-valued over
+  // many-valued) so the UI does not show duplicate groups and so
+  // save logic can align with the rendered controls.
   var assocSelectorEnds = [];
-  var seenReflexiveAssoc = {};
+  var reflexiveByField = {};
+
   assocEnds.forEach(function(end) {
-    var multTo = end.toMultiplicity || "";
-    var multFrom = end.fromMultiplicity || "";
-    var toHasStar = multTo.indexOf("*") !== -1;
-    var fromHasStar = multFrom.indexOf("*") !== -1;
+    if (!end || !end.storageKey) { return; }
+    var fieldName = end.storageKey;
 
-    // Hide the reverse of a one-to-many: if the target side allows many (*),
-    // but the source side does not, it is clearer to edit links from the
-    // opposite end. Example: Employee -> Accident when Accident -> Employee
-    // is 1..*.
-    // Only apply this when the association is truly bidirectional; for
-    // unidirectional associations, this is the only navigable end and must
-    // remain visible (including when inherited by subclasses).
-    if (end.isBidirectional && toHasStar && !fromHasStar) {
-      return;
-    }
-
-    // For self-reflexive associations (fromClass === toClass), we can end up
-    // with two navigable ends that look identical from the UI perspective.
-    // Only keep one per association id so we don't render duplicate groups
-    // (e.g., Territory[*] borders Territory[*]).
     if (end.fromClass === end.toClass) {
-      var key = (end.assocId || end.assocName || "") + "::" + end.toClass;
-      if (seenReflexiveAssoc[key]) {
-        return;
+      var existing = reflexiveByField[fieldName];
+      if (!existing) {
+        reflexiveByField[fieldName] = end;
+      } else {
+        // Prefer the end whose target multiplicity is strictly
+        // single-valued (max <= 1). If both are multi-valued or
+        // both single-valued, keep the first.
+        var existingMax = (typeof existing.toMax === "number") ? existing.toMax : null;
+        var newMax = (typeof end.toMax === "number") ? end.toMax : null;
+        var existingMultiple = (existingMax === null || existingMax > 1);
+        var newMultiple = (newMax === null || newMax > 1);
+        if (existingMultiple && !newMultiple) {
+          reflexiveByField[fieldName] = end;
+        }
       }
-      seenReflexiveAssoc[key] = true;
+    } else {
+      assocSelectorEnds.push(end);
+      assocEndByField[fieldName] = end;
     }
+  });
 
-    // Otherwise (including many-to-many where both sides use *), show it.
-    assocSelectorEnds.push(end);
+  // Add the chosen reflexive ends (if any) after non-reflexive ones.
+  Object.keys(reflexiveByField).forEach(function(fieldName) {
+    var chosen = reflexiveByField[fieldName];
+    assocSelectorEnds.push(chosen);
+    assocEndByField[fieldName] = chosen;
   });
 
   if (assocSelectorEnds.length > 0) {
-    html += "<h4>Associations</h4>";
+    // Use a plain text label rather than a heading so this section
+    // does not visually compete with the main "Add/Edit Instance"
+    // heading or look like it refers to an existing row.
+    html += "<div class='crud-assoc-section-label' style='margin:8px 0 4px 0;font-weight:normal;'>Associations from this instance</div>";
     assocSelectorEnds.forEach(function(end) {
       var targetClass = end.toClass;
       var targetInfo = Page.crudData.classes[targetClass];
-      var targetInstances = (targetInfo && targetInfo.instances) || [];
+      // Build polymorphic target list: targetClass and all its subclasses.
+      var polyTargets = Page.getCrudPolymorphicTargets
+        ? Page.getCrudPolymorphicTargets(targetClass)
+        : [];
       var fieldName = end.storageKey;
 
       html += "<div class='crud-field crud-assoc-field'>";
@@ -3074,7 +3313,7 @@ Page.openCrudDialogForClass = function(className) {
 
       // Small dropdown to let the user choose the labelling basis.
       html += "<div class='crud-assoc-label-selector'>";
-      html += "<span class='crud-assoc-label-selector-text'>Label for " + targetClass + " options: </span>";
+      html += "<span class='crud-assoc-label-selector-text'>Label" + " options: </span>";
       html += "<select class='crud-assoc-label-select' data-target-class='" + targetClass + "'>";
 
       var indexSelected = (effectivePref === "__index__");
@@ -3151,13 +3390,17 @@ Page.openCrudDialogForClass = function(className) {
         // Multi-valued end: render a checkbox list so users can easily
         // add/remove multiple associated instances (e.g., many-to-many).
         html += "<div class='crud-assoc-options crud-assoc-multi' data-field='" + fieldName + "'>";
-        targetInstances.forEach(function(inst, idx) {
-          var optionLabel = Page.buildCrudAssociationLabelForInstance(targetClass, inst, idx, labelMeta, effectivePref);
-          var targetAttrs = (Page.crudData.classes[targetClass] && Page.crudData.classes[targetClass].attributes) || [];
-          var tooltipEsc = buildAssocOptionTooltip(end, targetClass, optionLabel, inst, targetAttrs);
+        polyTargets.forEach(function(entry, idx) {
+          var instObj = entry.instance;
+          var runtimeClass = entry.className;
+          var runtimeIndex = entry.index;
+          var optionLabel = Page.buildCrudAssociationLabelForInstance(targetClass, instObj, idx, labelMeta, effectivePref, runtimeClass, runtimeIndex);
+          var attrsForRuntime = (Page.crudData.classes[runtimeClass] && Page.crudData.classes[runtimeClass].attributes) || [];
+          var tooltipEsc = buildAssocOptionTooltip(end, runtimeClass, optionLabel, instObj, attrsForRuntime);
+          var refVal = Page.encodeCrudAssocRef({ className: runtimeClass, index: entry.index });
           html += "<label class='crud-assoc-option'>" +
-            "<input type='checkbox' name='" + fieldName + "' value='" + idx + "'>" +
-            "<span class='crud-tooltip-target crud-assoc-option-label' data-target-class='" + targetClass + "' data-index='" + idx + "' data-field='" + fieldName + "' data-crud-tooltip-html=\"" + tooltipEsc + "\">" + escapeHtml(optionLabel) + "</span>" +
+            "<input type='checkbox' name='" + fieldName + "' value='" + refVal + "'>" +
+            "<span class='crud-tooltip-target crud-assoc-option-label' data-target-class='" + targetClass + "' data-runtime-class='" + runtimeClass + "' data-runtime-index='" + entry.index + "' data-field='" + fieldName + "' data-crud-tooltip-html=\"" + tooltipEsc + "\">" + escapeHtml(optionLabel) + "</span>" +
             "</label>";
         });
         html += "</div>";
@@ -3172,20 +3415,24 @@ Page.openCrudDialogForClass = function(className) {
                    "</label>";
         }
 
-        targetInstances.forEach(function(inst, idx) {
-          var optionLabel = Page.buildCrudAssociationLabelForInstance(targetClass, inst, idx, labelMeta, effectivePref);
-          var targetAttrs = (Page.crudData.classes[targetClass] && Page.crudData.classes[targetClass].attributes) || [];
-          var tooltipEsc = buildAssocOptionTooltip(end, targetClass, optionLabel, inst, targetAttrs);
+        polyTargets.forEach(function(entry, idx) {
+          var instObj = entry.instance;
+          var runtimeClass = entry.className;
+          var runtimeIndex = entry.index;
+          var optionLabel = Page.buildCrudAssociationLabelForInstance(targetClass, instObj, idx, labelMeta, effectivePref, runtimeClass, runtimeIndex);
+          var attrsForRuntime = (Page.crudData.classes[runtimeClass] && Page.crudData.classes[runtimeClass].attributes) || [];
+          var tooltipEsc = buildAssocOptionTooltip(end, runtimeClass, optionLabel, instObj, attrsForRuntime);
+          var refVal = Page.encodeCrudAssocRef({ className: runtimeClass, index: entry.index });
           html += "<label class='crud-assoc-option'>" +
-            "<input type='radio' name='" + fieldName + "' value='" + idx + "'>" +
-            "<span class='crud-tooltip-target crud-assoc-option-label' data-target-class='" + targetClass + "' data-index='" + idx + "' data-field='" + fieldName + "' data-crud-tooltip-html=\"" + tooltipEsc + "\">" + escapeHtml(optionLabel) + "</span>" +
+            "<input type='radio' name='" + fieldName + "' value='" + refVal + "'>" +
+            "<span class='crud-tooltip-target crud-assoc-option-label' data-target-class='" + targetClass + "' data-runtime-class='" + runtimeClass + "' data-runtime-index='" + entry.index + "' data-field='" + fieldName + "' data-crud-tooltip-html=\"" + tooltipEsc + "\">" + escapeHtml(optionLabel) + "</span>" +
             "</label>";
         });
         html += "</div>";
       }
 
       // If there are no target instances and multiplicity requires one, hint to create them first
-      if (targetInstances.length < minRequired && minRequired > 0) {
+      if (polyTargets.length < minRequired && minRequired > 0) {
         html += "<div class='crud-association-hint' style='margin-top:4px;color:#a00;'>" +
                 "Not enough " + targetClass + " instances exist. Create more before adding " + className + ". " + "If this is a cyclic association, please proceed to click Save, the error messages will guide you."+
                 "</div>";
@@ -3268,18 +3515,20 @@ Page.openCrudDialogForClass = function(className) {
       $select.val(effectivePref);
     }
 
-    var targetInfo = (Page.crudData && Page.crudData.classes && Page.crudData.classes[targetClass]) ? Page.crudData.classes[targetClass] : null;
-    var instancesForClass = (targetInfo && targetInfo.instances) || [];
+    var instancesForClass = Page.getCrudPolymorphicTargets
+      ? Page.getCrudPolymorphicTargets(targetClass)
+      : [];
 
-    $panel.find(".crud-assoc-option-label[data-target-class='" + targetClass + "']").each(function() {
+    $panel.find(".crud-assoc-option-label[data-target-class='" + targetClass + "']").each(function(idx) {
       var $span = jQuery(this);
-      var idxStr = $span.attr("data-index");
-      var idx = parseInt(idxStr, 10);
-      if (isNaN(idx) || idx < 0 || idx >= instancesForClass.length) {
+      if (idx < 0 || idx >= instancesForClass.length) {
         return;
       }
-      var inst = instancesForClass[idx];
-      var newLabel = Page.buildCrudAssociationLabelForInstance(targetClass, inst, idx, labelMeta, effectivePref);
+      var entry = instancesForClass[idx];
+      var inst = entry.instance;
+      var runtimeClass = entry.className;
+      var runtimeIndex = entry.index;
+      var newLabel = Page.buildCrudAssociationLabelForInstance(targetClass, inst, idx, labelMeta, effectivePref, runtimeClass, runtimeIndex);
       $span.text(newLabel);
     });
   });
@@ -3327,6 +3576,13 @@ Page.openCrudDialogForClass = function(className) {
     var inst = instancesCurrent[index] || {};
     var $form = $panel.find("#crud-instance-form");
     $form.find("input[name='instanceIndex']").val(index);
+
+    // Update the heading to reflect that we are editing a specific
+    // instance, e.g., "Edit Person[1] Instance".
+    var $heading = $panel.find(".crud-instance-form-heading");
+    if ($heading.length) {
+      $heading.text("Edit " + className + "[" + (index + 1) + "] Instance");
+    }
 
     // When editing an existing instance, show the Cancel Edit button so
     // the user has an explicit way to abandon in-progress changes.
@@ -3413,28 +3669,20 @@ Page.openCrudDialogForClass = function(className) {
       if (multiple) {
         var $checks = $form.find("input[type='checkbox'][name='" + fieldName + "']");
         $checks.prop("checked", false);
-        if (stored !== undefined && stored !== null && stored !== "") {
-          var storedArray = [];
-          if (Array.isArray(stored)) {
-            storedArray = stored.slice();
-          } else if (typeof stored === "number") {
-            storedArray = [stored];
-          } else {
-            var parsedStored = parseInt(stored, 10);
-            if (!isNaN(parsedStored)) {
-              storedArray = [parsedStored];
-            }
-          }
-
-          if (storedArray.length > 0) {
-            $checks.each(function() {
-              var v = jQuery(this).val();
-              var idx = parseInt(v, 10);
-              if (!isNaN(idx) && storedArray.indexOf(idx) !== -1) {
+        var refs = Page.normalizeCrudAssociationRefs(end, stored);
+        if (refs.length > 0) {
+          $checks.each(function() {
+            var v = jQuery(this).val();
+            var ref = Page.decodeCrudAssocRef(v, end.toClass);
+            if (!ref) { return; }
+            for (var i = 0; i < refs.length; i++) {
+              var r = refs[i];
+              if (r.className === ref.className && r.index === ref.index) {
                 jQuery(this).prop("checked", true);
+                break;
               }
-            });
-          }
+            }
+          });
         }
       } else {
         var $radios = $form.find("input[type='radio'][name='" + fieldName + "']");
@@ -3450,15 +3698,22 @@ Page.openCrudDialogForClass = function(className) {
             });
           }
         } else {
-          var targetVal = Array.isArray(stored) ? (stored[0] || "") : stored;
-          $radios.each(function() {
-            var v = jQuery(this).val();
-            if (v === "") { return; }
-            var idx = parseInt(v, 10);
-            if (!isNaN(idx) && idx === targetVal) {
-              jQuery(this).prop("checked", true);
-            }
-          });
+          var refSingle = null;
+          var refsSingle = Page.normalizeCrudAssociationRefs(end, stored);
+          if (refsSingle.length > 0) {
+            refSingle = refsSingle[0];
+          }
+          if (refSingle) {
+            $radios.each(function() {
+              var v = jQuery(this).val();
+              if (v === "") { return; }
+              var refOpt = Page.decodeCrudAssocRef(v, end.toClass);
+              if (!refOpt) { return; }
+              if (refOpt.className === refSingle.className && refOpt.index === refSingle.index) {
+                jQuery(this).prop("checked", true);
+              }
+            });
+          }
         }
       }
     });
@@ -3522,7 +3777,6 @@ Page.openCrudDialogForClass = function(className) {
       var val = inst[fieldName];
       var targetClass = end.toClass;
       var targetInfo = Page.crudData.classes[targetClass];
-      var targetInstances = (targetInfo && targetInfo.instances) || [];
       var targetAttrs = (targetInfo && targetInfo.attributes) || [];
 
       if (val === undefined || val === null) {
@@ -3530,52 +3784,43 @@ Page.openCrudDialogForClass = function(className) {
       }
 
       // Avoid duplicate groups for self-reflexive associations where two
-      // navigable ends correspond to the same logical relationship.
+      // navigable ends correspond to the same logical relationship. When a
+      // canonical end has been chosen for this storage field (e.g., the
+      // single-valued mentor side of a mentor/mentee association), prefer
+      // that end so that role names in the header match the form.
       if (end.fromClass === end.toClass) {
         var keyF = end.assocId || end.assocName || "";
-        if (seenAssocIdsForward[keyF]) { return; }
-        seenAssocIdsForward[keyF] = true;
+        if (keyF) {
+          if (seenAssocIdsForward[keyF]) { return; }
+
+          if (assocEndByField && assocEndByField[fieldName] && assocEndByField[fieldName] !== end) {
+            return;
+          }
+
+          seenAssocIdsForward[keyF] = true;
+        }
       }
+
+      // Use canonical polymorphic refs so that associations targeting
+      // subclasses of the declared target type are also displayed.
+      var refs = Page.normalizeCrudAssociationRefs
+        ? Page.normalizeCrudAssociationRefs(end, val)
+        : [];
+
+      if (!refs.length) { return; }
 
       var items = [];
-      // Align multiplicity interpretation with form rendering/saving: treat
-      // an end as multi-valued when its max bound allows more than one.
-      var multiple = true;
-      if (typeof end.toMax === "number" && end.toMax <= 1) {
-        multiple = false;
-      }
-      if (multiple) {
-        // Support both legacy single-valued storage (a single numeric
-        // index from radio buttons) and the newer array-based storage
-        // used by checkboxes. Normalize into an array of indices.
-        var indices = [];
-        if (Array.isArray(val)) {
-          indices = val.slice();
-        } else if (val !== undefined && val !== null && val !== "") {
-          var idxSingle = (typeof val === "number") ? val : parseInt(val, 10);
-          if (!isNaN(idxSingle)) {
-            indices = [idxSingle];
-          }
-        }
+      refs.forEach(function(ref) {
+        if (!ref || typeof ref.index !== "number" || ref.index < 0) { return; }
+        var runtimeClass = ref.className || targetClass;
+        var runtimeInfo = Page.crudData.classes[runtimeClass];
+        if (!runtimeInfo || !Array.isArray(runtimeInfo.instances)) { return; }
+        var runtimeInstances = runtimeInfo.instances;
+        if (ref.index >= runtimeInstances.length) { return; }
+        items.push({ inst: runtimeInstances[ref.index], idx: ref.index, className: runtimeClass });
+      });
 
-        if (!indices.length) { return; }
-
-        indices.forEach(function(idx) {
-          if (typeof idx !== "number" || idx < 0 || idx >= targetInstances.length) { return; }
-          items.push({ inst: targetInstances[idx], idx: idx });
-        });
-      } else {
-        var idxSingle = val;
-        if (typeof idxSingle !== "number") {
-          idxSingle = parseInt(idxSingle, 10);
-        }
-        if (isNaN(idxSingle) || idxSingle < 0 || idxSingle >= targetInstances.length) { return; }
-        items.push({ inst: targetInstances[idxSingle], idx: idxSingle });
-      }
-
-      if (items.length === 0) {
-        return;
-      }
+      if (!items.length) { return; }
 
       hasContent = true;
       var headerLabel = targetClass;
@@ -3596,7 +3841,7 @@ Page.openCrudDialogForClass = function(className) {
       assocHtml += "</tr></thead><tbody>";
 
       items.forEach(function(item) {
-        var label = targetClass + "[" + (item.idx + 1) + "]";
+        var label = (item.className || targetClass) + "[" + (item.idx + 1) + "]";
         assocHtml += "<tr><td>" + label + "</td>";
         targetAttrs.forEach(function(attr) {
           var aName = attr.name;
@@ -3615,39 +3860,81 @@ Page.openCrudDialogForClass = function(className) {
     // stores the link (e.g., child -> parent), also show the reverse
     // perspective in this panel: from a parent record, list its children
     // without modifying any stored associations.
+    var seenAssocIdsHierarchy = {};
     assocEnds.forEach(function(end) {
       if (!end.reflexiveHierarchy) { return; }
       if (end.fromClass !== end.toClass) { return; }
 
       var fieldName = end.storageKey;
       var classInfo = Page.crudData.classes[className];
-      var allInstances = (classInfo && classInfo.instances) || [];
-      if (!allInstances.length) { return; }
+      if (!classInfo) { return; }
+
+      // When a reflexive association has two navigable ends that share the
+      // same underlying storage (e.g., a mentor/mentee association on
+      // Person), we only want to render a single hierarchical reverse
+      // group. Use the association id as the key and, when available,
+      // prefer the canonical end that is actually rendered in the form
+      // (so labels and tooltips stay consistent with the UI).
+      var assocKey = end.assocId || (end.assocName || "");
+      if (assocKey) {
+        if (seenAssocIdsHierarchy[assocKey]) {
+          return;
+        }
+        // If this storage field is mapped to a specific end in the form,
+        // and that end differs from the one we are currently visiting,
+        // skip this visit so that the canonical end will own the
+        // hierarchical view.
+        if (assocEndByField && assocEndByField[fieldName] && assocEndByField[fieldName] !== end) {
+          return;
+        }
+        seenAssocIdsHierarchy[assocKey] = true;
+      }
+
+      // For hierarchical self-reflexive associations that are declared on
+      // a base class (e.g., Person mentor -- Person) but whose actual
+      // instances may be subclasses (e.g., Student isA Person), search
+      // across all subclasses of this class for links pointing back to
+      // the current instance.
+      var candidateChildren = Page.getCrudPolymorphicTargets
+        ? Page.getCrudPolymorphicTargets(className)
+        : [];
+
+      if (!candidateChildren.length) { return; }
 
       var children = [];
-      allInstances.forEach(function(otherInst, otherIdx) {
-        if (otherIdx === index) { return; }
+      candidateChildren.forEach(function(entry) {
+        if (!entry || !entry.instance) { return; }
+        var otherInst = entry.instance;
+        var otherIdx = entry.index;
+        var otherClassName = entry.className;
+
+        // Skip the current instance itself (same class and index).
+        if (otherClassName === className && otherIdx === index) { return; }
+
         var linkVal = otherInst[fieldName];
         if (linkVal === undefined || linkVal === null) { return; }
-        var parentIdx = linkVal;
-        if (Array.isArray(parentIdx)) {
-          // Hierarchical patterns should store a single parent index, but
-          // handle arrays defensively by checking membership.
-          if (parentIdx.indexOf(index) === -1) { return; }
-        } else {
-          if (typeof parentIdx !== "number") {
-            parentIdx = parseInt(parentIdx, 10);
+        var refs = Page.normalizeCrudAssociationRefs
+          ? Page.normalizeCrudAssociationRefs(end, linkVal)
+          : [];
+        if (!refs.length) { return; }
+        for (var r = 0; r < refs.length; r++) {
+          var ref = refs[r];
+          if (!ref || ref.className !== className) { continue; }
+          if (typeof ref.index === "number" && ref.index === index) {
+            children.push({ inst: otherInst, idx: otherIdx, className: otherClassName });
+            break;
           }
-          if (isNaN(parentIdx) || parentIdx !== index) { return; }
         }
-        children.push({ inst: otherInst, idx: otherIdx });
       });
 
       if (!children.length) { return; }
 
       hasContent = true;
       var revHeader = className;
-      if (end.oppositeRoleName) {
+      // Only show a role name when it meaningfully differs from the
+      // forward role. This avoids confusing labels like "mentor" being
+      // reused for both mentor and mentee when only one role is named.
+      if (end.oppositeRoleName && end.oppositeRoleName !== end.roleName) {
         revHeader += " (" + end.oppositeRoleName + ")";
       }
 
@@ -3665,7 +3952,8 @@ Page.openCrudDialogForClass = function(className) {
       assocHtml += "</tr></thead><tbody>";
 
       children.forEach(function(child) {
-        var label = className + "[" + (child.idx + 1) + "]";
+        var labelClass = child.className || className;
+        var label = labelClass + "[" + (child.idx + 1) + "]";
         assocHtml += "<tr><td>" + label + "</td>";
         attrsForClass.forEach(function(attr) {
           var aName = attr.name;
@@ -3790,8 +4078,27 @@ Page.openCrudDialogForClass = function(className) {
     }
 
     // Associations: enforce multiplicity rules and capture selected links
+    var processedAssocFields = {};
     assocEnds.forEach(function(end) {
       var fieldName = end.storageKey;
+      if (!fieldName) {
+        return;
+      }
+
+      // For reflexive associations there may be two navigable ends
+      // that share the same storageKey. Only process each storage
+      // field once per save, and when a specific end was rendered in
+      // the UI for this field (via assocEndByField), use that end so
+      // multiplicity and labels match the controls.
+      if (processedAssocFields[fieldName]) {
+        return;
+      }
+      processedAssocFields[fieldName] = true;
+
+      if (assocEndByField && assocEndByField[fieldName]) {
+        end = assocEndByField[fieldName];
+      }
+
       // If this association end does not have any visible controls in the
       // current form (for example, when we intentionally hide the reverse
       // side of a one-to-many), then preserve the existing stored value
@@ -3822,28 +4129,31 @@ Page.openCrudDialogForClass = function(className) {
         $checks.each(function() {
           selectedArray.push(jQuery(this).val());
         });
-        var indices = [];
+        var refs = [];
         selectedArray.forEach(function(v) {
           if (v === "") { return; }
-          var idx = parseInt(v, 10);
-          if (!isNaN(idx)) {
-            indices.push(idx);
-          }
+          var ref = Page.decodeCrudAssocRef(v, end.toClass);
+          if (!ref) { return; }
+          refs.push(ref);
         });
 
         // Reflexive constraint: prevent self-reference in many-valued
         // self-associations (e.g., Territory borders itself).
         if (end.fromClass === end.toClass) {
-          var selfPos = indices.indexOf(index);
-          if (selfPos !== -1) {
-            indices.splice(selfPos, 1);
-            errors.push("An instance of " + className + " cannot be associated with itself for association " + end.assocName + ".");
-          }
+          var filtered = [];
+          refs.forEach(function(r) {
+            if (r.className === className && r.index === index) {
+              errors.push("An instance of " + className + " cannot be associated with itself for association " + end.assocName + ".");
+            } else {
+              filtered.push(r);
+            }
+          });
+          refs = filtered;
         }
 
-        newInst[fieldName] = indices;
+        newInst[fieldName] = refs;
 
-        var count = indices.length;
+        var count = refs.length;
         var relationLabel = end.cascadeDeleteTargets ? "composition" : "association";
         // Do not block save when mandatory associations are underfilled;
         // rely on global validation to surface multiplicity issues.
@@ -3859,8 +4169,8 @@ Page.openCrudDialogForClass = function(className) {
           // validation will report missing links.
           newInst[fieldName] = null;
         } else {
-          var idxSingle = parseInt(val, 10);
-          if (isNaN(idxSingle)) {
+          var refSingle = Page.decodeCrudAssocRef(val, end.toClass);
+          if (!refSingle || typeof refSingle.index !== "number" || refSingle.index < 0) {
             if (minRequired >= 1) {
               var relationLabelInvalid = end.cascadeDeleteTargets ? "composition" : "association";
               errors.push("Invalid selection for " + relationLabelInvalid + " " + end.assocName + ".");
@@ -3868,12 +4178,12 @@ Page.openCrudDialogForClass = function(className) {
             newInst[fieldName] = null;
           } else {
             // Reflexive constraint: prevent self-reference.
-            if (end.fromClass === end.toClass && idxSingle === index) {
+            if (end.fromClass === end.toClass && refSingle.className === className && refSingle.index === index) {
               var relationLabelSelf = end.cascadeDeleteTargets ? "composition" : "association";
               errors.push("An instance of " + className + " cannot be associated with itself for " + relationLabelSelf + " " + end.assocName + ".");
               newInst[fieldName] = null;
             } else {
-            newInst[fieldName] = idxSingle;
+            newInst[fieldName] = refSingle;
               // With a single-select, we can only ever have 0 or 1; enforce
               // any max bound < 1 as an error, and otherwise accept.
               if (maxAllowed !== null && maxAllowed < 1) {
@@ -3905,9 +4215,16 @@ Page.openCrudDialogForClass = function(className) {
         multiple = false;
       }
       if (multiple) { return; }
-      var value = newInst[end.storageKey];
-      if (typeof value !== "number") { return; }
-      Page.checkCrudReflexiveHierarchyCycle(className, instancesForCycleCheck, end, index, value, errors);
+      var rawVal = newInst[end.storageKey];
+      var refsForParent = Page.normalizeCrudAssociationRefs
+        ? Page.normalizeCrudAssociationRefs(end, rawVal)
+        : [];
+      if (!refsForParent.length) { return; }
+      var parentRef = refsForParent[0];
+      if (!parentRef || parentRef.className !== className || typeof parentRef.index !== "number") {
+        return;
+      }
+      Page.checkCrudReflexiveHierarchyCycle(className, instancesForCycleCheck, end, index, parentRef.index, errors);
     });
 
     // First, show any local validation errors for the currently edited
@@ -4448,11 +4765,13 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
 
       var assocName = assoc.name || (classOneName + "__" + classTwoName);
 
-      // For self-reflexive associations, detect hierarchical patterns
-      // where one end is many and the other is single (e.g.,
-      // FunctionalArea child * <-> 0..1 parent). These should not have
-      // symmetric reverse links in the CRUD UI; children store a parent,
-      // while parents derive their children.
+      // For self-reflexive associations, detect hierarchical or
+      // directional patterns where one end is many and the other is
+      // single (e.g., FunctionalArea child * <-> 0..1 parent, or
+      // Person 0..1 mentor -- 0..* Person). These should not have
+      // symmetric reverse links in the CRUD UI; the "many" side stores
+      // a single link to the "one" side, while the "one" side derives
+      // its linked instances by scanning those references.
       var isReflexive = (classOneName === classTwoName);
       var multOneHasStar = multOne && multOne.indexOf("*") !== -1;
       var multTwoHasStar = multTwo && multTwo.indexOf("*") !== -1;
@@ -4496,13 +4815,17 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
           }
         } else {
           if (direction === "one-to-two") {
-            // From classOne to classTwo
-            roleName = assoc.roleTwo || assoc.roleOne || "";
-            oppositeRoleName = assoc.roleOne || assoc.roleTwo || "";
+            // From classOne to classTwo: the targets are seen using
+            // the role defined on the classTwo end. Do not fall back
+            // to the opposite role when one side is unnamed; this keeps
+            // missing roles as empty strings instead of duplicating
+            // names like "mentee" on both sides.
+            roleName = assoc.roleTwo || "";
+            oppositeRoleName = assoc.roleOne || "";
           } else if (direction === "two-to-one") {
             // From classTwo to classOne
-            roleName = assoc.roleOne || assoc.roleTwo || "";
-            oppositeRoleName = assoc.roleTwo || assoc.roleOne || "";
+            roleName = assoc.roleOne || "";
+            oppositeRoleName = assoc.roleTwo || "";
           }
         }
 

@@ -127,17 +127,23 @@
         multiple = false;
       }
 
+      // Normalize association values to typed refs so that we support
+      // both legacy numeric indices and the newer {className,index}
+      // representation (including polymorphic subclasses).
+      var refs = (Page.normalizeCrudAssociationRefs && typeof Page.normalizeCrudAssociationRefs === "function")
+        ? Page.normalizeCrudAssociationRefs(end, val)
+        : [];
+
       if (multiple) {
         var arr = [];
-        if (Array.isArray(val)) {
-          val.forEach(function(targetIdx) {
-            if (typeof targetIdx !== "number") {
-              targetIdx = parseInt(targetIdx, 10);
-            }
-            if (isNaN(targetIdx) || targetIdx < 0) { return; }
+        if (refs && refs.length) {
+          refs.forEach(function(ref) {
+            if (!ref || typeof ref.index !== "number" || ref.index < 0) { return; }
+            var targetClass = ref.className || end.toClass;
+            if (!targetClass) { return; }
             // Always expand forward links; the cycle guard above will turn
             // back-references into ID-only stubs.
-            var child = buildNestedInstance(ns, end.toClass, targetIdx, visited);
+            var child = buildNestedInstance(ns, targetClass, ref.index, visited);
             if (child) {
               arr.push(child);
             }
@@ -145,16 +151,15 @@
         }
         data[propName] = arr;
       } else {
-        if (val === undefined || val === null || val === "") {
+        if (!refs || !refs.length) {
           // Single-valued ends are omitted when there is no link.
           return;
         }
-        var idxSingle = val;
-        if (typeof idxSingle !== "number") {
-          idxSingle = parseInt(idxSingle, 10);
-        }
-        if (isNaN(idxSingle) || idxSingle < 0) { return; }
-        var linked = buildNestedInstance(ns, end.toClass, idxSingle, visited);
+        var refSingle = refs[0];
+        if (!refSingle || typeof refSingle.index !== "number" || refSingle.index < 0) { return; }
+        var targetClassSingle = refSingle.className || end.toClass;
+        if (!targetClassSingle) { return; }
+        var linked = buildNestedInstance(ns, targetClassSingle, refSingle.index, visited);
         if (linked) {
           data[propName] = linked;
         }
@@ -443,7 +448,7 @@
 
           if (multiple) {
             if (!Array.isArray(rawVal)) { return; }
-            var indices = [];
+            var refsForField = [];
             rawVal.forEach(function(refWrapper) {
               if (!refWrapper || typeof refWrapper !== "object") { return; }
               var keys = Object.keys(refWrapper);
@@ -454,9 +459,12 @@
               if (!rid) { return; }
               var entry = idMap[rfqn + "#" + rid];
               if (!entry) { return; }
-              indices.push(entry.index);
+              refsForField.push({
+                className: entry.className,
+                index: entry.index
+              });
             });
-            inst[fieldName] = indices;
+            inst[fieldName] = refsForField;
           } else {
             if (!rawVal || typeof rawVal !== "object") { return; }
             var keysSingle = Object.keys(rawVal);
@@ -467,7 +475,10 @@
             if (!sid) { return; }
             var sentry = idMap[sfqn + "#" + sid];
             if (!sentry) { return; }
-            inst[fieldName] = sentry.index;
+            inst[fieldName] = {
+              className: sentry.className,
+              index: sentry.index
+            };
           }
         });
       });
