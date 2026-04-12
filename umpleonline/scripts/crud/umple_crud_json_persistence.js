@@ -111,10 +111,37 @@
       }
     });
 
-    var assocEnds = (Page.crudAssociationsByClass && Page.crudAssociationsByClass[className]) || [];
+    // Resolve association ends that are applicable to this runtime class,
+    // including those declared on superclasses. We treat ends whose
+    // fromClass is a superclass of className as inherited. For hierarchical
+    // self-reflexive associations (e.g., mentee->mentor), only the
+    // single-valued storing side is exported; the multi-valued reverse side
+    // is derived at runtime and should not appear in the JSON.
+    var assocEndsRaw = (Page.crudAssociationsByClass && Page.crudAssociationsByClass[className]) || [];
+    var assocEnds = [];
+    assocEndsRaw.forEach(function(end) {
+      if (!end) { return; }
+      // Only consider ends whose fromClass is this class or one of its
+      // superclasses.
+      if (Page.isCrudSubclass && !Page.isCrudSubclass(className, end.fromClass)) {
+        return;
+      }
+
+      // Skip derived multi-valued side of hierarchical self-reflexive
+      // associations; only the single-valued side actually stores data.
+      if (end.reflexiveHierarchy && end.fromClass === end.toClass) {
+        var toMax = (typeof end.toMax === "number") ? end.toMax : null;
+        var multipleSide = (toMax === null || toMax > 1);
+        if (multipleSide) {
+          return;
+        }
+      }
+
+      assocEnds.push(end);
+    });
 
     assocEnds.forEach(function(end) {
-      if (!end || end.fromClass !== className) { return; }
+      if (!end) { return; }
       var fieldName = end.storageKey;
       if (!fieldName) { return; }
 
@@ -399,7 +426,25 @@
     Object.keys(instancesByClass).forEach(function(className) {
       var info = Page.crudData.classes[className] || {};
       var attrs = info.attributes || [];
-      var assocEnds = (Page.crudAssociationsByClass && Page.crudAssociationsByClass[className]) || [];
+      // Resolve association ends applicable to this class, including those
+      // declared on superclasses, and skip the derived multi-valued side of
+      // hierarchical self-reflexive associations.
+      var assocEndsRaw = (Page.crudAssociationsByClass && Page.crudAssociationsByClass[className]) || [];
+      var assocEnds = [];
+      assocEndsRaw.forEach(function(end) {
+        if (!end) { return; }
+        if (Page.isCrudSubclass && !Page.isCrudSubclass(className, end.fromClass)) {
+          return;
+        }
+        if (end.reflexiveHierarchy && end.fromClass === end.toClass) {
+          var toMax = (typeof end.toMax === "number") ? end.toMax : null;
+          var multipleSide = (toMax === null || toMax > 1);
+          if (multipleSide) {
+            return;
+          }
+        }
+        assocEnds.push(end);
+      });
       var arr = instancesByClass[className];
 
       arr.forEach(function(inst, localIndex) {
@@ -430,7 +475,7 @@
 
         // Associations (forward ends only; reverse ends will be synced later)
         assocEnds.forEach(function(end) {
-          if (!end || end.fromClass !== className) { return; }
+          if (!end) { return; }
           var fieldName = end.storageKey;
           if (!fieldName) { return; }
 
