@@ -38,9 +38,8 @@ UmpleCodeExecution/config.cfg.bak
 UmpleCodeExecution/config.cfg
 UmpleCollabServer/config.cfg.bak
 UmpleCollabServer/config.cfg
-UmpleLsp/config.cfg.bak
-UmpleLsp/config.cfg
 UmpleLsp/umplesync.jar
+umpleonline/config/lsp.ini
 UmpleLsp/server.js
 testbed_cpp/test/runAllTests
 

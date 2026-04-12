@@ -5,38 +5,6 @@ The web-based editor and compiler for the [Umple](https://umple.org) modeling la
 **Live:** https://try.umple.org
 **Docker:** https://hub.docker.com/r/umple/umpleonline
 
-## Quick Start
-
-### Using Docker (recommended)
-
-```bash
-dev-tools/udock
-# opens http://localhost:8000/umple.php
-```
-
-Or manually:
-
-```bash
-docker pull umple/umpleonline
-docker run --rm -ti -p 8000:8000 \
-  -v /var/run/docker.sock:/var/run/docker.sock \
-  -v /tmp/umpleonline-tmp:/var/www/ump \
-  umple/umpleonline
-```
-
-This gives you everything: compiler, diagrams, code execution, and LSP editor features.
-
-### Using PHP built-in server (local development)
-
-See the [wiki setup guide](https://github.com/umple/umple/wiki/SettingUpLocalUmpleOnlineWebServer) for prerequisites.
-
-```bash
-ant -DshouldPackageUmpleOnline=true -Dmyenv=local -f build/build.umple.xml packageUmpleonline
-cd umpleonline
-php -S localhost:8001
-# opens http://localhost:8001/umple.php
-```
-
 ## LSP Editor Features
 
 UmpleOnline includes Language Server Protocol support, providing:
@@ -46,36 +14,213 @@ UmpleOnline includes Language Server Protocol support, providing:
 - Rename symbol (`F2`)
 - Hover information
 - Completion
+- Right-click context menu with keybinding hints
 
-### Docker
+### Configuration
 
-LSP is enabled by default. No configuration needed.
+All repo-owned LSP settings live in one file: `umpleonline/config/lsp.ini`. If missing, create it from `lsp.ini.template`.
+
+| Setting | Description |
+|---------|-------------|
+| `standaloneUmpBaseDir` | Path to session files. Relative paths resolved from repo root. |
+| `standaloneHostPort` | Host port for the standalone LSP container. |
+| `standaloneContainerName` | Docker container and image name for standalone mode. |
+| `maxProcesses` | Maximum concurrent LSP server processes per proxy. |
+| `localBrowserHost` | Loopback address for local dev (e.g., `127.0.0.1`). |
+| `useLinkedLsp` | Set `true` to build with a locally npm-linked `umple-lsp-server`. |
+
+Deployment-only settings are env vars, not in `lsp.ini`:
+
+| Env var | Set by | Description |
+|---------|--------|-------------|
+| `UMPLE_LSP_WS_URL` | Docker / nginx | Browser WebSocket path. Docker sets `/lsp`. For nginx, set via `fastcgi_param`. |
+| `LSP_AUTH_SECRET` | Docker / nginx | HMAC key for token auth. Empty = dev mode (when `LSP_DEV_AUTH=1`). |
+| `LSP_DEV_AUTH` | Docker | Skip auth when `1`. Set `0` with a real `LSP_AUTH_SECRET` for production. |
+
+Config precedence: **env var > lsp.ini > disabled (fail closed)**.
+
+### Deployment modes
+
+#### A. Local development (pumple + php -S)
+
+The standard local workflow. LSP runs in a standalone Docker container.
 
 ```bash
-# To disable LSP:
-docker run -e UMPLE_LSP_WS_URL="" ...
-
-# For production (enables HMAC auth):
-docker run -e LSP_AUTH_SECRET="$(openssl rand -hex 32)" ...
-```
-
-### Local development (php -S)
-
-LSP runs in a Docker container. If Docker is not running, the editor works normally without LSP features.
-
-```bash
-# Build and start everything (jars, Docker containers, JS bundles):
 dev-tools/pumple
-
-# Start PHP server:
 cd umpleonline
-UMPLE_LSP_WS_URL=ws://127.0.0.1:9999 php -S localhost:8001
-
-# Browser:
-http://localhost:8001/umple.php
+php -S localhost:8001
+# Open http://localhost:8001/umple.php
 ```
 
-To develop against a local `umple-lsp-server` (npm-linked), set `useLinkedLsp=true` in `UmpleLsp/config.cfg`.
+Config source: `umpleonline/config/lsp.ini` (read by both `setup.sh` and `umple.php`).
+Browser connects to: `ws://127.0.0.1:<standaloneHostPort>` (built from `lsp.ini`).
+
+**Verify:**
+- Browser console: `window.UMPLE_LSP_WS_URL` shows `ws://<localBrowserHost>:<standaloneHostPort>`
+- `docker ps` shows `my<standaloneContainerName>` running
+- Hover over a class name — tooltip appears
+
+#### B. Multi-clone local development
+
+Each clone on the same machine must have unique values in its `umpleonline/config/lsp.ini`:
+- `standaloneHostPort` (e.g., `9999` and `4455`)
+- `standaloneContainerName` (e.g., `umple_lsp` and `umple_lsp2`)
+
+After editing `lsp.ini` in each clone, start the LSP containers and PHP servers:
+```bash
+# Clone 1
+UMPLEROOT=~/clone1 dev-tools/pumple
+cd ~/clone1/umpleonline && php -S localhost:8001
+
+# Clone 2
+UMPLEROOT=~/clone2 dev-tools/pumple
+cd ~/clone2/umpleonline && php -S localhost:8002
+```
+
+If ports or names collide, the second clone's `setup.sh` kills the first clone's container, and `umple.php` sends the browser to the wrong LSP container — resulting in `4002 Model directory not found`.
+
+**Verify:** Each clone's `window.UMPLE_LSP_WS_URL` shows a different port.
+
+#### C. Remote server (nginx + standalone LSP container)
+
+For servers where PHP runs under nginx (not the all-in-one Docker).
+
+**1.** Edit `umpleonline/config/lsp.ini` with the correct port and path, then start the LSP container via `dev-tools/pumple` or `UmpleLsp/setup.sh bg`.
+
+**2.** Add to the nginx server block:
+```nginx
+location /lsp {
+    proxy_pass http://127.0.0.1:9999;  # must match standaloneHostPort in lsp.ini
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_read_timeout 86400s;
+    proxy_send_timeout 86400s;
+}
+```
+
+**3.** Pass the WebSocket URL to PHP (in the `location ~ \.php$` block):
+```nginx
+fastcgi_param UMPLE_LSP_WS_URL /lsp;
+```
+
+**4.** Restart nginx: `sudo systemctl restart nginx`
+
+**Multi-instance example (3 clones on one server):**
+
+Each web instance emits its own WebSocket path, each nginx path proxies to its own LSP port, and each LSP port belongs to one clone's `ump` directory.
+
+| Instance | Repo path | `standaloneHostPort` | `standaloneContainerName` | Browser path |
+|----------|-----------|---------------------|--------------------------|-------------|
+| Main | `~/umple` | `9999` | `umple_lsp` | `/lsp` |
+| Test 1 | `~/test1` | `4455` | `umple_lsp_test1` | `/lsp-test1` |
+| Test 2 | `~/test2` | `4466` | `umple_lsp_test2` | `/lsp-test2` |
+
+The simplest setup is to keep each instance explicit. Give each site config its own hardcoded WebSocket path instead of routing through nginx variables.
+
+**Main instance**
+```nginx
+location /lsp {
+    proxy_pass http://127.0.0.1:9999;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
+
+location ~ \.php$ {
+    ...
+    fastcgi_param UMPLE_LSP_WS_URL /lsp;
+}
+```
+
+**Test 1**
+```nginx
+location /lsp-test1 {
+    proxy_pass http://127.0.0.1:4455;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
+
+location ~ \.php$ {
+    ...
+    fastcgi_param UMPLE_LSP_WS_URL /lsp-test1;
+}
+```
+
+**Test 2**
+```nginx
+location /lsp-test2 {
+    proxy_pass http://127.0.0.1:4466;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+}
+
+location ~ \.php$ {
+    ...
+    fastcgi_param UMPLE_LSP_WS_URL /lsp-test2;
+}
+```
+
+**Verify:**
+- Browser console on each instance: `window.UMPLE_LSP_WS_URL` shows `/lsp`, `/lsp-test1`, or `/lsp-test2`
+- WebSocket connects via `wss://yourserver.com/<path>`
+- `docker ps` shows three containers with distinct names and ports
+
+#### D. All-in-one Docker
+
+The `umpleonline/Dockerfile` bundles nginx, PHP, lsp-proxy, and umple-lsp-server in one container. LSP is enabled by default.
+
+```bash
+dev-tools/bdock
+docker run --rm -ti -p 8000:8000 \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /tmp/umpleonline-tmp:/var/www/ump \
+  umple/umpleonline:recentbuild
+```
+
+Config source: `UMPLE_LSP_WS_URL="/lsp"` set in Dockerfile. `maxProcesses` read from `config/lsp.ini` inside the image.
+
+To disable LSP: `docker run -e UMPLE_LSP_WS_URL="" ...`
+
+To enable auth: `docker run -e LSP_AUTH_SECRET="$(openssl rand -hex 32)" -e LSP_DEV_AUTH=0 ...`
+
+**Verify:**
+- Browser console: `window.UMPLE_LSP_WS_URL` shows `/lsp`
+- Diagnostics appear as you type
+
+### Disabling LSP
+
+To disable LSP explicitly, make `UMPLE_LSP_WS_URL` empty for that instance.
+
+**Docker**
+```bash
+docker run -e UMPLE_LSP_WS_URL="" ...
+```
+
+**nginx + php-fpm**
+```nginx
+fastcgi_param UMPLE_LSP_WS_URL "";
+```
+
+**Local `php -S`**
+```bash
+UMPLE_LSP_WS_URL="" php -S localhost:8001
+```
+
+**Verify:**
+- Browser console: `window.UMPLE_LSP_WS_URL` shows `""`
+- LSP features such as diagnostics, hover, and go-to-definition are inactive
+
+Note: disabling LSP in the page does not stop the standalone LSP container. If you want it fully off, also stop or remove the `my<standaloneContainerName>` container.
+
+### Fail-closed behavior
+
+LSP is intentionally disabled when configuration is missing:
+- **`umple.php`**: If `UMPLE_LSP_WS_URL` env is not set and `config/lsp.ini` is missing or incomplete, `window.UMPLE_LSP_WS_URL` is empty and LSP is disabled. A warning is logged via `error_log`.
+- **`UmpleLsp/setup.sh`**: Auto-creates `lsp.ini` from `lsp.ini.template` if missing. Fails with an error if neither exists or required values (`standaloneHostPort`, `standaloneContainerName`, `standaloneUmpBaseDir`, `maxProcesses`) are absent.
+- **`server.js`**: Exits with an error if `LSP_HOST`, `LSP_PORT`, or `UMP_BASE_DIR` env vars are missing. Exits if `maxProcesses` is not available from env or `config/lsp.ini`.
 
 ## Code Execution
 
@@ -108,6 +253,8 @@ docker run --rm -ti --name umpleonline_local \
 
 | Path | Description |
 |------|-------------|
+| `config/lsp.ini.template` | LSP configuration template (checked in) |
+| `config/lsp.ini` | LSP runtime configuration (gitignored, created from template) |
 | `umple.php` | Main entry point |
 | `scripts/compiler.php` | Backend compilation endpoint |
 | `scripts/compiler_config.php` | Compiler configuration and execution |
