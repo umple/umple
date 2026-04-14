@@ -334,8 +334,9 @@ class UmpleInternalParser
     mixset.addMixsetFragment(mixsetFragment);
     mixsetFragment.setMixset(mixset);
     for (ReqImplementation ri : ReqImpMixset )
-      { 
+      {
         mixset.addReqImplementation(ri);
+        model.addReqImplementation(ri);
       }
       ReqImpMixset.clear();
       mixset.setPosition(token.getPosition()); 

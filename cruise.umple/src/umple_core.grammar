@@ -57,8 +57,6 @@ multilineComment- : /* [**multilineComment] */
 
 reqIdentifier : [name]
 
-requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[plainReq]] ) )
-requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[plainReq]] ) )
 requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[quality]] ) | ( [[plainReq]] ) )
 quality- : [=reqLanguage:quality|Quality|QUALITY] { [**reqContent] }
 plainReq- : [reqLanguage]? { [**reqContent] }

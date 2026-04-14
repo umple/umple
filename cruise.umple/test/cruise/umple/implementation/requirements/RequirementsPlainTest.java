@@ -173,6 +173,7 @@ public class RequirementsPlainTest extends TemplateTest
     assertUmpleTemplateFor("requirements/ReqSortStatVisibleText.test.ump","requirements/ReqSortStatVisibleText.test.expectedresult.html");
   }
 
+  @Test
   public void ReqAssociation()
   {
     assertUmpleTemplateFor("requirements/ReqAssociation.ump","requirements/ReqAssociation.html.txt");
