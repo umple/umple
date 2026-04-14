@@ -430,7 +430,7 @@ else if (isset($_REQUEST["umpleCode"]))
     }
     $errors = getErrorHtml($errorFilename, 0);
     
-    if ($language != "Json" && $language != "JsonMixed")
+    if ($language != "Json" && $language != "JsonMixed" && $language != "FeatureModelJson")
     {
       $sourceCode = htmlspecialchars($sourceCode);
     }
