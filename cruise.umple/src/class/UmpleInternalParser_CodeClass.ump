@@ -266,6 +266,9 @@ class UmpleInternalParser
     if ("Quality".equals(newLanguage) || "QUALITY".equals(newLanguage)) {
       newLanguage = QUALITY_LANG;
     }
+    if ("usecase".equals(newLanguage)) {
+      newLanguage = "useCase";
+    }
 
     newLanguage=newLanguage.trim();
     newContent=newContent.trim();
@@ -274,8 +277,9 @@ class UmpleInternalParser
     String whenContent = null;
     String whatContent = null;
     String whyContent = null;
+    List<String[]> parsedUseCaseSteps = new ArrayList<String[]>();
 
-    if ("userStory".equals(newLanguage) && !newContent.equals("")) {
+    if (("userStory".equals(newLanguage) || "useCase".equals(newLanguage)) && !newContent.equals("")) {
       String[] lines = newContent.split("\\r?\\n");
       StringBuilder remainingContent = new StringBuilder();
 
@@ -294,6 +298,20 @@ class UmpleInternalParser
         else if (trimmed.startsWith("why {") && trimmed.endsWith("}")) {
           whyContent = trimmed.substring(5, trimmed.length() - 1).trim();
         }
+        else if ("useCase".equals(newLanguage) && trimmed.startsWith("userStep ") && trimmed.contains("{") && trimmed.endsWith("}")) {
+          int braceStart = trimmed.indexOf("{");
+          String prefix = trimmed.substring(0, braceStart).trim();
+          String content = trimmed.substring(braceStart + 1, trimmed.length() - 1).trim();
+          String id = prefix.substring("userStep".length()).trim();
+          parsedUseCaseSteps.add(new String[] { id, "userStep", content });
+        }
+        else if ("useCase".equals(newLanguage) && trimmed.startsWith("systemResponse ") && trimmed.contains("{") && trimmed.endsWith("}")) {
+          int braceStart = trimmed.indexOf("{");
+          String prefix = trimmed.substring(0, braceStart).trim();
+          String content = trimmed.substring(braceStart + 1, trimmed.length() - 1).trim();
+          String id = prefix.substring("systemResponse".length()).trim();
+          parsedUseCaseSteps.add(new String[] { id, "systemResponse", content });
+        }
         else {
           if (remainingContent.length() > 0) {
             remainingContent.append("\n");
@@ -302,7 +320,7 @@ class UmpleInternalParser
         }
       }
 
-      if (!(whoContent == null && whenContent == null && whatContent == null && whyContent == null)) {
+      if (!(whoContent == null && whenContent == null && whatContent == null && whyContent == null && parsedUseCaseSteps.isEmpty())) {
         newContent = remainingContent.toString().trim();
       }
     }
@@ -392,6 +410,15 @@ class UmpleInternalParser
         // QualityClass constructor auto-appends to the requirement
         new QualityClass(qcData[0], qcData[1], existingRequirement);
       }
+
+      for (String[] stepData : parsedUseCaseSteps) {
+        UseCaseStep.UseCaseStepType stepType =
+          "userStep".equals(stepData[1])
+            ? UseCaseStep.UseCaseStepType.UserStep
+            : UseCaseStep.UseCaseStepType.SystemResponse;
+
+        new UseCaseStep(stepData[0], stepType, stepData[2], existingRequirement);
+      }
     }
     else {
       if (QUALITY_LANG.equals(newLanguage)) {
@@ -407,6 +434,15 @@ class UmpleInternalParser
         new QualityClass(qcData[0], qcData[1], req);
       }
       model.getAllRequirements().put(reqID, req);
+
+      for (String[] stepData : parsedUseCaseSteps) {
+        UseCaseStep.UseCaseStepType stepType =
+          "userStep".equals(stepData[1])
+            ? UseCaseStep.UseCaseStepType.UserStep
+            : UseCaseStep.UseCaseStepType.SystemResponse;
+
+        new UseCaseStep(stepData[0], stepType, stepData[2], req);
+      }
     }
   }
 

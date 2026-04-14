@@ -8,18 +8,44 @@ const crypto = require("crypto");
 const url = require("url");
 
 // ---------------------------------------------------------------------------
-// Configuration (from environment variables with defaults)
+// Configuration (from environment variables — set by launcher/supervisor)
 // ---------------------------------------------------------------------------
-const LSP_PORT = parseInt(process.env.LSP_PORT || "9999", 10);
-const LSP_HOST = process.env.LSP_HOST || "127.0.0.1";
-const UMP_BASE_DIR = process.env.UMP_BASE_DIR || "/var/www/ump";
+
+// Required — must be supplied by the launcher (setup.sh or supervisord)
+const LSP_PORT = parseInt(process.env.LSP_PORT, 10);
+const LSP_HOST = process.env.LSP_HOST;
+const UMP_BASE_DIR = process.env.UMP_BASE_DIR;
+
+if (!LSP_PORT || !LSP_HOST || !UMP_BASE_DIR) {
+  console.error("[lsp-proxy] FATAL: Missing required env: LSP_PORT, LSP_HOST, UMP_BASE_DIR");
+  process.exit(1);
+}
+
+// Optional — have sensible fallbacks
 const LSP_COMMAND = process.env.LSP_COMMAND || "umple-lsp-server";
 const UMPLESYNC_JAR_PATH = process.env.UMPLESYNC_JAR_PATH || "";
 const AUTH_SECRET = process.env.LSP_AUTH_SECRET || "";
 const LSP_DEBUG = process.env.LSP_DEBUG === "1";
 
-// Process limits
-const MAX_PROCESSES_GLOBAL = parseInt(process.env.LSP_MAX_PROCESSES || "20", 10);
+// Process limit — from env, else from canonical lsp.ini
+let maxProc = process.env.LSP_MAX_PROCESSES;
+if (!maxProc) {
+  // Try reading from canonical config (available inside Docker via COPY . /var/www)
+  const iniPaths = [
+    path.join(__dirname, "..", "..", "config", "lsp.ini"),  // Docker: /var/www/scripts/lsp-proxy/../../config/lsp.ini
+  ];
+  for (const p of iniPaths) {
+    if (fs.existsSync(p)) {
+      const match = fs.readFileSync(p, "utf8").match(/^maxProcesses\s*=\s*(\d+)/m);
+      if (match) { maxProc = match[1]; break; }
+    }
+  }
+}
+if (!maxProc) {
+  console.error("[lsp-proxy] FATAL: LSP_MAX_PROCESSES not set and config/lsp.ini not found or missing maxProcesses");
+  process.exit(1);
+}
+const MAX_PROCESSES_GLOBAL = parseInt(maxProc, 10);
 
 // Session ID validation
 const SESSION_ID_RE = /^[a-zA-Z0-9_-]+$/;
