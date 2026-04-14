@@ -312,6 +312,107 @@ a.button:active { color:black; text-decoration:none; }
 
 .buttonExtend:hover { cursor: pointer; }
 
+/* Feature model tree*/
+#featureModelTreeContainer {
+  list-style-type: none;
+  padding: 2px 0px 4px 0px;
+  margin: 0;
+}
+.feature-tree {
+  font-size: 9pt;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  color: inherit;
+}
+.feature-tree .feature-tree,
+.feature-tree-children {
+  margin: 0;
+  padding: 0 0 0 14px;
+  list-style-type: none;
+  border-left: 1px dotted #888;
+  margin-left: 7px;
+}
+.feature-tree-node {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 1px 0 1px 4px;
+  list-style-type: none;
+}
+.feature-tree-toggle {
+  display: inline-block;
+  width: 12px;
+  cursor: pointer;
+  user-select: none;
+  text-align: center;
+  color: #666;
+  font-size: 8pt;
+}
+.feature-tree-toggle-placeholder {
+  display: inline-block;
+  width: 12px;
+}
+.feature-tree-checkbox {
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle;
+}
+.feature-tree-checkbox:disabled {
+  cursor: default;
+}
+.feature-tree-name {
+  cursor: pointer;
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  font-size: 9pt;
+  color: inherit;
+}
+.feature-tree-name-bold {
+  font-weight: bold;
+}
+.feature-tree-name-root {
+  font-weight: bold;
+  cursor: default;
+}
+.feature-tree-name-group {
+  font-style: italic;
+  color: #555;
+  cursor: default;
+}
+.feature-tree-name-violated {
+  color: #cc0000;
+}
+.feature-tree-name-multiref {
+  font-style: italic;
+  text-decoration: underline;
+  color: #1f5fa8;
+}
+.feature-tree-name-multiref-violated {
+  font-style: italic;
+  text-decoration: underline;
+  color: #cc0000;
+}
+.feature-tree-name-cycle-disabled {
+  color: #888;
+  cursor: default;
+}
+.feature-tree-mult-label {
+  font-style: italic;
+  color: #555;
+  font-size: 9pt;
+  cursor: default;
+}
+.feature-tree-mult-label-violated {
+  color: #cc0000;
+}
+.feature-tree-child-count {
+  font-style: italic;
+  color: #888;
+  font-size: 8pt;
+  margin-left: 4px;
+}
+
 /* DISABLING DIVS ON THE SCREEN */
 .disabled { opacity: 0.3; color: #d6d6d6; pointer-events: none; }
 .disabled a { text-decoration: none; color: #d6d6d6;}
@@ -2203,4 +2304,39 @@ textarea#umpleLayoutEditorText {
   height: 1px;
   background: #e0e0e0;
   margin: 4px 0;
+}
+
+/* Feature tree modal — overrides the ai-settings-modal (Other styles are inherited from the ai-settings-modal) */
+.feature-tree-modal .dialog-content {
+  width: 520px;
+  min-width: 0;
+  max-width: 85vw;
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  z-index: 10003;
+}
+.feature-tree-modal #featureTreeModalBody {
+  flex: 1 1 auto;
+  overflow: auto;
+  min-height: 120px;
+}
+.feature-tree-modal #featureModelTreeContainer {
+  padding: 2px 0 4px 0;
+  margin: 0;
+}
+.feature-tree-info {
+  color: #555;
+  font-style: italic;
+  padding: 12px 4px;
+}
+.feature-tree-retry-link {
+  margin-left: 6px;
+  color: #1f5fa8;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.feature-tree-modal .dialog-buttons {
+  text-align: right;
+  margin-top: 8px;
 }
