@@ -3,7 +3,7 @@ req Q1 Quality {
   Slow {}
 }
 
-req Q2 QUALITY {
+req Q2 quality {
   Reliable {}
   Unreliable {}
 }

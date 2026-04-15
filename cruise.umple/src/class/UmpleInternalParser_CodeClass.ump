@@ -263,7 +263,7 @@ class UmpleInternalParser
     if ("userstory".equals(newLanguage)) {
       newLanguage = "userStory";
     }
-    if ("Quality".equals(newLanguage) || "QUALITY".equals(newLanguage)) {
+    if ("Quality".equals(newLanguage)) {
       newLanguage = QUALITY_LANG;
     }
     if ("usecase".equals(newLanguage)) {
