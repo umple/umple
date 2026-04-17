@@ -1,0 +1,4 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqUseCasePlain.ump
+</p><p><b>UC1: Customer checks out items and the system calculates the total.</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>

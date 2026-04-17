@@ -40,6 +40,10 @@ public class RequirementsPlainTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryStructured.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryStructuredPartial.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUserStoryWhoOnly.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqUseCasePlain.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqUseCaseStructured.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqUseCaseStructuredPartial.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqUseCaseMultipleSteps.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideImpl.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideStatements.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqSortStat.html");
@@ -135,6 +139,27 @@ public class RequirementsPlainTest extends TemplateTest
   public void userStoryWhoOnly()
   {
     assertUmpleTemplateFor("requirements/ReqUserStoryWhoOnly.ump","requirements/ReqUserStoryWhoOnly.html.txt");
+  }
+
+  @Test
+  public void useCasePlain()
+  {
+    assertUmpleTemplateFor("requirements/ReqUseCasePlain.ump","requirements/ReqUseCasePlain.html.txt");
+  }
+  @Test
+  public void useCaseStructured()
+  {
+    assertUmpleTemplateFor("requirements/ReqUseCaseStructured.ump","requirements/ReqUseCaseStructured.html.txt");
+  }
+  @Test
+  public void useCaseStructuredPartial()
+  {
+    assertUmpleTemplateFor("requirements/ReqUseCaseStructuredPartial.ump","requirements/ReqUseCaseStructuredPartial.html.txt");
+  }
+  @Test
+  public void useCaseMultipleSteps()
+  {
+    assertUmpleTemplateFor("requirements/ReqUseCaseMultipleSteps.ump","requirements/ReqUseCaseMultipleSteps.html.txt");
   }
 
   @Test
