@@ -55,11 +55,90 @@ class PlainRequirementsDocGenerator
     for (Requirement req : ReqTreeSet){
 		if (req.hasReqImplementations() && hasreqHideImpl) continue;
     	if (req.hasReqImplementations() || !hasreqHideNotImpl) {
-	    	  // Below string stores the main visible requirement text without the quality summary line
-				String mainReqText = Requirement.translateToHTML(
-					req.getBodyDisplayText("<br/>"),
-					req.getLanguage()
-				);
+    	  // Below string stores the requirement statement and language and translates to html
+				String mainReqText = "";
+				if ("userStory".equals(req.getLanguage())) {
+					StringBuilder userStoryText = new StringBuilder();
+					if (req.getWho() != null && !req.getWho().equals("")) {
+						userStoryText.append("As ").append(req.getWho());
+					}
+					if (req.getWhen() != null && !req.getWhen().equals("")) {
+						if (userStoryText.length() > 0) {
+							userStoryText.append("<br/>");
+						}
+						userStoryText.append("When ").append(req.getWhen());
+					}
+					if (req.getWhat() != null && !req.getWhat().equals("")) {
+						if (userStoryText.length() > 0) {
+							userStoryText.append("<br/>");
+						}
+						userStoryText.append("I want ").append(req.getWhat());
+					}
+					if (req.getWhy() != null && !req.getWhy().equals("")) {
+						if (userStoryText.length() > 0) {
+							userStoryText.append("<br/>");
+						}
+						userStoryText.append("So that ").append(req.getWhy());
+					}
+					if (userStoryText.length() > 0) {
+						mainReqText = Requirement.translateToHTML(userStoryText.toString(), req.getLanguage());
+					}
+					else {
+						mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+					}
+				}
+				else if ("useCase".equals(req.getLanguage())) {
+					StringBuilder useCaseText = new StringBuilder();
+					if (req.getWho() != null && !req.getWho().equals("")) {
+						useCaseText.append("As ").append(req.getWho());
+					}
+					if (req.getWhen() != null && !req.getWhen().equals("")) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append("When ").append(req.getWhen());
+					}
+					if (req.getWhat() != null && !req.getWhat().equals("")) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append("I want ").append(req.getWhat());
+					}
+					if (req.getWhy() != null && !req.getWhy().equals("")) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append("So that ").append(req.getWhy());
+					}
+					if (req.getStatement() != null && !req.getStatement().equals("")) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append(req.getStatement());
+					}
+					for (int i = 0; i < req.numberOfUseCaseSteps(); i++) {
+						UseCaseStep step = req.getUseCaseStep(i);
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						if (step.getStepType() == UseCaseStep.UseCaseStepType.UserStep) {
+							useCaseText.append("User step ");
+						}
+						else {
+							useCaseText.append("System response ");
+						}
+						useCaseText.append(step.getId()).append(": ").append(step.getContent());
+					}
+					if (useCaseText.length() > 0) {
+						mainReqText = Requirement.translateToHTML(useCaseText.toString(), req.getLanguage());
+					}
+					else {
+						mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+					}
+				}
+				else {
+					mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+				}
 
 				mainReqText = linkifyHttpUrls(mainReqText);
 				if (hasreqHideStatements) {
