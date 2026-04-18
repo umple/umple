@@ -159,7 +159,7 @@ Page.showCrudConfirmModal = function(message, onConfirm, onCancel) {
     $dialog.remove();
   };
 
-  // Prefer jQuery UI dialog for reliability in this app shell.
+  // Prefer jQuery UI dialog for reliability in this app shell..
   // Inject scoped CSS for the close button and button hover once per page.
   if (!jQuery("#crud-unsaved-dialog-style").length) {
     jQuery("head").append(
