@@ -147,6 +147,7 @@ document.write('<script type="text/javascript" src="scripts/umple_history.js"></
 document.write('<script type="text/javascript" src="scripts/umple_restore.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_action_diagram.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tooltips.js"></script>');
+document.write('<script type="text/javascript" src="scripts/umple_feature_tree.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tab_control.js"></script>');
 //CRUD UI
 document.write('<script type="text/javascript" src="scripts/crud/umple_crudui.js"></script>');

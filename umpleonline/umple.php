@@ -1074,6 +1074,13 @@ $output = $dataHandle->readData('model.ump');
                Make Mixset
             </li>              
           </ul>
+          <ul id="paletteFeatureSelectReqSection" class="second center-children" style="display:none;">
+            <li id="ttSelectReq" title="Select which features/requirements are active in the model.">
+              <div id="buttonSelectReq"
+                   class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+                   tabindex="0" role="button">Select Features</div>
+            </li>
+          </ul>
       </div>
       
       <!-- GROUP 3 OF OPTIONS -->
@@ -1391,6 +1398,27 @@ $output = $dataHandle->readData('model.ump');
       <div class="dialog-buttons">
         <div id="buttonResetAiUsage" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Reset Usage</div>
         <div id="btnCloseAiSettings" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Close</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Tree Modal. Reuses .ai-settings-modal and override some style to reuse the code -->
+  <div id="featureTreeModal" class="ai-settings-modal feature-tree-modal is-hidden">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3>Select Features</h3>
+      <div id="featureTreeModalBody">
+        <div id="featureModelTreeContainer" class="feature-tree-mount"></div>
+        <div id="featureTreeModalLoading" class="is-hidden feature-tree-info">Loading feature model&hellip;</div>
+        <div id="featureTreeModalEmpty" class="is-hidden feature-tree-info">
+          No feature model detected. Ensure your code contains requirements.
+          <a href="#" id="featureTreeRetryLink" class="feature-tree-retry-link">Retry</a>
+        </div>
+      </div>
+      <div class="dialog-buttons">
+        <div id="btnCloseFeatureTree"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Done</div>
       </div>
     </div>
   </div>
