@@ -494,7 +494,7 @@ class InstanceDiagramGenerator
   private Map<String, String> generateRandomAttributesForInstance(UmpleClass uClass, int iteration) {
     Map<String, String> result = new LinkedHashMap<String, String>();
 
-    java.util.List<Attribute> attrs = uClass.getAttributes();
+    java.util.List<Attribute> attrs = uClass.getAllAttributes();
     if (attrs == null || attrs.size() == 0) {
       return result;
     }
@@ -905,8 +905,9 @@ class InstanceDiagramGenerator
     String className = umpClass.getName();
     String instanceName = "";
 
-    if (umpClass.getAttributes().size() != 0){
-      Attribute firstAttribute = umpClass.getAttributes().get(0);
+    java.util.List<Attribute> allAttrs = umpClass.getAllAttributes();
+    if (allAttrs.size() != 0){
+      Attribute firstAttribute = allAttrs.get(0);
       String firstAttributeName = firstAttribute.getName();
       int attributeNameLength = firstAttributeName.length();
 
@@ -924,14 +925,7 @@ class InstanceDiagramGenerator
         firstAttributeIsId = true;
         instanceName = className + iteration + ": " + className;
 
-        // if the first attribute is called "name" and is type String
-      } else if (firstAttributeName.toLowerCase().equals("name") && firstAttribute.getType().equals("String")){
-        firstAttributeInstanceName = createRandomAttributeValue(firstAttribute);
-
-        instanceIdtoInstanceName.put(className + iteration, firstAttributeInstanceName);
-
-        instanceName = firstAttributeInstanceName + ": " + className;
-      } else{
+        } else{
         instanceName = className + iteration + ": " + className;
       }
     
@@ -984,7 +978,7 @@ class InstanceDiagramGenerator
     boolean isFirst = true;
 
     if (!hasSuboption("hideattributes")) { 
-      for (Attribute uAttribute : uClass.getAttributes()) {
+      for (Attribute uAttribute : uClass.getAllAttributes()) {
         if (!uAttribute.isConstant()) 
         { 
           String instanceAttribute;
@@ -1294,6 +1288,34 @@ public String randomStringGen(){
 
       result.diagramIsEmpty = !anyInstances;
 
+      // Rebuild inheritance edges among counted classes so that
+      // PopulateInstanceList can include subclass instances for
+      // association endpoints declared on a superclass.
+      for (UmpleClass uClass : model.getUmpleClasses()) {
+        if (uClass == null) {
+          continue;
+        }
+        String childName = uClass.getName();
+        if (childName == null || !result.rawClassInstanceCounts.containsKey(childName)) {
+          continue;
+        }
+        UmpleClass parent = uClass.getExtendsClass();
+        if (parent == null) {
+          continue;
+        }
+        String parentName = parent.getName();
+        if (parentName == null || !result.rawClassInstanceCounts.containsKey(parentName)) {
+          continue;
+        }
+
+        ClassInstanceCount parentCount = result.rawClassInstanceCounts.get(parentName);
+        ClassInstanceCount childCount = result.rawClassInstanceCounts.get(childName);
+        if (parentCount != null && childCount != null) {
+          parentCount.directSubclasses.add(childName);
+          childCount.directSuperclasses.add(parentName);
+        }
+      }
+
       // If a full CRUD instance-data marker is present, attempt to parse
       // it and capture attribute values for each instance. Failure to
       // parse this marker does not abort diagram generation; we simply
@@ -1465,10 +1487,13 @@ public String randomStringGen(){
           String leftClass = leftEnd.getClassName();
           String rightClass = rightEnd.getClassName();
 
-          Integer leftCountObj = result.instanceCounts.get(leftClass);
-          Integer rightCountObj = result.instanceCounts.get(rightClass);
-          int leftCount = (leftCountObj != null) ? leftCountObj.intValue() : 0;
-          int rightCount = (rightCountObj != null) ? rightCountObj.intValue() : 0;
+          ArrayList<String> leftInstanceList = new ArrayList<String>();
+          ArrayList<String> rightInstanceList = new ArrayList<String>();
+          PopulateInstanceList(leftClass, result.rawClassInstanceCounts, leftInstanceList);
+          PopulateInstanceList(rightClass, result.rawClassInstanceCounts, rightInstanceList);
+
+          int leftCount = leftInstanceList.size();
+          int rightCount = rightInstanceList.size();
 
           if (leftCount <= 0 || rightCount <= 0) {
             continue;
@@ -1483,22 +1508,55 @@ public String randomStringGen(){
           if (crudAssociationLinks != null && !crudAssociationLinks.isEmpty()) {
             boolean[][] matrix = new boolean[leftCount][rightCount];
             boolean anyLink = false;
+
+            Map<String, Integer> leftPosByClassIndex = new LinkedHashMap<String, Integer>();
+            for (int li = 0; li < leftInstanceList.size(); li++) {
+              String id = leftInstanceList.get(li);
+              String c = getClassNameFromInstanceId(id);
+              int idx = getIndexFromInstanceId(id);
+              if (c == null || c.length() == 0 || idx <= 0) {
+                continue;
+              }
+              leftPosByClassIndex.put(c + "#" + idx, Integer.valueOf(li));
+            }
+
+            Map<String, Integer> rightPosByClassIndex = new LinkedHashMap<String, Integer>();
+            for (int ri = 0; ri < rightInstanceList.size(); ri++) {
+              String id = rightInstanceList.get(ri);
+              String c = getClassNameFromInstanceId(id);
+              int idx = getIndexFromInstanceId(id);
+              if (c == null || c.length() == 0 || idx <= 0) {
+                continue;
+              }
+              rightPosByClassIndex.put(c + "#" + idx, Integer.valueOf(ri));
+            }
+
             for (CrudAssociationLink rec : crudAssociationLinks) {
               if (rec == null) {
                 continue;
               }
               int i = -1;
               int j = -1;
-              if (leftClass.equals(rec.fromClass) && rightClass.equals(rec.toClass)) {
-                i = rec.fromIndex.intValue() - 1;
-                j = rec.toIndex.intValue() - 1;
-              } else if (leftClass.equals(rec.toClass) && rightClass.equals(rec.fromClass)) {
-                // Reverse orientation
-                i = rec.toIndex.intValue() - 1;
-                j = rec.fromIndex.intValue() - 1;
+
+              String fromKey = rec.fromClass + "#" + rec.fromIndex;
+              String toKey = rec.toClass + "#" + rec.toIndex;
+
+              Integer iForward = leftPosByClassIndex.get(fromKey);
+              Integer jForward = rightPosByClassIndex.get(toKey);
+              if (iForward != null && jForward != null) {
+                i = iForward.intValue();
+                j = jForward.intValue();
               } else {
-                continue;
+                Integer iReverse = leftPosByClassIndex.get(toKey);
+                Integer jReverse = rightPosByClassIndex.get(fromKey);
+                if (iReverse != null && jReverse != null) {
+                  i = iReverse.intValue();
+                  j = jReverse.intValue();
+                } else {
+                  continue;
+                }
               }
+
               if (i < 0 || i >= leftCount || j < 0 || j >= rightCount) {
                 continue;
               }
