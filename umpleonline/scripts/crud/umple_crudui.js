@@ -33,6 +33,232 @@ Page.resetCrudData = function() {
   Page.crudAssociationLabelPreference = {};
 };
 
+// Capture the current CRUD form state (excluding global label-selector
+// dropdowns) so we can detect unsaved edits when switching classes.
+Page.captureCrudFormState = function($panel) {
+  if (!$panel || !$panel.length) {
+    return "";
+  }
+  var $form = $panel.find("#crud-instance-form");
+  if (!$form.length) {
+    return "";
+  }
+
+  var state = {
+    instanceIndex: $form.find("input[name='instanceIndex']").val() || "",
+    fields: [],
+    classArrays: []
+  };
+
+  $form.find("input, select, textarea").not(".crud-assoc-label-select").each(function() {
+    var $el = jQuery(this);
+    var tag = (this.tagName || "").toLowerCase();
+    var type = ($el.attr("type") || "").toLowerCase();
+    var name = $el.attr("name") || "";
+    if (!name) { return; }
+
+    var key = tag + "|" + type + "|" + name + "|";
+    var value;
+
+    if (type === "checkbox" || type === "radio") {
+      key += ($el.val() || "");
+      value = $el.is(":checked") ? "1" : "0";
+    } else {
+      value = $el.val();
+      if (value === undefined || value === null) {
+        value = "";
+      }
+    }
+
+    state.fields.push({ key: key, value: String(value) });
+  });
+
+  state.fields.sort(function(a, b) {
+    if (a.key < b.key) { return -1; }
+    if (a.key > b.key) { return 1; }
+    if (a.value < b.value) { return -1; }
+    if (a.value > b.value) { return 1; }
+    return 0;
+  });
+
+  $form.find(".crud-class-array").each(function() {
+    var $arr = jQuery(this);
+    var attrName = $arr.data("attr") || "";
+    if (!attrName) { return; }
+    var items = $arr.data("items") || [];
+    var asText = "";
+    try {
+      asText = JSON.stringify(items);
+    } catch (e) {
+      asText = String(items);
+    }
+    state.classArrays.push({ attr: attrName, items: asText });
+  });
+
+  state.classArrays.sort(function(a, b) {
+    if (a.attr < b.attr) { return -1; }
+    if (a.attr > b.attr) { return 1; }
+    if (a.items < b.items) { return -1; }
+    if (a.items > b.items) { return 1; }
+    return 0;
+  });
+
+  try {
+    return JSON.stringify(state);
+  } catch (e) {
+    return "";
+  }
+};
+
+Page.markCrudFormClean = function($panel) {
+  if (!$panel || !$panel.length) { return; }
+  $panel.data("crudFormBaseline", Page.captureCrudFormState($panel));
+};
+
+Page.isCrudFormDirty = function($panel) {
+  if (!$panel || !$panel.length) { return false; }
+  var baseline = $panel.data("crudFormBaseline");
+  if (typeof baseline !== "string") {
+    return false;
+  }
+  return Page.captureCrudFormState($panel) !== baseline;
+};
+
+// Lightweight modern confirmation modal used for unsaved CRUD form edits.
+Page.showCrudConfirmModal = function(message, onConfirm, onCancel) {
+  // Clear any previous dialog instance.
+  var $existing = jQuery("#crud-unsaved-dialog");
+  if ($existing.length) {
+    try {
+      if ($existing.hasClass("ui-dialog-content")) {
+        $existing.dialog("destroy");
+      }
+    } catch (e) {
+      // ignore
+    }
+    $existing.remove();
+  }
+
+  var $dialog = jQuery("<div id='crud-unsaved-dialog' style='display:none;'></div>");
+  $dialog.html(
+    "<div style='padding:4px 2px 2px 2px;font-family:Inter,Segoe UI,Roboto,Arial,sans-serif;'>" +
+      "<div style='font-size:14px;line-height:1.55;color:#334155;'>" + String(message || "") + "</div>" +
+    "</div>"
+  );
+  jQuery("body").append($dialog);
+  var handled = false;
+
+  var doClose = function() {
+    try {
+      if ($dialog.hasClass("ui-dialog-content")) {
+        $dialog.dialog("destroy");
+      }
+    } catch (e) {
+      // ignore
+    }
+    $dialog.remove();
+  };
+
+  // Prefer jQuery UI dialog for reliability in this app shell..
+  // Inject scoped CSS for the close button and button hover once per page.
+  if (!jQuery("#crud-unsaved-dialog-style").length) {
+    jQuery("head").append(
+      "<style id='crud-unsaved-dialog-style'>" +
+        ".crud-unsaved-dialog-modern .ui-dialog-titlebar-close { background:none !important; border:none !important; box-shadow:none !important; outline:none !important; width:24px !important; height:24px !important; padding:0 !important; margin:0 !important; position:absolute !important; right:14px !important; top:50% !important; transform:translateY(-50%) !important; overflow:hidden !important; text-indent:-9999px !important; font-size:0 !important; color:transparent !important; }" +
+        ".crud-unsaved-dialog-modern .ui-dialog-titlebar-close .ui-icon, .crud-unsaved-dialog-modern .ui-dialog-titlebar-close .ui-button-icon-space, .crud-unsaved-dialog-modern .ui-dialog-titlebar-close .ui-button-text { display:none !important; }" +
+        ".crud-unsaved-dialog-modern .ui-dialog-titlebar-close::before { content:'\\00D7' !important; position:absolute !important; left:50% !important; top:50% !important; transform:translate(-50%,-50%) !important; font-size:20px !important; font-weight:bold !important; color:#555555 !important; line-height:1 !important; display:block !important; text-indent:0 !important; }" +
+        ".crud-unsaved-dialog-modern .ui-dialog-buttonpane button { border:1px solid #b06c5b !important; background:linear-gradient(to bottom,#e5bcae,#d8a695) !important; color:#ffffff !important; border-radius:4px !important; padding:0 10px !important; height:25px !important; line-height:25px !important; font-weight:bold !important; font-size:14px !important; text-shadow:rgba(0,0,0,.4) 0 1px 0 !important; cursor:pointer; }" +
+        ".crud-unsaved-dialog-modern .ui-dialog-buttonpane button:hover { border:1px solid #7a3d2e !important; background:linear-gradient(to bottom,#c8937e,#b5735f) !important; }" +
+      "</style>"
+    );
+  }
+
+  if (typeof $dialog.dialog === "function") {
+    $dialog.dialog({
+      modal: true,
+      width: 520,
+      resizable: false,
+      draggable: false,
+      closeOnEscape: true,
+      title: "Unsaved changes",
+      dialogClass: "crud-unsaved-dialog-modern",
+      open: function() {
+        var $widget = $dialog.dialog("widget");
+        $widget.css({
+          borderRadius: "14px",
+          overflow: "hidden",
+          boxShadow: "0 18px 48px rgba(2,8,23,0.28)",
+          zIndex: 2147483647
+        });
+        $widget.find(".ui-dialog-titlebar").css({
+          background: "#ffffff",
+          border: "none",
+          borderBottom: "1px solid #e2e8f0",
+          padding: "14px 16px"
+        });
+        $widget.find(".ui-dialog-title").css({
+          color: "#0f172a",
+          fontWeight: "700"
+        });
+        $widget.find(".ui-dialog-content").css({
+          border: "none",
+          padding: "10px 16px 8px 16px",
+          background: "#ffffff"
+        });
+        $widget.find(".ui-dialog-buttonpane").css({
+          border: "none",
+          borderTop: "1px solid #e2e8f0",
+          background: "#f8fafc",
+          padding: "10px 12px"
+        });
+      },
+      buttons: [
+        {
+          text: "Stay on this form",
+          click: function() {
+            handled = true;
+            doClose();
+            if (typeof onCancel === "function") {
+              onCancel();
+            }
+          }
+        },
+        {
+          text: "Switch form",
+          click: function() {
+            handled = true;
+            doClose();
+            if (typeof onConfirm === "function") {
+              onConfirm();
+            }
+          }
+        }
+      ],
+      close: function() {
+        if (handled) {
+          return;
+        }
+        doClose();
+        if (typeof onCancel === "function") {
+          onCancel();
+        }
+      }
+    });
+    return;
+  }
+
+  // Fallback if jQuery UI dialog is unavailable.
+  var ok = window.confirm(String(message || ""));
+  doClose();
+  if (ok) {
+    if (typeof onConfirm === "function") {
+      onConfirm();
+    }
+  } else if (typeof onCancel === "function") {
+    onCancel();
+  }
+};
+
 // Return the inheritance chain (superclasses) for a given class name
 // using the extends map built from the JSON. The array is ordered from
 // immediate parent up to the root. Cycles are guarded against.
@@ -1197,6 +1423,203 @@ Page.adjustCrudAssociationsForClassRenames = function(classRenameNewToOld, oldAs
         });
       });
     });
+  });
+};
+
+// When role names (or other end labels that influence storageKey) change for
+// an otherwise equivalent association end, preserve existing association data
+// by migrating values from old storage fields to new ones. If an old
+// association end can no longer be matched to any current end, remove its
+// stale stored values and report what was cleared.
+Page.adjustCrudAssociationsForRoleNameChanges = function(oldAssocByClass) {
+  if (!oldAssocByClass || !Page.crudAssociationsByClass || !Page.crudData || !Page.crudData.classes) {
+    return;
+  }
+
+  if (!Array.isArray(Page.crudAdjustmentMessages)) {
+    Page.crudAdjustmentMessages = [];
+  }
+
+  var classesData = Page.crudData.classes;
+
+  var endAppliesToClass = function(className, end) {
+    if (!className || !end || !end.fromClass) { return false; }
+    if (Page.isCrudSubclass) {
+      return Page.isCrudSubclass(className, end.fromClass);
+    }
+    return end.fromClass === className;
+  };
+
+  var toMaxText = function(v) {
+    return (typeof v === "number") ? String(v) : "*";
+  };
+
+  var sameEndByIdentity = function(a, b) {
+    if (!a || !b) { return false; }
+    return (a.assocId || "") === (b.assocId || "") &&
+      (a.toClass || "") === (b.toClass || "") &&
+      (a.direction || "") === (b.direction || "");
+  };
+
+  var sameEndByStructure = function(a, b) {
+    if (!a || !b) { return false; }
+    return (a.fromClass || "") === (b.fromClass || "") &&
+      (a.toClass || "") === (b.toClass || "") &&
+      (a.direction || "") === (b.direction || "") &&
+      (a.fromMultiplicity || "") === (b.fromMultiplicity || "") &&
+      (a.toMultiplicity || "") === (b.toMultiplicity || "") &&
+      toMaxText(a.fromMax) === toMaxText(b.fromMax) &&
+      toMaxText(a.toMax) === toMaxText(b.toMax) &&
+      (!!a.isBidirectional) === (!!b.isBidirectional) &&
+      (!!a.cascadeDeleteTargets) === (!!b.cascadeDeleteTargets) &&
+      (!!a.reflexiveHierarchy) === (!!b.reflexiveHierarchy);
+  };
+
+  var countRefs = function(end, raw) {
+    if (raw === undefined || raw === null || raw === "") {
+      return 0;
+    }
+    var refs = (Page.normalizeCrudAssociationRefs && typeof Page.normalizeCrudAssociationRefs === "function")
+      ? Page.normalizeCrudAssociationRefs(end, raw)
+      : [];
+    return refs.length;
+  };
+
+  Object.keys(classesData).forEach(function(className) {
+    var classInfo = classesData[className] || {};
+    var instances = classInfo.instances || [];
+    if (!instances.length) { return; }
+
+    var oldEndsAll = oldAssocByClass[className] || [];
+    var newEndsAll = Page.crudAssociationsByClass[className] || [];
+    if (!oldEndsAll.length && !newEndsAll.length) { return; }
+
+    var oldEnds = [];
+    oldEndsAll.forEach(function(end) {
+      if (!end || !end.storageKey) { return; }
+      if (!endAppliesToClass(className, end)) { return; }
+      oldEnds.push(end);
+    });
+
+    var newEnds = [];
+    var newKeys = {};
+    newEndsAll.forEach(function(end) {
+      if (!end || !end.storageKey) { return; }
+      if (!endAppliesToClass(className, end)) { return; }
+      newEnds.push(end);
+      newKeys[end.storageKey] = true;
+    });
+
+    if (!oldEnds.length && !newEnds.length) { return; }
+
+    var usedOldIdx = {};
+    var preservedLinks = 0;
+    var preservedFields = 0;
+
+    newEnds.forEach(function(newEnd) {
+      var newKey = newEnd.storageKey;
+      if (!newKey) { return; }
+
+      // Keep already-aligned keys untouched.
+      var hasNewKeyData = false;
+      for (var i = 0; i < instances.length; i++) {
+        if (instances[i] && Object.prototype.hasOwnProperty.call(instances[i], newKey)) {
+          hasNewKeyData = true;
+          break;
+        }
+      }
+      if (hasNewKeyData) {
+        return;
+      }
+
+      var matchedOldIdx = -1;
+      for (var j = 0; j < oldEnds.length; j++) {
+        if (usedOldIdx[j]) { continue; }
+        var oldEndId = oldEnds[j];
+        if (!oldEndId || !oldEndId.storageKey) { continue; }
+        if (oldEndId.storageKey === newKey) { continue; }
+        if (sameEndByIdentity(newEnd, oldEndId)) {
+          matchedOldIdx = j;
+          break;
+        }
+      }
+
+      if (matchedOldIdx < 0) {
+        for (var k = 0; k < oldEnds.length; k++) {
+          if (usedOldIdx[k]) { continue; }
+          var oldEndStruct = oldEnds[k];
+          if (!oldEndStruct || !oldEndStruct.storageKey) { continue; }
+          if (oldEndStruct.storageKey === newKey) { continue; }
+          if (sameEndByStructure(newEnd, oldEndStruct)) {
+            matchedOldIdx = k;
+            break;
+          }
+        }
+      }
+
+      if (matchedOldIdx < 0) {
+        return;
+      }
+
+      var oldEnd = oldEnds[matchedOldIdx];
+      var oldKey = oldEnd.storageKey;
+      usedOldIdx[matchedOldIdx] = true;
+
+      var movedThisField = false;
+      instances.forEach(function(inst) {
+        if (!inst || !Object.prototype.hasOwnProperty.call(inst, oldKey)) {
+          return;
+        }
+        var oldRaw = inst[oldKey];
+        var refsCount = countRefs(oldEnd, oldRaw);
+        if (!Object.prototype.hasOwnProperty.call(inst, newKey)) {
+          inst[newKey] = oldRaw;
+          movedThisField = true;
+          preservedLinks += refsCount;
+        }
+        delete inst[oldKey];
+      });
+
+      if (movedThisField) {
+        preservedFields++;
+      }
+    });
+
+    if (preservedFields > 0) {
+      var msgKept = "Info: Association role-name changes were detected in class '" + className + "'. Existing association data was preserved for " + preservedFields + " association field(s)" +
+                    (preservedLinks > 0 ? (", covering " + preservedLinks + " link(s).") : ".");
+      Page.crudAdjustmentMessages.push(msgKept);
+    }
+
+    // Remove stale fields that no longer map to any current association end.
+    var removedLinks = 0;
+    var removedFields = 0;
+    oldEnds.forEach(function(oldEnd, idxOld) {
+      if (!oldEnd || !oldEnd.storageKey) { return; }
+      var oldKey = oldEnd.storageKey;
+      if (newKeys[oldKey]) { return; }
+      if (usedOldIdx[idxOld]) { return; }
+
+      var removedAnyForField = false;
+      instances.forEach(function(inst) {
+        if (!inst || !Object.prototype.hasOwnProperty.call(inst, oldKey)) {
+          return;
+        }
+        removedLinks += countRefs(oldEnd, inst[oldKey]);
+        delete inst[oldKey];
+        removedAnyForField = true;
+      });
+      if (removedAnyForField) {
+        removedFields++;
+      }
+    });
+
+    if (removedFields > 0) {
+      var msgRemoved = "Info: Some association data in class '" + className + "' was removed because those association definition(s) no longer exist after your model changes. " +
+                       "Removed " + removedFields + " stale field(s)" +
+                       (removedLinks > 0 ? (" and " + removedLinks + " stale link(s).") : ".");
+      Page.crudAdjustmentMessages.push(msgRemoved);
+    }
   });
 };
 
@@ -2489,6 +2912,7 @@ Page.showCrudAbstractMessage = function(className) {
   html += "</div>";
 
   $panel.html(html);
+  $panel.data("crudActiveClass", className);
 };
 
 // Sets up clickable class headers and hides underlying forms
@@ -2817,7 +3241,40 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
             }
           });
 
-          var assocEnds = assocByClass[className] || [];
+          var assocEndsAll = assocByClass[className] || [];
+          // Match CRUD form behaviour: include association ends declared on
+          // this class or inherited from superclasses, and for self-reflexive
+          // associations sharing one storage field pick a single canonical end
+          // (prefer single-valued) to avoid duplicate links.
+          var assocEnds = [];
+          var reflexiveByField = {};
+          assocEndsAll.forEach(function(end) {
+            if (!end || !end.storageKey) { return; }
+            if (Page.isCrudSubclass && !Page.isCrudSubclass(className, end.fromClass)) {
+              return;
+            }
+
+            if (end.fromClass === end.toClass) {
+              var fieldName = end.storageKey;
+              var existing = reflexiveByField[fieldName];
+              if (!existing) {
+                reflexiveByField[fieldName] = end;
+              } else {
+                var existingMax = (typeof existing.toMax === "number") ? existing.toMax : null;
+                var newMax = (typeof end.toMax === "number") ? end.toMax : null;
+                var existingMultiple = (existingMax === null || existingMax > 1);
+                var newMultiple = (newMax === null || newMax > 1);
+                if (existingMultiple && !newMultiple) {
+                  reflexiveByField[fieldName] = end;
+                }
+              }
+            } else {
+              assocEnds.push(end);
+            }
+          });
+          Object.keys(reflexiveByField).forEach(function(fieldName) {
+            assocEnds.push(reflexiveByField[fieldName]);
+          });
 
           instances.forEach(function(inst, idx) {
             if (!inst) { return; }
@@ -2872,7 +3329,7 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
             // same index space (1-based) so the backend can build
             // precise link matrices instead of random ones.
             assocEnds.forEach(function(end) {
-              if (!end || end.fromClass !== className) { return; }
+              if (!end) { return; }
               var fieldName = end.storageKey;
               if (!fieldName) { return; }
               var rawVal = inst[fieldName];
@@ -2880,33 +3337,23 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
                 return;
               }
 
-              var multiple = true;
-              if (typeof end.toMax === "number" && end.toMax <= 1) {
-                multiple = false;
-              }
+              var refs = (Page.normalizeCrudAssociationRefs && typeof Page.normalizeCrudAssociationRefs === "function")
+                ? Page.normalizeCrudAssociationRefs(end, rawVal)
+                : [];
+              if (!refs.length) { return; }
 
-              var targetIndices = [];
-              if (multiple) {
-                if (!Array.isArray(rawVal)) { return; }
-                rawVal.forEach(function(tIdx) {
-                  if (typeof tIdx === "number" && tIdx >= 0) {
-                    targetIndices.push(tIdx);
-                  }
-                });
-              } else {
-                if (typeof rawVal === "number" && rawVal >= 0) {
-                  targetIndices.push(rawVal);
-                }
-              }
-
-              if (targetIndices.length === 0) { return; }
-
-              targetIndices.forEach(function(tIdx) {
+              refs.forEach(function(ref) {
+                if (!ref || typeof ref.index !== "number" || ref.index < 0) { return; }
+                var runtimeToClass = ref.className || end.toClass;
+                if (!runtimeToClass) { return; }
+                var runtimeInfo = Page.crudData.classes[runtimeToClass] || {};
+                var runtimeInstances = runtimeInfo.instances || [];
+                if (ref.index >= runtimeInstances.length) { return; }
                 instanceSnapshot.associations.push({
                   fromClass: className,
                   fromIndex: idx + 1,
-                  toClass: end.toClass,
-                  toIndex: tIdx + 1
+                  toClass: runtimeToClass,
+                  toIndex: ref.index + 1
                 });
               });
             });
@@ -3028,20 +3475,40 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
     var $item = jQuery(this);
     var className = $item.data("class");
     var isAbstract = $item.data("abstract") === true || $item.data("abstract") === "true";
-
-    // Ensure that subsequent dialog rendering targets the container
-    // that this header belongs to (bottom panel vs live-view canvas).
-    Page.currentCrudContainer = container;
-
-    // Visually indicate the selected class header
-    container.find(".crud-class-item").removeClass("crud-class-item-active active");
-    $item.addClass("crud-class-item-active active");
-
-    if (isAbstract) {
-      Page.showCrudAbstractMessage(className);
-    } else {
-      Page.openCrudDialogForClass(className);
+    var $panel = container.find(".crud-instance-panel").first();
+    var currentOpenClass = $panel.length ? ($panel.data("crudActiveClass") || null) : null;
+    if (!currentOpenClass && Page.crudClassSelected) {
+      currentOpenClass = Page.crudClassSelected;
     }
+
+    var doSwitch = function() {
+      // Ensure that subsequent dialog rendering targets the container
+      // that this header belongs to (bottom panel vs live-view canvas).
+      Page.currentCrudContainer = container;
+
+      // Visually indicate the selected class header
+      container.find(".crud-class-item").removeClass("crud-class-item-active active");
+      $item.addClass("crud-class-item-active active");
+
+      if (isAbstract) {
+        Page.showCrudAbstractMessage(className);
+      } else {
+        Page.openCrudDialogForClass(className);
+      }
+    };
+
+    // If the user is switching away from a different class form with
+    // unsaved edits, confirm before discarding those in-progress changes.
+    if ($panel.length && currentOpenClass && currentOpenClass !== className && Page.isCrudFormDirty && Page.isCrudFormDirty($panel)) {
+      Page.showCrudConfirmModal(
+        "Switching forms will discard your unsaved changes. Do you want to continue?",
+        function() { doSwitch(); },
+        function() { /* stay on current form */ }
+      );
+      return;
+    }
+
+    doSwitch();
   });
 };
 
@@ -3454,6 +3921,7 @@ Page.openCrudDialogForClass = function(className) {
   html += "</div>";
 
   $panel.html(html);
+  $panel.data("crudActiveClass", className);
 
   // Initialize HTML-based tooltips for CRUD association options that
   // provided rich HTML content via data-crud-tooltip-html. We attach
@@ -3717,6 +4185,12 @@ Page.openCrudDialogForClass = function(className) {
         }
       }
     });
+
+    // Editing form is now fully populated programmatically; treat this
+    // populated state as clean until the user changes something.
+    if (typeof Page.markCrudFormClean === "function") {
+      Page.markCrudFormClean($panel);
+    }
   });
 
   // Delete existing instance
@@ -4339,7 +4813,18 @@ Page.openCrudDialogForClass = function(className) {
       // value is now empty.
       $sel.trigger("change");
     });
+
+    // Cancel returns the form to a clean add-mode state.
+    if (typeof Page.markCrudFormClean === "function") {
+      Page.markCrudFormClean($panel);
+    }
   });
+
+  // Initial baseline for unsaved-change detection in the currently
+  // rendered form.
+  if (typeof Page.markCrudFormClean === "function") {
+    Page.markCrudFormClean($panel);
+  }
 
   // ----- Class array (ClassType[]) element management -----
 
@@ -5120,6 +5605,13 @@ Page.showCrudFromJson = function(jsonText, tabnumber, containerSelector) {
       if (typeof Page.adjustCrudAssociationsForClassRenames === "function") {
         Page.adjustCrudAssociationsForClassRenames(classRenameNewToOld, oldCrudAssociationsByClass);
       }
+    }
+    // Reconcile association-field keys when association role names change.
+    // If an old end and a new end are structurally the same, preserve data
+    // by moving values to the new storage key; otherwise remove stale values
+    // and report what was cleared.
+    if (oldCrudAssociationsByClass && typeof Page.adjustCrudAssociationsForRoleNameChanges === "function") {
+      Page.adjustCrudAssociationsForRoleNameChanges(oldCrudAssociationsByClass);
     }
     // After reattaching any preserved instances, first handle simple
     // attribute renames (old attribute removed, new attribute added,
