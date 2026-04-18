@@ -494,7 +494,7 @@ class InstanceDiagramGenerator
   private Map<String, String> generateRandomAttributesForInstance(UmpleClass uClass, int iteration) {
     Map<String, String> result = new LinkedHashMap<String, String>();
 
-    java.util.List<Attribute> attrs = uClass.getAttributes();
+    java.util.List<Attribute> attrs = uClass.getAllAttributes();
     if (attrs == null || attrs.size() == 0) {
       return result;
     }
@@ -905,8 +905,9 @@ class InstanceDiagramGenerator
     String className = umpClass.getName();
     String instanceName = "";
 
-    if (umpClass.getAttributes().size() != 0){
-      Attribute firstAttribute = umpClass.getAttributes().get(0);
+    java.util.List<Attribute> allAttrs = umpClass.getAllAttributes();
+    if (allAttrs.size() != 0){
+      Attribute firstAttribute = allAttrs.get(0);
       String firstAttributeName = firstAttribute.getName();
       int attributeNameLength = firstAttributeName.length();
 
@@ -924,14 +925,7 @@ class InstanceDiagramGenerator
         firstAttributeIsId = true;
         instanceName = className + iteration + ": " + className;
 
-        // if the first attribute is called "name" and is type String
-      } else if (firstAttributeName.toLowerCase().equals("name") && firstAttribute.getType().equals("String")){
-        firstAttributeInstanceName = createRandomAttributeValue(firstAttribute);
-
-        instanceIdtoInstanceName.put(className + iteration, firstAttributeInstanceName);
-
-        instanceName = firstAttributeInstanceName + ": " + className;
-      } else{
+        } else{
         instanceName = className + iteration + ": " + className;
       }
     
@@ -984,7 +978,7 @@ class InstanceDiagramGenerator
     boolean isFirst = true;
 
     if (!hasSuboption("hideattributes")) { 
-      for (Attribute uAttribute : uClass.getAttributes()) {
+      for (Attribute uAttribute : uClass.getAllAttributes()) {
         if (!uAttribute.isConstant()) 
         { 
           String instanceAttribute;
