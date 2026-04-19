@@ -465,6 +465,15 @@ class FeatureModel{
   */
   public boolean evaluateFeatureLink(FeatureLink featureLink)
   {
+    return evaluateFeatureLinkLoop(featureLink, new HashSet<FeatureNode>());
+  }
+  /*
+  visited tracks FeatureNodes whose evaluteLinkedFeatures call is already on
+  the current stack, so a require-cycle terminates instead of recursing
+  forever.
+  */
+  private boolean evaluateFeatureLinkLoop(FeatureLink featureLink, Set<FeatureNode> visited)
+  {
     FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeatureNode());
     if(featureNode.getIsLeaf())
     {
@@ -487,13 +496,13 @@ class FeatureModel{
       {
         isUsedfeature = true;      // opt is always has a true value 
       }
-      else 
-      {  
-        return isUsedFeatureLeaf((FeatureLeaf)featureNode) && evaluteLinkedFeatures(featureNode);
+      else
+      {
+        return isUsedFeatureLeaf((FeatureLeaf)featureNode) && evaluteLinkedFeaturesLoop(featureNode, visited);
       }
       if(featureLeafHasUseStatement) // to check a feature's require statement.
       {
-        return isUsedfeature && evaluteLinkedFeatures(featureNode) ;
+        return isUsedfeature && evaluteLinkedFeaturesLoop(featureNode, visited) ;
       }
       return isUsedfeature;
     }
@@ -502,7 +511,7 @@ class FeatureModel{
     { 
       if(!featureNode.getIsLeaf())
       {
-        return  evaluteLinkedFeatures(featureNode);
+        return  evaluteLinkedFeaturesLoop(featureNode, visited);
       }
     }
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Disjunctive))
@@ -512,7 +521,7 @@ class FeatureModel{
         boolean result = false;
         List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
         for(int i=0 ; i<outgoingLinks.size(); i++){
-          result = result || evaluateFeatureLink(outgoingLinks.get(i));
+          result = result || evaluateFeatureLinkLoop(outgoingLinks.get(i), visited);
         }
         return result;
       }
@@ -524,7 +533,7 @@ class FeatureModel{
             List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
             int countOfUsedTarget = 0;
             for(int i=0 ; i < outgoingLinks.size(); i++){
-              if(evaluateFeatureLink(outgoingLinks.get(i)))  // bitwise xor (^) can not be used here because it does not mean always only one. Example: (true ^ true ^ true == true) 
+              if(evaluateFeatureLinkLoop(outgoingLinks.get(i), visited))  // bitwise xor (^) can not be used here because it does not mean always only one. Example: (true ^ true ^ true == true)
               countOfUsedTarget++;
             }
             return (countOfUsedTarget == 1) ? true: false;
@@ -578,13 +587,39 @@ class FeatureModel{
   }
 
   private boolean evaluteLinkedFeatures(FeatureNode featureNode) {
-    boolean includedFeatures = true;
-    List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
-    for(int i=0 ; i<outgoingLinks.size(); i++){
-      includedFeatures = includedFeatures && evaluateFeatureLink(outgoingLinks.get(i));
+    return evaluteLinkedFeaturesLoop(featureNode, new HashSet<FeatureNode>());
+  }
+
+  private boolean evaluteLinkedFeaturesLoop(FeatureNode featureNode, Set<FeatureNode> visited) {
+    if(visited.contains(featureNode))
+    {
+      // Cycle: this node's outgoing requirements are already being evaluated
+      // higher on the stack. Returning true here is correct because the higher
+      // frame is iterating ALL of this node's outgoing links itself; we must
+      // not re-walk them or we'd recurse forever. Mutual require between two
+      // use'd mixsets resolves to true under this semantic.
+      return true;
     }
-    return includedFeatures;
-}
+    visited.add(featureNode);
+    try
+    {
+      boolean includedFeatures = true;
+      List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
+      for(int i=0 ; i<outgoingLinks.size(); i++){
+        includedFeatures = includedFeatures && evaluateFeatureLinkLoop(outgoingLinks.get(i), visited);
+      }
+      return includedFeatures;
+    }
+    finally
+    {
+      // Pop on exit so the visited set stays equal to "nodes currently on the
+      // evaluation stack". Without this pop a non-cycle DAG (e.g. Root -> A or C
+      // where A and C both require X) would let the second sibling inherit a
+      // bogus "true" cache for X from the first sibling's traversal, even when
+      // X has its own unsatisfied requirement downstream.
+      visited.remove(featureNode);
+    }
+  }
 }
 /*
 This class used to represent the binary tree of require-statement argument 

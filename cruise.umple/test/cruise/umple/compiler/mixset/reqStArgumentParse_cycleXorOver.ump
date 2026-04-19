@@ -1,0 +1,17 @@
+// Regression fixture: XOR over a 2-node require-cycle, both ends used.
+// Each XOR child follows the cycle and resolves to true (cycle short-circuit
+// returns true once the visited node is re-encountered), so the XOR count is 2
+// and the model is NOT satisfied. Must not crash, and must report false.
+//
+// Note: xor is an infix linking operator in the require-statement grammar
+// (see cruise.umple/src/mixset/umple_mixsets.grammar:27). Existing fixtures
+// (e.g. reqStArgumentParse_validCombinedOpFeatuerModel.ump) use the same
+// "A xor B" form -- there is no "xor [A, B]" prefix syntax.
+mixset Root { require [A xor B]; }
+mixset A { require [B]; }
+mixset B { require [A]; }
+mixset Z { require [Root]; }
+
+use Root;
+use A;
+use B;

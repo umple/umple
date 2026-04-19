@@ -1,0 +1,9 @@
+// Regression fixture: require-cycle (A <-> B) where both nodes are used and
+// a root mixset Z points into the cycle. The compiler must not StackOverflow
+// while satisfying the feature model. Expected: satisfied (true).
+mixset A { require [B]; }
+mixset B { require [A]; }
+mixset Z { require [A]; }
+
+use A;
+use B;

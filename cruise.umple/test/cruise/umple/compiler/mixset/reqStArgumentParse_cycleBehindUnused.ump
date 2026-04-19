@@ -1,0 +1,11 @@
+// Regression fixture: A <-> B cycle, both used, plus B requires an unused D.
+// Traversal must walk A -> B (cycle short-circuit on B->A revisit), then
+// B -> D and fail there. Expected: NOT satisfied (false). Must not crash.
+mixset A { require [B]; }
+mixset B { require [A]; }
+mixset B { require [D]; }
+mixset D {}
+mixset Z { require [A]; }
+
+use A;
+use B;

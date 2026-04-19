@@ -1,0 +1,11 @@
+// Regression fixture: 3-node cycle A -> B -> C -> A, all used, root Z -> A.
+// Catches a hypothetical fix that only handled the immediate-mutual case.
+// Expected: satisfied (true).
+mixset A { require [B]; }
+mixset B { require [C]; }
+mixset C { require [A]; }
+mixset Z { require [A]; }
+
+use A;
+use B;
+use C;
