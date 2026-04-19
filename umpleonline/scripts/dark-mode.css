@@ -874,6 +874,9 @@ select {
 .feature-tree-toggle {
   color: #aaa;
 }
+.feature-tree-name {
+  color: var(--ai-text);
+}
 .feature-tree-name-group,
 .feature-tree-mult-label {
   color: #bbb;

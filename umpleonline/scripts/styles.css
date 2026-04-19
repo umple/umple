@@ -35,6 +35,7 @@ p, ol, ul, div, h1, h2, h3, h4, b {
 
 .ui-tooltip {
   background-color: #dadada;;
+  z-index: 10010;
 }
 
 p.pagedescription { margin-left:5px; margin-top: 10px;}
@@ -380,8 +381,14 @@ a.button:active { color:black; text-decoration:none; }
   color: #555;
   cursor: default;
 }
-.feature-tree-name-violated {
-  color: #cc0000;
+.feature-tree-name-excluded {
+  text-decoration: underline;
+}
+.feature-tree-name-excluded::before {
+  content: "\2298\00a0"; /* U+2298 CIRCLED DIVISION SLASH + NBSP gap */
+  font-size: 10pt;
+  font-weight: bold;
+  text-decoration: none;
 }
 .feature-tree-name-multiref {
   font-style: italic;
@@ -391,6 +398,9 @@ a.button:active { color:black; text-decoration:none; }
 .feature-tree-name-multiref-violated {
   font-style: italic;
   text-decoration: underline;
+  color: #cc0000;
+}
+.feature-tree-name-violated {
   color: #cc0000;
 }
 .feature-tree-name-cycle-disabled {
