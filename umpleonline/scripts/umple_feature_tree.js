@@ -835,6 +835,8 @@ var FeatureTreeModal = {
   _fetchInFlight: false,
   _fetchId: 0,
   _savedScroll: 0,
+  _lastFetchFailed: false,
+  _lastFetchStatus: -1,
 
   init: function() {
     if (FeatureTreeModal._domBound) return;
@@ -939,7 +941,21 @@ var FeatureTreeModal = {
     } else {
       while (mount.firstChild) mount.removeChild(mount.firstChild);
       mount.style.display = "none";
-      if (empty) empty.classList.remove("is-hidden");
+      if (empty) {
+        let textEl = document.getElementById("featureTreeModalEmptyText");
+        if (textEl) {
+          if (FeatureTreeModal._lastFetchFailed) {
+            textEl.textContent =
+              "Failed to load feature model (HTTP "
+              + FeatureTreeModal._lastFetchStatus
+              + ").";
+          } else {
+            textEl.textContent =
+              "No feature model detected. Ensure your code contains requirements.";
+          }
+        }
+        empty.classList.remove("is-hidden");
+      }
       if (spin) spin.classList.add("is-hidden");
     }
   },

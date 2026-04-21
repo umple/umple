@@ -5862,8 +5862,13 @@ Action.updateUmpleDiagram = function() {
 // To fetch the feature model json from the backend complier
 Action.fetchFeatureModelTreeThen = function(next)
 {
-  let proceed = function() { if (typeof next === "function") next(); };
-  let proceedAsync = function() { setTimeout(proceed, 0); };
+  let proceed = function() {
+    if (typeof next === "function") next();
+  };
+  // proceedAsync is only used by the early-return branches below — they need the continuation deferred via setTimeout so fetchFeatureModelTreeThen returns before next() fires. The main Ajax onFinally path calls the sync proceed() directly.
+  let proceedAsync = function() {
+    setTimeout(proceed, 0);
+  };
 
 
   let mount = document.getElementById("featureModelTreeContainer");
@@ -5874,6 +5879,8 @@ Action.fetchFeatureModelTreeThen = function(next)
     Page.hasFeatureModelTree = false;
     FeatureTreeModal._fetchId++;
     FeatureTreeModal._fetchInFlight = false;
+    FeatureTreeModal._lastFetchFailed = false;
+    FeatureTreeModal._lastFetchStatus = -1;
     FeatureTreeModal.close();
     if (mount) {
       while (mount.firstChild) mount.removeChild(mount.firstChild);
@@ -5885,6 +5892,8 @@ Action.fetchFeatureModelTreeThen = function(next)
 
   if (!mount) {
     Page.hasFeatureModelTree = false;
+    FeatureTreeModal._lastFetchFailed = false;
+    FeatureTreeModal._lastFetchStatus = -1;
     proceedAsync();
     return;
   }
@@ -5892,30 +5901,46 @@ Action.fetchFeatureModelTreeThen = function(next)
   // async lock to prevent ajax mutex
   var thisFetchId = ++FeatureTreeModal._fetchId;
   FeatureTreeModal._fetchInFlight = true;
+  FeatureTreeModal._lastFetchFailed = false;
+  FeatureTreeModal._lastFetchStatus = -1;
   FeatureTreeModal.refreshBody();
 
   Ajax.sendRequest(
     "scripts/compiler.php",
     function(response) {
       // Stale callback guard: a newer fetch or a mode switch has made.
-      if (thisFetchId !== FeatureTreeModal._fetchId) { proceed(); return; }
-      try {
-        var featureModelJson = FeatureTree.getModelFromResponse(response.responseText);
-        if (featureModelJson && featureModelJson.featureModel) {
-          FeatureTree.parseModel(featureModelJson.featureModel);
-          Page.hasFeatureModelTree = true;
-        } else {
-          FeatureTree.reset();
-          Page.hasFeatureModelTree = false;
+      if (thisFetchId !== FeatureTreeModal._fetchId) return;
+      var featureModelJson = FeatureTree.getModelFromResponse(response.responseText);
+      if (featureModelJson && featureModelJson.featureModel) {
+        FeatureTree.parseModel(featureModelJson.featureModel);
+        Page.hasFeatureModelTree = true;
+      } else {
+        FeatureTree.reset();
+        Page.hasFeatureModelTree = false;
+      }
+    },
+    "language=FeatureModelJson&theme=light&error=true&umpleCode="
+      + encodeURIComponent(Page.getUmpleCode()),
+    {
+      onError: function(http) {
+        // Error-unique: reset feature state and record failure for UI.
+        // Stale callbacks do not mutate state; onFinally drives proceed().
+        if (thisFetchId !== FeatureTreeModal._fetchId) return;
+        FeatureTree.reset();
+        Page.hasFeatureModelTree = false;
+        FeatureTreeModal._lastFetchFailed = true;
+        FeatureTreeModal._lastFetchStatus = http.status;
+      },
+      onFinally: function(http) {
+        if (thisFetchId !== FeatureTreeModal._fetchId) {
+          proceed();
+          return;
         }
-      } finally {
         FeatureTreeModal._fetchInFlight = false;
         FeatureTreeModal.refreshBody();
         proceed();
       }
-    },
-    "language=FeatureModelJson&theme=light&error=true&umpleCode="
-      + encodeURIComponent(Page.getUmpleCode())
+    }
   );
 };
 

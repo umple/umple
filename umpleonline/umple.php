@@ -1411,7 +1411,7 @@ $output = $dataHandle->readData('model.ump');
         <div id="featureModelTreeContainer" class="feature-tree-mount"></div>
         <div id="featureTreeModalLoading" class="is-hidden feature-tree-info">Loading feature model&hellip;</div>
         <div id="featureTreeModalEmpty" class="is-hidden feature-tree-info">
-          No feature model detected. Ensure your code contains requirements.
+          <span id="featureTreeModalEmptyText">EMPTY_TEXT</span>
           <a href="#" id="featureTreeRetryLink" class="feature-tree-retry-link">Retry</a>
         </div>
       </div>
