@@ -1,0 +1,21 @@
+req R1 userStory {
+  who { user }
+  what { manage orders }
+}
+
+req R1 quality {
+  Scalability {}
+  Maintainability {}
+}
+
+implementsReq R1;
+class Customer {
+  name;
+  email;
+}
+
+implementsReq R1;
+class Order {
+  orderNumber;
+  * -- 1 Customer;
+}

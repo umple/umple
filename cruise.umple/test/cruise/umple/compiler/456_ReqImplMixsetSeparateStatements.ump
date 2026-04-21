@@ -1,0 +1,19 @@
+// Regression: multiple implementsReq statements before a mixset should accumulate.
+implementsReq R1;
+implementsReq R2;
+
+mixset DesignA {
+  class FeatureA {
+    name;
+  }
+}
+
+req R1 text {
+  First requirement.
+}
+
+req R2 text {
+  Second requirement.
+}
+
+use DesignA;

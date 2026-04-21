@@ -11,6 +11,7 @@ package cruise.umple.compiler;
 
 import java.io.File;
 import cruise.umple.compiler.Requirement;
+import cruise.umple.compiler.ReqImplementation;
 import java.util.*;
 
 import org.junit.*;
@@ -1978,6 +1979,777 @@ public class UmpleParserTest
   {
     assertNoWarningsParse("455_ReqUseCaseMultipleSteps.ump");
   }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityBasic()
+  {
+    assertHasWarningsParse("456_ReqQualityBasic.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("INVALID", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Medium", req.getQualityClass(1).getName());
+    Assert.assertEquals("Low", req.getQualityClass(2).getName());
+    Assert.assertEquals("", req.getQualityClass(0).getContent());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityAliases()
+  {
+    assertHasWarningsParse("456_ReqQualityAliases.ump", 406);
+
+    Requirement req1 = model.getAllRequirements().get("Q1");
+    Assert.assertNotNull(req1);
+    Assert.assertEquals("INVALID", req1.getLanguage());
+    Assert.assertEquals(2, req1.numberOfQualityClasses());
+
+    Requirement req2 = model.getAllRequirements().get("Q2");
+    Assert.assertNotNull(req2);
+    Assert.assertEquals("INVALID", req2.getLanguage());
+    Assert.assertEquals(2, req2.numberOfQualityClasses());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityCoexistence()
+  {
+    assertNoWarningsParse("456_ReqQualityCoexistence.ump");
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("architect", req.getWho());
+    Assert.assertEquals("compare designs", req.getWhat());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityNonEmptyWarning()
+  {
+    assertHasWarningsParse("456_ReqQualityNonEmptyWarning.ump", 403);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqNormalStillWorksAfterQuality()
+  {
+    assertNoWarningsParse("456_ReqNormalStillWorksAfterQuality.ump");
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityWithSemicolons()
+  {
+    assertFailedParse("456_ReqQualityWithSemicolons.ump", 1500);
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Medium", req.getQualityClass(1).getName());
+    Assert.assertEquals("Low", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityAccumulate()
+  {
+    assertHasWarningsParse("456_ReqQualityAccumulate.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("INVALID", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Medium", req.getQualityClass(1).getName());
+    Assert.assertEquals("Low", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityThenPlain()
+  {
+    assertHasWarningsParse("456_ReqQualityThenPlain.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Some plain text requirement.", req.getStatement().trim());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityThenUserStory()
+  {
+    assertHasWarningsParse("456_ReqQualityThenUserStory.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("architect", req.getWho());
+    Assert.assertEquals("compare designs", req.getWhat());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Low", req.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualitySingleClass()
+  {
+    assertNoWarningsParse("456_ReqQualitySingleClass.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("OnlyOne", req.getQualityClass(0).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityManyClasses()
+  {
+    assertNoWarningsParse("456_ReqQualityManyClasses.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(12, req.numberOfQualityClasses());
+    Assert.assertEquals("A", req.getQualityClass(0).getName());
+    Assert.assertEquals("B", req.getQualityClass(1).getName());
+    Assert.assertEquals("C", req.getQualityClass(2).getName());
+    Assert.assertEquals("D", req.getQualityClass(3).getName());
+    Assert.assertEquals("E", req.getQualityClass(4).getName());
+    Assert.assertEquals("F", req.getQualityClass(5).getName());
+    Assert.assertEquals("G", req.getQualityClass(6).getName());
+    Assert.assertEquals("H", req.getQualityClass(7).getName());
+    Assert.assertEquals("I", req.getQualityClass(8).getName());
+    Assert.assertEquals("J", req.getQualityClass(9).getName());
+    Assert.assertEquals("K", req.getQualityClass(10).getName());
+    Assert.assertEquals("L", req.getQualityClass(11).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualitySingleLineDense()
+  {
+    assertNoWarningsParse("456_ReqQualitySingleLineDense.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("X", req.getQualityClass(0).getName());
+    Assert.assertEquals("Y", req.getQualityClass(1).getName());
+    Assert.assertEquals("Z", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityUnderscorePrefix()
+  {
+    assertNoWarningsParse("456_ReqQualityUnderscorePrefix.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("_Internal", req.getQualityClass(0).getName());
+    Assert.assertEquals("_Secure", req.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityDigitsInName()
+  {
+    assertNoWarningsParse("456_ReqQualityDigitsInName.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("Level1", req.getQualityClass(0).getName());
+    Assert.assertEquals("Class99", req.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualitySingleCharName()
+  {
+    assertNoWarningsParse("456_ReqQualitySingleCharName.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("A", req.getQualityClass(0).getName());
+    Assert.assertEquals("B", req.getQualityClass(1).getName());
+    Assert.assertEquals("C", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityExtraWhitespace()
+  {
+    assertNoWarningsParse("456_ReqQualityExtraWhitespace.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Medium", req.getQualityClass(1).getName());
+    Assert.assertEquals("Low", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityWithUseCase()
+  {
+    assertNoWarningsParse("456_ReqQualityWithUseCase.ump");
+
+    Requirement req = model.getAllRequirements().get("UC1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Low", req.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMultipleReqIDs()
+  {
+    assertNoWarningsParse("456_ReqQualityMultipleReqIDs.ump");
+
+    Requirement speedReq = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(speedReq);
+    Assert.assertEquals("", speedReq.getLanguage());
+    Assert.assertEquals(2, speedReq.numberOfQualityClasses());
+    Assert.assertEquals("High", speedReq.getQualityClass(0).getName());
+    Assert.assertEquals("Low", speedReq.getQualityClass(1).getName());
+
+    Requirement safetyReq = model.getAllRequirements().get("Safety");
+    Assert.assertNotNull(safetyReq);
+    Assert.assertEquals("", safetyReq.getLanguage());
+    Assert.assertEquals(2, safetyReq.numberOfQualityClasses());
+    Assert.assertEquals("Critical", safetyReq.getQualityClass(0).getName());
+    Assert.assertEquals("Normal", safetyReq.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityAccumulateThree()
+  {
+    assertNoWarningsParse("456_ReqQualityAccumulateThree.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("Alpha", req.getQualityClass(0).getName());
+    Assert.assertEquals("Beta", req.getQualityClass(1).getName());
+    Assert.assertEquals("Gamma", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityKeywordLikeNames()
+  {
+    assertNoWarningsParse("456_ReqQualityKeywordLikeNames.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("QualityAttr", req.getQualityClass(0).getName());
+    Assert.assertEquals("ReqLevel", req.getQualityClass(1).getName());
+    Assert.assertEquals("ClassType", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityWhitespaceOnlyBraces()
+  {
+    assertNoWarningsParse("456_ReqQualityWhitespaceOnlyBraces.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("", req.getQualityClass(0).getContent());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityLongClassName()
+  {
+    assertNoWarningsParse("456_ReqQualityLongClassName.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("AVeryLongQualityClassNameThatDefinitelyExceedsOneHundredCharactersInTotalLengthForTestingPurposesOnly", req.getQualityClass(0).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityUseCaseReversed()
+  {
+    assertHasWarningsParse("456_ReqQualityUseCaseReversed.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Low", req.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityEmptySection405()
+  {
+    assertHasWarningsParse("456_ReqQualityEmptySection405.ump", 405);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityEmptySectionWhitespace405()
+  {
+    assertHasWarningsParse("456_ReqQualityEmptySectionWhitespace405.ump", 405);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMissingBraces407()
+  {
+    assertFailedParse("456_ReqQualityMissingBraces407.ump", 407);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMultipleBareIds407()
+  {
+    assertFailedParse("456_ReqQualityMultipleBareIds407.ump", 407);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMixedValidAndBare407()
+  {
+    assertFailedParse("456_ReqQualityMixedValidAndBare407.ump", 407);
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityOrphanBraces1504()
+  {
+    assertFailedParse("456_ReqQualityOrphanBraces1504.ump", 1504);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualitySpecialChars1500()
+  {
+    assertFailedParse("456_ReqQualitySpecialChars1500.ump", 1500);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMultipleNonEmpty403()
+  {
+    assertHasWarningsParse("456_ReqQualityMultipleNonEmpty403.ump", 403, 0);
+    Assert.assertEquals(403, parser.getParseResult().getErrorMessage(1).getErrorType().getErrorCode());
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMixedValidAndWarned403()
+  {
+    assertHasWarningsParse("456_ReqQualityMixedValidAndWarned403.ump", 403);
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("content", req.getQualityClass(1).getContent());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityStandalone406()
+  {
+    assertHasWarningsParse("456_ReqQualityStandalone406.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("Standalone");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("INVALID", req.getLanguage());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityLanguageConflict402()
+  {
+    assertHasWarningsParse("456_ReqQualityLanguageConflict402.ump", 402);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityGrammarBraceMismatch()
+  {
+    assertBraceMismatchError("456_ReqQualityGrammarBraceMismatch.ump", 1502);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityWithImplementsReq()
+  {
+    assertNoWarningsParse("456_ReqQualityWithImplementsReq.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("Performance", req.getQualityClass(0).getName());
+    Assert.assertEquals("Security", req.getQualityClass(1).getName());
+
+    UmpleClass itemClass = model.getUmpleClass("Item");
+    Assert.assertNotNull(itemClass);
+    Assert.assertEquals(2, itemClass.numberOfAttributes());
+    Assert.assertEquals(1, itemClass.numberOfReqImplementations());
+    Assert.assertEquals("R1", itemClass.getReqImplementation(0).getIdentifier());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityInsideTrait()
+  {
+    assertNoWarningsParse("456_ReqQualityInsideTrait.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("Reliability", req.getQualityClass(0).getName());
+
+    UmpleTrait loggable = model.getUmpleTrait("Loggable");
+    Assert.assertNotNull(loggable);
+    Assert.assertEquals(1, loggable.numberOfAttributes());
+    Assert.assertEquals(1, loggable.numberOfReqImplementations());
+    Assert.assertEquals("R1", loggable.getReqImplementation(0).getIdentifier());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMixedReqTypes()
+  {
+    assertNoWarningsParse("456_ReqQualityMixedReqTypes.ump");
+
+    Requirement r1 = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(r1);
+    Assert.assertEquals("", r1.getLanguage());
+    Assert.assertEquals(0, r1.numberOfQualityClasses());
+    Assert.assertEquals("Simple plain requirement.", r1.getStatement().trim());
+
+    Requirement r2 = model.getAllRequirements().get("R2");
+    Assert.assertNotNull(r2);
+    Assert.assertEquals("userStory", r2.getLanguage());
+    Assert.assertEquals(2, r2.numberOfQualityClasses());
+    Assert.assertEquals("Accuracy", r2.getQualityClass(0).getName());
+    Assert.assertEquals("Coverage", r2.getQualityClass(1).getName());
+    Assert.assertEquals("tester", r2.getWho());
+    Assert.assertEquals("validate", r2.getWhat());
+
+    Requirement r3 = model.getAllRequirements().get("R3");
+    Assert.assertNotNull(r3);
+    Assert.assertEquals("useCase", r3.getLanguage());
+    Assert.assertEquals(1, r3.numberOfQualityClasses());
+    Assert.assertEquals("Usability", r3.getQualityClass(0).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityWithClassAndAssociations()
+  {
+    assertNoWarningsParse("456_ReqQualityWithClassAndAssociations.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("Scalability", req.getQualityClass(0).getName());
+    Assert.assertEquals("Maintainability", req.getQualityClass(1).getName());
+
+    UmpleClass customerClass = model.getUmpleClass("Customer");
+    Assert.assertNotNull(customerClass);
+    Assert.assertEquals(2, customerClass.numberOfAttributes());
+    Assert.assertEquals(1, customerClass.numberOfReqImplementations());
+    Assert.assertEquals("R1", customerClass.getReqImplementation(0).getIdentifier());
+
+    UmpleClass orderClass = model.getUmpleClass("Order");
+    Assert.assertNotNull(orderClass);
+    Assert.assertEquals(1, orderClass.numberOfAttributes());
+    Assert.assertEquals(1, orderClass.numberOfReqImplementations());
+    Assert.assertEquals("R1", orderClass.getReqImplementation(0).getIdentifier());
+
+    List<Association> associations = model.getAssociations();
+    Assert.assertEquals(1, associations.size());
+  }
+
+  //Issue 2144 (Quality - implementsReq with quality class parameter)
+  @Test
+  public void ReqQualityImplReqBasic()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqBasic.ump");
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+
+    // Check that the ReqImplementation has qualityClassName set
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertTrue(impls.size() >= 1);
+    ReqImplementation speedImpl = null;
+    for (ReqImplementation ri : impls) {
+      if ("Speed".equals(ri.getIdentifier())) { speedImpl = ri; break; }
+    }
+    Assert.assertNotNull(speedImpl);
+    Assert.assertEquals("High", speedImpl.getQualityClassName());
+    Assert.assertNotNull(speedImpl.getQualityClass());
+    Assert.assertEquals("High", speedImpl.getQualityClass().getName());
+  }
+
+  //Issue 2144 (Quality - mixed bare and quality class refs)
+  @Test
+  public void ReqQualityImplReqMixed()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqMixed.ump");
+
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertTrue(impls.size() >= 2);
+
+    ReqImplementation r1Impl = null;
+    ReqImplementation speedImpl = null;
+    for (ReqImplementation ri : impls) {
+      if ("R1".equals(ri.getIdentifier())) r1Impl = ri;
+      if ("Speed".equals(ri.getIdentifier())) speedImpl = ri;
+    }
+    Assert.assertNotNull(r1Impl);
+    Assert.assertNull(r1Impl.getQualityClassName());
+
+    Assert.assertNotNull(speedImpl);
+    Assert.assertEquals("High", speedImpl.getQualityClassName());
+    Assert.assertNotNull(speedImpl.getQualityClass());
+  }
+
+  //Issue 2144 (Quality - multiple quality class parameters)
+  @Test
+  public void ReqQualityImplReqMultiQuality()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqMultiQuality.ump");
+
+    ReqImplementation speedImpl = null;
+    ReqImplementation securityImpl = null;
+    for (ReqImplementation ri : model.getReqImplementations()) {
+      if ("Speed".equals(ri.getIdentifier())) speedImpl = ri;
+      if ("Security".equals(ri.getIdentifier())) securityImpl = ri;
+    }
+    Assert.assertNotNull(speedImpl);
+    Assert.assertEquals("High", speedImpl.getQualityClassName());
+    Assert.assertNotNull(speedImpl.getQualityClass());
+
+    Assert.assertNotNull(securityImpl);
+    Assert.assertEquals("Perfect", securityImpl.getQualityClassName());
+    Assert.assertNotNull(securityImpl.getQualityClass());
+  }
+
+  //Issue 2144 (Quality - backward compatibility)
+  @Test
+  public void ReqQualityImplReqBackwardCompat()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqBackwardCompat.ump");
+
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertEquals(1, impls.size());
+    Assert.assertEquals("R1", impls.get(0).getIdentifier());
+    Assert.assertNull(impls.get(0).getQualityClassName());
+  }
+
+  //Issue 2144 (Quality - error 408: no quality classes defined)
+  @Test
+  public void ReqQualityImplReqWarning408()
+  {
+    boolean answer = parseWarnings("456_ReqQualityImplReqWarning408.ump");
+    Assert.assertEquals(false, answer);
+    Assert.assertEquals(408, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+  }
+
+  //Issue 2144 (Quality - error 409: quality class not found)
+  @Test
+  public void ReqQualityImplReqWarning409()
+  {
+    boolean answer = parseWarnings("456_ReqQualityImplReqWarning409.ump");
+    Assert.assertEquals(false, answer);
+    Assert.assertEquals(409, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+  }
+
+  //Issue 2144 (Quality - warning 401 only when req not found, no cascading 408/409)
+  @Test
+  public void ReqQualityImplReqWarning401WithQuality()
+  {
+    assertHasWarningsParse("456_ReqQualityImplReqWarning401WithQuality.ump", 401);
+    // Only warning 401 should fire, no cascading 408/409
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+  }
+
+  //Issue 2144 (Quality - multi-identifier fix)
+  @Test
+  public void ReqQualityImplReqMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqMultiIdentifier.ump");
+
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertEquals(3, impls.size());
+
+    java.util.Set<String> ids = new java.util.HashSet<>();
+    for (ReqImplementation ri : impls) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+    Assert.assertTrue(ids.contains("R3"));
+
+    UmpleClass itemClass = model.getUmpleClass("Item");
+    Assert.assertNotNull(itemClass);
+    Assert.assertEquals(3, itemClass.numberOfReqImplementations());
+
+    ids.clear();
+    for (ReqImplementation ri : itemClass.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+    Assert.assertTrue(ids.contains("R3"));
+  }
+
+  @Test
+  public void ReqImplMixsetSeparateStatements()
+  {
+    assertNoWarningsParse("456_ReqImplMixsetSeparateStatements.ump");
+
+    Mixset designA = model.getMixset("DesignA");
+    Assert.assertNotNull(designA);
+    Assert.assertEquals(2, designA.numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : designA.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
+  @Test
+  public void ReqImplMixsetNoLeakage()
+  {
+    assertNoWarningsParse("456_ReqImplMixsetNoLeakage.ump");
+
+    Mixset designA = model.getMixset("DesignA");
+    Mixset designB = model.getMixset("DesignB");
+    Assert.assertNotNull(designA);
+    Assert.assertNotNull(designB);
+    Assert.assertEquals(1, designA.numberOfReqImplementations());
+    Assert.assertEquals("R1", designA.getReqImplementation(0).getIdentifier());
+    Assert.assertEquals(0, designB.numberOfReqImplementations());
+  }
+
+  @Test
+  public void ReqImplTopLevelAssociationMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplTopLevelAssociationMultiIdentifier.ump");
+
+    List<Association> associations = model.getAssociations();
+    Assert.assertEquals(1, associations.size());
+    Assert.assertEquals(2, associations.get(0).numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : associations.get(0).getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
+  @Test
+  public void ReqImplAssociationBlockMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplAssociationBlockMultiIdentifier.ump");
+
+    List<Association> associations = model.getAssociations();
+    Assert.assertEquals(2, associations.size());
+    Assert.assertEquals(2, associations.get(0).numberOfReqImplementations());
+    Assert.assertEquals(0, associations.get(1).numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : associations.get(0).getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
+  @Test
+  public void ReqImplStateMachineMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplStateMachineMultiIdentifier.ump");
+
+    Assert.assertEquals(4, model.getReqImplementations().size());
+
+    StateMachine sm = model.getUmpleClass("X").getStateMachine(0);
+    State state1 = sm.getState(0);
+    State state2 = sm.getState(1);
+
+    Assert.assertEquals(2, sm.numberOfReqImplementations());
+    Assert.assertEquals(2, state1.numberOfReqImplementations());
+    Assert.assertEquals(0, state2.numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : sm.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+
+    ids.clear();
+    for (ReqImplementation ri : state1.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R3"));
+    Assert.assertTrue(ids.contains("R4"));
+  }
+
+  @Test
+  public void ReqImplTraitMultiIdentifierWithQuality()
+  {
+    assertNoWarningsParse("456_ReqImplTraitMultiIdentifierWithQuality.ump");
+
+    UmpleTrait loggable = model.getUmpleTrait("Loggable");
+    Assert.assertNotNull(loggable);
+    Assert.assertEquals(2, loggable.numberOfReqImplementations());
+
+    ReqImplementation loggingImpl = null;
+    ReqImplementation auditImpl = null;
+    for (ReqImplementation ri : loggable.getReqImplementations()) {
+      if ("Logging".equals(ri.getIdentifier())) loggingImpl = ri;
+      if ("Audit".equals(ri.getIdentifier())) auditImpl = ri;
+    }
+
+    Assert.assertNotNull(loggingImpl);
+    Assert.assertEquals("Reliability", loggingImpl.getQualityClassName());
+    Assert.assertNotNull(loggingImpl.getQualityClass());
+    Assert.assertEquals("Reliability", loggingImpl.getQualityClass().getName());
+
+    Assert.assertNotNull(auditImpl);
+    Assert.assertEquals("Security", auditImpl.getQualityClassName());
+    Assert.assertNotNull(auditImpl.getQualityClass());
+    Assert.assertEquals("Security", auditImpl.getQualityClass().getName());
+  }
+
+  @Test
+  public void ReqImplActiveMethodMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplActiveMethodMultiIdentifier.ump");
+
+    UmpleClass worker = model.getUmpleClass("Worker");
+    Assert.assertNotNull(worker);
+    Assert.assertEquals(1, worker.numberOfActiveMethods());
+
+    ActiveMethod method = worker.getActiveMethod(0);
+    Assert.assertNotNull(method);
+
+    List<ActiveDirectionHandlerBody> requirementBodies = new ArrayList<ActiveDirectionHandlerBody>();
+    for (ActiveDirectionHandlerBody body : method.getMethodBody().getActiveDirectionHandlerBodies()) {
+      if (body.getBodyType() == ActiveDirectionHandlerBody.BodyType.REQUIREMENT) {
+        requirementBodies.add(body);
+      }
+    }
+
+    Assert.assertEquals(2, requirementBodies.size());
+
+    Set<String> ids = new HashSet<String>();
+    for (ActiveDirectionHandlerBody body : requirementBodies) {
+      Assert.assertNotNull(body.getRequirement());
+      ids.add(body.getRequirement().getIdentifier());
+    }
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
   //Issue 2378 (Use Case Parsing)
   @Test
   public void ReqUsecaseAliasLowercaseParsed()
@@ -4303,4 +5075,3 @@ public class UmpleParserTest
 	Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
   }
 }
-

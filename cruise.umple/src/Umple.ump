@@ -1328,6 +1328,17 @@ class Requirement{
 
   // Ordered structured use case steps such as userStep/systemResponse
   1 -- * UseCaseStep;
+
+  // Quality classes defined within this requirement
+  // format: `req <req_name> [quality|Quality] {(<quality_name>{...})*}`
+    1 -- * QualityClass;
+}
+
+class QualityClass
+{
+  name;
+  // Reserved for {}; currently expected empty and will do nothing on it. If it is not empty, warning will occur
+  content;
 }
 
 class UseCaseStep
@@ -1358,12 +1369,19 @@ class ReqImplementation {
 
   // unique identifier that should match the identifier of a Requirement
   identifier;
-  
+
+  // Because the QualityClass maybe not accessible in the parse stage, so only store its name first
+  lazy qualityClassName;
+
+  // bound during post-parse if qualityClassName matches a QualityClass in the Requirement
+  * -> 0..1 QualityClass;
+
+
   // After analysis of the code, this will identify the requirement if there is one
   // If there are zero requirements it would indicate a mismatch (warning 402)
   // A requirement can have many implementing features.
   * -- 0..1 Requirement;
-  
+
   // The location in the code where the implementation was found, so we can
   // report warning 402 if we find no matching requirement
   // and so we can output a requirements document that enables the reader to find each implementation

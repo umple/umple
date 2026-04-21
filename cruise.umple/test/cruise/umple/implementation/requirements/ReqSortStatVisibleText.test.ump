@@ -1,0 +1,27 @@
+// Test that reqSortStat sorts by visible requirement text without including quality metadata
+suboption "reqSortStat";
+
+req A01 {
+  alpha statement.
+}
+
+req A01 quality {
+  Zeta {}
+}
+
+req B01 {
+  alpha statement.
+}
+
+req B01 quality {
+  Beta {}
+}
+
+req UC1 useCase {
+  1. userStep { select product }
+  1. systemResponse { display price }
+}
+
+req Z01 {
+  zeta statement.
+}

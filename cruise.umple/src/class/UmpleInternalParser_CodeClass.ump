@@ -248,6 +248,8 @@ class UmpleInternalParser
 
   private void analyzeRequirement(Token t) {
     String reqID = t.getSubToken("reqIdentifier").getValue();
+    final String INVALID_LANG = "INVALID";
+    final String QUALITY_LANG = "quality";
 
     String newContent = "";
     if (!(t.getSubToken("reqContent") == null || t.getSubToken("reqContent").getValue() == null)) {
@@ -261,9 +263,15 @@ class UmpleInternalParser
     if ("userstory".equals(newLanguage)) {
       newLanguage = "userStory";
     }
+    if ("Quality".equals(newLanguage)) {
+      newLanguage = QUALITY_LANG;
+    }
     if ("usecase".equals(newLanguage)) {
       newLanguage = "useCase";
     }
+
+    newLanguage=newLanguage.trim();
+    newContent=newContent.trim();
 
     String whoContent = null;
     String whenContent = null;
@@ -317,12 +325,49 @@ class UmpleInternalParser
       }
     }
 
+    // Validate quality section content and extract quality class data
+    List<String[]> qualityClassData = new ArrayList<String[]>();
+    if (QUALITY_LANG.equals(newLanguage)) {
+      if (newContent.equals("")) {
+        setFailedPosition(t.getPosition(), 405, reqID);
+      } else {
+        Pattern p = Pattern.compile("([A-Za-z_][A-Za-z0-9_]*)\\s*\\{([^}]*)\\}");
+        Matcher m = p.matcher(newContent);
+        while (m.find()) {
+          String className = m.group(1).trim();
+          String classContent = m.group(2).trim();
+          if (!classContent.isEmpty()) {
+            setFailedPosition(t.getPosition(), 403, className, reqID);
+          }
+          qualityClassData.add(new String[]{className, classContent});
+        }
+        // Check for unmatched leftover content after extracting all valid matches
+        String leftover = p.matcher(newContent).replaceAll("").trim();
+        if (!leftover.isEmpty()) {
+          if (leftover.contains("{")) {
+            setFailedPosition(t.getPosition(), 1504, reqID);
+          } else if (leftover.matches("[A-Za-z0-9_\\s]+")) {
+            setFailedPosition(t.getPosition(), 407, reqID, leftover);
+          } else {
+            setFailedPosition(t.getPosition(), 1500, leftover);
+          }
+        }
+        newContent = "";
+      }
+    }
+
     Requirement existingRequirement = model.getAllRequirements().get(reqID);
 
     if (existingRequirement != null) {
       String existingLanguage = existingRequirement.getLanguage();
 
-      if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
+      if (existingLanguage.equals(INVALID_LANG) && !newLanguage.equals(QUALITY_LANG)) {
+        // Reset to the first concrete requirement language encountered
+        existingLanguage = newLanguage;
+        existingRequirement.setLanguage(newLanguage);
+      }
+
+      if (!(existingLanguage.equals(INVALID_LANG) || newLanguage.equals(QUALITY_LANG) || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
         setFailedPosition(t.getPosition(), 402, reqID, existingLanguage, newLanguage);
         return;
       }
@@ -361,6 +406,10 @@ class UmpleInternalParser
       if (whyContent != null && !whyContent.equals("")) {
         existingRequirement.setWhy(whyContent);
       }
+      for (String[] qcData : qualityClassData) {
+        // QualityClass constructor auto-appends to the requirement
+        new QualityClass(qcData[0], qcData[1], existingRequirement);
+      }
 
       for (String[] stepData : parsedUseCaseSteps) {
         UseCaseStep.UseCaseStepType stepType =
@@ -372,8 +421,18 @@ class UmpleInternalParser
       }
     }
     else {
+      if (QUALITY_LANG.equals(newLanguage)) {
+        // Quality section appears before any requirement type definition;
+        // use an invalid language placeholder so it can be resolved later
+        setFailedPosition(t.getPosition(), 406, reqID);
+        newLanguage = INVALID_LANG;
+      }
       Requirement req = new Requirement(reqID, newContent, whoContent, whenContent, whatContent, whyContent, newLanguage);
       req.addReqToken(t);
+      for (String[] qcData : qualityClassData) {
+        // QualityClass constructor auto-appends to the requirement
+        new QualityClass(qcData[0], qcData[1], req);
+      }
       model.getAllRequirements().put(reqID, req);
 
       for (String[] stepData : parsedUseCaseSteps) {
@@ -387,13 +446,28 @@ class UmpleInternalParser
     }
   }
 
+  // Shared utility to parse reqRef tokens from a reqImplementation token.
+  // Returns a list of ReqImplementation objects, one per reqRef sub-token.
+  private static List<ReqImplementation> parseReqRefTokens(Token t) {
+    List<ReqImplementation> result = new ArrayList<>();
+    for (Token reqRefToken : t.getSubTokens()) {
+      if (!reqRefToken.is("reqRef")) continue;
+      String reqImpID = reqRefToken.getSubToken("reqIdentifier").getValue();
+      Token qualityToken = reqRefToken.getSubToken("qualityClassName");
+      ReqImplementation reqImpl = new ReqImplementation(reqImpID, t);
+      if (qualityToken != null) {
+        reqImpl.setQualityClassName(qualityToken.getValue());
+      }
+      result.add(reqImpl);
+    }
+    return result;
+  }
+
   private void analyzeImplementReq(Token t) {
-     // Identifier that has been identified 
-     String reqImpID = t.getSubToken("reqIdentifier").getValue();
-     // Instantiate the requirement implementation
-     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
-     model.addReqImplementation(reqImplementation);
-     lastRequirementsImpl.add(reqImplementation); 
+     for (ReqImplementation reqImpl : parseReqRefTokens(t)) {
+       model.addReqImplementation(reqImpl);
+       lastRequirementsImpl.add(reqImpl);
+     }
   }
   
   private void analyzeImplementReq(Token t, UmpleClass aClass) {
@@ -402,22 +476,13 @@ class UmpleInternalParser
   
   private List<ReqImplementation> analyzeEnumImplReq(Token t)
   {
-     List<ReqImplementation> ReqImp= new ArrayList<ReqImplementation>();
-     String reqImpID = t.getSubToken("reqIdentifier").getValue();
-     // Instantiate the requirement implementation
-     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
-     ReqImp.add(reqImplementation); 
-     return ReqImp;
+     return parseReqRefTokens(t);
   }
   
   mixset StateMachine {
     private List<ReqImplementation> analyzeStateReqImpl(Token t)
     {
-      List<ReqImplementation> ReqImp= new ArrayList<ReqImplementation>();
-      String reqImpID = t.getSubToken("reqIdentifier").getValue();
-      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
-      ReqImp.add(reqImplementation);
-      return ReqImp;
+      return parseReqRefTokens(t);
     }
   }
   
@@ -1464,10 +1529,10 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       //capture implementsReq inside the association block
       if (token.is("reqImplementation")) {
         innerReqImpls.clear();
-        String reqImpID = token.getSubToken("reqIdentifier").getValue();
-        ReqImplementation reqImpl = new ReqImplementation(reqImpID, token);
-        model.addReqImplementation(reqImpl);
-        innerReqImpls.add(reqImpl);
+        for (ReqImplementation reqImpl : parseReqRefTokens(token)) {
+          model.addReqImplementation(reqImpl);
+          innerReqImpls.add(reqImpl);
+        }
         continue;
       }
       mixset Mixset {
