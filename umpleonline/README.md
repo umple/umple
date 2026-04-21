@@ -85,9 +85,43 @@ If ports or names collide, the second clone's `setup.sh` kills the first clone's
 
 For servers where PHP runs under nginx (not the all-in-one Docker).
 
-**1.** Edit `umpleonline/config/lsp.ini` with the correct port and path, then start the LSP container via `dev-tools/pumple` or `UmpleLsp/setup.sh bg`.
+**Files to edit**
+- `umpleonline/config/lsp.ini` in the repo
+- your host nginx site config (for example `/etc/nginx/sites-available/umple.conf` or `/etc/nginx/conf.d/umple.conf`)
 
-**2.** Add to the nginx server block:
+Do not edit `umpleonline/docker_config/nginx.conf` for this deployment mode unless you are rebuilding the all-in-one Docker image. For a host-nginx deployment, edit the host nginx config instead.
+
+**1.** Create the live LSP config if needed, then edit it:
+```bash
+cd /path/to/umple
+cp umpleonline/config/lsp.ini.template umpleonline/config/lsp.ini
+```
+
+Typical values:
+```ini
+standaloneUmpBaseDir=/path/to/umple/umpleonline/ump
+standaloneHostPort=9999
+standaloneContainerName=umple_lsp
+maxProcesses=200
+localBrowserHost=127.0.0.1
+useLinkedLsp=false
+```
+
+Use an absolute `standaloneUmpBaseDir` on the server.
+
+**2.** Build/package UmpleOnline and start the standalone LSP container:
+```bash
+cd /path/to/umple
+./dev-tools/pumple
+```
+
+If you only changed `lsp.ini` and just need to restart the LSP container:
+```bash
+cd /path/to/umple
+./UmpleLsp/setup.sh bg
+```
+
+**3.** Add to your host nginx server block:
 ```nginx
 location /lsp {
     proxy_pass http://127.0.0.1:9999;  # must match standaloneHostPort in lsp.ini
@@ -99,12 +133,45 @@ location /lsp {
 }
 ```
 
-**3.** Pass the WebSocket URL to PHP (in the `location ~ \.php$` block):
+**4.** Pass the WebSocket URL to PHP (in the `location ~ \.php$` block):
 ```nginx
 fastcgi_param UMPLE_LSP_WS_URL /lsp;
 ```
 
-**4.** Restart nginx: `sudo systemctl restart nginx`
+If your PHP is running through php-fpm, the PHP block typically looks like:
+```nginx
+location ~ \.php$ {
+    include fastcgi_params;
+    include fastcgi.conf;
+    fastcgi_pass unix:/run/php/php8.2-fpm.sock;  # use your real php-fpm socket or host:port
+    fastcgi_index index.php;
+
+    fastcgi_param UMPLE_LSP_WS_URL /lsp;
+}
+```
+
+**5.** Start or reload the host services:
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+sudo systemctl restart php8.2-fpm   # use your actual php-fpm service name
+```
+
+If nginx or php-fpm are not already running:
+```bash
+sudo systemctl enable --now nginx
+sudo systemctl enable --now php8.2-fpm
+```
+
+**6.** Verify the remote-server setup:
+```bash
+docker ps | grep myumple_lsp
+```
+
+In the browser:
+- open `/umple.php`
+- browser console: `window.UMPLE_LSP_WS_URL` should show `/lsp`
+- network tab: WebSocket request to `/lsp` should return `101 Switching Protocols`
 
 **Multi-instance example (3 clones on one server):**
 
