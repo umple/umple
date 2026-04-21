@@ -248,12 +248,28 @@ FeatureTree._syncMixsetsActive = function(nodes) {
   }
 };
 
-FeatureTree._isAncestorActive = function(uniqueName) {
+FeatureTree._isAncestorActive = function(uniqueName, visited) {
   let node = FeatureTree.nodeByUniqueName
     ? FeatureTree.nodeByUniqueName[uniqueName] : null;
   if (!node) return false;
+  if (!visited) visited = new Set();
+  if (visited.has(uniqueName)) return false;
+  visited.add(uniqueName);
+
   if (node.mixsetOrFileNode && node.mixsetOrFileNode.type === "UmpleFile") return true;
-  if (node.nodeType === "FeatureNode" || node.nodeType === "CompoundFeatureNode") return true;
+
+  // FeatureNode/CompoundFeatureNode are linking operators emitted under a selectable parent. They are active only when a selectable parent is.
+  if (node.nodeType === "FeatureNode" || node.nodeType === "CompoundFeatureNode") {
+    let parents = FeatureTree.parentOf[node.id];
+    // Orphan operators have no parent. treat them as active to keep same behavior as what under the UmpleFile root.
+    if (!parents || parents.length === 0) return true;
+    for (let i = 0; i < parents.length; i++) {
+      let parentNode = parents[i].sourceNode;
+      if (parentNode && FeatureTree._isAncestorActive(parentNode.uniqueName, visited))  return true;
+    }
+    return false;
+  }
+
   return Page.mixsetsActive.includes(node.name);
 };
 
