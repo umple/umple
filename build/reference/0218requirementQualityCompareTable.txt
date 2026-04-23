@@ -19,6 +19,8 @@ suboption "reqQC";
 umple -g PlainRequirementsDoc -s reqQC your_model.ump
 </pre>
 
+<p>In UmpleOnline you can also select Requirements Doc with Comparison Table from the Generate dropdown, which invokes the same generator with <code>reqQC</code> pre-applied without requiring the <code>suboption "reqQC";</code> directive in the source file.</p>
+
 <p>The currently-active mixset (the one selected via a <code>use</code> statement or through the UmpleOnline <a href="MixsetFeatureTreeSelector.html">feature-tree selector</a>) is prefixed with an asterisk in the generated table header.</p>
 
 <p>See also <a href="SortingRequirements.html">Sorting Requirements</a> for other suboptions supported by the same generator, including <code>reqSortID</code>, <code>reqSortStat</code>, and <code>reqHideNotImpl</code>.</p>
