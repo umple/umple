@@ -16,6 +16,49 @@ Requirements allow for the same comment to appear in different sections of the c
 
 <br />
 
+<h3>Requirement-definition syntax</h3>
+
+<p>A requirement is introduced with the <code>req</code> keyword, followed by an identifier and an optional requirement-language tag. The body is enclosed in curly braces:</p>
+
+<pre>
+req &lt;ReqIdentifier&gt; [&lt;reqLanguage&gt;] { ... }
+</pre>
+
+<p>The supported requirement languages are:</p>
+
+<ul>
+  <li><b>plain</b> (default, tag may be omitted) &mdash; free text.</li>
+  <li><b>userStory</b> &mdash; free text optionally structured with <code>who</code>, <code>when</code>, <code>what</code>, and <code>why</code> sub-blocks.</li>
+  <li><b>useCase</b> &mdash; free text optionally structured with <code>userStep</code> and <code>systemResponse</code> sub-blocks.</li>
+  <li><b>quality</b> &mdash; introduces named quality classes (e.g. <i>High</i>, <i>Medium</i>, <i>Low</i>) for a non-functional property. See <a href="RequirementQualityClasses.html">Requirement Quality Classes</a>.</li>
+</ul>
+
+<h3>implementsReq statement</h3>
+
+<p>An <code>implementsReq</code> statement attaches one or more requirements to the surrounding entity. It can appear at the top level (binding to a following mixset or class), inside a class, trait, state machine, attribute, association, or method:</p>
+
+<pre>
+implementsReq &lt;ReqIdentifier&gt; [(&lt;QualityClassName&gt;)] [, &lt;ReqIdentifier&gt; [(&lt;QualityClassName&gt;)]]* ;
+</pre>
+
+<p>The optional parenthesised argument selects a specific quality class of the referenced requirement, which is required when using <code>implementsReq</code> to differentiate alternative designs on a non-functional property:</p>
+
+<pre>
+implementsReq Speed(High), Security(Perfect);
+mixset DesignA { ... }
+</pre>
+
+<p>See also:</p>
+
+<ul>
+  <li><a href="RequirementsExamples.html">Requirements Examples</a> for a gallery of requirement models.</li>
+  <li><a href="RequirementQualityClasses.html">Requirement Quality Classes</a> for non-functional requirement declarations.</li>
+  <li><a href="RequirementQualityComparisonTable.html">Requirement Quality Comparison Table</a> for generating a side-by-side comparison of alternative designs.</li>
+  <li><a href="SortingRequirements.html">Sorting Requirements</a> for suboptions that control requirement ordering and filtering.</li>
+</ul>
+
+<br />
+
 @@example
 @@source manualexamples/Requirements1.ump
 @@endexample
