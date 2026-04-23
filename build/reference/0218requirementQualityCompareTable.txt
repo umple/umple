@@ -1,0 +1,30 @@
+Requirement Quality Comparison Table
+Comments and Requirements
+noreferences
+@@tooltip Use the reqQC suboption of PlainRequirementsDoc to emit an HTML table that compares alternative designs (mixsets) across every quality requirement.
+
+@@description
+<p>Once alternative designs have been tagged with quality classes through <code>implementsReq</code> (see <a href="RequirementQualityClasses.html">Requirement Quality Classes</a>), the Plain Requirements Doc generator can emit a comparison table. The table lists every quality requirement as a row and every quality-tagged mixset as a column, so the alternatives can be compared on a shared set of criteria.</p>
+
+<p>The feature is activated with the <code>reqQC</code> suboption of the <code>PlainRequirementsDoc</code> generator. From inside an Umple file:</p>
+
+<pre>
+generate PlainRequirementsDoc;
+suboption "reqQC";
+</pre>
+
+<p>Or from the command line:</p>
+
+<pre>
+umple -g PlainRequirementsDoc -s reqQC your_model.ump
+</pre>
+
+<p>The currently-active mixset (the one selected via a <code>use</code> statement or through the UmpleOnline <a href="MixsetFeatureTreeSelector.html">feature-tree selector</a>) is prefixed with an asterisk in the generated table header.</p>
+
+<p>See also <a href="SortingRequirements.html">Sorting Requirements</a> for other suboptions supported by the same generator, including <code>reqSortID</code>, <code>reqSortStat</code>, and <code>reqHideNotImpl</code>.</p>
+
+<br />
+
+@@example @@caption Generating a comparison table for two alternative mixsets @@endcaption
+@@source manualexamples/ReqQualityCompareTable.ump
+@@endexample
