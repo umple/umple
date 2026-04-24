@@ -1,0 +1,13 @@
+// Test: implementsReq with quality class parameter at top level
+req Speed userStory {
+  who { architect }
+  what { compare designs }
+}
+
+req Speed quality {
+  High {}
+  Low {}
+}
+
+implementsReq Speed(High);
+class FastCar {}

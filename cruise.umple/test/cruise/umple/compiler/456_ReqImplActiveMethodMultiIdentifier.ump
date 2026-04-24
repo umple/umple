@@ -1,0 +1,17 @@
+// Multiple identifiers inside an active method body should produce multiple requirement bodies.
+req R1 text {
+  First active-method requirement.
+}
+
+req R2 text {
+  Second active-method requirement.
+}
+
+class Worker {
+  counter;
+
+  void active process() {
+    implementsReq R1, R2;
+    counter = counter + 1;
+  }
+}

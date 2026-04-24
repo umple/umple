@@ -23,6 +23,12 @@ public class RequirementClassTest extends TemplateTest {
 		assertUmpleTemplateFor("RequirementBeforeClass.ump", languagePath + "/RequirementBeforeClass."+ languagePath +".txt", "Example");
 	}
 
+	@Test
+	public void RequirementQualityBeforeClass()
+	{
+		assertUmpleTemplateFor("RequirementQualityBeforeClass.test.ump", languagePath + "/RequirementQualityBeforeClass."+ languagePath +".txt", "Item");
+	}
+
 	// @Ignore - Currently fails for Java and Python... Could be an issue with the requirements implementation
 	@Test @Ignore
 	public void RequirementMultipleImplementsReq()
@@ -37,4 +43,3 @@ public class RequirementClassTest extends TemplateTest {
 	}
 
 }
-

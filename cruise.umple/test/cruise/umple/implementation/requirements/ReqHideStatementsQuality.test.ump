@@ -1,0 +1,13 @@
+// Test that reqHideStatements hides statement text but still shows quality metadata
+suboption "reqHideStatements";
+req Q01 {
+  this statement should be hidden.
+}
+req Q01 quality {
+  Performance {}
+  Security {}
+}
+implementsReq Q01;
+class Example {
+  var1;
+}

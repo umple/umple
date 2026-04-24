@@ -1,0 +1,34 @@
+generate PlainRequirementsDoc;
+suboption "reqQC";
+
+req Speed userStory {
+  who { architect }
+  what { compare speed }
+}
+
+req Speed quality {
+  High {}
+  Low {}
+}
+
+req Security userStory {
+  who { architect }
+  what { compare security }
+}
+
+req Security quality {
+  Perfect {}
+  Basic {}
+}
+
+implementsReq Speed(High), Security(Perfect);
+mixset DesignA {
+  class FastSecureCar {}
+}
+
+implementsReq Speed(Low), Security(Basic);
+mixset DesignB {
+  class SlowCar {}
+}
+
+use DesignA;

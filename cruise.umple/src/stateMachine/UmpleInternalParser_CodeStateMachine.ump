@@ -266,6 +266,9 @@ class UmpleInternalParser
      if(token.is("reqImplementation"))
     {
        ReqImpState = analyzeStateReqImpl(token);
+       for (ReqImplementation reqImpl : ReqImpState) {
+         model.addReqImplementation(reqImpl);
+       }
     }
   }
 
@@ -977,7 +980,10 @@ class UmpleInternalParser
 
       if(stateToken.is("reqImplementation"))
       {
-        ReqImpState = analyzeStateReqImpl(stateToken);
+        for (ReqImplementation reqImpl : analyzeStateReqImpl(stateToken)) {
+          model.addReqImplementation(reqImpl);
+          sm.addReqImplementation(reqImpl);
+        }
         continue;
       }
 
@@ -1151,6 +1157,10 @@ class UmpleInternalParser
       else if (subToken.is("reqImplementation"))
       {
         ReqImpState = analyzeStateReqImpl(subToken);
+        for (ReqImplementation reqImpl : ReqImpState) {
+          model.addReqImplementation(reqImpl);
+          fromState.addReqImplementation(reqImpl);
+        }
         continue;
       }
 

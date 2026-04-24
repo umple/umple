@@ -83,6 +83,8 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/OneToMany.php");
     SampleFileWriter.destroy(pathToInput + "/Application.java");
     SampleFileWriter.destroy(pathToInput + "/Application.php");
+    SampleFileWriter.destroy(pathToInput + "/Item.java");
+    SampleFileWriter.destroy(pathToInput + "/Item.py");
     SampleFileWriter.destroy(pathToInput + "/MyException.php");
     SampleFileWriter.destroy(pathToInput + "/Exception.php");
     SampleFileWriter.destroy(pathToInput + "/Course.php");

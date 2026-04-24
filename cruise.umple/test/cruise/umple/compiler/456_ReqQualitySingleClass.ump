@@ -1,0 +1,7 @@
+req R1 {
+  placeholder
+}
+
+req R1 quality {
+  OnlyOne {}
+}
