@@ -353,6 +353,37 @@ class UmpleInternalParser
        {  
          // There is a need to make a connection
          foundRequirement.addReqImplementation(reqImpl);
+
+         // Bind quality class
+         String qualityClassName = reqImpl.getQualityClassName();
+         if (qualityClassName!=null && !qualityClassName.isEmpty())
+         {
+           if (!foundRequirement.hasQualityClasses())
+           {
+             // No quality in this requirement
+             setFailedPosition(reqImplToken.getPosition(), 408, reqImplID, qualityClassName);
+           }
+           else
+           {
+             QualityClass matched = null;
+             for (QualityClass qc : foundRequirement.getQualityClasses())
+             {
+               if (qc.getName().equals(qualityClassName))
+               {
+                 matched = qc;
+                 break;
+               }
+             }
+             if (matched == null)
+             {
+               setFailedPosition(reqImplToken.getPosition(), 409, reqImplID, qualityClassName);
+             }
+             else
+             {
+               reqImpl.setQualityClass(matched);
+             }
+           }
+         }
        }
      }
     } 

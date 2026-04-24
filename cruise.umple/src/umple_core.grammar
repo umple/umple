@@ -57,15 +57,16 @@ multilineComment- : /* [**multilineComment] */
 
 reqIdentifier : [name]
 
-requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[plainReq]] ) )
-requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[plainReq]] ) )
+requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[quality]] ) | ( [[plainReq]] ) )
+quality- : [=reqLanguage:quality|Quality] { [**reqContent] }
 plainReq- : [reqLanguage]? { [**reqContent] }
 userStory- : [=reqLanguage:userStory|userstory] { ( [[userStoryTags]] | [**reqContent] ) }
 userStoryTags- : ( who { [*whoContent] } )? ( when { [*whenContent] } )? ( what { [*whatContent] } )? ( why { [*whyContent] } )?
 useCase- : [=reqLanguage:useCase|usecase] { ( [[useCaseTags]] | [**reqContent] ) }
 useCaseTags- : ( [[userStoryTags]] | [[useCaseStep]] )*
 useCaseStep- : ( userStep [useCaseId] { [*useCaseStepContent] } ) | ( systemResponse [useCaseId] { [*useCaseStepContent] } )
-reqImplementation : implementsReq [reqIdentifier] (, [reqIdentifier])* ;
+reqRef : [reqIdentifier] (OPEN_ROUND_BRACKET [qualityClassName] CLOSE_ROUND_BRACKET)?
+reqImplementation : implementsReq [[reqRef]] (, [[reqRef]])* ;
 
 //Matches all forms of Java annotations including those with parentheses and values in quotes
 annotationComment- : [!annotationComment:@[a-zA-Z_][a-zA-Z0-9_-]*(\((("(\w|\s|-)*")|\w|\s|=|,|\.)*\))?]

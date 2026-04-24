@@ -923,6 +923,123 @@ class Comment
 /*
  */
 class Requirement{
+  private boolean hasDisplayText(String content)
+  {
+    return content != null && !content.isEmpty();
+  }
+
+  public boolean hasStructuredUserStoryFields()
+  {
+    return hasDisplayText(getWho())
+      || hasDisplayText(getWhen())
+      || hasDisplayText(getWhat())
+      || hasDisplayText(getWhy());
+  }
+
+  // format logic moved from cruise.umple/src/generators/Generator_CodePlainRequirementsDoc.ump:generator()
+  public String getUserStoryDisplayText(String separator)
+  {
+    String stmt = getStatement();
+    if (stmt == null)
+    {
+      stmt = "";
+    }
+
+    if (!hasStructuredUserStoryFields())
+    {
+      return stmt;
+    }
+
+    StringBuilder userStoryText = new StringBuilder();
+
+    if (hasDisplayText(getWho()))
+    {
+      userStoryText.append("As ").append(getWho());
+    }
+    if (hasDisplayText(getWhen()))
+    {
+      if (userStoryText.length() > 0)
+      {
+        userStoryText.append(separator);
+      }
+      userStoryText.append("When ").append(getWhen());
+    }
+    if (hasDisplayText(getWhat()))
+    {
+      if (userStoryText.length() > 0)
+      {
+        userStoryText.append(separator);
+      }
+      userStoryText.append("I want ").append(getWhat());
+    }
+    if (hasDisplayText(getWhy()))
+    {
+      if (userStoryText.length() > 0)
+      {
+        userStoryText.append(separator);
+      }
+      userStoryText.append("So that ").append(getWhy());
+    }
+
+    return userStoryText.toString();
+  }
+
+  // Returns the requirement body text so renderers can output body and quality separately.
+  public String getBodyDisplayText(String separator)
+  {
+    String statement = getStatement();
+    if (statement == null)
+    {
+      statement = "";
+    }
+
+    String reqLanguage = getLanguage();
+    if (reqLanguage == null)
+    {
+      reqLanguage = "";
+    }
+
+    if ("userStory".equals(reqLanguage))
+    {
+      return getUserStoryDisplayText(separator);
+    }
+    else if ("useCase".equals(reqLanguage))
+    {
+      StringBuilder useCaseText = new StringBuilder();
+
+      if (hasStructuredUserStoryFields())
+      {
+        useCaseText.append(getUserStoryDisplayText(separator));
+      }
+      else if (hasDisplayText(statement))
+      {
+        useCaseText.append(statement);
+      }
+
+      for (int i = 0; i < numberOfUseCaseSteps(); i++)
+      {
+        UseCaseStep step = getUseCaseStep(i);
+        if (useCaseText.length() > 0)
+        {
+          useCaseText.append(separator);
+        }
+
+        String prefix = step.getStepType() == UseCaseStep.UseCaseStepType.UserStep
+          ? "User step "
+          : "System response ";
+        useCaseText
+          .append(prefix)
+          .append(step.getId())
+          .append(": ")
+          .append(step.getContent());
+      }
+
+      return useCaseText.toString();
+    }
+
+    return statement;
+  }
+
   // deep copy constructor
   public Requirement(Requirement aReq)
   {
@@ -933,6 +1050,8 @@ class Requirement{
     what = aReq.getWhat();
     why = aReq.getWhy();
     language = aReq.getLanguage();
+
+    qualityClasses = new ArrayList<QualityClass>();
 
     useCaseSteps = new ArrayList<UseCaseStep>();
     for (int i = 0; i < aReq.numberOfUseCaseSteps(); i++)
@@ -945,7 +1064,47 @@ class Requirement{
         this
       );
     }
+
+    // Deep-copy quality classes using helper accessors generated from Umple.ump.
+    for (int i = 0; i < aReq.numberOfQualityClasses(); i++)
+    {
+      QualityClass originalQc = aReq.getQualityClass(i);
+      new QualityClass(originalQc.getName(), originalQc.getContent(), this);
+    }
   }
+
+  public String getQualityClassNamesSummary()
+  {
+    StringBuilder qualityText = new StringBuilder();
+    for (int i = 0; i < numberOfQualityClasses(); i++)
+    {
+      if (i > 0)
+      {
+        qualityText.append(", ");
+      }
+      qualityText.append(getQualityClass(i).getName());
+    }
+    return qualityText.toString();
+  }
+
+  public String getDisplayStatement()
+  {
+    String displayText = getBodyDisplayText("\n");
+
+    if (!hasQualityClasses())
+    {
+      return displayText;
+    }
+
+    String qualityText = "[Quality: " + getQualityClassNamesSummary() + "]";
+
+    if (!hasDisplayText(displayText.trim()))
+    {
+      return qualityText;
+    }
+    return displayText + "\n" + qualityText;
+  }
+
   public static List<Comment> convertToComment(List<ReqImplementation> reqSelected,UmpleModel aModel){
     List<Comment> reqTextOnly = new ArrayList<Comment>();
     String reqText = new String();
@@ -955,7 +1114,7 @@ class Requirement{
       Requirement findRequirement = aModel.getAllRequirements().get(reqImpID);
       if(findRequirement != null)
      {
-      reqText = findRequirement.getStatement().trim();
+      reqText = findRequirement.getDisplayStatement().trim();
 
       reqText = findRequirement.getIdentifier() + ": " + reqText;
 

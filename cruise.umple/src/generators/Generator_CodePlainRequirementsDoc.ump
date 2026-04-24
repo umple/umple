@@ -36,8 +36,8 @@ class PlainRequirementsDocGenerator
     // This applies to default case including "PlainRequirementsDoc", "reqSortID" 
     Comparator<Requirement> defaultComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
     if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")) {
-      // If -s reqSortStat is present the comparator is changed to be assigned to statement
-      defaultComparator = (r1, r2) -> (r1.getStatement() + r1.getIdentifier()).compareTo(r2.getStatement() + r2.getIdentifier());
+      // If -s reqSortStat is present the comparator is changed to visible requirement text
+      defaultComparator = (r1, r2) -> (r1.getBodyDisplayText("\n") + r1.getIdentifier()).compareTo(r2.getBodyDisplayText("\n") + r2.getIdentifier());
     } 
     // The TreeSet is created based on the chosen comparator
     ReqTreeSet = new TreeSet<>(defaultComparator);
@@ -145,6 +145,9 @@ class PlainRequirementsDocGenerator
                     doc.createParagraphElement("<b>" + req.getIdentifier() + "</b>", false);
                 } else {
 				doc.createParagraphElement("<b>" + req.getIdentifier() + ": " + mainReqText + "</b>", false);
+				}
+				if (req.hasQualityClasses()) {
+					doc.createParagraphElement("&nbsp;Quality: " + req.getQualityClassNamesSummary(), false);
 				}
 		  // Check if the requirement is implemented
           if(req.hasReqImplementations()) {
@@ -436,9 +439,89 @@ class PlainRequirementsDocGenerator
             }
           }
         }
+    // reqQC suboption: generate for quality comparison table
+    if (model.modelHasSuboption("PlainRequirementsDoc", "reqQC")) {
+      generateQualityCompareTable();
+    }
+
     model.setCode(doc.toString());
     writeModel();
     return;
+  }
+
+  void generateQualityCompareTable() {
+    List<MixsetOrFile> qualityMixsets = new ArrayList<>();
+    for (MixsetOrFile mix : model.getMixsetOrFiles()) {
+      // Only mixset is comparable
+      if (!mix.getIsMixset()) continue;
+      for (ReqImplementation ri : mix.getReqImplementations()) {
+        if (ri.getQualityClassName() != null && !ri.getQualityClassName().isEmpty()) {
+          qualityMixsets.add(mix);
+          break;
+        }
+      }
+    }
+    if (qualityMixsets.isEmpty()) return;
+
+    // get the requirement list
+    List<Requirement> qualityReqs = new ArrayList<>();
+    for (Requirement req : model.getAllRequirements().values()) {
+      if (req.hasQualityClasses()) {
+        qualityReqs.add(req);
+      }
+    }
+    if (qualityReqs.isEmpty()) return;
+    // keep list sorted so the generator can return same result for the test cases
+    qualityReqs.sort(Comparator.comparing(Requirement::getIdentifier));
+
+    // Check if any use statement exist
+    boolean hasUseStatements = false;
+    for (MixsetOrFile mix : qualityMixsets) {
+      if (mix.getUseUmpleFile() != null) {
+        hasUseStatements = true;
+        break;
+      }
+    }
+
+    // Build the HTML table
+    StringBuilder table = new StringBuilder();
+    table.append("<table border='1' cellpadding='4' cellspacing='0'>");
+
+    // Header row: empty corner cell + one column per mixset
+    table.append("<tr><th>Requirement</th>");
+    for (MixsetOrFile mix : qualityMixsets) {
+      String header = mix.getName();
+      if (hasUseStatements && mix.getUseUmpleFile() != null) {
+        header = "*" + header;
+      }
+      table.append("<th>").append(header).append("</th>");
+    }
+    table.append("</tr>");
+
+    // One row per quality requirement
+    for (Requirement req : qualityReqs) {
+      table.append("<tr><td>").append(req.getIdentifier()).append("</td>");
+      for (MixsetOrFile mix : qualityMixsets) {
+        String cellValue = "";
+        for (ReqImplementation ri : mix.getReqImplementations()) {
+          if (ri.getIdentifier().equals(req.getIdentifier())
+              && ri.getQualityClassName() != null
+              && !ri.getQualityClassName().isEmpty()) {
+            cellValue = ri.getQualityClassName();
+            break;
+          }
+        }
+        table.append("<td>").append(cellValue).append("</td>");
+      }
+      table.append("</tr>");
+    }
+
+    table.append("</table>");
+    doc.createParagraphElement(table.toString(), false);
+
+    if (hasUseStatements) {
+      doc.createParagraphElement("* selected mixset", false);
+    }
   }
 	String linkifyHttpUrls(String htmlish){
 		if (htmlish == null || htmlish.length() == 0) { return ""; }
@@ -477,4 +560,3 @@ class PlainRequirementsDocGenerator
     }
   }
 }
-

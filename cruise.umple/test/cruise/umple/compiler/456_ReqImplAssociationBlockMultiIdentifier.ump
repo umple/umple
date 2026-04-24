@@ -1,0 +1,18 @@
+// Multiple identifiers inside an association block should attach only to the next association.
+req R1 text {
+  First association-block requirement.
+}
+
+req R2 text {
+  Second association-block requirement.
+}
+
+class Student {}
+class Course {}
+class Department {}
+
+association {
+  implementsReq R1, R2;
+  * Student -- * Course;
+  * Course -- 1 Department;
+}

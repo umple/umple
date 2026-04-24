@@ -310,7 +310,7 @@ class UmpleInternalParser
     }
     if (t.is("reqImplementation"))
     {
-      ReqImpMixset = analyzeEnumImplReq(t);
+      ReqImpMixset.addAll(analyzeEnumImplReq(t));
     }
     
   }
@@ -334,9 +334,11 @@ class UmpleInternalParser
     mixset.addMixsetFragment(mixsetFragment);
     mixsetFragment.setMixset(mixset);
     for (ReqImplementation ri : ReqImpMixset )
-      { 
+      {
         mixset.addReqImplementation(ri);
-      } 
+        model.addReqImplementation(ri);
+      }
+      ReqImpMixset.clear();
       mixset.setPosition(token.getPosition()); 
     // parse mixset fragments right away if there is a use-statement. 
     if(mixset.getUseUmpleFile() != null)

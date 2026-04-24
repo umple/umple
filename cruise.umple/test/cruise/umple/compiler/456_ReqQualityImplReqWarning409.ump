@@ -1,0 +1,13 @@
+// Test: implementsReq Speed(NonExistent) where Speed has different quality classes -> warning 409
+req Speed userStory {
+  who { architect }
+  what { compare designs }
+}
+
+req Speed quality {
+  High {}
+  Low {}
+}
+
+implementsReq Speed(NonExistent);
+class Item {}

@@ -1,0 +1,30 @@
+// Multiple identifiers should attach at both state machine and state levels.
+req R1 text {
+  First state machine requirement.
+}
+
+req R2 text {
+  Second state machine requirement.
+}
+
+req R3 text {
+  First state requirement.
+}
+
+req R4 text {
+  Second state requirement.
+}
+
+class X {
+  status {
+    implementsReq R1, R2;
+    state1 {
+      implementsReq R3, R4;
+      e -> state2;
+    }
+
+    state2 {
+      e -> state1;
+    }
+  }
+}
