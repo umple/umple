@@ -55,6 +55,7 @@ Page.mixsetsActive = new Array();
 Page.filtersActive = new Array();
 Page.copyableMixset="";
 Page.specialSuboptionsActive = new Array();
+Page.hasFeatureModelTree = false;
 Page.showActions = true;
 Page.showText = true;
 Page.showCanvas = true;
@@ -277,6 +278,15 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     if (window.AiSettings && window.AiSettings.init) {
       window.AiSettings.init();
     }
+    // Initialize feature tree modal after DOM is ready so its dialog elements (declared after the inline Page.init script in umple.php) are present.
+    Page.initHighlighter("btnCloseFeatureTree");
+    FeatureTreeModal.init();
+    if (Page.useGvFeatureDiagram) {
+      FeatureTreeModal.showPaletteSection();
+    } else {
+      FeatureTreeModal.hidePaletteSection();
+    }
+
   });
 
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
@@ -351,7 +361,8 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleFeatureDependency");
   Page.initHighlighter("buttonAllowPinch");
   Page.initHighlighter("buttonReindent");
-  
+  Page.initHighlighter("buttonSelectReq");
+
   Page.initToggleTool("buttonAddClass");
   Page.initToggleTool("buttonAddAssociation");
   Page.initToggleTool("buttonAddTransition");

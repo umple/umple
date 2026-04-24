@@ -264,6 +264,87 @@ public class UmpleFeatureModelTest {
     FeatureModel featureModel= model.getFeatureModel();
     Assert.assertEquals(true,featureModel.satisfyFeatureModel());
   }
- 
+
+  @Test
+  public void parseReqStArgumetToSatisfyFeatureModel_cycleAllUsed()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_cycleAllUsed.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel = model.getFeatureModel();
+    Assert.assertEquals(true, featureModel.satisfyFeatureModel());
+  }
+
+  @Test
+  public void parseReqStArgumetToSatisfyFeatureModel_cycleBehindUnused()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_cycleBehindUnused.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel = model.getFeatureModel();
+    Assert.assertEquals(false, featureModel.satisfyFeatureModel());
+  }
+
+  @Test
+  public void parseReqStArgumetToSatisfyFeatureModel_cycleThreeNodes()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_cycleThreeNodes.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel = model.getFeatureModel();
+    Assert.assertEquals(true, featureModel.satisfyFeatureModel());
+  }
+
+  @Test
+  public void parseReqStArgumetToSatisfyFeatureModel_cycleSelfLoop()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_cycleSelfLoop.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel = model.getFeatureModel();
+    // Termination check only: a self-require + use must not StackOverflow.
+    // We do NOT assert on the boolean -- self-require semantics (warn vs
+    // satisfied vs unsatisfied) are out of scope for this fix and a future
+    // diagnostic could legitimately change the answer either way.
+    featureModel.satisfyFeatureModel();
+  }
+
+  @Test
+  public void parseReqStArgumetToSatisfyFeatureModel_diamondSharedRequire()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_diamondSharedRequire.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel = model.getFeatureModel();
+    Assert.assertEquals(false, featureModel.satisfyFeatureModel());
+  }
+
+  @Test
+  public void parseReqStArgumetToSatisfyFeatureModel_cycleXorOver()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_cycleXorOver.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel = model.getFeatureModel();
+    Assert.assertEquals(false, featureModel.satisfyFeatureModel());
+  }
+
+  @Test
+  public void parseReqStArgumetToSatisfyFeatureModel_cycleTwoDisjoint()
+  {
+    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_cycleTwoDisjoint.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+    FeatureModel featureModel = model.getFeatureModel();
+    Assert.assertEquals(true, featureModel.satisfyFeatureModel());
+  }
+
 }
  

@@ -1,0 +1,7 @@
+// Regression fixture: A requires itself, used. Edge case for the
+// visited.add() / visited.contains() interaction on the very first link.
+// Expected: satisfied (true) — tautology.
+mixset A { require [A]; }
+mixset Z { require [A]; }
+
+use A;

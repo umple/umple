@@ -968,8 +968,10 @@ Action.changeDiagramType = function(newDiagramType)
 
   var changedType = false;
   jQuery(".layoutListItem").hide();
+  // reset show state
+  FeatureTreeModal.hidePaletteSection();
 
-  if(newDiagramType.type == "editableClass") { 
+  if(newDiagramType.type === "editableClass") {
     if(Page.useEditableClassDiagram) return;
     Page.useEditableClassDiagram = true;
     Page.useJointJSClassDiagram = false;
@@ -989,7 +991,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery(".view_opt_class_palette").show();
 
   }
-  else if(newDiagramType.type == "JointJSClass") { 
+  else if(newDiagramType.type === "JointJSClass") {
     if(Page.useJointJSClassDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = true;
@@ -1008,7 +1010,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery(".view_opt_class").show();
     jQuery(".view_opt_class_palette").show();
   }  
-  else if(newDiagramType.type == "GvClass") { 
+  else if(newDiagramType.type === "GvClass") {
     if(Page.useGvClassDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -1028,7 +1030,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery(".view_opt_class_palette").show();
   }
 
-  else if(newDiagramType.type == "GvEntity" || newDiagramType.type == "GvEntityRelationshipDiagram") { 
+  else if(newDiagramType.type === "GvEntity" || newDiagramType.type === "GvEntityRelationshipDiagram") {
     if(Page.useGvEntityRelationshipDiagram) return;
     Page.useGvClassDiagram = false;
     Page.useEditableClassDiagram = false;
@@ -1049,7 +1051,7 @@ Action.changeDiagramType = function(newDiagramType)
 
   }
 
-  else if(newDiagramType.type == "GvState") {
+  else if(newDiagramType.type === "GvState") {
     if(Page.useGvStateDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -1068,7 +1070,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery(".view_opt_state").show();
 
   }
-  else if(newDiagramType.type == "GvFeature") {
+  else if(newDiagramType.type === "GvFeature") {
    if(Page.useGvFeatureDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -1085,10 +1087,9 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery("#buttonShowGvFeatureDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvFeature');
     jQuery(".view_opt_feature").show();
-
-
+    FeatureTreeModal.showPaletteSection();
   }
-  else if(newDiagramType.type == "structure") { // Structure Diagram
+  else if(newDiagramType.type === "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -1106,7 +1107,7 @@ Action.changeDiagramType = function(newDiagramType)
     Page.setDiagramTypeIconState('structure');
   }
 
-  else if(newDiagramType.type == "instanceDiagram") {
+  else if(newDiagramType.type === "instanceDiagram") {
     if(Page.useInstanceDiagram) return;
      Page.useEditableClassDiagram = false;
      Page.useJointJSClassDiagram = false;
@@ -1127,7 +1128,7 @@ Action.changeDiagramType = function(newDiagramType)
  
    }
 
-  else if(newDiagramType.type == "crudUI"){
+  else if(newDiagramType.type === "crudUI"){
    if(Page.useCRUDUI) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -1146,7 +1147,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery(".view_opt_feature").show();
 }
 
-   else if(newDiagramType.type == "stateTables"){
+   else if(newDiagramType.type === "stateTables"){
     if(Page.useStateTables) return;
      Page.useEditableClassDiagram = false;
      Page.useJointJSClassDiagram = false;
@@ -1165,7 +1166,7 @@ Action.changeDiagramType = function(newDiagramType)
      jQuery(".view_opt_feature").show();
    }
 
-   else if(newDiagramType.type == "eventSequence"){
+   else if(newDiagramType.type === "eventSequence"){
     if(Page.useEventSequence) return;
      Page.useEditableClassDiagram = false;
      Page.useJointJSClassDiagram = false;
@@ -5858,6 +5859,91 @@ Action.updateUmpleDiagram = function() {
  return Action.updateUmpleDiagramForce(true)
 }
 
+// To fetch the feature model json from the backend complier
+Action.fetchFeatureModelTreeThen = function(next)
+{
+  let proceed = function() {
+    if (typeof next === "function") next();
+  };
+  // proceedAsync is only used by the early-return branches below — they need the continuation deferred via setTimeout so fetchFeatureModelTreeThen returns before next() fires. The main Ajax onFinally path calls the sync proceed() directly.
+  let proceedAsync = function() {
+    setTimeout(proceed, 0);
+  };
+
+
+  let mount = document.getElementById("featureModelTreeContainer");
+
+  // Additional check to ensure this fetch only happens when in the feature diagram mode
+  if (!Page.useGvFeatureDiagram) {
+    FeatureTree.reset();
+    Page.hasFeatureModelTree = false;
+    FeatureTreeModal._fetchId++;
+    FeatureTreeModal._fetchInFlight = false;
+    FeatureTreeModal._lastFetchFailed = false;
+    FeatureTreeModal._lastFetchStatus = -1;
+    FeatureTreeModal.close();
+    if (mount) {
+      while (mount.firstChild) mount.removeChild(mount.firstChild);
+      mount.style.display = "none";
+    }
+    proceedAsync();
+    return;
+  }
+
+  if (!mount) {
+    Page.hasFeatureModelTree = false;
+    FeatureTreeModal._lastFetchFailed = false;
+    FeatureTreeModal._lastFetchStatus = -1;
+    proceedAsync();
+    return;
+  }
+
+  // async lock to prevent ajax mutex
+  var thisFetchId = ++FeatureTreeModal._fetchId;
+  FeatureTreeModal._fetchInFlight = true;
+  FeatureTreeModal._lastFetchFailed = false;
+  FeatureTreeModal._lastFetchStatus = -1;
+  FeatureTreeModal.refreshBody();
+
+  Ajax.sendRequest(
+    "scripts/compiler.php",
+    function(response) {
+      // Stale callback guard: a newer fetch or a mode switch has made.
+      if (thisFetchId !== FeatureTreeModal._fetchId) return;
+      var featureModelJson = FeatureTree.getModelFromResponse(response.responseText);
+      if (featureModelJson && featureModelJson.featureModel) {
+        FeatureTree.parseModel(featureModelJson.featureModel);
+        Page.hasFeatureModelTree = true;
+      } else {
+        FeatureTree.reset();
+        Page.hasFeatureModelTree = false;
+      }
+    },
+    "language=FeatureModelJson&theme=light&error=true&umpleCode="
+      + encodeURIComponent(Page.getUmpleCode()),
+    {
+      onError: function(http) {
+        // Error-unique: reset feature state and record failure for UI.
+        // Stale callbacks do not mutate state; onFinally drives proceed().
+        if (thisFetchId !== FeatureTreeModal._fetchId) return;
+        FeatureTree.reset();
+        Page.hasFeatureModelTree = false;
+        FeatureTreeModal._lastFetchFailed = true;
+        FeatureTreeModal._lastFetchStatus = http.status;
+      },
+      onFinally: function(http) {
+        if (thisFetchId !== FeatureTreeModal._fetchId) {
+          proceed();
+          return;
+        }
+        FeatureTreeModal._fetchInFlight = false;
+        FeatureTreeModal.refreshBody();
+        proceed();
+      }
+    }
+  );
+};
+
 Action.updateUmpleDiagramForce = function(forceUpdate)
 {
   // DEBUG
@@ -5874,7 +5960,9 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   Action.savedCanonical=canonical;
   Page.showCanvasLoading();
 
-  Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+  Action.fetchFeatureModelTreeThen(function(){
+    Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+  });
 
 }
 
@@ -5916,10 +6004,15 @@ Action.updateUmpleDiagramCallback = function(response)
     // Enable dynamic checkboxes of mixsets and named filters
     // Find any phrases describing
     // named mixsets of filters not commented out
-    var dynamicCheckboxItems = Page.getUmpleCode()
-      .match(/(((?<!(\/\/.*))(mixset))|((?<!(\/\/.*))(filter)))\s+[a-zA-Z1-9-_]+/g);
+    var dynamicCheckboxItems = new Array();
+    var umpleCodeForScan = Page.getUmpleCode();
+    var mixsetMatches = umpleCodeForScan
+      .match(/(?<!(\/\/.*))mixset\s+[a-zA-Z1-9-_]+/g);
+    var filterMatches = umpleCodeForScan
+      .match(/(?<!(\/\/.*))filter\s+[a-zA-Z1-9-_]+/g);
+    if (mixsetMatches != null&&!Page.hasFeatureModelTree) dynamicCheckboxItems = dynamicCheckboxItems.concat(mixsetMatches);
+    if (filterMatches != null) dynamicCheckboxItems = dynamicCheckboxItems.concat(filterMatches);
     // Add special suboptions
-    if(dynamicCheckboxItems == null) dynamicCheckboxItems = new Array();
     dynamicCheckboxItems.push("gvmanual","gvdot","gvsfdp","gvcirco","gvortho");
     
     // Clear out previous
@@ -5949,11 +6042,20 @@ Action.updateUmpleDiagramCallback = function(response)
         boxesToActivate.push(idPart);
       });
 
-      // If there are any items active that are not in the new set because
-      // deleted or commented out, then remove them from being active
-      Page.mixsetsActive = Page.mixsetsActive.filter(function(aMixset){
-        return boxesToActivate.includes("mixset"+aMixset);
-      });
+      /*
+       * Reconcile Page.mixsetsActive against the mixsets that still exist in
+       * source. boxesToActivate was built from the regex scan above, so any
+       * entry absent from it means that mixset was deleted or commented out
+       * and should be dropped from the active set.
+       *
+       * Skip this reconciliation when the feature tree owns mixset state
+       * to prevent the selection being cleared by this code
+       */
+      if (!Page.hasFeatureModelTree) {
+        Page.mixsetsActive = Page.mixsetsActive.filter(function(aMixset){
+          return boxesToActivate.includes("mixset"+aMixset);
+        });
+      }
       Page.filtersActive = Page.filtersActive.filter(function(aFilter){
         return boxesToActivate.includes("filter"+aFilter);
       });

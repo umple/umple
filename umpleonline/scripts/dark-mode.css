@@ -868,3 +868,30 @@ select {
 .cm-context-menu-separator {
   background: #444;
 }
+.feature-tree-children {
+  border-left-color: #555;
+}
+.feature-tree-toggle {
+  color: #aaa;
+}
+.feature-tree-name {
+  color: var(--ai-text);
+}
+.feature-tree-name-group,
+.feature-tree-mult-label {
+  color: #bbb;
+}
+.feature-tree-name-violated,
+.feature-tree-name-multiref-violated,
+.feature-tree-mult-label-violated {
+  color: #ff6b6b;
+}
+.feature-tree-name-multiref {
+  color: #6fa9e3;
+}
+.feature-tree-name-cycle-disabled {
+  color: #777;
+}
+.feature-tree-child-count {
+  color: #888;
+}

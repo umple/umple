@@ -28,6 +28,7 @@ cat \
  umple_restore.js \
  umple_action_diagram.js \
  umple_tooltips.js \
+ umple_feature_tree.js \
  umple_tab_control.js \
  crud/umple_crudui.js \
  crud/umple_crud_json_persistence.js \

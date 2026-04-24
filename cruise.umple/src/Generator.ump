@@ -99,7 +99,7 @@ use SuperCodeGeneratorGenerator;
 use CodeGenerator, UmpleGenerator, RubyGenerator , JavaGenerator , RTCppGenerator, PhpGenerator, PythonGenerator; 
 use Uigu2Generator , SqlGenerator , UmpleSelfGenerator , USEGenerator , EcoreGenerator ,TestGenerator ; 
 use PapyrusGenerator, XmiGenerator, TextUmlGenerator, ScxmlGenerator, CodeGvClassTraitDiagramGenerator
-use EventSequenceGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  SimulateGenerator,  YumlGenerator;
+use EventSequenceGenerator,  FeatureModelJsonGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  SimulateGenerator,  YumlGenerator;
 use XtextGenerator,  JsonGenerator,  JsonMixedGenerator,  StructureDiagramGenerator , GvStateDiagramGenerator;
 use StateTableGenerator, SuperGvGeneratorGenerator, HtmlGenerator, UmpleModelWalkerGenerator,  CodeAnalysisGenerator;
 use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, PlainRequirementsDocGenerator, CodeGvClassDiagramGenerator, ExternalGrammarGenerator;
@@ -140,6 +140,7 @@ mixset ExternalGrammarGenerator{ use generators/Generator_CodeExternalGrammar.um
 mixset CodeGvClassDiagramGenerator{ use generators/Generator_CodeGvClassDiagram.ump;}
 mixset CodeGvClassTraitDiagramGenerator{ use generators/Generator_CodeGvClassTraitDiagram.ump; }
 mixset FeatureDiagramCo{ use generators/featureDiagramGenerator/FeatureDiagramConfig.ump; }
+mixset FeatureModelJsonGenerator{ use generators/Generator_CodeFeatureModelJson.ump; }
 mixset EntityRelationshipCon{ use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump}
 mixset AlloyGenerator{ use generators/alloy/Generator_CodeAlloy.ump; }
 mixset NuSMVGenerators{ use generators/NuSMV/nusmvGeneratorConfig.ump; }

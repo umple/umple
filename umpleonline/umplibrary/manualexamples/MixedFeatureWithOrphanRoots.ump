@@ -1,0 +1,29 @@
+// Demonstrates a FeatureModelJson that contains both a UmpleFile root and a
+// mixset-only structural root in the same file.
+//
+// Parser mechanics:
+//   - `require [Base];` at file level causes the parser to synthesize a
+//     UmpleFile FeatureLeaf and a Mandatory link from that UmpleFile node
+//     to Base. In the rendered tree this shows as the file name at the top
+//     with a Base checkbox directly beneath it.
+//   - `mixset Outer { require subfeature [Inner]; }` creates an Outer->Inner
+//     subfeature link without anchoring Outer under any UmpleFile node, so
+//     Outer is a structural-only root in the resulting FeatureModelJson.
+//
+// Before the _findRoots merge fix, only the file-anchored subtree (the file's
+// root label with Base beneath it) appeared in the "Show and Hide" panel, and
+// Outer/Inner were silently dropped. After the fix, the panel shows the file
+// subtree at the top and the Outer->Inner mixset subtree directly below as a
+// second top-level entry.
+
+require [Base];
+
+mixset Base {
+}
+
+mixset Outer {
+  require subfeature [Inner];
+}
+
+mixset Inner {
+}

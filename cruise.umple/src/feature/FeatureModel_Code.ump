@@ -1,0 +1,386 @@
+/*
+Copyright: All contributers to the Umple Project.
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+Feature model functions
+*/
+
+class FeatureModel
+{
+  depend cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
+  depend cruise.umple.util.Json;
+  depend cruise.umple.util.JsonParser;
+  depend cruise.umple.parser.ParseResult;
+  depend java.util.HashMap;
+  depend java.util.LinkedHashMap;
+  depend java.util.Map;
+  depend java.util.List;
+  depend java.util.ArrayList;
+
+  /*
+    Serializes this FeatureModel to a complete JSON string.
+    schema:
+    ===SCHEMA START===
+    {
+      "featureModel": {
+        "name": string,
+        "nodes": [
+          {
+            "id": int,
+            "uniqueName": string,
+            "name": string,
+            "nodeType": "FeatureLeaf" | "CompoundFeatureNode" | "FragmentFeatureLeaf" | "FeatureNode",
+            "isLeaf": boolean,
+            "isCompoundFeature": boolean,
+            "mixsetOrFileNode": {              // FeatureLeaf only
+              "type": "Mixset" | "UmpleFile",
+              "name": string,
+              "isMixset": boolean,
+              "isFeature": boolean,            // Mixset only
+              "isEmpty": boolean,              // Mixset only
+              "useUmpleFile": string | null,
+              "useUmpleLine": int
+            } | null,
+            "childFeatureIds": [int, ...],     // CompoundFeatureNode only
+            "fragments": [                     // FragmentFeatureLeaf only
+              {
+                "file": string | null,
+                "line": int,
+                "bodyLength": int
+              }
+            ]
+          }
+        ],
+        "links": [
+          {
+            "sourceNodeId": int,
+            "targetNodeId": int,
+            "linkType": "FeatureLink" | "MultiplicityFeatureConnectingOpType" | "XORFeatureConnectingOpType",
+            "opType": "Mandatory" | "Optional" | "Conjunctive" | "Disjunctive" | "Multiplicity" | "Include" | "Exclude" | "XOR",
+            "isSub": boolean,
+            "lowerBound": int,                 // Multiplicity/XOR only
+            "upperBound": int                  // Multiplicity/XOR only
+          }
+        ]
+      }
+    }
+    ===SCHEMA END===
+  */
+  public String toJSON()
+  {
+    Map<String, Object> root = new LinkedHashMap<>();
+    Map<String, Object> fm = new LinkedHashMap<>();
+    fm.put("name", this.getName());
+
+    // Serialize nodes
+    List<Map<String, Object>> nodeList = new ArrayList<>();
+    for (FeatureNode n : this.getNode())
+    {
+      Map<String, Object> nodeMap = new LinkedHashMap<>();
+      nodeMap.put("id", n.getId());
+      nodeMap.put("uniqueName", n.getUniqueFeatureNodeName());
+      nodeMap.put("name", n.getName());
+
+      String nodeType;
+      if (n instanceof FeatureLeaf)
+      {
+        nodeType = "FeatureLeaf";
+      }
+      else if (n instanceof CompoundFeatureNode)
+      {
+        nodeType = "CompoundFeatureNode";
+      }
+      else if (n instanceof FragmentFeatureLeaf)
+      {
+        nodeType = "FragmentFeatureLeaf";
+      }
+      else
+      {
+        nodeType = "FeatureNode";
+      }
+      nodeMap.put("nodeType", nodeType);
+
+      nodeMap.put("isLeaf", n.getIsLeaf());
+      nodeMap.put("isCompoundFeature", n.getIsCompoundFeature());
+
+      if (n instanceof FeatureLeaf)
+      {
+        FeatureLeaf leaf = (FeatureLeaf) n;
+        if (leaf.hasMixsetOrFileNode())
+        {
+          MixsetOrFile mof = leaf.getMixsetOrFileNode();
+          Map<String, Object> mofMap = new LinkedHashMap<>();
+          if (mof instanceof Mixset)
+          {
+            mofMap.put("type", "Mixset");
+            mofMap.put("name", mof.getName());
+            mofMap.put("isMixset", true);
+            mofMap.put("isFeature", ((Mixset) mof).getIsFeature());
+            mofMap.put("isEmpty", ((Mixset) mof).getIsEmpty());
+          }
+          else
+          {
+            mofMap.put("type", "UmpleFile");
+            mofMap.put("name", mof.getName());
+            mofMap.put("isMixset", false);
+          }
+          mofMap.put(
+            "useUmpleFile",
+            mof.getUseUmpleFile() != null ? mof.getUseUmpleFile().getFileName() : null);
+          mofMap.put("useUmpleLine", mof.getUseUmpleLine());
+          nodeMap.put("mixsetOrFileNode", mofMap);
+        }
+        else
+        {
+          nodeMap.put("mixsetOrFileNode", null);
+        }
+      }
+
+      if (n instanceof CompoundFeatureNode)
+      {
+        CompoundFeatureNode cfn = (CompoundFeatureNode) n;
+        List<Integer> childIds = new ArrayList<>();
+        for (FeatureNode child : cfn.getChildFeatures())
+        {
+          childIds.add(child.getId());
+        }
+        nodeMap.put("childFeatureIds", childIds);
+      }
+
+      if (n instanceof FragmentFeatureLeaf)
+      {
+        FragmentFeatureLeaf ffl = (FragmentFeatureLeaf) n;
+        List<Map<String, Object>> fragList = new ArrayList<>();
+        for (MixsetFragment frag : ffl.getMixsetFragment())
+        {
+          Map<String, Object> fragMap = new LinkedHashMap<>();
+          fragMap.put(
+            "file",
+            frag.getOriginalUmpFile() != null ? frag.getOriginalUmpFile().getFileName() : null);
+          fragMap.put("line", frag.getOriginalUmpLine());
+          fragMap.put("bodyLength", frag.getBody() != null ? frag.getBody().length() : 0);
+          fragList.add(fragMap);
+        }
+        nodeMap.put("fragments", fragList);
+      }
+
+      nodeList.add(nodeMap);
+    }
+    fm.put("nodes", nodeList);
+
+    List<Map<String, Object>> linkList = new ArrayList<>();
+    for (FeatureLink link : this.getFeaturelink())
+    {
+      Map<String, Object> linkMap = new LinkedHashMap<>();
+      linkMap.put(
+        "sourceNodeId",
+        link.getSourceFeatureNode() != null ? link.getSourceFeatureNode().getId() : null);
+      linkMap.put(
+        "targetNodeId",
+        link.getTargetFeatureNode() != null ? link.getTargetFeatureNode().getId() : null);
+
+      String linkType;
+      if (link instanceof XORFeatureConnectingOpType)
+      {
+        linkType = "XORFeatureConnectingOpType";
+      }
+      else if (link instanceof MultiplicityFeatureConnectingOpType)
+      {
+        linkType = "MultiplicityFeatureConnectingOpType";
+      }
+      else
+      {
+        linkType = "FeatureLink";
+      }
+      linkMap.put("linkType", linkType);
+
+      linkMap.put("opType", link.getFeatureConnectingOpType().name());
+      linkMap.put("isSub", link.getIsSub());
+
+      if (link instanceof MultiplicityFeatureConnectingOpType)
+      {
+        Multiplicity mult = ((MultiplicityFeatureConnectingOpType) link).getMultiplicity();
+        linkMap.put("lowerBound", mult.getLowerBound());
+        linkMap.put("upperBound", mult.getUpperBound());
+      }
+
+      linkList.add(linkMap);
+    }
+    fm.put("links", linkList);
+
+    root.put("featureModel", fm);
+    return Json.serialize(root);
+  }
+
+  // Deserializes a JSON string.
+  public static FeatureModel fromJSON(String json)
+  {
+    if (json == null || json.isEmpty())
+    {
+      return null;
+    }
+    JsonParser parser = new JsonParser("json");
+    ParseResult parseResult = parser.parse("json", json);
+    if (!parseResult.getWasSuccess())
+    {
+      return null;
+    }
+    Json root = parser.analyze();
+    Json fmJson = root.getAttribute("featureModel");
+    if (fmJson == null)
+    {
+      return null;
+    }
+
+    String fmName = fmJson.getValue("name");
+    FeatureModel model = new FeatureModel(fmName != null ? fmName : "");
+
+    // Map from serialized id to created node
+    Map<Integer, FeatureNode> idToNode = new HashMap<>();
+    // Track CompoundFeatureNode child IDs for deferred wiring
+    Map<CompoundFeatureNode, List<Integer>> deferredChildren = new LinkedHashMap<>();
+
+    Json[] nodes = fmJson.getArray("nodes");
+    if (nodes != null)
+    {
+      for (Json nodeJson : nodes)
+      {
+        String nodeType = nodeJson.getValue("nodeType");
+        FeatureNode node;
+
+        if ("FeatureLeaf".equals(nodeType))
+        {
+          FeatureLeaf leaf = new FeatureLeaf(model);
+          Json mofJson = nodeJson.getAttribute("mixsetOrFileNode");
+          if (mofJson != null && mofJson.isComposite())
+          {
+            String mofType = mofJson.getValue("type");
+            if ("Mixset".equals(mofType))
+            {
+              Mixset mixset = new Mixset(mofJson.getValue("name"));
+              String isFeatureStr = mofJson.getValue("isFeature");
+              if ("true".equals(isFeatureStr))
+              {
+                mixset.setIsFeature(true);
+              }
+              String isEmptyStr = mofJson.getValue("isEmpty");
+              if ("true".equals(isEmptyStr))
+              {
+                mixset.setIsEmpty(true);
+              }
+              leaf.setMixsetOrFileNode(mixset);
+            }
+            // UmpleFile deserialization is intentionally omitted.
+          }
+          node = leaf;
+        }
+        else if ("CompoundFeatureNode".equals(nodeType))
+        {
+          CompoundFeatureNode cfn = new CompoundFeatureNode(model);
+          Json[] childIds = nodeJson.getArray("childFeatureIds");
+          if (childIds != null)
+          {
+            List<Integer> ids = new ArrayList<>();
+            for (Json idJson : childIds)
+            {
+              ids.add(idJson.getIntValue());
+            }
+            deferredChildren.put(cfn, ids);
+          }
+          node = cfn;
+        }
+        else if ("FragmentFeatureLeaf".equals(nodeType))
+        {
+          node = new FragmentFeatureLeaf(model);
+          // MixsetFragment bodies are not encoded in the JSON.
+        }
+        else
+        {
+          node = new FeatureNode(model);
+        }
+
+        node.setName(nodeJson.getValue("name"));
+        node.setId(nodeJson.getIntValue("id"));
+        // Sync static counter to avoid future ID collisions
+        FeatureNode.nextId.updateAndGet(cur -> Math.max(cur, node.getId()));
+        idToNode.put(node.getId(), node);
+      }
+    }
+
+    for (Map.Entry<CompoundFeatureNode, List<Integer>> entry : deferredChildren.entrySet())
+    {
+      CompoundFeatureNode parent = entry.getKey();
+      for (Integer childId : entry.getValue())
+      {
+        FeatureNode child = idToNode.get(childId);
+        if (child != null)
+        {
+          parent.addChildFeature(child);
+        }
+      }
+    }
+
+    Json[] links = fmJson.getArray("links");
+    if (links != null)
+    {
+      for (Json linkJson : links)
+      {
+        String linkType = linkJson.getValue("linkType");
+        FeatureLink link;
+
+        if ("XORFeatureConnectingOpType".equals(linkType))
+        {
+          XORFeatureConnectingOpType xorLink = new XORFeatureConnectingOpType();
+          int lower = linkJson.getIntValue("lowerBound");
+          int upper = linkJson.getIntValue("upperBound");
+          xorLink.getMultiplicity().setRange(
+            String.valueOf(lower), String.valueOf(upper));
+          link = xorLink;
+        }
+        else if ("MultiplicityFeatureConnectingOpType".equals(linkType))
+        {
+          MultiplicityFeatureConnectingOpType multLink = new MultiplicityFeatureConnectingOpType();
+          int lower = linkJson.getIntValue("lowerBound");
+          int upper = linkJson.getIntValue("upperBound");
+          multLink.getMultiplicity().setRange(
+            String.valueOf(lower), String.valueOf(upper));
+          link = multLink;
+        }
+        else
+        {
+          link = new FeatureLink();
+        }
+
+        String opTypeStr = linkJson.getValue("opType");
+        if (opTypeStr != null)
+        {
+          link.setFeatureConnectingOpType(FeatureConnectingOpType.valueOf(opTypeStr));
+        }
+
+        String isSubStr = linkJson.getValue("isSub");
+        link.setIsSub("true".equals(isSubStr));
+
+        int sourceId = linkJson.getIntValue("sourceNodeId");
+        int targetId = linkJson.getIntValue("targetNodeId");
+        FeatureNode sourceNode = idToNode.get(sourceId);
+        FeatureNode targetNode = idToNode.get(targetId);
+        if (sourceNode != null)
+        {
+          link.setSourceFeatureNode(sourceNode);
+        }
+        if (targetNode != null)
+        {
+          link.setTargetFeatureNode(targetNode);
+        }
+
+        link.setFeatureModel(model);
+      }
+    }
+
+    return model;
+  }
+
+
+}

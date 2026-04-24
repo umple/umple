@@ -1,0 +1,15 @@
+// Regression fixture: two disjoint cycles (A<->B and C<->D), each with its own
+// root pointing in (Z1->A, Z2->C). Both cycles are fully used. The per-evaluation
+// fresh visited set must let each root traverse its own cycle independently.
+// Expected: satisfied (true).
+mixset A { require [B]; }
+mixset B { require [A]; }
+mixset C { require [D]; }
+mixset D { require [C]; }
+mixset Z1 { require [A]; }
+mixset Z2 { require [C]; }
+
+use A;
+use B;
+use C;
+use D;
