@@ -13,11 +13,15 @@ class FeatureModel
   depend cruise.umple.util.Json;
   depend cruise.umple.util.JsonParser;
   depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.Token;
   depend java.util.HashMap;
   depend java.util.LinkedHashMap;
   depend java.util.Map;
   depend java.util.List;
   depend java.util.ArrayList;
+  depend java.util.Collections;
+  depend java.util.Comparator;
+  depend java.util.Objects;
 
   /*
     Serializes this FeatureModel to a complete JSON string.
@@ -40,6 +44,15 @@ class FeatureModel
               "isMixset": boolean,
               "isFeature": boolean,            // Mixset only
               "isEmpty": boolean,              // Mixset only
+              "reqImplementations": [          // Mixset only
+                {
+                  "requirementIdentifier": string,
+                  "qualityClassName": string | null,
+                  "implementingFeature": string | null,
+                  "requirementResolved": boolean,   // recomputed output only; ignored on fromJSON
+                  "qualityClassResolved": boolean   // recomputed output only; ignored on fromJSON
+                }
+              ],
               "useUmpleFile": string | null,
               "useUmpleLine": int
             } | null,
@@ -62,6 +75,30 @@ class FeatureModel
             "isSub": boolean,
             "lowerBound": int,                 // Multiplicity/XOR only
             "upperBound": int                  // Multiplicity/XOR only
+          }
+        ],
+        "requirements": [                      // present if and only if an UmpleModel is attached; sorted by identifier
+          {
+            "identifier": string,
+            "language": string,
+            "statement": string,
+            "who": string,
+            "when": string,
+            "what": string,
+            "why": string,
+            "useCaseSteps": [
+              {
+                "id": string,
+                "stepType": "UserStep" | "SystemResponse",
+                "content": string
+              }
+            ],
+            "qualityClasses": [
+              {
+                "name": string,
+                "content": string
+              }
+            ]
           }
         ]
       }
@@ -119,6 +156,18 @@ class FeatureModel
             mofMap.put("isMixset", true);
             mofMap.put("isFeature", ((Mixset) mof).getIsFeature());
             mofMap.put("isEmpty", ((Mixset) mof).getIsEmpty());
+            List<Map<String, Object>> riList = new ArrayList<>();
+            for (ReqImplementation ri : mof.getReqImplementations())
+            {
+              Map<String, Object> riMap = new LinkedHashMap<>();
+              riMap.put("requirementIdentifier", ri.getIdentifier());
+              riMap.put("qualityClassName", ri.getQualityClassName());
+              riMap.put("implementingFeature", ri.getImplementingFeature());
+              riMap.put("requirementResolved", ri.getRequirement() != null);
+              riMap.put("qualityClassResolved", ri.getQualityClass() != null);
+              riList.add(riMap);
+            }
+            mofMap.put("reqImplementations", riList);
           }
           else
           {
@@ -210,6 +259,51 @@ class FeatureModel
     }
     fm.put("links", linkList);
 
+    // Emit top-level requirements[] if an UmpleModel is attached. Key presence signals UmpleModel availability. empty [] means "attached but no Requirements"
+    // key absence means "no UmpleModel."
+    UmpleModel umpleModel = this.getUmpleModel();
+    if (umpleModel != null)
+    {
+      List<Requirement> reqs = new ArrayList<>(umpleModel.getAllRequirements().values());
+      Collections.sort(reqs, Comparator.comparing(Requirement::getIdentifier));
+      List<Map<String, Object>> reqList = new ArrayList<>();
+      for (Requirement req : reqs)
+      {
+        Map<String, Object> reqMap = new LinkedHashMap<>();
+        reqMap.put("identifier", _ensureNonNullStr(req.getIdentifier()));
+        reqMap.put("language", _ensureNonNullStr(req.getLanguage()));
+        reqMap.put("statement", _ensureNonNullStr(req.getStatement()));
+        reqMap.put("who", _ensureNonNullStr(req.getWho()));
+        reqMap.put("when", _ensureNonNullStr(req.getWhen()));
+        reqMap.put("what", _ensureNonNullStr(req.getWhat()));
+        reqMap.put("why", _ensureNonNullStr(req.getWhy()));
+
+        List<Map<String, Object>> stepList = new ArrayList<>();
+        for (UseCaseStep step : req.getUseCaseSteps())
+        {
+          Map<String, Object> stepMap = new LinkedHashMap<>();
+          stepMap.put("id", _ensureNonNullStr(step.getId()));
+          stepMap.put("stepType", step.getStepType().name());
+          stepMap.put("content", _ensureNonNullStr(step.getContent()));
+          stepList.add(stepMap);
+        }
+        reqMap.put("useCaseSteps", stepList);
+
+        List<Map<String, Object>> qcList = new ArrayList<>();
+        for (QualityClass qc : req.getQualityClasses())
+        {
+          Map<String, Object> qcMap = new LinkedHashMap<>();
+          qcMap.put("name", _ensureNonNullStr(qc.getName()));
+          qcMap.put("content", _ensureNonNullStr(qc.getContent()));
+          qcList.add(qcMap);
+        }
+        reqMap.put("qualityClasses", qcList);
+
+        reqList.add(reqMap);
+      }
+      fm.put("requirements", reqList);
+    }
+
     root.put("featureModel", fm);
     return Json.serialize(root);
   }
@@ -235,7 +329,84 @@ class FeatureModel
     }
 
     String fmName = fmJson.getValue("name");
-    FeatureModel model = new FeatureModel(fmName != null ? fmName : "");
+    FeatureModel model = new FeatureModel(_ensureNonNullStr(fmName));
+
+    // The "requirements" key presence signals an attached UmpleModel. This partial UmpleModel carries only Requirements and their ReqImplementations
+    Map<String, Requirement> rebuiltByIdentifier = new HashMap<>();
+    UmpleModel umpleModel = null;
+    Json[] reqs = fmJson.getArray("requirements");
+    boolean requirementsKeyPresent = reqs != null;
+    if (requirementsKeyPresent)
+    {
+      umpleModel = new UmpleModel(null);
+      model.setUmpleModel(umpleModel);
+      if (reqs != null)
+      {
+        for (Json reqJson : reqs)
+        {
+          String identifier = _ensureNonNullStr(reqJson.getValue("identifier"));
+          String statement = reqJson.getValue("statement");
+          String who = reqJson.getValue("who");
+          String when = reqJson.getValue("when");
+          String what = reqJson.getValue("what");
+          String why = reqJson.getValue("why");
+          String language = reqJson.getValue("language");
+          Requirement req = new Requirement(
+              identifier,
+              _ensureNonNullStr(statement),
+              _ensureNonNullStr(who),
+              _ensureNonNullStr(when),
+              _ensureNonNullStr(what),
+              _ensureNonNullStr(why),
+              _ensureNonNullStr(language));
+          umpleModel.getAllRequirements().put(identifier, req);
+          rebuiltByIdentifier.put(identifier, req);
+
+          Json[] steps = reqJson.getArray("useCaseSteps");
+          if (steps != null)
+          {
+            for (Json stepJson : steps)
+            {
+              String stepId = stepJson.getValue("id");
+              String stepTypeStr = stepJson.getValue("stepType");
+              String stepContent = stepJson.getValue("content");
+              UseCaseStep.UseCaseStepType stepType;
+              try
+              {
+                stepType = UseCaseStep.UseCaseStepType.valueOf(stepTypeStr);
+              }
+              catch (IllegalArgumentException ex)
+              {
+                // Unknown enum value, skip to avoid stop
+                // This function have no common use case that the user will touch from the online. So no warning set
+                System.err.println("FeatureModel.fromJson: unknown UseCaseStepType found and skipped: '"
+                    + stepTypeStr + "' for step id='" + stepId + "': " + ex.getMessage());
+                continue;
+              }
+              new UseCaseStep(
+                  _ensureNonNullStr(stepId),
+                  stepType,
+                  _ensureNonNullStr(stepContent),
+                  req);
+            }
+          }
+
+          Json[] qcs = reqJson.getArray("qualityClasses");
+          if (qcs != null)
+          {
+            for (Json qcJson : qcs)
+            {
+              String qcName = qcJson.getValue("name");
+              String qcContent = qcJson.getValue("content");
+              new QualityClass(
+                  _ensureNonNullStr(qcName),
+                  _ensureNonNullStr(qcContent),
+                  req);
+            }
+          }
+        }
+      }
+    }
 
     // Map from serialized id to created node
     Map<Integer, FeatureNode> idToNode = new HashMap<>();
@@ -269,6 +440,43 @@ class FeatureModel
               if ("true".equals(isEmptyStr))
               {
                 mixset.setIsEmpty(true);
+              }
+
+              Json[] riArr = mofJson.getArray("reqImplementations");
+              if (riArr != null)
+              {
+                for (Json riJson : riArr)
+                {
+                  String riIdentifier = _ensureNonNullStr(riJson.getValue("requirementIdentifier"));
+                  // Since Json.getValue may parse the null value as "null" string value, we need to specify here
+                  // There is no way that the json contains "null" potentially, unless such json not comes from our generator
+                  String riQcName = _parseNullableStr(riJson.getValue("qualityClassName"));
+                  String riImplFeature = _parseNullableStr(riJson.getValue("implementingFeature"));
+                  ReqImplementation newImpl = new ReqImplementation(riIdentifier, new Token("", ""));
+                  newImpl.setQualityClassName(riQcName);
+                  newImpl.setImplementingFeature(riImplFeature);
+                  mixset.addReqImplementation(newImpl);
+                  if (umpleModel != null)
+                  {
+                    umpleModel.addReqImplementation(newImpl);
+                  }
+                  Requirement matchedReq = rebuiltByIdentifier.get(riIdentifier);
+                  if (matchedReq != null)
+                  {
+                    newImpl.setRequirement(matchedReq);
+                    if (riQcName != null && !riQcName.isEmpty())
+                    {
+                      for (QualityClass qc : matchedReq.getQualityClasses())
+                      {
+                        if (riQcName.equals(qc.getName()))
+                        {
+                          newImpl.setQualityClass(qc);
+                          break;
+                        }
+                      }
+                    }
+                  }
+                }
               }
               leaf.setMixsetOrFileNode(mixset);
             }
@@ -380,6 +588,16 @@ class FeatureModel
     }
 
     return model;
+  }
+
+  private static String _ensureNonNullStr(String content)
+  {
+    return Objects.requireNonNullElse(content, "");
+  }
+
+  private static String _parseNullableStr(String content)
+  {
+    return (content == null || "null".equals(content)) ? null : content;
   }
 
 

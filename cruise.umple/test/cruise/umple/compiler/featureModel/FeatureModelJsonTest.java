@@ -6,6 +6,7 @@ import cruise.umple.compiler.FeatureLink.FeatureConnectingOpType;
 import cruise.umple.util.Json;
 import cruise.umple.util.JsonParser;
 import cruise.umple.parser.ParseResult;
+import cruise.umple.parser.Token;
 
 public class FeatureModelJsonTest
 {
@@ -407,6 +408,110 @@ public class FeatureModelJsonTest
     Assert.assertTrue(json.contains("\"useUmpleFile\":null"));
   }
 
+  @Test
+  public void toJSON_mixsetWithoutReqImplementationsEmitsEmptyKey()
+  {
+    FeatureModel model = new FeatureModel("M");
+    FeatureLeaf leaf = new FeatureLeaf(model);
+    leaf.setName("LeafT2");
+    Mixset mixset = new Mixset("UniqMixT2");
+    leaf.setMixsetOrFileNode(mixset);
+
+    String json = model.toJSON();
+    Assert.assertTrue(json.contains("\"reqImplementations\":[]"));
+  }
+
+  @Test
+  public void toJSON_umpleFileLeafOmitsReqImplementationsKey()
+  {
+    FeatureModel model = new FeatureModel("M");
+    FeatureLeaf leaf = new FeatureLeaf(model);
+    leaf.setName("LeafUmpleFile");
+    UmpleFile umpleFile = new UmpleFile("plainFile.ump");
+    leaf.setMixsetOrFileNode(umpleFile);
+
+    String json = model.toJSON();
+    Assert.assertTrue(json.contains("\"type\":\"UmpleFile\""));
+    Assert.assertFalse(json.contains("\"reqImplementations\""));
+  }
+
+  @Test
+  public void toJSON_reqImplementationEntryPopulatedFields()
+  {
+    FeatureModel model = new FeatureModel("M");
+    FeatureLeaf leaf = new FeatureLeaf(model);
+    leaf.setName("LeafT3a");
+    Mixset mixset = new Mixset("UniqMixT3a");
+    leaf.setMixsetOrFileNode(mixset);
+    ReqImplementation ri = new ReqImplementation("Req1", new Token("", ""));
+    ri.setQualityClassName("High");
+    mixset.addReqImplementation(ri);
+
+    String json = model.toJSON();
+    Assert.assertTrue(json.contains("\"requirementIdentifier\":\"Req1\""));
+    Assert.assertTrue(json.contains("\"qualityClassName\":\"High\""));
+    Assert.assertTrue(json.contains("\"requirementResolved\":false"));
+    Assert.assertTrue(json.contains("\"qualityClassResolved\":false"));
+  }
+
+  @Test
+  public void toJSON_reqImplementationEntryNullQualityClassName()
+  {
+    FeatureModel model = new FeatureModel("M");
+    FeatureLeaf leaf = new FeatureLeaf(model);
+    leaf.setName("LeafT3b");
+    Mixset mixset = new Mixset("UniqMixT3b");
+    leaf.setMixsetOrFileNode(mixset);
+    ReqImplementation ri = new ReqImplementation("Req2", new Token("", ""));
+    // qualityClassName never set; stays null
+    mixset.addReqImplementation(ri);
+
+    String json = model.toJSON();
+    Assert.assertTrue(json.contains("\"requirementIdentifier\":\"Req2\""));
+    Assert.assertTrue(json.contains("\"qualityClassName\":null"));
+  }
+
+  @Test
+  public void toJSON_topLevelRequirementsSortedByIdentifier()
+  {
+    FeatureModel model = new FeatureModel("M");
+    UmpleModel umpleModel = new UmpleModel(null);
+    model.setUmpleModel(umpleModel);
+
+    Requirement speed = new Requirement("Speed", "", "", "", "", "", "");
+    umpleModel.getAllRequirements().put("Speed", speed);
+    new QualityClass("High", "", speed);
+    new QualityClass("Medium", "", speed);
+    new QualityClass("Low", "", speed);
+
+    Requirement security = new Requirement("Security", "", "", "", "", "", "");
+    umpleModel.getAllRequirements().put("Security", security);
+    new QualityClass("Perfect", "", security);
+    new QualityClass("Risky", "", security);
+
+    String json = model.toJSON();
+    Assert.assertTrue(json.contains("\"requirements\":["));
+    int secIdx = json.indexOf("\"identifier\":\"Security\"");
+    int spdIdx = json.indexOf("\"identifier\":\"Speed\"");
+    Assert.assertTrue("Security must appear before Speed (sorted)",
+        secIdx >= 0 && spdIdx >= 0 && secIdx < spdIdx);
+    int qcSpeedIdx = json.indexOf("\"qualityClasses\":[", spdIdx);
+    int highIdx = json.indexOf("\"name\":\"High\"", qcSpeedIdx);
+    Assert.assertTrue("High must appear after Speed's qualityClasses opener",
+        qcSpeedIdx >= 0 && highIdx > qcSpeedIdx);
+  }
+
+  @Test
+  public void toJSON_requirementsKeyAbsentWhenNoUmpleModel()
+  {
+    FeatureModel model = new FeatureModel("M");
+    FeatureLeaf leaf = new FeatureLeaf(model);
+    leaf.setName("LeafT4b");
+
+    String json = model.toJSON();
+    Assert.assertFalse(json.contains("\"requirements\""));
+  }
+
   // =========================================================================
   // fromJSON() tests
   // =========================================================================
@@ -679,6 +784,158 @@ public class FeatureModelJsonTest
     Assert.assertFalse(leaf.hasMixsetOrFileNode());
   }
 
+  @Test
+  public void fromJSON_reconstructsRequirementsWithQualityClasses()
+  {
+    String json = "{\"featureModel\":{\"name\":\"M\",\"nodes\":[],\"links\":[],"
+        + "\"requirements\":[{"
+        + "\"identifier\":\"Speed\",\"language\":\"\",\"statement\":\"\","
+        + "\"who\":\"\",\"when\":\"\",\"what\":\"\",\"why\":\"\","
+        + "\"useCaseSteps\":[],"
+        + "\"qualityClasses\":[{\"name\":\"High\",\"content\":\"\"},{\"name\":\"Low\",\"content\":\"\"}]"
+        + "}]}}";
+    FeatureModel fm = FeatureModel.fromJSON(json);
+    Assert.assertNotNull(fm);
+    Assert.assertNotNull(fm.getUmpleModel());
+    Requirement speed = fm.getUmpleModel().getAllRequirements().get("Speed");
+    Assert.assertNotNull(speed);
+    Assert.assertEquals(2, speed.numberOfQualityClasses());
+    Assert.assertEquals("High", speed.getQualityClass(0).getName());
+    Assert.assertEquals("Low", speed.getQualityClass(1).getName());
+  }
+
+  @Test
+  public void fromJSON_reconstructsUseCaseStepsWithStringIds()
+  {
+    String json = "{\"featureModel\":{\"name\":\"M\",\"nodes\":[],\"links\":[],"
+        + "\"requirements\":[{"
+        + "\"identifier\":\"Login\",\"language\":\"\",\"statement\":\"\","
+        + "\"who\":\"\",\"when\":\"\",\"what\":\"\",\"why\":\"\","
+        + "\"useCaseSteps\":["
+        + "{\"id\":\"1\",\"stepType\":\"UserStep\",\"content\":\"enter credentials\"},"
+        + "{\"id\":\"2a\",\"stepType\":\"SystemResponse\",\"content\":\"validate\"}],"
+        + "\"qualityClasses\":[]"
+        + "}]}}";
+    FeatureModel fm = FeatureModel.fromJSON(json);
+    Assert.assertNotNull(fm);
+    Requirement login = fm.getUmpleModel().getAllRequirements().get("Login");
+    Assert.assertNotNull(login);
+    Assert.assertEquals(2, login.numberOfUseCaseSteps());
+    UseCaseStep step1 = login.getUseCaseStep(0);
+    Assert.assertEquals("1", step1.getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.UserStep, step1.getStepType());
+    Assert.assertEquals("enter credentials", step1.getContent());
+    UseCaseStep step2 = login.getUseCaseStep(1);
+    Assert.assertEquals("2a", step2.getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, step2.getStepType());
+    Assert.assertEquals("validate", step2.getContent());
+  }
+
+  @Test
+  public void fromJSON_absentRequirementsKeySkipsUmpleModel()
+  {
+    String json = "{\"featureModel\":{\"name\":\"M\",\"nodes\":[],\"links\":[]}}";
+    FeatureModel fm = FeatureModel.fromJSON(json);
+    Assert.assertNotNull(fm);
+    Assert.assertNull(fm.getUmpleModel());
+  }
+
+  @Test
+  public void fromJSON_emptyRequirementsArrayYieldsEmptyUmpleModel()
+  {
+    String json = "{\"featureModel\":{\"name\":\"M\",\"nodes\":[],\"links\":[],\"requirements\":[]}}";
+    FeatureModel fm = FeatureModel.fromJSON(json);
+    Assert.assertNotNull(fm);
+    Assert.assertNotNull(fm.getUmpleModel());
+    Assert.assertTrue(fm.getUmpleModel().getAllRequirements().isEmpty());
+  }
+
+  @Test
+  public void fromJSON_reconstructsReqImplementationAndRebinds()
+  {
+    String json = "{\"featureModel\":{\"name\":\"M\",\"nodes\":["
+        + "{\"id\":1,\"uniqueName\":\"L\",\"name\":\"L\",\"nodeType\":\"FeatureLeaf\",\"isLeaf\":true,\"isCompoundFeature\":false,"
+        + "\"mixsetOrFileNode\":{\"type\":\"Mixset\",\"name\":\"Mix1\",\"isMixset\":true,\"isFeature\":false,\"isEmpty\":false,"
+        + "\"reqImplementations\":[{\"requirementIdentifier\":\"Speed\",\"qualityClassName\":\"High\",\"implementingFeature\":null,\"requirementResolved\":false,\"qualityClassResolved\":false}],"
+        + "\"useUmpleFile\":null,\"useUmpleLine\":0}}"
+        + "],\"links\":[],"
+        + "\"requirements\":[{"
+        + "\"identifier\":\"Speed\",\"language\":\"\",\"statement\":\"\","
+        + "\"who\":\"\",\"when\":\"\",\"what\":\"\",\"why\":\"\","
+        + "\"useCaseSteps\":[],"
+        + "\"qualityClasses\":[{\"name\":\"High\",\"content\":\"\"}]"
+        + "}]}}";
+    FeatureModel fm = FeatureModel.fromJSON(json);
+    Assert.assertNotNull(fm);
+    FeatureLeaf leaf = (FeatureLeaf) fm.getNode(0);
+    Mixset mixset = (Mixset) leaf.getMixsetOrFileNode();
+    Assert.assertEquals(1, mixset.numberOfReqImplementations());
+    ReqImplementation ri = mixset.getReqImplementation(0);
+    Assert.assertEquals("Speed", ri.getIdentifier());
+    Assert.assertEquals("High", ri.getQualityClassName());
+    Assert.assertNotNull(ri.getRequirement());
+    Assert.assertEquals("Speed", ri.getRequirement().getIdentifier());
+    Assert.assertNotNull(ri.getQualityClass());
+    Assert.assertEquals("High", ri.getQualityClass().getName());
+  }
+
+  @Test
+  public void fromJSON_reqImplementationWithUnknownIdentifierLeavesBindingsNull()
+  {
+    String json = "{\"featureModel\":{\"name\":\"M\",\"nodes\":["
+        + "{\"id\":1,\"uniqueName\":\"L\",\"name\":\"L\",\"nodeType\":\"FeatureLeaf\",\"isLeaf\":true,\"isCompoundFeature\":false,"
+        + "\"mixsetOrFileNode\":{\"type\":\"Mixset\",\"name\":\"Mix1\",\"isMixset\":true,\"isFeature\":false,\"isEmpty\":false,"
+        + "\"reqImplementations\":[{\"requirementIdentifier\":\"Unknown\",\"qualityClassName\":null,\"implementingFeature\":null,\"requirementResolved\":false,\"qualityClassResolved\":false}],"
+        + "\"useUmpleFile\":null,\"useUmpleLine\":0}}"
+        + "],\"links\":[],"
+        + "\"requirements\":[]}}";
+    FeatureModel fm = FeatureModel.fromJSON(json);
+    Assert.assertNotNull(fm);
+    FeatureLeaf leaf = (FeatureLeaf) fm.getNode(0);
+    Mixset mixset = (Mixset) leaf.getMixsetOrFileNode();
+    Assert.assertEquals(1, mixset.numberOfReqImplementations());
+    ReqImplementation ri = mixset.getReqImplementation(0);
+    Assert.assertEquals("Unknown", ri.getIdentifier());
+    Assert.assertNull(ri.getRequirement());
+    Assert.assertNull(ri.getQualityClass());
+  }
+
+  @Test
+  public void fromJSON_emptyReqImplementationsListYieldsNoEntries()
+  {
+    String json = "{\"featureModel\":{\"name\":\"M\",\"nodes\":["
+        + "{\"id\":1,\"uniqueName\":\"L\",\"name\":\"L\",\"nodeType\":\"FeatureLeaf\",\"isLeaf\":true,\"isCompoundFeature\":false,"
+        + "\"mixsetOrFileNode\":{\"type\":\"Mixset\",\"name\":\"Mix1\",\"isMixset\":true,\"isFeature\":false,\"isEmpty\":false,"
+        + "\"reqImplementations\":[],"
+        + "\"useUmpleFile\":null,\"useUmpleLine\":0}}"
+        + "],\"links\":[]}}";
+    FeatureModel fm = FeatureModel.fromJSON(json);
+    Assert.assertNotNull(fm);
+    FeatureLeaf leaf = (FeatureLeaf) fm.getNode(0);
+    Mixset mixset = (Mixset) leaf.getMixsetOrFileNode();
+    Assert.assertEquals(0, mixset.numberOfReqImplementations());
+  }
+
+  @Test
+  public void fromJSON_nullImplementingFeatureStaysJavaNull()
+  {
+    // JsonParser.stripQuotes leaves the bare token "null" intact as a Java String.
+    // Without a guard, setImplementingFeature("null") would round-trip to a quoted
+    // "null" on the next toJSON. This test locks in the null-literal guard.
+    String json = "{\"featureModel\":{\"name\":\"M\",\"nodes\":["
+        + "{\"id\":1,\"uniqueName\":\"L\",\"name\":\"L\",\"nodeType\":\"FeatureLeaf\",\"isLeaf\":true,\"isCompoundFeature\":false,"
+        + "\"mixsetOrFileNode\":{\"type\":\"Mixset\",\"name\":\"Mix1\",\"isMixset\":true,\"isFeature\":false,\"isEmpty\":false,"
+        + "\"reqImplementations\":[{\"requirementIdentifier\":\"Req1\",\"qualityClassName\":null,\"implementingFeature\":null,\"requirementResolved\":false,\"qualityClassResolved\":false}],"
+        + "\"useUmpleFile\":null,\"useUmpleLine\":0}}"
+        + "],\"links\":[]}}";
+    FeatureModel fm = FeatureModel.fromJSON(json);
+    FeatureLeaf leaf = (FeatureLeaf) fm.getNode(0);
+    Mixset mixset = (Mixset) leaf.getMixsetOrFileNode();
+    ReqImplementation ri = mixset.getReqImplementation(0);
+    Assert.assertNull(ri.getImplementingFeature());
+    Assert.assertNull(ri.getQualityClassName());
+  }
+
   // =========================================================================
   // Round-trip tests (toJSON -> fromJSON)
   // =========================================================================
@@ -896,6 +1153,192 @@ public class FeatureModelJsonTest
     Assert.assertEquals(restored1.getName(), restored2.getName());
     Assert.assertEquals(restored1.numberOfNode(), restored2.numberOfNode());
     Assert.assertEquals(restored1.numberOfFeaturelink(), restored2.numberOfFeaturelink());
+  }
+
+  @Test
+  public void roundTrip_requirementsAndReqImplementationsPreserved()
+  {
+    FeatureModel original = new FeatureModel("RTReq");
+    UmpleModel um = new UmpleModel(null);
+    original.setUmpleModel(um);
+
+    Requirement speed = new Requirement("Speed", "", "", "", "", "", "");
+    QualityClass speedHigh = new QualityClass("High", "", speed);
+    QualityClass speedMedium = new QualityClass("Medium", "", speed);
+    new QualityClass("Low", "", speed);
+    um.getAllRequirements().put("Speed", speed);
+
+    Requirement security = new Requirement("Security", "", "", "", "", "", "");
+    QualityClass securityPerfect = new QualityClass("Perfect", "", security);
+    new QualityClass("Risky", "", security);
+    um.getAllRequirements().put("Security", security);
+
+    FeatureLeaf leafA = new FeatureLeaf(original);
+    leafA.setName("DesignA");
+    Mixset mixA = new Mixset("DesignA");
+    leafA.setMixsetOrFileNode(mixA);
+    ReqImplementation riA1 = new ReqImplementation("Speed", new Token("", ""));
+    riA1.setQualityClassName("High");
+    riA1.setRequirement(speed);
+    riA1.setQualityClass(speedHigh);
+    mixA.addReqImplementation(riA1);
+    um.addReqImplementation(riA1);
+    ReqImplementation riA2 = new ReqImplementation("Security", new Token("", ""));
+    riA2.setQualityClassName("Perfect");
+    riA2.setRequirement(security);
+    riA2.setQualityClass(securityPerfect);
+    mixA.addReqImplementation(riA2);
+    um.addReqImplementation(riA2);
+
+    FeatureLeaf leafB = new FeatureLeaf(original);
+    leafB.setName("DesignB");
+    Mixset mixB = new Mixset("DesignB");
+    leafB.setMixsetOrFileNode(mixB);
+    ReqImplementation riB1 = new ReqImplementation("Speed", new Token("", ""));
+    riB1.setQualityClassName("Medium");
+    riB1.setRequirement(speed);
+    riB1.setQualityClass(speedMedium);
+    mixB.addReqImplementation(riB1);
+    um.addReqImplementation(riB1);
+
+    String json1 = original.toJSON();
+    FeatureModel restored = FeatureModel.fromJSON(json1);
+    String json2 = restored.toJSON();
+    Assert.assertEquals(json1, json2);
+
+    Assert.assertNotNull(restored.getUmpleModel());
+    Assert.assertEquals(2, restored.getUmpleModel().getAllRequirements().size());
+    FeatureLeaf restoredA = (FeatureLeaf) restored.getNode(0);
+    Mixset restoredMixA = (Mixset) restoredA.getMixsetOrFileNode();
+    Assert.assertEquals(2, restoredMixA.numberOfReqImplementations());
+    Assert.assertNotNull(restoredMixA.getReqImplementation(0).getRequirement());
+    Assert.assertNotNull(restoredMixA.getReqImplementation(0).getQualityClass());
+    FeatureLeaf restoredB = (FeatureLeaf) restored.getNode(1);
+    Mixset restoredMixB = (Mixset) restoredB.getMixsetOrFileNode();
+    Assert.assertEquals(1, restoredMixB.numberOfReqImplementations());
+    Assert.assertEquals("Medium", restoredMixB.getReqImplementation(0).getQualityClass().getName());
+  }
+
+  @Test
+  public void roundTrip_preservesUserStoryAndUseCaseFields()
+  {
+    FeatureModel original = new FeatureModel("RTStory");
+    UmpleModel um = new UmpleModel(null);
+    original.setUmpleModel(um);
+
+    Requirement login = new Requirement(
+        "Login",
+        "User can log in",
+        "registered user",
+        "on login page",
+        "authenticate with password",
+        "to access the system",
+        "en");
+    new UseCaseStep("1", UseCaseStep.UseCaseStepType.UserStep, "enter credentials", login);
+    new UseCaseStep("2a", UseCaseStep.UseCaseStepType.SystemResponse, "validate session", login);
+    um.getAllRequirements().put("Login", login);
+
+    String json1 = original.toJSON();
+    FeatureModel restored = FeatureModel.fromJSON(json1);
+    String json2 = restored.toJSON();
+    Assert.assertEquals(json1, json2);
+
+    Requirement restoredLogin = restored.getUmpleModel().getAllRequirements().get("Login");
+    Assert.assertEquals("registered user", restoredLogin.getWho());
+    Assert.assertEquals("on login page", restoredLogin.getWhen());
+    Assert.assertEquals("authenticate with password", restoredLogin.getWhat());
+    Assert.assertEquals("to access the system", restoredLogin.getWhy());
+    Assert.assertEquals("User can log in", restoredLogin.getStatement());
+    Assert.assertEquals("en", restoredLogin.getLanguage());
+    Assert.assertEquals(2, restoredLogin.numberOfUseCaseSteps());
+    UseCaseStep s1 = restoredLogin.getUseCaseStep(0);
+    Assert.assertEquals("1", s1.getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.UserStep, s1.getStepType());
+    Assert.assertEquals("enter credentials", s1.getContent());
+    UseCaseStep s2 = restoredLogin.getUseCaseStep(1);
+    Assert.assertEquals("2a", s2.getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, s2.getStepType());
+    Assert.assertEquals("validate session", s2.getContent());
+  }
+
+  @Test
+  public void roundTrip_requirementWithEmptyQualityClasses()
+  {
+    FeatureModel original = new FeatureModel("RTText");
+    UmpleModel um = new UmpleModel(null);
+    original.setUmpleModel(um);
+
+    Requirement textReq = new Requirement("R_text", "some text", "", "", "", "", "text");
+    um.getAllRequirements().put("R_text", textReq);
+
+    String json1 = original.toJSON();
+    Assert.assertTrue(json1.contains("\"qualityClasses\":[]"));
+    FeatureModel restored = FeatureModel.fromJSON(json1);
+    String json2 = restored.toJSON();
+    Assert.assertEquals(json1, json2);
+
+    Requirement restoredReq = restored.getUmpleModel().getAllRequirements().get("R_text");
+    Assert.assertEquals(0, restoredReq.numberOfQualityClasses());
+  }
+
+  @Test
+  public void roundTrip_multipleMixsetsImplementingSameRequirement()
+  {
+    FeatureModel original = new FeatureModel("RTMulti");
+    UmpleModel um = new UmpleModel(null);
+    original.setUmpleModel(um);
+
+    Requirement speed = new Requirement("Speed", "", "", "", "", "", "");
+    QualityClass speedHigh = new QualityClass("High", "", speed);
+    um.getAllRequirements().put("Speed", speed);
+
+    FeatureLeaf leafA = new FeatureLeaf(original);
+    leafA.setName("DesignA");
+    Mixset mixA = new Mixset("DesignA");
+    leafA.setMixsetOrFileNode(mixA);
+    ReqImplementation riA = new ReqImplementation("Speed", new Token("", ""));
+    riA.setQualityClassName("High");
+    riA.setRequirement(speed);
+    riA.setQualityClass(speedHigh);
+    mixA.addReqImplementation(riA);
+    um.addReqImplementation(riA);
+
+    FeatureLeaf leafB = new FeatureLeaf(original);
+    leafB.setName("DesignB");
+    Mixset mixB = new Mixset("DesignB");
+    leafB.setMixsetOrFileNode(mixB);
+    ReqImplementation riB = new ReqImplementation("Speed", new Token("", ""));
+    riB.setQualityClassName("High");
+    riB.setRequirement(speed);
+    riB.setQualityClass(speedHigh);
+    mixB.addReqImplementation(riB);
+    um.addReqImplementation(riB);
+
+    String json1 = original.toJSON();
+    int firstSpeed = json1.indexOf("\"identifier\":\"Speed\"");
+    int secondSpeed = json1.indexOf("\"identifier\":\"Speed\"", firstSpeed + 1);
+    Assert.assertTrue(firstSpeed >= 0);
+    Assert.assertEquals(-1, secondSpeed);
+
+    FeatureModel restored = FeatureModel.fromJSON(json1);
+    Assert.assertEquals(1, restored.getUmpleModel().getAllRequirements().size());
+    Mixset rA = (Mixset) ((FeatureLeaf) restored.getNode(0)).getMixsetOrFileNode();
+    Mixset rB = (Mixset) ((FeatureLeaf) restored.getNode(1)).getMixsetOrFileNode();
+    Requirement reqFromA = rA.getReqImplementation(0).getRequirement();
+    Requirement reqFromB = rB.getReqImplementation(0).getRequirement();
+    Assert.assertNotNull(reqFromA);
+    Assert.assertSame(reqFromA, reqFromB);
+  }
+
+  @Test
+  public void toJSON_fragmentFeatureLeafOmitsReqImplementationsKey()
+  {
+    FeatureModel original = new FeatureModel("RTFrag");
+    FragmentFeatureLeaf fragLeaf = new FragmentFeatureLeaf(original);
+    fragLeaf.setName("FragLeaf");
+
+    String json = original.toJSON();
+    Assert.assertFalse(json.contains("\"reqImplementations\""));
   }
 
   @Test
