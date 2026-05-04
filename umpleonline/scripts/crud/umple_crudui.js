@@ -2990,13 +2990,30 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
         success: function(resp) {
           var parsed;
           var isEmptyDiagram = false;
+          var generatorErrorMessage = "";
           try {
             parsed = JSON.parse(resp);
+            if (parsed) {
+              if (parsed.status === "error") {
+                generatorErrorMessage = jQuery.trim((parsed.generatorErrors || "") + "") || jQuery.trim((parsed.message || "") + "");
+              }
+              if (!generatorErrorMessage && parsed.error) {
+                generatorErrorMessage = jQuery.trim((parsed.error.message || "") + "") || jQuery.trim((parsed.error.generatorErrors || "") + "");
+              }
+              if (!generatorErrorMessage && typeof parsed.statusCode === "number" && parsed.statusCode !== 0) {
+                generatorErrorMessage = jQuery.trim((parsed.message || "") + "");
+              }
+            }
             if (parsed && parsed.diagramIsEmpty) {
               isEmptyDiagram = true;
             }
           } catch (e) {
             // Non-JSON response; fall through to normal import path.
+          }
+
+          if (generatorErrorMessage) {
+            showInstanceDiagramMessage(generatorErrorMessage);
+            return;
           }
 
           if (isEmptyDiagram) {
@@ -3043,6 +3060,23 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
           }
         },
         error: function(xhr, status, err) {
+          var generatorErrorMessage = "";
+          if (xhr && xhr.responseText) {
+            try {
+              var parsedError = JSON.parse(xhr.responseText);
+              if (parsedError) {
+                generatorErrorMessage =
+                  jQuery.trim((parsedError.generatorErrors || "") + "") ||
+                  jQuery.trim((parsedError.message || "") + "") ||
+                  jQuery.trim((parsedError.error && parsedError.error.message || "") + "") ||
+                  jQuery.trim((parsedError.error && parsedError.error.generatorErrors || "") + "");
+              }
+            } catch (parseErr) {
+            }
+          }
+          if (generatorErrorMessage) {
+            showInstanceDiagramMessage(generatorErrorMessage);
+          }
           console.error("Failed to generate random instance data:", status, err, xhr && xhr.responseText);
         }
       });
