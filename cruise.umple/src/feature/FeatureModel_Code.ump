@@ -371,15 +371,23 @@ class FeatureModel
               String stepTypeStr = stepJson.getValue("stepType");
               String stepContent = stepJson.getValue("content");
               UseCaseStep.UseCaseStepType stepType;
+              if (stepTypeStr == null || stepTypeStr.trim().isEmpty())
+              {
+                // Unknown or missing enum value, skip to avoid stopping processing.
+                // This function has no common user-facing online use case, so no warning is emitted.
+                System.err.println("FeatureModel.fromJSON: missing UseCaseStepType found and skipped for step id='"
+                    + stepId + "'");
+                continue;
+              }
               try
               {
                 stepType = UseCaseStep.UseCaseStepType.valueOf(stepTypeStr);
               }
               catch (IllegalArgumentException ex)
               {
-                // Unknown enum value, skip to avoid stop
-                // This function have no common use case that the user will touch from the online. So no warning set
-                System.err.println("FeatureModel.fromJson: unknown UseCaseStepType found and skipped: '"
+                // Unknown enum value, skip to avoid stopping processing.
+                // This function has no common user-facing online use case, so no warning is emitted.
+                System.err.println("FeatureModel.fromJSON: unknown UseCaseStepType found and skipped: '"
                     + stepTypeStr + "' for step id='" + stepId + "': " + ex.getMessage());
                 continue;
               }

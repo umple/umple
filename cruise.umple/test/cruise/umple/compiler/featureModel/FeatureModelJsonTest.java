@@ -832,6 +832,31 @@ public class FeatureModelJsonTest
   }
 
   @Test
+  public void fromJSON_reconstructsUseCaseStepsAndSkipsMissingOrInvalidStepTypes()
+  {
+    String json = "{\"featureModel\":{\"name\":\"M\",\"nodes\":[],\"links\":[],"
+        + "\"requirements\":[{"
+        + "\"identifier\":\"Login\",\"language\":\"\",\"statement\":\"\","
+        + "\"who\":\"\",\"when\":\"\",\"what\":\"\",\"why\":\"\","
+        + "\"useCaseSteps\":["
+        + "{\"id\":\"1\",\"content\":\"missing type\"},"
+        + "{\"id\":\"2\",\"stepType\":\"\",\"content\":\"blank type\"},"
+        + "{\"id\":\"3\",\"stepType\":\"NotARealType\",\"content\":\"bad type\"},"
+        + "{\"id\":\"4\",\"stepType\":\"SystemResponse\",\"content\":\"valid\"}],"
+        + "\"qualityClasses\":[]"
+        + "}]}}";
+    FeatureModel fm = FeatureModel.fromJSON(json);
+    Assert.assertNotNull(fm);
+    Requirement login = fm.getUmpleModel().getAllRequirements().get("Login");
+    Assert.assertNotNull(login);
+    Assert.assertEquals(1, login.numberOfUseCaseSteps());
+    UseCaseStep step = login.getUseCaseStep(0);
+    Assert.assertEquals("4", step.getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, step.getStepType());
+    Assert.assertEquals("valid", step.getContent());
+  }
+
+  @Test
   public void fromJSON_absentRequirementsKeySkipsUmpleModel()
   {
     String json = "{\"featureModel\":{\"name\":\"M\",\"nodes\":[],\"links\":[]}}";
