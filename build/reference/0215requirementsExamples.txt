@@ -39,3 +39,15 @@ noreferences
 @@example @@caption Partial structured userStory requirement example @@endcaption
 @@source manualexamples/ReqUserStoryStructuredPartial.ump
 @@endexample
+
+@@example @@caption Quality requirement with named quality classes @@endcaption
+@@source manualexamples/ReqQuality.ump
+@@endexample
+
+@@example @@caption Binding quality classes to alternative mixsets via implementsReq @@endcaption
+@@source manualexamples/ReqImplementsQuality.ump
+@@endexample
+
+@@example @@caption Full model producing an alternative-design comparison table @@endcaption
+@@source manualexamples/ReqQualityCompareTable.ump
+@@endexample

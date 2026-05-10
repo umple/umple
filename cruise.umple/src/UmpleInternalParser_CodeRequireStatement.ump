@@ -164,7 +164,7 @@ class UmpleInternalParser
         {
           if(subToken.is("targetMixsetName"))
           {
-            Mixset targetMixset = new Mixset(subToken.getValue()); //To Do: check if its a mixset.
+            Mixset targetMixset = new Mixset(subToken.getValue());
             FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
             targetFeature.setMixsetOrFileNode(targetMixset);
             newCompoundFeatureNode.addChildFeature(targetFeature);
@@ -399,7 +399,10 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Toke
     parseMixsetsNotUsed();
     
     if(model.getFeatureModel() != null)
-    model.getFeatureModel().satisfyFeatureModel();
+    {
+      model.getFeatureModel().rebindFeatureLeavesToCanonicalMixsets();
+      model.getFeatureModel().satisfyFeatureModel();
+    }
   }
 }
 
@@ -434,6 +437,26 @@ class FeatureModel{
       aNode.setName(name);
     }
     return aNode; 
+  }
+
+  //Rebind each FeatureLeaf whose MixsetOrFile is a Mixset to the canonical Mixset registered in UmpleModel.mixsetOrFiles for that name, when one  exists.
+  //This repairs leaves constructed with detached Mixset placeholders by createFeatureModelSegment
+  public void rebindFeatureLeavesToCanonicalMixsets()
+  {
+    UmpleModel umpleModel = getUmpleModel();
+    if (umpleModel == null) return;
+    for (FeatureNode aNode : getNode())
+    {
+      if (!(aNode instanceof FeatureLeaf)) continue;
+      FeatureLeaf leaf = (FeatureLeaf) aNode;
+      MixsetOrFile current = leaf.getMixsetOrFileNode();
+      if (current == null || !current.getIsMixset()) continue;
+      Mixset canonical = umpleModel.getMixset(current.getName());
+      if (canonical != null && canonical != current)
+      {
+        leaf.setMixsetOrFileNode(canonical);
+      }
+    }
   }
   /*
   This method returns true if the feature leaf has a use-statement.

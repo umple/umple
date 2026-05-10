@@ -1,0 +1,15 @@
+// Quality requirements introduce named quality classes
+// (discrete levels of a non-functional property) that can
+// later be bound to alternative designs via implementsReq.
+
+req Speed quality {
+  High {}
+  Medium {}
+  Low {}
+}
+
+req Security quality {
+  Perfect {}
+  SlightlyRisky {}
+  Weak {}
+}

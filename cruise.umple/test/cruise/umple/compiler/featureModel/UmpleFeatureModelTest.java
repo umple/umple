@@ -346,5 +346,42 @@ public class UmpleFeatureModelTest {
     Assert.assertEquals(true, featureModel.satisfyFeatureModel());
   }
 
+  @Test
+  public void requireSubfeatureLeafTracksUseStatement()
+  {
+    UmpleFile umpleFile = new UmpleFile(
+        umpleParserTest.pathToInput,
+        "reqStArgumentParse_UseWithRequireSubfeature.ump");
+    UmpleModel model = new UmpleModel(umpleFile);
+    model.setShouldGenerate(false);
+    model.run();
+
+    FeatureModel featureModel = model.getFeatureModel();
+
+    FeatureLeaf designALeaf = featureModel.getFeatureLeafNode("DesignA");
+    Assert.assertNotNull("DesignA leaf must exist", designALeaf);
+    Assert.assertNotNull("DesignA leaf must carry a MixsetOrFile",
+        designALeaf.getMixsetOrFileNode());
+    Assert.assertNotNull(
+        "DesignA leaf's MixsetOrFile must reflect the `use DesignA;` statement",
+        designALeaf.getMixsetOrFileNode().getUseUmpleFile());
+    Assert.assertSame(
+        "DesignA leaf must point to the canonical Mixset registered in the model",
+        model.getMixset("DesignA"),
+        designALeaf.getMixsetOrFileNode());
+
+    FeatureLeaf designBLeaf = featureModel.getFeatureLeafNode("DesignB");
+    Assert.assertNotNull("DesignB leaf must exist", designBLeaf);
+    Assert.assertNotNull("DesignB leaf must carry a MixsetOrFile",
+        designBLeaf.getMixsetOrFileNode());
+    Assert.assertNull(
+        "DesignB leaf must NOT be marked used (no `use DesignB;`)",
+        designBLeaf.getMixsetOrFileNode().getUseUmpleFile());
+    Assert.assertSame(
+        "DesignB leaf must also point to the canonical Mixset registered in the model",
+        model.getMixset("DesignB"),
+        designBLeaf.getMixsetOrFileNode());
+  }
+
 }
  

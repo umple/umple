@@ -375,7 +375,7 @@ else if (isset($_REQUEST["umpleCode"]))
     $filename = $workDir->getPath().'/'.$dataname;
     // note: this does not create the error output in the working directory, and likely never did
     $errorFilename = "{$filename}.erroroutput";
-    $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
+    $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename}{$suboptions} 2> {$errorFilename}");
     $errors = getErrorHtml($errorFilename, 0);
     if($outputErr == "true")
       echo $errors . "<p>URL_SPLIT";

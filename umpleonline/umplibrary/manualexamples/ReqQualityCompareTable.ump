@@ -1,0 +1,41 @@
+// Full example producing the alternative-design comparison
+// table. The reqQC suboption of PlainRequirementsDoc emits an
+// HTML table with one row per quality requirement and one
+// column per quality-tagged mixset.
+
+generate PlainRequirementsDoc;
+suboption "reqQC";
+
+require subfeature [1..1 of {DesignA, DesignB}];
+
+req Speed userStory {
+  who { architect }
+  what { compare speed across designs }
+}
+
+req Speed quality {
+  High {}
+  Low {}
+}
+
+req Security userStory {
+  who { architect }
+  what { compare security across designs }
+}
+
+req Security quality {
+  Perfect {}
+  Basic {}
+}
+
+implementsReq Speed(High), Security(Perfect);
+mixset DesignA {
+  class FastSecureCar {}
+}
+
+implementsReq Speed(Low), Security(Basic);
+mixset DesignB {
+  class SlowCar {}
+}
+
+use DesignA;

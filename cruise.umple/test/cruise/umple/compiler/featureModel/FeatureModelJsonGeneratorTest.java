@@ -83,4 +83,62 @@ public class FeatureModelJsonGeneratorTest
       SampleFileWriter.destroy("FmJsonGenMixsetTest.ump");
     }
   }
+
+  @Test
+  public void generateWithReqQualityAndImplementsReq()
+  {
+    String[] args = {"-generate", "FeatureModelJson", "FmJsonGenReqQualityTest.ump"};
+    SampleFileWriter.createFile("FmJsonGenReqQualityTest.ump",
+        "req Speed quality {\n"
+        + "  High {}\n"
+        + "  Medium {}\n"
+        + "  Low {}\n"
+        + "}\n"
+        + "\n"
+        + "req Security quality {\n"
+        + "  Perfect {}\n"
+        + "  Risky {}\n"
+        + "}\n"
+        + "\n"
+        + "implementsReq Speed(High), Security(Perfect);\n"
+        + "mixset DesignA {\n"
+        + "  isFeature;\n"
+        + "  class CarA {}\n"
+        + "}\n"
+        + "\n"
+        + "implementsReq Speed(Medium);\n"
+        + "mixset DesignB {\n"
+        + "  isFeature;\n"
+        + "  class CarB {}\n"
+        + "}\n"
+        + "\n"
+        + "require [DesignA or DesignB];\n");
+    try
+    {
+      UmpleConsoleMain.main(args);
+      SampleFileWriter.assertFileExists("FmJsonGenReqQualityTest_FeatureModelJson.json");
+      String content = new String(Files.readAllBytes(Paths.get("FmJsonGenReqQualityTest_FeatureModelJson.json")));
+      Assert.assertTrue("JSON must carry top-level requirements block", content.contains("\"requirements\""));
+      Assert.assertTrue("JSON must reference Speed requirement", content.contains("\"identifier\":\"Speed\""));
+      Assert.assertTrue("JSON must reference Security requirement", content.contains("\"identifier\":\"Security\""));
+      Assert.assertTrue("JSON must reference High quality class", content.contains("\"High\""));
+      Assert.assertTrue("JSON must reference Perfect quality class", content.contains("\"Perfect\""));
+      Assert.assertTrue("JSON must emit per-leaf reqImplementations", content.contains("\"reqImplementations\""));
+      Assert.assertTrue("JSON must carry Speed requirementIdentifier",
+          content.contains("\"requirementIdentifier\":\"Speed\""));
+      Assert.assertTrue("Parser should resolve requirement bindings",
+          content.contains("\"requirementResolved\":true"));
+      Assert.assertTrue("Parser should resolve quality class bindings",
+          content.contains("\"qualityClassResolved\":true"));
+    }
+    catch (Exception e)
+    {
+      Assert.fail("Generator threw exception: " + e.getMessage());
+    }
+    finally
+    {
+      SampleFileWriter.destroy("FmJsonGenReqQualityTest_FeatureModelJson.json");
+      SampleFileWriter.destroy("FmJsonGenReqQualityTest.ump");
+    }
+  }
 }

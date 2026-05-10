@@ -22,6 +22,7 @@ Optional requirements-doc directives (only when explicitly requested)
 - `suboption "reqSortID";` (default sort)
 - `suboption "reqSortStat";` (sort by statement text)
 - `suboption "reqHideNotImpl";` (hide unimplemented requirements)
+- `suboption "reqQC";` (emit a side-by-side comparison table of every quality requirement across every quality-tagged mixset)
 
 Minimal pattern
 ```umple
