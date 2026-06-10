@@ -3424,6 +3424,10 @@ Page.initCrudUi = function(tabnumber, containerSelector) {
       var jsonDataText;
       try {
         jsonCountsText = JSON.stringify(counts);
+        if (jsonDataText.length > 50000) {showInstanceDiagramMessage(
+        "Dataset too large for instance diagram generation.");
+    return;
+}
         jsonDataText = JSON.stringify(instanceSnapshot);
       } catch (e) {
         console.error("Failed to serialize CRUD instance data:", e);
