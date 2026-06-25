@@ -129,9 +129,27 @@ if (isset($_REQUEST["model"]) && explode("-", $_REQUEST["model"])[0] == "task")
 }
 
 //
-$generateDefault="#genclass";
-if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] != "") {
-  $generateDefault="#gen".strip_tags($_REQUEST['generateDefault']);
+$generateDefault = "#genclass";
+
+$allowedGenerateDefaults = array(
+    "java",
+    "javadoc",
+    "php",
+    "cpp",
+    "ruby",
+    "sql",
+    "metrics",
+    "alloy",
+    "nusmv",
+    "uigu2"
+);
+
+if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] !== "") {
+    $requested = trim($_REQUEST["generateDefault"]);
+
+    if (in_array($requested, $allowedGenerateDefaults, true)) {
+        $generateDefault = "#gen" . $requested;
+    }
 }
 
 $output = $dataHandle->readData('model.ump');
