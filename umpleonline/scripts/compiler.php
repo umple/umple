@@ -36,6 +36,17 @@ if (isset($_REQUEST["save"]))
     if(isset($_REQUEST["filename"]))
     {
       $filename = basename($_REQUEST['filename']);
+      $allowedExtensions = array( 
+    'ump',
+    'svg',
+);
+      $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+      if (!in_array($extension, $allowedExtensions, true)) {
+          http_response_code(400);
+          echo "Invalid file type."; 
+          exit;
+}
+ 
       $modelId = dirname($_REQUEST['filename']);
       $dataHandle = dataStore()->openData($modelId);
       $dataHandle->writeData($filename, $input);
