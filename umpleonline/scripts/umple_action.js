@@ -4667,29 +4667,36 @@ Action.loadExample = function loadExample()
   var diagramType="";
   if(Page.useGvStateDiagram) {
     diagramType="&diagramtype=state";
+    Action.setLiveView("sd");
   }
  else if(Page.useGvFeatureDiagram) {
     diagramType="&diagramtype=GvFeature";
+    Action.setLiveView("gfd");
   }
 
   else if(Page.useGvEntityRelationshipDiagram) {
     diagramType="&diagramtype=entityRelationshipDiagram";
+    Action.setLiveView("erd");
   }
 
   else if(Page.useInstanceDiagram) {
     diagramType="&diagramtype=instanceDiagram";
+    Action.setLiveView("instanceDiagram");
   }
 
 
   else if(Page.useStateTables) {
     diagramType="&diagramtype=StateTables";
+    Action.setLiveView("stateTables");
   }
 
   else if(Page.useEventSequence) {
     diagramType="&diagramtype=eventSequence";
+    Action.setLiveView("eventSequence");
   }
   else if(Page.useStructureDiagram) {
     diagramType="&diagramtype=structure&generateDefault=cpp";
+    Action.setLiveView("std");
   }
   else {
     diagramType="&diagramtype=GvClass";
