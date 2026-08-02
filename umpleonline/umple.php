@@ -130,17 +130,23 @@ if (isset($_REQUEST["model"]) && explode("-", $_REQUEST["model"])[0] == "task")
 
 //
 $generateDefault = "#genclass";
-
+// The following correspond to the options in $generatemenu of compiler_config.php
 $allowedGenerateDefaults = array(
     "java",
     "javadoc",
     "php",
+    "python",
     "cpp",
     "ruby",
     "sql",
     "metrics",
     "alloy",
     "nusmv",
+    "statetables",
+    "eventsequence",
+    "plainrequirementsdoc",
+    "plainrequirementsdocqc",
+    "UmpleAnnotaiveToComposition",
     "uigu2"
 );
 
