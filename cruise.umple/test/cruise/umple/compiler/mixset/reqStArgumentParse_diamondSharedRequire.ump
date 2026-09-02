@@ -1,8 +1,6 @@
 // Regression fixture: diamond DAG (no cycle). Root requires (A or C), both A
-// and C require X, and X requires unused Y. The first OR-branch fully evaluates
-// X and finds Y missing; the second OR-branch must NOT inherit a cached "true"
-// for X just because the visited set saw it earlier in the same traversal.
-// Expected: NOT satisfied (false). Must not crash.
+// and C require X, and X requires unused Y. Only X's require statement fails,
+// so it is the only one reported. Expected: NOT satisfied (false).
 mixset Root { require [A or C]; }
 mixset A { require [X]; }
 mixset C { require [X]; }

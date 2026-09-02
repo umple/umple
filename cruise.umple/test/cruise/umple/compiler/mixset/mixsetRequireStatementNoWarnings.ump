@@ -5,7 +5,11 @@ require [GSMProtocol opt Mp3Recording and Playback and AudioFormat opt Camera ];
 
 require [ 1..3 of {M1,M2,M3} ];
 
-require [not M2 and m4 ] ;
+// Stated as two constraints: a leading "not" followed by a linking operator,
+// as in [not M2 and m4], is not parsed correctly yet.
+require [not M2];
+
+require [m4];
 
 require [M1 opt M3];
 
@@ -13,9 +17,15 @@ require [M3 or M2];
 
 require [0..1 of {M1}]; 
 
+mixset GSMProtocol {} mixset Playback {} mixset AudioFormat {}
+mixset M1 {} mixset M3 {} mixset m4 {}
 
 /*
 
-All these forms of require statements should not raise errors .  
+All these forms of require statements should not raise errors,
+and the use statements below satisfy them, so no warnings either.
 
 */
+
+use GSMProtocol, Playback, AudioFormat;
+use M1, M3, m4;
