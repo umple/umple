@@ -75,10 +75,14 @@ class FragmentFeatureLeaf
 // A FeatureLink connects a source feature to target feature(s) in the feature diagram.
 class FeatureLink
 {
+  depend cruise.umple.parser.Position;
   boolean isSub =false; // isSub to differentiate between sub-features and include/exclude relationship
   enum FeatureConnectingOpType{ Mandatory, Optional, Conjunctive, Disjunctive, Multiplicity, Include, Exclude, XOR}; 
   //Set a default value for featureLinks. 
   FeatureConnectingOpType featureConnectingOpType = FeatureConnectingOpType.Include;
+  // Position of the require statement that created this link, so that an unsatisfied constraint can be reported there.
+  // The optional links created by isFeature have no position; they are always satisfied.
+  1 -> 0..1 Position;
 }
 // MultiplicityFeatureConnectingOpType is a special type of FeatureLink in which there are min and max multiplicity. 
 
