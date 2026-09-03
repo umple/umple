@@ -6,7 +6,7 @@
   "dependencies": {
     "body-parser": "*",
     "exports": "*",
-    "express": "4.*",
+    "express": "5.*",
     "nodemon": "^3.1.14",
     "pm2": "^7.0.3"
   },
