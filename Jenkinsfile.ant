@@ -1,0 +1,52 @@
+// Full Ant build with all tests (what bumple runs). Triggered by hand.
+pipeline {
+  agent { label 'umple-host' }
+
+  options {
+    timeout(time: 3, unit: 'HOURS')
+    timestamps()
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+    disableConcurrentBuilds()
+  }
+
+  tools {
+    jdk 'jdk17'
+  }
+
+  stages {
+    stage('Versions') {
+      steps {
+        sh '''
+          java -version
+          ant -version
+          php --version | head -1
+          ruby --version
+          python3 --version
+          gcc --version | head -1
+          txl -v 2>&1 | head -1
+        '''
+      }
+    }
+    stage('First build') {
+      steps {
+        dir('build') {
+          sh 'ant -Dmyenv=local bootstrap'
+          sh 'ant -Dmyenv=local -lib /usr/share/java first-build'
+        }
+      }
+    }
+    stage('Build and test') {
+      steps {
+        dir('build') {
+          sh 'ant -Dmyenv=local -lib /usr/share/java'
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      junit allowEmptyResults: true, testResults: 'dist/**/TEST-*.xml'
+    }
+  }
+}
