@@ -680,16 +680,27 @@ Action.loadFile = function()
     Action.setjustUpdatetoSaveLater(true);
     if (Page.getModel().substring(0, 8) == "taskroot")
     {
-      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename));
+      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename),{onFinally: Action.initialLoadFinished});
     } 
     else 
     {
-      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&filename={0}",filename));
+      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&filename={0}",filename),{onFinally: Action.initialLoadFinished});
     }
   }
   else
   {
     Action.saveNewFile();
+  }
+}
+
+// Collaboration needs the loaded text, which is complete once the model file and the tab list are both in
+Action.initialLoadsPending = 2;
+Action.initialLoadFinished = function()
+{
+  Action.initialLoadsPending -= 1;
+  if (Action.initialLoadsPending == 0)
+  {
+    Collab.connectCollabServer();
   }
 }
 
@@ -941,7 +952,7 @@ Action.saveNewFile = function()
 
   if (filename == "")
   {
-    Ajax.sendRequest("scripts/compiler.php",Action.saveNewFileCallback,format("save=1&&umpleCode={0}",umpleCode));
+    Ajax.sendRequest("scripts/compiler.php",Action.saveNewFileCallback,format("save=1&&umpleCode={0}",umpleCode),{onFinally: Action.initialLoadFinished});
   }
 
   // LSP: bootstrap for new blank sessions (loadFileCallback doesn't fire)

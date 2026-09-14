@@ -1325,10 +1325,6 @@ $output = $dataHandle->readData('model.ump');
   </script>
 
   <script>
-    Collab.connectCollabServer();
-  </script>
-
-  <script>
     function reconnect() {
       var currentaddress = document.location.href;
       window.location.href = currentaddress;
