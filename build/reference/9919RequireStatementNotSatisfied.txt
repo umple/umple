@@ -1,0 +1,16 @@
+W1514 Require Statement Not Satisfied
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2> Warning reporting that the use statements in the model do not satisfy a require statement.</h2>
+
+<p>A <a href="RequireStatement.html">require statement</a> constrains which mixsets may be used together. This warning is raised when the use statements violate such a constraint: for example, a required mixset has no use statement, or two mixsets that exclude each other are both used. A require statement at the top level of a file always applies; a require statement inside a mixset applies only when that mixset is used. The same check sets the Configuration Status shown in a feature diagram to Valid or Not Valid.</p>
+
+<p>To get rid of this warning, change the use statements so that they satisfy the require statement, or change the require statement itself.<br/>
+</p>
+
+@@example
+@@source manualexamples/W1514RequireStatementNotSatisfied.ump
+@@endexample
