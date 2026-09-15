@@ -10,7 +10,7 @@ buildscript {
 }
 
 plugins {
-  id 'nebula.ospackage' version '9.1.1'
+  id 'com.netflix.nebula.ospackage' version '11.11.2'
 }
 
 String runGit(List<String> args, String fallback) {
@@ -397,7 +397,7 @@ sourceSets {
             ]
             exclude '**/*.ump', '**/.git*'
         }
-        java.outputDir = file(rootProject.ext.classfileOutputDir)
+        java.destinationDirectory.set(file(rootProject.ext.classfileOutputDir))
     }
     test {
         compileClasspath = files(
@@ -415,7 +415,7 @@ sourceSets {
             ]
             exclude '**/*.ump', '**/.git*'
         }
-        java.outputDir = file(rootProject.ext.testClassfileOutputDir)
+        java.destinationDirectory.set(file(rootProject.ext.testClassfileOutputDir))
     }
 }
 
@@ -2018,7 +2018,7 @@ task executeDocJar (type: JavaExec){
         description = "Running the umple documenter jar to update the user manual"
  	classpath = files("${rootProject.ext.distdir}/gradle/libs/umpledocs**.jar")
  	classpath += sourceSets.main.runtimeClasspath
- 	main = "cruise.umple.docs.DocumenterMain"
+ 	mainClass.set("cruise.umple.docs.DocumenterMain")
  	args = ["${rootProject.projectDir.toString()}/build/reference", distpath]
  	jvmArgs = ['-Xmx500m']
  }
@@ -2069,7 +2069,7 @@ task executeDocJar (type: JavaExec){
     def drop = fileTree ("${rootProject.ext.umpleoscripts}/dropbox") {
       include '*.js'
     }
-   files = files (
+   files = project.files (
      'umpleonline/scripts/prototype.js',
      'umpleonline/scripts/dom.js',
      'umpleonline/scripts/ajax.js', 
@@ -2091,7 +2091,7 @@ task executeDocJar (type: JavaExec){
    group = "Custom"
    description = "Running the yui compressor that is used to minify javascript files "
  	classpath = configurations.ivy
- 	main "com.yahoo.platform.yui.compressor.Bootstrap"
+ 	mainClass.set("com.yahoo.platform.yui.compressor.Bootstrap")
  	args =  ["${rootProject.ext.umpleoscripts}/tmpAllUmple.js", "-o", "${rootProject.ext.umpleoscripts}/allumple-min.js"]
  	
  }
