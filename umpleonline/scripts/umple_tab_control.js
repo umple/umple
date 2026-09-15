@@ -438,6 +438,7 @@ TabControl.loadAllTabsCallback = function(response)
   if (foundRemoteTabs && typeof Page !== "undefined" && Page.initLspAsync) {
     Page.initLspAsync();
   }
+  Action.initialLoadFinished();
 }
 
 /**

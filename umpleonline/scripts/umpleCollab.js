@@ -50,10 +50,9 @@ function updateConnectionStatus() {
 // Listen for changes
 window.addEventListener('offline', updateConnectionStatus);
 
-// this method is called in umple.php when it is verified that current URL is Bookmarked/Collaborative URL
-// connect to UmpleCollabServer which takes URL parameters umpdir, filename and inittext
+// called from Action.initialLoadFinished() once the model text is in the editor; connects to
+// UmpleCollabServer if the current URL is a Bookmarked/Collaborative URL
 // umpdir represents the current model
-// filename represents the currently active tab
 // inittext represents the current contents of the codemirror6 editor
 Collab.connectCollabServer = async function() {
 
@@ -300,7 +299,8 @@ updateConnectionStatus();
 
 
     const umpdir = Page.getModel();
-    const filename = TabControl.activeTab != null ? TabControl.activeTab.name : "Untitled";
+    // one shared document per model; tabs are not synchronised separately
+    const filename = "Untitled";
 
     const inittext = Page.codeMirrorEditor6.state.doc.toString();
 
@@ -313,10 +313,9 @@ updateConnectionStatus();
     if(collabClientDebugFlag){
       console.log("Version: ", getDocumentResponse.version, "Doc: ", getDocumentResponse.doc);
     }
-    // when response document coming from collaboration server has some content,
-    // then only update the code editor
+    // the shared document wins, even when it is empty
 
-    if(getDocumentResponse.doc.length != 0){
+    if(!getDocumentResponse.doc.eq(Page.codeMirrorEditor6.state.doc)){
       Page.setCodeMirror6Text(getDocumentResponse.doc);
       if(collabClientDebugFlag){
         console.warn("Document content received from Collab Server: ");
