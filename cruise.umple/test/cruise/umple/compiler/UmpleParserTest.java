@@ -2813,6 +2813,147 @@ public class UmpleParserTest
     Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(3).getStepType());
     Assert.assertEquals("update total", req.getUseCaseStep(3).getContent());
   }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseInclude()
+  {
+    assertNoWarningsParse("457_ReqUseCaseInclude.ump");
+    Requirement req = model.getAllRequirements().get("UC7");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+    Assert.assertEquals("customer", req.getWho());
+
+    Assert.assertEquals(2, req.numberOfIncludedUseCases());
+    Assert.assertEquals("UC1", req.getIncludedUseCase(0));
+    Assert.assertEquals("UC2", req.getIncludedUseCase(1));
+    Assert.assertEquals(0, req.numberOfParentUseCases());
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("start checkout", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseIsA()
+  {
+    assertNoWarningsParse("457_ReqUseCaseIsA.ump");
+    Requirement req = model.getAllRequirements().get("UC8");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals(1, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+    Assert.assertEquals(0, req.numberOfIncludedUseCases());
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("pay with the saved card", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseStepConditions()
+  {
+    assertNoWarningsParse("457_ReqUseCaseStepConditions.ump");
+    Requirement req = model.getAllRequirements().get("UC9");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+
+    Assert.assertEquals(4, req.numberOfUseCaseSteps());
+
+    // An unconditional step keeps a null condition
+    Assert.assertEquals("1", req.getUseCaseStep(0).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.UserStep, req.getUseCaseStep(0).getStepType());
+    Assert.assertEquals("select a payment method", req.getUseCaseStep(0).getContent());
+    Assert.assertNull(req.getUseCaseStep(0).getCondition());
+
+    // Two responses share an id and are told apart by their conditions
+    Assert.assertEquals("1", req.getUseCaseStep(1).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(1).getStepType());
+    Assert.assertEquals("card accepted", req.getUseCaseStep(1).getCondition());
+    Assert.assertEquals("confirm the order", req.getUseCaseStep(1).getContent());
+
+    Assert.assertEquals("1", req.getUseCaseStep(2).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(2).getStepType());
+    Assert.assertEquals("card declined", req.getUseCaseStep(2).getCondition());
+    Assert.assertEquals("ask for another card", req.getUseCaseStep(2).getContent());
+
+    Assert.assertEquals("2", req.getUseCaseStep(3).getId());
+    Assert.assertEquals("collect the receipt", req.getUseCaseStep(3).getContent());
+    Assert.assertNull(req.getUseCaseStep(3).getCondition());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseExtendedAll()
+  {
+    assertNoWarningsParse("457_ReqUseCaseExtendedAll.ump");
+    Requirement req = model.getAllRequirements().get("UC10");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals("returning customer", req.getWho());
+    Assert.assertEquals("a saved address exists", req.getWhen());
+    Assert.assertEquals("check out quickly", req.getWhat());
+    Assert.assertEquals("avoid retyping delivery details", req.getWhy());
+
+    Assert.assertEquals(1, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+
+    Assert.assertEquals(2, req.numberOfIncludedUseCases());
+    Assert.assertEquals("UC2", req.getIncludedUseCase(0));
+    Assert.assertEquals("UC3", req.getIncludedUseCase(1));
+
+    Assert.assertEquals(3, req.numberOfUseCaseSteps());
+    Assert.assertEquals("confirm the saved address", req.getUseCaseStep(0).getContent());
+    Assert.assertNull(req.getUseCaseStep(0).getCondition());
+    Assert.assertEquals("address still valid", req.getUseCaseStep(1).getCondition());
+    Assert.assertEquals("show the order summary", req.getUseCaseStep(1).getContent());
+    Assert.assertEquals("pay", req.getUseCaseStep(2).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUsecaseExtendedAliasLowercase()
+  {
+    assertNoWarningsParse("457_ReqUsecaseExtendedAlias.ump");
+    Requirement req = model.getAllRequirements().get("UC11");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+
+    Assert.assertEquals(1, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+    Assert.assertEquals(1, req.numberOfIncludedUseCases());
+    Assert.assertEquals("UC2", req.getIncludedUseCase(0));
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("express lane open", req.getUseCaseStep(0).getCondition());
+    Assert.assertEquals("skip the queue", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqNormalStillWorksAfterUseCaseExtensions()
+  {
+    assertNoWarningsParse("457_ReqNormalStillWorksAfterUseCaseExtensions.ump");
+
+    // include and isA are only use case keywords; a plain requirement keeps them as text
+    Requirement plain = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(plain);
+    Assert.assertEquals("", plain.getLanguage());
+    // A plain requirement keeps its body verbatim, indentation included
+    Assert.assertEquals("include the applicable tax;\n  isA legal obligation;", plain.getStatement());
+    Assert.assertEquals(0, plain.numberOfIncludedUseCases());
+    Assert.assertEquals(0, plain.numberOfParentUseCases());
+
+    Requirement useCase = model.getAllRequirements().get("UC12");
+    Assert.assertNotNull(useCase);
+    Assert.assertEquals(1, useCase.numberOfParentUseCases());
+    Assert.assertEquals("UC1", useCase.getParentUseCase(0));
+  }
   @Test
   public void associationName()
   {
