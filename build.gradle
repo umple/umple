@@ -5,29 +5,30 @@
 buildscript {
     dependencies {
         classpath 'de.undercouch:gradle-download-task:4.1.1'
-        classpath group: 'org.yaml', name: 'snakeyaml', version: '1.19'
+        classpath 'org.yaml:snakeyaml:1.19'
     }
 }
 
 plugins {
-  id 'nebula.ospackage' version '9.1.1'
+  id 'com.netflix.nebula.ospackage' version '12.3.0'
 }
 
 String runGit(List<String> args, String fallback) {
     // The Ant script uses the git command to get version info data. Use the same behavior here.
-    def output = new ByteArrayOutputStream()
-    def result = project.exec {
+    def git = providers.exec {
         commandLine = ['git'] + args
-        standardOutput = output
         ignoreExitValue = true
     }
 
-    def value = output.toString().trim()
+    def value = git.standardOutput.asText.get().trim()
     // The Ant has a fallback. Follow the same one.
-    return result.exitValue == 0 && value ? value : fallback
+    return git.result.get().exitValue == 0 && value ? value : fallback
 }
 
+interface ExecServices { @Inject ExecOperations getExecOperations() }
+
 ext {
+    execOperations = objects.newInstance(ExecServices).execOperations
     umpleLastVersionFile = new File("${rootProject.projectDir.toString()}/build/umpleversion.last.txt")
     umpleMajorVersionFile = new File("${rootProject.projectDir.toString()}/build/umpleversion.txt")
     umpleLastVersion = new org.yaml.snakeyaml.Yaml().load(rootProject.ext.umpleLastVersionFile.newInputStream()).version
@@ -132,12 +133,12 @@ configurations {
 
 repositories {
     maven {
-        name 'central'
-        url 'https://repo1.maven.org/maven2'
+        name = 'central'
+        url = 'https://repo1.maven.org/maven2'
     }
     maven {
-        name 'jboss'
-        url 'https://repository.jboss.org/nexus/content/groups/public-jboss'
+        name = 'jboss'
+        url = 'https://repository.jboss.org/nexus/content/groups/public-jboss'
     }
 }
 
@@ -146,18 +147,15 @@ dependencies {
     // ivy group: 'com.yahoo.platform.yui', name: 'yuicompressor', version: '2.4.8'
     
     // Testing
-    ivy group: 'junit', name: 'junit', version: '4.13.2'
-
+    ivy 'junit:junit:4.13.2'
     // Core
-    ivy group: 'net.sf.jopt-simple', name: 'jopt-simple', version: '4.4'
-    ivy group: 'org.apache.ant', name: 'ant', version: '1.9.15'
-
+    ivy 'net.sf.jopt-simple:jopt-simple:4.4'
+    ivy 'org.apache.ant:ant:1.9.15'
     // XText/Xtend Plugin
-    ivy group: 'org.eclipse.xtext', name: 'org.eclipse.xtext.ui', version: '2.9.0.beta3'
-    ivy group: 'org.eclipse.xtend', name: 'org.eclipse.xtend.core', version: '2.26.0.M1'
-
+    ivy 'org.eclipse.xtext:org.eclipse.xtext.ui:2.9.0.beta3'
+    ivy 'org.eclipse.xtend:org.eclipse.xtend.core:2.26.0.M1'
     // Eclipse Plugin dependencies
-    ivy group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.core', version: '3.17.0'
+    ivy 'org.eclipse.jdt:org.eclipse.jdt.core:3.17.0'
 }
 
 // ===================
@@ -216,7 +214,7 @@ task ('compileTXL') {
 }
 
 // Execute Umple jar
-def runUmpleJar(umpleJar, masterFile, args="") {
+ext.runUmpleJar = { umpleJar, masterFile, args = "" ->
     if (!new File(umpleJar).exists()) {
         throw new Exception("${umpleJar} does not exist.")
     }
@@ -233,9 +231,10 @@ subprojects{
     evaluationDependsOn(":${project.name}")
 
     // Clean up task
+    def umpleOutputDir = project.ext.umpleOutputDir
     task ('cleanUp')  {
     	doLast {
-        delete project.ext.umpleOutputDir
+        delete umpleOutputDir
         }
     }
 
@@ -244,7 +243,7 @@ subprojects{
     // Compile task using remote jar
    task ('compileUmple') {
     	doLast{
-        runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+        rootProject.ext.runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
         }
     }
     compileUmple.dependsOn(":downloadUmpleJar")
@@ -253,10 +252,10 @@ subprojects{
     task ('compileUmpleSelf') {
     	doLast{
         if (new File(rootProject.ext.umpleCurrentJar).exists()) {
-            runUmpleJar(rootProject.ext.umpleCurrentJar, masterFile)
+            rootProject.ext.runUmpleJar(rootProject.ext.umpleCurrentJar, masterFile)
         } else {
             // Still default to using the stable downloaded jar
-            runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+            rootProject.ext.runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
         }
        }
     }
@@ -267,7 +266,7 @@ subprojects{
     // incomplete jar would generate incomplete src-gen-umple output.
     task ('compileUmpleRemote') {
         doLast {
-            runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+            rootProject.ext.runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
         }
     }
     compileUmpleRemote.dependsOn(":downloadUmpleJar")
@@ -397,7 +396,7 @@ sourceSets {
             ]
             exclude '**/*.ump', '**/.git*'
         }
-        java.outputDir = file(rootProject.ext.classfileOutputDir)
+        java.destinationDirectory.set(file(rootProject.ext.classfileOutputDir))
     }
     test {
         compileClasspath = files(
@@ -415,7 +414,7 @@ sourceSets {
             ]
             exclude '**/*.ump', '**/.git*'
         }
-        java.outputDir = file(rootProject.ext.testClassfileOutputDir)
+        java.destinationDirectory.set(file(rootProject.ext.testClassfileOutputDir))
     }
 }
 
@@ -526,8 +525,8 @@ tasks.getByName("compileJava").dependsOn getVendorLibs
 jar {
     exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA', 'META-INF/*.MF', "**/.git", "**/.ump",  "**/data", "**/*Test.class"
     from rootProject.ext.classfileOutputDir
-    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archivesBaseName}.jar"
-    archivesBaseName = rootProject.ext.umpleCurrentJarBase
+    // Set the base name -- the jar will be compiled to "${buildDir}/libs/${archiveBaseName}.jar"
+    archiveBaseName = rootProject.ext.umpleCurrentJarBase
     manifest {
         attributes 'Main-Class': 'cruise.umple.UmpleConsoleMain',
                    'Class-Path': configurations.ivy,
@@ -547,7 +546,7 @@ task createSymbolicLink {
   doLast{
 	  if (! new File ("${rootProject.projectDir.toString()}/dist/gradle/libs/umple.jar").exists() && 
 	    new File ("${rootProject.projectDir.toString()}/dist/gradle/libs/${rootProject.ext.umpleCurrentJarBase}.jar").exists()){
-	    exec {
+	    execOperations.exec {
 	      workingDir "${rootProject.projectDir.toString()}/dist/gradle/libs/"
 	      commandLine 'ln', '-s', "${rootProject.ext.umpleCurrentJarBase}.jar", 'umple.jar'
 	    }
@@ -787,7 +786,7 @@ task packageDeb(dependsOn: [genManpage, removeCR], type: Deb) {
     }
     from("${rootProject.projectDir.toString()}/build/package-files/umple") {
         into 'usr/local/bin'
-        fileMode 0755
+        filePermissions { unix(0755) }
     }
     from("${rootProject.projectDir.toString()}/build/package-files/copyright") {
         into 'usr/share/doc/umple'
@@ -843,7 +842,7 @@ task packageRpm(dependsOn: [genManpage, removeCR], type: Rpm) {
     }
     from("${rootProject.projectDir.toString()}/build/package-files/umple") {
         into 'usr/local/bin'
-        fileMode 0755
+        filePermissions { unix(0755) }
     }      
     from("${rootProject.projectDir.toString()}/build/package-files/copyright") {
         into 'usr/share/doc/umple'
@@ -1607,7 +1606,7 @@ def runUserManualAndExampleTests(language, languageOpt, excludes) {
       target.append(name+"\n")
     }
     
-    def result = exec {
+    def result = execOperations.exec {
     	workingDir "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/${language}"	
     	commandLine 'java', '-jar', "${rootProject.ext.umpleCurrentJar}", '-g', "${languageOpt}", "-path", 'src-gen-umple', '-w', '-q', '-c', '-', '-f', 'allExamplesList.txt' 	
     }
@@ -2018,7 +2017,7 @@ task executeDocJar (type: JavaExec){
         description = "Running the umple documenter jar to update the user manual"
  	classpath = files("${rootProject.ext.distdir}/gradle/libs/umpledocs**.jar")
  	classpath += sourceSets.main.runtimeClasspath
- 	main = "cruise.umple.docs.DocumenterMain"
+ 	mainClass.set("cruise.umple.docs.DocumenterMain")
  	args = ["${rootProject.projectDir.toString()}/build/reference", distpath]
  	jvmArgs = ['-Xmx500m']
  }
@@ -2069,7 +2068,7 @@ task executeDocJar (type: JavaExec){
     def drop = fileTree ("${rootProject.ext.umpleoscripts}/dropbox") {
       include '*.js'
     }
-   files = files (
+   files = project.files (
      'umpleonline/scripts/prototype.js',
      'umpleonline/scripts/dom.js',
      'umpleonline/scripts/ajax.js', 
@@ -2091,7 +2090,7 @@ task executeDocJar (type: JavaExec){
    group = "Custom"
    description = "Running the yui compressor that is used to minify javascript files "
  	classpath = configurations.ivy
- 	main "com.yahoo.platform.yui.compressor.Bootstrap"
+ 	mainClass.set("com.yahoo.platform.yui.compressor.Bootstrap")
  	args =  ["${rootProject.ext.umpleoscripts}/tmpAllUmple.js", "-o", "${rootProject.ext.umpleoscripts}/allumple-min.js"]
  	
  }
@@ -2184,7 +2183,7 @@ task runRspec {
     else println("RSpec tests with tag "+tagArg)
   
   
-    def result = exec {
+    def result = execOperations.exec {
   	  workingDir "${rootProject.projectDir.toString()}/umpleonline/testsuite"
   	  commandLine  'rspec', '-f', 'html', '-o', testOutputPath+"/index.html", '-t', tagArg, failfastoption, 'spec'
   	  ignoreExitValue=true
