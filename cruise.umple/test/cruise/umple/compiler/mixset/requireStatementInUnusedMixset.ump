@@ -1,0 +1,6 @@
+mixset M1 {
+  require [M2];
+}
+
+mixset M2 {
+}
