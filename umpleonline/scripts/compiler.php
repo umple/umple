@@ -674,6 +674,14 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($stateDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/stateDiagram.svg");
+      // Graphviz versions may emit escaped DOT quotes as raw quotes in SVG hrefs.
+      // Encode the state/transition callback arguments before generating the SVG.
+      $stateGraphPath = $thedir . "/model.gv";
+      $stateGraph = file_get_contents($stateGraphPath);
+      if ($stateGraph !== false)
+      {
+        file_put_contents($stateGraphPath, encodeGraphvizStateLinks($stateGraph));
+      }
       $command = "dot -Tsvg " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg"; 
       exec($command);
             if (!file_exists($thedir . "/stateDiagram.svg") && file_exists("doterr.svg"))
@@ -887,6 +895,16 @@ else
   echo "Invalid use of compiler";
 }
 
+function encodeGraphvizStateLinks($content)
+{
+  return preg_replace_callback(
+    '/URL="javascript:Action\.(?:stateClicked|transitionClicked)\(.*?\)"/',
+    function($match) {
+      return str_replace('\"', '&quot;', $match[0]);
+    },
+    $content
+  );
+}
 function applyGraphvizLightThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram)
 {
   $targets = array();
@@ -1027,6 +1045,14 @@ function transformGraphvizContentToLight($content)
     }
 
     $processedLine = $line;
+    // State diagrams override the filled node default with style=rounded.
+    // Restore the fill (and reset the black start-state fill) for normal and
+    // nested states so their entire interior is clickable in the SVG.
+    // Explicitly coloured states already use "filled, rounded" and are preserved.
+    if (preg_match('/^(?:node\s*\[|style\s*=)/', $trimmed))
+    {
+      $processedLine = preg_replace('/\bstyle\s*=\s*rounded\b/', 'style="rounded,filled" fillcolor="#FFFFFF"', $processedLine);
+    }
 
     if (stripos($processedLine, '<table') !== false || stripos($processedLine, '<td') !== false)
     {
@@ -1088,6 +1114,12 @@ function transformGraphvizContentToDark($content)
     }
 
     $processedLine = $line;
+    // Keep normal and nested states filled after their rounded-style override.
+    // Reset the start-state fill without changing explicit state colours.
+    if (preg_match('/^(?:node\s*\[|style\s*=)/', $trimmed))
+    {
+      $processedLine = preg_replace('/\bstyle\s*=\s*rounded\b/', 'style="rounded,filled" fillcolor="#333333"', $processedLine);
+    }
 
     if (stripos($processedLine, '<table') !== false || stripos($processedLine, '<td') !== false)
     {
