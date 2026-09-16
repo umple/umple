@@ -6314,8 +6314,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if (braceResult != null)
       {
         // braceResult: [errorCode, line, col, offset]
+        String errorFilename = position.getFilename();
+        if (errorFilename != null && !errorFilename.isEmpty())
+        {
+          errorFilename = Paths.get(errorFilename).getFileName().toString();
+        }
+
         Position bracePos = new Position(
-          position.getFilename(), braceResult[1], braceResult[2], braceResult[3]);
+          errorFilename, braceResult[1], braceResult[2], braceResult[3]);
         setFailedPosition(bracePos, braceResult[0], identifier);
       }
       else
