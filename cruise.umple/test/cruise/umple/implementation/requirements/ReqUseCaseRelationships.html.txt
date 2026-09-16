@@ -1,0 +1,4 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqUseCaseRelationships.ump
+</p><p><b>UC5: As returning customer<br/>I want check out quickly<br/>Specializes UC1<br/>Includes UC2, UC3<br/>User step 1: confirm the saved address<br/>System response 1: show the order summary</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>
