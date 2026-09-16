@@ -171,6 +171,23 @@ public class UmpleParserTest
   }
 
   @Test
+public void braceMismatch_filenameUsesBasename() {
+  String filename = "2167_missingOpenBrace.ump";
+  parse(filename);
+
+  for (int i = 0; i < parser.getParseResult().numberOfErrorMessages(); i++) {
+    ErrorMessage em = parser.getParseResult().getErrorMessage(i);
+
+    if (em.getErrorType().getErrorCode() == 1505) {
+      Assert.assertEquals(filename, em.getPosition().getFilename());
+      return;
+    }
+  }
+
+  Assert.fail("Expected error 1505 in " + filename);
+}
+
+  @Test
   public void toplevelExtracode()
   {
     assertSimpleParse("001_toplevelExtracode.ump");
