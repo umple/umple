@@ -2350,3 +2350,7 @@ textarea#umpleLayoutEditorText {
   text-align: right;
   margin-top: 8px;
 }
+/* Keep the selected draw tool cursor over diagram elements, including inline cursors. */
+#umpleCanvas.draw-tool-active * {
+  cursor: inherit !important;
+}
