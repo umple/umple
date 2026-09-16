@@ -1373,6 +1373,7 @@ Page.updateCanvasCursor = function()
   }
 
   canvas.style.cursor = cursorValue;
+  canvas.classList.toggle("draw-tool-active", cursorValue !== "default");
 };
 
 Page.canShowHovers = function()
