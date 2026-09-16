@@ -9,7 +9,7 @@ pipeline {
   }
 
   tools {
-    jdk 'jdk17'   // Gradle 8 does not run on the JDK 25 the host defaults to
+    jdk 'jdk17'   // the host defaults to JDK 25; keep building on 17
   }
 
   stages {
