@@ -11,9 +11,15 @@ require subfeature [M3 or M2];
 
 require subfeature [0..1 of {M1}]; 
 
+mixset GSMProtocol {} mixset Playback {} mixset AudioFormat {}
+mixset M1 {} mixset M3 {}
 
 /*
 
-All these forms of require statements should not raise errors .  
+All these forms of require statements should not raise errors,
+and the use statements below satisfy them, so no warnings either.
 
 */
+
+use GSMProtocol, Playback, AudioFormat;
+use M1, M3;

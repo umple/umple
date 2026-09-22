@@ -17,6 +17,7 @@
 // second top-level entry.
 
 require [Base];
+use Base;
 
 mixset Base {
 }
