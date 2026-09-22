@@ -977,6 +977,7 @@ Action.changeDiagramType = function(newDiagramType)
   if ((newDiagramType.type === "GvEntity" || newDiagramType.type === "GvEntityRelationshipDiagram") && Page.useGvEntityRelationshipDiagram) return;
   if (newDiagramType.type === "structure"     && Page.useStructureDiagram) return;
 
+  Page.unselectAllToggleTools();
   var changedType = false;
   jQuery(".layoutListItem").hide();
   // reset show state
@@ -4005,6 +4006,7 @@ Action.classClicked = function(event)
 Action.stateClicked = function(identifier)
 {
     if (!Action.diagramInSync) return;
+    GvDiagramEdit.selectedState = identifier;
     Action.focusOn("umpleCanvas", true);
     Action.focusOn("umpleModelEditorText", false);
     var idSplit=identifier.split("^*^");
@@ -4050,7 +4052,7 @@ Action.stateClicked = function(identifier)
 
 
 
-   if (Page.selectedItem == "AddTransition")
+   if (Page.selectedItem == "AddTransition" && !Page.useGvStateDiagram)
     {
         if (DiagramEdit.newTransition == null)
         {
@@ -4533,6 +4535,11 @@ Action.drawGeneralizationLine = function(event, newGeneralization)
 
 Action.umpleCanvasClicked = function(event)
 {
+  if (Page.useGvStateDiagram && Page.selectedItem === "AddState") {
+    Action.elementClicked = false;
+    GvDiagramEdit.addState(event);
+    return;
+  }
   if (Action.elementClicked)
   {
     Action.elementClicked = false;
@@ -6380,6 +6387,7 @@ Action.updateUmpleDiagramCallback = function(response)
   }
 
   if(Page.useGvStateDiagram){
+    GvDiagramEdit.bindStateDiagram();
     //add double click to display menu, issue#2081
     var elems=document.getElementsByClassName("node");
     // Add event listener to Graphviz state nodes for right click
@@ -6700,6 +6708,7 @@ Action.toggleTraits = function()
 
 Action.redrawDiagram = function()
 {
+    if (typeof GvDiagramEdit !== "undefined") GvDiagramEdit.clearPendingPaletteState();
     UmpleSystem.merge(null);    // Clear the diagram
     var canvas = jQuery("#umpleCanvas");
     canvas.html("");
@@ -6716,12 +6725,14 @@ Action.redrawDiagram = function()
       Page.enableCheckBoxItem("buttonManualSync", "ttManualSync", true);
 
       Page.enablePaletteItem('buttonAddClass', true);
+      Page.enablePaletteItem('buttonAddState', true);
       Page.enablePaletteItem('buttonAddAssociation', true);
       Page.enablePaletteItem('buttonAddTransition', true);
       Page.enablePaletteItem('buttonAddGeneralization', true);
       Page.enablePaletteItem('buttonDeleteEntity', true);
     
       Page.initToggleTool('buttonAddClass');
+      Page.initToggleTool('buttonAddState');
       Page.initToggleTool('buttonAddAssociation');
       Page.initToggleTool('buttonAddTransition');
       Page.initToggleTool('buttonAddGeneralization');
@@ -7053,7 +7064,7 @@ Mousetrap.bind(['a'], function(e){
   {
     if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
     {
-      jQuery('#buttonAddAssociation').click();
+      jQuery(Page.useGvStateDiagram ? '#buttonAddTransition' : '#buttonAddAssociation').click();
     }
   }
 });
@@ -7064,7 +7075,7 @@ Mousetrap.bind(['c'], function(e){
   {
     if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
     {        
-      jQuery('#buttonAddClass').click();
+      jQuery(Page.useGvStateDiagram ? '#buttonAddState' : '#buttonAddClass').click();
     }        
   }
 });
