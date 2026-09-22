@@ -748,17 +748,11 @@ public class UmpleMixsetTest {
   @Test
   public void featureUseIsValid()
   {
-    UmpleFile file1 = new UmpleFile(umpleParserTest.pathToInput,"mobileSPL_1.ump");
-    UmpleModel model1 = new UmpleModel(file1);
-    model1.run();
-    boolean file1Test = model1.getFeatureModel().satisfyFeatureModel();
-    Assert.assertTrue(file1Test);
+    umpleParserTest.assertNoWarningsParse("mobileSPL_1.ump");
+    Assert.assertTrue(umpleParserTest.model.getFeatureModel().satisfyFeatureModel());
 
-    UmpleFile file2 = new UmpleFile(umpleParserTest.pathToInput,"mobileSPL_2.ump");
-    UmpleModel model2 = new UmpleModel(file2);
-    model2.run();
-    boolean file2Test = model2.getFeatureModel().satisfyFeatureModel();
-    Assert.assertFalse(file2Test);   
+    Assert.assertTrue(umpleParserTest.parseWarnings("mobileSPL_2.ump"));
+    Assert.assertFalse(umpleParserTest.model.getFeatureModel().satisfyFeatureModel());
   }
   @Test
   public void sameLabelManyTimesWarning() {

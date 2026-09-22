@@ -9,6 +9,8 @@ noreferences
 
 <p> Require statements may include the subfeature keyword to specify mixsets that are features. A require statement containing subfeature forms a parent-child relationship between the source mixset and the target mixset and both will become features.
 
+<p>A require statement at the top level of a file always applies. A require statement inside a mixset applies only when that mixset is used. When the use statements do not satisfy a require statement that applies, the compiler raises <a href="W1514RequireStatementNotSatisfied.html">warning W1514</a> and the feature diagram shows the configuration as not valid.</p>
+
 <p> When a mixset acts as an optional feature; the keyword isFeature can be included in the mixset body instead of using the require statement. The keyword isFeature makes a mixset an optional feature to the container mixset (the one which the former is nested in). If the mixset containing isFeature is a top entity element in an Umple file, the mixset becomes an  optional feature to the SPL base.</p>
 
 <p>The second code example below contains multiple features that form a feature model. Line 5 indicates that GSM1800 is required but that GSM1900 is not. Line 9 states that one or both of two sound features is required. Line 18 states that up to one of three resolution features is required (i.e. only at most one).  Line 21 contains a use statement that produces a software variant with five features.</p>
