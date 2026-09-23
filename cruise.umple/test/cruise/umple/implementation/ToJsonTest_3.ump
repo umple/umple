@@ -1,0 +1,24 @@
+generate Java --suboption "genJson";
+
+// Issue 2504: the current state of every state machine is saved and restored
+class Player {
+  name;
+  status {
+    Off { turnOn -> On; resume -> On.H; }
+    On {
+      turnOff -> Off;
+      Idle { play -> Playing; }
+      Playing {}
+    }
+  }
+  mode {
+    Active {
+      stop -> Stopped;
+      Waiting { work -> Busy; }
+      Busy {}
+    }
+    Stopped { restart -> Active.HStar; }
+  }
+  // Without a start state there is nothing to save
+  unused {}
+}

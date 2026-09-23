@@ -81,6 +81,16 @@ class UmpleToJava {
 		associationItems.add(av.getType());
 		associationIsMany.add(av.isMany());
 	  }
+	  // Issue 2504: each state machine and nested region is stored in its own enum field
+	  List<StateMachine> stateMachines = new ArrayList<StateMachine>();
+	  for(StateMachine sm: uClass.getStateMachines())
+	  {
+	    if(sm.getStartState() != null)
+	    {
+	      stateMachines.add(sm);
+	      stateMachines.addAll(sm.getNestedStateMachines());
+	    }
+	  }
 	  #>>
     if(atConcreteClass) {
       // This will not be true in a super call; output header
@@ -143,6 +153,15 @@ class UmpleToJava {
         <<#}
       #>>
       //haveOutputItem = false;
+      <<#
+        for (StateMachine sm : stateMachines){#>>
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
+          toJsonOutput.append(indent+"  \"<<=gen.translate("stateMachineOne",sm)>>\" : \""+<<=gen.translate("stateMachineOne",sm)>>+"\"");
+          haveOutputItem=true;
+        <<#}
+      #>>
       <<#
         for(int assoIndex=0;assoIndex<associationNames.size();assoIndex++){#>>
          if(haveOutputItem) {
@@ -348,7 +367,47 @@ class UmpleToJava {
         subClassList.add(up.getName());
     }	  
 	  
+    // Issue 2504: states are assigned directly so that loading runs no entry actions.
+    // A region missing from the json gets the value the constructor would give it:
+    // its start state when every enclosing state is entered by default, otherwise Null
+    List<StateMachine> stateMachinesFromJson = new ArrayList<StateMachine>();
+    List<String> defaultStatesFromJson = new ArrayList<String>();
+    for(StateMachine sm: uClass.getStateMachines())
+    {
+      if(sm.getStartState() == null)
+      {
+        continue;
+      }
+      List<StateMachine> smAndNested = new ArrayList<StateMachine>();
+      smAndNested.add(sm);
+      smAndNested.addAll(sm.getNestedStateMachines());
+      for(StateMachine region: smAndNested)
+      {
+        boolean enteredByDefault = region.getStartState() != null;
+        for(State enclosing = region.getParentState(); enteredByDefault && enclosing != null; enclosing = enclosing.getStateMachine().getParentState())
+        {
+          enteredByDefault = enclosing.getStateMachine().getStartState() == enclosing;
+        }
+        stateMachinesFromJson.add(region);
+        defaultStatesFromJson.add(enteredByDefault ? gen.translate("stateOne",region.getStartState()) : gen.translate("stateNull",region));
+      }
+    }
     #>>
+    <<#if(!stateMachinesFromJson.isEmpty()){#>>
+    // Restore the current state of each state machine; a missing one starts where the constructor would
+    <<#}
+    for(int smJsonCount=0; smJsonCount<stateMachinesFromJson.size(); smJsonCount++){
+      StateMachine region = stateMachinesFromJson.get(smJsonCount);
+      String field = gen.translate("stateMachineOne",region);
+      String type = gen.translate("type",region);#>>
+    <<=field>>=parsedResult.containsKey("<<=field>>")?<<=type>>.valueOf(parsedResult.get("<<=field>>")):<<=type>>.<<=defaultStatesFromJson.get(smJsonCount)>>;
+      <<#if(region.getContainsHistoryState()){#>>
+    <<=field>>H=<<=type>>.<<=region.getState(1).getName()>>;
+      <<#}
+      if(region.getContainsDeepHistoryState()){#>>
+    <<=field>>HStar=<<=type>>.<<=region.getState(1).getName()>>;
+      <<#}
+    }#>>
     // Check if the object has already been visited and created
     //if((umpleObjectIDMap.get(umpleObjectId)==null)||visitedSuperClass){
       try{
