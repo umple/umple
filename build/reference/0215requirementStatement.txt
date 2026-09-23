@@ -29,7 +29,10 @@ req &lt;ReqIdentifier&gt; [&lt;reqLanguage&gt;] { ... }
 <ul>
   <li><b>plain</b> (default, tag may be omitted) &mdash; free text.</li>
   <li><b>userStory</b> &mdash; free text optionally structured with <code>who</code>, <code>when</code>, <code>what</code>, and <code>why</code> sub-blocks.</li>
-  <li><b>useCase</b> &mdash; free text optionally structured with <code>userStep</code> and <code>systemResponse</code> sub-blocks.</li>
+  <li><b>useCase</b> &mdash; free text optionally structured with <code>who</code>, <code>when</code>, <code>what</code>, <code>why</code>,
+      <code>userStep</code> and <code>systemResponse</code> sub-blocks. A step may carry a condition in square brackets, written like a
+      state machine guard, and a use case may name others with <code>include</code> and specialize one with <code>isA</code>:
+      <code>isA UC1; include UC2, UC3; systemResponse 1 [card accepted] { confirm the order }</code></li>
   <li><b>quality</b> &mdash; introduces named quality classes (e.g. <i>High</i>, <i>Medium</i>, <i>Low</i>) for a non-functional property. See <a href="RequirementQualityClasses.html">Requirement Quality Classes</a>.</li>
 </ul>
 

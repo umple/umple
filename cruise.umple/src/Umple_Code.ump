@@ -928,6 +928,21 @@ class Requirement{
     return content != null && !content.isEmpty();
   }
 
+  // Renders a list of use case identifiers as a comma separated list
+  private String joinUseCaseReferences(String[] references)
+  {
+    StringBuilder joined = new StringBuilder();
+    for (String reference : references)
+    {
+      if (joined.length() > 0)
+      {
+        joined.append(", ");
+      }
+      joined.append(reference);
+    }
+    return joined.toString();
+  }
+
   public boolean hasStructuredUserStoryFields()
   {
     return hasDisplayText(getWho())
@@ -1016,6 +1031,23 @@ class Requirement{
         useCaseText.append(statement);
       }
 
+      if (hasParentUseCases())
+      {
+        if (useCaseText.length() > 0)
+        {
+          useCaseText.append(separator);
+        }
+        useCaseText.append("Specializes ").append(joinUseCaseReferences(getParentUseCases()));
+      }
+      if (hasIncludedUseCases())
+      {
+        if (useCaseText.length() > 0)
+        {
+          useCaseText.append(separator);
+        }
+        useCaseText.append("Includes ").append(joinUseCaseReferences(getIncludedUseCases()));
+      }
+
       for (int i = 0; i < numberOfUseCaseSteps(); i++)
       {
         UseCaseStep step = getUseCaseStep(i);
@@ -1027,11 +1059,12 @@ class Requirement{
         String prefix = step.getStepType() == UseCaseStep.UseCaseStepType.UserStep
           ? "User step "
           : "System response ";
-        useCaseText
-          .append(prefix)
-          .append(step.getId())
-          .append(": ")
-          .append(step.getContent());
+        useCaseText.append(prefix).append(step.getId());
+        if (hasDisplayText(step.getCondition()))
+        {
+          useCaseText.append(" [").append(step.getCondition()).append("]");
+        }
+        useCaseText.append(": ").append(step.getContent());
       }
 
       return useCaseText.toString();
@@ -1053,16 +1086,29 @@ class Requirement{
 
     qualityClasses = new ArrayList<QualityClass>();
 
+    includedUseCases = new ArrayList<String>();
+    for (String includedUseCase : aReq.getIncludedUseCases())
+    {
+      includedUseCases.add(includedUseCase);
+    }
+
+    parentUseCases = new ArrayList<String>();
+    for (String parentUseCase : aReq.getParentUseCases())
+    {
+      parentUseCases.add(parentUseCase);
+    }
+
     useCaseSteps = new ArrayList<UseCaseStep>();
     for (int i = 0; i < aReq.numberOfUseCaseSteps(); i++)
     {
       UseCaseStep originalStep = aReq.getUseCaseStep(i);
-      new UseCaseStep(
+      UseCaseStep copiedStep = new UseCaseStep(
         originalStep.getId(),
         originalStep.getStepType(),
         originalStep.getContent(),
         this
       );
+      copiedStep.setCondition(originalStep.getCondition());
     }
 
     // Deep-copy quality classes using helper accessors generated from Umple.ump.
