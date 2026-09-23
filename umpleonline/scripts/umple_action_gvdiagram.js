@@ -29,6 +29,11 @@ GvDiagramEdit.replaceFullText = function(newText) {
 };
 
 GvDiagramEdit.clearPendingPaletteState = function() {
+  GvDiagramEdit.state.transitionSource = null;
+  if (GvDiagramEdit.statePicker) {
+    GvDiagramEdit.statePicker.remove();
+    GvDiagramEdit.statePicker = null;
+  }
   GvDiagramEdit.state.assocSourceClass = null;
   GvDiagramEdit.state.genChildClass = null;
 
@@ -60,12 +65,13 @@ GvDiagramEdit.cancelDragCreate = function() {
 };
 
 GvDiagramEdit.beginPossibleDragCreate = function(domEvent, nodeEl, mode) {
-  if (!Page.useGvClassDiagram) return false;
+  if (Page.readOnly || (mode === "transition" ? !Page.useGvStateDiagram : !Page.useGvClassDiagram)) return false;
   if (!Action.diagramInSync) return false;
+  if (mode === "transition" && Page.selectedItem !== "AddTransition") return false;
   if (mode === "association" && Page.selectedItem !== "AddAssociation") return false;
   if (mode === "generalization" && Page.selectedItem !== "AddGeneralization") return false;
 
-  const className = Action.getGvClassNameFromNode(nodeEl);
+  const className = mode === "transition" ? GvDiagramEdit.getStateIdentifier(nodeEl) : Action.getGvClassNameFromNode(nodeEl);
   if (!className) return false;
 
   const s = GvDiagramEdit.dragCreate;
@@ -92,7 +98,12 @@ GvDiagramEdit.maybeActivateDragCreate = function(moveEvent) {
 
   s.dragging = true;
 
-  if (s.mode === "association") {
+  if (s.mode === "transition") {
+    GvDiagramEdit.state.transitionSource = s.sourceClassName;
+    GvDiagramEdit.selectState(s.sourceClassName);
+    GvDiagramEdit.rubberBand.start(s.sourceNodeEl, "transition", moveEvent);
+    Page.setFeedbackMessage("Transition: drag to the target state.");
+  } else if (s.mode === "association") {
     GvDiagramEdit.state.assocSourceClass = s.sourceClassName;
     Action.selectClass(s.sourceClassName);
     GvDiagramEdit.rubberBand.start(s.sourceNodeEl, "association", moveEvent);
@@ -112,13 +123,18 @@ GvDiagramEdit.finishDragCreateOnNode = function(domEvent, nodeEl) {
   const wasDragging = s.dragging;
   const mode = s.mode;
   const sourceClass = s.sourceClassName;
-  const targetClass = Action.getGvClassNameFromNode(nodeEl);
+  const targetClass = mode === "transition" ? GvDiagramEdit.getStateIdentifier(nodeEl) : Action.getGvClassNameFromNode(nodeEl);
 
   GvDiagramEdit.resetDragCreate();
 
   if (!wasDragging) return false;
   if (!sourceClass || !targetClass) {
     GvDiagramEdit.clearPendingPaletteState();
+    return true;
+  }
+
+  if (mode === "transition") {
+    GvDiagramEdit.commitTransition(sourceClass, targetClass);
     return true;
   }
 
@@ -178,9 +194,9 @@ GvDiagramEdit.handleDocumentMouseUpForCreateDrag = function(domEvent) {
   const releasedOnNode =
     domEvent.target &&
     typeof domEvent.target.closest === "function" &&
-    domEvent.target.closest(".node");
+    domEvent.target.closest(s.mode === "transition" ? "#umpleCanvas .node, #umpleCanvas .cluster" : "#umpleCanvas .node");
 
-  if (releasedOnNode) return;
+  if (releasedOnNode && (s.mode !== "transition" || GvDiagramEdit.getStateIdentifier(releasedOnNode))) return;
 
   // Mouse was released somewhere else (empty canvas / outside canvas), so cancel the in-progress drag-create cleanly.
   if (s.dragging) {
@@ -836,12 +852,7 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
       if (e.key === "Escape") {
         e.preventDefault();
         e.stopPropagation();
-        RB.cancel();
-
-        if (GvDiagramEdit && GvDiagramEdit.state) {
-          GvDiagramEdit.state.assocSourceClass = null;
-          GvDiagramEdit.state.genChildClass = null;
-        }
+        GvDiagramEdit.clearPendingPaletteState();
       }
     };
     document.addEventListener("keydown", RB._onKeyDown, true);
@@ -853,3 +864,261 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
 
   return RB;
 })();
+
+// S-mode tools use the same editor updates, drag threshold and preview as G mode.
+GvDiagramEdit.getStateIdentifier = function(nodeEl) {
+  const anchors = nodeEl.querySelectorAll("a");
+  for (const anchor of anchors) {
+    const href = anchor.getAttribute("href") || anchor.getAttribute("xlink:href") || "";
+    const match = href.match(/^javascript:Action\.stateClicked\(["']([^"']+)["']\)/);
+    if (match) return match[1].replace(/Entry:|Exit:/g, "");
+  }
+  return null; // Start markers and transition edges are not states.
+};
+
+// Keep offsets intact while ignoring braces and names in comments or strings.
+GvDiagramEdit.maskStateSource = function(text) {
+  return text.replace(/\/\/[^\n]*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'/g,
+    part => part.replace(/[^\n\r]/g, " "));
+};
+
+GvDiagramEdit.findNamedStateBlock = function(masked, name, from, to) {
+  let depth = 0;
+  for (let i = from; i < to; i++) {
+    if (masked[i] === "{") depth++;
+    else if (masked[i] === "}") depth--;
+    else if (depth === 0 && /[A-Za-z_]/.test(masked[i])) {
+      const start = i;
+      while (i < to && /[A-Za-z0-9_]/.test(masked[i])) i++;
+      const word = masked.slice(start, i);
+      while (i < to && /\s/.test(masked[i])) i++;
+      if (word === name && masked[i] === "{") {
+        const open = i;
+        let braces = 1;
+        while (++i < to) {
+          if (masked[i] === "{") braces++;
+          if (masked[i] === "}" && --braces === 0) return { start, open, end: i + 1 };
+        }
+        return null;
+      }
+      i--;
+    }
+  }
+  return null;
+};
+
+GvDiagramEdit.findStateRange = function(text, identifier, machineOnly) {
+  const parts = identifier.split("^*^");
+  if (parts.length !== 3) return null;
+  const masked = GvDiagramEdit.maskStateSource(text);
+  let range = GvDiagramEdit.findNamedStateBlock(masked, parts[0], 0, masked.length);
+  if (!range) return null;
+  range = GvDiagramEdit.findNamedStateBlock(masked, parts[1], range.open + 1, range.end - 1);
+  if (machineOnly) return range;
+  for (const name of parts[2].split(".")) {
+    if (!range) return null;
+    range = GvDiagramEdit.findNamedStateBlock(masked, name, range.open + 1, range.end - 1);
+  }
+  return range;
+};
+
+GvDiagramEdit.appendToStateBlock = function(text, range, line) {
+  const close = range.end - 1;
+  const lineStart = text.lastIndexOf("\n", range.start - 1) + 1;
+  const indent = (text.slice(lineStart, range.start).match(/^\s*/) || [""])[0];
+  const closingLine = text.lastIndexOf("\n", close - 1) + 1;
+  const insertAt = /^\s*$/.test(text.slice(closingLine, close)) ? closingLine : close;
+  const prefix = insertAt > 0 && text[insertAt - 1] !== "\n" ? "\n" : "";
+  return text.slice(0, insertAt) + prefix + indent + "  " + line + "\n" +
+    (insertAt === close ? indent : "") + text.slice(insertAt);
+};
+
+GvDiagramEdit.uniqueStateName = function(text, prefix) {
+  const names = new Set(GvDiagramEdit.maskStateSource(text).match(/[A-Za-z_][A-Za-z0-9_]*/g) || []);
+  let index = 1;
+  while (names.has(prefix + index)) index++;
+  return prefix + index;
+};
+
+GvDiagramEdit.insertTransitionIntoSourceState = function(text, source, target) {
+  const from = source.split("^*^");
+  const to = target.split("^*^");
+  if (from[0] !== to[0] || from[1] !== to[1]) return null;
+  const range = GvDiagramEdit.findStateRange(text, source);
+  const machine = GvDiagramEdit.findStateRange(text, source, true);
+  if (!range || !machine || !GvDiagramEdit.findStateRange(text, target)) return null;
+  const eventName = GvDiagramEdit.uniqueStateName(text.slice(machine.start, machine.end), "event");
+  return GvDiagramEdit.appendToStateBlock(text, range, eventName + " -> " + to[2] + ";");
+};
+
+GvDiagramEdit.selectState = function(identifier) {
+  GvDiagramEdit.selectedState = identifier;
+  const range = GvDiagramEdit.findStateRange(GvDiagramEdit.getFullText(), identifier);
+  if (range) Action.highlightByIndexCM6(range.start, range.end);
+};
+
+GvDiagramEdit.commitTransition = function(source, target) {
+  GvDiagramEdit.clearPendingPaletteState();
+  const after = GvDiagramEdit.insertTransitionIntoSourceState(GvDiagramEdit.getFullText(), source, target);
+  if (after == null) {
+    Page.setFeedbackMessage("Choose states in the same state machine, defined in the current editor.");
+    return;
+  }
+  GvDiagramEdit.replaceFullText(after);
+  GvDiagramEdit.refreshDiagram();
+  if (!Page.repeatToolItem) Page.unselectAllToggleTools();
+  Page.setFeedbackMessage("Transition added: " + source.split("^*^")[2] + " -> " + target.split("^*^")[2]);
+};
+
+GvDiagramEdit.handlePaletteTransition = function(event, nodeEl) {
+  const identifier = GvDiagramEdit.getStateIdentifier(nodeEl);
+  if (!identifier) return;
+  if (GvDiagramEdit.state.transitionSource == null) {
+    GvDiagramEdit.state.transitionSource = identifier;
+    GvDiagramEdit.selectState(identifier);
+    GvDiagramEdit.rubberBand.start(nodeEl, "transition", event);
+    Page.setFeedbackMessage("Transition: select the target state.");
+  } else {
+    GvDiagramEdit.commitTransition(GvDiagramEdit.state.transitionSource, identifier);
+  }
+};
+
+GvDiagramEdit.bindStateDiagram = function() {
+  GvDiagramEdit.installCreateDragListeners();
+  const nodes = document.querySelectorAll("#umpleCanvas .node, #umpleCanvas .cluster");
+  for (const node of nodes) {
+    if (!GvDiagramEdit.getStateIdentifier(node)) continue;
+    let suppressClick = false;
+    const active = () => Page.useGvStateDiagram && !Page.readOnly && Action.diagramInSync && Page.selectedItem === "AddTransition";
+    const stop = event => { event.preventDefault(); event.stopImmediatePropagation(); };
+    node.addEventListener("mousedown", function(event) {
+      suppressClick = false;
+      if (!active() || event.button !== 0) return;
+      stop(event);
+      GvDiagramEdit.beginPossibleDragCreate(event, node, "transition");
+    }, true);
+    node.addEventListener("mouseup", function(event) {
+      if (!active() || event.button !== 0) return;
+      stop(event);
+      suppressClick = true;
+      Action.elementClicked = false;
+      if (!GvDiagramEdit.finishDragCreateOnNode(event, node)) {
+        GvDiagramEdit.handlePaletteTransition(event, node);
+      }
+    }, true);
+    node.addEventListener("click", function(event) {
+      if (suppressClick || active()) {
+        suppressClick = false;
+        stop(event); // Do not follow the state link or call the legacy transition tool.
+      }
+    }, true);
+  }
+};
+
+GvDiagramEdit.insertFirstState = function(text, className) {
+  const masked = GvDiagramEdit.maskStateSource(text);
+  const range = className && GvDiagramEdit.findNamedStateBlock(masked, className, 0, masked.length);
+  if (className && !range) return null;
+  const machineName = GvDiagramEdit.uniqueStateName(text, "stateMachine");
+  const newMachine = machineName + " {\n    State1 {}\n  }";
+  const updated = range ? GvDiagramEdit.appendToStateBlock(text, range, newMachine) :
+    text + "\nclass " + GvDiagramEdit.uniqueStateName(text, "NewClass") + " {\n  " + newMachine + "\n}\n";
+  return { text: updated, name: "State1" };
+};
+
+GvDiagramEdit.insertStateIntoMachine = function(text, identifier, nested) {
+  const range = GvDiagramEdit.findStateRange(text, identifier, !nested);
+  if (!range) return null;
+  const machine = GvDiagramEdit.findStateRange(text, identifier, true);
+  const name = GvDiagramEdit.uniqueStateName(text.slice(machine.start, machine.end), "State");
+  return { text: GvDiagramEdit.appendToStateBlock(text, range, name + " {}"), name };
+};
+
+GvDiagramEdit.addState = function(event) {
+  if (!Page.useGvStateDiagram || Page.readOnly || !Action.diagramInSync) return;
+  const text = GvDiagramEdit.getFullText();
+  const cluster = event.target.closest(".cluster");
+  const nestedIdentifier = cluster && GvDiagramEdit.getStateIdentifier(cluster);
+  const machines = new Map();
+  for (const node of document.querySelectorAll("#umpleCanvas .node, #umpleCanvas .cluster")) {
+    const id = GvDiagramEdit.getStateIdentifier(node);
+    if (id && GvDiagramEdit.findStateRange(text, id, true)) {
+      const parts = id.split("^*^");
+      machines.set(parts[0] + " / " + parts[1], id);
+    }
+  }
+  const masked = GvDiagramEdit.maskStateSource(text);
+  const classes = [...masked.matchAll(/\bclass\s+([A-Za-z_][A-Za-z0-9_]*)\s*\{/g)];
+  for (const match of classes) {
+    const classRange = GvDiagramEdit.findNamedStateBlock(masked, match[1], 0, masked.length);
+    if (!classRange) continue;
+    const body = masked.slice(classRange.open + 1, classRange.end - 1);
+    for (const block of body.matchAll(/\b([A-Za-z_][A-Za-z0-9_]*)\s*\{/g)) {
+      const range = GvDiagramEdit.findNamedStateBlock(masked, block[1], classRange.open + 1, classRange.end - 1);
+      if (range && range.start === classRange.open + 1 + block.index &&
+          masked.slice(range.open + 1, range.end - 1).trim() === "" &&
+          !["invariant", "before", "after"].includes(block[1])) {
+        machines.set(match[1] + " / " + block[1], match[1] + "^*^" + block[1] + "^*^");
+      }
+    }
+  }
+  function create(identifier, nested) {
+    if (text !== GvDiagramEdit.getFullText()) {
+      Page.setFeedbackMessage("The model changed. Select State again to add a state.");
+      GvDiagramEdit.clearPendingPaletteState();
+      return;
+    }
+    const result = identifier.split("^*^")[1] ? GvDiagramEdit.insertStateIntoMachine(text, identifier, nested) :
+      GvDiagramEdit.insertFirstState(text, identifier.split("^*^")[0]);
+    if (!result) {
+      Page.setFeedbackMessage("Select a state machine defined in the current editor.");
+      return;
+    }
+    GvDiagramEdit.replaceFullText(result.text);
+    GvDiagramEdit.refreshDiagram();
+    if (!Page.repeatToolItem) Page.unselectAllToggleTools();
+    Page.setFeedbackMessage("State added: " + result.name);
+  }
+  if (nestedIdentifier) return create(nestedIdentifier, true);
+  const selected = GvDiagramEdit.selectedState;
+  if (selected && [...machines.values()].some(id => id.split("^*^").slice(0, 2).join("^*^") === selected.split("^*^").slice(0, 2).join("^*^"))) {
+    return create(selected, false);
+  }
+  if (machines.size === 0) {
+    if (classes.length === 0) return create("^*^^*^", false);
+    for (const match of classes) machines.set(match[1] + " / new state machine", match[1] + "^*^^*^");
+  }
+  if (machines.size === 1) return create(machines.values().next().value, false);
+  // A blank canvas click has no owner when several state machines are visible.
+  GvDiagramEdit.clearPendingPaletteState();
+  const picker = document.createElement("div");
+  picker.className = "gv-state-picker";
+  const label = document.createElement("label");
+  label.textContent = "Add state to: ";
+  const select = document.createElement("select");
+  for (const [name, id] of machines) {
+    const option = document.createElement("option");
+    option.textContent = name;
+    option.value = id;
+    select.appendChild(option);
+  }
+  label.appendChild(select);
+  picker.appendChild(label);
+  const add = document.createElement("button");
+  add.textContent = "Add state";
+  add.onclick = () => create(select.value, false);
+  picker.appendChild(add);
+  const cancel = document.createElement("button");
+  cancel.textContent = "Cancel";
+  cancel.onclick = () => GvDiagramEdit.clearPendingPaletteState();
+  picker.appendChild(cancel);
+  picker.addEventListener("keydown", e => {
+    if (e.key === "Escape") GvDiagramEdit.clearPendingPaletteState();
+  });
+  picker.style.position = "fixed";
+  picker.style.left = Math.max(0, Math.min(event.clientX, window.innerWidth - 360)) + "px";
+  picker.style.top = Math.max(0, Math.min(event.clientY, window.innerHeight - 80)) + "px";
+  document.body.appendChild(picker);
+  GvDiagramEdit.statePicker = picker;
+  select.focus();
+};

@@ -1008,7 +1008,11 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/assoc.png" alt="Icon to click on to create an association in editable mode"/> 
               Association
             </li>
-            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition." tabindex="0">
+            <li id="buttonAddState" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on the canvas to add a state, or inside a composite state to add a substate." tabindex="0">
+              <img src="scripts/class.png" alt="Add a state"/>
+              State
+            </li>
+            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select a source and target state, or drag between states, to draw a transition." tabindex="0">
                <img src="scripts/assoc.png" alt="Icon to click on to create a new transition in certain state modes"/>
                Transition
              </li>            
