@@ -337,7 +337,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $graphvizTheme = null;
 
   // Handle explicit theme for Graphviz generators
-  if (isset($_REQUEST['theme']) && strpos($language, 'Gv') === 0)
+  if (isset($_REQUEST['theme']) && (strpos($language, 'Gv') === 0 || $instanceDiagram))
   {
     if ($_REQUEST['theme'] === 'dark')
     {
@@ -522,13 +522,13 @@ else if (isset($_REQUEST["umpleCode"]))
   // Took off 1> {$outputFilename}  in two commands above
   $resultFromCommand = executeCommand($command);
 
-  if ($graphvizTheme === 'dark' && ($stateDiagram || $classDiagram || $featureDiagram || $entityRelationshipDiagram))
+  if ($graphvizTheme === 'dark' && ($stateDiagram || $classDiagram || $featureDiagram || $entityRelationshipDiagram || $instanceDiagram))
   {
-    applyGraphvizDarkThemeFiles($thedir, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram);
+    applyGraphvizDarkThemeFiles($thedir, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram);
   }
-  else if ($graphvizTheme === 'light' && ($stateDiagram || $classDiagram || $featureDiagram || $entityRelationshipDiagram))
+  else if ($graphvizTheme === 'light' && ($stateDiagram || $classDiagram || $featureDiagram || $entityRelationshipDiagram || $instanceDiagram))
   {
-    applyGraphvizLightThemeFiles($thedir, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram);
+    applyGraphvizLightThemeFiles($thedir, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram);
   }
 
   $dataHandle->writeData(basename($outputFilename), $resultFromCommand);
@@ -905,7 +905,7 @@ function encodeGraphvizStateLinks($content)
     $content
   );
 }
-function applyGraphvizLightThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram)
+function applyGraphvizLightThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram)
 {
   $targets = array();
   if ($stateDiagram)
@@ -916,7 +916,7 @@ function applyGraphvizLightThemeFiles($directory, $generatorType, $stateDiagram,
   {
     $targets[] = $directory . "/modelGvFeatureDiagram.gv";
   }
-  if ($classDiagram || $entityRelationshipDiagram)
+  if ($classDiagram || $entityRelationshipDiagram || $instanceDiagram)
   {
     $suffix = $generatorType;
     if ($suffix === null)
@@ -932,7 +932,7 @@ function applyGraphvizLightThemeFiles($directory, $generatorType, $stateDiagram,
   }
 }
 
-function applyGraphvizDarkThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram)
+function applyGraphvizDarkThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram)
 {
   $targets = array();
   if ($stateDiagram)
@@ -943,7 +943,7 @@ function applyGraphvizDarkThemeFiles($directory, $generatorType, $stateDiagram, 
   {
     $targets[] = $directory . "/modelGvFeatureDiagram.gv";
   }
-  if ($classDiagram || $entityRelationshipDiagram)
+  if ($classDiagram || $entityRelationshipDiagram || $instanceDiagram)
   {
     $suffix = $generatorType;
     if ($suffix === null)

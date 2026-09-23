@@ -1,0 +1,8 @@
+generate InstanceDiagram -s "initialInstCount=1";
+namespace example;
+
+class Person {
+}
+
+class Course {
+}
