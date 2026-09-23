@@ -63,8 +63,12 @@ plainReq- : [reqLanguage]? { [**reqContent] }
 userStory- : [=reqLanguage:userStory|userstory] { ( [[userStoryTags]] | [**reqContent] ) }
 userStoryTags- : ( who { [*whoContent] } )? ( when { [*whenContent] } )? ( what { [*whatContent] } )? ( why { [*whyContent] } )?
 useCase- : [=reqLanguage:useCase|usecase] { ( [[useCaseTags]] | [**reqContent] ) }
-useCaseTags- : ( [[userStoryTags]] | [[useCaseStep]] )*
-useCaseStep- : ( userStep [useCaseId] { [*useCaseStepContent] } ) | ( systemResponse [useCaseId] { [*useCaseStepContent] } )
+useCaseTags- : ( [[userStoryTags]] | [[useCaseRelationship]] | [[useCaseStep]] )*
+// A use case can incorporate the steps of other use cases, or specialize another use case
+useCaseRelationship- : [=useCaseRelationType:include|isA] [useCaseRef] ( , [useCaseRef] )* ;
+useCaseStep- : ( userStep [useCaseId] [[useCaseStepCondition]]? { [*useCaseStepContent] } ) | ( systemResponse [useCaseId] [[useCaseStepCondition]]? { [*useCaseStepContent] } )
+// A step is taken only when its condition holds; written like a state machine guard
+useCaseStepCondition- : [ [*useCaseCondition] ]
 reqRef : [reqIdentifier] (OPEN_ROUND_BRACKET [qualityClassName] CLOSE_ROUND_BRACKET)?
 reqImplementation : implementsReq [[reqRef]] (, [[reqRef]])* ;
 
