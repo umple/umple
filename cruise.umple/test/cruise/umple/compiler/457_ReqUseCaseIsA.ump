@@ -1,0 +1,4 @@
+req UC8 useCase {
+  isA UC1;
+  userStep 1 { pay with the saved card }
+}

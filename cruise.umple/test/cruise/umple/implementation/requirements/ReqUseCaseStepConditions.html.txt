@@ -1,0 +1,4 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqUseCaseStepConditions.ump
+</p><p><b>UC6: User step 1: select a payment method<br/>System response 1 [card accepted]: confirm the order<br/>System response 1 [card declined]: ask for another card<br/>User step 2: collect the receipt</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>

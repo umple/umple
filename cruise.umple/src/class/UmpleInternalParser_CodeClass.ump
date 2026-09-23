@@ -278,6 +278,8 @@ class UmpleInternalParser
     String whatContent = null;
     String whyContent = null;
     List<String[]> parsedUseCaseSteps = new ArrayList<String[]>();
+    List<String> parsedIncludedUseCases = new ArrayList<String>();
+    List<String> parsedParentUseCases = new ArrayList<String>();
 
     if (("userStory".equals(newLanguage) || "useCase".equals(newLanguage)) && !newContent.equals("")) {
       String[] lines = newContent.split("\\r?\\n");
@@ -298,19 +300,17 @@ class UmpleInternalParser
         else if (trimmed.startsWith("why {") && trimmed.endsWith("}")) {
           whyContent = trimmed.substring(5, trimmed.length() - 1).trim();
         }
-        else if ("useCase".equals(newLanguage) && trimmed.startsWith("userStep ") && trimmed.contains("{") && trimmed.endsWith("}")) {
-          int braceStart = trimmed.indexOf("{");
-          String prefix = trimmed.substring(0, braceStart).trim();
-          String content = trimmed.substring(braceStart + 1, trimmed.length() - 1).trim();
-          String id = prefix.substring("userStep".length()).trim();
-          parsedUseCaseSteps.add(new String[] { id, "userStep", content });
+        else if ("useCase".equals(newLanguage) && isUseCaseRelationship(trimmed, "include")) {
+          addUseCaseReferences(trimmed, "include", parsedIncludedUseCases);
         }
-        else if ("useCase".equals(newLanguage) && trimmed.startsWith("systemResponse ") && trimmed.contains("{") && trimmed.endsWith("}")) {
-          int braceStart = trimmed.indexOf("{");
-          String prefix = trimmed.substring(0, braceStart).trim();
-          String content = trimmed.substring(braceStart + 1, trimmed.length() - 1).trim();
-          String id = prefix.substring("systemResponse".length()).trim();
-          parsedUseCaseSteps.add(new String[] { id, "systemResponse", content });
+        else if ("useCase".equals(newLanguage) && isUseCaseRelationship(trimmed, "isA")) {
+          addUseCaseReferences(trimmed, "isA", parsedParentUseCases);
+        }
+        else if ("useCase".equals(newLanguage) && isUseCaseStep(trimmed, "userStep")) {
+          parsedUseCaseSteps.add(parseUseCaseStep(trimmed, "userStep"));
+        }
+        else if ("useCase".equals(newLanguage) && isUseCaseStep(trimmed, "systemResponse")) {
+          parsedUseCaseSteps.add(parseUseCaseStep(trimmed, "systemResponse"));
         }
         else {
           if (remainingContent.length() > 0) {
@@ -320,7 +320,8 @@ class UmpleInternalParser
         }
       }
 
-      if (!(whoContent == null && whenContent == null && whatContent == null && whyContent == null && parsedUseCaseSteps.isEmpty())) {
+      if (!(whoContent == null && whenContent == null && whatContent == null && whyContent == null
+            && parsedUseCaseSteps.isEmpty() && parsedIncludedUseCases.isEmpty() && parsedParentUseCases.isEmpty())) {
         newContent = remainingContent.toString().trim();
       }
     }
@@ -411,14 +412,7 @@ class UmpleInternalParser
         new QualityClass(qcData[0], qcData[1], existingRequirement);
       }
 
-      for (String[] stepData : parsedUseCaseSteps) {
-        UseCaseStep.UseCaseStepType stepType =
-          "userStep".equals(stepData[1])
-            ? UseCaseStep.UseCaseStepType.UserStep
-            : UseCaseStep.UseCaseStepType.SystemResponse;
-
-        new UseCaseStep(stepData[0], stepType, stepData[2], existingRequirement);
-      }
+      addUseCaseElements(existingRequirement, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
     }
     else {
       if (QUALITY_LANG.equals(newLanguage)) {
@@ -435,14 +429,74 @@ class UmpleInternalParser
       }
       model.getAllRequirements().put(reqID, req);
 
-      for (String[] stepData : parsedUseCaseSteps) {
-        UseCaseStep.UseCaseStepType stepType =
-          "userStep".equals(stepData[1])
-            ? UseCaseStep.UseCaseStepType.UserStep
-            : UseCaseStep.UseCaseStepType.SystemResponse;
+      addUseCaseElements(req, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
+    }
+  }
 
-        new UseCaseStep(stepData[0], stepType, stepData[2], req);
+  // Matches a use case relationship line such as "include UC1, UC2;" or "isA UC3;"
+  private static boolean isUseCaseRelationship(String line, String keyword) {
+    return line.startsWith(keyword + " ") && line.endsWith(";");
+  }
+
+  // Collects the comma separated use case identifiers named by a relationship line
+  private static void addUseCaseReferences(String line, String keyword, List<String> references) {
+    String body = line.substring(keyword.length(), line.length() - 1);
+    for (String reference : body.split(",")) {
+      String trimmedReference = reference.trim();
+      if (!trimmedReference.equals("")) {
+        references.add(trimmedReference);
       }
+    }
+  }
+
+  // Matches a use case step line, with or without a condition,
+  // such as "userStep 1 { pay }" or "userStep 1 [card accepted] { pay }"
+  private static boolean isUseCaseStep(String line, String keyword) {
+    return line.startsWith(keyword + " ") && line.contains("{") && line.endsWith("}");
+  }
+
+  // Splits a use case step line into { id, keyword, content, condition }.
+  // The condition is null when the step carries no [...] guard.
+  private static String[] parseUseCaseStep(String line, String keyword) {
+    int braceStart = line.indexOf("{");
+    String content = line.substring(braceStart + 1, line.length() - 1).trim();
+    String prefix = line.substring(keyword.length(), braceStart).trim();
+
+    String condition = null;
+    int conditionStart = prefix.indexOf("[");
+    if (conditionStart >= 0 && prefix.endsWith("]")) {
+      condition = prefix.substring(conditionStart + 1, prefix.length() - 1).trim();
+      prefix = prefix.substring(0, conditionStart).trim();
+      if (condition.equals("")) {
+        condition = null;
+      }
+    }
+
+    return new String[] { prefix, keyword, content, condition };
+  }
+
+  // Attaches the structured use case elements found in a requirement body to the requirement,
+  // keeping the steps in the order they were written
+  private static void addUseCaseElements(Requirement req, List<String[]> steps, List<String> includedUseCases, List<String> parentUseCases) {
+    for (String reference : parentUseCases) {
+      if (req.indexOfParentUseCase(reference) == -1) {
+        req.addParentUseCase(reference);
+      }
+    }
+    for (String reference : includedUseCases) {
+      if (req.indexOfIncludedUseCase(reference) == -1) {
+        req.addIncludedUseCase(reference);
+      }
+    }
+    for (String[] stepData : steps) {
+      UseCaseStep.UseCaseStepType stepType =
+        "userStep".equals(stepData[1])
+          ? UseCaseStep.UseCaseStepType.UserStep
+          : UseCaseStep.UseCaseStepType.SystemResponse;
+
+      // The UseCaseStep constructor appends the step to the requirement
+      UseCaseStep step = new UseCaseStep(stepData[0], stepType, stepData[2], req);
+      step.setCondition(stepData[3]);
     }
   }
 
