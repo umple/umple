@@ -1,0 +1,7 @@
+req UC3 useCase {
+  who { store administrator }
+  what { cancel an order }
+
+  userStep 1 { choose the order to cancel }
+  systemResponse 1 { release the reserved stock }
+}
