@@ -81,7 +81,7 @@ class UmpleToJava {
 		associationItems.add(av.getType());
 		associationIsMany.add(av.isMany());
 	  }
-	  // Issue 2504: each state machine and nested region is stored in its own enum field
+	  // Each state machine and nested region is stored in its own enum field
 	  List<StateMachine> stateMachines = new ArrayList<StateMachine>();
 	  for(StateMachine sm: uClass.getStateMachines())
 	  {
@@ -367,7 +367,7 @@ class UmpleToJava {
         subClassList.add(up.getName());
     }	  
 	  
-    // Issue 2504: states are assigned directly so that loading runs no entry actions.
+    // States are assigned directly so that loading runs no entry actions.
     // A region missing from the json gets the value the constructor would give it:
     // its start state when every enclosing state is entered by default, otherwise Null
     List<StateMachine> stateMachinesFromJson = new ArrayList<StateMachine>();

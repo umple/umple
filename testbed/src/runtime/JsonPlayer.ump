@@ -1,7 +1,7 @@
 generate Java "../../src-gen-umple";
 suboption "genJson";
 
-// Issue 2504: compiled on its own because genJson applies to the whole model.
+// Compiled on its own because genJson applies to the whole model.
 // No namespace, because fromJson only accepts unqualified class names.
 class JsonPlayer
 {

@@ -1,6 +1,5 @@
 generate Java --suboption "genJson";
 
-// Issue 2504: the current state of every state machine is saved and restored
 class Player {
   name;
   status {

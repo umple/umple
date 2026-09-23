@@ -1,7 +1,7 @@
 import org.junit.Assert;
 import org.junit.Test;
 
-// Issue 2504: toJson and fromJson carry the current state of every state machine.
+// toJson and fromJson carry the current state of every state machine.
 // In the default package because the genJson fixture JsonPlayer has no namespace.
 public class JsonPlayerTest
 {
