@@ -2354,3 +2354,13 @@ textarea#umpleLayoutEditorText {
 #umpleCanvas.draw-tool-active * {
   cursor: inherit !important;
 }
+
+.gv-state-picker {
+  z-index: 10000;
+  padding: 12px;
+  border: 1px solid #888;
+  border-radius: 4px;
+  background: var(--umple-dark-bg, white);
+  color: var(--umple-dark-text, black);
+}
+.gv-state-picker button { margin-left: 8px; }

@@ -243,6 +243,7 @@ div.palette li.disabled a.buttonExtend {
   color: #777;
 }
 
+#buttonAddTransition img,
 #buttonAddAssociation img,
 #buttonAddGeneralization img {
   filter: invert(1) brightness(1.1);
