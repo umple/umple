@@ -2871,6 +2871,25 @@ public void braceMismatch_filenameUsesBasename() {
 
   //Issue 2378 (Extended Use Case syntax)
   @Test
+  public void ReqUseCaseIsAMultipleParents()
+  {
+    assertNoWarningsParse("457_ReqUseCaseIsAMultipleParents.ump");
+    Requirement req = model.getAllRequirements().get("UC11");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals(2, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+    Assert.assertEquals("UC2", req.getParentUseCase(1));
+    Assert.assertEquals(0, req.numberOfIncludedUseCases());
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("confirm the order", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
   public void ReqUseCaseStepConditions()
   {
     assertNoWarningsParse("457_ReqUseCaseStepConditions.ump");
