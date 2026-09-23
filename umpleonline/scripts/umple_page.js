@@ -316,6 +316,7 @@ Page.initPaletteArea = function()
   Page.initJQueryButton("buttonLoadBlankModel");
   
   Page.initHighlighter("buttonAddClass");
+  Page.initHighlighter("buttonAddState");
   Page.initHighlighter("buttonAddAssociation");
   Page.initHighlighter("buttonAddTransition");
   Page.initHighlighter("buttonAddGeneralization");
@@ -364,6 +365,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonSelectReq");
 
   Page.initToggleTool("buttonAddClass");
+  Page.initToggleTool("buttonAddState");
   Page.initToggleTool("buttonAddAssociation");
   Page.initToggleTool("buttonAddTransition");
   Page.initToggleTool("buttonAddGeneralization");
@@ -451,7 +453,7 @@ Page.initPaletteArea = function()
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
   Page.enablePaletteItem("buttonSyncDiagram", false);
-  Page.enablePaletteItem("buttonAddTransition", false);
+  Page.enablePaletteItem("buttonAddTransition", Page.useGvStateDiagram);
 
   jQuery("#genstatus").hide();
   jQuery("#buttonViewComplete").hide();
@@ -593,13 +595,12 @@ Page.enablePaletteItem = function(id, doEnable)
   
   if (doEnable)
   {
-    item.removeClass();
+    item.removeClass("disabled");
     item.prop('disabled', true);
     Page.initHighlighter(id);
   }
   else
   {
-    item.removeClass();
     item.addClass("disabled");
     item.prop('disabled', false);
     Page.removeHighlighter(id);
@@ -1232,6 +1233,8 @@ Page.enableDiagram = function(doEnable)
 {
   Page.enableEditDragAndResize(doEnable);
   Page.enablePaletteItem("buttonAddClass", doEnable);
+  Page.enablePaletteItem("buttonAddState", doEnable);
+  Page.enablePaletteItem("buttonAddTransition", doEnable);
   Page.enablePaletteItem("buttonAddAssociation", doEnable);
   Page.enablePaletteItem("buttonAddGeneralization", doEnable);
   Page.enablePaletteItem("buttonDeleteEntity", doEnable);
@@ -1281,6 +1284,7 @@ Page.toggleToolItem = function(id, doubleClicked)
 
 Page.unselectAllToggleTools = function()
 {
+  if (typeof GvDiagramEdit !== "undefined") GvDiagramEdit.clearPendingPaletteState();
   var unselected = false;
   var temp = false;
 
@@ -1307,6 +1311,7 @@ Page.unselectAllToggleTools = function()
 
 Page.selectToggleTool = function(toolSelected)
 {
+  if (typeof GvDiagramEdit !== "undefined") GvDiagramEdit.clearPendingPaletteState();
   if (Page.selectedItem != null)
   {
     DiagramEdit.removeNewClass();
@@ -1353,6 +1358,7 @@ Page.updateCanvasCursor = function()
         : "url('scripts/generalization.png') 8 8, auto";
       break;
 
+    case "AddState":
     case "AddClass":
       cursorValue = "url('scripts/class.png') 8 8, auto";
       break;
@@ -1373,6 +1379,7 @@ Page.updateCanvasCursor = function()
   }
 
   canvas.style.cursor = cursorValue;
+  canvas.classList.toggle("draw-tool-active", cursorValue !== "default");
 };
 
 Page.canShowHovers = function()

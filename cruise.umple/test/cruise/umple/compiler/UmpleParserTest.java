@@ -171,6 +171,23 @@ public class UmpleParserTest
   }
 
   @Test
+public void braceMismatch_filenameUsesBasename() {
+  String filename = "2167_missingOpenBrace.ump";
+  parse(filename);
+
+  for (int i = 0; i < parser.getParseResult().numberOfErrorMessages(); i++) {
+    ErrorMessage em = parser.getParseResult().getErrorMessage(i);
+
+    if (em.getErrorType().getErrorCode() == 1505) {
+      Assert.assertEquals(filename, em.getPosition().getFilename());
+      return;
+    }
+  }
+
+  Assert.fail("Expected error 1505 in " + filename);
+}
+
+  @Test
   public void toplevelExtracode()
   {
     assertSimpleParse("001_toplevelExtracode.ump");
@@ -2850,6 +2867,25 @@ public class UmpleParserTest
 
     Assert.assertEquals(1, req.numberOfUseCaseSteps());
     Assert.assertEquals("pay with the saved card", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseIsAMultipleParents()
+  {
+    assertNoWarningsParse("457_ReqUseCaseIsAMultipleParents.ump");
+    Requirement req = model.getAllRequirements().get("UC11");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals(2, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+    Assert.assertEquals("UC2", req.getParentUseCase(1));
+    Assert.assertEquals(0, req.numberOfIncludedUseCases());
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("confirm the order", req.getUseCaseStep(0).getContent());
   }
 
   //Issue 2378 (Extended Use Case syntax)

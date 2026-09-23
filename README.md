@@ -4,7 +4,7 @@
 
 OS         | Linux Jenkins | Windows Appveyor |  
 :--------- | ------------- | ---------------- |
-**Status** | [![Jenkins Linux Build status](https://jenkins.umple.org/job/Umple/lastSuccessfulBuild/badge/icon?subject=Jenkins%2FLinux&build=lastCompleted:${params.BRANCH=master})](https://jenkins.umple.org/job/Umple/lastSuccessfulBuild?subject=Jenkins%2FLinux&build=lastCompleted:${params.BRANCH=master}) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/1yetvadynui7r8y6?svg=true)](https://ci.appveyor.com/project/vahdat-ab/umple/branch/master) 
+**Status** | [![Jenkins Linux Build status](https://jenkins.umple.org/job/Umple/job/master/badge/icon?subject=Jenkins%2FLinux)](https://jenkins.umple.org/job/Umple/job/master/) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/1yetvadynui7r8y6?svg=true)](https://ci.appveyor.com/project/vahdat-ab/umple/branch/master) 
 
 
 ## Description

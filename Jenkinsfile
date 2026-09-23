@@ -9,7 +9,7 @@ pipeline {
   }
 
   tools {
-    jdk 'jdk17'   // the Gradle 7.3 wrapper does not run on newer JDKs
+    jdk 'jdk17'   // the host defaults to JDK 25; keep building on 17
   }
 
   stages {
