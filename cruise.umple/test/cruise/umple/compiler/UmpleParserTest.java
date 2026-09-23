@@ -1055,6 +1055,39 @@ public void braceMismatch_filenameUsesBasename() {
     assertHasWarningsParse("043_warningClassNameNotCapital.ump", 101);
   }
 
+  //Issue 2521
+  @Test
+  public void warningClassNamesDifferOnlyByCase107()
+  {
+    assertHasWarningsParse("2521_classNamesDifferOnlyByCase.ump", new Position("2521_classNamesDifferOnlyByCase.ump", 3, 0, 25), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more classes have the same characters but differ only in case: PinG, Ping. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  //Issue 2521
+  @Test
+  public void warningAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_attributeNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, 107);
+    ParseResult result = parser.getParseResult();
+    Assert.assertEquals(2, result.numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Ping have the same characters but differ only in case: apple, apPle. This can increase the risk of defects.",
+      result.getErrorMessage(0).getFormattedMessage());
+    Assert.assertEquals(new Position(file, 3, 2, 24), result.getErrorMessage(0).getPosition());
+    // class X is declared twice; its attributes are compared as one class
+    Assert.assertEquals(107, result.getErrorMessage(1).getErrorType().getErrorCode());
+    Assert.assertEquals(new Position(file, 11, 2, 69), result.getErrorMessage(1).getPosition());
+  }
+
+  //Issue 2521: same letters in different classes, and a class declared twice, are not a clash
+  @Test
+  public void noWarningNamesDifferOnlyByCase107()
+  {
+    assertNoWarningsParse("2521_namesDifferOnlyByCaseNone.ump");
+  }
+
   @Test
   public void warningInterfaceNameCapitalLetter()
   { // Test to make sure a warning is generated when an interface name does not start with a capital letter

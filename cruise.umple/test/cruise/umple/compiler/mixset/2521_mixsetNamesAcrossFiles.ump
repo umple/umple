@@ -1,0 +1,7 @@
+// Mixset m1 is declared here and M1 in a file used below
+mixset m1 class A {
+  x;
+}
+
+use 2521_mixsetNamesAcrossFilesUsed.ump;
+use m1, M1;

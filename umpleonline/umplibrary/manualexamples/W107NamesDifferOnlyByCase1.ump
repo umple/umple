@@ -1,0 +1,20 @@
+// This example generates the message three times:
+// for the classes, the attributes and the mixsets
+use Logging, logging;
+
+mixset logging class Account {
+  logLevel;
+}
+
+mixset Logging class Account {
+  logFile;
+}
+
+class Customer {
+  firstName;
+  firstname;
+}
+
+class CUSTOMER {}
+//$?[End_of_model]$?
+// @@@skipcompile - Customer and CUSTOMER overwrite each other on case-insensitive file systems, and PHP treats setFirstName and setFirstname as the same method

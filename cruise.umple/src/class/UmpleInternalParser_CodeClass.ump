@@ -901,6 +901,33 @@ class UmpleInternalParser
         setParentClassesDefaultInterface();
         checkAssociationsForDistributed(); 
         //checkDistributedAssociations();
+
+      //Issue 2521
+      checkClassNamesDifferOnlyByCase();
+      checkAttributeNamesDifferOnlyByCase();
+    }
+  }
+
+  private void checkClassNamesDifferOnlyByCase()
+  {
+    Map<String, Position> classPositions = new LinkedHashMap<String, Position>();
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      classPositions.put(uClass.getName(), uClass.numberOfPositions() > 0 ? uClass.getPosition(0) : null);
+    }
+    checkNamesDifferOnlyByCase("classes", classPositions);
+  }
+
+  private void checkAttributeNamesDifferOnlyByCase()
+  {
+    for (UmpleClass uClass : model.getUmpleClasses())
+    {
+      Map<String, Position> attributePositions = new LinkedHashMap<String, Position>();
+      for (Attribute attribute : uClass.getAttributes())
+      {
+        attributePositions.putIfAbsent(attribute.getName(), attribute.getPosition());
+      }
+      checkNamesDifferOnlyByCase("attributes in class " + uClass.getName(), attributePositions);
     }
   }
 private void checkAssociationsForDistributed()
