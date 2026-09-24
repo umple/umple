@@ -9,13 +9,13 @@ digraph "ColouredEntity" {
 "];
 
   // Attributes for X
-  "aX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   a\ :\ String   ", tooltip="String a&#13;"];
+  "aX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   a\ :\ String   ", tooltip="String a&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;a&quot;);"];
   "X" -> "aX" [arrowhead="none"];
 
-  "dateX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, peripheries=2, label="   date\ :\ Date[]   ", tooltip="Date[] date&#13;"];
+  "dateX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, peripheries=2, label="   date\ :\ Date[]   ", tooltip="Date[] date&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;date&quot;);"];
   "X" -> "dateX" [arrowhead="none"];
 
-  "timeX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   time\ :\ Time   ", tooltip="Time time&#13;"];
+  "timeX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   time\ :\ Time   ", tooltip="Time time&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;time&quot;);"];
   "X" -> "timeX" [arrowhead="none"];
 
   // Class: Y
@@ -24,16 +24,16 @@ digraph "ColouredEntity" {
 "];
 
   // Attributes for Y
-  "dateY" [shape=ellipse, label=<   <u>date : Date</u>   >, tooltip="Date date&#13;"];
+  "dateY" [shape=ellipse, label=<   <u>date : Date</u>   >, tooltip="Date date&#13;", href="javascript:Action.selectAttribute(&quot;Y&quot;,&quot;date&quot;);"];
   "Y" -> "dateY" [arrowhead="none"];
 
-  "timeY" [shape=ellipse, label=<   <u>time : Time</u>   >, tooltip="Time time&#13;"];
+  "timeY" [shape=ellipse, label=<   <u>time : Time</u>   >, tooltip="Time time&#13;", href="javascript:Action.selectAttribute(&quot;Y&quot;,&quot;time&quot;);"];
   "Y" -> "timeY" [arrowhead="none"];
 
   // All associations
-  "Y_X" [shape=diamond, label="   test   ", tooltip="Y->X"];
-  "Y" -> "Y_X" [dir="back", arrowtail="open", label="0..1", tooltip="Y->X" labeltooltip="Y->X" headtooltip="Y->X" tailtooltip="Y->X" URL="javascript:Action.selectAssociation('Y,Y_X,0..1')" ];
+  "Y_X" [shape=diamond, label="   test   ", tooltip="Y->X", href="javascript:Action.selectAssociation('Y,X,* test,0..1 ')"];
+  "Y" -> "Y_X" [dir="back", arrowtail="open", label="0..1", tooltip="Y->X" labeltooltip="Y->X" headtooltip="Y->X" tailtooltip="Y->X" URL="javascript:Action.selectAssociation('Y,X,* test,0..1 ')" ];
 
-  "Y_X" -> "X" [dir="back", arrowtail="open", label="*", tooltip="Y->X" labeltooltip="Y->X" headtooltip="Y->X" tailtooltip="Y->X" URL="javascript:Action.selectAssociation('Y_X,X,*')" ];
+  "Y_X" -> "X" [dir="back", arrowtail="open", label="*", tooltip="Y->X" labeltooltip="Y->X" headtooltip="Y->X" tailtooltip="Y->X" URL="javascript:Action.selectAssociation('Y,X,* test,0..1 ')" ];
 
 }
