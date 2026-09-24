@@ -9,22 +9,22 @@ digraph "NormalEntity" {
 "];
 
   // Attributes for X
-  "aX" [shape=ellipse, label="   a\ :\ String   ", tooltip="String a&#13;"];
+  "aX" [shape=ellipse, label="   a\ :\ String   ", tooltip="String a&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;a&quot;);"];
   "X" -> "aX" [arrowhead="none"];
 
-  "dateX" [shape=ellipse, peripheries=2, label="   date\ :\ Date[]   ", tooltip="Date[] date&#13;"];
+  "dateX" [shape=ellipse, peripheries=2, label="   date\ :\ Date[]   ", tooltip="Date[] date&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;date&quot;);"];
   "X" -> "dateX" [arrowhead="none"];
 
-  "timeX" [shape=ellipse, label="   time\ :\ Time   ", tooltip="Time time&#13;"];
+  "timeX" [shape=ellipse, label="   time\ :\ Time   ", tooltip="Time time&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;time&quot;);"];
   "X" -> "timeX" [arrowhead="none"];
 
-  "xX" [shape=ellipse, label="   x\ :\ Float   ", tooltip="Float x&#13;"];
+  "xX" [shape=ellipse, label="   x\ :\ Float   ", tooltip="Float x&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;x&quot;);"];
   "X" -> "xX" [arrowhead="none"];
 
-  "yX" [shape=ellipse, label="   y\ :\ Float   ", tooltip="Float y&#13;"];
+  "yX" [shape=ellipse, label="   y\ :\ Float   ", tooltip="Float y&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;y&quot;);"];
   "X" -> "yX" [arrowhead="none"];
 
-  "sumX" [shape=ellipse, style=dashed, label="   sum\ :\ Float   ", tooltip="Float sum&#13;"];
+  "sumX" [shape=ellipse, style=dashed, label="   sum\ :\ Float   ", tooltip="Float sum&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;sum&quot;);"];
   "X" -> "sumX" [arrowhead="none"];
 
   // All associations

@@ -29,7 +29,7 @@ class GvEntityRelationshipDiagramGenerator
   protected void parentClassAssoc(StringBuilder code, String className, String parentName)
   {
     code.append("\n  \""+className+"IsA\" ["+"shape=triangle, ");
-    code.append("label=\"IsA\"];\n");
+    code.append("label=\"IsA\", href=\"javascript:Action.selectClass(&quot;"+className+"&quot;);\"];\n");
     code.append("  \""+className+"\" -> \""+className+"IsA\""
         +" [arrowhead=\"none\"];\n");
     code.append("  \""+className+"IsA\" -> \""+parentName+"\""
@@ -122,7 +122,7 @@ class GvEntityRelationshipDiagramGenerator
           tooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
           tooltip.append(appendTooltipComment(uAttribute.getComments(), true));        
 
-          code.append("label="+label+", tooltip=\""+tooltip+"\"];");
+          code.append("label="+label+", tooltip=\""+tooltip+"\", href=\"javascript:Action.selectAttribute(&quot;"+className+"&quot;,&quot;"+attrName+"&quot;);\"];");
           code.append("\n  \""+className+"\" -> \""+attrName+className+"\" [arrowhead=\"none\"];\n");
         }
       }
@@ -144,7 +144,7 @@ class GvEntityRelationshipDiagramGenerator
       String[] arrows = retArrows(uAssoc);
 
       // Get the cardinality of the relationship for both ends
-      String leftMult, rightMult;
+      String leftMult, rightMult, associationDetails;
       if ("symmetricreflexive".equals(modifierOne) && "symmetricreflexive".equals(modifierTwo)) 
       {
         if ("undefined".equals(rightEnd.getDisplayRoleName()))
@@ -153,11 +153,15 @@ class GvEntityRelationshipDiagramGenerator
           leftMult = rightEnd.toSimpleString();
 
         rightMult = leftMult;
+        associationDetails = leftEnd.getClassName()+","+rightEnd.getClassName()+","+leftMult+" "
+          +("undefined".equals(rightEnd.getDisplayRoleName()) ? leftEnd.getDisplayRoleName() : rightEnd.getDisplayRoleName());
       }
       else
       {
         leftMult = leftEnd.toSimpleString();
         rightMult = rightEnd.toSimpleString();
+        associationDetails = leftEnd.getClassName()+","+rightEnd.getClassName()+","+rightMult+" "+rightEnd.getDisplayRoleName()
+          +","+leftMult+" "+leftEnd.getDisplayRoleName();
       }
 
       // If normal class - create a relationships (put into a function?)
@@ -188,20 +192,20 @@ class GvEntityRelationshipDiagramGenerator
         toolTip = leftEnd.getClassName()+"->"+rightEnd.getClassName();
 
         // Add the tooltip to the relationship diamond
-        associations.append(", tooltip=\""+toolTip+"\"];\n");
+        associations.append(", tooltip=\""+toolTip+"\", href=\"javascript:Action.selectAssociation('"+associationDetails+"')\"];\n");
           
         // Add the associations connecting the relationship diamond + entities
         associations.append(labelAssociation(leftEnd.getClassName(),
-          relName, arrows[0], leftMult, toolTip)+"\n");
+          relName, arrows[0], leftMult, toolTip, associationDetails)+"\n");
 
         associations.append(labelAssociation(relName,
-          rightEnd.getClassName(), arrows[0], rightMult, toolTip)+"\n");
+          rightEnd.getClassName(), arrows[0], rightMult, toolTip, associationDetails)+"\n");
       } else {
         // Add the associations connecting the relationship diamond + entities
         toolTip = rightEnd.getClassName()+"->"+leftEnd.getClassName();
 
         associations.append(labelAssociation(rightEnd.getClassName(),
-          leftEnd.getClassName(), arrows[0], leftMult, toolTip)+"\n");
+          leftEnd.getClassName(), arrows[0], leftMult, toolTip, associationDetails)+"\n");
       }
     }
   }

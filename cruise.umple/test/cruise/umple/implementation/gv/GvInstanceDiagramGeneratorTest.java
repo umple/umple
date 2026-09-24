@@ -27,6 +27,8 @@ public class GvInstanceDiagramGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/gv/InheritanceErrorOnecid.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/InheritanceErrorOnecid.instance.json");
     SampleFileWriter.destroy(pathToInput + "/gv/TooManyAssociationscid.instance.json");
+    SampleFileWriter.destroy(pathToInput + "/gv/InstanceSelectClasscid.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/InstanceSelectClasscid.instance.json");
   }
 
 
@@ -41,6 +43,14 @@ public class GvInstanceDiagramGeneratorTest extends TemplateTest
   public void inheritance_Error_one()
   {
     assertUmplePartialTemplateFor("gv/InheritanceErrorOne.ump","gv/InheritanceErrorOne.gv.txt");
+
+  }
+
+  @Test
+  public void instance_Select_Class()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/InstanceSelectClass.ump","gv/InstanceSelectClass.gv.txt");
 
   }
 

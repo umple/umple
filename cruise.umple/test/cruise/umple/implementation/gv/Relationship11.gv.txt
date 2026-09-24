@@ -9,13 +9,13 @@ digraph "Relationship11" {
 "];
 
   // Attributes for X
-  "aX" [shape=ellipse, label="   a\ :\ String   ", tooltip="String a&#13;"];
+  "aX" [shape=ellipse, label="   a\ :\ String   ", tooltip="String a&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;a&quot;);"];
   "X" -> "aX" [arrowhead="none"];
 
-  "dateX" [shape=ellipse, label="   date\ :\ Date   ", tooltip="Date date&#13;"];
+  "dateX" [shape=ellipse, label="   date\ :\ Date   ", tooltip="Date date&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;date&quot;);"];
   "X" -> "dateX" [arrowhead="none"];
 
-  "timeX" [shape=ellipse, label="   time\ :\ Time   ", tooltip="Time time&#13;"];
+  "timeX" [shape=ellipse, label="   time\ :\ Time   ", tooltip="Time time&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;time&quot;);"];
   "X" -> "timeX" [arrowhead="none"];
 
   // Class: Y
@@ -24,16 +24,16 @@ digraph "Relationship11" {
 "];
 
   // Attributes for Y
-  "bY" [shape=ellipse, label="   b\ :\ String   ", tooltip="String b&#13;"];
+  "bY" [shape=ellipse, label="   b\ :\ String   ", tooltip="String b&#13;", href="javascript:Action.selectAttribute(&quot;Y&quot;,&quot;b&quot;);"];
   "Y" -> "bY" [arrowhead="none"];
 
-  "cY" [shape=ellipse, label="   c\ :\ String   ", tooltip="String c&#13;"];
+  "cY" [shape=ellipse, label="   c\ :\ String   ", tooltip="String c&#13;", href="javascript:Action.selectAttribute(&quot;Y&quot;,&quot;c&quot;);"];
   "Y" -> "cY" [arrowhead="none"];
 
   // All associations
-  "X_Y" [shape=diamond, label="      ", tooltip="X->Y"];
-  "X" -> "X_Y" [dir="none", label="1", tooltip="X->Y" labeltooltip="X->Y" headtooltip="X->Y" tailtooltip="X->Y" URL="javascript:Action.selectAssociation('X,X_Y,1')" ];
+  "X_Y" [shape=diamond, label="      ", tooltip="X->Y", href="javascript:Action.selectAssociation('X,Y,1 ,1 ')"];
+  "X" -> "X_Y" [dir="none", label="1", tooltip="X->Y" labeltooltip="X->Y" headtooltip="X->Y" tailtooltip="X->Y" URL="javascript:Action.selectAssociation('X,Y,1 ,1 ')" ];
 
-  "X_Y" -> "Y" [dir="none", label="1", tooltip="X->Y" labeltooltip="X->Y" headtooltip="X->Y" tailtooltip="X->Y" URL="javascript:Action.selectAssociation('X_Y,Y,1')" ];
+  "X_Y" -> "Y" [dir="none", label="1", tooltip="X->Y" labeltooltip="X->Y" headtooltip="X->Y" tailtooltip="X->Y" URL="javascript:Action.selectAssociation('X,Y,1 ,1 ')" ];
 
 }
