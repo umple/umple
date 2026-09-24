@@ -1,0 +1,27 @@
+generate Java "../../src-gen-umple";
+suboption "genJson";
+
+// Compiled on its own because genJson applies to the whole model.
+// No namespace, because fromJson only accepts unqualified class names.
+class JsonPlayer
+{
+  name;
+  status {
+    Off { turnOn -> On; resume -> On.H; }
+    On {
+      turnOff -> Off;
+      Idle { play -> Playing; }
+      Playing {}
+    }
+  }
+  mode {
+    Active {
+      stop -> Stopped;
+      Waiting { work -> Busy; }
+      Busy {}
+    }
+    Stopped { restart -> Active.HStar; }
+  }
+  // Without a start state there is nothing to save
+  unused {}
+}
