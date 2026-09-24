@@ -1,0 +1,15 @@
+// The following shows how to avoid the message:
+// names differ by more than their case
+use Logging;
+
+mixset Logging class Account {
+  logLevel;
+  logFile;
+}
+
+class Customer {
+  firstName;
+  preferredName;
+}
+
+class CorporateCustomer {}
