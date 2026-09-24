@@ -5398,6 +5398,29 @@ Action.selectClass = function(className)
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 }
 
+// Highlights the text of the attribute that is currently selected.
+Action.selectAttribute = function(className, attributeName)
+{
+  var searchCursor = new RegExp("(associationClass|class|interface|trait) "+className+"($|\\\s|[{])");
+  var pattern = new RegExp("(^|[;{}])[^\\S\\n]*([\\w<>\\[\\],.]+[^\\S\\n]+)*"+attributeName+"\\s*[=;]", "m");
+
+  if(Page.codeMirrorOn) {
+    var text = Page.codeMirrorEditor6.state.doc.toString();
+    let splitBuffer=Action.splitStates(text);
+    for(let i=0;i<splitBuffer.length;i++){
+      if(splitBuffer[i].search(searchCursor)==0){
+        let matches=splitBuffer[i].match(pattern);
+        if(matches){
+          let startIndex=text.indexOf(splitBuffer[i])+matches.index;
+          Action.highlightByIndexCM6(startIndex, startIndex+matches[0].length);
+          return;
+        }
+      }
+    }
+    Action.selectClass(className);
+  }
+}
+
 // Highlights the text of the state that is currently selected.
 Action.selectState = function(stateName)
 {
