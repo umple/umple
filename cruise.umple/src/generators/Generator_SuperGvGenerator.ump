@@ -263,8 +263,12 @@ class SuperGvGenerator
 
   public static String labelAssociation(String left, String right, String arrow, String label, String tooltip)
   {
+    return labelAssociation(left, right, arrow, label, tooltip, left + "," + right+ "," + label);
+  }
+
+  public static String labelAssociation(String left, String right, String arrow, String label, String tooltip, String associationDetails)
+  {
     String association;
-    String associationDetails = left + "," + right+ "," + label;
     String hrefAction = "javascript:Action.selectAssociation('" + associationDetails + "')";
     association = "  \""+left+"\" -> \""+right+"\" ["+arrow+
         ", label=\""+label+"\""+", tooltip=\""+tooltip+"\" labeltooltip=\""+tooltip+"\" headtooltip=\"" + tooltip + "\" tailtooltip=\"" + tooltip + "\" URL=\"" + hrefAction + "\"" +  // Use URL for embedding clickable actions
