@@ -269,8 +269,8 @@
 # Warning messages related to distributed systems
 
 7002: 4, "https://manual.umple.org/?PageBeingDeveloped.html", Distributed class '{0}' has an association with non-distributed class '{1}'. ;
-7001: 4, "https://manual.umple.org/?PageBeingDeveloped.html, System is distributed but class '{0}' has a static attribute {1}. This might result in multiple instances;
-7003: 4, "https://manual.umple.org/?PageBeingDeveloped.html, Distributed class '{0}' has no associations {1} It is better to define it as regular class if it is not called remotely;
+7001: 4, "https://manual.umple.org/?PageBeingDeveloped.html", System is distributed but class '{0}' has a static attribute {1}. This might result in multiple instances;
+7003: 4, "https://manual.umple.org/?PageBeingDeveloped.html", Distributed class '{0}' has no associations {1} It is better to define it as regular class if it is not called remotely;
 
 # Special testing messages for debugging
 8001: 1, "https://manual.umple.org/?PageBeingDeveloped.html", Debug error : '{0}' ;
