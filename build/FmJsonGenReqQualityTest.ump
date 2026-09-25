@@ -1,0 +1,24 @@
+req Speed quality {
+  High {}
+  Medium {}
+  Low {}
+}
+
+req Security quality {
+  Perfect {}
+  Risky {}
+}
+
+implementsReq Speed(High), Security(Perfect);
+mixset DesignA {
+  isFeature;
+  class CarA {}
+}
+
+implementsReq Speed(Medium);
+mixset DesignB {
+  isFeature;
+  class CarB {}
+}
+
+require [DesignA or DesignB];
