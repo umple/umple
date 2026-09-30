@@ -162,6 +162,26 @@ class UmpleInternalParser
     getParseResult().addErrorMessage(new ErrorMessage(errorCode,position,messages));
   }
   
+  // Issue 2521: names differing only in case collide on case-insensitive file systems
+  // and in generated accessors such as setApple/setApPle. namePositions keeps declaration
+  // order; the warning points at the first name that clashes with an earlier one.
+  private void checkNamesDifferOnlyByCase(String kind, Map<String, Position> namePositions)
+  {
+    Map<String, List<String>> groups = new TreeMap<String, List<String>>(String.CASE_INSENSITIVE_ORDER);
+    for (String name : namePositions.keySet())
+    {
+      groups.computeIfAbsent(name, k -> new ArrayList<String>()).add(name);
+    }
+    for (List<String> group : groups.values())
+    {
+      if (group.size() > 1)
+      {
+        Position position = namePositions.get(group.get(1));
+        setFailedPosition(position == null ? new Position("", 0, 0, 0) : position, 107, kind, String.join(", ", group));
+      }
+    }
+  }
+
   // Generate a generic error for debug purposes that just contains the string s
   public void emitDebugError(String s) {
     setFailedPosition(new Position("debug",0,0,0), 8001, s);
@@ -469,6 +489,8 @@ class UmpleInternalParser
       if (getParseResult().getWasSuccess())
       {
         checkMixsetsNotUsed();
+        //Issue 2521
+        checkMixsetNamesDifferOnlyByCase();
       } 
     }
     // We have to look at the error messages again to see if

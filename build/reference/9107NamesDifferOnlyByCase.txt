@@ -1,0 +1,38 @@
+W107 Names Differ Only By Case
+Errors and Warnings 100-999
+noreferences
+
+@@description
+
+<h2>
+Umple semantic warning reported when two or more classes, attributes of the same class, or mixsets have names that differ only in case
+</h2>
+
+<p>Names such as <i>Ping</i> and <i>PinG</i>, or <i>apple</i> and <i>apPle</i>, are distinct identifiers
+to Umple and to languages such as Java, but they are easily confused by people and can lead to defects
+(see <a href="https://cwe.mitre.org/data/definitions/178.html">CWE-178</a>).
+They also cause concrete problems in generated code. Each class becomes a file named after the class,
+so on case-insensitive file systems such as the defaults on Windows and macOS one class file overwrites the other.
+Attribute names are capitalized to form method names, so <i>apple</i> and <i>apPle</i> produce
+<i>setApple</i> and <i>setApPle</i>, which PHP treats as the same method.
+Mixsets named, for example, <i>M1</i> and <i>m1</i> are separate mixsets, and a use statement that names one of them does not include the other.
+</p>
+
+<p>The message lists all the names that clash and points at the first of them that duplicates an earlier one.
+Attributes are only compared within one class; the same letters in different classes are fine.
+When the names differ only in the case of their first letter, such as <i>attr</i> and <i>Attr</i>, the generated methods are identical
+and error <a href="E048DuplicateGeneratedMethod.html">E048</a> is reported as well.
+To avoid the message, rename the elements so their names differ by more than their case.
+</p>
+
+<p>The first example below is not compiled when the manual is built, since its generated code
+shows exactly these problems: on some file systems and in PHP it does not compile.
+</p>
+
+@@example
+@@source manualexamples/W107NamesDifferOnlyByCase1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/W107NamesDifferOnlyByCase2.ump
+@@endexample

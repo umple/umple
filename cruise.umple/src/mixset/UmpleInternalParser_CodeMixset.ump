@@ -56,6 +56,7 @@ class UmpleInternalParser
 	depend cruise.umple.compiler.UmpleFile;
 	depend  java.util.stream.*;
 	List<ReqImplementation> ReqImpMixset= new ArrayList<ReqImplementation>();
+  Map<String, Position> mixsetDeclarations = new LinkedHashMap<String, Position>(); // Issue 2521: first declaration of each mixset, in the order analyzed
   
   Map<String, Boolean> parsedUmpfiles = new HashMap<>(); // The key is to store names of parsed umple files. The value is to specify if fully parsed file (true) or partially (false). 
 
@@ -317,6 +318,7 @@ class UmpleInternalParser
 
   private Mixset analyzeMixset(Token token){
     String mixsetName = token.getValue("mixsetName");
+    mixsetDeclarations.putIfAbsent(mixsetName, token.getPosition());
     // check if the mixset is was not added before
     Mixset mixset = model.getMixset(mixsetName);
     
@@ -633,6 +635,29 @@ class UmpleInternalParser
         setFailedPosition(wPosition,1513, aMixset.getName(),""+ aMixset.getUseUmpleLine());
         }
     }
+  }
+
+  // Issue 2521: the model holds mixsets in the order of their first mention, often a use
+  // statement, so declarations are taken in the order analyzed. Mixsets only named in a
+  // use statement come first, so that a clash points at a declaration when there is one.
+  private void checkMixsetNamesDifferOnlyByCase() {
+    Map<String, Position> mixsetPositions = new LinkedHashMap<String, Position>();
+    for (MixsetOrFile m : getModel().getMixsetOrFiles())
+    {
+      if (m.getIsMixset() && !mixsetDeclarations.containsKey(m.getName()))
+      {
+        mixsetPositions.put(m.getName(), m.getUseUmpleFile() == null ? null : new Position(m.getUseUmpleFile().getFileName(), m.getUseUmpleLine(), 0, 0));
+      }
+    }
+    for (Map.Entry<String, Position> declaration : mixsetDeclarations.entrySet())
+    {
+      // a use statement such as use !m1 removes a declared mixset from the model
+      if (getModel().getMixset(declaration.getKey()) != null)
+      {
+        mixsetPositions.put(declaration.getKey(), declaration.getValue());
+      }
+    }
+    checkNamesDifferOnlyByCase("mixsets", mixsetPositions);
   }
 
 }
