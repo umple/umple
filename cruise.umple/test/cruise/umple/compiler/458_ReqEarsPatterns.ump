@@ -1,0 +1,43 @@
+// Ubiquitous
+req E1 ears {
+  system { mobile phone }
+  shall { have a mass of less than 150 grams }
+}
+
+// Event-driven
+req E2 ears {
+  when { mute is selected }
+  system { laptop }
+  shall { suppress all audio output }
+}
+
+// State-driven
+req E3 ears {
+  while { there is no card in the ATM }
+  system { ATM }
+  shall { display 'insert card to begin' }
+}
+
+// Optional feature
+req E4 ears {
+  where { the car has a sunroof }
+  system { car }
+  shall { have a sunroof control panel on the driver door }
+}
+
+// Unwanted behaviour
+req E5 ears {
+  if { an invalid credit card number is entered }
+  system { website }
+  shall { display 'please re-enter credit card details' }
+}
+
+// Complex, with every clause
+req E6 ears {
+  where { the aircraft has thrust reversers }
+  while { the aircraft is on ground }
+  when { reverse thrust is commanded }
+  if { an engine has failed }
+  system { engine control system }
+  shall { enable reverse thrust on the working engine only }
+}

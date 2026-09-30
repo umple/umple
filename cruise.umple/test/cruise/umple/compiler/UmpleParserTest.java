@@ -3275,6 +3275,26 @@ public void braceMismatch_filenameUsesBasename() {
     Assert.assertEquals(1, useCase.numberOfParentUseCases());
     Assert.assertEquals("UC1", useCase.getParentUseCase(0));
   }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsPlain()
+  {
+    assertNoWarningsParse("458_ReqEarsPlain.ump");
+    Assert.assertEquals("ears", model.getAllRequirements().get("E7").getLanguage());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsPatterns()
+  {
+    assertNoWarningsParse("458_ReqEarsPatterns.ump");
+    Assert.assertEquals("ears", model.getAllRequirements().get("E6").getLanguage());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqNormalStillWorksAfterEarsGrammar()
+  {
+    assertNoWarningsParse("458_ReqNormalStillWorksAfterEars.ump");
+  }
   @Test
   public void associationName()
   {
