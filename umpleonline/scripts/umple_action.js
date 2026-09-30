@@ -1495,7 +1495,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 
           var assocState=function (event){
               let targ=event.target;
-              while(targ.parentElement.id!="graph0"){
+              while(targ.parentElement.id!="graph0" && targ.tagName!="TD"){
                 targ=targ.parentNode;
               }
               let elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
@@ -1522,6 +1522,10 @@ Action.drawInputState = function(inputType,stateCode,stateName){
               for(let q=0;q<others.length;q++){
                 others[q].removeEventListener("mousedown",assocState);
               }  
+              others=document.querySelectorAll("#htmlCanvas td.state-header[href]");
+              for(let q=0;q<others.length;q++){
+                others[q].removeEventListener("mousedown",assocState);
+              }
             };
           //add event listener to Graphviz nodes for left click
           var elems=document.getElementsByClassName("node");
@@ -1532,6 +1536,10 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           for(let i=0;i<elems.length;i++){
             elems[i].addEventListener("mousedown", assocState);
           }       
+          elems=document.querySelectorAll("#htmlCanvas td.state-header[href]");
+          for(let i=0;i<elems.length;i++){
+            elems[i].addEventListener("mousedown", assocState);
+          }
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
@@ -1672,7 +1680,7 @@ Action.drawStateMenu = function(){
   Action.removeContextMenu();
   var targ=event.target;
   //iterate up to top of graph elements
-  while (targ && targ.parentElement && targ.parentElement.id != "graph0") {
+  while (targ && targ.parentElement && targ.parentElement.id != "graph0" && targ.tagName != "TD") {
     targ = targ.parentNode;
   }
   //grabs state name
@@ -6451,6 +6459,31 @@ Action.updateUmpleDiagramCallback = function(response)
     });
     }
   }  
+
+  if(Page.useStateTables){
+    // Give state table rows the same state identifier and menu as Graphviz state nodes
+    jQuery("#htmlCanvas .statetable").each(function() {
+      // Composite tables list combinations of concurrent states, not individual states
+      if(jQuery(this).parent().prevAll("h3").first().text().indexOf("Composite") == 0) return;
+      var heading = jQuery(this).parent().prevAll("h2").first().text().split(" ");
+      var rows = jQuery(this).find("tr");
+      var names = [];
+      for(var i = 1; i < rows.length; i++) {
+        var entry = jQuery(rows[i]).find("td")[0];
+        var parentId = parseInt(jQuery(entry).attr("data-parent"));
+        names.push((isNaN(parentId) ? "" : names[parentId] + ".") + jQuery(entry).text().replace(/^(- )*/, ""));
+        entry.setAttribute("href", "javascript:Action.stateClicked(\"" + heading[1] + "^*^" + heading[4] + "^*^" + names[i-1] + "\")");
+        entry.addEventListener("contextmenu", function(event){
+          event.preventDefault();
+          Action.drawStateMenu(event);
+        });
+        entry.addEventListener("dblclick", function(event){
+          event.preventDefault();
+          Action.drawStateMenu(event);
+        });
+      }
+    });
+  }
 }
 
 
