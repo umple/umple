@@ -2,27 +2,12 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Example():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class Example:
     def __init__(self):
         pass
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def delete(self):
         pass
 
-    #*
-    
-    #   * R01: this is a requirement for a method
-    
-    #   
-
     def methodName(self):
-        
+        pass

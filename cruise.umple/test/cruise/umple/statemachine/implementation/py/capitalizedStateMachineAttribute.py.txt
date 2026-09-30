@@ -1,35 +1,25 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from enum import Enum, auto
+from enum import Enum
 
-class Garage():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Garage State Machines
+
+class Garage:
     class GarageDoor(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
-        def __str__(self):
-            return str(self.value)
 
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+        def __str__(self):
+            return self.value
+
     def __init__(self):
         self._garageDoor = None
+        self._deleted = False
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def getGarageDoorFullName(self):
-        answer = self._garageDoor.__str__()
+        answer = str(self._garageDoor)
         return answer
 
     def getGarageDoor(self):
         return self._garageDoor
 
     def delete(self):
-        pass
-
+        self._deleted = True

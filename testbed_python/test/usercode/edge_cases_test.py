@@ -1,0 +1,86 @@
+import unittest
+
+# Test classes are imported dynamically
+# Must be generated into ImportModules' namespace then imported
+from ImportModules import importModules
+
+importModules(["LoudGreeter", "Checks", "AlwaysEqual", "Pair", "CountedChild", "ContractCalls", "ContractCallsChild",
+               "KeyedPart", "PartBox", "PartBoxPair"], ["usercode", "test"])
+from ImportModules import *
+
+
+# Edge cases of user methods and their contracts: dispatch, names, Java's arithmetic and identity.
+class EdgeCasesTest(unittest.TestCase):
+    def test_subclassOverloadsCallTheirParentsThroughSuper(self):
+        greeter = LoudGreeter.LoudGreeter()
+        self.assertEqual("hello 3!", greeter.greet(3))
+        self.assertEqual("hello you!", greeter.greet("you"))
+
+    def test_enumerationParameterIsDispatchedByType(self):
+        checks = Checks.Checks()
+        self.assertEqual("color Red", checks.paint(Checks.Checks.Color.Red))
+        self.assertEqual("number", checks.paint(2))
+        with self.assertRaises(TypeError):
+            checks.paint(object())
+
+    def test_parameterNamedLikeItsClass(self):
+        self.assertEqual(4, Checks.Checks().twice(2))
+        with self.assertRaises(RuntimeError):
+            Checks.Checks().twice(0)
+
+    def test_listAndStringOperationsInContracts(self):
+        self.assertEqual(4, Checks.Checks().sizes(["a", "b"], "xy"))
+        for values, name in (([], "xy"), (["a"], "xy"), (["a", "b"], "x")):
+            with self.assertRaises(RuntimeError):
+                Checks.Checks().sizes(values, name)
+
+    def test_integerDivisionIsExact(self):
+        big = 2 ** 53 + 1
+        self.assertEqual(big, Checks.Checks().exact(big))
+
+    def test_remainderHasTheSignOfTheDividendAsInJava(self):
+        self.assertEqual(-3, Checks.Checks().notOddPositive(-3))
+        with self.assertRaises(RuntimeError):
+            Checks.Checks().notOddPositive(3)
+
+    def test_parametersNamedLikeTheReturnedValue(self):
+        pair = Pair.Pair(AlwaysEqual.AlwaysEqual(), AlwaysEqual.AlwaysEqual())
+        self.assertEqual(5, pair.sum(2, 3))
+        self.assertEqual((2, 3), pair.seen)
+
+    def test_modelObjectsReturnedByCallsAreComparedByIdentity(self):
+        self.assertEqual(1, Pair.Pair(AlwaysEqual.AlwaysEqual(), AlwaysEqual.AlwaysEqual()).distinct())
+        same = AlwaysEqual.AlwaysEqual()
+        with self.assertRaises(RuntimeError):
+            Pair.Pair(same, same).distinct()
+
+    def test_inheritedAttributeInAContract(self):
+        self.assertEqual(1, CountedChild.CountedChild().positive())
+
+    def test_integralCallsDivideAndTakeTheRemainderAsInJava(self):
+        calls = ContractCalls.ContractCalls()
+        self.assertEqual(7, calls.half())
+        self.assertEqual(7, calls.remainder())
+        calls.setN(3)
+        with self.assertRaises(RuntimeError):
+            calls.half()
+        with self.assertRaises(RuntimeError):
+            calls.remainder()
+
+    def test_remainderEvaluatesACallOnce(self):
+        calls = ContractCalls.ContractCalls()
+        self.assertEqual(7, calls.bumpedRemainder())
+        self.assertEqual(1, calls.getBumps())
+
+    def test_inheritedIntegralCalls(self):
+        child = ContractCallsChild.ContractCallsChild()
+        self.assertEqual(7, child.inherited())
+        self.assertEqual(1, child.getBumps())
+
+    def test_modelObjectsReachedThroughGettersAreComparedByIdentity(self):
+        distinct = PartBoxPair.PartBoxPair(PartBox.PartBox(KeyedPart.KeyedPart(1)), PartBox.PartBox(KeyedPart.KeyedPart(1)))
+        self.assertEqual(distinct.getOne().getPart(), distinct.getTwo().getPart())
+        self.assertEqual(7, distinct.distinct())
+        part = KeyedPart.KeyedPart(1)
+        with self.assertRaises(RuntimeError):
+            PartBoxPair.PartBoxPair(PartBox.PartBox(part), PartBox.PartBox(part)).distinct()

@@ -27,12 +27,43 @@ mixset Trait {
     public void findKeywordAndReplace(String keyword, CodeBlock cBlock, StateMachine inStateMachine){
       if(keyword==null || keyword=="") return;
         for (String language : codes.keySet()) {
+          if ("Python".equals(language)) {
+            String composed = cBlock.codes.get(language) == null ? null
+              : pythonTraitCode(keyword, cBlock, inStateMachine.getRootStateMachine().getUmpleTrait().getName());
+            if (composed != null) {
+              codes.put(language, composed);
+            }
+            continue;
+          }
           String replacement=System.lineSeparator()+"\t\t//This part of code comes from the trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' -> begins"+System.lineSeparator()+"\t\t";
           replacement = replacement+cBlock.codes.get(language).replace(keyword, "");
           replacement=replacement+System.lineSeparator()+"\t\t//The code coming from trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' ends here"+System.lineSeparator()+"\t\t";
           codes.put(language,codes.get(language).replace(keyword,replacement+keyword)) ;
         }
       } 
+
+    // Python has no statement brackets, so the trait's code goes in as lines at the indentation of
+    // the statement the keyword stands for, re-indented as the Python generator re-indents native
+    // code, and what follows the keyword on its line starts a new line. The class's code is first
+    // brought to a known indentation, which becomes its first line's. null when the keyword is not a
+    // statement of the class's code (only text in a string or a comment).
+    private String pythonTraitCode(String keyword, CodeBlock cBlock, String trait){
+      String code = PythonGenerator.pythonBlock(codes.get("Python"), getFirstLineIndent("Python"), "").substring(1);
+      int at = PythonGenerator.codeAt(code, keyword);
+      if (at < 0) {
+        return null;
+      }
+      if (authoredIndents.containsKey("Python")) {
+        authoredIndents.put("Python", "");
+      }
+      int lineStart = code.lastIndexOf('\n', at) + 1;
+      String indent = code.substring(lineStart, at).matches("[ \t]*") ? code.substring(lineStart, at) : code.substring(lineStart).replaceFirst("(?s)^([ \t]*).*", "$1");
+      String traitCode = PythonGenerator.pythonBlock(removePythonKeyword(cBlock.codes.get("Python"), keyword), cBlock.getFirstLineIndent("Python"), indent);
+      String after = code.substring(at + keyword.length()).replaceFirst("^[ \t]+", "");
+      return code.substring(0, at) + "#This part of code comes from the trait '" + trait + "' -> begins" + traitCode
+        + "\n" + indent + "#The code coming from trait '" + trait + "' ends here\n" + indent + keyword
+        + (after.isEmpty() || after.startsWith("\n") ? after : "\n" + indent + after);
+    }
     
   }
 } 

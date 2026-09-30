@@ -130,6 +130,9 @@ class UmpleInternalParser
 
     if (shouldGenerate && getParseResult().getWasSuccess())
     {
+      // Generators report into the model's last result; after mixset fragments are parsed that can be
+      // another result than the one returned here, and their messages would be lost.
+      model.setLastResult(getParseResult());
       String generatorError = model.generate();
       if(generatorError != null) {
         setFailedPosition(new Position("",0,0,0),9200,generatorError);

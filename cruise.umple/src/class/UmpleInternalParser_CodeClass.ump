@@ -22,6 +22,9 @@ class UmpleInternalParser
   internal AssociationVariable[] unlinkedAssociationVariables;
   internal Association[] unlinkedAssociations;
   internal Map<Position,String> positionToClassNameReference = new HashMap<Position, String>();
+  // The code blocks of every declaration of each method of a class, in order, from which mergeBlocks
+  // makes the method. Keyed by the method object: equal methods of other classes are other methods.
+  internal Map<Method,List<MethodBlock>> methodBlocks = new IdentityHashMap<Method,List<MethodBlock>>();
   internal Map<UmpleClassifier,List<Token>> unanalyzedInvariants = new HashMap<UmpleClassifier,List<Token>>();
   internal Map<UmpleClassifier,List<String>> unlinkedExtends = new HashMap<UmpleClassifier,List<String>>();
   internal Map<UmpleClassifier,List<Token>> unlinkedExtendsTokens = new HashMap<UmpleClassifier,List<Token>>();
@@ -3707,6 +3710,228 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     analyzeMethod(method, uElement, false);
   }
 
+  // One code block of a method's declaration, for one or more languages ("" is untagged): its code as
+  // written, where it is, and its pre- and postconditions with the languages they were written for
+  private static class MethodBlock
+  {
+    final CodeBlock code = new CodeBlock();
+    final Map<String,Position> positions = new HashMap<String,Position>();
+    final List<ConstraintTree> contracts;
+    final List<List<String>> contractLanguages = new ArrayList<List<String>>();
+
+    MethodBlock(List<String> languages, String text, String firstLineIndent, Position position, List<ConstraintTree> contracts)
+    {
+      for (String language : languages)
+      {
+        code.setAuthoredCode(language, text, firstLineIndent);
+        positions.put(language, position);
+      }
+      this.contracts = new ArrayList<ConstraintTree>(contracts);
+      for (ConstraintTree contract : contracts)
+      {
+        contractLanguages.add(new ArrayList<String>(Arrays.asList(bodyLanguages(contract))));
+      }
+    }
+
+    // Whether the block is for language and has code
+    boolean hasCode(String language)
+    {
+      return code.isAuthored(language) && !code.getCode(language).trim().isEmpty();
+    }
+
+    // Whether the block is a body for language, possibly empty, rather than conditions with no code
+    boolean hasBody(String language)
+    {
+      return hasCode(language) || code.isAuthored(language) && contracts.isEmpty();
+    }
+  }
+
+  private static String[] bodyLanguages(ConstraintTree contract)
+  {
+    return contract instanceof Precondition ? ((Precondition) contract).getBodyLanguages()
+      : contract instanceof Postcondition ? ((Postcondition) contract).getBodyLanguages() : new String[0];
+  }
+
+  /*
+   * Makes method from the blocks of all its declarations, whatever their order (#1488, #2250). Each
+   * language ("" for the untagged body) takes the first block with code for it, or an empty body when
+   * none has code; another body for it, from the declaration whose blocks start at first, is reported
+   * and disregarded. A language with a block of conditions but no body of its own takes the untagged
+   * body as its own entry, so those conditions go with it alone. A pre- or postcondition goes with
+   * the body of its block, and the untagged body's also with the languages that take it; those of an
+   * untagged block with no code go with every body; those of a disregarded body are dropped. Once
+   * the method has a body for some language, a block with conditions only is no body: a language with
+   * neither its own body nor an untagged one has no method.
+   */
+  private void mergeBlocks(UmpleClass uClass, Method method, List<MethodBlock> blocks, int first, Method redeclared)
+  {
+    CodeBlock code = method.getMethodBody().getCodeblock();
+    Map<String,Position> positions = method.getMethodBody().getImplementationPositions();
+    List<String> languages = new ArrayList<String>();
+    for (MethodBlock block : blocks)
+    {
+      for (String language : block.code.getLanguages())
+      {
+        if (!languages.contains(language)) languages.add(language);
+      }
+    }
+
+    Map<String,MethodBlock> bodies = new HashMap<String,MethodBlock>();
+    for (String language : languages)
+    {
+      for (MethodBlock block : blocks)
+      {
+        MethodBlock chosen = bodies.get(language);
+        if (block.hasBody(language) && (chosen == null || block.hasCode(language) && !chosen.hasCode(language)))
+        {
+          bodies.put(language, block);
+        }
+      }
+    }
+    // A body of the latest declaration kept out by one of an earlier declaration, unless one with code
+    // before it in the same declaration keeps it out: that duplicate was reported as it was read
+    for (int i = first; redeclared != null && i < blocks.size(); i++)
+    {
+      for (String language : blocks.get(i).code.getLanguages())
+      {
+        MethodBlock chosen = bodies.get(language);
+        boolean reported = false;
+        for (int j = first; j < i; j++)
+        {
+          reported = reported || blocks.get(j).hasCode(language);
+        }
+        if (blocks.get(i).hasBody(language) && chosen != blocks.get(i) && blocks.indexOf(chosen) < first && !reported)
+        {
+          reportDisregardedBody(uClass, method, redeclared, language, chosen.positions.get(language), blocks.get(i).positions.get(language),
+            blocks.get(i).hasCode(language));
+        }
+      }
+    }
+
+    MethodBlock untagged = bodies.get("");
+    List<String> takingUntagged = new ArrayList<String>();
+    for (String language : languages)
+    {
+      MethodBlock body = bodies.get(language);
+      MethodBlock written = body;
+      for (int i = 0; written == null && i < blocks.size(); i++)
+      {
+        if (blocks.get(i).code.isAuthored(language)) written = blocks.get(i);
+      }
+      if (body == null && untagged != null && !language.isEmpty())
+      {
+        // Not written for language: a body declared later for it replaces this one
+        CodeBlock fallback = new CodeBlock();
+        fallback.setCode(language, untagged.code.getCode(""));
+        code.copyCode(language, fallback);
+        positions.put(language, untagged.positions.get(""));
+        takingUntagged.add(language);
+      }
+      else if (body == null && !bodies.isEmpty())
+      {
+        // Conditions alone are no body, so the language has none
+        code.copyCode(language, new CodeBlock());
+      }
+      else
+      {
+        code.copyCode(language, written.code);
+        positions.put(language, written.positions.get(language));
+      }
+    }
+
+    for (MethodBlock block : blocks)
+    {
+      for (int i = 0; i < block.contracts.size(); i++)
+      {
+        List<String> targets = new ArrayList<String>();
+        for (String language : block.contractLanguages.get(i))
+        {
+          if (!block.hasBody(language))
+          {
+            targets.addAll(language.isEmpty() ? code.getLanguages() : Arrays.asList(language));
+          }
+          else if (bodies.get(language) == block)
+          {
+            targets.add(language);
+            if (language.isEmpty()) targets.addAll(takingUntagged);
+          }
+        }
+        ConstraintTree contract = block.contracts.get(i);
+        for (String language : targets)
+        {
+          if (contract instanceof Precondition && ((Precondition) contract).indexOfBodyLanguage(language) < 0) ((Precondition) contract).addBodyLanguage(language);
+          if (contract instanceof Postcondition && ((Postcondition) contract).indexOfBodyLanguage(language) < 0) ((Postcondition) contract).addBodyLanguage(language);
+        }
+        keepMethodContract(uClass, contract, method, targets);
+      }
+    }
+  }
+
+  // Reports the body of a redeclared method written at disregarded because the method has one for
+  // language l already, written at existing: warning 49, error 71 when the return types differ,
+  // error 1009 for a getter or setter
+  private void reportDisregardedBody(UmpleClass uClass, Method actualMethod, Method aMethod, String l, Position existing,
+    Position disregarded, boolean hasCode)
+  {
+    if (isGetterSetter(actualMethod)) {
+      String methodName = aMethod.getName();
+      String attributeName = methodName.substring(3,methodName.length()).toLowerCase();
+      getParseResult().addErrorMessage(new ErrorMessage(1009, aMethod.getPosition(), methodName, attributeName, uClass.getName()));
+    }
+    //Issue 771
+    else if(uClass.hasSameType(aMethod)) 
+    {
+      //Issue 1488: an untagged body with no code disregarded is no warning
+      if (hasCode || !l.isEmpty())
+      {
+        getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
+              aMethod.getName(),uClass.getName(), existing.getLineNumber()+"", existing.getFilename(),
+              disregarded.getLineNumber()+"", aMethod.getPosition().getFilename(), l));
+      }
+    }
+    else
+    {
+      getParseResult().addErrorMessage(new ErrorMessage(71,aMethod.getPosition(),
+              aMethod.getName(),uClass.getName(), existing.getLineNumber()+"", existing.getFilename(),
+              disregarded.getLineNumber()+"", aMethod.getPosition().getFilename(), l));
+    }
+  }
+
+  /*
+   * Keeps a pre- or postcondition only with those of its bodies that method takes, and makes it
+   * belong to method. One left with no body was declared with disregarded code, so it is removed.
+   * Returns whether it was kept.
+   */
+  private boolean keepMethodContract(UmpleClass uClass, ConstraintTree contract, Method method, List<String> bodies)
+  {
+    boolean kept = false;
+    if (contract instanceof Precondition)
+    {
+      Precondition condition = (Precondition) contract;
+      for (String body : condition.getBodyLanguages())
+      {
+        if (!bodies.contains(body)) condition.removeBodyLanguage(body);
+      }
+      condition.setMethod(method);
+      kept = condition.hasBodyLanguages();
+    }
+    else if (contract instanceof Postcondition)
+    {
+      Postcondition condition = (Postcondition) contract;
+      for (String body : condition.getBodyLanguages())
+      {
+        if (!bodies.contains(body)) condition.removeBodyLanguage(body);
+      }
+      condition.setMethod(method);
+      kept = condition.hasBodyLanguages();
+    }
+    if (!kept)
+    {
+      uClass.removeMethodContract(contract);
+    }
+    return kept;
+  }
+
   /*
    * Analyzes a token flagged to be a method in which case the data that makes up the method will be populated into a
    * method instance and added to an Umple element (which could be an Umple class).
@@ -3742,13 +3967,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     // Go through all the sub tokens of the "method token" to obtain details about it, using them to populate a method instance.
     List<String> langs = new ArrayList<String>();
     CodeBlock cb = new CodeBlock("");
-    String iValue = null;
     Position iPosition = null;
   MethodBody meth = new MethodBody(cb);
     
     //559b
     Map<String,Position> implementationPositions = new HashMap<String,Position>();
     List<String> langsImplementation = new ArrayList<String>();
+
+    // Pre/postconditions of this declaration, those of the body block being read, and each block
+    List<ConstraintTree> contracts = new ArrayList<ConstraintTree>();
+    List<ConstraintTree> blockContracts = new ArrayList<ConstraintTree>();
+    List<MethodBlock> blocks = new ArrayList<MethodBlock>();
     
     boolean canClear = false;
     for(Token token : method.getSubTokens())
@@ -3812,40 +4041,53 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       else if (token.is("code"))
       {        
+        // A block holding only conditions is no body, so it never duplicates one
+        boolean isBody = !token.getValue().trim().isEmpty() || blockContracts.isEmpty();
         if(langs.isEmpty())
         {
+          String methodCode = token.getValue();
+          String indent = token.getFirstLineIndent();
           if( (cb.getCode("") != null) && (!cb.getCode("").equals("")) && (!cb.getCode("").equals("\n")))   
-          getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
+          {
+            if (isBody)
+              getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
                 aMethod.getName(),aMethod.getClass().getName(), implementationPositions.get("").getLineNumber()+"", implementationPositions.get("").getFilename(),
                 token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), ""));
+          }
           else
           {
-            String methodCode = token.getValue();
             // process mixsets inside code 
             mixset Mixset {
               methodCode = processInlineMixset(token.getValue(), meth);
               checkLabelDoublication(aMethod.getName(),methodCode,token);
             } // end of MIXSET 
-            cb.setCode(methodCode);
+            indent = firstLineIndent(token, methodCode);
+            cb.setAuthoredCode("", methodCode, indent);
             aMethod.setCodePosition(token.getPosition());
             
             //559b
             implementationPositions.put("", token.getPosition());
             langsImplementation.add("");
           }
+          blocks.add(new MethodBlock(Arrays.asList(""), methodCode, indent, token.getPosition(), blockContracts));
         }
         else
         {
+          blocks.add(new MethodBlock(langs, token.getValue(), token.getFirstLineIndent(), iPosition, blockContracts));
           for(String str: langs)
           {
             if( (cb.getCode(str) != null) && (!cb.getCode(str).equals("")) && (!cb.getCode(str).equals("\n")))    
-              getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
+            {
+              if (isBody)
+                getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
                       aMethod.getName(),aMethod.getClass().getName(), implementationPositions.get(str).getLineNumber()+"", implementationPositions.get(str).getFilename(),
                       token.getPosition().getLineNumber()+"", token.getPosition().getFilename(), str));
+            }
             else
             {
-            implementationPositions.put(iValue, iPosition);
-              cb.setCode(str,/*(cb.getCode(str)!=null?cb.getCode(str)+"\n":"")+*/ token.getValue());
+              // Every language of a multi-language block gets a position, or duplicate warnings fail
+              implementationPositions.put(str, iPosition);
+              cb.setAuthoredCode(str, token.getValue(), token.getFirstLineIndent());
               if("Java".equals(str))
               {
                 aMethod.setCodePosition(token.getPosition());
@@ -3855,6 +4097,9 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           //559b
           langs.clear();
         }
+        // The block's conditions go with its bodies, as mergeBlocks decides
+        contracts.addAll(blockContracts);
+        blockContracts.clear();
         canClear = true;
       }
       else if (token.is("codeLang"))
@@ -3869,17 +4114,24 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         //559b
         langsImplementation.add(token.getValue());
         iPosition = token.getPosition();
-        iValue = token.getValue();
         //implementationPositions.put(token.getValue(), token.getPosition());
       }
       else if (token.is("precondition")){ 
         if (uElement instanceof UmpleClass){
-          analyzePrecondition(token, (UmpleClass) uElement, aMethod);
+          Precondition condition = analyzePrecondition(token, (UmpleClass) uElement, aMethod);
+          if (condition != null){
+            for (String lang : langs.isEmpty() ? Arrays.asList("") : langs) condition.addBodyLanguage(lang);
+            blockContracts.add(condition);
+          }
         }  
       }
       else if (token.is("postcondition")){ 
         if (uElement instanceof UmpleClass){
-          analyzePostcondition(token, (UmpleClass) uElement, aMethod);
+          Postcondition condition = analyzePostcondition(token, (UmpleClass) uElement, aMethod);
+          if (condition != null){
+            for (String lang : langs.isEmpty() ? Arrays.asList("") : langs) condition.addBodyLanguage(lang);
+            blockContracts.add(condition);
+          }
         }  
       }
     
@@ -3958,69 +4210,40 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       if(uClass.hasMethod(aMethod))
       {
         Method actualMethod = uClass.getMethod(aMethod);
-        
-        List<String> implementations = new ArrayList<String>();
-        
-        for(String l : langsImplementation)
-          if(actualMethod.getExistsInLanguage(l))
-            implementations.add(l);
-          else
-          {
-            if(!l.equals(""))
-              actualMethod.getMethodBody().setExtraCode(l, aMethod.getMethodBody().getExtraCode(l));
-            else
-            actualMethod.getMethodBody().setExtraCode("", aMethod.getMethodBody().getExtraCode(l));
-          
-            actualMethod.getMethodBody().getImplementationPositions().put(l, aMethod.getMethodBody().getImplementationPositions().get(l));
-          }
-          
-        if(!implementations.isEmpty())
+        List<MethodBlock> merged = methodBlocks.get(actualMethod);
+        if (merged != null)
         {
-          for(String l : implementations)
+          int first = merged.size();
+          merged.addAll(blocks);
+          mergeBlocks(uClass, actualMethod, merged, first, aMethod);
+        }
+        else
+        {
+          // A method the compiler made takes the bodies of languages it has none for, and replaces an
+          // empty one
+          CodeBlock actualCode = actualMethod.getMethodBody().getCodeblock();
+          List<String> acceptedBodies = new ArrayList<String>();
+          for(String l : langsImplementation)
           {
-            if(!isGetterSetter(actualMethod) && (actualMethod.getMethodBody().getExtraCode(l).equals("") || 
-              actualMethod.getMethodBody().getExtraCode(l).equals("\n"))&&
-             (!aMethod.getMethodBody().getExtraCode(l).equals("") &&
-                !aMethod.getMethodBody().getExtraCode(l).equals("\n")) &&
-               (!actualMethod.getMethodBody().getExtraCode(l).equals(aMethod.getMethodBody().getExtraCode(l))))
+            String existing = actualMethod.getMethodBody().getExtraCode(l);
+            String added = aMethod.getMethodBody().getExtraCode(l);
+            boolean exists = actualCode.hasAuthoredCode() ? actualCode.isAuthored(l) : actualMethod.getExistsInLanguage(l);
+            if(!exists || !isGetterSetter(actualMethod) && (existing.equals("") || existing.equals("\n"))
+              && !added.equals("") && !added.equals("\n") && !existing.equals(added))
             {
-              actualMethod.getMethodBody().setExtraCode(l, aMethod.getMethodBody().getExtraCode(l));
-              actualMethod.getMethodBody().getImplementationPositions().put(l, aMethod.getMethodBody().getImplementationPositions().get(l));
+              actualCode.copyCode(l, cb);
+              actualMethod.getMethodBody().getImplementationPositions().put(l, implementationPositions.get(l));
+              acceptedBodies.add(l);
             }
             else
             {
-              if (isGetterSetter(actualMethod)) {
-                String methodName = aMethod.getName();
-                String attributeName = methodName.substring(3,methodName.length()).toLowerCase();
-                getParseResult().addErrorMessage(new ErrorMessage(1009, aMethod.getPosition(), methodName, attributeName, uClass.getName()));
-              }
-              //Issue 771
-              else if(uClass.hasSameType(aMethod)) 
-              {
-                //Issue 1488
-                boolean raiseWarning49 = !method.getSubToken("code").getValue().equals("");
-                for (Token token : method.getSubTokens())
-                {
-                  if (token.is("codeLang"))
-                  {
-                    raiseWarning49 = true;
-                  }
-                }
-                if (raiseWarning49) // if no executable code, don't raise warning 49.
-                {
-                  getParseResult().addErrorMessage(new ErrorMessage(49,aMethod.getPosition(),
-                        aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
-                        aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
-                }
-              }
-              else
-              {
-                getParseResult().addErrorMessage(new ErrorMessage(71,aMethod.getPosition(),
-                        aMethod.getName(),uClass.getName(), actualMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", actualMethod.getMethodBody().getImplementationPositions().get(l).getFilename(),
-                        aMethod.getMethodBody().getImplementationPositions().get(l).getLineNumber()+"", aMethod.getPosition().getFilename(), l));
-              }
+              reportDisregardedBody(uClass, actualMethod, aMethod, l, actualMethod.getMethodBody().getImplementationPositions().get(l),
+                implementationPositions.get(l), !added.trim().isEmpty());
             }
-            
+          }
+          for(ConstraintTree contract : contracts)
+          {
+            keepMethodContract(uClass, contract, actualMethod, acceptedBodies);
           }
         }
         
@@ -4041,6 +4264,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         
         */
         
+      }
+      else
+      {
+        methodBlocks.put(aMethod, blocks);
+        mergeBlocks(uClass, aMethod, blocks, 0, null);
       }
 
            
@@ -4099,6 +4327,21 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       aMethod.addCommentAt(new Comment(msg),2);
           uTrait.addMethod(aMethod); 
         } 
+        else if (!aMethod.getIsAbstract())
+        {
+          // A later declaration of the same method adds its bodies for languages the first one has
+          // none for (as in a class), so a Java body and a Python body can be declared separately.
+          Method existing = uTrait.getMethod(aMethod);
+          CodeBlock existingCode = existing.getMethodBody().getCodeblock();
+          for (String l : langsImplementation)
+          {
+            if (existingCode.hasAuthoredCode() && !existingCode.isAuthored(l))
+            {
+              existingCode.copyCode(l, cb);
+              existing.getMethodBody().getImplementationPositions().put(l, aMethod.getMethodBody().getImplementationPositions().get(l));
+            }
+          }
+        }
 
         // Make class abstract if an abstract method was added
         if(uTrait.hasMethod(aMethod) && aMethod.getIsAbstract()) 
@@ -4648,14 +4891,14 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         }
         if(langs.size()==0)
         {
-          cb.setCode(aspectCode);
+          cb.setAuthoredCode("", aspectCode, firstLineIndent(sub, aspectCode));
           injection.setCodePosition(sub.getPosition());
         }
         else
         {
           for(String lang:langs)
             {
-                cb.setCode(lang,aspectCode);
+                cb.setAuthoredCode(lang, aspectCode, firstLineIndent(sub, aspectCode));
                 if("Java".equals(lang))
                 {
                   injection.setCodePosition(sub.getPosition());
@@ -5205,11 +5448,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       } else if(tkn.is("code")) {
         if(codelangs.isEmpty())
         {
-          languageSpecificCode.setCode(tkn.getValue());
+          languageSpecificCode.setAuthoredCode("", tkn.getValue(), tkn.getFirstLineIndent());
         } else {
           for(String lang: codelangs)
           {
-            languageSpecificCode.setCode(lang, tkn.getValue());
+            languageSpecificCode.setAuthoredCode(lang, tkn.getValue(), tkn.getFirstLineIndent());
           }
           codelangs.clear();
         }
@@ -6099,6 +6342,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
 
       cb.setCode(otherComment);
       cb.setCode("Ruby", rubyComment);
+      cb.setCode("Python", pythonLineComment(aClass, exception.getPosition()));
 
       aClass.appendExtraCode(true,cb);
       aClass.appendExtraCode("  "+extraCode+"\n");
@@ -6249,6 +6493,47 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
   }
   
+  // The source-line comment for extra code in Python, in the form Python's error mapping reads
+  private String pythonLineComment(UmpleClassifier classifier, Position position)
+  {
+    return "# line " + position.getLineNumber() + " \"" + classifier.getRelativePath(position.getFilename(), "Python") + "\"";
+  }
+
+  /*
+   * The block that precedes a piece of extra code, giving its source line in each target's comment
+   * syntax. For all but Python it also holds the line break and two-space indent the extra code has
+   * always been given, so that newExtraCodeBlock can hold the code exactly as parsed. Python's ends
+   * with "\n", as all generated Python does.
+   */
+  private CodeBlock newExtraCodeMarker(String otherComment, String rubyComment, String pythonComment)
+  {
+    String layout = System.getProperty("line.separator");
+    CodeBlock marker = new CodeBlock();
+    marker.setCode(otherComment + layout + "  ");
+    marker.setCode("Ruby", rubyComment + layout + "  ");
+    marker.setCode("Python", pythonComment + "\n");
+    return marker;
+  }
+
+  /*
+   * The indentation of the first line of token's code, as long as code (the token's value after
+   * inline mixsets are processed) still starts with that line; null otherwise.
+   */
+  private String firstLineIndent(Token token, String code)
+  {
+    String value = token.getValue();
+    int end = value.indexOf('\n');
+    return code.startsWith(end == -1 ? value : value.substring(0, end)) ? token.getFirstLineIndent() : null;
+  }
+
+  // The extra code of a token as written
+  private CodeBlock newExtraCodeBlock(Token token)
+  {
+    CodeBlock code = new CodeBlock();
+    code.setCode(token.getValue());
+    return code;
+  }
+
   private void analyzeExtraCode(Token token, UmpleClass aClass)
   {
     mixset StateMachine {
@@ -6262,16 +6547,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       String extraCodeLineNumberComment = " line " + token.getPosition().getLineNumber() + " " + aClass.getRelativePath( token.getPosition().getFilename(), "Java");
     String rubyComment = "#" + extraCodeLineNumberComment;
     String otherComment = "//" + extraCodeLineNumberComment;
+    String pythonComment = pythonLineComment(aClass, token.getPosition());
     if(aClass.hasExtraCode())
     {
       rubyComment = System.getProperty("line.separator") + rubyComment;
       otherComment = System.getProperty("line.separator") + otherComment;
+      pythonComment = System.getProperty("line.separator") + pythonComment;
     }
-      CodeBlock cb = new CodeBlock();
-      cb.setCode(otherComment);
-      cb.setCode("Ruby", rubyComment);
-      aClass.appendExtraCode(true,cb);
-      aClass.appendExtraCode("  " + token.getValue());
+      aClass.appendExtraCode(true,newExtraCodeMarker(otherComment, rubyComment, pythonComment));
+      aClass.appendExtraCode(true,newExtraCodeBlock(token));
       // Issue 516 Fix : UCOSP : Michael Kmicik
 
       setFailedPosition(token.getPosition(), 1007, token.getValue("name"));

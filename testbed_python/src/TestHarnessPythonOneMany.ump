@@ -1,0 +1,219 @@
+// Models for the Python-specific behaviour of associations whose one end is at most one and whose
+// other end is many: identity with keyed classes, tuple snapshots, rollback at bounds, duplicates
+// in batch setters, association classes, sorting, key guards, factories and deletion.
+namespace cruise.onemany;
+
+// Keyed classes on both sides: equal objects are still different links.
+class OmMentor {
+  Integer id;
+  key { id };
+  1 mentor -- * OmStudent students;
+}
+
+class OmStudent {
+  Integer id;
+  key { id };
+}
+
+class OmOptMentor {
+  Integer id;
+  key { id };
+  0..1 mentor -- * OmOptStudent students;
+}
+
+class OmOptStudent {
+  Integer id;
+  key { id };
+}
+
+// Batch setters of bounded ends whose other end is optional one.
+class OmBatchMentor {
+  0..1 mentor -- 2..4 OmBatchStudent students;
+}
+
+class OmBatchStudent {
+  Integer id;
+  key { id };
+}
+
+class OmNMentor {
+  0..1 mentor -- 2 OmNStudent students;
+}
+
+class OmNStudent {
+}
+
+// Factories: a bounded end returns None when full; an abstract class gets no factory.
+class OmFMentor {
+  1 mentor -- 0..2 OmFStudent students;
+}
+
+class OmFStudent {
+  name;
+}
+
+class OmCanvas {
+  1 board -- * OmShape shapes;
+}
+
+class OmShape {
+  abstract;
+}
+
+class OmCircle {
+  isA OmShape;
+}
+
+// An association class's key is its link: a second instance for the same pair is refused.
+class OmShow {
+  Integer number;
+}
+
+class OmViewer {
+  name;
+}
+
+associationClass OmTicket {
+  * OmShow;
+  * OmViewer;
+}
+
+// Key members cannot change once the hash is cached.
+class OmBus {
+}
+
+class OmSeat {
+  Integer n;
+  * seats -- 1 OmBus bus;
+  key { bus, n };
+}
+
+class OmTeam {
+  Integer id;
+  0..1 team -- * OmPlayer players;
+  key { id, players };
+}
+
+class OmPlayer {
+}
+
+class OmKmOwner {
+  Integer id;
+  1 owner -- * OmKmChild children;
+  key { id, children };
+}
+
+class OmKmChild {
+}
+
+// Ends Java writes through reflection: a frozen key member on either object is refused.
+class OmKbOwner {
+  0..1 owner -- 2..4 OmKbChild children;
+}
+
+class OmKbChild {
+  Integer id;
+  key { id, owner };
+}
+
+class OmKcOwner {
+  Integer id;
+  key { id, children };
+  0..1 owner -- 2..4 OmKcChild children;
+}
+
+class OmKcChild {
+}
+
+class OmGMentor {
+}
+
+class OmGStudent {
+  Integer id;
+  * students -- 0..1 OmGMentor mentor;
+  key { id, mentor };
+}
+
+// Compositions: a deleted part may already be gone from the whole's list.
+class OmWhole {
+  1 owner <@>- * OmPart parts;
+}
+
+class OmPart {
+}
+
+class OmHub {
+  * hubs <@>- 0..1 OmSpoke rim;
+}
+
+class OmSpoke {
+}
+
+// Sorted ends are kept in priority order after every add.
+class OmAcademy {
+  1 academy -- * OmPupil students sorted {id};
+}
+
+class OmPupil {
+  Integer id;
+  name;
+}
+
+class OmBatch {
+  0..1 batch -- 2..4 OmItem items sorted {priority};
+}
+
+class OmItem {
+  Integer priority;
+}
+
+// Moving between owners of an end with a lower bound and no upper bound.
+class OmMmMentor {
+  0..1 mentor -- 2..* OmMmStudent students;
+}
+
+class OmMmStudent {
+}
+
+// Before and after injections run around a change that happens, not around a refused one.
+class OmLogMentor {
+  String[] events;
+  0..1 mentor -- * OmLogStudent students;
+  before addStudent Python { self.addEvent("before add") }
+  after addStudent Python { self.addEvent("after add") }
+}
+
+class OmLogStudent {
+  String[] events;
+  before setMentor Python { self.addEvent("before set") }
+  after setMentor Python { self.addEvent("after set") }
+}
+
+class OmLogOwner {
+  String[] events;
+  0..1 owner -- 2..4 OmLogItem items;
+  before setItems Python { self.addEvent("before set items") }
+  after setItems Python { self.addEvent("after set items") }
+}
+
+class OmLogItem {
+}
+
+// Random operations must keep both sides of every link consistent, also when keys collide.
+class OmFzOwner {
+  Integer id;
+  key { id };
+  0..1 ownerA -- * OmFzA as;
+  0..1 ownerB -- 0..3 OmFzB bs;
+  0..1 ownerC -- 2..* OmFzC cs;
+  1 ownerD -- * OmFzD ds;
+  1 ownerE -- 0..2 OmFzE es;
+  1 ownerF -- 1..3 OmFzF fs;
+}
+
+class OmFzA { Integer id; key { id }; }
+class OmFzB { Integer id; key { id }; }
+class OmFzC { Integer id; key { id }; }
+class OmFzD { Integer id; key { id }; }
+class OmFzE { Integer id; key { id }; }
+class OmFzF { Integer id; key { id }; }

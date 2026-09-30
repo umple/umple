@@ -1,0 +1,48 @@
+class UmpleToPython {
+    // The state machine fields of the constructor's field block: each machine's state (with history
+    // for nested machines, and a visit counter where its setter needs one), each timer's handler,
+    // each activity's worker and the deleted flag.
+    constructor_StateMachineFields_All <<!<</*constructor_StateMachineFields_All*/>><<#
+{
+  for (StateMachine rootSm : uClass.getStateMachines())
+  {
+    realSb.append("\n        " + gen.smField(rootSm) + " = None");
+    String rootVisit = gen.visitField(uClass, rootSm);
+    if (rootVisit != null)
+    {
+      realSb.append("\n        " + rootVisit + " = 0");
+    }
+    for (StateMachine nestedSm : rootSm.getNestedStateMachines())
+    {
+      realSb.append("\n        " + gen.smField(nestedSm) + " = None");
+      String visit = gen.visitField(uClass, nestedSm);
+      if (visit != null)
+      {
+        realSb.append("\n        " + visit + " = 0");
+      }
+      if (nestedSm.getContainsHistoryState())
+      {
+        realSb.append("\n        " + gen.historyField(uClass, nestedSm, "H") + " = None");
+      }
+      if (nestedSm.getContainsDeepHistoryState())
+      {
+        realSb.append("\n        " + gen.historyField(uClass, nestedSm, "HStar") + " = None");
+      }
+    }
+  }
+  for (Transition timed : gen.timedTransitions(uClass))
+  {
+    realSb.append("\n        self." + gen.timerHandler(uClass, timed) + " = None");
+  }
+  for (Activity activity : gen.activities(uClass))
+  {
+    realSb.append("\n        self." + gen.activityWorker(uClass, activity) + " = None");
+  }
+  String deletedFlag = gen.deletedFlag(uClass);
+  if (deletedFlag != null)
+  {
+    realSb.append("\n        self." + deletedFlag + " = False");
+  }
+}
+#>>!>>
+}

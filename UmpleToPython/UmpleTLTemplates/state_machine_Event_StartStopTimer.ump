@@ -1,0 +1,36 @@
+class UmpleToPython {
+    // Starting a timer replaces any pending handler and publishes the new one before its timer
+    // starts, so even a zero delay finds it current; nothing starts on a deleted object.
+    state_machine_Event_StartStopTimer <<!<</*state_machine_Event_StartStopTimer*/>><<#
+  Event e = timed.getEvent();
+  StateMachine sm = timed.getFromState().getStateMachine();
+  String handler = "self." + gen.timerHandler(uClass, timed);
+  List<String> delayImports = new ArrayList<String>();
+  String delay = gen.timerDelay(uClass, timed, delayImports);
+  Set<String> locals = gen.localNames(delay, String.join("\n", delayImports));
+  String visit = gen.localName("visit", locals);
+  String delayLocal = gen.localName("delay", locals);
+#>>
+
+    def <<=gen.translate("eventStartMethod", e, sm)>>(self):<<#
+  for (String line : delayImports)
+  {
+    realSb.append("\n        " + line);
+  }
+  #>>
+        if self.<<=deletingFlag>>:
+            return
+        if <<=handler>> is not None:
+            <<=handler>>.stop()
+        <<=visit>> = <<=gen.visitField(uClass, sm)>>
+        <<=delayLocal>> = <<=delay>><<#
+  // Evaluating the delay can end this visit and publish a newer visit's handler.
+  realSb.append(gen.visitCheck(deletingFlag, gen.visitField(uClass, sm), visit, "        "));
+  #>>
+        <<=handler>> = __class__.<<=gen.timerHandlerClass(uClass)>>(self, <<=gen.pythonString(gen.translate("eventMethod", e, sm))>>, <<=delayLocal>>)
+        <<=handler>>.start()
+
+    def <<=gen.translate("eventStopMethod", e, sm)>>(self):
+        if <<=handler>> is not None:
+            <<=handler>>.stop()!>>
+}

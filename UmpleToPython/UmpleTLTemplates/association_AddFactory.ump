@@ -1,0 +1,48 @@
+class UmpleToPython {
+    // Java's add overload that creates the object to add from the constructor arguments of its class,
+    // passing this object for the end back here. It is the first numbered implementation of the add
+    // method; a bounded end returns None when full. An abstract class gets none, since it cannot be
+    // created. The class is always another one: Umple rejects a reflexive association whose one end
+    // is mandatory, and only such an end has a factory. The arguments follow the class's ordinary
+    // constructor, which is alternateConstructor when its constructor creates a one-to-one partner
+    // (constructor_DeclareOneToOne).
+    association_AddFactory <<!<</*association_AddFactory*/>><<#
+  if (!relatedAssociation.getUmpleClass().getIsAbstract())
+  {
+    String[] factoryClass = gen.classUse(uClass, av.getType(), gen.factoryArguments(av));
+    boolean createsPartner = model.getUmpleClass(av.getType()).getGeneratedClass().getLookup(PythonGenerator.MANDATORY_CONSTRUCTOR_PARAMETERS) != null;
+    #>>
+
+    def <<=gen.addImplementationNames(uClass, av).get(0)>>(self<<=gen.factoryParameters(av)>>):<<#
+    if (!av.isStar())
+    {
+      #>>
+        if self.<<=gen.translate("numberOfMethod", av)>>() >= self.<<=gen.translate("maximumNumberOfMethod", av)>>():
+            return None<<#
+    }
+    if (factoryClass[1] != null)
+    {
+      #>>
+        <<=factoryClass[1]>><<#
+    }
+    #>>
+        return <<=factoryClass[0]>><<=createsPartner ? ".alternateConstructor" : "">>(<<=gen.factoryArguments(av)>>)<<#
+  }
+#>>!>>
+
+    // The add taking the object: the second numbered implementation when there is a factory.
+    association_AddName <<!<</*association_AddName*/>><<=relatedAssociation.getUmpleClass().getIsAbstract() ? gen.translate("addMethod", av) : gen.addImplementationNames(uClass, av).get(1)>>!>>
+
+    // The add method's dispatcher when there is a factory; the class's binding helper comes with the
+    // user methods. The object's add is tried first, so None reaches it and fails there, as Java's
+    // null does, rather than creating an object.
+    association_AddDispatcher <<!<</*association_AddDispatcher*/>><<#
+  if (!relatedAssociation.getUmpleClass().getIsAbstract())
+  {
+    List<String> names = gen.addImplementationNames(uClass, av);
+    List<List<MethodParameter>> parameters = gen.addImplementationParameters(av);
+    realSb.append(gen.overloadDispatcher(uClass, gen.translate("addMethod", av), false, Arrays.asList(names.get(1), names.get(0)),
+      Arrays.asList(parameters.get(1), parameters.get(0))));
+  }
+#>>!>>
+}

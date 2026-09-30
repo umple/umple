@@ -1,0 +1,17 @@
+E9214 Python Self Parameter
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>A method or event has a parameter named self</h2>
+
+<p>In Python, <code>self</code> is the object a method is called on, so it cannot also be one of the method&apos;s own parameters. The Python generator reports this error at the method (for an event, at its class) and does not write a Python file for the class. Rename the parameter.</p>
+
+@@example
+@@source manualexamples/E9214PythonSelfParameter1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E9214PythonSelfParameter2.ump
+@@endexample

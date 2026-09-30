@@ -1,0 +1,17 @@
+E9217 Python Package Name
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>A namespace is not a valid Python package name</h2>
+
+<p>A class in a namespace is generated as a module of the package named by the namespace, so each part of the namespace must be a Python identifier: letters, digits and underscores, not starting with a digit, and not a Python keyword. Namespaces such as <code>releases.2024</code> or those taken from URLs cannot be imported, so their classes are reported and not generated. Use a namespace made of identifiers.</p>
+
+@@example
+@@source manualexamples/E9217PythonPackageName1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E9217PythonPackageName2.ump
+@@endexample

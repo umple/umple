@@ -1,0 +1,24 @@
+use association_GetOne.ump;
+use association_GetMany.ump;
+
+class UmpleToPython {
+    association_Get_All <<!<</*association_Get_All*/>><<#
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    String field = gen.field(av);
+    String parameter = gen.translate("parameterOne", av);
+    if (av.isOne())
+    {
+      #>><<@ UmpleToPython.association_GetOne >><<#
+    }
+    else if (av.isMany())
+    {
+      #>><<@ UmpleToPython.association_GetMany >><<#
+    }
+  }
+#>>!>>
+}

@@ -1,0 +1,7 @@
+// In a namespace the class gets its own package, so the
+// standard module stays reachable
+generate Python;
+namespace planner;
+class datetime {
+  Integer day;
+}

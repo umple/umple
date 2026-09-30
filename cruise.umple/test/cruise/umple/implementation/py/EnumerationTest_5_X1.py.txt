@@ -1,41 +1,24 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-import os
-from enum import Enum, auto
+from enum import Enum
 
-class X1():
-    #------------------------
-    # ENUMERATIONS
-    #------------------------
+
+class X1:
     class Month(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        January = "January"
+        February = "February"
+        March = "March"
+
         def __str__(self):
-            return str(self.value)
-        January = auto()
-        February = auto()
-        March = auto()
+            return self.value
 
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #X1 Attributes
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
     def __init__(self, aMonth):
-        self._month = None
         self._month = aMonth
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setMonth(self, aMonth):
-        wasSet = False
         self._month = aMonth
-        wasSet = True
-        return wasSet
+        return True
 
     def getMonth(self):
         return self._month
@@ -44,4 +27,6 @@ class X1():
         pass
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "month" + "=" + (((self.getMonth().__str__().replaceAll("  ", "    ")) if not self.getMonth() == self else "this") if not (self.getMonth() is None) else "null")
+        return (super().__str__() + "["
+                + "]"
+                + "\n  month=" + ("null" if self.getMonth() is None else "this" if self.getMonth() is self else str(self.getMonth()).replace("  ", "    ")))

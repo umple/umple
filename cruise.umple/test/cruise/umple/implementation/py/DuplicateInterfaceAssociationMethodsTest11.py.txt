@@ -1,0 +1,125 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from I import I
+
+
+class First(I):
+    def __init__(self):
+        self._seconds = []
+
+    def getSecond(self, index):
+        return self._seconds[index]
+
+    def getSeconds(self):
+        return tuple(self._seconds)
+
+    def numberOfSeconds(self):
+        return len(self._seconds)
+
+    def hasSeconds(self):
+        return len(self._seconds) > 0
+
+    def indexOfSecond(self, aSecond):
+        return next((i for i, x in enumerate(self._seconds) if x is aSecond), -1)
+
+    def isNumberOfSecondsValid(self):
+        return self.numberOfSeconds() >= __class__.minimumNumberOfSeconds() and self.numberOfSeconds() <= __class__.maximumNumberOfSeconds()
+
+    @staticmethod
+    def minimumNumberOfSeconds():
+        return 1
+
+    @staticmethod
+    def maximumNumberOfSeconds():
+        return 4
+
+    def addSecond1(self):
+        if self.numberOfSeconds() >= self.maximumNumberOfSeconds():
+            return None
+        from Second import Second
+        return Second(self)
+
+    def addSecond2(self, aSecond):
+        if any(x is aSecond for x in self._seconds):
+            return False
+        if self.numberOfSeconds() >= self.maximumNumberOfSeconds():
+            return False
+        existingFirst = aSecond.getFirst()
+        isNewFirst = existingFirst is not None and existingFirst is not self
+        if isNewFirst and existingFirst.numberOfSeconds() <= self.minimumNumberOfSeconds():
+            return False
+        if isNewFirst:
+            if not aSecond.setFirst(self):
+                return False
+        else:
+            self._seconds.append(aSecond)
+        return True
+
+    def addSecond(self, *args, **kwargs):
+        from Second import Second
+        bound = __class__._bindArguments(("aSecond",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or isinstance(bound[0], Second)):
+            return __class__.addSecond2(self, *bound)
+        bound = __class__._bindArguments((), False, args, kwargs)
+        if bound is not None:
+            return __class__.addSecond1(self, *bound)
+        raise TypeError("No method matches provided parameters")
+
+    def removeSecond(self, aSecond):
+        if aSecond.getFirst() is self:
+            return False
+        if self.numberOfSeconds() <= self.minimumNumberOfSeconds():
+            return False
+        index = next((i for i, x in enumerate(self._seconds) if x is aSecond), -1)
+        if index >= 0:
+            del self._seconds[index]
+        return True
+
+    def addSecondAt(self, aSecond, index):
+        if not self.addSecond2(aSecond):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfSeconds():
+            index = self.numberOfSeconds() - 1
+        del self._seconds[next((i for i, x in enumerate(self._seconds) if x is aSecond), -1)]
+        self._seconds.insert(index, aSecond)
+        return True
+
+    def addOrMoveSecondAt(self, aSecond, index):
+        if not any(x is aSecond for x in self._seconds):
+            return self.addSecondAt(aSecond, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfSeconds():
+            index = self.numberOfSeconds() - 1
+        del self._seconds[next((i for i, x in enumerate(self._seconds) if x is aSecond), -1)]
+        self._seconds.insert(index, aSecond)
+        return True
+
+    def delete(self):
+        for i in range(len(self._seconds), 0, -1):
+            aSecond = self._seconds[i - 1]
+            aSecond.delete()
+
+    def setSecond(self, aSecond):
+        return False
+
+    def setSeconds(self, *newSeconds):
+        return False
+
+    @staticmethod
+    def _bindArguments(names, varargs, args, kwargs):
+        if len(args) > len(names) and not varargs:
+            return None
+        bound = list(args[:len(names)])
+        for name in names[len(bound):]:
+            if name not in kwargs:
+                return None
+            bound.append(kwargs[name])
+        if len(kwargs) != len(names) - min(len(args), len(names)):
+            return None
+        if varargs:
+            bound.append(args[len(names):])
+        return bound

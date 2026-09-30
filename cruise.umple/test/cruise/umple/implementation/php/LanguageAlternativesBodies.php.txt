@@ -1,0 +1,44 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+// An untagged body is every language's fallback; a method with bodies only for other languages is left out
+abstract class Shape
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+  public function area()
+  {
+    return 1;
+  }
+
+  public function resize()
+  {
+    $x = 1;
+  }
+
+  public abstract function perimeter();
+}
+?>

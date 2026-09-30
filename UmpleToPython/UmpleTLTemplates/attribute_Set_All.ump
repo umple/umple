@@ -1,0 +1,68 @@
+use attribute_Set.ump;
+use attribute_SetMany.ump;
+use attribute_SetDefaulted.ump;
+
+class UmpleToPython {
+    // Attribute mutators return True, or False when a guard rejects the change.
+    attribute_Set_All <<!<</*attribute_Set_All*/>><<#
+{
+  List<String> keys = Arrays.asList(uClass.getKey().getMembers());
+  for (Attribute av : gen.attributes(uClass))
+  {
+    if (av.isConstant() || av.getIsAutounique() || "internal".equals(av.getModifier()) || av.getIsDerived())
+    {
+      continue;
+    }
+    String field = gen.field(av);
+    String parameter = gen.translate("parameterOne", av);
+    String canSet = gen.canSetField(uClass, av);
+    MethodParameter setterParameter = gen.parameter(parameter, av.getType());
+    boolean isKey = keys.contains(av.getName()) && !av.isImmutable();
+    if (av.isImmutable())
+    {
+      if (av.getIsLazy() || av.getIsUnique())
+      {
+        #>><<@ UmpleToPython.attribute_Set >><<#
+      }
+    }
+    else if (av.getModifier().equals("defaulted"))
+    {
+      #>><<@ UmpleToPython.attribute_SetDefaulted >><<#
+    }
+    else if (av.getIsList())
+    {
+      #>><<@ UmpleToPython.attribute_SetMany >><<#
+    }
+    else
+    {
+      #>><<@ UmpleToPython.attribute_Set >><<#
+    }
+  }
+  // Attributes of ancestors: this class adds its key guards, invariants and injections around the
+  // inherited mutators (Java's *_subclass templates), so a key cannot change after hashing.
+  for (Attribute av : gen.inheritedAttributes(uClass))
+  {
+    if (!gen.hasSetter(av))
+    {
+      continue;
+    }
+    MethodParameter valueParameter = gen.parameter(gen.translate("parameterOne", av), av.getType());
+    String keyGuard = keys.contains(av.getName()) && !av.isImmutable()
+      ? "\n        if not " + gen.canSetField(uClass, av) + ":\n            return False" : "";
+    if (av.getIsList())
+    {
+      realSb.append(gen.inheritedOverride(uClass, gen.translate("addMethod", av), keyGuard, true, "", valueParameter));
+      realSb.append(gen.inheritedOverride(uClass, gen.translate("removeMethod", av), keyGuard, true, "", valueParameter));
+    }
+    else
+    {
+      realSb.append(gen.inheritedOverride(uClass, gen.translate("setMethod", av), keyGuard + gen.invariantGuards(uClass, av), true, "", valueParameter));
+      if ("defaulted".equals(av.getModifier()))
+      {
+        realSb.append(gen.inheritedOverride(uClass, gen.translate("resetMethod", av), keyGuard, true, ""));
+      }
+    }
+  }
+}
+#>>!>>
+}

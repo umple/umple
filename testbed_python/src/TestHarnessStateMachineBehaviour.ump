@@ -1,0 +1,480 @@
+// State machine behaviour of generated Python. Actions are Python-tagged so these models test
+// the state machine runtime on its own; the Java bodies let the same models run as Java controls.
+// Timer delays are fractions of a second so the suite stays fast.
+
+namespace cruise.statemachine.behaviour;
+
+// Transitions and dispatch
+
+class GuardPriority
+{
+  state {
+    A { go(Integer n) [n > 0] -> B; go(Integer n) -> C; }
+    B { reset -> A; }
+    C { reset -> A; }
+  }
+}
+
+class GuardsInOrder
+{
+  state {
+    A { go(Integer n) [n < 0] -> B; go(Integer n) [n > 0] -> C; go(Integer n) -> D; }
+    B { reset -> A; }
+    C { reset -> A; }
+    D { reset -> A; }
+  }
+}
+
+class ReusedStateNames
+{
+  one { A {} }
+  two { A { go -> B; } B {} }
+}
+
+class ReusedNestedStateNames
+{
+  first { Top { A { go -> B; } B {} } }
+  second { Top { A { go -> B; } B {} } }
+}
+
+class SharedEvent
+{
+  one { A { go(Integer n) [n > 0] -> B; go(Integer n) -> C; } B {} C {} }
+  two { X { go(Integer n) -> Y; } Y {} }
+}
+
+class TwoMachines
+{
+  one { A { go -> B; } B { back -> A; } }
+  two { C { go -> D; } D { back -> C; } }
+}
+
+class EventResult
+{
+  state { A { go -> B; } B {} }
+}
+
+class ActionOrder
+{
+  String log = "";
+  void note(String s) Java { log = log + s; } Python { self.setLog(self.getLog() + s) }
+  state {
+    A {
+      entry / Java { note("enterA;"); } Python { self.note("enterA;") }
+      exit / Java { note("exitA;"); } Python { self.note("exitA;") }
+      go / Java { note("transition;"); } Python { self.note("transition;") } -> B;
+    }
+    B {
+      entry / Java { note("enterB;"); } Python { self.note("enterB;") }
+    }
+  }
+}
+
+class NestedActions
+{
+  String log = "";
+  void note(String s) Java { log = log + s; } Python { self.setLog(self.getLog() + s) }
+  state {
+    Off { on -> On; }
+    On {
+      entry / Java { note("enterOn;"); } Python { self.note("enterOn;") }
+      exit / Java { note("exitOn;"); } Python { self.note("exitOn;") }
+      off -> Off;
+      A {
+        entry / Java { note("enterA;"); } Python { self.note("enterA;") }
+        exit / Java { note("exitA;"); } Python { self.note("exitA;") }
+        next -> B;
+      }
+      B {
+        entry / Java { note("enterB;"); } Python { self.note("enterB;") }
+        exit / Java { note("exitB;"); } Python { self.note("exitB;") }
+      }
+    }
+  }
+}
+
+class ConcurrentRegions
+{
+  String log = "";
+  void note(String s) Java { log = log + s; } Python { self.setLog(self.getLog() + s) }
+  state {
+    Off { on -> On; }
+    On {
+      off -> Off;
+      A { step / Java { note("A;"); } Python { self.note("A;") } -> B; }
+      B { reset -> A; }
+      ||
+      C { step / Java { note("C;"); } Python { self.note("C;") } -> D; }
+      D { reset -> C; }
+    }
+  }
+}
+
+class RegionFinal
+{
+  Integer deleted = 0;
+  sm {
+    On {
+      left { L { first -> LeftDone; } final LeftDone {} }
+      ||
+      right { R { second -> RightDone; } final RightDone {} }
+    }
+  }
+  after delete Java { deleted++; } Python { self.setDeleted(self.getDeleted() + 1) }
+}
+
+class FinalDelete
+{
+  Integer deleted = 0;
+  state { A { finish -> Final; } }
+  after delete Java { deleted++; } Python { self.setDeleted(self.getDeleted() + 1) }
+}
+
+class ShallowHistory
+{
+  state {
+    On {
+      off -> Off;
+      A { next -> B; }
+      B { X { next -> Y; } Y {} }
+    }
+    Off { resume -> On.H; }
+  }
+}
+
+class AutoTransitions
+{
+  Integer count = 0;
+  state {
+    A { entry / Java { count++; } Python { self.setCount(self.getCount() + 1) } -> B; }
+    B { [count > 0] -> C; }
+    C { again -> A; }
+  }
+}
+
+class StateDependentWord
+{
+  state {
+    A { String word() { return "A"; } go -> B; }
+    B { String word() { return "B"; } go -> C; }
+    C { go -> A; }
+  }
+  String word() { return "default"; }
+}
+
+class StateDependentNested
+{
+  state {
+    On {
+      String word() { return "On"; }
+      X { String word() { return "X"; } next -> Y; }
+      Y { }
+    }
+  }
+}
+
+class EnumGuard
+{
+  enum Mode { Yes, No }
+  state { A { go(Mode m) [m == Mode.Yes] -> B; } B {} }
+}
+
+class EventParameters
+{
+  Integer total = 0;
+  String text = "";
+  state {
+    A {
+      send(Integer n, String s) [n >= 0] / Java { total += n; text = s; } Python {
+        self.setTotal(self.getTotal() + n)
+        self.setText(s)
+      } -> B;
+    }
+    B { reset -> A; }
+  }
+}
+
+class SetterEvent
+{
+  Integer value = 0;
+  state { A { setValue -> B; } B {} }
+}
+
+class InheritedMachineBase
+{
+  state { A { go -> B; } B { back -> A; } }
+}
+
+class InheritedMachine
+{
+  isA InheritedMachineBase;
+}
+
+class ReentrantAction
+{
+  state {
+    A { go / Java { other(); } Python { self.other() } -> B; other -> C; }
+    B {}
+    C {}
+  }
+}
+
+class DeleteInAction
+{
+  String log = "";
+  void note(String s) Java { log = log + s; } Python { self.setLog(self.getLog() + s) }
+  state {
+    A { go / Java { delete(); } Python { self.delete() } -> B; }
+    B { entry / Java { note("enterB;"); } Python { self.note("enterB;") } after(0.1) -> C; }
+    C {}
+  }
+}
+
+// Timers
+
+class TimerOnce
+{
+  Integer count = 0;
+  state { A { after(0.1) / Java { count++; } Python { self.setCount(self.getCount() + 1) } -> B; } B {} }
+}
+
+// The action records when the timer fired, so the test measures the callback, not its own polling
+class TimerFraction
+{
+  Double firedAt = 0.0;
+  state {
+    A {
+      after(0.8) / Java { } Python {
+        import time
+        self.setFiredAt(time.monotonic())
+      } -> B;
+    }
+    B {}
+  }
+}
+
+class TimerZero
+{
+  state { A { after(0) -> B; } B {} }
+}
+
+class TimerCancel
+{
+  Integer count = 0;
+  state {
+    A { after(0.5) / Java { count++; } Python { self.setCount(self.getCount() + 1) } -> B; cancel -> C; }
+    B {}
+    C {}
+  }
+}
+
+class TimerDelete
+{
+  Integer count = 0;
+  state { A { after(0.5) / Java { count++; } Python { self.setCount(self.getCount() + 1) } -> B; } B {} }
+}
+
+class TimerReenter
+{
+  Integer count = 0;
+  state {
+    A { after(0.5) / Java { count++; } Python { self.setCount(self.getCount() + 1) } -> B; cancel -> C; }
+    B {}
+    C { restart -> A; }
+  }
+}
+
+class TimerGuardOnce
+{
+  Boolean ready = false;
+  Integer count = 0;
+  state {
+    A { after(0.1) [ready] / Java { count++; } Python { self.setCount(self.getCount() + 1) } -> B; cancel -> C; }
+    B {}
+    C {}
+  }
+}
+
+class TimerGuardEvery
+{
+  Boolean ready = false;
+  Integer count = 0;
+  state {
+    A { afterEvery(0.1) [ready] / Java { count++; } Python { self.setCount(self.getCount() + 1) } -> B; cancel -> C; }
+    B {}
+    C {}
+  }
+}
+
+// The third firing's re-entry leaves A through the automatic transition, on the timer's own
+// thread, so leaving cannot race with a callback
+class TimerRepeated
+{
+  Integer count = 0;
+  state {
+    A {
+      [count >= 3] -> B;
+      afterEvery(0.1) / Java { count++; } Python { self.setCount(self.getCount() + 1) } -> A;
+    }
+    B {}
+  }
+}
+
+class TimerNested
+{
+  Integer count = 0;
+  state {
+    On {
+      off -> Off;
+      A { after(0.5) / Java { count++; } Python { self.setCount(self.getCount() + 1) } -> B; }
+      B {}
+    }
+    Off { on -> On; }
+  }
+}
+
+class TimerTwoMachines
+{
+  Integer countOne = 0;
+  Integer countTwo = 0;
+  one { A { after(0.1) / Java { countOne++; } Python { self.setCountOne(self.getCountOne() + 1) } -> B; } B {} }
+  two { A { after(0.1) / Java { countTwo++; } Python { self.setCountTwo(self.getCountTwo() + 1) } -> B; } B {} }
+}
+
+class TimerThread
+{
+  state { A { after(2) -> B; } B {} }
+}
+
+// Do activities. A slow activity takes the next gate (class attribute `gates`, set by the test),
+// then records its thread (`threads`) and waits for the gate, so the test opens gates and joins
+// threads to decide the order of events instead of relying on sleeps. A quick activity sets the
+// event `quickDone`.
+
+class DoActivityRuns
+{
+  Integer count = 0;
+  state { A { do Java { count++; } Python { self.setCount(self.getCount() + 1) } } }
+}
+
+class DoActivityExit
+{
+  Integer count = 0;
+  state {
+    A { go -> B; }
+    B {
+      do Java { Thread.sleep(1000); count++; } Python {
+        import threading
+        gate = type(self).gates.pop(0)
+        type(self).threads.append(threading.current_thread())
+        gate.wait(10)
+        self.setCount(self.getCount() + 1)
+      }
+      back -> A;
+    }
+  }
+}
+
+class DoCompletion
+{
+  state {
+    A { do Java { } Python { pass } -> B; }
+    B {}
+  }
+}
+
+class DoSiblingCompletion
+{
+  Boolean slow = false;
+  state {
+    A {
+      do Java { } Python { type(self).quickDone.set() } -> B;
+      do Java { Thread.sleep(1000); slow = true; } Python {
+        type(self).gates.pop(0).wait(10)
+        self.setSlow(True)
+      }
+    }
+    B {}
+  }
+}
+
+// The completion transition may not share its state with another unguarded event (warning 54),
+// so leaving and re-entering the activity's state goes through the enclosing state
+class DoStaleCompletion
+{
+  state {
+    Busy {
+      leave -> Away;
+      A {
+        do Java { Thread.sleep(1000); } Python {
+          import threading
+          gate = type(self).gates.pop(0)
+          type(self).threads.append(threading.current_thread())
+          gate.wait(10)
+        } -> Done;
+      }
+      Done {}
+    }
+    Away { back -> Busy; }
+  }
+}
+
+class DoDeleteCompletion
+{
+  state {
+    A {
+      do Java { Thread.sleep(1000); } Python {
+        import threading
+        gate = type(self).gates.pop(0)
+        type(self).threads.append(threading.current_thread())
+        gate.wait(10)
+      } -> B;
+    }
+    B {}
+  }
+}
+
+class DoActivityError
+{
+  state { A { do Java { if (true) { throw new IllegalStateException("boom"); } } Python { raise RuntimeError("boom") } } }
+}
+
+class DoActivityDaemon
+{
+  Boolean daemon = true;
+  Boolean ran = false;
+  state {
+    A {
+      do Java { daemon = Thread.currentThread().isDaemon(); ran = true; } Python {
+        import threading
+        self.setDaemon(threading.current_thread().daemon)
+        self.setRan(True)
+      }
+    }
+  }
+}
+
+class DoNested
+{
+  Integer count = 0;
+  state {
+    On {
+      A { do Java { count++; } Python { self.setCount(self.getCount() + 1) } go -> B; }
+      B {}
+    }
+  }
+}
+
+class DoMultiple
+{
+  Integer first = 0;
+  Integer second = 0;
+  state {
+    A {
+      do Java { first++; } Python { self.setFirst(self.getFirst() + 1) }
+      do Java { second++; } Python { self.setSecond(self.getSecond() + 1) }
+      go -> B;
+    }
+    B {}
+  }
+}

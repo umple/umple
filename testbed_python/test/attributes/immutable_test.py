@@ -1,62 +1,40 @@
 import unittest
+import datetime
 
-# Test classes are imported dynamically
-# Must be generated into ImportModules' namespace then imported
 from ImportModules import importModules
 
 importModules(["DoorA", "DoorB", "DoorC"], ["attributes", "test"])
 from ImportModules import *
-import datetime
+
+IMMUTABLE_ATTRIBUTES = ["Id", "IntId", "DoubleId", "DateId", "TimeId", "BooleanId", "DoorId"]
 
 
 class ImmutableTest(unittest.TestCase):
-    @unittest.skip("Update with different Date/Time")
+    # testbed/test/cruise/attributes/test/ImmutableTest.java: Immutable
+    # The Java test's commented-out setter checks and TODO ask that immutable attributes have no
+    # setter; the last assertion checks exactly that.
     def test_Immutable(self):
         door = DoorC.DoorC(
-            "1",
-            2,
-            3.4,
-            datetime.datetime.strptime("1234", "%Y").date(),
-            datetime.datetime.strptime("1235", "%H%M"),
-            False,
-            DoorB.DoorB(5),
+            "1", 2, 3.4, datetime.date(1978, 12, 1), datetime.time(12, 51, 51), False, DoorB.DoorB(5)
         )
-
         self.assertEqual("1", door.getId())
-
         self.assertEqual(2, door.getIntId())
-
-        self.assertEqual(3.4, door.getDoubleId(), 0.01)
-
-        self.assertEqual(
-            datetime.datetime.strptime("1234", "%Y").date(),
-            door.getDateId(),
-            "DateTime object did not match",
-        )
-
-        self.assertEqual(
-            datetime.datetime.strptime("1235", "%H%M"),
-            door.getTimeId(),
-            "DateTime object did not match",
-        )
-
-        self.assertEqual(False, door.getBooleanId())
-
+        self.assertAlmostEqual(3.4, door.getDoubleId(), delta=0.01)
+        self.assertEqual(datetime.date(1978, 12, 1), door.getDateId())
+        self.assertEqual(datetime.time(12, 51, 51), door.getTimeId())
+        self.assertIs(False, door.getBooleanId())
         self.assertEqual(DoorB.DoorB(5), door.getDoorId())
+        self.assertEqual([], [n for n in IMMUTABLE_ATTRIBUTES if hasattr(door, "set" + n)])
 
-    @unittest.skip("Update with different Date/Time")
+    # testbed/test/cruise/attributes/test/ImmutableTest.java: ImmutableInitialized
+    # The Date and Time values are the ones in testbed_python/src/LocalHarness.ump
     def test_ImmutableInitialized(self):
         door = DoorA.DoorA()
         self.assertEqual("1", door.getId())
-
         self.assertEqual(2, door.getIntId())
-
-        self.assertEqual(3.4, door.getDoubleId(), 0.01)
-
-        self.assertEqual(Date(1234), door.getDateId())
-
-        self.assertEqual(Time(1235), door.getTimeId())
-
-        self.assertEqual(False, door.getBooleanId())
-
-        self.assertEqual(DoorB(5), door.getDoorId())
+        self.assertAlmostEqual(3.4, door.getDoubleId(), delta=0.01)
+        self.assertEqual(datetime.date(1978, 12, 5), door.getDateId())
+        self.assertEqual(datetime.time(10, 11, 15), door.getTimeId())
+        self.assertIs(False, door.getBooleanId())
+        self.assertEqual(DoorB.DoorB(5), door.getDoorId())
+        self.assertEqual([], [n for n in IMMUTABLE_ATTRIBUTES if hasattr(door, "set" + n)])

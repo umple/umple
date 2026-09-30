@@ -1,0 +1,6 @@
+class UmpleToPython {
+    // A directed immutable 0..n end given to the constructor.
+    constructor_AssociationAssignImmutableOptionalN <<!<</*constructor_AssociationAssignImmutableOptionalN*/>>
+        if not self.<<=gen.immutableEndSetterName(av, "setManyMethod")>>(*<<=gen.translate("parameterAll", av)>>):
+            raise RuntimeError(<<=gen.pythonString("Unable to create " + gen.relatedTranslate("type", av) + ", must have " + av.getMultiplicity().getUpperBound() + " or fewer " + gen.translate("associationMany", av) + ", no duplicates. See https://manual.umple.org?RE001ViolationofImmutability.html")>>)!>>
+}

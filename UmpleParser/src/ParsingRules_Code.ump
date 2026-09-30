@@ -669,7 +669,8 @@ class Terminal
     Matcher matcher = getPattern().matcher(input.substring(from,max));
     if(matcher.matches())
     {
-      String matched = matcher.group(canBeNull&&data.getNoSpaces()?1:2);
+      int group = canBeNull&&data.getNoSpaces()?1:2;
+      String matched = matcher.group(group);
     
       if(cannotBe!=null&&matched.matches(cannotBe)&&!getCannotBePattern().matcher(input.substring(from+matcher.group(1).length(),max)).matches())
       {
@@ -679,8 +680,11 @@ class Terminal
       {
         if(!matched.equals("")||(canBeNull&&!getName().equals("extraCode")))
         {
-          matched = canBeNull&&data.getNoSpaces()?matched:matched.trim();
+          boolean trimmed = !(canBeNull&&data.getNoSpaces());
+          int start = from+matcher.start(group)+(trimmed?leadingTrimLength(matched):0);
+          matched = trimmed?matched.trim():matched;
           Token tok = onlyValue?new Token(matched,"STATIC"):new Token(getName(),matched);
+          recordFirstLineIndent(tok,input,start);
           addToken(token,tok,
               from,
               from+matcher.group(1).length(),data);
@@ -703,6 +707,7 @@ class Terminal
           if(!matched.equals("")||(canBeNull&&!getName().equals("extraCode")))
           {
             Token tok = onlyValue?new Token(matched.trim(),"STATIC"):new Token(getName(),matched.trim());
+            recordFirstLineIndent(tok,input,from+matcher.start(2)+leadingTrimLength(matched));
             addToken(token,tok,
                 from,
                 from+matcher.group(1).length(),data);
@@ -712,6 +717,40 @@ class Terminal
       }
     }
     return -1;
+  }
+
+  // The number of leading characters String.trim() removes from text
+  private static int leadingTrimLength(String text)
+  {
+    int length = 0;
+    while(length<text.length()&&text.charAt(length)<=' ')
+    {
+      ++length;
+    }
+    return length;
+  }
+
+  /*
+    Arbitrary-text values (such as native code bodies) are stored trimmed, which loses the indentation
+    of their first line. For those, record on the token the whitespace between the start of the source
+    line and the value's first character (start), or null when other text, such as an opening brace,
+    precedes the value on that line. Tabs are kept as written.
+  */
+  private void recordFirstLineIndent(Token tok, String input, int start)
+  {
+    if(!canBeNull||start>=input.length()||"".equals(tok.getValue()))
+    {
+      return;
+    }
+    int lineStart = start;
+    while(lineStart>0&&(input.charAt(lineStart-1)==' '||input.charAt(lineStart-1)=='\t'||input.charAt(lineStart-1)=='\f'))
+    {
+      --lineStart;
+    }
+    if(lineStart==0||input.charAt(lineStart-1)=='\n'||input.charAt(lineStart-1)=='\r')
+    {
+      tok.setFirstLineIndent(input.substring(lineStart,start));
+    }
   }
 
   /*

@@ -1,0 +1,71 @@
+class UmpleToPython {
+    // The string form keeps the format of the Java output: the parent's form, the simple attribute
+    // values in brackets, then one line per other attribute and per single-valued association. A
+    // toString method written in the model is what str() returns.
+    toString <<!<</*toString*/>><<#
+  if (gen.definesStr(uClass))
+  {
+    // the class's own __str__ is emitted with its methods
+  }
+  else if (gen.definesToString(uClass))
+  {
+    #>>
+
+    def __str__(self):
+        return self.toString()<<#
+  }
+  else if (!uClass.getAttributes().isEmpty() && !gen.definesToString(uClass.getExtendsClass()) && !gen.definesStr(uClass.getExtendsClass()))
+  {
+  List<String> keys = Arrays.asList(uClass.getKey().getMembers());
+  LinkedList<String> simple = new LinkedList<String>();
+  LinkedList<String> other = new LinkedList<String>();
+  for (Attribute av : gen.attributes(uClass))
+  {
+    if (av.getIsList() || "internal".equals(av.getModifier()) || "const".equals(av.getModifier()))
+    {
+      continue;
+    }
+    String getter = "self." + gen.translate("getMethod", av) + "()";
+    boolean first = av.getIsAutounique() || keys.contains(av.getName());
+    if (gen.isSimpleType(av.getType()))
+    {
+      String part = "\"" + av.getName() + ":\" + str(" + getter + ")";
+      if (first) simple.addFirst(part); else simple.addLast(part);
+    }
+    else
+    {
+      String part = "\"\\n  " + av.getName() + "=\" + (\"null\" if " + getter + " is None else \"this\" if " + getter + " is self else str(" + getter + ").replace(\"  \", \"    \"))";
+      if (first) other.addFirst(part); else other.addLast(part);
+    }
+  }
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    Multiplicity m = av.getMultiplicity();
+    if (av.getIsNavigable() && av.getUmpleClass() != av.getRelatedAssociation().getUmpleClass()
+        && ("1".equals(m.getMinimum()) || "0".equals(m.getMinimum()) || "1".equals(m.getBound()))
+        && ("1".equals(m.getMaximum()) || "1".equals(m.getBound())))
+    {
+      String getter = "self." + gen.translate("getMethod", av) + "()";
+      other.add("\"\\n  " + av.getName() + " = \" + (\"null\" if " + getter + " is None else format(id(" + getter + "), \"x\"))");
+    }
+  }
+  #>>
+
+    def __str__(self):<<=gen.injected(uClass, "before", "toString")>><<=gen.injected(uClass, "after", "toString")>>
+        return (super().__str__() + "["<<#
+  for (int i = 0; i < simple.size(); i++)
+  {
+    #>>
+                + <<=simple.get(i)>><<= i < simple.size() - 1 ? " + \",\"" : "" >><<#
+  }
+  #>>
+                + "]"<<#
+  for (String part : other)
+  {
+    #>>
+                + <<=part>><<#
+  }
+  #>>)<<#
+  }
+#>>!>>
+}

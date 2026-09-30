@@ -32,6 +32,7 @@ class CodeCompiler {
     {
       extra+=arg;
     }
+    List<UmpleElement> pythonElements = new ArrayList<UmpleElement>();
     for (UmpleElement currentElement : model.getUmpleElements())
     {
       if ("external".equals(currentElement.getModifier()))
@@ -48,139 +49,151 @@ class CodeCompiler {
           subsequentCompilation = true;
         }
         else if (generator.equals("Python")) {
-          wasSuccessful = wasSuccessful & compilePython(currentElement, model, beQuiet,errorFileName, extra);
-          subsequentCompilation = true;
+          pythonElements.add(currentElement);
         }
         else {
           System.out.println("Compilation of generated code not supported yet for generator "+generator);
         }
       }
     }
+    if (!pythonElements.isEmpty()) {
+      wasSuccessful = wasSuccessful & compilePython(pythonElements, model, errorFileName);
+      subsequentCompilation = true;
+    }
     return wasSuccessful;
   }
  
-  private static boolean compilePython(UmpleElement aClass, UmpleModel model, boolean beQuiet,String errorFileName, String args) {
-    String path="";
-    String base="";
-    boolean isMain=false;
+  // Python is only syntax-checked here. Running user code is the job of an explicit
+  // execution step (for example the UmpleOnline sandboxed execution service), never of compilation.
+  private static boolean compilePython(List<UmpleElement> elements, UmpleModel model, String errorFileName) {
+    String root = null;
     for (GenerateTarget gt : model.getGenerates()) {
       if (gt.getLanguage().equals("Python")) {
-        base = StringFormatter.addPathOrAbsolute( 
-            model.getUmpleFile().getPath() +File.separator+ gt.getPath(), "");
-        path = base + aClass.getPackageName().replace(".", File.separator);
+        root = StringFormatter.addPathOrAbsolute(model.getUmpleFile().getPath(), gt.getPath());
       }
     }
-
-    for(UmpleClass mainClass: CodeCompiler.getMainClasses(model)){
-      if(aClass.getName().equals(mainClass.getName())){
-        isMain=true;
+    if (root == null) {
+      return false;
+    }
+    List<File> files = new ArrayList<File>();
+    for (UmpleElement element : elements) {
+      File file = new File(root + element.getPackageName().replace(".", File.separator), element.getName() + ".py");
+      if (file.exists()) {
+        files.add(file); // inner classes live in their outer class's file
       }
     }
-    
-    String filename = path + File.separator + aClass.getName() + ".py";
-    String modelname = base + File.separator + model.getUmpleFile().getFileName();
+    if (files.isEmpty()) {
+      return true;
+    }
 
-    int retval=0;
+    if (getPythonInterpreter() == null) {
+      System.err.println("Python 3 is required to compile generated Python. Install it, or set UMPLE_PYTHON to its path.");
+      return false;
+    }
 
+    String errors = checkPythonSyntax(files);
+    if (errors == null) {
+      return true;
+    }
+
+    String message = mapPythonTraceback(errors, null);
+    System.err.println(message);
+    if (errorFileName != null) {
+      try (PrintWriter out = new PrintWriter(errorFileName)) {
+        out.println(message);
+      }
+      catch (IOException e) {
+        System.err.println(e);
+      }
+    }
+    return false;
+  }
+
+  const int PYTHON_TIMEOUT_SECONDS = 60;
+  const int PROCESS_OUTPUT_LIMIT = 1048576;
+  private static String pythonInterpreter = null;
+  private static boolean pythonInterpreterSearched = false;
+
+  // Compiles the given Python files without running them, using the interpreter from
+  // getPythonInterpreter(), which must be available. Returns null when every file compiles,
+  // otherwise what Python reported.
+  public static String checkPythonSyntax(List<File> files) {
+    // -I isolates Python from the working directory and PYTHONPATH, so a generated module that
+    // happens to be named py_compile cannot replace the standard one and run. The files go in
+    // batches: one argument each could pass Windows' command-line limit for a large model. Every
+    // batch is checked, so all errors are reported, as for a single batch.
+    StringBuilder output = new StringBuilder();
+    boolean failed = false;
+    for (int from = 0, to; from < files.size(); from = to) {
+      List<String> command = new ArrayList<String>(Arrays.asList(getPythonInterpreter(), "-I", "-m", "py_compile"));
+      int length = 0;
+      for (to = from; to < files.size() && (to == from || length + files.get(to).getPath().length() < 8000); to++) {
+        command.add(files.get(to).getPath());
+        length += files.get(to).getPath().length() + 1;
+      }
+      failed = runProcess(command, PYTHON_TIMEOUT_SECONDS, output) != 0 || failed;
+    }
+    return failed ? output.toString() : null;
+  }
+
+  // UMPLE_PYTHON wins when set; otherwise python3, then python if it is Python 3.
+  public static String getPythonInterpreter() {
+    synchronized (CodeCompiler.class) {
+      if (!pythonInterpreterSearched) {
+        String configured = System.getenv("UMPLE_PYTHON");
+        List<String> candidates = (configured != null && !configured.isEmpty())
+          ? Arrays.asList(configured)
+          : Arrays.asList("python3", "python");
+        for (String candidate : candidates) {
+          StringBuilder version = new StringBuilder();
+          if (runProcess(Arrays.asList(candidate, "--version"), PYTHON_TIMEOUT_SECONDS, version) == 0
+              && version.toString().startsWith("Python 3")) {
+            pythonInterpreter = candidate;
+            break;
+          }
+        }
+        pythonInterpreterSearched = true;
+      }
+      return pythonInterpreter;
+    }
+  }
+
+  // Runs a command with stdout and stderr merged into a temporary file, so a chatty child can never
+  // block on a full pipe, and kills it if it outlives the timeout. Appends what it printed to output
+  // and returns its exit code, or -1 if it could not be run or timed out.
+  private static int runProcess(List<String> command, int timeoutSeconds, StringBuilder output) {
+    File log = null;
+    Process process = null;
     try {
-      if(base.contains(" ") && !(beQuiet && subsequentCompilation)) {
-        System.err.println("Warning: Compiling generated Python from a directory or path containing a space character may produce an error message from the Python compiler.");
+      log = File.createTempFile("umple-process", ".log");
+      process = new ProcessBuilder(command).redirectErrorStream(true).redirectOutput(log).start();
+      boolean finished = process.waitFor(timeoutSeconds, java.util.concurrent.TimeUnit.SECONDS);
+      if (!finished) {
+        process.destroyForcibly().waitFor();
       }
-      
-      BufferedReader reader;
-      //used python3 for linux, use python for windows
-      String pythonVersion="python3";
-
-      if(System.getProperty("os.name").toLowerCase().contains("windows"))
-        pythonVersion="python";
-
-      String cmd=pythonVersion+" -m py_compile " +filename;
-      String cmd2 = pythonVersion + " " + filename;
-
-      //ProcessBuilder processBuilder = new ProcessBuilder(pythonVersion, "-m", "compileall", filename);
-      //Process p = processBuilder.start();
-      Process p = Runtime.getRuntime().exec(cmd);
-      reader=new BufferedReader(new InputStreamReader(p.getErrorStream())); 
-
-      // All output of the above should go to standard output
-      try {
-        retval=p.waitFor();
+      output.append(readAtMost(log, PROCESS_OUTPUT_LIMIT));
+      if (!finished) {
+        output.append("Timed out after " + timeoutSeconds + " seconds: " + String.join(" ", command) + "\n");
+        return -1;
       }
-      catch (InterruptedException e) {}
-
-      String line;
-      if(reader.ready()) {
-        line = reader.readLine();
-      }
-      else {
-        // no syntax error, check runtime error
-        if(isMain){          
-          //check runtime error
-          Process p2 = Runtime.getRuntime().exec(cmd2);
-          reader=new BufferedReader(new InputStreamReader(p2.getErrorStream()));
-
-          try {
-            retval=p2.waitFor();
-          }
-          catch (InterruptedException e) {}
-
-          if(reader.ready()) {
-            line = reader.readLine();
-          }else{
-            return (retval==0);
-          }
-        }else{
-           return (retval==0);
-        }    
-      }
-
-      StringBuilder builder = new StringBuilder();
-
-      while (line!=null) {
-        builder.append(line+"\n");
-        if(reader.ready()) {
-          line = reader.readLine();
-        }
-        else {
-          line = null;
-        }
-      }
-
-      //System.err.println("SHOULD SHOW IN TEST CONSOLE, model file path: "+modelname);
-      String translatedOutput=translateLineToUmplePython(builder.toString(), modelname, filename);
-      System.err.println(translatedOutput);
-
-      if(retval!=0 && errorFileName != null) {
-        String error = translatedOutput;
-          try
-          {
-            File newFile = new File(errorFileName);
-            newFile.createNewFile();   
-          }
-          catch (IOException ex)  
-          {
-            System.err.println(ex);
-          }
-
-          // Write to the file
-          try (PrintWriter fileout = new PrintWriter(errorFileName)) 
-          { 
-//DEBUG to test if the the compiler writes to the file
-            fileout.println(error);
-          }  
-          catch (FileNotFoundException ex) 
-          {
-            System.err.println(ex);
-          }
-      }
-      
-    } catch (IOException e) {
-      println(e.getMessage());
-      retval = 999;
+      return process.exitValue();
     }
-
-    return (retval == 0);
-  }  
+    catch (IOException e) {
+      output.append(e.getMessage()).append("\n");
+      return -1;
+    }
+    catch (InterruptedException e) {
+      process.destroyForcibly();
+      Thread.currentThread().interrupt();
+      output.append("Interrupted\n");
+      return -1;
+    }
+    finally {
+      if (log != null && !log.delete()) {
+        log.deleteOnExit(); // still held open by a child that is being killed
+      }
+    }
+  }
 
   private static boolean compilePhp(UmpleElement aClass, UmpleModel model, boolean beQuiet, String args) {
     String path="";
@@ -431,231 +444,96 @@ class CodeCompiler {
     return successful;
   }
 
-  private static String translateLineToUmplePython(String error, String model, String filePath) {
-      // retrieve filename and ignore pattern for main method error traceback msg
-      String filenameParts[] = filePath.split("\\\\");
-      String last = filenameParts[filenameParts.length - 1];
-      String filename = last.substring(0, last.length() - 3);
-      String ignorePattern = filename + ".main(";
-      // System.err.println("ignore pattern: " + ignorePattern);
-
-      // key functionName, value umpLine
-      Map<String, Integer> hashMap = new HashMap<>();
-      String functionName;
-      int umpLine, pythonLine;
-
-      String umpFile = model;
-      String pythonFile = filePath;
-
-      // store file lines in 2 String Arrays
-      String[] umpFileCode = fileCodeArray(umpFile);
-      String[] pythonFileCode = fileCodeArray(pythonFile);
-
-      // locate funcions tagged with Python
-      // pattern for functions tagged with Python
-      String regex1 = "\\b\\w+\\s+(\\w+)\\s*\\([^{}]*?\\)\\s*Python\\s*";
-      Pattern pattern1 = Pattern.compile(regex1);
-      for (int i = 0; i < umpFileCode.length; i++) {
-          Matcher matcher = pattern1.matcher(umpFileCode[i]);
-          if (matcher.find()) {
-              functionName = matcher.group(1);
-                while(umpFileCode[i+1].trim().isEmpty()){
-                    i++;
-                }
-                umpLine = i;
-              hashMap.put(functionName, umpLine);
-          }
+  // Reads the start of a file, noting when the rest was left out, so a runaway child cannot exhaust memory.
+  private static String readAtMost(File file, int limit) throws IOException {
+    try (InputStream in = new FileInputStream(file)) {
+      byte[] buffer = new byte[limit];
+      int total = 0;
+      int read;
+      while (total < limit && (read = in.read(buffer, total, limit - total)) > 0) {
+        total += read;
       }
-
-      if (!hashMap.containsKey("main")){
-          // Regex pattern for simple Python main
-          String regex2 = "\\s*Python\\s*\\{\\s*";
-          Pattern pattern2 = Pattern.compile(regex2);
-          for (int i = 0; i < umpFileCode.length; i++) {
-              Matcher matcher2 = pattern2.matcher(umpFileCode[i]);
-
-              if (matcher2.find()) {
-                  functionName = "main";
-                  while(umpFileCode[i+1].trim().isEmpty()){
-                      i++;
-                  }
-                  umpLine = i;
-                  hashMap.put("main", umpLine);
-                  break;
-              }
-          }
-      }
-
-      // locate line number for python funciton in python format with python keyword
-      String regex3 = "\\b(\\w+)\\s*\\(\\s*(.*?)\\s*\\)\\s*Python\\s*\\{?";
-      Pattern pattern3 = Pattern.compile(regex3);
-
-      for (int i = 0; i < umpFileCode.length; i++) {
-          Matcher matcher3 = pattern3.matcher(umpFileCode[i]);
-          if (matcher3.find() && !umpFileCode[i].contains("=") && !umpFileCode[i].contains(".")
-                  && !umpFileCode[i].contains("new")) {
-              functionName = matcher3.group(1);
-              System.out.println("Found regular function: " + functionName + " at line: " + (i + 1));
-              if (!hashMap.containsKey(functionName)) {
-                  while(umpFileCode[i+1].trim().isEmpty()){
-                    i++;
-                  }
-                  umpLine = i;
-                  hashMap.put(functionName, umpLine);
-              }
-          }
-      }
-
-
-      // locate line number of regular function in java format without python keyword
-      // Regex pattern for regular function
-      String regex4 = "\\b\\w+\\s+(\\w+)\\s*\\([^{}]*?\\)\\s*";
-      Pattern pattern4 = Pattern.compile(regex4);
-
-      for (int i = 0; i < umpFileCode.length; i++) {
-          Matcher matcher4 = pattern4.matcher(umpFileCode[i]);
-          if (matcher4.find() && !umpFileCode[i].contains("=") && !umpFileCode[i].contains(".")
-                  && !umpFileCode[i].contains("new")) {
-              functionName = matcher4.group(1);
-              if (!hashMap.containsKey(functionName)) {
-                  while(umpFileCode[i+1].trim().isEmpty()){
-                      i++;
-                  }
-                  umpLine = i;
-                  hashMap.put(functionName, umpLine);
-              }
-          }
-      }
-
-      // locate line number of regular function in python format without python keyword
-      String regex5 = "\\b(\\w+)\\s*\\(\\s*(.*?)\\s*\\)\\s*\\{?";
-      Pattern pattern5 = Pattern.compile(regex5);
-
-      for (int i = 0; i < umpFileCode.length; i++) {
-          Matcher matcher5 = pattern5.matcher(umpFileCode[i]);
-          if (matcher5.find() && !umpFileCode[i].contains("=") && !umpFileCode[i].contains(".")
-                  && !umpFileCode[i].contains("new")) {
-              functionName = matcher5.group(1);
-              System.out.println("Found regular function: " + functionName + " at line: " + (i + 1));
-              if (!hashMap.containsKey(functionName)) {
-                  while (umpFileCode[i + 1].trim().isEmpty()) {
-                      ++i;
-                  }
-                  umpLine = i;
-                  hashMap.put(functionName, umpLine);
-              }
-          }
-      }
-
-      System.err.println("Functions:");
-      for (Map.Entry<String, Integer> entry : hashMap.entrySet()) {
-          System.err.println("Line: " + entry.getValue() + " function: " + entry.getKey());
-      }
-
-      StringBuilder builder = new StringBuilder();
-      String[] errorLines = error.split("\n");
-      String line;
-
-      for (int i = 0; i < errorLines.length; i++) {
-          line = errorLines[i];
-          // if no error line number in the msg line
-          if (!line.contains("line")) {
-             builder.append(line + "\n");
-          } else {
-              // skip the error msg for main method traceback
-              if (i < errorLines.length - 1 && errorLines[i + 1].contains(ignorePattern)) {
-                  i++;
-              } else {
-                  // System.err.println("Line: "+line);
-                  // convert the line for error msg
-                  String[] words = line.split(" ");
-                  for (int k = 0; k < words.length; k++) {
-                      if (words[k].equals("line")) {
-                          String num = words[k + 1];
-                          boolean convert = false;
-                          int lineNum = 0;
-                          // discard end non-integar char
-                          while (!convert) {
-                              try {
-                                  lineNum = Integer.parseInt(num);
-                                  convert = true;
-                              } catch (NumberFormatException e) {
-                                  num = num.substring(0, num.length() - 1);
-                              }
-                          }
-
-                          String pythonErrorFunction = getPythonLine(lineNum, pythonFileCode);
-                          if(pythonErrorFunction == null){
-                              // System.err.println("function not found for python file line: " + lineNum);
-                              builder.append(line + "\n");
-                              break;
-                          }
-                          // get function name and ump line number
-                          String[] components = pythonErrorFunction.split("\\|\\|");
-                          String errorFunctionName = components[0];
-                          if (hashMap.containsKey(errorFunctionName)) {
-                              // System.err.println("Function: " + errorFunctionName + "modelLine: " + hashMap.get(errorFunctionName) + " pythonLine: "
-                              //        + components[1]);
-                              int gap = hashMap.get(errorFunctionName) - Integer.parseInt(components[1]);
-                              builder.append("model.ump:" + (lineNum + gap +1) + ": error in the ump code\n");
-                              if(line.contains("indentation")){
-                                  builder.append( line + "\n");
-                              }
-                                  
-                             
-
-                              break;
-                          } else {
-                              builder.append("function: " + errorFunctionName + "not found\n"+ line + "\n");
-                              break;
-                          }
-                      }
-                  }
-              }
-          }
-      }
-      return builder.toString();
+      String text = new String(buffer, 0, total);
+      return file.length() > limit ? text + "\n[output truncated after " + limit + " bytes]\n" : text;
+    }
   }
 
-  private static String[] fileCodeArray(String fileName) {
-      int count = 0;
-      String[] fileCode = new String[0];
-
-      try {
-          BufferedReader reader = new BufferedReader(new FileReader(fileName));
-          while (reader.readLine() != null) {
-              count++;
-          }
-
-          reader.close();
-          reader = new BufferedReader(new FileReader(fileName));
-          fileCode = new String[count];
-
-          for (int i = 0; i < count; i++) {
-              fileCode[i] = reader.readLine();
-          }
-
-          reader.close();
-      } catch (IOException e) {
-          e.printStackTrace();
+  // Annotates each Python traceback frame that falls inside code copied from the model with its
+  // model location, for example "[model.ump:12]". Generated Python brackets every such region with
+  // a "# line N" comment naming the file and an "# end line" comment; frames elsewhere are left
+  // as they are. pathPrefix, when given, maps a path the traceback reports (such as a container
+  // path) to a readable local path: it is a two-element array {reportedPrefix, localPrefix}.
+  public static String mapPythonTraceback(String text, String[] pathPrefix) {
+    Pattern pythonFrame = Pattern.compile("^\\s*File \"([^\"]+\\.py)\", line (\\d{1,9})\\b");
+    StringBuilder mapped = new StringBuilder();
+    for (String line : text.split("\n", -1)) {
+      String ending = line.endsWith("\r") ? "\r" : "";
+      String content = line.substring(0, line.length() - ending.length());
+      mapped.append(content);
+      Matcher frame = pythonFrame.matcher(content);
+      if (frame.find()) {
+        String path = frame.group(1);
+        if (pathPrefix != null && path.startsWith(pathPrefix[0])) {
+          path = pathPrefix[1] + path.substring(pathPrefix[0].length());
+        }
+        String location = modelLocation(path, Integer.parseInt(frame.group(2)));
+        if (location != null) {
+          mapped.append(" [").append(location).append("]");
+        }
       }
-
-      return fileCode;
+      mapped.append(ending).append("\n");
+    }
+    return mapped.substring(0, mapped.length() - 1);
   }
 
-  private static String getPythonLine(int errorLine, String[] pythonFileCode) {
-      int line = errorLine - 1;
-      String regex = "def\\s+([a-zA-Z_][a-zA-Z0-9_]*)\\s*\\([^\\)]*\\):";
-      Pattern pattern = Pattern.compile(regex);
-      Matcher matcher = null;
-      while (line >= 0 && line < pythonFileCode.length) {
-          matcher = pattern.matcher(pythonFileCode[line]);
-          if (matcher.find())
-              return matcher.group(1) + "||" + (1+line);
-
-          line--;
-      }
+  private static String modelLocation(String pythonPath, int pythonLine) {
+    Pattern regionStart = Pattern.compile("^\\s*# line (\\d{1,9}) \"([^\"]+)\"\\s*$");
+    Pattern regionEnd = Pattern.compile("^\\s*# end line\\s*$");
+    List<String> lines;
+    try {
+      lines = new ArrayList<String>(java.nio.file.Files.readAllLines(new File(pythonPath).toPath()));
+    }
+    catch (IOException | RuntimeException e) {
       return null;
+    }
+    // A line inside a string literal is text, even when it looks like a marker.
+    boolean[] insideString = PythonGenerator.linesInsideStrings(lines);
+    for (int i = 0; i < lines.size(); i++) {
+      if (insideString[i]) {
+        lines.set(i, "");
+      }
+    }
+    if (pythonLine < 1 || pythonLine > lines.size()
+        || regionStart.matcher(lines.get(pythonLine - 1)).matches() || regionEnd.matcher(lines.get(pythonLine - 1)).matches()) {
+      return null;
+    }
+    // The reported line must lie inside a region: the nearest marker above it is a start marker,
+    // and the nearest marker below it is an end marker.
+    Matcher start = null;
+    int startIndex = -1;
+    for (int i = pythonLine - 2; i >= 0 && start == null; i--) {
+      if (regionEnd.matcher(lines.get(i)).matches()) {
+        return null;
+      }
+      Matcher candidate = regionStart.matcher(lines.get(i));
+      if (candidate.matches()) {
+        start = candidate;
+        startIndex = i;
+      }
+    }
+    if (start == null) {
+      return null;
+    }
+    for (int i = pythonLine; i < lines.size(); i++) {
+      if (regionEnd.matcher(lines.get(i)).matches()) {
+        int modelLine = Integer.parseInt(start.group(1)) + (pythonLine - 1) - (startIndex + 1);
+        return start.group(2) + ":" + modelLine;
+      }
+      if (regionStart.matcher(lines.get(i)).matches()) {
+        return null;
+      }
+    }
+    return null;
   }
 
   // To do: Use model to determine generation path
@@ -742,35 +620,37 @@ class CodeCompiler {
     }
   }
   
-  public static List<UmpleClass> getMainClasses(UmpleModel model)
+  // Classes with a "public static void main" whose body exists in the given target language.
+  public static List<UmpleClass> getMainClasses(UmpleModel model, String language)
   {
     List<UmpleClass> mainClasses = new ArrayList<UmpleClass>();
-    for(UmpleClass uClass:model.getUmpleClasses())
+    for (UmpleClass uClass : model.getUmpleClasses())
     {
-      if (!uClass.hasMethods()) {
-            continue;
-      }
-      for (Method aMethod : uClass.getMethods()) 
+      for (Method aMethod : uClass.getMethods())
       {
-        
-        if(!(aMethod.getExistsInLanguage("Java") || aMethod.getExistsInLanguage("Python"))) {
+        if ("Python".equals(language))
+        {
+          // Python mains are chosen by the same rule the generator uses to emit them
+          if (PythonGenerator.isPythonMain(aMethod) && uClass.getOuterClass() == null)
+          {
+            mainClasses.add(uClass);
+            break;
+          }
+          continue;
+        }
+        if (!aMethod.getExistsInLanguage(language))
+        {
           continue;
         }
         String methodModifier = aMethod.getModifier().equals("") ? "public" : aMethod.getModifier();
-        String methodName = aMethod.getName();
-        String methodType = aMethod.getType();
-        
-	if(methodName.equals("main")&&methodType.equals("void")&&methodModifier.contains("public")&&methodModifier.contains("static"))
+        if (aMethod.getName().equals("main") && aMethod.getType().equals("void")
+            && methodModifier.contains("public") && methodModifier.contains("static"))
         {
           mainClasses.add(uClass);
-	}
-
-	} // end for loop for all methods in class
-
-	} // end for loop for all classes in model
-
-
-
+          break;
+        }
+      }
+    }
     return mainClasses;
   }
 

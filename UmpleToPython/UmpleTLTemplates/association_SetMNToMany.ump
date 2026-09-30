@@ -1,0 +1,41 @@
+class UmpleToPython {
+    // The batch setter of a mandatory many end (m..n or n) whose other end is many. As in Java, the
+    // call is refused when an object is given twice or the count is outside the end's bounds;
+    // otherwise the end holds exactly the given objects in the given order, the new ones link back
+    // and the ones left out unlink, and a link or unlink the other end refuses is not undone.
+    // Objects are told apart by id, so neither __eq__ nor __hash__ is called and the work is
+    // linear. Java's setters for m..* and 0..n ends differ only in the bounds they check; they
+    // include this template, which checks the bounds the end has.
+    association_SetMNToMany <<!<</*association_SetMNToMany*/>>
+
+    def <<=gen.translate("setManyMethod", av)>>(self, *<<=gen.translate("parameterMany", av)>>):<<=gen.injected(uClass, "before", gen.translate("setManyMethod", av), gen.parameter(gen.translate("parameterMany", av), av.getType()))>><<#
+  if (uClass.getKey().isMember(av))
+  {
+    #>>
+        if not <<=gen.canSetField(uClass, av)>>:
+            return False<<#
+  }
+  #>>
+        if len({id(x) for x in <<=gen.translate("parameterMany", av)>>}) != len(<<=gen.translate("parameterMany", av)>>)<<#
+  if (av.isMandatory())
+  {
+    #>> or len(<<=gen.translate("parameterMany", av)>>) < __class__.<<=gen.translate("minimumNumberOfMethod", av)>>()<<#
+  }
+  if (!av.getMultiplicity().isUpperBoundMany())
+  {
+    #>> or len(<<=gen.translate("parameterMany", av)>>) > __class__.<<=gen.translate("maximumNumberOfMethod", av)>>()<<#
+  }
+  #>>:
+            return False
+        <<=gen.translate("parameterOldMany", av)>> = {id(x): x for x in <<=field>>}
+        <<=field>>.clear()
+        for <<=gen.translate("parameterNew", av)>> in <<=gen.translate("parameterMany", av)>>:
+            <<=field>>.append(<<=gen.translate("parameterNew", av)>>)
+            if id(<<=gen.translate("parameterNew", av)>>) in <<=gen.translate("parameterOldMany", av)>>:
+                del <<=gen.translate("parameterOldMany", av)>>[id(<<=gen.translate("parameterNew", av)>>)]
+            else:
+                <<=gen.translate("parameterNew", av)>>.<<=gen.relatedTranslate("addMethod", av)>>(self)
+        for <<=gen.translate("parameterOld", av)>> in <<=gen.translate("parameterOldMany", av)>>.values():
+            <<=gen.translate("parameterOld", av)>>.<<=gen.relatedTranslate("removeMethod", av)>>(self)<<=gen.injected(uClass, "after", gen.translate("setManyMethod", av), gen.parameter(gen.translate("parameterMany", av), av.getType()))>>
+        return True!>>
+}

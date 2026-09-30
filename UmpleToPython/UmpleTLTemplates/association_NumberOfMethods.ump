@@ -1,0 +1,26 @@
+class UmpleToPython {
+    // The multiplicity bounds of a many end and whether the current count is within them.
+    association_IsNumberOfValidMethod <<!<</*association_IsNumberOfValidMethod*/>><<#
+  // A query with before and after injections around it, as Java's
+  String count = "self." + gen.translate("numberOfMethod", av) + "()";
+  String validity = count + " >= __class__." + gen.translate("minimumNumberOfMethod", av) + "()"
+    + (av.getMultiplicity().isUpperBoundMany() ? "" : " and " + count + " <= __class__." + gen.translate("maximumNumberOfMethod", av) + "()");
+  #>>
+
+    def <<=gen.translate("isNumberOfValidMethod", av)>>(self):<<=gen.accessorBody(uClass, gen.translate("isNumberOfValidMethod", av), "isValid", validity)>>!>>
+
+    association_RequiredNumberOfMethod <<!<</*association_RequiredNumberOfMethod*/>>
+
+    @staticmethod
+    def <<=gen.translate("requiredNumberOfMethod", av)>>():<<=gen.staticAccessorBody(uClass, gen.translate("requiredNumberOfMethod", av), "required", "" + av.getMultiplicity().getLowerBound())>>!>>
+
+    association_MinimumNumberOfMethod <<!<</*association_MinimumNumberOfMethod*/>>
+
+    @staticmethod
+    def <<=gen.translate("minimumNumberOfMethod", av)>>():<<=gen.staticAccessorBody(uClass, gen.translate("minimumNumberOfMethod", av), "minimum", "" + av.getMultiplicity().getLowerBound())>>!>>
+
+    association_MaximumNumberOfMethod <<!<</*association_MaximumNumberOfMethod*/>>
+
+    @staticmethod
+    def <<=gen.translate("maximumNumberOfMethod", av)>>():<<=gen.staticAccessorBody(uClass, gen.translate("maximumNumberOfMethod", av), "maximum", "" + av.getMultiplicity().getUpperBound())>>!>>
+}

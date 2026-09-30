@@ -1,0 +1,24 @@
+use constructor_NestedStateMachineAssignDefault.ump;
+use constructor_StateMachineAssignDefault.ump;
+
+class UmpleToPython {
+    // Entering the start states, after the attributes and associations are assigned: nested machines
+    // start in Null, then each machine enters its start state, which enters its nested machines.
+    constructor_StateMachine_All <<!<</*constructor_StateMachine_All*/>><<#
+{
+  for (StateMachine sm : uClass.getStateMachines())
+  {
+    State state = sm.getStartState();
+    if (state == null)
+    {
+      continue;
+    }
+    for (StateMachine nestedSm : sm.getNestedStateMachines())
+    {
+      #>><<@ UmpleToPython.constructor_NestedStateMachineAssignDefault >><<#
+    }
+    #>><<@ UmpleToPython.constructor_StateMachineAssignDefault >><<#
+  }
+}
+#>>!>>
+}

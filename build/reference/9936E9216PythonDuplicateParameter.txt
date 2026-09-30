@@ -1,0 +1,17 @@
+E9216 Python Duplicate Parameter
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Two parameters get the same Python name</h2>
+
+<p>Parameters named like a Python keyword are renamed in the generated Python: <code>in</code> becomes <code>input</code>, and other keywords get a trailing underscore (<code>lambda</code> becomes <code>lambda_</code>). When the new name is already the name of another parameter of the same method, the Python generator reports this error at the method (for an event, at its class) and does not write a Python file for the class. Rename one of the parameters.</p>
+
+@@example
+@@source manualexamples/E9216PythonDuplicateParameter1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E9216PythonDuplicateParameter2.ump
+@@endexample

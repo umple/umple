@@ -1,0 +1,121 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+// Each pre or postcondition belongs to its method and to the body written with it (#2250)
+class Account
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Account Attributes
+  private $balance;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->balance = 0;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setBalance($aBalance)
+  {
+    $wasSet = false;
+    $this->balance = $aBalance;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getBalance()
+  {
+    return $this->balance;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+  public function deposit(int $amount)
+  {
+    $result = depositOriginal(int $amount);
+    if ($this->amount>=1000)
+    {
+        throw new RuntimeException("Please provide a valid amount");
+    }
+    return $result;
+  }
+
+  public function depositOriginal(int $amount)
+  {
+
+    if ($this->amount<=0)
+    {
+        throw new RuntimeException("Please provide a valid amount");
+    }
+    return amount;
+  }
+
+  public function deposit($note)
+  {
+
+    if ($this->note==$this->null)
+    {
+        throw new RuntimeException("Please provide a valid note and null");
+    }
+    return 0;
+  }
+
+  public function withdraw(int $amount)
+  {
+
+    if ($this->amount>=200)
+    {
+        throw new RuntimeException("Please provide a valid amount");
+    }
+    return $amount;
+  }
+
+  public function close(int $code)
+  {
+
+    if ($this->code<=1)
+    {
+        throw new RuntimeException("Please provide a valid code");
+    }
+    return code;
+  }
+
+  public function limit(int $v)
+  {
+
+    if ($this->v<=0)
+    {
+        throw new RuntimeException("Please provide a valid v");
+    }
+    return $v;
+  }
+
+  public function refine(int $v)
+  {
+
+    if ($this->v>=50)
+    {
+        throw new RuntimeException("Please provide a valid v");
+    }
+    return v;
+  }
+
+}
+?>

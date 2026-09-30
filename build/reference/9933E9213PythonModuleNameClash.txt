@@ -1,0 +1,19 @@
+E9213 Python Module Name Clash
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>A class outside a namespace is named like a standard Python module</h2>
+
+<p>Each class becomes a Python module of the same name. Generated code imports a few standard modules (abc, enum, threading, datetime, sys, math and fractions), which a class or interface with one of these names and no namespace would hide. Python itself loads others when it starts (such as os, io, re, site and types), so an import of a class module with one of those names would find the standard module instead. Such a class or interface is reported and not generated.</p>
+
+<p>Put the class in a namespace, which makes it a module of that package, or give it another name.</p>
+
+@@example
+@@source manualexamples/E9213PythonModuleNameClash1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E9213PythonModuleNameClash2.ump
+@@endexample

@@ -37,23 +37,32 @@ class UmpleInternalParser
     }
   }
   
-  private void analyzePrecondition (Token preconditionToken, UmpleClassifier uClassifier, Method method)
+  // Returns the precondition the token produced, or null
+  private Precondition analyzePrecondition (Token preconditionToken, UmpleClassifier uClassifier, Method method)
   {
-    if(((PreconditionAnalyzer)model.getAnalyzer("precondition"))!=null){
-      ((PreconditionAnalyzer)model.getAnalyzer("precondition")).setUClassifier(uClassifier);
-      ((PreconditionAnalyzer)model.getAnalyzer("precondition")).setMethod(method);
-      model.getAnalyzer("precondition").analyzeToken(preconditionToken);
+    PreconditionAnalyzer analyzer = (PreconditionAnalyzer)model.getAnalyzer("precondition");
+    if(analyzer==null){
+      return null;
     }
-    
+    analyzer.setUClassifier(uClassifier);
+    analyzer.setMethod(method);
+    analyzer.setCondition(null);
+    analyzer.analyzeToken(preconditionToken);
+    return analyzer.getCondition();
   }
 
-  private void analyzePostcondition (Token postconditionToken, UmpleClassifier uClassifier, Method method)
+  // Returns the postcondition the token produced, or null
+  private Postcondition analyzePostcondition (Token postconditionToken, UmpleClassifier uClassifier, Method method)
   {
-    if(((PostconditionAnalyzer)model.getAnalyzer("postcondition"))!=null){
-      ((PostconditionAnalyzer)model.getAnalyzer("postcondition")).setUClassifier(uClassifier);
-      ((PostconditionAnalyzer)model.getAnalyzer("postcondition")).setMethod(method);
-      model.getAnalyzer("postcondition").analyzeToken(postconditionToken);
+    PostconditionAnalyzer analyzer = (PostconditionAnalyzer)model.getAnalyzer("postcondition");
+    if(analyzer==null){
+      return null;
     }
+    analyzer.setUClassifier(uClassifier);
+    analyzer.setMethod(method);
+    analyzer.setCondition(null);
+    analyzer.analyzeToken(postconditionToken);
+    return analyzer.getCondition();
   }
     
   /*

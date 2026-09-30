@@ -1379,7 +1379,10 @@ class UmpleInternalParser
 		if (checkAvailability) {
 			  for(Action mAction: bState.getActionsByType(type)){
 				  for(Action cAction : cState.getActionsByType(type)){
-					  mAction.getCodeblock().findKeywordAndReplace("superCall;", cAction.getCodeblock(),inSMachine);
+					  // The trait action's guard is kept apart from its bodies, so the copied bodies take it with them;
+					  // its Java-style conditional does not fit Python code, which keeps the body alone
+					  CodeBlock traitCode = cAction.getCodeblock().map((language, code) -> "Python".equals(language) ? code : cAction.wrapInGuard(code));
+					  mAction.getCodeblock().findKeywordAndReplace("superCall;", traitCode, inSMachine);
 				  }
 			  }
 		  }else  {
@@ -1878,6 +1881,7 @@ class Action{
   	action.setPosition(getPosition());
   	action.setEndPosition(getEndPosition());
   	action.setIsInternal(isInternal);
+  	action.setGuardCode(getGuardCode());
   	action.codeblock = new CodeBlock(codeblock);
   	action.cachedHashCode = cachedHashCode;
   	action.canSetActionCode = canSetActionCode;

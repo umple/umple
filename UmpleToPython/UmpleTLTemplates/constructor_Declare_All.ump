@@ -1,0 +1,184 @@
+class UmpleToPython {
+    // The constructor. Every field is created before the parent constructor runs, so a method the
+    // parent calls finds the fields, as Java's default field values guarantee. Assignments that run
+    // code follow the parent call in Java's order.
+    constructor_Declare_All <<!<</*constructor_Declare_All*/>><<#
+{
+  // In a mandatory one-to-one pair the constructor takes the partner's values and creates the
+  // partner; alternateConstructor (constructor_DeclareOneToOne) takes an existing partner.
+  String mandatoryParameters = uClass.getGeneratedClass().getLookup(PythonGenerator.MANDATORY_CONSTRUCTOR_PARAMETERS);
+  boolean createsPartners = mandatoryParameters != null;
+  String parameters = createsPartners ? mandatoryParameters : uClass.getGeneratedClass().getLookup(PythonGenerator.CONSTRUCTOR_PARAMETERS);
+  List<String> fieldLines = new ArrayList<String>();
+  List<String> codeLines = new ArrayList<String>();
+  List<String> keys = Arrays.asList(uClass.getKey().getMembers());
+
+  if (uClass.getIsAbstract() && !gen.hasAbstractMethod(uClass))
+  {
+    fieldLines.add("if type(self) is __class__:");
+    fieldLines.add("    raise TypeError(\"Can't instantiate abstract class " + uClass.getName() + "\")");
+  }
+  if (uClass.getIsSingleton())
+  {
+    fieldLines.add("if __class__.theInstance is not self:");
+    fieldLines.add("    raise RuntimeError(\"" + uClass.getName() + " is a singleton, so use " + uClass.getName() + ".getInstance()\")");
+  }
+  if (uClass.getKey().isProvided())
+  {
+    fieldLines.add(gen.hashCacheField(uClass) + " = None");
+  }
+  for (String memberId : keys)
+  {
+    Attribute key = uClass.getAttribute(memberId);
+    AssociationVariable keyEnd = uClass.getAssociationVariable(memberId);
+    if (key != null && !key.isImmutable())
+    {
+      fieldLines.add(gen.canSetField(uClass, key) + " = True");
+    }
+    else if (key == null && keyEnd != null)
+    {
+      fieldLines.add(gen.canSetField(uClass, keyEnd) + " = True");
+    }
+  }
+  for (Attribute av : gen.attributes(uClass))
+  {
+    if (av.isConstant() || av.getIsDerived())
+    {
+      continue;
+    }
+    String field = gen.field(av);
+    if (av.isImmutable() && (av.getIsLazy() || av.getIsUnique()))
+    {
+      fieldLines.add(gen.canSetField(uClass, av) + " = True");
+    }
+    if (av.getIsList())
+    {
+      if (av.getValue() == null || gen.hasLiteralItems(av))
+      {
+        fieldLines.addAll(gen.listLines(uClass, field + " = ", av));
+      }
+      else
+      {
+        fieldLines.add(field + " = []");
+        gen.addLines(codeLines, gen.listLines(uClass, field + " = ", av));
+      }
+    }
+    else if (av.getIsAutounique())
+    {
+      fieldLines.add(field + " = 0");
+    }
+    else if (av.getIsUnique())
+    {
+      fieldLines.add(field + " = None"); // unset, so the first value is registered even if it is 0
+    }
+    else if ("defaulted".equals(av.getModifier()))
+    {
+      fieldLines.add(field + " = " + gen.fieldDefault(av));
+      codeLines.add("self." + gen.translate("resetMethod", av) + "()");
+    }
+    else if (av.getIsLazy() && (av.isImmutable() || av.getValue() == null))
+    {
+      fieldLines.add(field + " = " + gen.fieldDefault(av));
+    }
+    else if (av.getValue() == null || "fixml".equals(av.getModifier()))
+    {
+      fieldLines.add(field + " = " + gen.translate("parameterOne", av));
+    }
+    else if (gen.literal(av.getType(), av.getValue()) != null)
+    {
+      fieldLines.add(field + " = " + gen.literal(av.getType(), av.getValue()));
+    }
+    else
+    {
+      fieldLines.add(field + " = " + gen.fieldDefault(av));
+      gen.addLines(codeLines, gen.valueLines(uClass, field + " = ", av, ""));
+    }
+  }
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    if (av.isImmutable() && !keys.contains(av.getName()))
+    {
+      fieldLines.add(gen.canSetField(uClass, av) + " = True");
+    }
+    fieldLines.add(gen.field(av) + " = " + (av.isMany() ? "[]" : "None"));
+  }
+
+  for (Attribute av : gen.attributes(uClass))
+  {
+    if (av.getIsAutounique())
+    {
+      codeLines.add(gen.field(av) + " = __class__.next" + av.getUpperCaseName());
+      codeLines.add("__class__.next" + av.getUpperCaseName() + " += 1");
+    }
+    else if (av.getIsUnique())
+    {
+      String setter = "if not self." + gen.translate("setMethod", av) + "(";
+      if (av.getValue() == null)
+      {
+        codeLines.add(setter + gen.translate("parameterOne", av) + "):");
+      }
+      else
+      {
+        gen.addLines(codeLines, gen.valueLines(uClass, setter, av, "):"));
+      }
+      codeLines.add("    raise RuntimeError(\"Cannot create due to duplicate " + av.getName() + ". See https://manual.umple.org?RE003ViolationofUniqueness.html\")");
+    }
+  }
+#>>
+
+    def __init__(self<<=parameters.isEmpty() ? "" : ", " + parameters>>):<<#
+  int bodyStart = realSb.length();
+  for (String line : fieldLines)
+  {
+    realSb.append("\n        ").append(line);
+  }
+  #>><<@ UmpleToPython.constructor_StateMachineFields_All >><<#
+  UmpleClass parent = uClass.getExtendsClass();
+  if (parent != null)
+  {
+    realSb.append("\n        " + gen.oneOneParentInit(parent));
+    realSb.append(gen.ancestorDeletedCheck(uClass));
+  }
+  List<MethodParameter> constructorParameters = new ArrayList<MethodParameter>();
+  for (String name : parameters.split(","))
+  {
+    if (!name.trim().isEmpty())
+    {
+      constructorParameters.add(gen.parameter(name.trim().replace("*", ""), ""));
+    }
+  }
+  realSb.append(gen.injections(uClass, "before", "constructor", constructorParameters, false, "        "));
+  for (String line : codeLines)
+  {
+    realSb.append("\n        ").append(line);
+  }
+  #>><<@ UmpleToPython.constructor_Association_All >><<@ UmpleToPython.constructor_StateMachine_All >><<#
+  realSb.append(gen.invariantChecks(uClass));
+  realSb.append(gen.injections(uClass, "after", "constructor", constructorParameters, false, "        "));
+  if (realSb.length() == bodyStart)
+  {
+    realSb.append("\n        pass");
+  }
+  #>><<@ UmpleToPython.constructor_DeclareOneToOne >><<#
+  if (uClass.getIsSingleton())
+  {
+    #>>
+
+    @staticmethod
+    def getInstance():
+        if __class__.theInstance is None:
+            __class__.theInstance = __class__.__new__(__class__)
+            try:
+                __class__.theInstance.__init__()
+            except BaseException:
+                __class__.theInstance = None
+                raise
+        return __class__.theInstance<<#
+  }
+}
+#>>!>>
+}

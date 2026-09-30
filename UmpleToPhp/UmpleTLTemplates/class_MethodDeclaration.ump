@@ -16,7 +16,8 @@ class UmpleToPhp {
     		String methodType = "function";
             String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", aMethod.getName(), aMethod.getMethodParameters()));
             String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", aMethod.getName(), aMethod.getMethodParameters()));
-    		String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Precondition"));String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", aMethod.getName()+"Postcondition"));
+    		String customPreconditionCode = gen.getPreconditionCode(uClass, aMethod);
+    		String customPostconditionCode = gen.getPostconditionCode(uClass, aMethod);
             customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
         
     		String methodBody = aMethod.getIsImplemented() ? "      return \"\";" : aMethod.getMethodBody().getExtraCode();    		

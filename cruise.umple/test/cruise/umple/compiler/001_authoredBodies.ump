@@ -1,0 +1,21 @@
+// Which bodies were written: exact slots and the untagged fallback
+class A {
+  int both() { return 1; } Python { return 2 }
+  int onlyPython() Python { return 3 }
+  void emptyDefault() {}
+  void emptyJava() Java {} Python { pass }
+  int multi() Java, Php { return 4; }
+  public static void main(String[] args) Python { print(1) }
+}
+class B {
+  public static void main(String [] args) { System.out.println(2); }
+}
+class C {
+  abstract int shape();
+}
+interface I {
+  int size();
+}
+class D {
+  isA I;
+}

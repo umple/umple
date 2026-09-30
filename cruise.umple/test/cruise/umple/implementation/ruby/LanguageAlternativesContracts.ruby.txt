@@ -1,0 +1,107 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+# Each pre or postcondition belongs to its method and to the body written with it (#2250)
+class Account
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Account Attributes - for documentation purposes
+  #attr_reader :balance
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize()
+    @initialized = false
+    @deleted = false
+    @balance = 0
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_balance(a_balance)
+    was_set = false
+    @balance = a_balance
+    was_set = true
+    was_set
+  end
+
+  def get_balance
+    @balance
+  end
+
+  def delete
+    @deleted = true
+  end
+
+  def deposit (amount)
+    result = deposit_original(amount)
+    if amount>=1000 then
+        raise RuntimeError, 'Please provide a valid amount'
+    end
+    return result
+  end
+
+  def deposit_original(amount)
+
+    if amount<=0 then
+        raise RuntimeError, 'Please provide a valid amount'
+    end
+    return amount;
+  end
+
+  def deposit (note)
+
+    if note==null then
+        raise RuntimeError, 'Please provide a valid note and null'
+    end
+    return 0;
+  end
+
+  def withdraw (amount)
+
+    if amount>=300 then
+        raise RuntimeError, 'Please provide a valid amount'
+    end
+    return amount
+  end
+
+  def close (code)
+
+    if code<=1 then
+        raise RuntimeError, 'Please provide a valid code'
+    end
+    return code;
+  end
+
+  def limit (v)
+
+    if v<=0 then
+        raise RuntimeError, 'Please provide a valid v'
+    end
+    return v
+  end
+
+  def refine (v)
+
+    if v>=50 then
+        raise RuntimeError, 'Please provide a valid v'
+    end
+    return v;
+  end
+
+
+
+end

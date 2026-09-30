@@ -584,6 +584,30 @@ public class UmpleTraitTest {
 				model.getUmpleClass("A").getStateMachine("sm").getState(0).getAction(1).getCodeblock().getCode("Java"));
 	}
 
+	// A trait's guarded entry action keeps its guard when a class's entry action takes it in with
+	// superCall; merged Python code gets Python comments
+	@Test
+	public void guardedTraitActionMergedWithSuperCall() {
+		String code = "trait T{ Boolean ok = true; sm{ s1{ entry [ok] / { fromTrait(); } go -> s1; } } }"
+				+ "class A{ isA T; sm{ s1{ entry / { superCall; fromClass(); } } } }";
+		String entry = getRunModel(code).getUmpleClass("A").getStateMachine("sm").getState(0).getAction(0).getCodeblock().getCode();
+		Assert.assertTrue(entry, entry.indexOf("if (ok)") >= 0 && entry.indexOf("fromTrait();") > entry.indexOf("if (ok)"));
+		String python = "trait T{ sm{ s1{ entry / Python { self.fromTrait() } go -> s1; } } }"
+				+ "class A{ isA T; sm{ s1{ entry / Python { superCall; self.fromClass() } } } }";
+		String merged = getRunModel(python).getUmpleClass("A").getStateMachine("sm").getState(0).getAction(0).getCodeblock().getCode("Python");
+		Assert.assertTrue(merged, merged.contains("self.fromTrait()") && merged.contains("#This part of code comes from the trait") && !merged.contains("//"));
+		// In Python, superCall; inside a string or a comment, or as a member (self.superCall;), is not the
+		// composition statement: the class's code stays as written
+		String text = "trait T{ sm{ s1{ entry / Python { self.fromTrait() } go -> s1; } } }"
+				+ "class A{ isA T; sm{ s1{ entry / Python { self.log(\"superCall;\")  # superCall;\n} } } }";
+		String kept = getRunModel(text).getUmpleClass("A").getStateMachine("sm").getState(0).getAction(0).getCodeblock().getCode("Python");
+		Assert.assertEquals("self.log(\"superCall;\")  # superCall;", kept.trim());
+		String member = "trait T{ sm{ s1{ entry / Python { self.fromTrait() } go -> s1; } } }"
+				+ "class A{ isA T; sm{ s1{ entry / Python { self.superCall; self.after() } } } }";
+		Assert.assertEquals("self.superCall; self.after()", getRunModel(member).getUmpleClass("A").getStateMachine("sm").getState(0).getAction(0)
+				.getCodeblock().getCode("Python").trim());
+	}
+
 	@Test
 	public void stateMachineTraits034Test() {
 		String code = "trait T{	Boolean requiredMethod ();}"

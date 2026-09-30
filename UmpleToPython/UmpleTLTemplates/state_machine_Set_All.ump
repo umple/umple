@@ -1,0 +1,33 @@
+use state_machine_Set.ump;
+use state_machine_SetSimple.ump;
+use state_machine_doActivity.ump;
+use state_machine_Event_StartStopTimer.ump;
+
+class UmpleToPython {
+    // The exit and set methods of each machine, then the do activities and the timer start and stop
+    // methods their entry and exit actions call.
+    state_machine_Set_All <<!<</*state_machine_Set_All*/>><<#
+{
+  String deletingFlag = gen.deletingFlag(uClass); // checked only where something can delete the object
+  for (StateMachine sm : uClass.getAllStateMachines())
+  {
+    if ("Simple".equals(sm.getType()) && sm.numberOfStates() > 0)
+    {
+      #>><<@ UmpleToPython.state_machine_SetSimple >><<#
+    }
+    else if (sm.numberOfStates() > 0)
+    {
+      #>><<@ UmpleToPython.state_machine_Set >><<#
+    }
+  }
+  for (Activity activity : gen.activities(uClass))
+  {
+    #>><<@ UmpleToPython.state_machine_doActivity >><<#
+  }
+  for (Transition timed : gen.timedTransitions(uClass))
+  {
+    #>><<@ UmpleToPython.state_machine_Event_StartStopTimer >><<#
+  }
+}
+#>>!>>
+}

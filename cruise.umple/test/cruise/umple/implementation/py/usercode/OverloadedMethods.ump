@@ -1,0 +1,16 @@
+class Part {}
+
+// Overloaded methods become numbered implementations and a dispatcher that binds the arguments.
+class OverloadedMethods
+{
+  String describe(Integer value) Python { return "int" }
+  String describe(Double value, Boolean flag) Python { return "pair" }
+  String describe(Part part) Python { return "part" }
+  String describe(String[] names) Python { return "names" }
+  String describe(Date day) Python { return "day" }
+  static int combine(int a) Python { return a }
+  static int combine(int a, int b) Python { return a + b }
+  int count(int... values) Python { return len(values) }
+  int count(String text) Python { return -1 }
+  int count1() Python { return 99 }
+}

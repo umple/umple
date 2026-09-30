@@ -1,0 +1,65 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Mentor:
+    def __init__(self, aName):
+        self._name = aName
+        self._myStudents = []
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def getName(self):
+        return self._name
+
+    def getMyStudent(self, index):
+        return self._myStudents[index]
+
+    def getMyStudents(self):
+        return tuple(self._myStudents)
+
+    def numberOfMyStudents(self):
+        return len(self._myStudents)
+
+    def hasMyStudents(self):
+        return len(self._myStudents) > 0
+
+    def indexOfMyStudent(self, aMyStudent):
+        return next((i for i, x in enumerate(self._myStudents) if x is aMyStudent), -1)
+
+    @staticmethod
+    def minimumNumberOfMyStudents():
+        return 0
+
+    def addMyStudent(self, aMyStudent):
+        if any(x is aMyStudent for x in self._myStudents):
+            return False
+        self._myStudents.append(aMyStudent)
+        if aMyStudent.indexOfProf(self) == -1 and not aMyStudent.addProf(self):
+            del self._myStudents[next((i for i, x in enumerate(self._myStudents) if x is aMyStudent), -1)]
+            return False
+        self._myStudents.sort(key=lambda x: x.getId())
+        return True
+
+    def removeMyStudent(self, aMyStudent):
+        oldIndex = next((i for i, x in enumerate(self._myStudents) if x is aMyStudent), -1)
+        if oldIndex == -1:
+            return False
+        del self._myStudents[oldIndex]
+        if aMyStudent.indexOfProf(self) != -1 and not aMyStudent.removeProf(self):
+            self._myStudents.insert(oldIndex, aMyStudent)
+            return False
+        return True
+
+    def delete(self):
+        copyOfMyStudents = tuple(self._myStudents)
+        self._myStudents.clear()
+        for aMyStudent in copyOfMyStudents:
+            aMyStudent.removeProf(self)
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]")

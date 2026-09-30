@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/input/Python/demo/Car.py", line 13, in main [model.ump:12]
+  File "/input/Python/demo/Car.py", line 6, in drive [model.ump:8]
+  File "/input/Python/demo/Car.py", line 8, in drive
+  File "/input/Python/demo/Missing.py", line 1, in other
+  File "/usr/lib/python3.10/runpy.py", line 5, in run
+  File "/input/Python/demo/Car.py", line 99999999999, in huge
+  File "/input/Python/demo/Car.py", line 4, in drive
+  File "/input/Python/Quoted.py", line 17, in forged [model.ump:6]
+  File "/input/Python/Quoted.py", line 14, in forged [model.ump:3]
+  File "/input/Python/Quoted.py", line 25, in ended [model.ump:12]
+ZeroDivisionError: division by zero  File "/input/Python/demo/Car.py", line 6, in drive

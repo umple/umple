@@ -434,6 +434,8 @@ class ConstraintVariable
     class Precondition
     {
       * -> 1 Method ; // The method precondition belongs to
+      // The method's bodies ("" for the untagged one) whose block declares this precondition
+      String[] bodyLanguages;
     }
     /*
      * The Preconditions are constraints on methods, throughing an exception if the constraint is not sastisfied after the method has computed.
@@ -443,6 +445,8 @@ class ConstraintVariable
       depend cruise.umple.parser.Position;
       * -> 1 Method ; // The method postcondition belongs to
       lazy Position position;
+      // The method's bodies ("" for the untagged one) whose block declares this postcondition
+      String[] bodyLanguages;
     }
   }
 
@@ -575,6 +579,10 @@ class CodeBlock
   depend java.util.*;
 
   internal HashMap<String,String> codes = new HashMap<String,String>();
+
+  // The languages whose code was written in the model ("" is the untagged body), each mapped to the
+  // indentation of the code's first line in the source (see setAuthoredCode and getFirstLineIndent)
+  internal HashMap<String,String> authoredIndents = new HashMap<String,String>();
   public static String languageUsed = "";
   lazy String name;
 }
