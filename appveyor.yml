@@ -52,10 +52,12 @@ init:
 
 install:
 # NOTE if changing php version, make sure you change the cache above
-- ps: $env:Path="C:\Ruby23\bin;C:\Program Files\Java\jdk11\bin;$($env:Path);C:\tools\php83;C:\tools\php;C:\tools\MinGW;C:\ProgramData\mingw64\mingw64\bin;C:\ProgramData\chocolatey\lib\python3;C:\ProgramData\chocolatey\lib\ant;C:\Program Files\CMake;C:\Program Files\CMake\bin"
+# Umple generates Python 3, but AppVeyor images put Python 2.7 first on PATH
+- ps: $env:Path="C:\Python38-x64;C:\Python38-x64\Scripts;C:\Ruby23\bin;C:\Program Files\Java\jdk11\bin;$($env:Path);C:\tools\php83;C:\tools\php;C:\tools\MinGW;C:\ProgramData\mingw64\mingw64\bin;C:\ProgramData\chocolatey\lib\ant;C:\Program Files\CMake;C:\Program Files\CMake\bin"
 
 - ps: $env:JAVA_HOME="C:\Program Files\Java\jdk11" 
 - ps: echo "Path is $env:Path"
+- cmd: python -c "import sys; print(sys.version); sys.exit(sys.version_info < (3, 8))"
 
 - ps: echo "Java versions available"
 - ps: dir "C:\Program Files\Java"
