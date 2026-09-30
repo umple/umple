@@ -141,11 +141,11 @@
         <table>
           <tr>
             <td class="column-header"><div><span>START</span></div></td>
-            <td class="column-header"><div><span>1. ev1</span></div></td>
-            <td class="column-header"><div><span>2. ev2</span></div></td>
-            <td class="column-header"><div><span>3. ev2</span></div></td>
-            <td class="column-header"><div><span>4. ev2</span></div></td>
-            <td class="column-header"><div><span>5. ev4</span></div></td>
+            <td class="column-header" data-transition="EventSeqTestEndState*^*sm*^*ev1*^*s1*^*s2*^*"><div><span>1. ev1</span></div></td>
+            <td class="column-header" data-transition="EventSeqTestEndState*^*sm*^*ev2*^*s2*^*s3*^*"><div><span>2. ev2</span></div></td>
+            <td class="column-header" data-transition="EventSeqTestEndState*^*sm*^*ev2*^*s3*^*s2*^*"><div><span>3. ev2</span></div></td>
+            <td class="column-header" data-transition="EventSeqTestEndState*^*sm*^*ev2*^*s2*^*s3*^*"><div><span>4. ev2</span></div></td>
+            <td class="column-header" data-transition="EventSeqTestEndState*^*sm*^*ev4*^*s3*^*endstate*^*"><div><span>5. ev4</span></div></td>
           </tr>
           <tr>
             <td class="content-cell" data-parent="">X</td>
@@ -206,27 +206,27 @@
   </tr>
   <tr>
     <td class="">1</td>
-    <td class="">ev1</td>
+    <td class="" data-transition="EventSeqTestEndState*^*sm*^*ev1*^*s1*^*s2*^*">ev1</td>
     <td class="">s2</td>
   </tr>
   <tr>
     <td class="">2</td>
-    <td class="">ev2</td>
+    <td class="" data-transition="EventSeqTestEndState*^*sm*^*ev2*^*s2*^*s3*^*">ev2</td>
     <td class="">s3</td>
   </tr>
   <tr>
     <td class="">3</td>
-    <td class="">ev2</td>
+    <td class="" data-transition="EventSeqTestEndState*^*sm*^*ev2*^*s3*^*s2*^*">ev2</td>
     <td class="">s2</td>
   </tr>
   <tr>
     <td class="">4</td>
-    <td class="">ev2</td>
+    <td class="" data-transition="EventSeqTestEndState*^*sm*^*ev2*^*s2*^*s3*^*">ev2</td>
     <td class="">s3</td>
   </tr>
   <tr>
     <td class="">5</td>
-    <td class="">ev4</td>
+    <td class="" data-transition="EventSeqTestEndState*^*sm*^*ev4*^*s3*^*endstate*^*">ev4</td>
     <td class="">endstate</td>
   </tr>
 </table>
