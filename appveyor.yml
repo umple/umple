@@ -25,8 +25,8 @@ init:
 # install some dependencies needed by php
 - ps: choco install chocolatey-core.extension --ignore-dependencies --no-progress 
 
-# install the latest php (dependencies kb2919442 kb3035131 kb2999226 were failing )
-- ps: choco install php --ignore-dependencies --limitoutput --no-progress 
+# install php 8.3 to match C:\tools\php83 on PATH and in the cache (dependencies kb2919442 kb3035131 kb2999226 were failing)
+- ps: choco install php --version 8.3.13 --ignore-dependencies --limitoutput --no-progress 
 
 # install the latest cmake
 - ps: choco install cmake --no-progress --installargs 'ADD_CMAKE_TO_PATH=System' --apply-install-arguments-to-dependencies
