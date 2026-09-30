@@ -57,7 +57,7 @@ multilineComment- : /* [**multilineComment] */
 
 reqIdentifier : [name]
 
-requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[quality]] ) | ( [[plainReq]] ) )
+requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[ears]] ) | ( [[quality]] ) | ( [[plainReq]] ) )
 quality- : [=reqLanguage:quality|Quality] { [**reqContent] }
 plainReq- : [reqLanguage]? { [**reqContent] }
 userStory- : [=reqLanguage:userStory|userstory] { ( [[userStoryTags]] | [**reqContent] ) }
@@ -69,6 +69,10 @@ useCaseRelationship- : [=useCaseRelationType:include|isA] [useCaseRef] ( , [useC
 useCaseStep- : ( userStep [useCaseId] [[useCaseStepCondition]]? { [*useCaseStepContent] } ) | ( systemResponse [useCaseId] [[useCaseStepCondition]]? { [*useCaseStepContent] } )
 // A step is taken only when its condition holds; written like a state machine guard
 useCaseStepCondition- : [ [*useCaseCondition] ]
+// An EARS (Easy Approach to Requirements Syntax) requirement. See [*Requirements*]. The body is free text, or
+// any of the clauses where { feature } while { precondition } when { trigger } if { unwanted trigger } system { name }
+// and shall { response }, which are read in the EARS order: Where ..., while ..., when ..., if ..., then the ... shall ...
+ears- : [=reqLanguage:ears] { [**reqContent] }
 reqRef : [reqIdentifier] (OPEN_ROUND_BRACKET [qualityClassName] CLOSE_ROUND_BRACKET)?
 reqImplementation : implementsReq [[reqRef]] (, [[reqRef]])* ;
 

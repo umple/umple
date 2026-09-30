@@ -6451,6 +6451,28 @@ Action.updateUmpleDiagramCallback = function(response)
     });
     }
   }  
+
+  if(Page.useEventSequence){
+    // Give event sequence states and transitions the same code selection as Graphviz state diagram elements
+    jQuery("#htmlCanvas .event-sequence-grid").each(function() {
+      var heading = jQuery(this).prevAll("h2").first().text().split(" ");
+      var rows = jQuery(this).find(".floating-col td");
+      var names = [];
+      for(var i = 1; i < rows.length; i++) {
+        var parentId = parseInt(jQuery(rows[i]).attr("data-parent"));
+        names.push((isNaN(parentId) ? "" : names[parentId] + ".") + jQuery(rows[i]).text().replace(/^(- )*/, ""));
+        rows[i].setAttribute("onclick", "javascript:Action.stateClicked(\"" + heading[1] + "^*^" + heading[4] + "^*^" + names[i-1] + "\")");
+      }
+      rows = jQuery(this).next(".event-sequence-list").find("tr");
+      for(var i = 1; i < rows.length; i++) {
+        var entry = jQuery(rows[i]).find("td")[2];
+        entry.setAttribute("onclick", "javascript:Action.stateClicked(\"" + heading[1] + "^*^" + heading[4] + "^*^" + jQuery(entry).text() + "\")");
+      }
+    });
+    jQuery("#htmlCanvas [data-transition]").click(function() {
+      Action.transitionClicked(jQuery(this).attr("data-transition"));
+    });
+  }
 }
 
 
