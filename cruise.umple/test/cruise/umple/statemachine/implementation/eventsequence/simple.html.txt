@@ -132,7 +132,7 @@
         <table>
           <tr>
             <td class="column-header"><div><span>START</span></div></td>
-            <td class="column-header"><div><span>1. ev1</span></div></td>
+            <td class="column-header" data-transition="ReallySimpleStateMachine*^*sm*^*ev1*^*s1*^*s2*^*"><div><span>1. ev1</span></div></td>
           </tr>
           <tr>
             <td class="content-cell" data-parent="">X</td>
@@ -161,7 +161,7 @@
   </tr>
   <tr>
     <td class="">1</td>
-    <td class="">ev1</td>
+    <td class="" data-transition="ReallySimpleStateMachine*^*sm*^*ev1*^*s1*^*s2*^*">ev1</td>
     <td class="">s2</td>
   </tr>
 </table>
