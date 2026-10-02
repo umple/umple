@@ -1,97 +1,133 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
+import os
 
-class Registration:
+class Registration():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Registration Attributes
+    #Registration Associations
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aGrade, aStudent, aCourseSection):
+        self._canSetCourseSection = None
+        self._canSetStudent = None
         self._cachedHashCode = None
+        self._courseSection = None
+        self._student = None
+        self._grade = None
+        self._cachedHashCode = -1
         self._canSetStudent = True
         self._canSetCourseSection = True
         self._grade = aGrade
-        self._student = None
-        self._courseSection = None
-        if not self.setStudent(aStudent):
-            raise RuntimeError("Unable to create registration due to student. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
-        if not self.setCourseSection(aCourseSection):
-            raise RuntimeError("Unable to create registration due to courseSection. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        didAddStudent = self.setStudent(aStudent)
+        if not didAddStudent :
+            raise RuntimeError ("Unable to create registration due to student. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        didAddCourseSection = self.setCourseSection(aCourseSection)
+        if not didAddCourseSection :
+            raise RuntimeError ("Unable to create registration due to courseSection. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setGrade(self, aGrade):
+        wasSet = False
         self._grade = aGrade
-        return True
+        wasSet = True
+        return wasSet
 
     def getGrade(self):
         return self._grade
 
+    # Code from template association_GetOne 
     def getStudent(self):
         return self._student
 
+    # Code from template association_GetOne 
     def getCourseSection(self):
         return self._courseSection
 
+    # Code from template association_SetOneToManyAssociationClass 
     def setStudent(self, aStudent):
-        if not self._canSetStudent:
+        wasSet = False
+        if not self._canSetStudent :
             return False
-        if aStudent is None:
-            return False
+        if aStudent is None :
+            return wasSet
         existingStudent = self._student
         self._student = aStudent
-        index = -1
-        if existingStudent is not None and existingStudent is not aStudent:
-            index = existingStudent.indexOfRegistration(self)
+        if not (existingStudent is None) and not existingStudent == aStudent :
             existingStudent.removeRegistration(self)
-        if not self._student.addRegistration(self):
+        if not self._student.addRegistration(self) :
             self._student = existingStudent
-            if index >= 0 and existingStudent.indexOfRegistration(self) < 0:
-                existingStudent._registrations.insert(index, self)
-            return False
-        return True
+            wasSet = False
+        else :
+            wasSet = True
+        return wasSet
 
+    # Code from template association_SetOneToManyAssociationClass 
     def setCourseSection(self, aCourseSection):
-        if not self._canSetCourseSection:
+        wasSet = False
+        if not self._canSetCourseSection :
             return False
-        if aCourseSection is None:
-            return False
+        if aCourseSection is None :
+            return wasSet
         existingCourseSection = self._courseSection
         self._courseSection = aCourseSection
-        index = -1
-        if existingCourseSection is not None and existingCourseSection is not aCourseSection:
-            index = existingCourseSection.indexOfRegistration(self)
+        if not (existingCourseSection is None) and not existingCourseSection == aCourseSection :
             existingCourseSection.removeRegistration(self)
-        if not self._courseSection.addRegistration(self):
+        if not self._courseSection.addRegistration(self) :
             self._courseSection = existingCourseSection
-            if index >= 0 and existingCourseSection.indexOfRegistration(self) < 0:
-                existingCourseSection._registrations.insert(index, self)
+            wasSet = False
+        else :
+            wasSet = True
+        return wasSet
+
+    def equals(self, obj):
+        if obj is None :
+            return False
+        if not type(self) is type(obj) :
+            return False
+        compareTo = obj
+        if self.getStudent() is None and not (compareTo.getStudent() is None) :
+            return False
+        elif not (self.getStudent() is None) and not self.getStudent() == compareTo.getStudent() :
+            return False
+        if self.getCourseSection() is None and not (compareTo.getCourseSection() is None) :
+            return False
+        elif not (self.getCourseSection() is None) and not self.getCourseSection() == compareTo.getCourseSection() :
             return False
         return True
 
-    def __eq__(self, obj):
-        if type(obj) is not type(self):
-            return NotImplemented
-        return (self.getStudent(), self.getCourseSection()) == (obj.getStudent(), obj.getCourseSection())
-
     def __hash__(self):
-        if self._cachedHashCode is None:
-            self._cachedHashCode = hash((self.getStudent(), self.getCourseSection()))
-            self._canSetStudent = False
-            self._canSetCourseSection = False
+        if self._cachedHashCode != -1 :
+            return self._cachedHashCode
+        self._cachedHashCode = 17
+        if not (self.getStudent() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getStudent().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        if not (self.getCourseSection() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getCourseSection().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        self._canSetStudent = False
+        self._canSetCourseSection = False
         return self._cachedHashCode
-
-    def equals(self, obj):
-        return self == obj
 
     def delete(self):
         placeholderStudent = self._student
         self._student = None
-        if placeholderStudent is not None:
+        if not (placeholderStudent is None) :
             placeholderStudent.removeRegistration(self)
         placeholderCourseSection = self._courseSection
         self._courseSection = None
-        if placeholderCourseSection is not None:
+        if not (placeholderCourseSection is None) :
             placeholderCourseSection.removeRegistration(self)
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "grade:" + str(self.getGrade())
-                + "]"
-                + "\n  student = " + ("null" if self.getStudent() is None else format(id(self.getStudent()), "x"))
-                + "\n  courseSection = " + ("null" if self.getCourseSection() is None else format(id(self.getCourseSection()), "x")))
+        return str(super().__str__()) + "[" + "grade" + ":" + str(self.getGrade()) + "]" + str(os.linesep) + "  " + "student = " + str(((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null")) + str(os.linesep) + "  " + "courseSection = " + ((format(id(self.getCourseSection()), "x")) if not (self.getCourseSection() is None) else "null")

@@ -1,0 +1,26 @@
+class UmpleToPythonNext {
+    // A defaulted attribute: reset puts the default value back.
+    attribute_SetDefaulted <<!<</*attribute_SetDefaulted*/>>
+
+    def <<=gen.translate("setMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("setMethod", av), setterParameter)>><<#
+  if (isKey)
+  {
+    #>>
+        if not <<=canSet>>:
+            return False<<#
+  }
+  #>><<=gen.invariantGuards(uClass, av)>>
+        <<=field>> = <<=parameter>><<=gen.injected(uClass, "after", gen.translate("setMethod", av), setterParameter)>>
+        return True
+
+    def <<=gen.translate("resetMethod", av)>>(self):<<=gen.injected(uClass, "before", gen.translate("resetMethod", av))>><<#
+  if (isKey)
+  {
+    #>>
+        if not <<=canSet>>:
+            return False<<#
+  }
+  #>>
+        <<=field>> = self.<<=gen.translate("getDefaultMethod", av)>>()<<=gen.injected(uClass, "after", gen.translate("resetMethod", av))>>
+        return True!>>
+}

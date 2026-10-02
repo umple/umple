@@ -1,23 +1,39 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 
 
-class Foo:
+class Foo():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Foo Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aBar):
+        self._bar = None
         self._bar = aBar
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setBar(self, aBar):
+        wasSet = False
         self._bar = aBar
-        return True
+        wasSet = True
+        return wasSet
 
+    #*
+    
+    #   * I am a inline comment above an attribute.
+    
+    #   
     def getBar(self):
-        """I am a inline comment above an attribute."""
         return self._bar
 
     def delete(self):
         pass
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "bar:" + str(self.getBar())
-                + "]")
+        return str(super().__str__()) + "[" + "bar" + ":" + str(self.getBar()) + "]"
+

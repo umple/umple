@@ -1,0 +1,71 @@
+class UmpleToPythonNext {
+    // The guard Java injects first into add, remove, set and setMany of a key member: once the hash
+    // is cached, the member can no longer change.
+    association_KeyGuard <<!<</*association_KeyGuard*/>><<#
+  if (uClass.getKey().isMember(av))
+  {
+    #>>
+        if not <<=gen.canSetField(uClass, av)>>:
+            return False<<#
+  }
+#>>!>>
+
+    // Java wraps set and add of an end that a class invariant mentions in that invariant. (The front
+    // end reports error 28 for association ends in invariants, so none are found for now.)
+    association_InvariantGuards <<!<</*association_InvariantGuards*/>><<#
+  for (ConstraintTree invariant : gen.invariantsOn(uClass, av))
+  {
+    #>>
+        if not (<<=gen.condition(invariant, uClass, null)>>):
+            return False<<#
+  }
+#>>!>>
+
+    // The guards of a one-end setter, after the user's before injection and before any change, as in
+    // Java: key member, frozen owners, invariants.
+    association_SetGuards <<!<</*association_SetGuards*/>><<@ UmpleToPythonNext.association_KeyGuard >><<@ UmpleToPythonNext.association_OwnerKeyGuard >><<@ UmpleToPythonNext.association_InvariantGuards >>!>>
+
+    // The guards of an add, after the user's before injection and before any change, as in Java: the
+    // key guard and the duplicate check Java injects, then invariants. Links are found by identity, except for an association class,
+    // whose key is its link: an equal instance links the same pair, which Java rejects through
+    // equals and so does this.
+    association_AddGuards <<!<</*association_AddGuards*/>><<@ UmpleToPythonNext.association_KeyGuard >><<#
+  if (model.getUmpleClass(av.getType()) instanceof AssociationClass)
+  {
+    #>>
+        if any(x == <<=parameter>> for x in <<=field>>):
+            return False<<#
+  }
+  else
+  {
+    #>>
+        if <<=gen.containsIdentity(field, parameter)>>:
+            return False<<#
+  }
+  #>><<@ UmpleToPythonNext.association_InvariantGuards >>!>>
+
+    // Where Java writes the linked object's end through reflection, its key guard is skipped; here
+    // the write is refused first when that end is a frozen key member, since a change would alter
+    // the object's key after its hash was cached.
+    association_LinkedKeyGuard <<!<</*association_LinkedKeyGuard*/>><<#
+  if (model.getUmpleClass(av.getType()).getKey().isMember(relatedAssociation))
+  {
+    #>>
+        if not <<=gen.onObject(parameter, gen.canSetField(model.getUmpleClass(av.getType()), relatedAssociation))>>:
+            return False<<#
+  }
+#>>!>>
+
+    // A one-end setter moves this object between two owners' lists, so a frozen key member on either
+    // owner's end refuses the move before anything changes (Java lets the owner refuse halfway).
+    association_OwnerKeyGuard <<!<</*association_OwnerKeyGuard*/>><<#
+  if (model.getUmpleClass(av.getType()).getKey().isMember(relatedAssociation))
+  {
+    #>>
+        if <<=parameter>> is not None and <<=parameter>> is not <<=field>> and not <<=gen.onObject(parameter, gen.canSetField(model.getUmpleClass(av.getType()), relatedAssociation))>>:
+            return False
+        if <<=field>> is not None and <<=field>> is not <<=parameter>> and not <<=gen.onObject(field, gen.canSetField(model.getUmpleClass(av.getType()), relatedAssociation))>>:
+            return False<<#
+  }
+#>>!>>
+}

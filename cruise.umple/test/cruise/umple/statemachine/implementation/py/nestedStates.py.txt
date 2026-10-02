@@ -1,36 +1,46 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 
-from enum import Enum
+from enum import Enum, auto
 
-
-class LightFixture:
+class LightFixture():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #LightFixture State Machines
     class Bulb(Enum):
-        Off = "Off"
-        On = "On"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        Off = auto()
+        On = auto()
 
     class BulbOn(Enum):
-        Null = "Null"
-        Normal = "Normal"
-        Dimmed = "Dimmed"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        Null = auto()
+        Normal = auto()
+        Dimmed = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
-        self._bulb = None
         self._bulbOn = None
-        self._deleted = False
-        self.setBulbOn(__class__.BulbOn.Null)
-        self.setBulb(__class__.Bulb.Off)
+        self._bulb = None
+        self.setBulbOn(LightFixture.BulbOn.Null)
+        self.setBulb(LightFixture.Bulb.Off)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getBulbFullName(self):
-        answer = str(self._bulb)
-        if self._bulbOn is not __class__.BulbOn.Null:
-            answer += "." + str(self._bulbOn)
+        answer = self._bulb.__str__()
+        if self._bulbOn != LightFixture.BulbOn.Null :
+            answer += "." + self._bulbOn.__str__()
         return answer
 
     def getBulb(self):
@@ -40,54 +50,58 @@ class LightFixture:
         return self._bulbOn
 
     def flip(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aBulb = self._bulb
-        if aBulb is __class__.Bulb.Off:
-            self.setBulb(__class__.Bulb.On)
+        if aBulb == LightFixture.Bulb.Off :
+            self.setBulb(LightFixture.Bulb.On)
             wasEventProcessed = True
-        elif aBulb is __class__.Bulb.On:
+        elif aBulb == LightFixture.Bulb.On :
             self.exitBulb()
-            self.setBulb(__class__.Bulb.Off)
+            self.setBulb(LightFixture.Bulb.Off)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def touch(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aBulbOn = self._bulbOn
-        if aBulbOn is __class__.BulbOn.Normal:
+        if aBulbOn == LightFixture.BulbOn.Normal :
             self.exitBulbOn()
-            self.setBulbOn(__class__.BulbOn.Dimmed)
+            self.setBulbOn(LightFixture.BulbOn.Dimmed)
             wasEventProcessed = True
-        elif aBulbOn is __class__.BulbOn.Dimmed:
+        elif aBulbOn == LightFixture.BulbOn.Dimmed :
             self.exitBulb()
-            self.setBulb(__class__.Bulb.Off)
+            self.setBulb(LightFixture.Bulb.Off)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def exitBulb(self):
-        if self._bulb is __class__.Bulb.On:
+        if self._bulb == LightFixture.Bulb.On :
             self.exitBulbOn()
 
     def setBulb(self, aBulb):
         self._bulb = aBulb
-        if self._bulb is __class__.Bulb.On:
-            if self._bulbOn is __class__.BulbOn.Null:
-                self.setBulbOn(__class__.BulbOn.Normal)
+        # entry actions and do activities
+        if self._bulb == LightFixture.Bulb.On :
+            if self._bulbOn == LightFixture.BulbOn.Null :
+                self.setBulbOn(LightFixture.BulbOn.Normal)
 
     def exitBulbOn(self):
-        if self._bulbOn is __class__.BulbOn.Normal:
-            self.setBulbOn(__class__.BulbOn.Null)
-        elif self._bulbOn is __class__.BulbOn.Dimmed:
-            self.setBulbOn(__class__.BulbOn.Null)
+        if self._bulbOn == LightFixture.BulbOn.Normal :
+            self.setBulbOn(LightFixture.BulbOn.Null)
+        elif self._bulbOn == LightFixture.BulbOn.Dimmed :
+            self.setBulbOn(LightFixture.BulbOn.Null)
 
     def setBulbOn(self, aBulbOn):
         self._bulbOn = aBulbOn
-        if self._bulb is not __class__.Bulb.On and aBulbOn is not __class__.BulbOn.Null:
-            self.setBulb(__class__.Bulb.On)
+        if self._bulb != LightFixture.Bulb.On and aBulbOn != LightFixture.BulbOn.Null :
+            self.setBulb(LightFixture.Bulb.On)
 
     def delete(self):
-        self._deleted = True
+        pass
+

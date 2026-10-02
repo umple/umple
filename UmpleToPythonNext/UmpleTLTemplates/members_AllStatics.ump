@@ -1,0 +1,36 @@
+class UmpleToPythonNext {
+    // Class-level members: constants, autounique counters, unique registries and the singleton.
+    members_AllStatics <<!<</*members_AllStatics*/>><<#
+{
+  int start = realSb.length();
+  for (Constant aConstant : uClass.getConstants())
+  {
+    realSb.append("\n    " + aConstant.getName() + " = " + gen.classValue(uClass, aConstant));
+  }
+  for (Attribute av : gen.attributes(uClass))
+  {
+    if (av.isConstant())
+    {
+      String value = gen.classValue(uClass, av);
+      realSb.append("\n    " + av.getName() + " = " + value);
+    }
+    else if (av.getIsAutounique())
+    {
+      realSb.append("\n    next" + av.getUpperCaseName() + " = " + (av.getValue() == null ? "1" : gen.classValue(uClass, av)));
+    }
+    else if (av.getIsUnique())
+    {
+      realSb.append("\n    " + gen.uniqueMap(uClass, av) + " = {}");
+    }
+  }
+  if (uClass.getIsSingleton())
+  {
+    realSb.append("\n    theInstance = None");
+  }
+  if (realSb.length() > start)
+  {
+    realSb.insert(start, "\n");
+  }
+}
+#>>!>>
+}

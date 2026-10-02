@@ -12,23 +12,23 @@ from ImportModules import *
 
 
 class SimpleStateMachineTest(unittest.TestCase):
-    def test_OneStateNoEvents(self):
+    def OneStateNoEvents(self):
         course = CourseB.CourseB()
-        self.assertEqual(CourseB.CourseB.Status.Open, course.getStatus())
+        self.assertEquals(CourseB.CourseB.Status.Open, course.getStatus())
 
-    def test_StateMachineWithNegativeNumberGuard(self):
+    def StateMachineWithNegativeNumberGuard(self):
         sm = StateMachineWithNegativeNumberGuard.StateMachineWithNegativeNumberGuard()
-        self.assertEqual(
+        self.assertEquals(
             StateMachineWithNegativeNumberGuard.StateMachineWithNegativeNumberGuard.Status.On,
             sm.getStatus(),
         )
         sm.turnOff(-1)
-        self.assertEqual(
+        self.assertEquals(
             StateMachineWithNegativeNumberGuard.StateMachineWithNegativeNumberGuard.Status.On,
             sm.getStatus(),
         )
         sm.turnOff(0)
-        self.assertEqual(
+        self.assertEquals(
             StateMachineWithNegativeNumberGuard.StateMachineWithNegativeNumberGuard.Status.Off,
             sm.getStatus(),
         )

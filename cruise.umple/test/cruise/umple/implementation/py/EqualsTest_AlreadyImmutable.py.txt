@@ -1,22 +1,41 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 1 "EqualsTest_AlreadyImmutable.ump"
 
-
-class Student:
+class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aDoubleId, aBooleanId, aStringId):
+        self._canSetIntId = None
         self._cachedHashCode = None
+        self._stringId = None
+        self._booleanId = None
+        self._doubleId = None
+        self._intId = None
+        self._cachedHashCode = -1
         self._canSetIntId = True
-        self._intId = 0
         self._doubleId = aDoubleId
         self._booleanId = aBooleanId
         self._stringId = aStringId
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template attribute_SetImmutable 
     def setIntId(self, aIntId):
-        if not self._canSetIntId:
+        wasSet = False
+        if not self._canSetIntId :
             return False
         self._canSetIntId = False
         self._intId = aIntId
-        return True
+        wasSet = True
+        return wasSet
 
     def getIntId(self):
         return self._intId
@@ -30,30 +49,45 @@ class Student:
     def getStringId(self):
         return self._stringId
 
+    # Code from template attribute_IsBoolean 
     def isBooleanId(self):
         return self._booleanId
 
-    def __eq__(self, obj):
-        if type(obj) is not type(self):
-            return NotImplemented
-        return (self.getIntId(), self.getDoubleId(), self.getBooleanId(), self.getStringId()) == (obj.getIntId(), obj.getDoubleId(), obj.getBooleanId(), obj.getStringId())
+    def equals(self, obj):
+        if obj is None :
+            return False
+        if not type(self) is type(obj) :
+            return False
+        compareTo = obj
+        if self.getIntId() != compareTo.getIntId() :
+            return False
+        if self.getDoubleId() != compareTo.getDoubleId() :
+            return False
+        if self.getBooleanId() != compareTo.getBooleanId() :
+            return False
+        if self.getStringId() is None and not (compareTo.getStringId() is None) :
+            return False
+        elif not (self.getStringId() is None) and not self.getStringId() == compareTo.getStringId() :
+            return False
+        return True
 
     def __hash__(self):
-        if self._cachedHashCode is None:
-            self._cachedHashCode = hash((self.getIntId(), self.getDoubleId(), self.getBooleanId(), self.getStringId()))
-            self._canSetIntId = False
+        if self._cachedHashCode != -1 :
+            return self._cachedHashCode
+        self._cachedHashCode = 17
+        self._cachedHashCode = self._cachedHashCode * 23 + self.getIntId()
+        self._cachedHashCode = self._cachedHashCode * 23 + (float(self.getDoubleId())).__hash__()
+        self._cachedHashCode = self._cachedHashCode * 23 + ((1) if self.getBooleanId() else 0)
+        if not (self.getStringId() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getStringId().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        self._canSetIntId = False
         return self._cachedHashCode
-
-    def equals(self, obj):
-        return self == obj
 
     def delete(self):
         pass
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "stringId:" + str(self.getStringId()) + ","
-                + "booleanId:" + str(self.getBooleanId()) + ","
-                + "doubleId:" + str(self.getDoubleId()) + ","
-                + "intId:" + str(self.getIntId())
-                + "]")
+        return str(super().__str__()) + "[" + "stringId" + ":" + str(self.getStringId()) + "," + "booleanId" + ":" + str(self.getBooleanId()) + "," + "doubleId" + ":" + str(self.getDoubleId()) + "," + "intId" + ":" + str(self.getIntId()) + "]"
+

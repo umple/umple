@@ -1,0 +1,184 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Student:
+    def __init__(self, aNumber, *allMentors):
+        self._number = aNumber
+        self._mentors = []
+        self._courses = []
+        if not self.setMentors(*allMentors):
+            raise RuntimeError("Unable to create Student, must have at least 1 mentors. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def setNumber(self, aNumber):
+        self._number = aNumber
+        return True
+
+    def getNumber(self):
+        return self._number
+
+    def getMentor(self, index):
+        return self._mentors[index]
+
+    def getMentors(self):
+        return tuple(self._mentors)
+
+    def numberOfMentors(self):
+        return len(self._mentors)
+
+    def hasMentors(self):
+        return len(self._mentors) > 0
+
+    def indexOfMentor(self, aMentor):
+        return next((i for i, x in enumerate(self._mentors) if x is aMentor), -1)
+
+    def getCourse(self, index):
+        return self._courses[index]
+
+    def getCourses(self):
+        return tuple(self._courses)
+
+    def numberOfCourses(self):
+        return len(self._courses)
+
+    def hasCourses(self):
+        return len(self._courses) > 0
+
+    def indexOfCourse(self, aCourse):
+        return next((i for i, x in enumerate(self._courses) if x is aCourse), -1)
+
+    @staticmethod
+    def minimumNumberOfMentors():
+        return 1
+
+    def addMentor(self, aMentor):
+        if any(x is aMentor for x in self._mentors):
+            return False
+        existingStudent = aMentor.getStudent()
+        if existingStudent is not None and existingStudent.numberOfMentors() <= self.minimumNumberOfMentors():
+            return False
+        if existingStudent is not None:
+            index = next((i for i, x in enumerate(existingStudent._mentors) if x is aMentor), -1)
+            if index >= 0:
+                del existingStudent._mentors[index]
+        self._mentors.append(aMentor)
+        aMentor._student = self
+        return True
+
+    def removeMentor(self, aMentor):
+        index = next((i for i, x in enumerate(self._mentors) if x is aMentor), -1)
+        if index < 0 or self.numberOfMentors() <= self.minimumNumberOfMentors():
+            return False
+        del self._mentors[index]
+        aMentor._student = None
+        return True
+
+    def setMentors(self, *newMentors):
+        if len(newMentors) < self.minimumNumberOfMentors():
+            return False
+        checkNewMentors = set()
+        studentToNewMentors = {}
+        for aMentor in newMentors:
+            if id(aMentor) in checkNewMentors:
+                return False
+            existingStudent = aMentor.getStudent()
+            if existingStudent is not None and existingStudent is not self:
+                nextCount = studentToNewMentors.get(id(existingStudent), existingStudent.numberOfMentors()) - 1
+                if nextCount < 1:
+                    return False
+                studentToNewMentors[id(existingStudent)] = nextCount
+            checkNewMentors.add(id(aMentor))
+        for orphan in self._mentors:
+            if id(orphan) not in checkNewMentors:
+                orphan._student = None
+        self._mentors.clear()
+        for aMentor in newMentors:
+            existingStudent = aMentor.getStudent()
+            if existingStudent is not None:
+                index = next((i for i, x in enumerate(existingStudent._mentors) if x is aMentor), -1)
+                if index >= 0:
+                    del existingStudent._mentors[index]
+            aMentor._student = self
+            self._mentors.append(aMentor)
+        return True
+
+    def addMentorAt(self, aMentor, index):
+        if not self.addMentor(aMentor):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfMentors():
+            index = self.numberOfMentors() - 1
+        del self._mentors[next((i for i, x in enumerate(self._mentors) if x is aMentor), -1)]
+        self._mentors.insert(index, aMentor)
+        return True
+
+    def addOrMoveMentorAt(self, aMentor, index):
+        if not any(x is aMentor for x in self._mentors):
+            return self.addMentorAt(aMentor, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfMentors():
+            index = self.numberOfMentors() - 1
+        del self._mentors[next((i for i, x in enumerate(self._mentors) if x is aMentor), -1)]
+        self._mentors.insert(index, aMentor)
+        return True
+
+    @staticmethod
+    def minimumNumberOfCourses():
+        return 0
+
+    def addCourse(self, aCourse):
+        if any(x is aCourse for x in self._courses):
+            return False
+        self._courses.append(aCourse)
+        if aCourse.indexOfStudent(self) == -1 and not aCourse.addStudent(self):
+            del self._courses[next((i for i, x in enumerate(self._courses) if x is aCourse), -1)]
+            return False
+        return True
+
+    def removeCourse(self, aCourse):
+        oldIndex = next((i for i, x in enumerate(self._courses) if x is aCourse), -1)
+        if oldIndex == -1:
+            return False
+        del self._courses[oldIndex]
+        if aCourse.indexOfStudent(self) != -1 and not aCourse.removeStudent(self):
+            self._courses.insert(oldIndex, aCourse)
+            return False
+        return True
+
+    def addCourseAt(self, aCourse, index):
+        if not self.addCourse(aCourse):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfCourses():
+            index = self.numberOfCourses() - 1
+        del self._courses[next((i for i, x in enumerate(self._courses) if x is aCourse), -1)]
+        self._courses.insert(index, aCourse)
+        return True
+
+    def addOrMoveCourseAt(self, aCourse, index):
+        if not any(x is aCourse for x in self._courses):
+            return self.addCourseAt(aCourse, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfCourses():
+            index = self.numberOfCourses() - 1
+        del self._courses[next((i for i, x in enumerate(self._courses) if x is aCourse), -1)]
+        self._courses.insert(index, aCourse)
+        return True
+
+    def delete(self):
+        for aMentor in self._mentors:
+            aMentor._student = None
+        self._mentors.clear()
+        copyOfCourses = tuple(self._courses)
+        self._courses.clear()
+        for aCourse in copyOfCourses:
+            aCourse.removeStudent(self)
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "number:" + str(self.getNumber())
+                + "]")

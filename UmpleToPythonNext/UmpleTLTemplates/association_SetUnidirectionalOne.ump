@@ -1,0 +1,15 @@
+use association_Guards.ump;
+
+class UmpleToPythonNext {
+    // A directed mandatory end takes any object but None.
+    association_SetUnidirectionalOne <<!<</*association_SetUnidirectionalOne*/>><<#
+  String newObject = gen.translate("parameterNew", av);
+  MethodParameter setParameter = gen.parameter(newObject, av.getType());
+  #>>
+
+    def <<=gen.immutableEndSetterName(av, "setMethod")>>(self, <<=newObject>>):<<=gen.injected(uClass, "before", gen.translate("setMethod", av), setParameter)>><<@ UmpleToPythonNext.association_KeyGuard >><<=gen.immutableEndGuard(uClass, av)>><<@ UmpleToPythonNext.association_InvariantGuards >>
+        if <<=newObject>> is None:
+            return False
+        <<=field>> = <<=newObject>><<=gen.injected(uClass, "after", gen.translate("setMethod", av), setParameter)>>
+        return True!>>
+}

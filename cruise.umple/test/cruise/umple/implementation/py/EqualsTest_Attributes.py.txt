@@ -1,10 +1,29 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 1 "EqualsTest.ump"
 
-
-class Student:
+class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aIntId, aDoubleId, aBooleanId, aStringId):
+        self._canSetStringListIds = None
+        self._canSetStringId = None
+        self._canSetBooleanId = None
+        self._canSetDoubleId = None
+        self._canSetIntId = None
         self._cachedHashCode = None
+        self._stringListIds = None
+        self._stringId = None
+        self._booleanId = None
+        self._doubleId = None
+        self._intId = None
+        self._cachedHashCode = -1
         self._canSetIntId = True
         self._canSetDoubleId = True
         self._canSetBooleanId = True
@@ -16,43 +35,55 @@ class Student:
         self._stringId = aStringId
         self._stringListIds = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setIntId(self, aIntId):
-        if not self._canSetIntId:
+        wasSet = False
+        if not self._canSetIntId :
             return False
         self._intId = aIntId
-        return True
+        wasSet = True
+        return wasSet
 
     def setDoubleId(self, aDoubleId):
-        if not self._canSetDoubleId:
+        wasSet = False
+        if not self._canSetDoubleId :
             return False
         self._doubleId = aDoubleId
-        return True
+        wasSet = True
+        return wasSet
 
     def setBooleanId(self, aBooleanId):
-        if not self._canSetBooleanId:
+        wasSet = False
+        if not self._canSetBooleanId :
             return False
         self._booleanId = aBooleanId
-        return True
+        wasSet = True
+        return wasSet
 
     def setStringId(self, aStringId):
-        if not self._canSetStringId:
+        wasSet = False
+        if not self._canSetStringId :
             return False
         self._stringId = aStringId
-        return True
+        wasSet = True
+        return wasSet
 
+    # Code from template attribute_SetMany 
     def addStringListId(self, aStringListId):
-        if not self._canSetStringListIds:
+        wasAdded = False
+        if not self._canSetStringListIds :
             return False
-        self._stringListIds.append(aStringListId)
-        return True
+        wasAdded = self._stringListIds.append(aStringListId)
+        return wasAdded
 
     def removeStringListId(self, aStringListId):
-        if not self._canSetStringListIds:
+        wasRemoved = False
+        if not self._canSetStringListIds :
             return False
-        if aStringListId not in self._stringListIds:
-            return False
-        self._stringListIds.remove(aStringListId)
-        return True
+        wasRemoved = self._stringListIds.remove(aStringListId)
+        return wasRemoved
 
     def getIntId(self):
         return self._intId
@@ -66,49 +97,86 @@ class Student:
     def getStringId(self):
         return self._stringId
 
+    # Code from template attribute_GetMany 
     def getStringListId(self, index):
-        return self._stringListIds[index]
+        aStringListId = self._stringListIds[index]
+        return aStringListId
 
     def getStringListIds(self):
-        return list(self._stringListIds)
+        newStringListIds = self._stringListIds.copy()
+        return newStringListIds
 
     def numberOfStringListIds(self):
-        return len(self._stringListIds)
+        number = len(self._stringListIds)
+        return number
 
     def hasStringListIds(self):
-        return len(self._stringListIds) > 0
+        has = len(self._stringListIds) > 0
+        return has
 
     def indexOfStringListId(self, aStringListId):
-        return self._stringListIds.index(aStringListId) if aStringListId in self._stringListIds else -1
+        index = (-1 if not aStringListId in self._stringListIds else self._stringListIds.index(aStringListId))
+        return index
 
+    # Code from template attribute_IsBoolean 
     def isBooleanId(self):
         return self._booleanId
 
-    def __eq__(self, obj):
-        if type(obj) is not type(self):
-            return NotImplemented
-        return (self.getIntId(), self.getDoubleId(), self.getBooleanId(), self.getStringId(), tuple(self.getStringListIds())) == (obj.getIntId(), obj.getDoubleId(), obj.getBooleanId(), obj.getStringId(), tuple(obj.getStringListIds()))
+    def equals(self, obj):
+        if obj is None :
+            return False
+        if not type(self) is type(obj) :
+            return False
+        compareTo = obj
+        if self.getIntId() != compareTo.getIntId() :
+            return False
+        if self.getDoubleId() != compareTo.getDoubleId() :
+            return False
+        if self.getBooleanId() != compareTo.getBooleanId() :
+            return False
+        if self.getStringId() is None and not (compareTo.getStringId() is None) :
+            return False
+        elif not (self.getStringId() is None) and not self.getStringId() == compareTo.getStringId() :
+            return False
+        if self.getStringListIds().length != compareTo.getStringListIds().length :
+            return False
+        i = 0
+        while i < self.getStringListIds().length :
+            me = self.getStringListIds()
+            them = compareTo.getStringListIds()[i]
+            if me is None and not (them is None) :
+                return False
+            elif not (me is None) and not me == them :
+                return False
+            i += 1
+
+        return True
 
     def __hash__(self):
-        if self._cachedHashCode is None:
-            self._cachedHashCode = hash((self.getIntId(), self.getDoubleId(), self.getBooleanId(), self.getStringId(), tuple(self.getStringListIds())))
-            self._canSetIntId = False
-            self._canSetDoubleId = False
-            self._canSetBooleanId = False
-            self._canSetStringId = False
-            self._canSetStringListIds = False
+        if self._cachedHashCode != -1 :
+            return self._cachedHashCode
+        self._cachedHashCode = 17
+        self._cachedHashCode = self._cachedHashCode * 23 + self.getIntId()
+        self._cachedHashCode = self._cachedHashCode * 23 + (float(self.getDoubleId())).__hash__()
+        self._cachedHashCode = self._cachedHashCode * 23 + ((1) if self.getBooleanId() else 0)
+        if not (self.getStringId() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getStringId().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        if not (self.getStringListIds() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getStringListIds().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        self._canSetIntId = False
+        self._canSetDoubleId = False
+        self._canSetBooleanId = False
+        self._canSetStringId = False
+        self._canSetStringListIds = False
         return self._cachedHashCode
-
-    def equals(self, obj):
-        return self == obj
 
     def delete(self):
         pass
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "stringId:" + str(self.getStringId()) + ","
-                + "booleanId:" + str(self.getBooleanId()) + ","
-                + "doubleId:" + str(self.getDoubleId()) + ","
-                + "intId:" + str(self.getIntId())
-                + "]")
+        return str(super().__str__()) + "[" + "stringId" + ":" + str(self.getStringId()) + "," + "booleanId" + ":" + str(self.getBooleanId()) + "," + "doubleId" + ":" + str(self.getDoubleId()) + "," + "intId" + ":" + str(self.getIntId()) + "]"
+

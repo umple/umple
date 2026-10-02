@@ -1,0 +1,130 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Mentor:
+    def __init__(self, aName):
+        self._name = aName
+        self._pupils = []
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def getName(self):
+        return self._name
+
+    def getPupil(self, index):
+        return self._pupils[index]
+
+    def getPupils(self):
+        return tuple(self._pupils)
+
+    def numberOfPupils(self):
+        return len(self._pupils)
+
+    def hasPupils(self):
+        return len(self._pupils) > 0
+
+    def indexOfPupil(self, aPupil):
+        return next((i for i, x in enumerate(self._pupils) if x is aPupil), -1)
+
+    def isNumberOfPupilsValid(self):
+        return self.numberOfPupils() >= __class__.minimumNumberOfPupils() and self.numberOfPupils() <= __class__.maximumNumberOfPupils()
+
+    @staticmethod
+    def minimumNumberOfPupils():
+        return 5
+
+    @staticmethod
+    def maximumNumberOfPupils():
+        return 7
+
+    def addPupil1(self, aNumber):
+        if self.numberOfPupils() >= self.maximumNumberOfPupils():
+            return None
+        from example.Pupil import Pupil
+        return Pupil(aNumber, self)
+
+    def addPupil2(self, aPupil):
+        if any(x is aPupil for x in self._pupils):
+            return False
+        if self.numberOfPupils() >= self.maximumNumberOfPupils():
+            return False
+        existingMentor = aPupil.getMentor()
+        isNewMentor = existingMentor is not None and existingMentor is not self
+        if isNewMentor and existingMentor.numberOfPupils() <= self.minimumNumberOfPupils():
+            return False
+        if isNewMentor:
+            if not aPupil.setMentor(self):
+                return False
+        else:
+            self._pupils.append(aPupil)
+        return True
+
+    def addPupil(self, *args, **kwargs):
+        from example.Pupil import Pupil
+        bound = __class__._bindArguments(("aPupil",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or isinstance(bound[0], Pupil)):
+            return __class__.addPupil2(self, *bound)
+        bound = __class__._bindArguments(("aNumber",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or isinstance(bound[0], str)):
+            return __class__.addPupil1(self, *bound)
+        raise TypeError("No method matches provided parameters")
+
+    def removePupil(self, aPupil):
+        if aPupil.getMentor() is self:
+            return False
+        if self.numberOfPupils() <= self.minimumNumberOfPupils():
+            return False
+        index = next((i for i, x in enumerate(self._pupils) if x is aPupil), -1)
+        if index >= 0:
+            del self._pupils[index]
+        return True
+
+    def addPupilAt(self, aPupil, index):
+        if not self.addPupil2(aPupil):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfPupils():
+            index = self.numberOfPupils() - 1
+        del self._pupils[next((i for i, x in enumerate(self._pupils) if x is aPupil), -1)]
+        self._pupils.insert(index, aPupil)
+        return True
+
+    def addOrMovePupilAt(self, aPupil, index):
+        if not any(x is aPupil for x in self._pupils):
+            return self.addPupilAt(aPupil, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfPupils():
+            index = self.numberOfPupils() - 1
+        del self._pupils[next((i for i, x in enumerate(self._pupils) if x is aPupil), -1)]
+        self._pupils.insert(index, aPupil)
+        return True
+
+    def delete(self):
+        for i in range(len(self._pupils), 0, -1):
+            aPupil = self._pupils[i - 1]
+            aPupil.delete()
+
+    @staticmethod
+    def _bindArguments(names, varargs, args, kwargs):
+        if len(args) > len(names) and not varargs:
+            return None
+        bound = list(args[:len(names)])
+        for name in names[len(bound):]:
+            if name not in kwargs:
+                return None
+            bound.append(kwargs[name])
+        if len(kwargs) != len(names) - min(len(args), len(names)):
+            return None
+        if varargs:
+            bound.append(args[len(names):])
+        return bound
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]")

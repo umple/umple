@@ -1,0 +1,149 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class NestedStatesWthSameEventNames:
+    class Sm(Enum):
+        nestedState1 = "nestedState1"
+        nestedState2 = "nestedState2"
+        state5 = "state5"
+
+        def __str__(self):
+            return self.value
+
+    class SmNestedState1(Enum):
+        Null = "Null"
+        state1 = "state1"
+        state2 = "state2"
+
+        def __str__(self):
+            return self.value
+
+    class SmNestedState2(Enum):
+        Null = "Null"
+        state3 = "state3"
+        state4 = "state4"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self):
+        self._sm = None
+        self._smNestedState1 = None
+        self._smNestedState2 = None
+        self._deleted = False
+        self.setSmNestedState1(__class__.SmNestedState1.Null)
+        self.setSmNestedState2(__class__.SmNestedState2.Null)
+        self.setSm(__class__.Sm.nestedState1)
+
+    def getSmFullName(self):
+        answer = str(self._sm)
+        if self._smNestedState1 is not __class__.SmNestedState1.Null:
+            answer += "." + str(self._smNestedState1)
+        if self._smNestedState2 is not __class__.SmNestedState2.Null:
+            answer += "." + str(self._smNestedState2)
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSmNestedState1(self):
+        return self._smNestedState1
+
+    def getSmNestedState2(self):
+        return self._smNestedState2
+
+    def e1(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmNestedState1 = self._smNestedState1
+        if aSmNestedState1 is __class__.SmNestedState1.state1:
+            self.exitSmNestedState1()
+            self.setSmNestedState1(__class__.SmNestedState1.state2)
+            wasEventProcessed = True
+        else:
+            wasEventProcessed = self.unspecified(self.getSmNestedState1().value, "e1") or wasEventProcessed
+        return wasEventProcessed
+
+    def unspecified(self, state, event):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmNestedState1 = self._smNestedState1
+        aSmNestedState2 = self._smNestedState2
+        if aSmNestedState1 is __class__.SmNestedState1.state1:
+            self.exitSmNestedState1()
+            self.setSmNestedState1(__class__.SmNestedState1.state1)
+            wasEventProcessed = True
+        if aSmNestedState2 is __class__.SmNestedState2.state4:
+            self.exitSm()
+            self.setSm(__class__.Sm.nestedState2)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e2(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmNestedState1 = self._smNestedState1
+        if aSmNestedState1 is __class__.SmNestedState1.state2:
+            self.exitSm()
+            self.setSm(__class__.Sm.state5)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e4(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmNestedState2 = self._smNestedState2
+        if aSmNestedState2 is __class__.SmNestedState2.state4:
+            self.exitSm()
+            self.setSm(__class__.Sm.state5)
+            wasEventProcessed = True
+        else:
+            wasEventProcessed = self.unspecified(self.getSmNestedState2().value, "e4") or wasEventProcessed
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm is __class__.Sm.nestedState1:
+            self.exitSmNestedState1()
+        elif self._sm is __class__.Sm.nestedState2:
+            self.exitSmNestedState2()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm is __class__.Sm.nestedState1:
+            if self._smNestedState1 is __class__.SmNestedState1.Null:
+                self.setSmNestedState1(__class__.SmNestedState1.state1)
+        elif self._sm is __class__.Sm.nestedState2:
+            if self._smNestedState2 is __class__.SmNestedState2.Null:
+                self.setSmNestedState2(__class__.SmNestedState2.state3)
+
+    def exitSmNestedState1(self):
+        if self._smNestedState1 is __class__.SmNestedState1.state1:
+            self.setSmNestedState1(__class__.SmNestedState1.Null)
+        elif self._smNestedState1 is __class__.SmNestedState1.state2:
+            self.setSmNestedState1(__class__.SmNestedState1.Null)
+
+    def setSmNestedState1(self, aSmNestedState1):
+        self._smNestedState1 = aSmNestedState1
+        if self._sm is not __class__.Sm.nestedState1 and aSmNestedState1 is not __class__.SmNestedState1.Null:
+            self.setSm(__class__.Sm.nestedState1)
+
+    def exitSmNestedState2(self):
+        if self._smNestedState2 is __class__.SmNestedState2.state3:
+            self.setSmNestedState2(__class__.SmNestedState2.Null)
+        elif self._smNestedState2 is __class__.SmNestedState2.state4:
+            self.setSmNestedState2(__class__.SmNestedState2.Null)
+
+    def setSmNestedState2(self, aSmNestedState2):
+        self._smNestedState2 = aSmNestedState2
+        if self._sm is not __class__.Sm.nestedState2 and aSmNestedState2 is not __class__.SmNestedState2.Null:
+            self.setSm(__class__.Sm.nestedState2)
+
+    def delete(self):
+        self._deleted = True

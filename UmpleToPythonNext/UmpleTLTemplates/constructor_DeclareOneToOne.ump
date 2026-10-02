@@ -1,0 +1,56 @@
+use constructor_AssociationCreateOneToOne.ump;
+
+class UmpleToPythonNext {
+    // A class in a mandatory one-to-one pair is constructed from its partner's values and creates the
+    // partner (constructor_AssociationCreateOneToOne in __init__). alternateConstructor takes an
+    // existing partner instead, as Java's constructor with the partner does; the partner's own
+    // constructor calls it. Its body is an instance method (oneOneAlternateInit) built from the same
+    // parts in the same order as __init__ (constructor_Declare_All), so a subclass initializes its
+    // parent part in place with it (oneOneParentInit), as a Java subclass calls that constructor.
+    // __class__ is the class that defines the method, so neither a subclass's method nor a parameter
+    // named like the class can hide the helper.
+    constructor_DeclareOneToOne <<!<</*constructor_DeclareOneToOne*/>><<#
+  if (createsPartners)
+  {
+    createsPartners = false;
+    String alternateParameters = uClass.getGeneratedClass().getLookup(PythonNextGenerator.CONSTRUCTOR_PARAMETERS);
+    String separator = alternateParameters.isEmpty() ? "" : ", ";
+    String alternateInit = gen.oneOneAlternateInit(uClass);
+    #>>
+
+    @classmethod
+    def alternateConstructor(cls<<=separator + alternateParameters>>):
+        self = cls.__new__(cls)
+        __class__.<<=alternateInit>>(self<<=separator + alternateParameters>>)
+        return self
+
+    def <<=alternateInit>>(self<<=separator + alternateParameters>>):<<#
+    for (String line : fieldLines)
+    {
+      realSb.append("\n        ").append(line);
+    }
+    #>><<@ UmpleToPythonNext.constructor_StateMachineFields_All >><<#
+    if (parent != null)
+    {
+      realSb.append("\n        " + gen.oneOneParentInit(parent));
+      realSb.append(gen.ancestorDeletedCheck(uClass));
+    }
+    List<MethodParameter> alternateMethodParameters = new ArrayList<MethodParameter>();
+    for (String name : alternateParameters.split(","))
+    {
+      if (!name.trim().isEmpty())
+      {
+        alternateMethodParameters.add(gen.parameter(name.trim().replace("*", ""), ""));
+      }
+    }
+    realSb.append(gen.injections(uClass, "before", "constructor", alternateMethodParameters, false, "        "));
+    for (String line : codeLines)
+    {
+      realSb.append("\n        ").append(line);
+    }
+    #>><<@ UmpleToPythonNext.constructor_Association_All >><<@ UmpleToPythonNext.constructor_StateMachine_All >><<#
+    realSb.append(gen.invariantChecks(uClass));
+    realSb.append(gen.injections(uClass, "after", "constructor", alternateMethodParameters, false, "        "));
+  }
+#>>!>>
+}

@@ -1,0 +1,25 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class Garage:
+    class GarageDoor(Enum):
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self):
+        self._garageDoor = None
+        self._deleted = False
+
+    def getGarageDoorFullName(self):
+        answer = str(self._garageDoor)
+        return answer
+
+    def getGarageDoor(self):
+        return self._garageDoor
+
+    def delete(self):
+        self._deleted = True

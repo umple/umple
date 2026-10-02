@@ -48,8 +48,8 @@ mixset Trait {
     // brought to a known indentation, which becomes its first line's. null when the keyword is not a
     // statement of the class's code (only text in a string or a comment).
     private String pythonTraitCode(String keyword, CodeBlock cBlock, String trait){
-      String code = PythonGenerator.pythonBlock(codes.get("Python"), getFirstLineIndent("Python"), "").substring(1);
-      int at = PythonGenerator.codeAt(code, keyword);
+      String code = PythonSource.reindent(codes.get("Python"), getFirstLineIndent("Python"), "").substring(1);
+      int at = PythonSource.codeAt(code, keyword);
       if (at < 0) {
         return null;
       }
@@ -58,7 +58,7 @@ mixset Trait {
       }
       int lineStart = code.lastIndexOf('\n', at) + 1;
       String indent = code.substring(lineStart, at).matches("[ \t]*") ? code.substring(lineStart, at) : code.substring(lineStart).replaceFirst("(?s)^([ \t]*).*", "$1");
-      String traitCode = PythonGenerator.pythonBlock(removePythonKeyword(cBlock.codes.get("Python"), keyword), cBlock.getFirstLineIndent("Python"), indent);
+      String traitCode = PythonSource.reindent(removePythonKeyword(cBlock.codes.get("Python"), keyword), cBlock.getFirstLineIndent("Python"), indent);
       String after = code.substring(at + keyword.length()).replaceFirst("^[ \t]+", "");
       return code.substring(0, at) + "#This part of code comes from the trait '" + trait + "' -> begins" + traitCode
         + "\n" + indent + "#The code coming from trait '" + trait + "' ends here\n" + indent + keyword

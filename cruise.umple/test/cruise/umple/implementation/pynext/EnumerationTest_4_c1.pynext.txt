@@ -1,0 +1,32 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class C1:
+    class Status(Enum):
+        Married = "Married"
+        Single = "Single"
+        Divorced = "Divorced"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self, aStatus):
+        self._status = aStatus
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        return True
+
+    def getStatus(self):
+        return self._status
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "]"
+                + "\n  status=" + ("null" if self.getStatus() is None else "this" if self.getStatus() is self else str(self.getStatus()).replace("  ", "    ")))

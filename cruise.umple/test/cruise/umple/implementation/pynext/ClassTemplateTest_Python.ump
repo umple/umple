@@ -1,0 +1,6 @@
+generate PythonNext;
+namespace example;
+
+class Mentor 
+{
+}

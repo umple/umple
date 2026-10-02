@@ -1,0 +1,56 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Student:
+    def __init__(self, aNumber, *allMentors):
+        self._number = aNumber
+        self._canSetMentors = True
+        self._mentors = []
+        if not self._setMentors(*allMentors):
+            raise RuntimeError("Unable to create Student, must have 2 to 4 mentors. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def getNumber(self):
+        return self._number
+
+    def getMentor(self, index):
+        return self._mentors[index]
+
+    def getMentors(self):
+        return tuple(self._mentors)
+
+    def numberOfMentors(self):
+        return len(self._mentors)
+
+    def hasMentors(self):
+        return len(self._mentors) > 0
+
+    def indexOfMentor(self, aMentor):
+        return next((i for i, x in enumerate(self._mentors) if x is aMentor), -1)
+
+    @staticmethod
+    def minimumNumberOfMentors():
+        return 2
+
+    @staticmethod
+    def maximumNumberOfMentors():
+        return 4
+
+    def _setMentors(self, *newMentors):
+        if not self._canSetMentors:
+            return False
+        self._canSetMentors = False
+        if len({id(aMentor) for aMentor in newMentors}) != len(newMentors):
+            return False
+        if len(newMentors) < __class__.minimumNumberOfMentors() or len(newMentors) > __class__.maximumNumberOfMentors():
+            return False
+        self._mentors = list(newMentors)
+        return True
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "number:" + str(self.getNumber())
+                + "]")

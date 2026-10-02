@@ -3,117 +3,129 @@
 
 from Person import Person
 
-
 class Teacher(Person):
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Teacher Attributes
+    #Teacher Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName, aAge, aPosition):
+        self._students = None
+        self._position = None
+        super().__init__(aName, aAge)
         self._position = aPosition
         self._students = []
-        super().__init__(aName, aAge)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setPosition(self, aPosition):
+        wasSet = False
         self._position = aPosition
-        return True
+        wasSet = True
+        return wasSet
 
     def getPosition(self):
         return self._position
 
+    # Code from template association_GetMany 
     def getStudent(self, index):
-        return self._students[index]
+        aStudent = self._students[index]
+        return aStudent
 
     def getStudents(self):
-        return tuple(self._students)
+        newStudents = tuple(self._students)
+        return newStudents
 
     def numberOfStudents(self):
-        return len(self._students)
+        number = len(self._students)
+        return number
 
     def hasStudents(self):
-        return len(self._students) > 0
+        has = len(self._students) > 0
+        return has
 
     def indexOfStudent(self, aStudent):
-        return next((i for i, x in enumerate(self._students) if x is aStudent), -1)
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 0
 
+    # Code from template association_AddManyToOne 
     def addStudent1(self, aName, aAge, aStudentID):
         from Student import Student
         return Student(aName, aAge, aStudentID, self)
 
     def addStudent2(self, aStudent):
-        if any(x is aStudent for x in self._students):
+        wasAdded = False
+        if (aStudent) in self._students :
             return False
         existingTeacher = aStudent.getTeacher()
-        isNewTeacher = existingTeacher is not None and existingTeacher is not self
-        if isNewTeacher:
-            if not aStudent.setTeacher(self):
-                return False
-        else:
+        isNewTeacher = not (existingTeacher is None) and not self == existingTeacher
+        if isNewTeacher :
+            aStudent.setTeacher(self)
+        else :
             self._students.append(aStudent)
-        return True
-
-    def addStudent(self, *args, **kwargs):
-        from Student import Student
-        bound = __class__._bindArguments(("aStudent",), False, args, kwargs)
-        if bound is not None and (bound[0] is None or isinstance(bound[0], Student)):
-            return __class__.addStudent2(self, *bound)
-        bound = __class__._bindArguments(("aName", "aAge", "aStudentID"), False, args, kwargs)
-        if bound is not None and (bound[0] is None or isinstance(bound[0], str)) and (isinstance(bound[1], int) and not isinstance(bound[1], bool)) and (isinstance(bound[2], int) and not isinstance(bound[2], bool)):
-            return __class__.addStudent1(self, *bound)
-        raise TypeError("No method matches provided parameters")
+        wasAdded = True
+        return wasAdded
 
     def removeStudent(self, aStudent):
-        if aStudent.getTeacher() is self:
-            return False
-        index = next((i for i, x in enumerate(self._students) if x is aStudent), -1)
-        if index >= 0:
-            del self._students[index]
-        return True
+        wasRemoved = False
+        #Unable to remove aStudent, as it must always have a teacher
+        if not self == aStudent.getTeacher() :
+            self._students.remove(aStudent)
+            wasRemoved = True
+        return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addStudentAt(self, aStudent, index):
-        if not self.addStudent2(aStudent):
-            return False
-        if index < 0:
-            index = 0
-        if index > self.numberOfStudents():
-            index = self.numberOfStudents() - 1
-        del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
-        self._students.insert(index, aStudent)
-        return True
+        wasAdded = False
+        if self.addStudent(aStudent) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+        return wasAdded
 
     def addOrMoveStudentAt(self, aStudent, index):
-        if not any(x is aStudent for x in self._students):
-            return self.addStudentAt(aStudent, index)
-        if index < 0:
-            index = 0
-        if index > self.numberOfStudents():
-            index = self.numberOfStudents() - 1
-        del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
-        self._students.insert(index, aStudent)
-        return True
+        wasAdded = False
+        if (aStudent) in self._students :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+        else :
+            wasAdded = self.addStudentAt(aStudent, index)
+        return wasAdded
 
     def delete(self):
-        for i in range(len(self._students), 0, -1):
+        i = len(self._students)
+        while i > 0 :
             aStudent = self._students[i - 1]
             aStudent.delete()
+            i -= 1
+
         super().delete()
 
-    @staticmethod
-    def _bindArguments(names, varargs, args, kwargs):
-        if len(args) > len(names) and not varargs:
-            return None
-        bound = list(args[:len(names)])
-        for name in names[len(bound):]:
-            if name not in kwargs:
-                return None
-            bound.append(kwargs[name])
-        if len(kwargs) != len(names) - min(len(args), len(names)):
-            return None
-        if varargs:
-            bound.append(args[len(names):])
-        return bound
-
     def __str__(self):
-        return (super().__str__() + "["
-                + "position:" + str(self.getPosition())
-                + "]")
+        return str(super().__str__()) + "[" + "position" + ":" + str(self.getPosition()) + "]"
+
+    def addStudent(self, *argv):
+        from Student import Student
+        if len(argv) == 3 and isinstance(argv[0], str) and isinstance(argv[1], int) and isinstance(argv[2], int) :
+            return self.addStudent1(argv[0], argv[1], argv[2])
+        if len(argv) == 1 and isinstance(argv[0], Student) :
+            return self.addStudent2(argv[0])
+        raise TypeError("No method matches provided parameters")

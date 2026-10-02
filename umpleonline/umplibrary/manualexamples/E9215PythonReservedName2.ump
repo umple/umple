@@ -1,5 +1,5 @@
 // Another name avoids the clash
-generate Python;
+generate PythonNext;
 namespace shapes;
 class Length {
   Double value;

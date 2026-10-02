@@ -1,0 +1,32 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class X1:
+    class Month(Enum):
+        January = "January"
+        February = "February"
+        March = "March"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self, aMonth):
+        self._month = aMonth
+
+    def setMonth(self, aMonth):
+        self._month = aMonth
+        return True
+
+    def getMonth(self):
+        return self._month
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "]"
+                + "\n  month=" + ("null" if self.getMonth() is None else "this" if self.getMonth() is self else str(self.getMonth()).replace("  ", "    ")))

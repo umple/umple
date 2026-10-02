@@ -1,0 +1,44 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class Light:
+    class Bulb(Enum):
+        Off = "Off"
+        On = "On"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self):
+        self._bulb = None
+        self._deleted = False
+        self.setBulb(__class__.Bulb.Off)
+
+    def getBulbFullName(self):
+        answer = str(self._bulb)
+        return answer
+
+    def getBulb(self):
+        return self._bulb
+
+    def flip(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aBulb = self._bulb
+        if aBulb is __class__.Bulb.Off:
+            self.setBulb(__class__.Bulb.On)
+            wasEventProcessed = True
+        elif aBulb is __class__.Bulb.On:
+            self.setBulb(__class__.Bulb.Off)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def setBulb(self, aBulb):
+        self._bulb = aBulb
+
+    def delete(self):
+        self._deleted = True

@@ -1,0 +1,13 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from abc import ABC
+
+
+class Foo(ABC):
+    def __init__(self):
+        if type(self) is __class__:
+            raise TypeError("Can't instantiate abstract class Foo")
+
+    def delete(self):
+        pass

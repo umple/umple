@@ -1,0 +1,17 @@
+class UmpleToPythonNext {
+    // A nested machine starts in Null; its history starts at its first state.
+    constructor_NestedStateMachineAssignDefault <<!<</*constructor_NestedStateMachineAssignDefault*/>>
+        self.<<=gen.translate("setMethod", nestedSm)>>(<<=gen.smType(nestedSm)>>.Null)<<#
+  realSb.append(gen.deletedCheck(gen.deletingFlag(uClass), "        ", ""));
+  if (nestedSm.getContainsDeepHistoryState())
+  {
+    #>>
+        <<=gen.historyField(uClass, nestedSm, "HStar")>> = <<=gen.stateReference(nestedSm.getState(1))>><<#
+  }
+  if (nestedSm.getContainsHistoryState())
+  {
+    #>>
+        <<=gen.historyField(uClass, nestedSm, "H")>> = <<=gen.stateReference(nestedSm.getState(1))>><<#
+  }
+  #>>!>>
+}

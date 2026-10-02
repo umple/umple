@@ -1,0 +1,48 @@
+use association_Guards.ump;
+
+class UmpleToPythonNext {
+    // Replaces the objects of an end of exactly n whose other end is optional one. The new objects
+    // must be n distinct objects (by identity) without another owner, and no frozen key member may
+    // change (association_LinkedKeyGuard); objects left out lose their owner. The other end's field
+    // is written directly, as Java does through reflection.
+    association_SetNToOptionalOne <<!<</*association_SetNToOptionalOne*/>><<#
+  String checkNew = gen.translate("parameterCheckNewMany", av);
+  String newObjects = gen.translate("parameterMany", av);
+  UmpleClass linkedClass = model.getUmpleClass(av.getType());
+  String linkedCanSet = linkedClass.getKey().isMember(relatedAssociation) ? gen.canSetField(linkedClass, relatedAssociation) : null;
+  #>>
+
+    def <<=gen.translate("setManyMethod", av)>>(self, *<<=newObjects>>):<<=gen.injected(uClass, "before", gen.translate("setManyMethod", av), gen.parameter(newObjects, av.getType()))>><<@ UmpleToPythonNext.association_KeyGuard >>
+        <<=checkNew>> = set()
+        for <<=parameter>> in <<=newObjects>>:
+            if id(<<=parameter>>) in <<=checkNew>>:
+                return False
+            if <<=parameter>>.<<=gen.relatedTranslate("getMethod", av)>>() is not None and <<=parameter>>.<<=gen.relatedTranslate("getMethod", av)>>() is not self:
+                return False<<#
+  if (linkedCanSet != null)
+  {
+    #>>
+            if <<=parameter>>.<<=gen.relatedTranslate("getMethod", av)>>() is not self and not <<=gen.onObject(parameter, linkedCanSet)>>:
+                return False<<#
+  }
+  #>>
+            <<=checkNew>>.add(id(<<=parameter>>))
+        if len(<<=checkNew>>) != self.<<=gen.translate("minimumNumberOfMethod", av)>>():
+            return False<<#
+  if (linkedCanSet != null)
+  {
+    #>>
+        for orphan in <<=field>>:
+            if id(orphan) not in <<=checkNew>> and not <<=gen.onObject("orphan", linkedCanSet)>>:
+                return False<<#
+  }
+  #>>
+        for orphan in <<=field>>:
+            if id(orphan) not in <<=checkNew>>:
+                <<=gen.onObject("orphan", gen.field(relatedAssociation))>> = None
+        <<=field>>.clear()
+        for <<=parameter>> in <<=newObjects>>:
+            <<=gen.onObject(parameter, gen.field(relatedAssociation))>> = self
+            <<=field>>.append(<<=parameter>>)<<=gen.injected(uClass, "after", gen.translate("setManyMethod", av), gen.parameter(newObjects, av.getType()))>><<=gen.sortAfterChange(av)>>
+        return True!>>
+}

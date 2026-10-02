@@ -1,0 +1,16 @@
+use association_Guards.ump;
+
+class UmpleToPythonNext {
+    // Setter of an optional one end whose other end is optional many: None unlinks. The old owner is
+    // compared by identity, so an equal but different owner is still left.
+    association_SetOptionalOneToMany <<!<</*association_SetOptionalOneToMany*/>>
+
+    def <<=gen.translate("setMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("setMethod", av), gen.parameter(parameter, av.getType()))>><<@ UmpleToPythonNext.association_SetGuards >>
+        <<=gen.translate("parameterExisting", av)>> = <<=field>>
+        <<=field>> = <<=parameter>>
+        if <<=gen.translate("parameterExisting", av)>> is not None and <<=gen.translate("parameterExisting", av)>> is not <<=parameter>>:
+            <<=gen.translate("parameterExisting", av)>>.<<=gen.relatedTranslate("removeMethod", av)>>(self)
+        if <<=parameter>> is not None:
+            <<=parameter>>.<<=gen.relatedTranslate("addMethod", av)>>(self)<<=gen.injected(uClass, "after", gen.translate("setMethod", av), gen.parameter(parameter, av.getType()))>>
+        return True!>>
+}

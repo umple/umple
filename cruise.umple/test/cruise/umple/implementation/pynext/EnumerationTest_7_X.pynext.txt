@@ -1,0 +1,25 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class X:
+    class Month(Enum):
+        Jan = "Jan"
+        Feb = "Feb"
+        Mar = "Mar"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass
+
+    def displayMonth(self, m):
+        # line 6 "../EnumerationTest_7.ump"
+        return(m.toString())
+        # end line

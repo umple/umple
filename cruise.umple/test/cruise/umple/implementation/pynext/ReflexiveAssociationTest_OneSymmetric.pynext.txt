@@ -1,0 +1,54 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class OneSymmetric:
+    def __init__(self, aName, aNumber, aNameForFriend, aNumberForFriend):
+        self._name = aName
+        self._number = aNumber
+        self._friend = None
+        self._friend = __class__.alternateConstructor(aNameForFriend, aNumberForFriend, self)
+
+    @classmethod
+    def alternateConstructor(cls, aName, aNumber, aFriend):
+        self = cls.__new__(cls)
+        __class__._alternateInit(self, aName, aNumber, aFriend)
+        return self
+
+    def _alternateInit(self, aName, aNumber, aFriend):
+        self._name = aName
+        self._number = aNumber
+        self._friend = None
+        if aFriend is None or aFriend.getFriend() is not None:
+            raise RuntimeError("Unable to create OneSymmetric due to aFriend. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        self._friend = aFriend
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def setNumber(self, aNumber):
+        self._number = aNumber
+        return True
+
+    def getName(self):
+        return self._name
+
+    def getNumber(self):
+        return self._number
+
+    def getFriend(self):
+        return self._friend
+
+    def delete(self):
+        existingFriend = self._friend
+        self._friend = None
+        if existingFriend is not None:
+            existingFriend.delete()
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "name:" + str(self.getName()) + ","
+                + "number:" + str(self.getNumber())
+                + "]"
+                + "\n  friend = " + ("null" if self.getFriend() is None else format(id(self.getFriend()), "x")))

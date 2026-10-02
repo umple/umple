@@ -244,6 +244,8 @@ class MethodParameter
  */
 class CodeBlock
 {	
+  depend cruise.umple.util.PythonSource;
+
   /*
    * @author Vahdat
    * @param another a CodeBlock that we would like to make a clone of.
@@ -284,7 +286,7 @@ class CodeBlock
 
   // Python code without keyword where it stands as code; the same text in a string or a comment is kept
   private static String removePythonKeyword(String code, String keyword){
-    for (int at = PythonGenerator.codeAt(code, keyword); at >= 0; at = PythonGenerator.codeAt(code, keyword)) {
+    for (int at = PythonSource.codeAt(code, keyword); at >= 0; at = PythonSource.codeAt(code, keyword)) {
       code = code.substring(0, at) + code.substring(at + keyword.length());
     }
     return code;

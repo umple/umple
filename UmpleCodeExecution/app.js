@@ -77,7 +77,7 @@ app.post('/run' , (req, res)  =>
             let totalServed = 0;
             mainFunctions.forEach((mainFunction) => {
                 let foundFilePath;
-                if(language==="Python"){
+                if(language==="Python" || language==="PythonNext"){
                     console.log(`languague is python`);
                     console.log("Finding file: " + (mainFunction + '.py'));
                     foundFilePath = findFile(path, "/", mainFunction + '.py');

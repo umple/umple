@@ -504,7 +504,7 @@ public class TemplateTest
     File expected = new File(pathToInput, codeFile);
     System.out.println(actual);
 
-    boolean isPython = codeFile.endsWith(".py.txt");
+    boolean isPython = "PythonNext".equals(language);
     if (isPython)
     {
       assertGeneratedPythonCompiles(model);
@@ -529,7 +529,7 @@ public class TemplateTest
 
   }
   
-  // For a shared test model that Python cannot generate: generating Python reports the diagnostic
+  // For a shared test model that PythonNext cannot generate: generating it reports the diagnostic
   // code (for example 9210 for an unsupported feature, 9211 for untranslatable untagged code).
   public void assertPythonDiagnostic(String umpleFile, int code)
   {
@@ -543,7 +543,7 @@ public class TemplateTest
     model.setLastResult(result);
     Assert.assertTrue("Syntax Failed at:" + result.getPosition(), result.getWasSuccess());
     model.setUmpleFile(new UmpleFile(new File(pathToInput, umpleFile)));
-    model.addGenerate("Python");
+    model.addGenerate("PythonNext");
     result = parser.analyze(true);
     List<Integer> codes = new ArrayList<Integer>();
     for (cruise.umple.parser.ErrorMessage message : model.getLastResult().getErrorMessages())
@@ -775,7 +775,7 @@ public class TemplateTest
   {
     List<String> lines = new ArrayList<String>();
     String[] all = text.replace("\r\n", "\n").split("\n", -1);
-    boolean[] insideString = PythonGenerator.linesInsideStrings(Arrays.asList(all));
+    boolean[] insideString = cruise.umple.util.PythonSource.linesInsideStrings(Arrays.asList(all));
     for (int i = 0; i < all.length; i++)
     {
       String line = all[i];

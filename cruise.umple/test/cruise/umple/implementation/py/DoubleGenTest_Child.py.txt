@@ -1,17 +1,29 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from example.Person import Person
-
+from Person import Person
 
 class Mentor(Person):
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName, aAge, aClass):
-        self._class = aClass
+        self._class = None
         super().__init__(aName, aAge)
-
-    def setClass(self, aClass):
         self._class = aClass
-        return True
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setClass(self, aClass):
+        wasSet = False
+        self._class = aClass
+        wasSet = True
+        return wasSet
 
     def getClass(self):
         return self._class
@@ -20,6 +32,4 @@ class Mentor(Person):
         super().delete()
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "class:" + str(self.getClass())
-                + "]")
+        return str(super().__str__()) + "[" + "class" + ":" + str(self.getClass()) + "]"

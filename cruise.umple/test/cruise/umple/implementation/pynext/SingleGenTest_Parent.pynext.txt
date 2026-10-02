@@ -1,0 +1,31 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Person:
+    def __init__(self, aName, aAge):
+        self._name = aName
+        self._age = aAge
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def setAge(self, aAge):
+        self._age = aAge
+        return True
+
+    def getName(self):
+        return self._name
+
+    def getAge(self):
+        return self._age
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "name:" + str(self.getName()) + ","
+                + "age:" + str(self.getAge())
+                + "]")

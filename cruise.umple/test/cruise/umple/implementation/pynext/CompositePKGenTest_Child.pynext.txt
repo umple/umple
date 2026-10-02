@@ -1,0 +1,25 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from example.Person import Person
+
+
+class Mentor(Person):
+    def __init__(self, aName, aId, aAge, aClass):
+        self._class = aClass
+        super().__init__(aName, aId, aAge)
+
+    def setClass(self, aClass):
+        self._class = aClass
+        return True
+
+    def getClass(self):
+        return self._class
+
+    def delete(self):
+        super().delete()
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "class:" + str(self.getClass())
+                + "]")

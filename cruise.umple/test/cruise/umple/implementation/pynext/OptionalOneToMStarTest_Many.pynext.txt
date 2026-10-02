@@ -1,0 +1,50 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Student:
+    def __init__(self, aNumber):
+        self._number = aNumber
+        self._mentor = None
+
+    def setNumber(self, aNumber):
+        self._number = aNumber
+        return True
+
+    def getNumber(self):
+        return self._number
+
+    def getMentor(self):
+        return self._mentor
+
+    def hasMentor(self):
+        return self._mentor is not None
+
+    def setMentor(self, aMentor):
+        existingMentor = self._mentor
+        if existingMentor is None:
+            if aMentor is None or not aMentor.addStudent(self):
+                return False
+        else:
+            if existingMentor.numberOfStudents() <= existingMentor.minimumNumberOfStudents():
+                return False
+            existingMentor.removeStudent(self)
+            if aMentor is not None:
+                aMentor.addStudent(self)
+        self._mentor = aMentor
+        return True
+
+    def delete(self):
+        if self._mentor is not None:
+            if self._mentor.numberOfStudents() <= 5:
+                self._mentor.delete()
+            else:
+                placeholderMentor = self._mentor
+                self._mentor = None
+                placeholderMentor.removeStudent(self)
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "number:" + str(self.getNumber())
+                + "]"
+                + "\n  mentor = " + ("null" if self.getMentor() is None else format(id(self.getMentor()), "x")))

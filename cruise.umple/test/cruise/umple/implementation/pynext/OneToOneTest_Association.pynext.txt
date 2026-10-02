@@ -1,0 +1,55 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Mentor:
+    def __init__(self, aName, aNameForStudent, aNumberForStudent):
+        self._name = aName
+        self._id = None
+        self._student = None
+        from example.Student import Student
+        self._student = Student.alternateConstructor(aNameForStudent, aNumberForStudent, self)
+
+    @classmethod
+    def alternateConstructor(cls, aName, aStudent):
+        self = cls.__new__(cls)
+        __class__._alternateInit(self, aName, aStudent)
+        return self
+
+    def _alternateInit(self, aName, aStudent):
+        self._name = aName
+        self._id = None
+        self._student = None
+        if aStudent is None or aStudent.getMentor() is not None:
+            raise RuntimeError("Unable to create Mentor due to aStudent. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        self._student = aStudent
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def setId(self, aId):
+        self._id = aId
+        return True
+
+    def getName(self):
+        return self._name
+
+    def getId(self):
+        return self._id
+
+    def getStudent(self):
+        return self._student
+
+    def delete(self):
+        existingStudent = self._student
+        self._student = None
+        if existingStudent is not None:
+            existingStudent.delete()
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "name:" + str(self.getName()) + ","
+                + "id:" + str(self.getId())
+                + "]"
+                + "\n  student = " + ("null" if self.getStudent() is None else format(id(self.getStudent()), "x")))

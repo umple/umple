@@ -1,0 +1,139 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class LightFixture:
+    class Status(Enum):
+        Off = "Off"
+        On = "On"
+
+        def __str__(self):
+            return self.value
+
+    class StatusOnMotorIdle(Enum):
+        Null = "Null"
+        MotorIdle = "MotorIdle"
+        MotorRunning = "MotorRunning"
+
+        def __str__(self):
+            return self.value
+
+    class StatusOnFanIdle(Enum):
+        Null = "Null"
+        FanIdle = "FanIdle"
+        FanRunning = "FanRunning"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self):
+        self._status = None
+        self._statusVisit = 0
+        self._statusOnMotorIdle = None
+        self._statusOnFanIdle = None
+        self._deleted = False
+        self.setStatusOnMotorIdle(__class__.StatusOnMotorIdle.Null)
+        self.setStatusOnFanIdle(__class__.StatusOnFanIdle.Null)
+        self.setStatus(__class__.Status.Off)
+
+    def getStatusFullName(self):
+        answer = str(self._status)
+        if self._statusOnMotorIdle is not __class__.StatusOnMotorIdle.Null:
+            answer += "." + str(self._statusOnMotorIdle)
+        if self._statusOnFanIdle is not __class__.StatusOnFanIdle.Null:
+            answer += "." + str(self._statusOnFanIdle)
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def getStatusOnMotorIdle(self):
+        return self._statusOnMotorIdle
+
+    def getStatusOnFanIdle(self):
+        return self._statusOnFanIdle
+
+    def turnOn(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus is __class__.Status.Off:
+            self.setStatus(__class__.Status.On)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def flip(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aStatusOnMotorIdle = self._statusOnMotorIdle
+        if aStatusOnMotorIdle is __class__.StatusOnMotorIdle.MotorIdle:
+            self.exitStatusOnMotorIdle()
+            self.setStatusOnMotorIdle(__class__.StatusOnMotorIdle.MotorRunning)
+            wasEventProcessed = True
+        elif aStatusOnMotorIdle is __class__.StatusOnMotorIdle.MotorRunning:
+            self.exitStatusOnMotorIdle()
+            self.setStatusOnMotorIdle(__class__.StatusOnMotorIdle.MotorIdle)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def flop(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aStatusOnFanIdle = self._statusOnFanIdle
+        if aStatusOnFanIdle is __class__.StatusOnFanIdle.FanIdle:
+            self.exitStatusOnFanIdle()
+            self.setStatusOnFanIdle(__class__.StatusOnFanIdle.FanRunning)
+            wasEventProcessed = True
+        elif aStatusOnFanIdle is __class__.StatusOnFanIdle.FanRunning:
+            self.exitStatusOnFanIdle()
+            self.setStatusOnFanIdle(__class__.StatusOnFanIdle.FanIdle)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def exitStatus(self):
+        self._statusVisit += 1
+        if self._status is __class__.Status.On:
+            self.exitStatusOnMotorIdle()
+            self.exitStatusOnFanIdle()
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        self._statusVisit += 1
+        visit = self._statusVisit
+        if self._status is __class__.Status.On:
+            if self._statusOnMotorIdle is __class__.StatusOnMotorIdle.Null:
+                self.setStatusOnMotorIdle(__class__.StatusOnMotorIdle.MotorIdle)
+            if self._statusVisit != visit:
+                return
+            if self._statusOnFanIdle is __class__.StatusOnFanIdle.Null:
+                self.setStatusOnFanIdle(__class__.StatusOnFanIdle.FanIdle)
+
+    def exitStatusOnMotorIdle(self):
+        if self._statusOnMotorIdle is __class__.StatusOnMotorIdle.MotorIdle:
+            self.setStatusOnMotorIdle(__class__.StatusOnMotorIdle.Null)
+        elif self._statusOnMotorIdle is __class__.StatusOnMotorIdle.MotorRunning:
+            self.setStatusOnMotorIdle(__class__.StatusOnMotorIdle.Null)
+
+    def setStatusOnMotorIdle(self, aStatusOnMotorIdle):
+        self._statusOnMotorIdle = aStatusOnMotorIdle
+        if self._status is not __class__.Status.On and aStatusOnMotorIdle is not __class__.StatusOnMotorIdle.Null:
+            self.setStatus(__class__.Status.On)
+
+    def exitStatusOnFanIdle(self):
+        if self._statusOnFanIdle is __class__.StatusOnFanIdle.FanIdle:
+            self.setStatusOnFanIdle(__class__.StatusOnFanIdle.Null)
+        elif self._statusOnFanIdle is __class__.StatusOnFanIdle.FanRunning:
+            self.setStatusOnFanIdle(__class__.StatusOnFanIdle.Null)
+
+    def setStatusOnFanIdle(self, aStatusOnFanIdle):
+        self._statusOnFanIdle = aStatusOnFanIdle
+        if self._status is not __class__.Status.On and aStatusOnFanIdle is not __class__.StatusOnFanIdle.Null:
+            self.setStatus(__class__.Status.On)
+
+    def delete(self):
+        self._deleted = True

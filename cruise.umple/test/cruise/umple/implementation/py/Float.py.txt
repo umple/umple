@@ -1,0 +1,31 @@
+class Student():
+    def __init__(self):
+        self._f1 = 1.1
+        f
+        self._f2 = 1.2
+        f
+
+    def setF1(self, aF1):
+        wasSet = False
+        self._f1 = aF1
+        wasSet = True
+        return wasSet
+
+    def setF2(self, aF2):
+        wasSet = False
+        self._f2 = aF2
+        wasSet = True
+        return wasSet
+
+    def getF1(self):
+        return self._f1
+
+    def getF2(self):
+        return self._f2
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super()) + "[" + "f1" + ":" + self.getF1() + "," + "f2" + ":" + self.getF2() + "]"
+

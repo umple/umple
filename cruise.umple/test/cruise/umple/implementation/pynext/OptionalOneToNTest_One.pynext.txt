@@ -1,0 +1,73 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Mentor:
+    def __init__(self, aName, *allStudents):
+        self._name = aName
+        self._students = []
+        if not self.setStudents(*allStudents):
+            raise RuntimeError("Unable to create Mentor, must have 3 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def getName(self):
+        return self._name
+
+    def getStudent(self, index):
+        return self._students[index]
+
+    def getStudents(self):
+        return tuple(self._students)
+
+    def numberOfStudents(self):
+        return len(self._students)
+
+    def hasStudents(self):
+        return len(self._students) > 0
+
+    def indexOfStudent(self, aStudent):
+        return next((i for i, x in enumerate(self._students) if x is aStudent), -1)
+
+    @staticmethod
+    def requiredNumberOfStudents():
+        return 3
+
+    @staticmethod
+    def minimumNumberOfStudents():
+        return 3
+
+    @staticmethod
+    def maximumNumberOfStudents():
+        return 3
+
+    def setStudents(self, *newStudents):
+        checkNewStudents = set()
+        for aStudent in newStudents:
+            if id(aStudent) in checkNewStudents:
+                return False
+            if aStudent.getMentor() is not None and aStudent.getMentor() is not self:
+                return False
+            checkNewStudents.add(id(aStudent))
+        if len(checkNewStudents) != self.minimumNumberOfStudents():
+            return False
+        for orphan in self._students:
+            if id(orphan) not in checkNewStudents:
+                orphan._mentor = None
+        self._students.clear()
+        for aStudent in newStudents:
+            aStudent._mentor = self
+            self._students.append(aStudent)
+        return True
+
+    def delete(self):
+        for aStudent in self._students:
+            aStudent._mentor = None
+        self._students.clear()
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]")

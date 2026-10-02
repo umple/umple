@@ -1,0 +1,79 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Student:
+    def __init__(self, aNumber):
+        self._number = aNumber
+        self._mentors = []
+
+    def setNumber(self, aNumber):
+        self._number = aNumber
+        return True
+
+    def getNumber(self):
+        return self._number
+
+    def getMentor(self, index):
+        return self._mentors[index]
+
+    def getMentors(self):
+        return tuple(self._mentors)
+
+    def numberOfMentors(self):
+        return len(self._mentors)
+
+    def hasMentors(self):
+        return len(self._mentors) > 0
+
+    def indexOfMentor(self, aMentor):
+        return next((i for i, x in enumerate(self._mentors) if x is aMentor), -1)
+
+    def isNumberOfMentorsValid(self):
+        return self.numberOfMentors() >= __class__.minimumNumberOfMentors() and self.numberOfMentors() <= __class__.maximumNumberOfMentors()
+
+    @staticmethod
+    def requiredNumberOfMentors():
+        return 5
+
+    @staticmethod
+    def minimumNumberOfMentors():
+        return 5
+
+    @staticmethod
+    def maximumNumberOfMentors():
+        return 5
+
+    def addMentor(self, aMentor):
+        if any(x is aMentor for x in self._mentors):
+            return False
+        if self.numberOfMentors() >= __class__.maximumNumberOfMentors():
+            return False
+        self._mentors.append(aMentor)
+        if aMentor.indexOfStudent(self) == -1 and not aMentor.addStudent(self):
+            del self._mentors[next((i for i, x in enumerate(self._mentors) if x is aMentor), -1)]
+            return False
+        return True
+
+    def removeMentor(self, aMentor):
+        oldIndex = next((i for i, x in enumerate(self._mentors) if x is aMentor), -1)
+        if oldIndex == -1:
+            return False
+        if self.numberOfMentors() <= __class__.minimumNumberOfMentors():
+            return False
+        del self._mentors[oldIndex]
+        if aMentor.indexOfStudent(self) != -1 and not aMentor.removeStudent(self):
+            self._mentors.insert(oldIndex, aMentor)
+            return False
+        return True
+
+    def delete(self):
+        copyOfMentors = tuple(self._mentors)
+        self._mentors.clear()
+        for aMentor in copyOfMentors:
+            aMentor.removeStudent(self)
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "number:" + str(self.getNumber())
+                + "]")

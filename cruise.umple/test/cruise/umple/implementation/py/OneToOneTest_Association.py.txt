@@ -1,36 +1,53 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 3 "../OneToOneTest.ump"
+import os
 
-
-class Mentor:
-    def __init__(self, aName, aNameForStudent, aNumberForStudent):
-        self._name = aName
-        self._id = None
-        self._student = None
-        from example.Student import Student
-        self._student = Student.alternateConstructor(aNameForStudent, aNumberForStudent, self)
-
+class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     @classmethod
     def alternateConstructor(cls, aName, aStudent):
         self = cls.__new__(cls)
-        __class__._alternateInit(self, aName, aStudent)
-        return self
-
-    def _alternateInit(self, aName, aStudent):
+        self._student = None
+        self._id = None
+        self._name = None
         self._name = aName
         self._id = None
-        self._student = None
-        if aStudent is None or aStudent.getMentor() is not None:
-            raise RuntimeError("Unable to create Mentor due to aStudent. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        if aStudent is None or not (aStudent.getMentor() is None) :
+            raise RuntimeError ("Unable to create Mentor due to aStudent. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
         self._student = aStudent
+        return self
 
-    def setName(self, aName):
+    def __init__(self, aName, aNameForStudent, aNumberForStudent):
+        from example.Student import Student
+        self._student = None
+        self._id = None
+        self._name = None
         self._name = aName
-        return True
+        self._id = None
+        self._student = Student.alternateConstructor(aNameForStudent, aNumberForStudent, self)
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setName(self, aName):
+        wasSet = False
+        self._name = aName
+        wasSet = True
+        return wasSet
 
     def setId(self, aId):
+        wasSet = False
         self._id = aId
-        return True
+        wasSet = True
+        return wasSet
 
     def getName(self):
         return self._name
@@ -38,18 +55,16 @@ class Mentor:
     def getId(self):
         return self._id
 
+    # Code from template association_GetOne 
     def getStudent(self):
         return self._student
 
     def delete(self):
         existingStudent = self._student
         self._student = None
-        if existingStudent is not None:
+        if not (existingStudent is None) :
             existingStudent.delete()
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "name:" + str(self.getName()) + ","
-                + "id:" + str(self.getId())
-                + "]"
-                + "\n  student = " + ("null" if self.getStudent() is None else format(id(self.getStudent()), "x")))
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "," + "id" + ":" + str(self.getId()) + "]" + str(os.linesep) + "  " + "student = " + ((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null")
+

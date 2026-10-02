@@ -1,0 +1,32 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Client:
+    def __init__(self, aMinAge):
+        self._minAge = aMinAge
+
+    def setMinAge(self, aMinAge):
+        self._minAge = aMinAge
+        return True
+
+    def getMinAge(self):
+        return self._minAge
+
+    def delete(self):
+        pass
+
+    def someMethod(self, arg):
+        result = __class__.someMethod_Original(self, arg)
+        if not (arg > 5):
+            raise RuntimeError("Please provide a valid arg")
+        return result
+
+    def someMethod_Original(self, arg):
+        # rest of stuff that we don\'t interpret
+        return 0
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "minAge:" + str(self.getMinAge())
+                + "]")

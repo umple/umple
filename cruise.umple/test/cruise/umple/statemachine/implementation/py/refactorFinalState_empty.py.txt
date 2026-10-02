@@ -1,66 +1,78 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 3 "../refactorFinalState_empty.ump"
+from enum import Enum, auto
 
-from enum import Enum
-
-
-class X:
+class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Status(Enum):
-        on = "on"
-        off = "off"
-        FINAL = "FINAL"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        on = auto()
+        off = auto()
+        FINAL = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._status = None
-        self._deleted = False
-        self.setStatus(__class__.Status.on)
-        if self._deleted:
-            return
+        self.setStatus(X.Status.on)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getStatusFullName(self):
-        answer = str(self._status)
+        answer = self._status.__str__()
         return answer
 
     def getStatus(self):
         return self._status
 
     def turnoff(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus is __class__.Status.on:
-            self.setStatus(__class__.Status.off)
+        if aStatus == X.Status.on :
+            self.setStatus(X.Status.off)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def powerOff(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus is __class__.Status.on:
-            self.setStatus(__class__.Status.FINAL)
+        if aStatus == X.Status.on :
+            self.setStatus(X.Status.FINAL)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def turnOn(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus is __class__.Status.off:
-            self.setStatus(__class__.Status.on)
+        if aStatus == X.Status.off :
+            self.setStatus(X.Status.on)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def setStatus(self, aStatus):
         self._status = aStatus
-        if self._status is __class__.Status.FINAL:
+        # entry actions and do activities
+        if self._status == X.Status.FINAL :
             self.delete()
 
     def delete(self):
-        self._deleted = True
+        pass
+

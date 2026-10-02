@@ -1,36 +1,57 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
 
-from enum import Enum
+import os
+from enum import Enum, auto
 
-
-class C2:
+class C2():
+    #------------------------
+    # ENUMERATIONS
+    #------------------------
     class Status(Enum):
-        Married = "Married"
-        Single = "Single"
-        Divorced = "Divorced"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        Married = auto()
+        Single = auto()
+        Divorced = auto()
 
     class Gender(Enum):
-        Male = "Male"
-        Female = "Female"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        Male = auto()
+        Female = auto()
 
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #C2 Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aGender, aStatus):
+        self._status = None
+        self._gender = None
         self._gender = aGender
         self._status = aStatus
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setGender(self, aGender):
+        wasSet = False
         self._gender = aGender
-        return True
+        wasSet = True
+        return wasSet
 
     def setStatus(self, aStatus):
+        wasSet = False
         self._status = aStatus
-        return True
+        wasSet = True
+        return wasSet
 
     def getGender(self):
         return self._gender
@@ -42,7 +63,4 @@ class C2:
         pass
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "]"
-                + "\n  gender=" + ("null" if self.getGender() is None else "this" if self.getGender() is self else str(self.getGender()).replace("  ", "    "))
-                + "\n  status=" + ("null" if self.getStatus() is None else "this" if self.getStatus() is self else str(self.getStatus()).replace("  ", "    ")))
+        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "gender" + "=" + str((((self.getGender().__str__().replaceAll("  ", "    ")) if not self.getGender() == self else "this") if not (self.getGender() is None) else "null")) + str(os.linesep) + "  " + "status" + "=" + (((self.getStatus().__str__().replaceAll("  ", "    ")) if not self.getStatus() == self else "this") if not (self.getStatus() is None) else "null")

@@ -1,0 +1,21 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class OneToMany:
+    def __init__(self, aOneToMany):
+        self._oneToMany = None
+        if not self.setOneToMany(aOneToMany):
+            raise RuntimeError("Unable to create OneToMany due to aOneToMany. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def getOneToMany(self):
+        return self._oneToMany
+
+    def setOneToMany(self, aNewOneToMany):
+        if aNewOneToMany is None:
+            return False
+        self._oneToMany = aNewOneToMany
+        return True
+
+    def delete(self):
+        self._oneToMany = None

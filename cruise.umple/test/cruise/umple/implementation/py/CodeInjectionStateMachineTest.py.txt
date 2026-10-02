@@ -1,23 +1,16 @@
-#PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+from enum import Enum, auto
 
-from enum import Enum
-
-
-class Example:
+class Example():
     class Light(Enum):
-        On = "On"
-        Off = "Off"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        On = auto()
+        Off = auto()
 
     def __init__(self):
-        self._light = None
-        self._deleted = False
-        self.setLight(__class__.Light.On)
-        if self._deleted:
-            return
+        self.setLight(Example.Light.On)
 
     def getLightFullName(self):
         answer = str(self._light)
@@ -27,26 +20,24 @@ class Example:
         return self._light
 
     def flip(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aLight = self._light
-        if aLight is __class__.Light.On:
-            self.setLight(__class__.Light.Off)
-            wasEventProcessed = True
-        elif aLight is __class__.Light.Off:
-            self.setLight(__class__.Light.On)
-            wasEventProcessed = True
+        match aLight :
+            case Example.Light.On :
+                self.setLight(Example.Light.Off)
+                wasEventProcessed = True
+            case Example.Light.Off :
+                self.setLight(Example.Light.On)
+                wasEventProcessed = True
+            case default :
+                pass
         return wasEventProcessed
 
     def setLight(self, aLight):
-        print("About to flip")
-        if self._deleted:
-            return
+        System.out.println("About to flip")
         self._light = aLight
-        print("Just flipped")
-        if self._deleted:
-            return
+        System.out.println("Just flipped")
 
     def delete(self):
-        self._deleted = True
+        pass
+

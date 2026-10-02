@@ -45,7 +45,7 @@ class DockerExecution {
         }
         const pathArr=path.split('/');
 
-        if(this.language=="Python"){
+        if(this.language=="Python" || this.language=="PythonNext"){
             return path ? `${path}/${this.mainFile}.py` : `${this.mainFile}.py`;
         }
         return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;    

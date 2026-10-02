@@ -61,7 +61,7 @@ public class MultipleTargetsFromOneModelTest
   @Test
   public void eachTargetGetsItsOwnCode() throws Exception
   {
-    String[] targets = {"Java", "Php", "Ruby", "RTCpp", "Python", "Java", "Python", "Php"};
+    String[] targets = {"Java", "Php", "Ruby", "RTCpp", "PythonNext", "Java", "PythonNext", "Php"};
     UmpleModel shared = parse();
     for (String target : targets)
     {
@@ -134,7 +134,7 @@ public class MultipleTargetsFromOneModelTest
     String javaB = generate(parse(orders), "Java").get("B");
     String n = javaB.substring(javaB.indexOf("public Integer n("));
     Assert.assertTrue(javaB, n.substring(0, n.indexOf("return a;")).contains("a<=0"));
-    String pythonB = generate(parse(orders), "Python").get("B");
+    String pythonB = generate(parse(orders), "PythonNext").get("B");
     String q = pythonB.substring(pythonB.indexOf("def q("));
     Assert.assertFalse(pythonB, q.substring(0, q.indexOf("return a")).contains("a > 0"));
     // One declaration can hold both kinds: the untagged block's conditions reach every body, the
@@ -148,7 +148,7 @@ public class MultipleTargetsFromOneModelTest
       String javaM = javaC.substring(javaC.indexOf("public Integer m("));
       javaM = javaM.substring(0, javaM.indexOf("return a;"));
       Assert.assertTrue(mixed, javaM.contains("a<=0") && !javaM.contains("a>=10"));
-      String pythonC = generate(parse("class C {\n" + mixed + "}\n"), "Python").get("C");
+      String pythonC = generate(parse("class C {\n" + mixed + "}\n"), "PythonNext").get("C");
       Assert.assertTrue(mixed + pythonC, pythonC.contains("a > 0") && pythonC.contains("a < 10"));
     }
     // The untagged body a tagged block with conditions only takes is replaced by a body of that
@@ -215,7 +215,7 @@ public class MultipleTargetsFromOneModelTest
       {
         String own = names.contains(language[1]) ? language[1] : null;
         boolean exists = own != null || untagged != null || !anyBody && (names.contains("UC") || names.contains(language[2]));
-        boolean actual = "Python".equals(language[0]) ? PythonGenerator.pythonLanguage(m) != null : m.getExistsInLanguage(language[0]);
+        boolean actual = "Python".equals(language[0]) ? PythonNextGenerator.pythonLanguage(m) != null : m.getExistsInLanguage(language[0]);
         Assert.assertEquals(names + " " + language[0], exists, actual);
         if (!exists) continue;
         String body = own != null ? own : untagged;
@@ -280,7 +280,7 @@ public class MultipleTargetsFromOneModelTest
   {
     UmpleModel model = parse();
     List<String> before = conditions(model);
-    for (String target : new String[] {"Java", "Php", "Ruby", "Python", "Java"})
+    for (String target : new String[] {"Java", "Php", "Ruby", "PythonNext", "Java"})
     {
       generate(model, target);
       Assert.assertEquals(target, before, conditions(model));

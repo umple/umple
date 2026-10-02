@@ -1,24 +1,8 @@
 generate Python "../src-gen-umple";
 
 use ../../testbed/src/TestHarnessAssociations.ump;
-use ../../testbed/src/TestHarnessAssociationClass.ump;
 use ../../testbed/src/TestHarnessAttributesPython.ump;
 use ../../testbed/src/TestHarnessStateMachinePython.ump;
-use ../../testbed/src/TestHarnessPatterns.ump;
 use ../../testbed/src/TestHarnessPatternsImmutable.ump;
 use ../../testbed/src/TestHarnessConstraints.ump;
-use ../../testbed/src/TestHarnessCompositionsLeft.ump;
-use ../../testbed/src/TestHarnessCompositionsRight.ump;
 use LocalHarness.ump;
-use TestHarnessStateMachineBehaviour.ump;
-use TestHarnessUserCode.ump;
-use TestHarnessCompatibility.ump;
-use TestHarnessPythonCore.ump;
-use TestHarnessPythonUserCode.ump;
-use TestHarnessPythonManyMany.ump;
-use TestHarnessPythonOneMany.ump;
-use TestHarnessPythonOneOne.ump;
-use TestHarnessPythonStateMachines.ump;
-use TestHarnessPythonConstraintCalls.ump;
-use TestHarnessPythonExpressions.ump;
-use TestHarnessPythonGuardEffects.ump;

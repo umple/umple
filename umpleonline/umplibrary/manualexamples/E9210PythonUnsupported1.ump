@@ -1,6 +1,6 @@
-// Tracing is not available for Python yet, so generating
-// Python from this model reports E9210 and writes no Lamp.py
-generate Python;
+// Tracing is not available in PythonNext yet, so generating
+// PythonNext from this model reports E9210 and writes no Lamp.py
+generate PythonNext;
 class Lamp {
   Integer level;
   trace level;

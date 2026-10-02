@@ -1,0 +1,10 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class MyException(Exception):
+    def __init__(self, aMessage, aParent):
+        super().__init__(aMessage, aParent)
+
+    def delete(self):
+        pass

@@ -1,64 +1,77 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 
-from enum import Enum
+from enum import Enum, auto
 
-
-class stateMachineWithStringComparisonGuard:
+class stateMachineWithStringComparisonGuard():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #stateMachineWithStringComparisonGuard Attributes
+    #stateMachineWithStringComparisonGuard State Machines
     class CommandControl(Enum):
-        IDLE = "IDLE"
-        CHECK_AVAILABILITY = "CHECK_AVAILABILITY"
-        COMMAND_VALIDITY = "COMMAND_VALIDITY"
-        EXECUTION = "EXECUTION"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        IDLE = auto()
+        CHECK_AVAILABILITY = auto()
+        COMMAND_VALIDITY = auto()
+        EXECUTION = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
-        self._cmdString = ""
         self._commandControl = None
-        self._deleted = False
-        self.setCommandControl(__class__.CommandControl.IDLE)
+        self._cmdString = None
+        self._cmdString = ""
+        self.setCommandControl(stateMachineWithStringComparisonGuard.CommandControl.IDLE)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setCmdString(self, aCmdString):
+        wasSet = False
         self._cmdString = aCmdString
-        return True
+        wasSet = True
+        return wasSet
 
     def getCmdString(self):
         return self._cmdString
 
     def getCommandControlFullName(self):
-        answer = str(self._commandControl)
+        answer = self._commandControl.__str__()
         return answer
 
     def getCommandControl(self):
         return self._commandControl
 
     def execute(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aCommandControl = self._commandControl
-        if aCommandControl is __class__.CommandControl.IDLE:
-            self.setCommandControl(__class__.CommandControl.CHECK_AVAILABILITY)
+        if aCommandControl == stateMachineWithStringComparisonGuard.CommandControl.IDLE :
+            self.setCommandControl(stateMachineWithStringComparisonGuard.CommandControl.CHECK_AVAILABILITY)
             wasEventProcessed = True
-        elif aCommandControl is __class__.CommandControl.CHECK_AVAILABILITY:
-            if "" != self.getCmdString():
-                self.setCommandControl(__class__.CommandControl.COMMAND_VALIDITY)
+        elif aCommandControl == stateMachineWithStringComparisonGuard.CommandControl.CHECK_AVAILABILITY :
+            if not "" == self.getCmdString() :
+                self.setCommandControl(stateMachineWithStringComparisonGuard.CommandControl.COMMAND_VALIDITY)
                 wasEventProcessed = True
-        elif aCommandControl is __class__.CommandControl.COMMAND_VALIDITY:
-            if self.isCommandValid(self.getCmdString()):
-                self.setCommandControl(__class__.CommandControl.EXECUTION)
+        elif aCommandControl == stateMachineWithStringComparisonGuard.CommandControl.COMMAND_VALIDITY :
+            if isCommandValid(self.getCmdString()) :
+                self.setCommandControl(stateMachineWithStringComparisonGuard.CommandControl.EXECUTION)
                 wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def setCommandControl(self, aCommandControl):
         self._commandControl = aCommandControl
 
     def delete(self):
-        self._deleted = True
+        pass
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "cmdString:" + str(self.getCmdString())
-                + "]")
+        return str(super().__str__()) + "[" + "cmdString" + ":" + str(self.getCmdString()) + "]"
+

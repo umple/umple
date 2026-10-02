@@ -1,6 +1,6 @@
 // describe has a Java body only, so the generated Python
 // leaves it out and W9212 names it
-generate Python;
+generate PythonNext;
 class Book {
   title;
   String describe() Java { return "Book " + getTitle(); }

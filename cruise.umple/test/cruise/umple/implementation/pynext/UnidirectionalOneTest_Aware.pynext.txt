@@ -1,0 +1,35 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Mentor:
+    def __init__(self, aName, aStudent):
+        self._name = aName
+        self._student = None
+        if not self.setStudent(aStudent):
+            raise RuntimeError("Unable to create Mentor due to aStudent. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def getName(self):
+        return self._name
+
+    def getStudent(self):
+        return self._student
+
+    def setStudent(self, aNewStudent):
+        if aNewStudent is None:
+            return False
+        self._student = aNewStudent
+        return True
+
+    def delete(self):
+        self._student = None
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]"
+                + "\n  student = " + ("null" if self.getStudent() is None else format(id(self.getStudent()), "x")))

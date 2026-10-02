@@ -1,23 +1,32 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 
-from enum import Enum
+from enum import Enum, auto
 
-
-class Student:
+class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student State Machines
     class Grade(Enum):
-        Pass = "Pass"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        Pass = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._grade = None
-        self._deleted = False
-        self.setGrade(__class__.Grade.Pass)
+        self.setGrade(Student.Grade.Pass)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getGradeFullName(self):
-        answer = str(self._grade)
+        answer = self._grade.__str__()
         return answer
 
     def getGrade(self):
@@ -28,4 +37,5 @@ class Student:
         return True
 
     def delete(self):
-        self._deleted = True
+        pass
+

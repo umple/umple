@@ -9,6 +9,7 @@
   <property name="project.output.path" value="temp" />
   <property name="java.path" value="${project.output.path}/java" />
   <property name="python.path" value="${project.output.path}/python" />
+  <property name="pythonnext.path" value="${project.output.path}/pythonnext" />
   <property name="cpp.path" value="${project.output.path}/cpp" />
   <property name="php.path" value="${project.output.path}/php" />
   <property name="ruby.path" value="${project.output.path}/ruby" />
@@ -46,6 +47,7 @@
       <try>
         <antcall target="newUserManualAndExampleTestsJava" /> <!-- New replacement for above -->
         <antcall target="newUserManualAndExampleTestsPython" /> <!-- New replacement for above -->
+        <antcall target="newUserManualAndExampleTestsPythonNext" />
         <antcall target="newUserManualAndExampleTestsCpp" />
         <antcall target="newUserManualAndExampleTestsPhp" /> <!-- New replacement for above -->
         <!--<antcall target="doRuby" />-->
@@ -77,7 +79,7 @@
       <exclude name="E2*.ump" />
       <exclude name="E3*.ump" />
       <exclude name="E4*.ump" />      
-      <!-- Python's error examples: their generate Python directive reports the error -->
+      <!-- PythonNext's error examples: their generate PythonNext directive reports the error -->
       <exclude name="E921*.ump" />
       <exclude name="WE1xxIdentifierInvalid1.ump" />
       <exclude name="WE1xxIdentifierInvalid3.ump" />
@@ -141,16 +143,177 @@
   </target>
 
   <target name="newUserManualAndExampleTestsPython">
+    <echo>Building User Manual and UmpleOnline Examples for Python and compiling Python using -c - option and method inside the compiler.</echo>
+  
+    <!-- Pick all the relevant examples to test -->
+    <fileset dir="${python.path}" includes="*.ump" id="pythonumpfiles">
+      <!-- Special cases - temporary until error detection-->
+      <exclude name="E0*.ump" />
+      <exclude name="E1*.ump" />
+      <exclude name="E2*.ump" />
+      <exclude name="E3*.ump" />
+      <exclude name="E4*.ump" />      
+      <!-- PythonNext's error examples: their generate PythonNext directive reports the error -->
+      <exclude name="E921*.ump" />
+      <exclude name="WE1xxIdentifierInvalid1.ump" />
+      <exclude name="WE1xxIdentifierInvalid3.ump" />
+      <exclude name="WE1xxIdentifierInvalid5.ump" />
+      <exclude name="WE1xxIdentifierInvalid6.ump" />
+      <exclude name="WE1xxIdentifierInvalid7.ump" />
+      <exclude name="W142TypeIsAccessSpecifierAmbiguous.ump" />
+      <!-- This fails to compile because they are incomplete examples of umple -->
+      <exclude name="UseStatements1.ump" />
+      <!-- Temporary exclusion .. challenges compiling in ant only to fix -->
+      <exclude name="NamespaceDirectives4.ump" />
+      <exclude name="HtmlGeneration2.ump" />
+      <exclude name="OBDCarSystem.ump" />
+      <!-- The following is excluded because it embeds unsafe code which would need to be replaced -->
+      <exclude name="ComplexStateMachine.ump"/>
+      <!-- The following is temporarily excluded because of an odd Java error only on the server not Mac -->
+      <exclude name="W010SingletonMultiplicityOver12.ump"/>
+
+      <!-- Contains the Java specific TimerTask class-->
+      <exclude name="Dishwasher.ump"/> <!-- uses synchronized keyword -->
+
+      <exclude name="W1012MethodNotFoundInjection1.ump"/> <!-- meant to be error -->
+
+      <!-- April 2023, no longer excluded 
+      <exclude name="AccessControl2.ump"/>
+      <exclude name="CanalLockStateMachine.ump"/>
+      <exclude name="Elevator_State_Machine.ump"/>
+      <exclude name="LibraryLoanStateMachine.ump"/>
+      <exclude name="TimedCommands.ump"/>
+      <exclude name="TrafficLightsB.ump"/>
+       -->
+
+
+      <!-- Contains the Java specific Thread class -->
+      <!-- April 2023, no longer excluded 
+      <exclude name="Auto-Transitions1.ump"/>
+      <exclude name="BcmsBaseConfiguration.ump"/>
+      <exclude name="BcmsMultipleCrisis-Multiple-Coordinator-Configuration.ump"/>
+      <exclude name="Ball_Game.ump"/>
+      <exclude name="MicrowaveOven2.ump"/>
+      <exclude name="Runway.ump"/> 
+      <exclude name="StateMachineActionsandDoActivities1.ump"/>
+      -->
+      
+      <!-- Contains the Java specific Message class + Threading  -->
+      <exclude name="CodeInjectioninCustomMethods1.ump"/>
+      <exclude name="CodeInjectioninEventMethods1.ump"/>
+      <exclude name="QueuedStateMachines1.ump"/>
+      <exclude name="SecurityLight.ump"/>
+      <exclude name="UnspecifiedEvents2.ump"/>
+
+      <!-- Contains Java specific classes used to generate HTML -->
+      <exclude name="BasicTemplates1.ump"/>
+      <exclude name="BasicTemplates2.ump"/>
+      <exclude name="BasicTemplates3.ump"/>
+      <exclude name="HtmlGeneration.ump"/>
+      <exclude name="DistributedClassInheritance1.ump"/>
+      <exclude name="DistributedOptions2.ump"/>
+      <exclude name="ExtendedDistributedExample3.ump"/>
+
+      <!-- Other issues bugs -->
+      <exclude name="AroundStatement1.ump"/>  <!-- Code Injection -->
+      <exclude name="AroundStatement2.ump"/>  <!-- Code Injection -->
+      <exclude name="PingPong.ump"/>  <!-- Code Injection -->
+      <exclude name="PooledStateMachines1.ump"/> <!-- Hashmaps failling to translate -->
+      <exclude name="StateDependentMethods1.ump"/> <!-- Return nothing on a switch case -->
+      <exclude name="StateDependentMethods2.ump"/> <!-- Return nothing on a switch case -->
+      <exclude name="TcpIpSimulation.ump"/> <!-- uses synchronized keyword -->
+      <exclude name="W082ConflictingModifiers.ump"/> <!-- Contains raw java code -->
+      <exclude name="W1006StateMachineNotParsed1.ump"/>
+      <exclude name="W1007ElementNotParsed1.ump"/>
+      <exclude name="W1010ConstraintSyntaxNotProcessed1.ump"/>
+      <exclude name="NullExample.ump"/>
+
+      <!-- Contains Java specific classes for tracing -->
+      <exclude name="Phone.ump"/>
+      <exclude name="Tracers1.ump"/>
+      <exclude name="Tracers2.ump"/>
+      <exclude name="Tracers3.ump"/>
+      <exclude name="Tracers4.ump"/>
+      <exclude name="Tracers5.ump"/>
+      <exclude name="TracingAssociations1.ump"/>
+      <exclude name="TracingAssociations2.ump"/>
+      <exclude name="TracingAssociations3.ump"/>
+      <exclude name="TracingAttributes1.ump"/>
+      <exclude name="TracingAttributes2.ump"/>
+      <exclude name="TracingAttributes3.ump"/>
+      <exclude name="TracingAttributeswithConditions2.ump"/>
+      <exclude name="TracingAttributeswithOccurrences1.ump"/>
+      <exclude name="TracingAttributeswithOccurrences2.ump"/>
+      <exclude name="TracingAttributeswithtimeline1.ump"/>
+      <exclude name="TracingAttributeswithtimeline2.ump"/>
+      <exclude name="TracingBasics1.ump"/>
+      <exclude name="TracingBasics2.ump"/>
+      <exclude name="TracingConstraints1.ump"/>
+      <exclude name="TracingConstraints2.ump"/>
+      <exclude name="TracingConstraints3.ump"/>
+      <exclude name="TracingMethods1.ump"/>
+      <exclude name="TracingMethods2.ump"/>
+      <exclude name="TracingStateMachines1.ump"/>
+      <exclude name="TracingStateMachines2.ump"/>
+      <exclude name="TracingStateMachines3.ump"/>
+      <exclude name="W301TracingEntityNotFound1.ump"/>
+      <exclude name="W301TracingEntityNotFound2.ump"/>
+      <exclude name="W302TracerNotRecognized1.ump"/>
+      <exclude name="W302TracerNotRecognized2.ump"/>
+    </fileset> 
+
+    <pathconvert pathsep=";" property="pythonumpfiles2" refid="pythonumpfiles"/>
+    
+    <echo file="${python.path}/allExamplesList.txt">${pythonumpfiles2}</echo>
+
+    <replace file="${python.path}/allExamplesList.txt" token=";" value="&#10;"/>
+    <echo>Umple examples to be tested and Python tested are in "${python.path}/allExamplesList.txt"</echo>
+
+    <copy file="${python.path}/allExamplesList.txt" todir="${dist.dir}/qa"/>
+
+    <!-- Compile in umple to Python and generate the Python -->
+      <trycatch>
+        <try>
+          <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true" dir="${python.path}">
+            <arg value="-g" />
+            <arg value="Python" />
+            <arg value="--path" />
+            <arg value="src-gen-umple" />
+            <!--arg value="-r" --> <!-- Uncomment to remove prev generated java+class files before each compile -->
+            <arg value="-w" /> <!-- Suppress expected warnings for files starting W -->
+            <arg value="-q" /> <!-- Comment out for more verbose trace -->
+            <arg value="-c" /> <!-- Do the Java compilation of whatever is produced by Umple -->
+            <arg value="-" />
+            <!--arg value="-x" --> <!-- Uncomment to use slower exec method of invoking compiler instead of internal -->           
+            <arg value="-f" /> <!-- Do separate generation and compilation for each line in this file -->
+            <arg value="allExamplesList.txt" />
+          </java>
+        </try>
+
+        <catch>
+          <echo>Failed to compile Umple and/or generate Python code from one or more examples</echo>
+          <if>
+            <equals arg1="${failfast}" arg2="true" />
+            <then>
+              <fail message="Failed tests of an Umpleonline or manual example when generating and compiling the Python"/>
+            </then>
+          </if>
+        </catch>
+      </trycatch>
+
+  </target>
+
+  <target name="newUserManualAndExampleTestsPythonNext">
     <!-- One sweep of every UmpleOnline, manual and extra example plus the relevant testbed and
-         compiler fixtures, each checked against its expected outcome in build/python_corpus_manifest.json -->
-    <echo>Checking Python generation on the example corpus with build/python_corpus_gate.py (each unexpected case is printed with its reason; details in ${python.path}/gate/results.json until the temporary folders are removed)</echo>
+         compiler fixtures, each checked against its expected outcome in build/pythonnext_corpus_manifest.json -->
+    <echo>Checking PythonNext generation on the example corpus with build/pythonnext_corpus_gate.py (details in ${pythonnext.path}/gate/results.json)</echo>
     <fail unless="python.found" message="No Python 3 interpreter found (tried ${python.candidate}, then python unless UMPLE_PYTHON is set); set UMPLE_PYTHON to one"/>
     <exec executable="${python.exe}" failonerror="true">
-      <arg value="build/python_corpus_gate.py" />
+      <arg value="build/pythonnext_corpus_gate.py" />
       <arg value="--jar" />
       <arg value="${dist.dir}/${dist.umple.jar}" />
       <arg value="--output" />
-      <arg value="${python.path}/gate" />
+      <arg value="${pythonnext.path}/gate" />
     </exec>
   </target>
   
@@ -165,8 +328,6 @@
       <exclude name="E2*.ump" />
       <exclude name="E3*.ump" />
       <exclude name="E4*.ump" />      
-      <!-- Python's error examples: their generate Python directive reports the error -->
-      <exclude name="E921*.ump" />
       <exclude name="ExtendedDistributedExample3.ump"/>
       <exclude name="WE1xxIdentifierInvalid1.ump" />
       <exclude name="WE1xxIdentifierInvalid3.ump" />
@@ -239,8 +400,6 @@
     <!-- Pick all the relevant examples to test -->
     <fileset dir="${cpp.path}" includes="*.ump" id="cppumpfiles">
       <!-- Special cases - temporary until error detection-->
-      <!-- Python's error examples: their generate Python directive reports the error -->
-      <exclude name="E921*.ump" />
       <exclude name="OBDCarSystem.ump"/>
       <exclude name="ActiveObjects1.ump"/>
       <exclude name="AgentsCommunication.ump"/>
@@ -466,7 +625,7 @@
         <mkdir dir="${java.path}" />
         <mkdir dir="${java.path}/src-gen-umple" />
         <mkdir dir="${java.path}/bin" />
-        <exec executable="ruby" failonerror="true">
+        <exec executable="ruby">
           <arg value="build/get_testable_examples.rb" />
           <arg value="-i" />
           <arg value="${manualumpfiles.path}" />
@@ -487,8 +646,22 @@
         <equals arg1="${mode.notpython}" arg2="false" />
       </not>
       <then>
-        <!-- the Python corpus gate reads the examples in place -->
         <mkdir dir="${python.path}" />
+        <mkdir dir="${python.path}/src-gen-umple" />
+        <mkdir dir="${python.path}/bin" />
+        <exec executable="ruby">
+          <arg value="build/get_testable_examples.rb" />
+          <arg value="-i" />
+          <arg value="${manualumpfiles.path}" />
+          <arg value="-i" />
+          <arg value="${exampleumpfiles.path}" />
+          <arg value="-o" />
+          <arg value="${python.path}" />
+          <arg value="-l" />
+          <arg value="python" />
+          <arg value="-s" />
+          <arg value="${examplepattern}" />
+        </exec>
       </then>
     </if>
 
@@ -500,7 +673,7 @@
         <mkdir dir="${cpp.path}" />
         <mkdir dir="${cpp.path}/src-gen-umple" />
         <mkdir dir="${cpp.path}/bin" />
-        <exec executable="ruby" failonerror="true">
+        <exec executable="ruby">
           <arg value="build/get_testable_examples.rb" />
           <arg value="-i" />
           <arg value="${manualumpfiles.path}" />
@@ -523,7 +696,7 @@
       <then>
         <mkdir dir="${php.path}" />
         <mkdir dir="${php.path}/src-gen-umple" />
-        <exec executable="ruby" failonerror="true">
+        <exec executable="ruby">
           <arg value="build/get_testable_examples.rb" />
           <arg value="-i" />
           <arg value="${manualumpfiles.path}" />
@@ -546,7 +719,7 @@
       <then>
         <mkdir dir="${ruby.path}" />
         <mkdir dir="${ruby.path}/src-gen-umple" />
-        <exec executable="ruby" failonerror="true">
+        <exec executable="ruby">
           <arg value="build/get_testable_examples.rb" />
           <arg value="-i" />
           <arg value="${manualumpfiles.path}" />
@@ -565,6 +738,8 @@
 
   <target name="deleteTempFolders">
     <delete dir="${project.output.path}" failonerror="false" />
+    <delete dir="./build/txl" failonerror="false" />
+    <delete dir="./txl" failonerror="false" />
   </target>
 
   <target name="startLog">

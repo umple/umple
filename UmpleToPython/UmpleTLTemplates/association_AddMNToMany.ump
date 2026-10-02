@@ -1,7 +1,0 @@
-use association_RemoveMany.ump;
-
-class UmpleToPython {
-    // Despite its name, Java's template is the remove method of a mandatory many end (m..n or n)
-    // whose other end is many: association_RemoveMany with the end's own lower bound checked.
-    association_AddMNToMany <<!<</*association_AddMNToMany*/>><<@ UmpleToPython.association_RemoveMany >>!>>
-}

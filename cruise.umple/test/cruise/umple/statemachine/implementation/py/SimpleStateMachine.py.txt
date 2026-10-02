@@ -1,25 +1,35 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 
-from enum import Enum
+from enum import Enum, auto
 
-
-class Mentor:
+class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor State Machines
     class Status(Enum):
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._status = None
-        self._deleted = False
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getStatusFullName(self):
-        answer = str(self._status)
+        answer = self._status.__str__()
         return answer
 
     def getStatus(self):
         return self._status
 
     def delete(self):
-        self._deleted = True
+        pass
+

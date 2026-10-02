@@ -1,39 +1,45 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 
-from enum import Enum
+from enum import Enum, auto
 
-
-class X:
+class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X State Machines
     class Sm(Enum):
-        s1 = "s1"
-        Final = "Final"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        s1 = auto()
+        Final = auto()
 
     class SmS1(Enum):
-        Null = "Null"
-        s2 = "s2"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        Null = auto()
+        s2 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
-        self._sm = None
         self._smS1 = None
-        self._deleted = False
-        self.setSmS1(__class__.SmS1.Null)
-        if self._deleted:
-            return
-        self.setSm(__class__.Sm.s1)
-        if self._deleted:
-            return
+        self._sm = None
+        self.setSmS1(X.SmS1.Null)
+        self.setSm(X.Sm.s1)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getSmFullName(self):
-        answer = str(self._sm)
-        if self._smS1 is not __class__.SmS1.Null:
-            answer += "." + str(self._smS1)
+        answer = self._sm.__str__()
+        if self._smS1 != X.SmS1.Null :
+            answer += "." + self._smS1.__str__()
         return answer
 
     def getSm(self):
@@ -43,40 +49,39 @@ class X:
         return self._smS1
 
     def goToFinal(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmS1 = self._smS1
-        if aSmS1 is __class__.SmS1.s2:
+        if aSmS1 == X.SmS1.s2 :
             self.exitSm()
-            if self._deleted:
-                return True
-            self.setSm(__class__.Sm.Final)
+            self.setSm(X.Sm.Final)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def exitSm(self):
-        if self._sm is __class__.Sm.s1:
+        if self._sm == X.Sm.s1 :
             self.exitSmS1()
 
     def setSm(self, aSm):
         self._sm = aSm
-        if self._sm is __class__.Sm.s1:
-            if self._smS1 is __class__.SmS1.Null:
-                self.setSmS1(__class__.SmS1.s2)
-        elif self._sm is __class__.Sm.Final:
+        # entry actions and do activities
+        if self._sm == X.Sm.s1 :
+            if self._smS1 == X.SmS1.Null :
+                self.setSmS1(X.SmS1.s2)
+        elif self._sm == X.Sm.Final :
             self.delete()
 
     def exitSmS1(self):
-        if self._smS1 is __class__.SmS1.s2:
-            self.setSmS1(__class__.SmS1.Null)
+        if self._smS1 == X.SmS1.s2 :
+            self.setSmS1(X.SmS1.Null)
 
     def setSmS1(self, aSmS1):
         self._smS1 = aSmS1
-        if self._sm is not __class__.Sm.s1 and aSmS1 is not __class__.SmS1.Null:
-            self.setSm(__class__.Sm.s1)
-            if self._deleted:
-                return
+        if self._sm != X.Sm.s1 and aSmS1 != X.SmS1.Null :
+            self.setSm(X.Sm.s1)
 
     def delete(self):
-        self._deleted = True
+        pass
+

@@ -1,0 +1,24 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class OuterClass_3:
+    class InnerClassAAAA:
+        def __init__(self):
+            pass
+
+        def delete(self):
+            pass
+
+    class InnerStaticClass:
+        def __init__(self):
+            pass
+
+        def delete(self):
+            pass
+
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass

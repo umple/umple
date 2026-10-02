@@ -1,0 +1,60 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Mentor:
+    theInstance = None
+
+    def __init__(self):
+        if __class__.theInstance is not self:
+            raise RuntimeError("Mentor is a singleton, so use Mentor.getInstance()")
+        self._name = None
+        self._student = None
+
+    @staticmethod
+    def getInstance():
+        if __class__.theInstance is None:
+            __class__.theInstance = __class__.__new__(__class__)
+            try:
+                __class__.theInstance.__init__()
+            except BaseException:
+                __class__.theInstance = None
+                raise
+        return __class__.theInstance
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def getName(self):
+        return self._name
+
+    def getStudent(self):
+        return self._student
+
+    def hasStudent(self):
+        return self._student is not None
+
+    def setStudent(self, aNewStudent):
+        if self._student is not None and self._student is not aNewStudent and self._student.getMentor() is self:
+            return False
+        self._student = aNewStudent
+        anOldMentor = aNewStudent.getMentor() if aNewStudent is not None else None
+        if anOldMentor is not self:
+            if anOldMentor is not None:
+                anOldMentor._student = None
+            if self._student is not None:
+                self._student.setMentor(self)
+        return True
+
+    def delete(self):
+        existingStudent = self._student
+        self._student = None
+        if existingStudent is not None:
+            existingStudent.delete()
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]"
+                + "\n  student = " + ("null" if self.getStudent() is None else format(id(self.getStudent()), "x")))

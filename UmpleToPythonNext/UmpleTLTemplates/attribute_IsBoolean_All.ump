@@ -1,0 +1,16 @@
+class UmpleToPythonNext {
+    // Boolean attributes also get isX, answering the same as getX.
+    attribute_IsBoolean_All <<!<</*attribute_IsBoolean_All*/>><<#
+  for (Attribute av : gen.attributes(uClass))
+  {
+    if (!"Boolean".equals(av.getType()) || av.getIsAutounique() || av.isConstant() || "internal".equals(av.getModifier()))
+    {
+      continue;
+    }
+    #>>
+
+    def <<=gen.translate("isMethod", av)>>(self):<<=gen.accessorBody(uClass, gen.translate("isMethod", av), gen.translate("parameterOne", av),
+      av.getIsDerived() ? "self." + gen.translate("getMethod", av) + "()" : gen.field(av))>><<#
+  }
+#>>!>>
+}

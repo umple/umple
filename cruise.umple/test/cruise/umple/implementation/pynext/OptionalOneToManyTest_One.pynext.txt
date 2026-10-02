@@ -1,0 +1,91 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Mentor:
+    def __init__(self, aName):
+        self._name = aName
+        self._students = []
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def getName(self):
+        return self._name
+
+    def getStudent(self, index):
+        return self._students[index]
+
+    def getStudents(self):
+        return tuple(self._students)
+
+    def numberOfStudents(self):
+        return len(self._students)
+
+    def hasStudents(self):
+        return len(self._students) > 0
+
+    def indexOfStudent(self, aStudent):
+        return next((i for i, x in enumerate(self._students) if x is aStudent), -1)
+
+    @staticmethod
+    def minimumNumberOfStudents():
+        return 0
+
+    def addStudent(self, aStudent):
+        if any(x is aStudent for x in self._students):
+            return False
+        existingMentor = aStudent.getMentor()
+        if existingMentor is None:
+            if not aStudent.setMentor(self):
+                return False
+        elif existingMentor is not self:
+            if not existingMentor.removeStudent(aStudent):
+                return False
+            if not self.addStudent(aStudent):
+                return False
+        else:
+            self._students.append(aStudent)
+        return True
+
+    def removeStudent(self, aStudent):
+        index = next((i for i, x in enumerate(self._students) if x is aStudent), -1)
+        if index < 0:
+            return False
+        del self._students[index]
+        if not aStudent.setMentor(None):
+            self._students.insert(index, aStudent)
+            return False
+        return True
+
+    def addStudentAt(self, aStudent, index):
+        if not self.addStudent(aStudent):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfStudents():
+            index = self.numberOfStudents() - 1
+        del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
+        self._students.insert(index, aStudent)
+        return True
+
+    def addOrMoveStudentAt(self, aStudent, index):
+        if not any(x is aStudent for x in self._students):
+            return self.addStudentAt(aStudent, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfStudents():
+            index = self.numberOfStudents() - 1
+        del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
+        self._students.insert(index, aStudent)
+        return True
+
+    def delete(self):
+        for aStudent in tuple(self._students):
+            aStudent.setMentor(None)
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]")

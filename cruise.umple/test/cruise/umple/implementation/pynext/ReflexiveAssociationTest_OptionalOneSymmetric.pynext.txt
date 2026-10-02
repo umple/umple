@@ -1,0 +1,47 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Mentor:
+    def __init__(self, aName):
+        self._name = aName
+        self._superMentor = None
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def getName(self):
+        return self._name
+
+    def getSuperMentor(self):
+        return self._superMentor
+
+    def hasSuperMentor(self):
+        return self._superMentor is not None
+
+    def setSuperMentor(self, aNewSuperMentor):
+        if aNewSuperMentor is None:
+            existingSuperMentor = self._superMentor
+            self._superMentor = None
+            if existingSuperMentor is not None and existingSuperMentor.getSuperMentor() is not None:
+                existingSuperMentor.setSuperMentor(None)
+            return True
+        currentSuperMentor = self._superMentor
+        if currentSuperMentor is not None and currentSuperMentor is not aNewSuperMentor:
+            currentSuperMentor.setSuperMentor(None)
+        self._superMentor = aNewSuperMentor
+        existingSuperMentor = aNewSuperMentor.getSuperMentor()
+        if existingSuperMentor is not self:
+            aNewSuperMentor.setSuperMentor(self)
+        return True
+
+    def delete(self):
+        if self._superMentor is not None:
+            self._superMentor.setSuperMentor(None)
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]"
+                + "\n  superMentor = " + ("null" if self.getSuperMentor() is None else format(id(self.getSuperMentor()), "x")))

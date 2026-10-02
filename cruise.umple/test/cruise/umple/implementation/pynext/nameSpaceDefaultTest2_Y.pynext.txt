@@ -1,0 +1,73 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Y:
+    def __init__(self):
+        self._xs = []
+
+    def getX(self, index):
+        return self._xs[index]
+
+    def getXs(self):
+        return tuple(self._xs)
+
+    def numberOfXs(self):
+        return len(self._xs)
+
+    def hasXs(self):
+        return len(self._xs) > 0
+
+    def indexOfX(self, aX):
+        return next((i for i, x in enumerate(self._xs) if x is aX), -1)
+
+    @staticmethod
+    def minimumNumberOfXs():
+        return 0
+
+    def addX(self, aX):
+        if any(x is aX for x in self._xs):
+            return False
+        self._xs.append(aX)
+        if aX.indexOfY(self) == -1 and not aX.addY(self):
+            del self._xs[next((i for i, x in enumerate(self._xs) if x is aX), -1)]
+            return False
+        return True
+
+    def removeX(self, aX):
+        oldIndex = next((i for i, x in enumerate(self._xs) if x is aX), -1)
+        if oldIndex == -1:
+            return False
+        del self._xs[oldIndex]
+        if aX.indexOfY(self) != -1 and not aX.removeY(self):
+            self._xs.insert(oldIndex, aX)
+            return False
+        return True
+
+    def addXAt(self, aX, index):
+        if not self.addX(aX):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfXs():
+            index = self.numberOfXs() - 1
+        del self._xs[next((i for i, x in enumerate(self._xs) if x is aX), -1)]
+        self._xs.insert(index, aX)
+        return True
+
+    def addOrMoveXAt(self, aX, index):
+        if not any(x is aX for x in self._xs):
+            return self.addXAt(aX, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfXs():
+            index = self.numberOfXs() - 1
+        del self._xs[next((i for i, x in enumerate(self._xs) if x is aX), -1)]
+        self._xs.insert(index, aX)
+        return True
+
+    def delete(self):
+        copyOfXs = tuple(self._xs)
+        self._xs.clear()
+        for aX in copyOfXs:
+            aX.removeY(self)

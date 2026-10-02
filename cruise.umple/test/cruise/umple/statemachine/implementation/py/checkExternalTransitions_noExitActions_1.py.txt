@@ -1,71 +1,59 @@
-#PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+from enum import Enum, auto
 
-from enum import Enum
-
-
-class X:
+class X():
     class Sm(Enum):
-        on = "on"
-        off = "off"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        on = auto()
+        off = auto()
 
     class SmOn(Enum):
-        Null = "Null"
-        s1 = "s1"
-        s2 = "s2"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        Null = auto()
+        s1 = auto()
+        s2 = auto()
 
     class SmOnS1(Enum):
-        Null = "Null"
-        m1 = "m1"
-        m2 = "m2"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        Null = auto()
+        m1 = auto()
+        m2 = auto()
 
     class SmOff(Enum):
-        Null = "Null"
-        s3 = "s3"
-        s4 = "s4"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        Null = auto()
+        s3 = auto()
+        s4 = auto()
 
     def __init__(self):
-        self._sm = None
-        self._smVisit = 0
-        self._smOn = None
-        self._smOnVisit = 0
-        self._smOnS1 = None
-        self._smOnS1Visit = 0
         self._smOff = None
-        self._deleted = False
-        self.setSmOn(__class__.SmOn.Null)
-        if self._deleted:
-            return
-        self.setSmOnS1(__class__.SmOnS1.Null)
-        if self._deleted:
-            return
-        self.setSmOff(__class__.SmOff.Null)
-        if self._deleted:
-            return
-        self.setSm(__class__.Sm.on)
-        if self._deleted:
-            return
+        self._smOnS1 = None
+        self._smOn = None
+        self._sm = None
+        self.setSmOn(X.SmOn.Null)
+        self.setSmOnS1(X.SmOnS1.Null)
+        self.setSmOff(X.SmOff.Null)
+        self.setSm(X.Sm.on)
 
     def getSmFullName(self):
-        answer = str(self._sm)
-        if self._smOn is not __class__.SmOn.Null:
-            answer += "." + str(self._smOn)
-        if self._smOnS1 is not __class__.SmOnS1.Null:
-            answer += "." + str(self._smOnS1)
-        if self._smOff is not __class__.SmOff.Null:
-            answer += "." + str(self._smOff)
+        answer = self._sm.__str__()
+        if self._smOn != X.SmOn.Null :
+            answer += "." + self._smOn.__str__()
+        if self._smOnS1 != X.SmOnS1.Null :
+            answer += "." + self._smOnS1.__str__()
+        if self._smOff != X.SmOff.Null :
+            answer += "." + self._smOff.__str__()
         return answer
 
     def getSm(self):
@@ -81,255 +69,206 @@ class X:
         return self._smOff
 
     def e1(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSm = self._sm
-        if aSm is __class__.Sm.on:
+        if aSm == X.Sm.on :
             self.exitSm()
-            if self._deleted:
-                return True
-            self.setSm(__class__.Sm.off)
+            self.setSm(X.Sm.off)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e2(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSm = self._sm
-        if aSm is __class__.Sm.on:
+        if aSm == X.Sm.on :
             self.exitSm()
-            if self._deleted:
-                return True
-            self.setSm(__class__.Sm.on)
+            self.setSm(X.Sm.on)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e3(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmOn = self._smOn
-        if aSmOn is __class__.SmOn.s1:
+        if aSmOn == X.SmOn.s1 :
             self.exitSmOn()
-            if self._deleted:
-                return True
-            self.setSmOn(__class__.SmOn.s2)
+            self.setSmOn(X.SmOn.s2)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e4(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmOn = self._smOn
-        if aSmOn is __class__.SmOn.s1:
+        if aSmOn == X.SmOn.s1 :
             self.exitSmOn()
-            if self._deleted:
-                return True
-            self.setSmOn(__class__.SmOn.s1)
+            self.setSmOn(X.SmOn.s1)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e5(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmOn = self._smOn
-        if aSmOn is __class__.SmOn.s1:
+        if aSmOn == X.SmOn.s1 :
             self.exitSm()
-            if self._deleted:
-                return True
-            self.setSm(__class__.Sm.on)
+            self.setSm(X.Sm.on)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e6(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmOn = self._smOn
-        if aSmOn is __class__.SmOn.s1:
+        if aSmOn == X.SmOn.s1 :
             self.exitSm()
-            if self._deleted:
-                return True
-            self.setSm(__class__.Sm.off)
+            self.setSm(X.Sm.off)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e7(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmOnS1 = self._smOnS1
-        if aSmOnS1 is __class__.SmOnS1.m1:
+        if aSmOnS1 == X.SmOnS1.m1 :
             self.exitSmOnS1()
-            if self._deleted:
-                return True
-            self.setSmOnS1(__class__.SmOnS1.m2)
+            self.setSmOnS1(X.SmOnS1.m2)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e8(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmOnS1 = self._smOnS1
-        if aSmOnS1 is __class__.SmOnS1.m1:
+        if aSmOnS1 == X.SmOnS1.m1 :
             self.exitSmOnS1()
-            if self._deleted:
-                return True
-            self.setSmOnS1(__class__.SmOnS1.m1)
+            self.setSmOnS1(X.SmOnS1.m1)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e9(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmOnS1 = self._smOnS1
-        if aSmOnS1 is __class__.SmOnS1.m1:
+        if aSmOnS1 == X.SmOnS1.m1 :
             self.exitSmOn()
-            if self._deleted:
-                return True
-            self.setSmOn(__class__.SmOn.s1)
+            self.setSmOn(X.SmOn.s1)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e10(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmOnS1 = self._smOnS1
-        if aSmOnS1 is __class__.SmOnS1.m1:
+        if aSmOnS1 == X.SmOnS1.m1 :
             self.exitSmOn()
-            if self._deleted:
-                return True
-            self.setSmOn(__class__.SmOn.s2)
+            self.setSmOn(X.SmOn.s2)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e11(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmOnS1 = self._smOnS1
-        if aSmOnS1 is __class__.SmOnS1.m1:
+        if aSmOnS1 == X.SmOnS1.m1 :
             self.exitSm()
-            if self._deleted:
-                return True
-            self.setSm(__class__.Sm.on)
+            self.setSm(X.Sm.on)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e12(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmOnS1 = self._smOnS1
-        if aSmOnS1 is __class__.SmOnS1.m1:
+        if aSmOnS1 == X.SmOnS1.m1 :
             self.exitSm()
-            if self._deleted:
-                return True
-            self.setSm(__class__.Sm.off)
+            self.setSm(X.Sm.off)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def e13(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aSmOff = self._smOff
-        if aSmOff is __class__.SmOff.s3:
+        if aSmOff == X.SmOff.s3 :
             self.exitSmOff()
-            if self._deleted:
-                return True
-            self.setSmOff(__class__.SmOff.s4)
+            self.setSmOff(X.SmOff.s4)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def exitSm(self):
-        self._smVisit += 1
-        if self._sm is __class__.Sm.on:
+        if self._sm == X.Sm.on :
             self.exitSmOn()
-        elif self._sm is __class__.Sm.off:
+        elif self._sm == X.Sm.off :
             self.exitSmOff()
 
     def setSm(self, aSm):
         self._sm = aSm
-        self._smVisit += 1
-        visit = self._smVisit
-        if self._sm is __class__.Sm.on:
+        if self._sm == X.Sm.on :
             self.on_entry_action()
-            if self._deleted or self._smVisit != visit:
-                return
-            if self._smOn is __class__.SmOn.Null:
-                self.setSmOn(__class__.SmOn.s1)
-        elif self._sm is __class__.Sm.off:
-            if self._smOff is __class__.SmOff.Null:
-                self.setSmOff(__class__.SmOff.s3)
+            if self._smOn == X.SmOn.Null :
+                self.setSmOn(X.SmOn.s1)
+        elif self._sm == X.Sm.off :
+            if self._smOff == X.SmOff.Null :
+                self.setSmOff(X.SmOff.s3)
 
     def exitSmOn(self):
-        self._smOnVisit += 1
-        if self._smOn is __class__.SmOn.s1:
+        if self._smOn == X.SmOn.s1 :
             self.exitSmOnS1()
-            if self._deleted:
-                return
-            self.setSmOn(__class__.SmOn.Null)
-        elif self._smOn is __class__.SmOn.s2:
-            self.setSmOn(__class__.SmOn.Null)
+            self.setSmOn(X.SmOn.Null)
+        elif self._smOn == X.SmOn.s2 :
+            self.setSmOn(X.SmOn.Null)
 
     def setSmOn(self, aSmOn):
         self._smOn = aSmOn
-        self._smOnVisit += 1
-        visit = self._smOnVisit
-        if self._sm is not __class__.Sm.on and aSmOn is not __class__.SmOn.Null:
-            self.setSm(__class__.Sm.on)
-            if self._deleted or self._smOnVisit != visit:
-                return
-        if self._smOn is __class__.SmOn.s1:
+        if self._sm != X.Sm.on and aSmOn != X.SmOn.Null :
+            self.setSm(X.Sm.on)
+        if self._smOn == X.SmOn.s1 :
             self.s1_entry_action()
-            if self._deleted or self._smOnVisit != visit:
-                return
-            if self._smOnS1 is __class__.SmOnS1.Null:
-                self.setSmOnS1(__class__.SmOnS1.m1)
+            if self._smOnS1 == X.SmOnS1.Null :
+                self.setSmOnS1(X.SmOnS1.m1)
 
     def exitSmOnS1(self):
-        self._smOnS1Visit += 1
-        if self._smOnS1 is __class__.SmOnS1.m1:
-            self.setSmOnS1(__class__.SmOnS1.Null)
-        elif self._smOnS1 is __class__.SmOnS1.m2:
-            self.setSmOnS1(__class__.SmOnS1.Null)
+        if self._smOnS1 == X.SmOnS1.m1 :
+            self.setSmOnS1(X.SmOnS1.Null)
+        elif self._smOnS1 == X.SmOnS1.m2 :
+            self.setSmOnS1(X.SmOnS1.Null)
 
     def setSmOnS1(self, aSmOnS1):
         self._smOnS1 = aSmOnS1
-        self._smOnS1Visit += 1
-        visit = self._smOnS1Visit
-        if self._smOn is not __class__.SmOn.s1 and aSmOnS1 is not __class__.SmOnS1.Null:
-            self.setSmOn(__class__.SmOn.s1)
-            if self._deleted or self._smOnS1Visit != visit:
-                return
-        if self._smOnS1 is __class__.SmOnS1.m1:
+        if self._smOn != X.SmOn.s1 and aSmOnS1 != X.SmOnS1.Null :
+            self.setSmOn(X.SmOn.s1)
+        if self._smOnS1 == X.SmOnS1.m1 :
             self.m1_entry_action()
-            if self._deleted:
-                return
 
     def exitSmOff(self):
-        if self._smOff is __class__.SmOff.s3:
-            self.setSmOff(__class__.SmOff.Null)
-        elif self._smOff is __class__.SmOff.s4:
-            self.setSmOff(__class__.SmOff.Null)
+        if self._smOff == X.SmOff.s3 :
+            self.setSmOff(X.SmOff.Null)
+        elif self._smOff == X.SmOff.s4 :
+            self.setSmOff(X.SmOff.Null)
 
     def setSmOff(self, aSmOff):
         self._smOff = aSmOff
-        if self._sm is not __class__.Sm.off and aSmOff is not __class__.SmOff.Null:
-            self.setSm(__class__.Sm.off)
-            if self._deleted:
-                return
+        if self._sm != X.Sm.off and aSmOff != X.SmOff.Null :
+            self.setSm(X.Sm.off)
 
     def delete(self):
-        self._deleted = True
+        pass
 
     def on_entry_action(self):
         pass
@@ -339,3 +278,4 @@ class X:
 
     def m1_entry_action(self):
         pass
+

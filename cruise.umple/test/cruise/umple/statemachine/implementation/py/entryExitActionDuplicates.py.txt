@@ -1,0 +1,57 @@
+from enum import Enum, auto
+
+class Duplicate():
+    class Sm(Enum):
+        def _generate_next_value_(name, start, count, last_values):      
+            return name
+        def __str__(self):
+            return str(self.value)
+        s0 = auto()
+        s1 = auto()
+
+    def __init__(self):
+        self._sm = None
+        self.setSm(Duplicate.Sm.s0)
+
+    def getSmFullName(self):
+        answer = self._sm.__str__()
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def e0(self):
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm == Duplicate.Sm.s0 :
+            self.exitSm()
+            self.setSm(Duplicate.Sm.s1)
+            wasEventProcessed = True
+        elif aSm == Duplicate.Sm.s1 :
+            self.exitSm()
+            self.setSm(Duplicate.Sm.s1)
+            wasEventProcessed = True
+        else :
+            pass
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm == Duplicate.Sm.s0 :
+            s0_exit1()
+            s0_exit2()
+        elif self._sm == Duplicate.Sm.s1 :
+            s1_exit1()
+            s1_exit1()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm == Duplicate.Sm.s0 :
+            s0_entr1()
+            s0_entry2()
+        elif self._sm == Duplicate.Sm.s1 :
+            s1_entry1()
+            s1_entry1()
+
+    def delete(self):
+        pass
+

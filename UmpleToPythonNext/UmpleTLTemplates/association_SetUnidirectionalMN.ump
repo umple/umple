@@ -1,0 +1,18 @@
+use association_Guards.ump;
+
+class UmpleToPythonNext {
+    // Replaces the objects of a directed m..n end with m to n different objects.
+    association_SetUnidirectionalMN <<!<</*association_SetUnidirectionalMN*/>><<#
+  String newObjects = gen.translate("parameterMany", av);
+  MethodParameter setParameter = gen.parameter(newObjects, av.getType());
+  setParameter.setIsList(true);
+  #>>
+
+    def <<=gen.immutableEndSetterName(av, "setManyMethod")>>(self, *<<=newObjects>>):<<=gen.injected(uClass, "before", gen.translate("setManyMethod", av), setParameter)>><<@ UmpleToPythonNext.association_KeyGuard >><<=gen.immutableEndGuard(uClass, av)>><<@ UmpleToPythonNext.association_InvariantGuards >>
+        if len({id(<<=parameter>>) for <<=parameter>> in <<=newObjects>>}) != len(<<=newObjects>>):
+            return False
+        if len(<<=newObjects>>) < __class__.<<=gen.translate("minimumNumberOfMethod", av)>>() or len(<<=newObjects>>) > __class__.<<=gen.translate("maximumNumberOfMethod", av)>>():
+            return False
+        <<=field>> = list(<<=newObjects>>)<<=gen.injected(uClass, "after", gen.translate("setManyMethod", av), setParameter)>><<=gen.sortAfterChange(av)>>
+        return True!>>
+}

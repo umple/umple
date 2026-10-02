@@ -1,7 +1,10 @@
 namespace cruise.attributes.test;
 
-// TestHarnessAttributes.ump without the two `new Object()` defaults: an untagged default
-// may only construct model classes in Python, and Object is not one.
+// Removed:
+// - ManyKeys
+// - ManKeysStringAndInt
+// - ItemWithUniqueId
+
 
 // Ignore warnings about lack of initialization of constants and setting to default
 strictness ignore 35;
@@ -82,19 +85,6 @@ class ManyStringAttributes
   String[] worksString;
 }
 
-class ManyKeys
-{
-  isA ManyAttribute;
-  key {works};
-}
-
-class ManKeysStringAndInt
-{
-  isA ManyStringAttributes;
-  Integer id;
-  key {worksString, id}
-}
-
 class TypeInference
 {
   a = 2;
@@ -131,14 +121,7 @@ class MoreTypeInference
   j = "2000:01:01"; 
   Date k = "2000-01-01";
 
-}
-
-class ItemWithUniqueId {
-  unique id;
-}
-
-class ItemWithUniqueImmutableId {
-  unique immutable id;
+  l = new Object(); 
 }
 
 class ConstDefault
@@ -223,6 +206,7 @@ interface TypeInferenceInterface
   const AI = "2000-01"; 
   const AJ = "2000:01:01"; 
   const Date AK = "2000-01-01";
+  const AL = new Object(); 
 }
 
 class TypeInferenceInterfaceObject{

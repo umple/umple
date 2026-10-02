@@ -1,0 +1,22 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Token:
+    def __init__(self, aP):
+        self._p = aP
+
+    def setP(self, aP):
+        self._p = aP
+        return True
+
+    def getP(self):
+        return self._p
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "]"
+                + "\n  p=" + ("null" if self.getP() is None else "this" if self.getP() is self else str(self.getP()).replace("  ", "    ")))

@@ -1,0 +1,73 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Course:
+    def __init__(self):
+        self._students = []
+
+    def getStudent(self, index):
+        return self._students[index]
+
+    def getStudents(self):
+        return tuple(self._students)
+
+    def numberOfStudents(self):
+        return len(self._students)
+
+    def hasStudents(self):
+        return len(self._students) > 0
+
+    def indexOfStudent(self, aStudent):
+        return next((i for i, x in enumerate(self._students) if x is aStudent), -1)
+
+    @staticmethod
+    def minimumNumberOfStudents():
+        return 0
+
+    def addStudent(self, aStudent):
+        if any(x is aStudent for x in self._students):
+            return False
+        self._students.append(aStudent)
+        if aStudent.indexOfCourse(self) == -1 and not aStudent.addCourse(self):
+            del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
+            return False
+        return True
+
+    def removeStudent(self, aStudent):
+        oldIndex = next((i for i, x in enumerate(self._students) if x is aStudent), -1)
+        if oldIndex == -1:
+            return False
+        del self._students[oldIndex]
+        if aStudent.indexOfCourse(self) != -1 and not aStudent.removeCourse(self):
+            self._students.insert(oldIndex, aStudent)
+            return False
+        return True
+
+    def addStudentAt(self, aStudent, index):
+        if not self.addStudent(aStudent):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfStudents():
+            index = self.numberOfStudents() - 1
+        del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
+        self._students.insert(index, aStudent)
+        return True
+
+    def addOrMoveStudentAt(self, aStudent, index):
+        if not any(x is aStudent for x in self._students):
+            return self.addStudentAt(aStudent, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfStudents():
+            index = self.numberOfStudents() - 1
+        del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
+        self._students.insert(index, aStudent)
+        return True
+
+    def delete(self):
+        copyOfStudents = tuple(self._students)
+        self._students.clear()
+        for aStudent in copyOfStudents:
+            aStudent.removeCourse(self)

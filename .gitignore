@@ -21,6 +21,7 @@ umpleonline/scripts/openai-sdk/node_modules
 umpleonline/scripts/codemirror6-plugins/collaboration-test-client/node_modules
 
 build/UserManualAndExampleTests_output.txt
+build/txl
 umpleonline/manual
 umpleonline/qr*
 umpleonline/countlog.txt
@@ -43,6 +44,9 @@ UmpleLsp/server.js
 testbed_cpp/test/runAllTests
 
 umpleonline/scripts/collab-server-config.js
+
+# duplicate txl file
+umpleonline/scripts/txl/umpleJavaToPython.ctxl
 
 # generated Umple code that is not saved
 src-gen-umple/

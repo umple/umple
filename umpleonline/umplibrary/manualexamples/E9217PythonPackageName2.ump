@@ -1,5 +1,5 @@
 // A namespace made of identifiers is a valid Python package
-generate Python;
+generate PythonNext;
 namespace releases.y2024;
 class Release {
   name;

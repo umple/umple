@@ -1,0 +1,8 @@
+class UmpleToPythonNext {
+    // An optional one end whose owner has no lower bound: cleared, then removed from the owner.
+    delete_OptionalOneFromMany <<!<</*delete_OptionalOneFromMany*/>>
+        if <<=field>> is not None:
+            <<=gen.translate("removeParameterOne", av)>> = <<=field>>
+            <<=field>> = None
+            <<=gen.translate("removeParameterOne", av)>>.<<=gen.relatedTranslate("removeMethod", av)>>(self)!>>
+}

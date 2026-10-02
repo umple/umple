@@ -191,7 +191,7 @@
         <arg value="UmpleToPhp/UmpleTLTemplates/Master.ump"/>
       </java>
       <java jar="${umplejar.touse}" fork="true" failonerror="true">
-        <arg value="UmpleToPython/UmpleTLTemplates/Master.ump"/>
+        <arg value="UmpleToPythonNext/UmpleTLTemplates/Master.ump"/>
       </java>
       <java jar="${umplejar.touse}" fork="true" failonerror="true">
         <arg value="UmpleToRuby/UmpleTLTemplates/Master.ump"/>
@@ -202,6 +202,11 @@
       <java jar="${umplejar.touse}" fork="true" failonerror="true">
         <arg value="UmpleToTest/UmpleTLTemplates/Master.ump"/>
       </java>
+      <!-- Compile TXL code -->
+      <exec executable="txl" dir="UmpleToPython/txl"  failonerror="true">
+        <arg value="-c" />
+        <arg value="umpleJavaToPython.txl" />
+      </exec>
     </parallel>
 
     <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/java" overwrite="true">
@@ -213,8 +218,8 @@
     <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/php" overwrite="true">
       <fileset dir="UmpleToPhp/src-gen-UmpleTL/cruise/umple/compiler/php" excludes=".git* UmpleToPhp.java" />
     </copy>
-    <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/python" overwrite="true">
-      <fileset dir="UmpleToPython/src-gen-UmpleTL/cruise/umple/compiler/python" excludes=".git* UmpleToPython.java" />
+    <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/pythonnext" overwrite="true">
+      <fileset dir="UmpleToPythonNext/src-gen-UmpleTL/cruise/umple/compiler/pythonnext" excludes=".git* UmpleToPythonNext.java" />
     </copy>
     <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/ruby" overwrite="true">
       <fileset dir="UmpleToRuby/src-gen-UmpleTL/cruise/umple/compiler/ruby" excludes=".git* UmpleToRuby.java" />
@@ -279,6 +284,7 @@
       <fileset dir="${basedir}/UmpleParser/src"><include name="ParsingRules*.ump"/></fileset>
       <fileset dir="${basedir}/UmpleParser/src"><include name="TextParser*.ump"/></fileset>
 
+      <fileset dir="${basedir}/UmpleToPython/txl"><include name="umpleJavaToPython.ctxl"/></fileset>
     </copy>
     <delete file="cruise.umple/src/rules.grammar"/>
     <delete file="cruise.umple/bin/rules.grammar"/>
@@ -516,6 +522,7 @@
     <copy file="${dist.dir}/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <echo message="Copying ${dist.dir}/umple.jar to umpleonline/scripts/umple.jar for new downloadable CLI" />
     <copy file="${dist.dir}/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
+    <copy file="UmpleToPython/txl/umpleJavaToPython.ctxl" tofile="umpleonline/scripts/txl/umpleJavaToPython.ctxl" overwrite="true" />
     <antcall target="compressAllScripts"/>
   </target>
 
@@ -591,7 +598,7 @@
 
     <jar destfile="${dist.dir}/${dist.umple.jar}"
          basedir="${bin.path}"
-         includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar *.ump"
+         includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar *.ump *.ctxl"
          excludes="**/*Test.class">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
@@ -616,7 +623,7 @@
 
     <jar  destfile="${dist.dir}/${dist.umple.sync.jar}" 
           basedir="${bin.path}" 
-          includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar *.ump">
+          includes="cruise/umple/** en.error org/apache/tools/ant/** *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar *.ump *.ctxl">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>
@@ -638,7 +645,7 @@
 
     <jar  destfile="${dist.dir}/${dist.umple.docs.jar}" 
           basedir="${bin.path}" 
-          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar">
+          includes="cruise/umple/** en.error *.grammar *.error templates/** org/apache/** joptsimple/** **/*.grammar *.ctxl">
       <manifest>
         <attribute name="Built-By" value="Cruise - University of Ottawa"/>
         <attribute name="Version" value="${umple.version}"/>

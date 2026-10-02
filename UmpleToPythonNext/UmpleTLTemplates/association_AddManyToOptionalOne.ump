@@ -1,0 +1,33 @@
+use association_Guards.ump;
+
+class UmpleToPythonNext {
+    // Add and remove at an unbounded many end whose other end is optional one. An object owned
+    // elsewhere is first removed there. Remove unlinks the object's end too, and is undone when that
+    // end refuses (a frozen key member). A refused removal makes add fail, where Java retries until
+    // the stack overflows.
+    association_AddManyToOptionalOne <<!<</*association_AddManyToOptionalOne*/>>
+
+    def <<=gen.translate("addMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("addMethod", av), gen.parameter(parameter, av.getType()))>><<@ UmpleToPythonNext.association_AddGuards >>
+        <<=gen.relatedTranslate("parameterExisting", av)>> = <<=parameter>>.<<=gen.relatedTranslate("getMethod", av)>>()
+        if <<=gen.relatedTranslate("parameterExisting", av)>> is None:
+            if not <<=parameter>>.<<=gen.relatedTranslate("setMethod", av)>>(self):
+                return False
+        elif <<=gen.relatedTranslate("parameterExisting", av)>> is not self:
+            if not <<=gen.relatedTranslate("parameterExisting", av)>>.<<=gen.translate("removeMethod", av)>>(<<=parameter>>):
+                return False
+            if not self.<<=gen.translate("addMethod", av)>>(<<=parameter>>):
+                return False
+        else:
+            <<=field>>.append(<<=parameter>>)<<=gen.injected(uClass, "after", gen.translate("addMethod", av), gen.parameter(parameter, av.getType()))>><<=gen.sortAfterChange(av)>>
+        return True
+
+    def <<=gen.translate("removeMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("removeMethod", av), gen.parameter(parameter, av.getType()))>><<@ UmpleToPythonNext.association_KeyGuard >>
+        index = <<=gen.identityIndex(field, parameter)>>
+        if index < 0:
+            return False
+        del <<=field>>[index]
+        if not <<=parameter>>.<<=gen.relatedTranslate("setMethod", av)>>(None):
+            <<=field>>.insert(index, <<=parameter>>)
+            return False<<=gen.injected(uClass, "after", gen.translate("removeMethod", av), gen.parameter(parameter, av.getType()))>>
+        return True!>>
+}

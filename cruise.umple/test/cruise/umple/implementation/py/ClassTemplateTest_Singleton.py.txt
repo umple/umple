@@ -2,23 +2,28 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Application:
+class Application():
     theInstance = None
-
+    #------------------------
+    # STATIC VARIABLES
+    #------------------------
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
-        if __class__.theInstance is not self:
-            raise RuntimeError("Application is a singleton, so use Application.getInstance()")
+        pass
 
     @staticmethod
     def getInstance():
-        if __class__.theInstance is None:
-            __class__.theInstance = __class__.__new__(__class__)
-            try:
-                __class__.theInstance.__init__()
-            except BaseException:
-                __class__.theInstance = None
-                raise
-        return __class__.theInstance
+        if Application.theInstance is None :
+            Application.theInstance = Application()
+        return Application.theInstance
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def delete(self):
         pass

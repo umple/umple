@@ -2,30 +2,53 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Person:
+class Person():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Person Attributes
+    #Helper Variables
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName, aId, aAge):
+        self._canSetName = None
+        self._canSetId = None
         self._cachedHashCode = None
+        self._age = None
+        self._id = None
+        self._name = None
+        self._cachedHashCode = -1
         self._canSetId = True
         self._canSetName = True
         self._name = aName
         self._id = aId
         self._age = aAge
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
-        if not self._canSetName:
+        wasSet = False
+        if not self._canSetName :
             return False
         self._name = aName
-        return True
+        wasSet = True
+        return wasSet
 
     def setId(self, aId):
-        if not self._canSetId:
+        wasSet = False
+        if not self._canSetId :
             return False
         self._id = aId
-        return True
+        wasSet = True
+        return wasSet
 
     def setAge(self, aAge):
+        wasSet = False
         self._age = aAge
-        return True
+        wasSet = True
+        return wasSet
 
     def getName(self):
         return self._name
@@ -36,27 +59,40 @@ class Person:
     def getAge(self):
         return self._age
 
-    def __eq__(self, obj):
-        if type(obj) is not type(self):
-            return NotImplemented
-        return (self.getId(), self.getName()) == (obj.getId(), obj.getName())
+    def equals(self, obj):
+        if obj is None :
+            return False
+        if not type(self) is type(obj) :
+            return False
+        compareTo = obj
+        if self.getId() is None and not (compareTo.getId() is None) :
+            return False
+        elif not (self.getId() is None) and not self.getId() == compareTo.getId() :
+            return False
+        if self.getName() is None and not (compareTo.getName() is None) :
+            return False
+        elif not (self.getName() is None) and not self.getName() == compareTo.getName() :
+            return False
+        return True
 
     def __hash__(self):
-        if self._cachedHashCode is None:
-            self._cachedHashCode = hash((self.getId(), self.getName()))
-            self._canSetId = False
-            self._canSetName = False
+        if self._cachedHashCode != -1 :
+            return self._cachedHashCode
+        self._cachedHashCode = 17
+        if not (self.getId() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getId().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        if not (self.getName() is None) :
+            self._cachedHashCode = self._cachedHashCode * 23 + self.getName().__hash__()
+        else :
+            self._cachedHashCode = self._cachedHashCode * 23
+        self._canSetId = False
+        self._canSetName = False
         return self._cachedHashCode
-
-    def equals(self, obj):
-        return self == obj
 
     def delete(self):
         pass
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "id:" + str(self.getId()) + ","
-                + "name:" + str(self.getName()) + ","
-                + "age:" + str(self.getAge())
-                + "]")
+        return str(super().__str__()) + "[" + "id" + ":" + str(self.getId()) + "," + "name" + ":" + str(self.getName()) + "," + "age" + ":" + str(self.getAge()) + "]"

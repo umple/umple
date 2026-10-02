@@ -1,13 +1,21 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from example.ISecondChild import ISecondChild
-
+from ISecondChild import ISecondChild
 
 class A(ISecondChild):
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         pass
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def delete(self):
         pass
 

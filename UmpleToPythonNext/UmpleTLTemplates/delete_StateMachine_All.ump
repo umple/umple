@@ -1,0 +1,23 @@
+class UmpleToPythonNext {
+    // First in delete: mark the object deleted, then stop its timers and cancel its activities without
+    // waiting for them.
+    delete_StateMachine_All <<!<</*delete_StateMachine_All*/>><<#
+{
+  String deletedFlag = gen.deletedFlag(uClass);
+  if (deletedFlag != null)
+  {
+    realSb.append("\n        self." + deletedFlag + " = True");
+  }
+  for (Transition timed : gen.timedTransitions(uClass))
+  {
+    realSb.append("\n        self." + gen.translate("eventStopMethod", timed.getEvent(), timed.getFromState().getStateMachine()) + "()");
+  }
+  for (Activity activity : gen.activities(uClass))
+  {
+    String worker = "self." + gen.activityWorker(uClass, activity);
+    realSb.append("\n        if " + worker + " is not None:");
+    realSb.append("\n            " + worker + ".cancelled.set()");
+  }
+}
+#>>!>>
+}

@@ -1,0 +1,6 @@
+class UmpleToPythonNext {
+    // A directed immutable many end without bounds given to the constructor.
+    constructor_AssociationAssignImmutableOptionalMany <<!<</*constructor_AssociationAssignImmutableOptionalMany*/>>
+        if not self.<<=gen.immutableEndSetterName(av, "setManyMethod")>>(*<<=gen.translate("parameterAll", av)>>):
+            raise RuntimeError(<<=gen.pythonString("Unable to create " + gen.relatedTranslate("type", av) + ", must not have duplicate " + gen.translate("associationMany", av) + ". See https://manual.umple.org?RE001ViolationofImmutability.html")>>)!>>
+}

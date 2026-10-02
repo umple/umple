@@ -1,0 +1,121 @@
+class UmpleToPythonNext {
+    // Java's exit and set methods: exit runs the exit actions of the current state; set changes the
+    // state, enters the parent state of a nested machine, then runs the entry actions of the new
+    // state, which include starting its nested machines, activities and timers. Code that deletes the
+    // object ends both; entry code that leaves the state ends the entry of that visit, so the
+    // visit starts nothing more, even when the state was entered again meanwhile.
+    state_machine_Set <<!<</*state_machine_Set*/>><<#
+  String field = gen.smField(sm);
+  String type = gen.smType(sm);
+  String parameter = gen.translate("parameterOne", sm);
+  String deepHistory = gen.historyField(uClass, sm, "HStar");
+  String visitField = gen.visitField(uClass, sm);
+  String setMethod = gen.translate("setMethod", sm);
+  MethodParameter setParameter = gen.parameter(parameter, gen.translate("type", sm));
+  String setBefore = gen.injected(uClass, "before", setMethod, setParameter);
+  String setAfter = gen.injected(uClass, "after", setMethod, setParameter);
+  String visit = gen.visitLocal(sm, parameter, setBefore, setAfter);
+  setBefore = gen.stateMachineInjections(uClass, "before", setMethod, gen.deletedCheck(deletingFlag, "        ", ""), setParameter);
+  setAfter = gen.stateMachineInjections(uClass, "after", setMethod, gen.visitCheck(deletingFlag, visitField, visit, "        "), setParameter);
+  String exitMethod = gen.translate("exitMethod", sm);
+  String exitAfter = gen.stateMachineInjections(uClass, "after", exitMethod, gen.deletedCheck(deletingFlag, "        ", ""));
+  State parentState = sm.getParentState();
+  boolean captureVisit = parentState != null || !setAfter.isEmpty();
+  StringBuilder entryActions = new StringBuilder();
+  StringBuilder exitActions = new StringBuilder();
+  for (State state : sm.getStates())
+  {
+    StringBuilder entry = new StringBuilder();
+    StringBuilder exit = new StringBuilder();
+    List<Action> entries = gen.actionsOf(state, "entry");
+    for (int i = 0; i < entries.size(); i++)
+    {
+      Action action = entries.get(i);
+      if (state.getIsDeepHistoryState())
+      {
+        // As in Java: the prepared entry action of a deep history state enters the nested machine's
+        // own deep history when the machine was last in that machine's parent state
+        String code = action.getCodeblock().getCode("Python");
+        int x = code.lastIndexOf('.');
+        int y = code.indexOf(')', x);
+        entry.append("\n            if " + deepHistory + " is " + type + "." + code.substring(x + 1, y) + ":");
+        entry.append(gen.preparedCode(code.substring(0, x + 1) + "HStar" + code.substring(y), uClass, "                "));
+      }
+      else
+      {
+        entry.append(gen.actionCode(action, uClass, new ArrayList<MethodParameter>(), "            ", "the entry action of state " + state.getName()));
+      }
+      if (i < entries.size() - 1 || gen.endsWithDeepHistory(state))
+      {
+        entry.append(gen.visitCheck(deletingFlag, visitField, visit, "            "));
+        captureVisit = true;
+      }
+      else if (!action.getIsInternal())
+      {
+        entry.append(gen.deletedCheck(deletingFlag, "            ", ""));
+      }
+    }
+    List<Action> exits = gen.actionsOf(state, "exit");
+    for (int i = 0; i < exits.size(); i++)
+    {
+      exit.append(gen.actionCode(exits.get(i), uClass, new ArrayList<MethodParameter>(), "            ", "the exit action of state " + state.getName()));
+      if (i < exits.size() - 1 || !exitAfter.isEmpty())
+      {
+        exit.append(gen.deletedCheck(deletingFlag, "            ", ""));
+      }
+    }
+    if (entry.length() > 0)
+    {
+      entryActions.append("\n        " + (entryActions.length() == 0 ? "if " : "elif ") + field + " is " + gen.stateReference(state) + ":" + entry);
+    }
+    if (exit.length() > 0)
+    {
+      exitActions.append("\n        " + (exitActions.length() == 0 ? "if " : "elif ") + field + " is " + gen.stateReference(state) + ":" + exit);
+    }
+  }
+  if (exitActions.length() > 0)
+  {
+    #>>
+
+    def <<=exitMethod>>(self):<<#
+    if (visitField != null)
+    {
+      realSb.append("\n        " + visitField + " += 1");
+    }
+    realSb.append(gen.stateMachineInjections(uClass, "before", exitMethod, gen.deletedCheck(deletingFlag, "        ", "")));
+    #>><<=exitActions>><<=exitAfter>><<#
+  }
+  #>>
+
+    def <<=setMethod>>(self, <<=parameter>>):<<#
+  realSb.append(setBefore);
+  #>>
+        <<=field>> = <<=parameter>><<#
+  if (visitField != null)
+  {
+    #>>
+        <<=visitField>> += 1<<#
+    if (captureVisit)
+    {
+      #>>
+        <<=visit>> = <<=visitField>><<#
+    }
+  }
+  if (parentState != null)
+  {
+    StateMachine parentSm = parentState.getStateMachine();
+    #>>
+        if <<=gen.smField(parentSm)>> is not <<=gen.stateReference(parentState)>> and <<=parameter>> is not <<=type>>.Null:
+            self.<<=gen.translate("setMethod", parentSm)>>(<<=gen.stateReference(parentState)>>)<<#
+    realSb.append(gen.visitCheck(deletingFlag, visitField, visit, "            "));
+  }
+  realSb.append(setAfter);
+  #>><<=entryActions>><<#
+  if (parentState != null && sm.getContainsDeepHistoryState())
+  {
+    #>>
+        if <<=parameter>> is <<=type>>.HStar:
+            <<=field>> = <<=deepHistory>><<#
+  }
+  #>>!>>
+}

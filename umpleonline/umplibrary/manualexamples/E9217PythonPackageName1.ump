@@ -1,6 +1,6 @@
 // Python packages are identifiers, so a namespace segment
 // such as 2024 cannot be imported: E9217
-generate Python;
+generate PythonNext;
 namespace releases.2024;
 class Release {
   name;

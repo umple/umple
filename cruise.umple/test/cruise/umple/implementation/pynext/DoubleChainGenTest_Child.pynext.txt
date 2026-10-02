@@ -1,0 +1,25 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from example.Employee import Employee
+
+
+class Admin(Employee):
+    def __init__(self, aName, aAge, aId, aNumber):
+        self._number = aNumber
+        super().__init__(aName, aAge, aId)
+
+    def setNumber(self, aNumber):
+        self._number = aNumber
+        return True
+
+    def getNumber(self):
+        return self._number
+
+    def delete(self):
+        super().delete()
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "number:" + str(self.getNumber())
+                + "]")

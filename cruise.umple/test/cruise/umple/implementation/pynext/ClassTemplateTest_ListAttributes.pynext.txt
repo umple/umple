@@ -1,0 +1,39 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Token:
+    def __init__(self):
+        self._positions = []
+
+    def addPosition(self, aPosition):
+        self._positions.append(aPosition)
+        return True
+
+    def removePosition(self, aPosition):
+        if aPosition not in self._positions:
+            return False
+        self._positions.remove(aPosition)
+        return True
+
+    def getPosition(self, index):
+        return self._positions[index]
+
+    def getPositions(self):
+        return list(self._positions)
+
+    def numberOfPositions(self):
+        return len(self._positions)
+
+    def hasPositions(self):
+        return len(self._positions) > 0
+
+    def indexOfPosition(self, aPosition):
+        return self._positions.index(aPosition) if aPosition in self._positions else -1
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "]")

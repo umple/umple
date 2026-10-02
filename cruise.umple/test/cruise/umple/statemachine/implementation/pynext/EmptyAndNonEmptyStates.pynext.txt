@@ -1,0 +1,41 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class Light:
+    class Status(Enum):
+        On = "On"
+        Off = "Off"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self):
+        self._status = None
+        self._deleted = False
+        self.setStatus(__class__.Status.On)
+
+    def getStatusFullName(self):
+        answer = str(self._status)
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def flip(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus is __class__.Status.On:
+            self.setStatus(__class__.Status.Off)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+
+    def delete(self):
+        self._deleted = True

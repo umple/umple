@@ -1,0 +1,33 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Student:
+    def __init__(self):
+        self._mentor = None
+
+    def getMentor(self):
+        return self._mentor
+
+    def hasMentor(self):
+        return self._mentor is not None
+
+    def setMentor(self, aNewMentor):
+        if aNewMentor is None:
+            existingMentor = self._mentor
+            self._mentor = None
+            if existingMentor is not None and existingMentor.getStudent() is not None:
+                existingMentor.setStudent(None)
+            return True
+        currentMentor = self._mentor
+        if currentMentor is not None and currentMentor is not aNewMentor:
+            currentMentor.setStudent(None)
+        self._mentor = aNewMentor
+        existingStudent = aNewMentor.getStudent()
+        if existingStudent is not self:
+            aNewMentor.setStudent(self)
+        return True
+
+    def delete(self):
+        if self._mentor is not None:
+            self._mentor.setStudent(None)

@@ -2,22 +2,37 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Student:
+class Student():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Student Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aAge, aWeight):
+        self._weight = None
+        self._age = None
         self._age = aAge
         self._weight = aWeight
-        if not ((self.getAge() <= 18)):
-            raise RuntimeError("Please provide a valid age [age<=18]")
+        if (aAge > 18) :
+            raise RuntimeError ("Please provide a valid age [age<=18]")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setAge(self, aAge):
-        if not ((aAge <= 18)):
-            return False
-        self._age = aAge
-        return True
+        wasSet = False
+        if (aAge <= 18) :
+            self._age = aAge
+            wasSet = True
+        return wasSet
 
     def setWeight(self, aWeight):
+        wasSet = False
         self._weight = aWeight
-        return True
+        wasSet = True
+        return wasSet
 
     def getAge(self):
         return self._age
@@ -29,7 +44,5 @@ class Student:
         pass
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "age:" + str(self.getAge()) + ","
-                + "weight:" + str(self.getWeight())
-                + "]")
+        return str(super().__str__()) + "[" + "age" + ":" + str(self.getAge()) + "," + "weight" + ":" + str(self.getWeight()) + "]"
+

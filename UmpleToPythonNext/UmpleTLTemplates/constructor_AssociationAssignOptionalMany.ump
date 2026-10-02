@@ -1,0 +1,5 @@
+class UmpleToPythonNext {
+    // Java creates the empty list here. The field block of constructor_Declare_All has already
+    // created it, so nothing is left to do.
+    constructor_AssociationAssignOptionalMany <<!<</*constructor_AssociationAssignOptionalMany*/>>!>>
+}

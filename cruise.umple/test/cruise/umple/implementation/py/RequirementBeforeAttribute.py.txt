@@ -2,22 +2,48 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Example:
+class Example():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Example Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aA, aB):
+        self._b = None
+        self._a = None
         self._a = aA
         self._b = aB
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setA(self, aA):
+        wasSet = False
         self._a = aA
-        return True
+        wasSet = True
+        return wasSet
 
     def setB(self, aB):
+        wasSet = False
         self._b = aB
-        return True
+        wasSet = True
+        return wasSet
 
+    #*
+    
+    #   * R01: this is a requirement for an attribute
+    
+    #   
     def getA(self):
         return self._a
 
+    #*
+    
+    #   * R01: this is a requirement for an attribute
+    
+    #   
     def getB(self):
         return self._b
 
@@ -25,7 +51,4 @@ class Example:
         pass
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "a:" + str(self.getA()) + ","
-                + "b:" + str(self.getB())
-                + "]")
+        return str(super().__str__()) + "[" + "a" + ":" + str(self.getA()) + "," + "b" + ":" + str(self.getB()) + "]"

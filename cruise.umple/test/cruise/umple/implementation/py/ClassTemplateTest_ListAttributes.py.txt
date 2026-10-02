@@ -1,39 +1,57 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 3 "../ClassTemplateTest_ListAttributes.ump"
 
-
-class Token:
+class Token():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Token Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
+        self._positions = None
         self._positions = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template attribute_SetMany 
     def addPosition(self, aPosition):
-        self._positions.append(aPosition)
-        return True
+        wasAdded = False
+        wasAdded = self._positions.append(aPosition)
+        return wasAdded
 
     def removePosition(self, aPosition):
-        if aPosition not in self._positions:
-            return False
-        self._positions.remove(aPosition)
-        return True
+        wasRemoved = False
+        wasRemoved = self._positions.remove(aPosition)
+        return wasRemoved
 
+    # Code from template attribute_GetMany 
     def getPosition(self, index):
-        return self._positions[index]
+        aPosition = self._positions[index]
+        return aPosition
 
     def getPositions(self):
-        return list(self._positions)
+        newPositions = self._positions.copy()
+        return newPositions
 
     def numberOfPositions(self):
-        return len(self._positions)
+        number = len(self._positions)
+        return number
 
     def hasPositions(self):
-        return len(self._positions) > 0
+        has = len(self._positions) > 0
+        return has
 
     def indexOfPosition(self, aPosition):
-        return self._positions.index(aPosition) if aPosition in self._positions else -1
+        index = (-1 if not aPosition in self._positions else self._positions.index(aPosition))
+        return index
 
     def delete(self):
         pass
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "]")
+        return str(super().__str__()) + "[" + "]"
+

@@ -1,0 +1,66 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from NetworkNode import NetworkNode
+from enum import Enum
+
+
+class Router(NetworkNode):
+    class Status(Enum):
+        disconnected = "disconnected"
+        connected = "connected"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self, aIpAddress):
+        self._ipAddress = aIpAddress
+        self._status = None
+        self._deleted = False
+        self.setStatus(__class__.Status.disconnected)
+
+    def getStatusFullName(self):
+        answer = str(self._status)
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def createConnection(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus is __class__.Status.disconnected:
+            self.setStatus(__class__.Status.connected)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def disconnectRequest(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus is __class__.Status.connected:
+            self.setStatus(__class__.Status.disconnected)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+
+    def delete(self):
+        self._deleted = True
+
+    def connect(self):
+        return False
+
+    def disconnect(self):
+        return False
+
+    def errorDetected(self):
+        return False
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "]")

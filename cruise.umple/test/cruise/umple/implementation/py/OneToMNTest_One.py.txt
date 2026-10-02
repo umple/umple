@@ -1,130 +1,149 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 3 "../OneToMNTest.ump"
 
-
-class Mentor:
+class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName):
+        self._pupils = None
+        self._name = None
         self._name = aName
         self._pupils = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
+        wasSet = False
         self._name = aName
-        return True
+        wasSet = True
+        return wasSet
 
     def getName(self):
         return self._name
 
+    # Code from template association_GetMany 
     def getPupil(self, index):
-        return self._pupils[index]
+        aPupil = self._pupils[index]
+        return aPupil
 
     def getPupils(self):
-        return tuple(self._pupils)
+        newPupils = tuple(self._pupils)
+        return newPupils
 
     def numberOfPupils(self):
-        return len(self._pupils)
+        number = len(self._pupils)
+        return number
 
     def hasPupils(self):
-        return len(self._pupils) > 0
+        has = len(self._pupils) > 0
+        return has
 
     def indexOfPupil(self, aPupil):
-        return next((i for i, x in enumerate(self._pupils) if x is aPupil), -1)
+        index = (-1 if not aPupil in self._pupils else self._pupils.index(aPupil))
+        return index
 
+    # Code from template association_IsNumberOfValidMethod 
     def isNumberOfPupilsValid(self):
-        return self.numberOfPupils() >= __class__.minimumNumberOfPupils() and self.numberOfPupils() <= __class__.maximumNumberOfPupils()
+        isValid = self.numberOfPupils() >= Mentor.minimumNumberOfPupils() and self.numberOfPupils() <= Mentor.maximumNumberOfPupils()
+        return isValid
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfPupils():
         return 5
 
+    # Code from template association_MaximumNumberOfMethod 
     @staticmethod
     def maximumNumberOfPupils():
         return 7
 
+    # Code from template association_AddMNToOnlyOne 
     def addPupil1(self, aNumber):
-        if self.numberOfPupils() >= self.maximumNumberOfPupils():
-            return None
         from example.Pupil import Pupil
-        return Pupil(aNumber, self)
+        if self.numberOfPupils() >= Mentor.maximumNumberOfPupils() :
+            return None
+        else :
+            return Pupil(aNumber, self)
 
     def addPupil2(self, aPupil):
-        if any(x is aPupil for x in self._pupils):
+        wasAdded = False
+        if (aPupil) in self._pupils :
             return False
-        if self.numberOfPupils() >= self.maximumNumberOfPupils():
-            return False
+        if self.numberOfPupils() >= Mentor.maximumNumberOfPupils() :
+            return wasAdded
         existingMentor = aPupil.getMentor()
-        isNewMentor = existingMentor is not None and existingMentor is not self
-        if isNewMentor and existingMentor.numberOfPupils() <= self.minimumNumberOfPupils():
-            return False
-        if isNewMentor:
-            if not aPupil.setMentor(self):
-                return False
-        else:
+        isNewMentor = not (existingMentor is None) and not self == existingMentor
+        if isNewMentor and existingMentor.numberOfPupils() <= Mentor.minimumNumberOfPupils() :
+            return wasAdded
+        if isNewMentor :
+            aPupil.setMentor(self)
+        else :
             self._pupils.append(aPupil)
-        return True
-
-    def addPupil(self, *args, **kwargs):
-        from example.Pupil import Pupil
-        bound = __class__._bindArguments(("aPupil",), False, args, kwargs)
-        if bound is not None and (bound[0] is None or isinstance(bound[0], Pupil)):
-            return __class__.addPupil2(self, *bound)
-        bound = __class__._bindArguments(("aNumber",), False, args, kwargs)
-        if bound is not None and (bound[0] is None or isinstance(bound[0], str)):
-            return __class__.addPupil1(self, *bound)
-        raise TypeError("No method matches provided parameters")
+        wasAdded = True
+        return wasAdded
 
     def removePupil(self, aPupil):
-        if aPupil.getMentor() is self:
-            return False
-        if self.numberOfPupils() <= self.minimumNumberOfPupils():
-            return False
-        index = next((i for i, x in enumerate(self._pupils) if x is aPupil), -1)
-        if index >= 0:
-            del self._pupils[index]
-        return True
+        wasRemoved = False
+        #Unable to remove aPupil, as it must always have a mentor
+        if self == aPupil.getMentor() :
+            return wasRemoved
+        #mentor already at minimum (5)
+        if self.numberOfPupils() <= Mentor.minimumNumberOfPupils() :
+            return wasRemoved
+        self._pupils.remove(aPupil)
+        wasRemoved = True
+        return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addPupilAt(self, aPupil, index):
-        if not self.addPupil2(aPupil):
-            return False
-        if index < 0:
-            index = 0
-        if index > self.numberOfPupils():
-            index = self.numberOfPupils() - 1
-        del self._pupils[next((i for i, x in enumerate(self._pupils) if x is aPupil), -1)]
-        self._pupils.insert(index, aPupil)
-        return True
+        wasAdded = False
+        if self.addPupil(aPupil) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfPupils() :
+                index = self.numberOfPupils() - 1
+            self._pupils.remove(aPupil)
+            self._pupils.insert(index, aPupil)
+            wasAdded = True
+        return wasAdded
 
     def addOrMovePupilAt(self, aPupil, index):
-        if not any(x is aPupil for x in self._pupils):
-            return self.addPupilAt(aPupil, index)
-        if index < 0:
-            index = 0
-        if index > self.numberOfPupils():
-            index = self.numberOfPupils() - 1
-        del self._pupils[next((i for i, x in enumerate(self._pupils) if x is aPupil), -1)]
-        self._pupils.insert(index, aPupil)
-        return True
+        wasAdded = False
+        if (aPupil) in self._pupils :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfPupils() :
+                index = self.numberOfPupils() - 1
+            self._pupils.remove(aPupil)
+            self._pupils.insert(index, aPupil)
+            wasAdded = True
+        else :
+            wasAdded = self.addPupilAt(aPupil, index)
+        return wasAdded
 
     def delete(self):
-        for i in range(len(self._pupils), 0, -1):
+        i = len(self._pupils)
+        while i > 0 :
             aPupil = self._pupils[i - 1]
             aPupil.delete()
-
-    @staticmethod
-    def _bindArguments(names, varargs, args, kwargs):
-        if len(args) > len(names) and not varargs:
-            return None
-        bound = list(args[:len(names)])
-        for name in names[len(bound):]:
-            if name not in kwargs:
-                return None
-            bound.append(kwargs[name])
-        if len(kwargs) != len(names) - min(len(args), len(names)):
-            return None
-        if varargs:
-            bound.append(args[len(names):])
-        return bound
+            i -= 1
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "name:" + str(self.getName())
-                + "]")
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+
+    def addPupil(self, *argv):
+        from example.Pupil import Pupil
+        if len(argv) == 1 and isinstance(argv[0], str) :
+            return self.addPupil1(argv[0])
+        if len(argv) == 1 and isinstance(argv[0], Pupil) :
+            return self.addPupil2(argv[0])
+        raise TypeError("No method matches provided parameters")
+

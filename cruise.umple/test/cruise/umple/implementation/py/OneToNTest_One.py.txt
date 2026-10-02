@@ -1,112 +1,127 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 3 "../OneToNTest.ump"
 
-
-class Mentor:
+class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName):
+        self._students = None
+        self._name = None
         self._name = aName
         self._students = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
+        wasSet = False
         self._name = aName
-        return True
+        wasSet = True
+        return wasSet
 
     def getName(self):
         return self._name
 
+    # Code from template association_GetMany 
     def getStudent(self, index):
-        return self._students[index]
+        aStudent = self._students[index]
+        return aStudent
 
     def getStudents(self):
-        return tuple(self._students)
+        newStudents = tuple(self._students)
+        return newStudents
 
     def numberOfStudents(self):
-        return len(self._students)
+        number = len(self._students)
+        return number
 
     def hasStudents(self):
-        return len(self._students) > 0
+        has = len(self._students) > 0
+        return has
 
     def indexOfStudent(self, aStudent):
-        return next((i for i, x in enumerate(self._students) if x is aStudent), -1)
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        return index
 
+    # Code from template association_IsNumberOfValidMethod 
     def isNumberOfStudentsValid(self):
-        return self.numberOfStudents() >= __class__.minimumNumberOfStudents() and self.numberOfStudents() <= __class__.maximumNumberOfStudents()
+        isValid = self.numberOfStudents() >= Mentor.minimumNumberOfStudents() and self.numberOfStudents() <= Mentor.maximumNumberOfStudents()
+        return isValid
 
+    # Code from template association_RequiredNumberOfMethod 
     @staticmethod
     def requiredNumberOfStudents():
         return 4
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 4
 
+    # Code from template association_MaximumNumberOfMethod 
     @staticmethod
     def maximumNumberOfStudents():
         return 4
 
+    # Code from template association_AddMNToOnlyOne 
     def addStudent1(self, aNumber):
-        if self.numberOfStudents() >= self.maximumNumberOfStudents():
-            return None
         from example.Student import Student
-        return Student(aNumber, self)
+        if self.numberOfStudents() >= Mentor.maximumNumberOfStudents() :
+            return None
+        else :
+            return Student(aNumber, self)
 
     def addStudent2(self, aStudent):
-        if any(x is aStudent for x in self._students):
+        wasAdded = False
+        if (aStudent) in self._students :
             return False
-        if self.numberOfStudents() >= self.maximumNumberOfStudents():
-            return False
+        if self.numberOfStudents() >= Mentor.maximumNumberOfStudents() :
+            return wasAdded
         existingMentor = aStudent.getMentor()
-        isNewMentor = existingMentor is not None and existingMentor is not self
-        if isNewMentor and existingMentor.numberOfStudents() <= self.minimumNumberOfStudents():
-            return False
-        if isNewMentor:
-            if not aStudent.setMentor(self):
-                return False
-        else:
+        isNewMentor = not (existingMentor is None) and not self == existingMentor
+        if isNewMentor and existingMentor.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
+            return wasAdded
+        if isNewMentor :
+            aStudent.setMentor(self)
+        else :
             self._students.append(aStudent)
-        return True
-
-    def addStudent(self, *args, **kwargs):
-        from example.Student import Student
-        bound = __class__._bindArguments(("aStudent",), False, args, kwargs)
-        if bound is not None and (bound[0] is None or isinstance(bound[0], Student)):
-            return __class__.addStudent2(self, *bound)
-        bound = __class__._bindArguments(("aNumber",), False, args, kwargs)
-        if bound is not None and (bound[0] is None or isinstance(bound[0], str)):
-            return __class__.addStudent1(self, *bound)
-        raise TypeError("No method matches provided parameters")
+        wasAdded = True
+        return wasAdded
 
     def removeStudent(self, aStudent):
-        if aStudent.getMentor() is self:
-            return False
-        if self.numberOfStudents() <= self.minimumNumberOfStudents():
-            return False
-        index = next((i for i, x in enumerate(self._students) if x is aStudent), -1)
-        if index >= 0:
-            del self._students[index]
-        return True
+        wasRemoved = False
+        #Unable to remove aStudent, as it must always have a mentor
+        if self == aStudent.getMentor() :
+            return wasRemoved
+        #mentor already at minimum (4)
+        if self.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
+            return wasRemoved
+        self._students.remove(aStudent)
+        wasRemoved = True
+        return wasRemoved
 
     def delete(self):
-        for i in range(len(self._students), 0, -1):
+        i = len(self._students)
+        while i > 0 :
             aStudent = self._students[i - 1]
             aStudent.delete()
-
-    @staticmethod
-    def _bindArguments(names, varargs, args, kwargs):
-        if len(args) > len(names) and not varargs:
-            return None
-        bound = list(args[:len(names)])
-        for name in names[len(bound):]:
-            if name not in kwargs:
-                return None
-            bound.append(kwargs[name])
-        if len(kwargs) != len(names) - min(len(args), len(names)):
-            return None
-        if varargs:
-            bound.append(args[len(names):])
-        return bound
+            i -= 1
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "name:" + str(self.getName())
-                + "]")
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+
+    def addStudent(self, *argv):
+        from example.Student import Student
+        if len(argv) == 1 and isinstance(argv[0], str) :
+            return self.addStudent1(argv[0])
+        if len(argv) == 1 and isinstance(argv[0], Student) :
+            return self.addStudent2(argv[0])
+        raise TypeError("No method matches provided parameters")
+

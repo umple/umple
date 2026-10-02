@@ -1,0 +1,50 @@
+class UmpleToPythonNext {
+    // The getter of a single-valued attribute, with the default getter of a defaulted attribute and
+    // the class-level lookups of a unique one.
+    attribute_Get <<!<</*attribute_Get*/>><<#
+  String getterAfter = gen.injected(uClass, "after", gen.translate("getMethod", av));
+  #>>
+
+    def <<=gen.translate("getMethod", av)>>(self):<<=gen.docstring(av.getComments(), "        ")>><<=gen.injected(uClass, "before", gen.translate("getMethod", av))>><<#
+  String getterTarget = getterAfter.isEmpty() ? "return " : parameter + " = ";
+  for (String line : av.getIsDerived() ? gen.derivedLines(uClass, getterTarget, av) : Arrays.asList(getterTarget + field))
+  {
+    realSb.append("\n        ").append(line);
+  }
+  if (!getterAfter.isEmpty())
+  {
+    #>><<=getterAfter>>
+        return <<=parameter>><<#
+  }
+  if ("defaulted".equals(av.getModifier()))
+  {
+    String defaultAfter = gen.injected(uClass, "after", gen.translate("getDefaultMethod", av));
+    #>>
+
+    def <<=gen.translate("getDefaultMethod", av)>>(self):<<=gen.injected(uClass, "before", gen.translate("getDefaultMethod", av))>><<#
+    for (String line : gen.valueLines(uClass, defaultAfter.isEmpty() ? "return " : parameter + " = ", av, ""))
+    {
+      realSb.append("\n        ").append(line);
+    }
+    if (!defaultAfter.isEmpty())
+    {
+      #>><<=defaultAfter>>
+        return <<=parameter>><<#
+    }
+  }
+  if (av.getIsUnique())
+  {
+    String registry = "__class__." + gen.uniqueMap(uClass, av);
+    // As in Java, the has-query asks the get-query, whose injections then run too
+    MethodParameter key = gen.parameter(parameter, av.getType());
+    #>>
+
+    @staticmethod
+    def <<=gen.translate("getUniqueMethod", av)>>(<<=parameter>>):<<=gen.staticAccessorBody(uClass, gen.translate("getUniqueMethod", av), gen.translate("parameterGetUnique", av), registry + ".get(" + parameter + ")", key)>>
+
+    @staticmethod
+    def <<=gen.translate("hasUniqueMethod", av)>>(<<=parameter>>):<<=gen.staticAccessorBody(uClass, gen.translate("hasUniqueMethod", av), gen.translate("parameterHasUnique", av),
+      "__class__." + gen.translate("getUniqueMethod", av) + "(" + parameter + ") is not None", key)>><<#
+  }
+  #>>!>>
+}

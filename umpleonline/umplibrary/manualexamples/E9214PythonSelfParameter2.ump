@@ -1,5 +1,5 @@
 // Any other parameter name works
-generate Python;
+generate PythonNext;
 class Shape {
   Double scale(Double factor) Python { return factor * 2 }
 }

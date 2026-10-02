@@ -1,7 +1,0 @@
-use association_SetMNToMany.ump;
-
-class UmpleToPython {
-    // The batch setter of a 0..n end whose other end is *: association_SetMNToMany, which
-    // checks only the upper bound for this end, as Java's template does.
-    association_SetOptionalNToMany <<!<</*association_SetOptionalNToMany*/>><<@ UmpleToPython.association_SetMNToMany >>!>>
-}

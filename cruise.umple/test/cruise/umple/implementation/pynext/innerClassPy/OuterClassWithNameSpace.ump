@@ -1,0 +1,12 @@
+generate PythonNext;
+namespace com.umple.innerClasses;
+
+class OuterClassWithNameSpace
+{
+
+  static class InnerStatic
+  {
+  
+  }
+
+}

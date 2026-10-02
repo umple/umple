@@ -1,0 +1,39 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Client():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Client Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self, aMinAge):
+        self._minAge = None
+        self._minAge = aMinAge
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setMinAge(self, aMinAge):
+        wasSet = False
+        self._minAge = aMinAge
+        wasSet = True
+        return wasSet
+
+    def getMinAge(self):
+        return self._minAge
+
+    def delete(self):
+        pass
+
+
+    def someMethod(self, arg):
+        // rest of stuff that we don't interpret
+        return 0;
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "minAge" + ":" + str(self.getMinAge()) + "]"
+

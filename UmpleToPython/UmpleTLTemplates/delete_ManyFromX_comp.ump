@@ -1,8 +1,0 @@
-class UmpleToPython {
-    // The parts of a composition, deleted last first. A deleted part usually removes itself already,
-    // so the removal here must accept an absent part.
-    delete_ManyFromX_comp <<!<</*delete_ManyFromX_comp*/>>
-        while len(<<=field>>) > 0:
-            <<=parameter>> = <<=field>>[-1]
-            <<=parameter>>.delete()<<=gen.removeLink(field, parameter, "            ")>>!>>
-}

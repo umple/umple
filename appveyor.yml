@@ -34,6 +34,22 @@ init:
 # install the latest gcc and g++
 - ps: choco install mingw --limitoutput --no-progress
 
+# Download the latest TXL version (this requires editing the install script)
+# Extract the files
+# Remove the need for user input
+# Run the installer (if Admin is required us this : -Verb RunAs)
+- ps: |
+    $zipPath = "C:\TXL\Txlinstaller.zip"
+    $path = "C:\TXL"
+    New-Item "C:\TXL" -itemType Directory
+    Invoke-Webrequest "https://cruise.umple.org/txldl/Txl108bwin64.zip" -OutFile $zipPath
+    Expand-Archive -Path $zipPath -DestinationPath $path
+    $installPath = (Get-ChildItem -Path C:\TXL -Filter "*Txl*" -Recurse -Directory).Fullname + "\InstallTxl.bat" 
+    $content = Get-Content -Path $installPath
+    $newContent = $content -replace 'pause', ':: pause'
+    $newContent | Set-Content -Path $installPath
+    Start-Process $installPath 
+
 install:
 # NOTE if changing php version, make sure you change the cache above
 # Umple generates Python 3, but AppVeyor images put Python 2.7 first on PATH
@@ -41,7 +57,7 @@ install:
 
 - ps: $env:JAVA_HOME="C:\Program Files\Java\jdk11" 
 
-# Python 3 checks and runs generated Python; the compiler and the testbed use the interpreter named here
+# Python 3 checks and runs generated Python; the compiler and the testbeds use the interpreter named here
 - ps: $env:UMPLE_PYTHON="C:\Python38-x64\python.exe"
 - ps: $env:UMPLE_REQUIRE_PYTHON="1"
 - ps: '& $env:UMPLE_PYTHON --version'
@@ -71,6 +87,7 @@ install:
 - cmd: java -version # using ps causes it to fail because it prints to sterr
 - cmd: ant -version
 - cmd: rake -V
+#- cmd: txl -V # prints to the sterr on cmd and ps
 
 build_script:
 

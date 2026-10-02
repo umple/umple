@@ -1,47 +1,62 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 
-from enum import Enum
+from enum import Enum, auto
 
-
-class Animal:
+class Animal():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Animal Attributes
+    #Animal State Machines
     class State(Enum):
-        alive = "alive"
-        dead = "dead"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        alive = auto()
+        dead = auto()
 
     class StateAlive(Enum):
-        Null = "Null"
-        normal = "normal"
-        zombie = "zombie"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        Null = auto()
+        normal = auto()
+        zombie = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aIsAlive):
-        self._isAlive = aIsAlive
-        self._state = None
         self._stateAlive = None
-        self._deleted = False
-        self.setStateAlive(__class__.StateAlive.Null)
-        self.setState(__class__.State.alive)
-
-    def setIsAlive(self, aIsAlive):
+        self._state = None
+        self._isAlive = None
         self._isAlive = aIsAlive
-        return True
+        self.setStateAlive(Animal.StateAlive.Null)
+        self.setState(Animal.State.alive)
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setIsAlive(self, aIsAlive):
+        wasSet = False
+        self._isAlive = aIsAlive
+        wasSet = True
+        return wasSet
 
     def getIsAlive(self):
         return self._isAlive
 
+    # Code from template attribute_IsBoolean 
     def isIsAlive(self):
         return self._isAlive
 
     def getStateFullName(self):
-        answer = str(self._state)
-        if self._stateAlive is not __class__.StateAlive.Null:
-            answer += "." + str(self._stateAlive)
+        answer = self._state.__str__()
+        if self._stateAlive != Animal.StateAlive.Null :
+            answer += "." + self._stateAlive.__str__()
         return answer
 
     def getState(self):
@@ -51,63 +66,66 @@ class Animal:
         return self._stateAlive
 
     def kill(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aState = self._state
-        if aState is __class__.State.alive:
+        if aState == Animal.State.alive :
             self.exitState()
-            self.setState(__class__.State.dead)
+            self.setState(Animal.State.dead)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def zombify(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aStateAlive = self._stateAlive
-        if aStateAlive is __class__.StateAlive.normal:
+        if aStateAlive == Animal.StateAlive.normal :
             self.exitStateAlive()
-            self.setStateAlive(__class__.StateAlive.zombie)
+            self.setStateAlive(Animal.StateAlive.zombie)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def haveBaby(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aStateAlive = self._stateAlive
-        if aStateAlive is __class__.StateAlive.zombie:
+        if aStateAlive == Animal.StateAlive.zombie :
             self.exitStateAlive()
-            self.setStateAlive(__class__.StateAlive.normal)
+            self.setStateAlive(Animal.StateAlive.normal)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def exitState(self):
-        if self._state is __class__.State.alive:
+        if self._state == Animal.State.alive :
             self.exitStateAlive()
 
     def setState(self, aState):
         self._state = aState
-        if self._state is __class__.State.alive:
-            if self._stateAlive is __class__.StateAlive.Null:
-                self.setStateAlive(__class__.StateAlive.normal)
+        # entry actions and do activities
+        if self._state == Animal.State.alive :
+            if self._stateAlive == Animal.StateAlive.Null :
+                self.setStateAlive(Animal.StateAlive.normal)
 
     def exitStateAlive(self):
-        if self._stateAlive is __class__.StateAlive.normal:
-            self.setStateAlive(__class__.StateAlive.Null)
-        elif self._stateAlive is __class__.StateAlive.zombie:
-            self.setStateAlive(__class__.StateAlive.Null)
+        if self._stateAlive == Animal.StateAlive.normal :
+            self.setStateAlive(Animal.StateAlive.Null)
+        elif self._stateAlive == Animal.StateAlive.zombie :
+            self.setStateAlive(Animal.StateAlive.Null)
 
     def setStateAlive(self, aStateAlive):
         self._stateAlive = aStateAlive
-        if self._state is not __class__.State.alive and aStateAlive is not __class__.StateAlive.Null:
-            self.setState(__class__.State.alive)
+        if self._state != Animal.State.alive and aStateAlive != Animal.StateAlive.Null :
+            self.setState(Animal.State.alive)
 
     def delete(self):
-        self._deleted = True
+        pass
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "isAlive:" + str(self.getIsAlive())
-                + "]")
+        return str(super().__str__()) + "[" + "isAlive" + ":" + str(self.getIsAlive()) + "]"
+

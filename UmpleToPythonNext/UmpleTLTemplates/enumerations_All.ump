@@ -1,0 +1,25 @@
+class UmpleToPythonNext {
+    // Umple enumerations become nested Enum classes, as Java nests them. Model-level enumerations are
+    // copied into each class that uses them, and a class's own enumeration takes precedence.
+    enumerations_All <<!<</*enumerations_All*/>><<#
+{
+  for (UmpleEnumeration umpleEnum : gen.enumerations(uClass))
+  {
+    String enumBase = gen.standardName("enum", "Enum");
+    #>>
+
+    class <<=StringFormatter.toPascalCase(umpleEnum.getName())>>(<<=enumBase>>):<<#
+    for (String value : umpleEnum.getEnumValues())
+    {
+      String name = StringFormatter.toPascalCase(value);
+      #>>
+        <<=name>> = "<<=name>>"<<#
+    }
+    #>>
+
+        def __str__(self):
+            return self.value<<#
+  }
+}
+#>>!>>
+}

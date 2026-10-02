@@ -1,0 +1,28 @@
+class UmpleToPythonNext {
+    // A list attribute. Removing a value that is not in the list returns False.
+    attribute_SetMany <<!<</*attribute_SetMany*/>>
+
+    def <<=gen.translate("addMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("addMethod", av), setterParameter)>><<#
+  if (isKey)
+  {
+    #>>
+        if not <<=canSet>>:
+            return False<<#
+  }
+  #>>
+        <<=field>>.append(<<=parameter>>)<<=gen.injected(uClass, "after", gen.translate("addMethod", av), setterParameter)>>
+        return True
+
+    def <<=gen.translate("removeMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("removeMethod", av), setterParameter)>><<#
+  if (isKey)
+  {
+    #>>
+        if not <<=canSet>>:
+            return False<<#
+  }
+  #>>
+        if <<=parameter>> not in <<=field>>:
+            return False
+        <<=field>>.remove(<<=parameter>>)<<=gen.injected(uClass, "after", gen.translate("removeMethod", av), setterParameter)>>
+        return True!>>
+}

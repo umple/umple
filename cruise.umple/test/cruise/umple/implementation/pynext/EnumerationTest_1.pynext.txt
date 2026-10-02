@@ -1,0 +1,33 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class Student:
+    class Status(Enum):
+        FullTime = "FullTime"
+        PartTime = "PartTime"
+
+        def __str__(self):
+            return self.value
+
+    class Grade(Enum):
+        High = "High"
+
+        def __str__(self):
+            return self.value
+
+    class RelationshipStatus(Enum):
+        Single = "Single"
+        Married = "Married"
+        Divorced = "Divorced"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass

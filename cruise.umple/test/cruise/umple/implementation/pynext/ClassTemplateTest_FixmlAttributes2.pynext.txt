@@ -1,0 +1,40 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Mentor:
+    def __init__(self, aCapacity, aId, aName):
+        self._capacity = aCapacity
+        self._id = aId
+        self._name = aName
+
+    def setCapacity(self, aCapacity):
+        self._capacity = aCapacity
+        return True
+
+    def setId(self, aId):
+        self._id = aId
+        return True
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def getCapacity(self):
+        return self._capacity
+
+    def getId(self):
+        return self._id
+
+    def getName(self):
+        return self._name
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "capacity:" + str(self.getCapacity()) + ","
+                + "id:" + str(self.getId()) + ","
+                + "name:" + str(self.getName())
+                + "]")

@@ -1,0 +1,35 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Student:
+    def __init__(self, aAge, aWeight):
+        self._age = aAge
+        self._weight = aWeight
+        if not (self.getAge() < 10 and (self.getAge() < 10)):
+            raise RuntimeError("Please provide a valid age [age<10&&age<10]")
+
+    def setAge(self, aAge):
+        if not (aAge < 10 and (aAge < 10)):
+            return False
+        self._age = aAge
+        return True
+
+    def setWeight(self, aWeight):
+        self._weight = aWeight
+        return True
+
+    def getAge(self):
+        return self._age
+
+    def getWeight(self):
+        return self._weight
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "age:" + str(self.getAge()) + ","
+                + "weight:" + str(self.getWeight())
+                + "]")

@@ -1,76 +1,89 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 
-from enum import Enum
+from enum import Enum, auto
 
-
-class Course:
+class Course():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Course State Machines
     class Status(Enum):
-        Open = "Open"
-        Full = "Full"
-        error1 = "error1"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        Open = auto()
+        Full = auto()
+        error1 = auto()
 
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         self._status = None
-        self._deleted = False
-        self.setStatus(__class__.Status.Open)
+        self.setStatus(Course.Status.Open)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getStatusFullName(self):
-        answer = str(self._status)
+        answer = self._status.__str__()
         return answer
 
     def getStatus(self):
         return self._status
 
     def register(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus is __class__.Status.Open:
-            self.setStatus(__class__.Status.Full)
+        if aStatus == Course.Status.Open :
+            self.setStatus(Course.Status.Full)
             wasEventProcessed = True
-        else:
-            wasEventProcessed = self.unspecified(self.getStatus().value, "register") or wasEventProcessed
+        else :
+            # Other states do respond to this event
+            wasEventProcessed = self.unspecified(self.getStatus().__str__(), "register")
         return wasEventProcessed
 
     def unspecified(self, state, event):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus is __class__.Status.Open:
-            self.setStatus(__class__.Status.error1)
+        if aStatus == Course.Status.Open :
+            self.setStatus(Course.Status.error1)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def reject(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus is __class__.Status.Full:
-            self.setStatus(__class__.Status.Full)
+        if aStatus == Course.Status.Full :
+            self.setStatus(Course.Status.Full)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def __autotransition1__(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus is __class__.Status.error1:
-            self.setStatus(__class__.Status.Open)
+        if aStatus == Course.Status.error1 :
+            self.setStatus(Course.Status.Open)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def setStatus(self, aStatus):
         self._status = aStatus
-        if self._status is __class__.Status.error1:
+        # entry actions and do activities
+        if self._status == Course.Status.error1 :
             self.__autotransition1__()
 
     def delete(self):
-        self._deleted = True
+        pass
+

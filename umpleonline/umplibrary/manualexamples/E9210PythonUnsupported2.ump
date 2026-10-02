@@ -1,5 +1,5 @@
 // Without the trace directive the class is generated
-generate Python;
+generate PythonNext;
 class Lamp {
   Integer level;
 }

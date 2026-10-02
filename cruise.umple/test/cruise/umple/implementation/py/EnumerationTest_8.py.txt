@@ -1,29 +1,49 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
 
-from enum import Enum
+import os
+from enum import Enum, auto
 
-
-class A:
+class A():
+    #------------------------
+    # ENUMERATIONS
+    #------------------------
     class Month(Enum):
-        O = "O"
-        P = "P"
-        Q = "Q"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        O = auto()
+        P = auto()
+        Q = auto()
 
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #A Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aM, aP):
+        self._p = None
+        self._m = None
         self._m = aM
         self._p = aP
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setM(self, aM):
+        wasSet = False
         self._m = aM
-        return True
+        wasSet = True
+        return wasSet
 
     def setP(self, aP):
+        wasSet = False
         self._p = aP
-        return True
+        wasSet = True
+        return wasSet
 
     def getM(self):
         return self._m
@@ -35,7 +55,4 @@ class A:
         pass
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "]"
-                + "\n  m=" + ("null" if self.getM() is None else "this" if self.getM() is self else str(self.getM()).replace("  ", "    "))
-                + "\n  p=" + ("null" if self.getP() is None else "this" if self.getP() is self else str(self.getP()).replace("  ", "    ")))
+        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "m" + "=" + str((((self.getM().__str__().replaceAll("  ", "    ")) if not self.getM() == self else "this") if not (self.getM() is None) else "null")) + str(os.linesep) + "  " + "p" + "=" + (((self.getP().__str__().replaceAll("  ", "    ")) if not self.getP() == self else "this") if not (self.getP() is None) else "null")

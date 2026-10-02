@@ -1,98 +1,145 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# line 1 "MNToNTest.ump"
 
-
-class Mentor:
+class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName):
+        self._students = None
+        self._name = None
         self._name = aName
         self._students = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
+        wasSet = False
         self._name = aName
-        return True
+        wasSet = True
+        return wasSet
 
     def getName(self):
         return self._name
 
+    # Code from template association_GetMany 
     def getStudent(self, index):
-        return self._students[index]
+        aStudent = self._students[index]
+        return aStudent
 
     def getStudents(self):
-        return tuple(self._students)
+        newStudents = tuple(self._students)
+        return newStudents
 
     def numberOfStudents(self):
-        return len(self._students)
+        number = len(self._students)
+        return number
 
     def hasStudents(self):
-        return len(self._students) > 0
+        has = len(self._students) > 0
+        return has
 
     def indexOfStudent(self, aStudent):
-        return next((i for i, x in enumerate(self._students) if x is aStudent), -1)
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        return index
 
+    # Code from template association_IsNumberOfValidMethod 
     def isNumberOfStudentsValid(self):
-        return self.numberOfStudents() >= __class__.minimumNumberOfStudents() and self.numberOfStudents() <= __class__.maximumNumberOfStudents()
+        isValid = self.numberOfStudents() >= Mentor.minimumNumberOfStudents() and self.numberOfStudents() <= Mentor.maximumNumberOfStudents()
+        return isValid
 
+    # Code from template association_RequiredNumberOfMethod 
     @staticmethod
     def requiredNumberOfStudents():
         return 3
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 3
 
+    # Code from template association_MaximumNumberOfMethod 
     @staticmethod
     def maximumNumberOfStudents():
         return 3
 
+    # Code from template association_AddManyToManyMethod 
     def addStudent(self, aStudent):
-        if any(x is aStudent for x in self._students):
+        wasAdded = False
+        if (aStudent) in self._students :
             return False
-        if self.numberOfStudents() >= __class__.maximumNumberOfStudents():
-            return False
+        if self.numberOfStudents() >= Mentor.maximumNumberOfStudents() :
+            return wasAdded
         self._students.append(aStudent)
-        if aStudent.indexOfMentor(self) == -1 and not aStudent.addMentor(self):
-            del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
-            return False
-        return True
+        if aStudent.indexOfMentor(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aStudent.addMentor(self)
+            if not wasAdded :
+                self._students.remove(aStudent)
+        return wasAdded
 
+    # Code from template association_AddMNToMany 
     def removeStudent(self, aStudent):
-        oldIndex = next((i for i, x in enumerate(self._students) if x is aStudent), -1)
-        if oldIndex == -1:
-            return False
-        if self.numberOfStudents() <= __class__.minimumNumberOfStudents():
-            return False
-        del self._students[oldIndex]
-        if aStudent.indexOfMentor(self) != -1 and not aStudent.removeMentor(self):
-            self._students.insert(oldIndex, aStudent)
-            return False
-        return True
+        wasRemoved = False
+        if not (aStudent) in self._students :
+            return wasRemoved
+        if self.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
+            return wasRemoved
+        oldIndex = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        self._students.remove(oldIndex)
+        if aStudent.indexOfMentor(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aStudent.removeMentor(self)
+            if not wasRemoved :
+                self._students.insert(oldIndex, aStudent)
+        return wasRemoved
 
+    # Code from template association_SetMNToMany 
     def setStudents(self, *newStudents):
-        if len({id(x) for x in newStudents}) != len(newStudents) or len(newStudents) < __class__.minimumNumberOfStudents() or len(newStudents) > __class__.maximumNumberOfStudents():
-            return False
-        oldStudents = {id(x): x for x in self._students}
+        newStudents = list(newStudents)
+        wasSet = False
+        verifiedStudents = []
+        for aStudent in newStudents:
+            if (aStudent) in verifiedStudents :
+                continue
+            verifiedStudents.append(aStudent)
+
+        if len(verifiedStudents) != len(newStudents) or len(verifiedStudents) < Mentor.minimumNumberOfStudents() or len(verifiedStudents) > Mentor.maximumNumberOfStudents() :
+            return wasSet
+        oldStudents = self._students.copy()
         self._students.clear()
-        for aNewStudent in newStudents:
+        for aNewStudent in verifiedStudents:
             self._students.append(aNewStudent)
-            if id(aNewStudent) in oldStudents:
-                del oldStudents[id(aNewStudent)]
-            else:
+            if (aNewStudent) in oldStudents :
+                oldStudents.remove(aNewStudent)
+            else :
                 aNewStudent.addMentor(self)
-        for anOldStudent in oldStudents.values():
+
+        for anOldStudent in oldStudents:
             anOldStudent.removeMentor(self)
-        return True
+
+        wasSet = True
+        return wasSet
 
     def delete(self):
         from example.Student import Student
-        copyOfStudents = tuple(self._students)
+        copyOfStudents = self._students.copy()
         self._students.clear()
         for aStudent in copyOfStudents:
-            if aStudent.numberOfMentors() <= Student.minimumNumberOfMentors():
+            if aStudent.numberOfMentors() <= Student.minimumNumberOfMentors() :
                 aStudent.delete()
-            else:
+            else :
                 aStudent.removeMentor(self)
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "name:" + str(self.getName())
-                + "]")
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+

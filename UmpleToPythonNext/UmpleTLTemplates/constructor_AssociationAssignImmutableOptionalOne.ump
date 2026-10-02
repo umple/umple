@@ -1,0 +1,5 @@
+class UmpleToPythonNext {
+    // A directed immutable 0..1 end given to the constructor; None leaves it empty.
+    constructor_AssociationAssignImmutableOptionalOne <<!<</*constructor_AssociationAssignImmutableOptionalOne*/>>
+        self.<<=gen.immutableEndSetterName(av, "setMethod")>>(<<=parameter>>)!>>
+}

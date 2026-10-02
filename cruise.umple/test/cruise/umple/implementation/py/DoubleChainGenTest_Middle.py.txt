@@ -1,17 +1,29 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from example.Person import Person
-
+from Person import Person
 
 class Employee(Person):
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Employee Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName, aAge, aId):
-        self._id = aId
+        self._id = None
         super().__init__(aName, aAge)
-
-    def setId(self, aId):
         self._id = aId
-        return True
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setId(self, aId):
+        wasSet = False
+        self._id = aId
+        wasSet = True
+        return wasSet
 
     def getId(self):
         return self._id
@@ -20,6 +32,4 @@ class Employee(Person):
         super().delete()
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "id:" + str(self.getId())
-                + "]")
+        return str(super().__str__()) + "[" + "id" + ":" + str(self.getId()) + "]"

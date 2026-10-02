@@ -1,0 +1,6 @@
+class UmpleToPythonNext {
+    state_machine_Get <<!<</*state_machine_Get*/>>
+
+    def <<=gen.translate("getMethod", sm)>>(self):
+        return <<=gen.smField(sm)>>!>>
+}

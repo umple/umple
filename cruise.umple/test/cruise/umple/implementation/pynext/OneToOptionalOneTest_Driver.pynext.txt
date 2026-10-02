@@ -1,0 +1,45 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class MyDriver:
+    def __init__(self, aName):
+        self._name = aName
+        self._mySubordinate = None
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def getName(self):
+        return self._name
+
+    def getMySubordinate(self):
+        return self._mySubordinate
+
+    def hasMySubordinate(self):
+        return self._mySubordinate is not None
+
+    def setMySubordinate(self, aNewMySubordinate):
+        if self._mySubordinate is not None and self._mySubordinate is not aNewMySubordinate and self._mySubordinate.getMyDriver() is self:
+            return False
+        self._mySubordinate = aNewMySubordinate
+        anOldMyDriver = aNewMySubordinate.getMyDriver() if aNewMySubordinate is not None else None
+        if anOldMyDriver is not self:
+            if anOldMyDriver is not None:
+                anOldMyDriver._mySubordinate = None
+            if self._mySubordinate is not None:
+                self._mySubordinate.setMyDriver(self)
+        return True
+
+    def delete(self):
+        existingMySubordinate = self._mySubordinate
+        self._mySubordinate = None
+        if existingMySubordinate is not None:
+            existingMySubordinate.delete()
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]"
+                + "\n  mySubordinate = " + ("null" if self.getMySubordinate() is None else format(id(self.getMySubordinate()), "x")))

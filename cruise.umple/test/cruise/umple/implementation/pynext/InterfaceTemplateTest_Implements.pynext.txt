@@ -1,0 +1,18 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from example.ISomething import ISomething
+
+
+class Something(ISomething):
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass
+
+    def getCode(self, aParam, anotherParam):
+        return ""
+
+    def isValid(self):
+        return ""

@@ -2,72 +2,105 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Course:
+class Course():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Course Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
+        self._students = None
         self._students = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetMany 
     def getStudent(self, index):
-        return self._students[index]
+        aStudent = self._students[index]
+        return aStudent
 
     def getStudents(self):
-        return tuple(self._students)
+        newStudents = tuple(self._students)
+        return newStudents
 
     def numberOfStudents(self):
-        return len(self._students)
+        number = len(self._students)
+        return number
 
     def hasStudents(self):
-        return len(self._students) > 0
+        has = len(self._students) > 0
+        return has
 
     def indexOfStudent(self, aStudent):
-        return next((i for i, x in enumerate(self._students) if x is aStudent), -1)
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 0
 
+    # Code from template association_AddManyToManyMethod 
     def addStudent(self, aStudent):
-        if any(x is aStudent for x in self._students):
+        wasAdded = False
+        if (aStudent) in self._students :
             return False
         self._students.append(aStudent)
-        if aStudent.indexOfCourse(self) == -1 and not aStudent.addCourse(self):
-            del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
-            return False
-        return True
+        if aStudent.indexOfCourse(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aStudent.addCourse(self)
+            if not wasAdded :
+                self._students.remove(aStudent)
+        return wasAdded
 
+    # Code from template association_RemoveMany 
     def removeStudent(self, aStudent):
-        oldIndex = next((i for i, x in enumerate(self._students) if x is aStudent), -1)
-        if oldIndex == -1:
-            return False
-        del self._students[oldIndex]
-        if aStudent.indexOfCourse(self) != -1 and not aStudent.removeCourse(self):
-            self._students.insert(oldIndex, aStudent)
-            return False
-        return True
+        wasRemoved = False
+        if not (aStudent) in self._students :
+            return wasRemoved
+        oldIndex = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        self._students.remove(oldIndex)
+        if aStudent.indexOfCourse(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aStudent.removeCourse(self)
+            if not wasRemoved :
+                self._students.insert(oldIndex, aStudent)
+        return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addStudentAt(self, aStudent, index):
-        if not self.addStudent(aStudent):
-            return False
-        if index < 0:
-            index = 0
-        if index > self.numberOfStudents():
-            index = self.numberOfStudents() - 1
-        del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
-        self._students.insert(index, aStudent)
-        return True
+        wasAdded = False
+        if self.addStudent(aStudent) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+        return wasAdded
 
     def addOrMoveStudentAt(self, aStudent, index):
-        if not any(x is aStudent for x in self._students):
-            return self.addStudentAt(aStudent, index)
-        if index < 0:
-            index = 0
-        if index > self.numberOfStudents():
-            index = self.numberOfStudents() - 1
-        del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
-        self._students.insert(index, aStudent)
-        return True
+        wasAdded = False
+        if (aStudent) in self._students :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+        else :
+            wasAdded = self.addStudentAt(aStudent, index)
+        return wasAdded
 
     def delete(self):
-        copyOfStudents = tuple(self._students)
+        copyOfStudents = self._students.copy()
         self._students.clear()
         for aStudent in copyOfStudents:
             aStudent.removeCourse(self)

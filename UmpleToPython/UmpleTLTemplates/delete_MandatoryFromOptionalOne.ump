@@ -1,9 +1,0 @@
-class UmpleToPython {
-    // The objects of a mandatory many end whose other end is 0..1 are released directly, as Java does
-    // through its private setter: their own setter would refuse to leave this object below its
-    // minimum.
-    delete_MandatoryFromOptionalOne <<!<</*delete_MandatoryFromOptionalOne*/>>
-        for <<=parameter>> in <<=field>>:
-            <<=gen.onObject(parameter, gen.field(relatedAssociation))>> = None
-        <<=field>>.clear()!>>
-}

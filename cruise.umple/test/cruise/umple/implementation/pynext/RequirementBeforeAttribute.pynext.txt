@@ -1,0 +1,31 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Example:
+    def __init__(self, aA, aB):
+        self._a = aA
+        self._b = aB
+
+    def setA(self, aA):
+        self._a = aA
+        return True
+
+    def setB(self, aB):
+        self._b = aB
+        return True
+
+    def getA(self):
+        return self._a
+
+    def getB(self):
+        return self._b
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "a:" + str(self.getA()) + ","
+                + "b:" + str(self.getB())
+                + "]")

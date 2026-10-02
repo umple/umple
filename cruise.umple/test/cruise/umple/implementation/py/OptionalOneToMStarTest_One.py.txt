@@ -1,119 +1,163 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 
 
-class Mentor:
+class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName, *allStudents):
+        allStudents = list(allStudents)
+        self._students = None
+        self._name = None
         self._name = aName
         self._students = []
-        if not self.setStudents(*allStudents):
-            raise RuntimeError("Unable to create Mentor, must have at least 5 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        didAddStudents = self.setStudents(*allStudents)
+        if not didAddStudents :
+            raise RuntimeError ("Unable to create Mentor, must have at least 5 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
+        wasSet = False
         self._name = aName
-        return True
+        wasSet = True
+        return wasSet
 
     def getName(self):
         return self._name
 
+    # Code from template association_GetMany 
     def getStudent(self, index):
-        return self._students[index]
+        aStudent = self._students[index]
+        return aStudent
 
     def getStudents(self):
-        return tuple(self._students)
+        newStudents = tuple(self._students)
+        return newStudents
 
     def numberOfStudents(self):
-        return len(self._students)
+        number = len(self._students)
+        return number
 
     def hasStudents(self):
-        return len(self._students) > 0
+        has = len(self._students) > 0
+        return has
 
     def indexOfStudent(self, aStudent):
-        return next((i for i, x in enumerate(self._students) if x is aStudent), -1)
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
+        return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 5
 
+    # Code from template association_AddMNToOptionalOne 
     def addStudent(self, aStudent):
-        if any(x is aStudent for x in self._students):
+        wasAdded = False
+        if (aStudent) in self._students :
             return False
         existingMentor = aStudent.getMentor()
-        if existingMentor is not None and existingMentor.numberOfStudents() <= self.minimumNumberOfStudents():
-            return False
-        if existingMentor is not None:
-            index = next((i for i, x in enumerate(existingMentor._students) if x is aStudent), -1)
-            if index >= 0:
-                del existingMentor._students[index]
+        if not (existingMentor is None) and existingMentor.numberOfStudents() <= Mentor.minimumNumberOfStudents() :
+            return wasAdded
+        elif not (existingMentor is None) :
+            existingMentor.students.remove(aStudent)
         self._students.append(aStudent)
-        aStudent._mentor = self
-        return True
+        self.setMentor(aStudent, self)
+        wasAdded = True
+        return wasAdded
 
     def removeStudent(self, aStudent):
-        index = next((i for i, x in enumerate(self._students) if x is aStudent), -1)
-        if index < 0 or self.numberOfStudents() <= self.minimumNumberOfStudents():
-            return False
-        del self._students[index]
-        aStudent._mentor = None
-        return True
+        wasRemoved = False
+        if (aStudent) in self._students and self.numberOfStudents() > Mentor.minimumNumberOfStudents() :
+            self._students.remove(aStudent)
+            self.setMentor(aStudent, None)
+            wasRemoved = True
+        return wasRemoved
 
+    # Code from template association_SetMNToOptionalOne 
     def setStudents(self, *newStudents):
-        if len(newStudents) < self.minimumNumberOfStudents():
-            return False
-        checkNewStudents = set()
-        mentorToNewStudents = {}
+        newStudents = list(newStudents)
+        wasSet = False
+        if len(newStudents) < Mentor.minimumNumberOfStudents() :
+            return wasSet
+        checkNewStudents = []
+        mentorToNewStudents = dict()
         for aStudent in newStudents:
-            if id(aStudent) in checkNewStudents:
-                return False
-            existingMentor = aStudent.getMentor()
-            if existingMentor is not None and existingMentor is not self:
-                nextCount = mentorToNewStudents.get(id(existingMentor), existingMentor.numberOfStudents()) - 1
-                if nextCount < 5:
-                    return False
-                mentorToNewStudents[id(existingMentor)] = nextCount
-            checkNewStudents.add(id(aStudent))
+            if (aStudent) in checkNewStudents :
+                return wasSet
+            elif not (aStudent.getMentor() is None) and not self == aStudent.getMentor() :
+                existingMentor = aStudent.getMentor()
+                if not (existingMentor) in mentorToNewStudents :
+                    mentorToNewStudents[existingMentor] = int(existingMentor.numberOfStudents())
+                currentCount = mentorToNewStudents.get(existingMentor)
+                nextCount = currentCount - 1
+                if nextCount < 5 :
+                    return wasSet
+                mentorToNewStudents[existingMentor] = int(nextCount)
+            checkNewStudents.append(aStudent)
+
+        self._students = list(filter(lambda a : not a in checkNewStudents, self._students))
         for orphan in self._students:
-            if id(orphan) not in checkNewStudents:
-                orphan._mentor = None
+            self.setMentor(orphan, None)
+
         self._students.clear()
         for aStudent in newStudents:
-            existingMentor = aStudent.getMentor()
-            if existingMentor is not None:
-                index = next((i for i, x in enumerate(existingMentor._students) if x is aStudent), -1)
-                if index >= 0:
-                    del existingMentor._students[index]
-            aStudent._mentor = self
+            if not (aStudent.getMentor() is None) :
+                aStudent.getMentor().students.remove(aStudent)
+            self.setMentor(aStudent, self)
             self._students.append(aStudent)
-        return True
 
+        wasSet = True
+        return wasSet
+
+    # Code from template association_GetPrivate 
+    def setMentor(self, aStudent, aMentor):
+        try :
+            aStudent._mentor = aMentor
+        except :
+            raise RuntimeError ("Issue internally setting aMentor to aStudent")
+
+    # Code from template association_AddIndexControlFunctions 
     def addStudentAt(self, aStudent, index):
-        if not self.addStudent(aStudent):
-            return False
-        if index < 0:
-            index = 0
-        if index > self.numberOfStudents():
-            index = self.numberOfStudents() - 1
-        del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
-        self._students.insert(index, aStudent)
-        return True
+        wasAdded = False
+        if self.addStudent(aStudent) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+        return wasAdded
 
     def addOrMoveStudentAt(self, aStudent, index):
-        if not any(x is aStudent for x in self._students):
-            return self.addStudentAt(aStudent, index)
-        if index < 0:
-            index = 0
-        if index > self.numberOfStudents():
-            index = self.numberOfStudents() - 1
-        del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
-        self._students.insert(index, aStudent)
-        return True
+        wasAdded = False
+        if (aStudent) in self._students :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfStudents() :
+                index = self.numberOfStudents() - 1
+            self._students.remove(aStudent)
+            self._students.insert(index, aStudent)
+            wasAdded = True
+        else :
+            wasAdded = self.addStudentAt(aStudent, index)
+        return wasAdded
 
     def delete(self):
         for aStudent in self._students:
-            aStudent._mentor = None
+            self.setMentor(aStudent, None)
+
         self._students.clear()
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "name:" + str(self.getName())
-                + "]")
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+

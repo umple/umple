@@ -1,0 +1,49 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+# line 1 "innerStatic.ump"
+
+class OuterClass_1():
+    y = 0
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self):
+        pass
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def delete(self):
+        pass
+
+    #PLEASE DO NOT EDIT THIS CODE
+    #This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+    # line 5 "innerStatic.ump"
+
+    class InnerStaticClass():
+        #------------------------
+        # MEMBER VARIABLES
+        #------------------------
+        #------------------------
+        # CONSTRUCTOR
+        #------------------------
+        def __init__(self):
+            pass
+
+        #------------------------
+        # INTERFACE
+        #------------------------
+        def delete(self):
+            pass
+
+        # line 10 "innerStatic.ump"
+        def increaseY(self):
+          OuterClass_1.y +=1
+
+    #------------------------
+    # DEVELOPER CODE - PROVIDED AS-IS
+    #------------------------
+    # line 3 "innerStatic.ump"

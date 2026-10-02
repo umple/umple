@@ -1,162 +1,202 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
 
 
-class Analyzer:
+class Analyzer():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Analyzer Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
+        self._parent = None
+        self._children = None
         self._children = []
         self._parent = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetMany 
     def getChild(self, index):
-        return self._children[index]
+        aChild = self._children[index]
+        return aChild
 
     def getChildren(self):
-        return tuple(self._children)
+        newChildren = tuple(self._children)
+        return newChildren
 
     def numberOfChildren(self):
-        return len(self._children)
+        number = len(self._children)
+        return number
 
     def hasChildren(self):
-        return len(self._children) > 0
+        has = len(self._children) > 0
+        return has
 
     def indexOfChild(self, aChild):
-        return next((i for i, x in enumerate(self._children) if x is aChild), -1)
+        index = (-1 if not aChild in self._children else self._children.index(aChild))
+        return index
 
+    # Code from template association_GetMany 
     def getParent1(self, index):
-        return self._parent[index]
+        aParent = self._parent[index]
+        return aParent
 
     def getParent2(self):
-        return tuple(self._parent)
-
-    def getParent(self, *args, **kwargs):
-        bound = __class__._bindArguments(("index",), False, args, kwargs)
-        if bound is not None and (isinstance(bound[0], int) and not isinstance(bound[0], bool)):
-            return __class__.getParent1(self, *bound)
-        bound = __class__._bindArguments((), False, args, kwargs)
-        if bound is not None:
-            return __class__.getParent2(self, *bound)
-        raise TypeError("No method matches provided parameters")
+        newParent = tuple(self._parent)
+        return newParent
 
     def numberOfParent(self):
-        return len(self._parent)
+        number = len(self._parent)
+        return number
 
     def hasParent(self):
-        return len(self._parent) > 0
+        has = len(self._parent) > 0
+        return has
 
     def indexOfParent(self, aParent):
-        return next((i for i, x in enumerate(self._parent) if x is aParent), -1)
+        index = (-1 if not aParent in self._parent else self._parent.index(aParent))
+        return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfChildren():
         return 0
 
+    # Code from template association_AddManyToManyMethod 
     def addChild(self, aChild):
-        if any(x is aChild for x in self._children):
+        wasAdded = False
+        if (aChild) in self._children :
             return False
         self._children.append(aChild)
-        if aChild.indexOfParent(self) == -1 and not aChild.addParent(self):
-            del self._children[next((i for i, x in enumerate(self._children) if x is aChild), -1)]
-            return False
-        return True
+        if aChild.indexOfParent(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aChild.addParent(self)
+            if not wasAdded :
+                self._children.remove(aChild)
+        return wasAdded
 
+    # Code from template association_RemoveMany 
     def removeChild(self, aChild):
-        oldIndex = next((i for i, x in enumerate(self._children) if x is aChild), -1)
-        if oldIndex == -1:
-            return False
-        del self._children[oldIndex]
-        if aChild.indexOfParent(self) != -1 and not aChild.removeParent(self):
-            self._children.insert(oldIndex, aChild)
-            return False
-        return True
+        wasRemoved = False
+        if not (aChild) in self._children :
+            return wasRemoved
+        oldIndex = (-1 if not aChild in self._children else self._children.index(aChild))
+        self._children.remove(oldIndex)
+        if aChild.indexOfParent(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aChild.removeParent(self)
+            if not wasRemoved :
+                self._children.insert(oldIndex, aChild)
+        return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addChildAt(self, aChild, index):
-        if not self.addChild(aChild):
-            return False
-        if index < 0:
-            index = 0
-        if index > self.numberOfChildren():
-            index = self.numberOfChildren() - 1
-        del self._children[next((i for i, x in enumerate(self._children) if x is aChild), -1)]
-        self._children.insert(index, aChild)
-        return True
+        wasAdded = False
+        if self.addChild(aChild) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfChildren() :
+                index = self.numberOfChildren() - 1
+            self._children.remove(aChild)
+            self._children.insert(index, aChild)
+            wasAdded = True
+        return wasAdded
 
     def addOrMoveChildAt(self, aChild, index):
-        if not any(x is aChild for x in self._children):
-            return self.addChildAt(aChild, index)
-        if index < 0:
-            index = 0
-        if index > self.numberOfChildren():
-            index = self.numberOfChildren() - 1
-        del self._children[next((i for i, x in enumerate(self._children) if x is aChild), -1)]
-        self._children.insert(index, aChild)
-        return True
+        wasAdded = False
+        if (aChild) in self._children :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfChildren() :
+                index = self.numberOfChildren() - 1
+            self._children.remove(aChild)
+            self._children.insert(index, aChild)
+            wasAdded = True
+        else :
+            wasAdded = self.addChildAt(aChild, index)
+        return wasAdded
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfParent():
         return 0
 
+    # Code from template association_AddManyToManyMethod 
     def addParent(self, aParent):
-        if any(x is aParent for x in self._parent):
+        wasAdded = False
+        if (aParent) in self._parent :
             return False
         self._parent.append(aParent)
-        if aParent.indexOfChild(self) == -1 and not aParent.addChild(self):
-            del self._parent[next((i for i, x in enumerate(self._parent) if x is aParent), -1)]
-            return False
-        return True
+        if aParent.indexOfChild(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aParent.addChild(self)
+            if not wasAdded :
+                self._parent.remove(aParent)
+        return wasAdded
 
+    # Code from template association_RemoveMany 
     def removeParent(self, aParent):
-        oldIndex = next((i for i, x in enumerate(self._parent) if x is aParent), -1)
-        if oldIndex == -1:
-            return False
-        del self._parent[oldIndex]
-        if aParent.indexOfChild(self) != -1 and not aParent.removeChild(self):
-            self._parent.insert(oldIndex, aParent)
-            return False
-        return True
+        wasRemoved = False
+        if not (aParent) in self._parent :
+            return wasRemoved
+        oldIndex = (-1 if not aParent in self._parent else self._parent.index(aParent))
+        self._parent.remove(oldIndex)
+        if aParent.indexOfChild(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aParent.removeChild(self)
+            if not wasRemoved :
+                self._parent.insert(oldIndex, aParent)
+        return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addParentAt(self, aParent, index):
-        if not self.addParent(aParent):
-            return False
-        if index < 0:
-            index = 0
-        if index > self.numberOfParent():
-            index = self.numberOfParent() - 1
-        del self._parent[next((i for i, x in enumerate(self._parent) if x is aParent), -1)]
-        self._parent.insert(index, aParent)
-        return True
+        wasAdded = False
+        if self.addParent(aParent) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfParent() :
+                index = self.numberOfParent() - 1
+            self._parent.remove(aParent)
+            self._parent.insert(index, aParent)
+            wasAdded = True
+        return wasAdded
 
     def addOrMoveParentAt(self, aParent, index):
-        if not any(x is aParent for x in self._parent):
-            return self.addParentAt(aParent, index)
-        if index < 0:
-            index = 0
-        if index > self.numberOfParent():
-            index = self.numberOfParent() - 1
-        del self._parent[next((i for i, x in enumerate(self._parent) if x is aParent), -1)]
-        self._parent.insert(index, aParent)
-        return True
+        wasAdded = False
+        if (aParent) in self._parent :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfParent() :
+                index = self.numberOfParent() - 1
+            self._parent.remove(aParent)
+            self._parent.insert(index, aParent)
+            wasAdded = True
+        else :
+            wasAdded = self.addParentAt(aParent, index)
+        return wasAdded
 
     def delete(self):
-        copyOfChildren = tuple(self._children)
+        copyOfChildren = self._children.copy()
         self._children.clear()
         for aChild in copyOfChildren:
             aChild.removeParent(self)
-        copyOfParent = tuple(self._parent)
+
+        copyOfParent = self._parent.copy()
         self._parent.clear()
         for aParent in copyOfParent:
             aParent.removeChild(self)
 
-    @staticmethod
-    def _bindArguments(names, varargs, args, kwargs):
-        if len(args) > len(names) and not varargs:
-            return None
-        bound = list(args[:len(names)])
-        for name in names[len(bound):]:
-            if name not in kwargs:
-                return None
-            bound.append(kwargs[name])
-        if len(kwargs) != len(names) - min(len(args), len(names)):
-            return None
-        if varargs:
-            bound.append(args[len(names):])
-        return bound
+    def getParent(self, *argv):
+        if len(argv) == 1 and isinstance(argv[0], int) :
+            return self.getParent1(argv[0])
+        if len(argv) == 0 :
+            return self.getParent2()
+        raise TypeError("No method matches provided parameters")

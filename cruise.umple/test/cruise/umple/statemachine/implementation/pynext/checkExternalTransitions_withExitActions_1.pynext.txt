@@ -1,0 +1,290 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class X:
+    class Sm(Enum):
+        on = "on"
+        off = "off"
+
+        def __str__(self):
+            return self.value
+
+    class SmOn(Enum):
+        Null = "Null"
+        s1 = "s1"
+        s2 = "s2"
+
+        def __str__(self):
+            return self.value
+
+    class SmOnS1(Enum):
+        Null = "Null"
+        m1 = "m1"
+        m2 = "m2"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self):
+        self._sm = None
+        self._smOn = None
+        self._smOnVisit = 0
+        self._smOnS1 = None
+        self._deleted = False
+        self.setSmOn(__class__.SmOn.Null)
+        if self._deleted:
+            return
+        self.setSmOnS1(__class__.SmOnS1.Null)
+        if self._deleted:
+            return
+        self.setSm(__class__.Sm.on)
+        if self._deleted:
+            return
+
+    def getSmFullName(self):
+        answer = str(self._sm)
+        if self._smOn is not __class__.SmOn.Null:
+            answer += "." + str(self._smOn)
+        if self._smOnS1 is not __class__.SmOnS1.Null:
+            answer += "." + str(self._smOnS1)
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSmOn(self):
+        return self._smOn
+
+    def getSmOnS1(self):
+        return self._smOnS1
+
+    def e1(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm is __class__.Sm.on:
+            self.exitSm()
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.off)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e2(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm is __class__.Sm.on:
+            self.exitSm()
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.on)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e3(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmOn = self._smOn
+        if aSmOn is __class__.SmOn.s1:
+            self.exitSmOn()
+            if self._deleted:
+                return True
+            self.setSmOn(__class__.SmOn.s2)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e4(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmOn = self._smOn
+        if aSmOn is __class__.SmOn.s1:
+            self.exitSmOn()
+            if self._deleted:
+                return True
+            self.setSmOn(__class__.SmOn.s1)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e5(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmOn = self._smOn
+        if aSmOn is __class__.SmOn.s1:
+            self.exitSm()
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.on)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e6(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmOn = self._smOn
+        if aSmOn is __class__.SmOn.s1:
+            self.exitSm()
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.off)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e7(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 is __class__.SmOnS1.m1:
+            self.exitSmOnS1()
+            if self._deleted:
+                return True
+            self.setSmOnS1(__class__.SmOnS1.m2)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e8(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 is __class__.SmOnS1.m1:
+            self.exitSmOnS1()
+            if self._deleted:
+                return True
+            self.setSmOnS1(__class__.SmOnS1.m1)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e9(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 is __class__.SmOnS1.m1:
+            self.exitSmOn()
+            if self._deleted:
+                return True
+            self.setSmOn(__class__.SmOn.s1)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e10(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 is __class__.SmOnS1.m1:
+            self.exitSmOn()
+            if self._deleted:
+                return True
+            self.setSmOn(__class__.SmOn.s2)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e11(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 is __class__.SmOnS1.m1:
+            self.exitSm()
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.on)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e12(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmOnS1 = self._smOnS1
+        if aSmOnS1 is __class__.SmOnS1.m1:
+            self.exitSm()
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.off)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def exitSm(self):
+        if self._sm is __class__.Sm.on:
+            self.exitSmOn()
+            if self._deleted:
+                return
+            self.on_exit_action()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm is __class__.Sm.on:
+            if self._smOn is __class__.SmOn.Null:
+                self.setSmOn(__class__.SmOn.s1)
+
+    def exitSmOn(self):
+        self._smOnVisit += 1
+        if self._smOn is __class__.SmOn.s1:
+            self.exitSmOnS1()
+            if self._deleted:
+                return
+            self.s1_exit_action()
+            if self._deleted:
+                return
+            self.setSmOn(__class__.SmOn.Null)
+        elif self._smOn is __class__.SmOn.s2:
+            self.setSmOn(__class__.SmOn.Null)
+
+    def setSmOn(self, aSmOn):
+        self._smOn = aSmOn
+        self._smOnVisit += 1
+        visit = self._smOnVisit
+        if self._sm is not __class__.Sm.on and aSmOn is not __class__.SmOn.Null:
+            self.setSm(__class__.Sm.on)
+            if self._deleted or self._smOnVisit != visit:
+                return
+        if self._smOn is __class__.SmOn.s1:
+            if self._smOnS1 is __class__.SmOnS1.Null:
+                self.setSmOnS1(__class__.SmOnS1.m1)
+
+    def exitSmOnS1(self):
+        if self._smOnS1 is __class__.SmOnS1.m1:
+            self.m1_exit_action()
+            if self._deleted:
+                return
+            self.setSmOnS1(__class__.SmOnS1.Null)
+        elif self._smOnS1 is __class__.SmOnS1.m2:
+            self.setSmOnS1(__class__.SmOnS1.Null)
+
+    def setSmOnS1(self, aSmOnS1):
+        self._smOnS1 = aSmOnS1
+        if self._smOn is not __class__.SmOn.s1 and aSmOnS1 is not __class__.SmOnS1.Null:
+            self.setSmOn(__class__.SmOn.s1)
+            if self._deleted:
+                return
+
+    def delete(self):
+        self._deleted = True
+
+    def on_exit_action(self):
+        # line 28 "checkExternalTransitions_withExitActions_1Python.ump"
+        print("exited on")
+        # end line
+
+    def s1_exit_action(self):
+        # line 29 "checkExternalTransitions_withExitActions_1Python.ump"
+        print("exited s1")
+        # end line
+
+    def m1_exit_action(self):
+        # line 30 "checkExternalTransitions_withExitActions_1Python.ump"
+        print("exited m1")
+        # end line

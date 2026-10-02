@@ -1,111 +1,103 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
 
-from enum import Enum
-import threading
+from enum import Enum, auto
+from threading import Thread
+import time
 
-
-class Lamp:
-    """A do activity in each of two states of one machine"""
-
+class Lamp():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Lamp State Machines
     class Status(Enum):
-        On = "On"
-        Off = "Off"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        On = auto()
+        Off = auto()
 
-    class DoActivityThread(threading.Thread):
-        def __init__(self, controller, doActivityMethodName):
-            super().__init__(daemon=False)
-            self._controller = controller
-            self._doActivityMethodName = doActivityMethodName
-            self._siblings = ()
-            self.cancelled = threading.Event()
-
-        @staticmethod
-        def startAll(*workers):
-            for worker in workers:
-                worker._siblings = tuple(other for other in workers if other is not worker)
-            for worker in workers:
-                if worker._controller._deleted or worker.cancelled.is_set():
-                    return
-                worker.start()
-
-        def run(self):
-            controller = self._controller
-            if self._doActivityMethodName == "doActivityStatusOn":
-                controller.doActivityStatusOn(self)
-            elif self._doActivityMethodName == "doActivityStatusOff":
-                controller.doActivityStatusOff(self)
-
+    #Lamp Do Activity Threads
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
-        self._status = None
-        self._doActivityStatusOnThread = None
         self._doActivityStatusOffThread = None
-        self._deleted = False
-        self.setStatus(__class__.Status.On)
-        if self._deleted:
-            return
+        self._doActivityStatusOnThread = None
+        self._status = None
+        self.setStatus(Lamp.Status.On)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def getStatusFullName(self):
-        answer = str(self._status)
+        answer = self._status.__str__()
         return answer
 
     def getStatus(self):
         return self._status
 
     def press(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus is __class__.Status.On:
+        if aStatus == Lamp.Status.On :
             self.exitStatus()
-            if self._deleted:
-                return True
-            self.setStatus(__class__.Status.Off)
+            self.setStatus(Lamp.Status.Off)
             wasEventProcessed = True
-        elif aStatus is __class__.Status.Off:
+        elif aStatus == Lamp.Status.Off :
             self.exitStatus()
-            if self._deleted:
-                return True
-            self.setStatus(__class__.Status.On)
+            self.setStatus(Lamp.Status.On)
             wasEventProcessed = True
+        else :
+            # Other states do respond to this event
+            pass
         return wasEventProcessed
 
     def exitStatus(self):
-        if self._status is __class__.Status.On:
-            if self._doActivityStatusOnThread is not None:
-                self._doActivityStatusOnThread.cancelled.set()
-        elif self._status is __class__.Status.Off:
-            if self._doActivityStatusOffThread is not None:
-                self._doActivityStatusOffThread.cancelled.set()
+        if self._status == Lamp.Status.On :
+            if not (self._doActivityStatusOnThread is None) :
+                self._doActivityStatusOnThread.interrupt()
+        elif self._status == Lamp.Status.Off :
+            if not (self._doActivityStatusOffThread is None) :
+                self._doActivityStatusOffThread.interrupt()
 
     def setStatus(self, aStatus):
         self._status = aStatus
-        if self._status is __class__.Status.On:
-            self._doActivityStatusOnThread = __class__.DoActivityThread(self, "doActivityStatusOn")
-            __class__.DoActivityThread.startAll(self._doActivityStatusOnThread)
-        elif self._status is __class__.Status.Off:
-            self._doActivityStatusOffThread = __class__.DoActivityThread(self, "doActivityStatusOff")
-            __class__.DoActivityThread.startAll(self._doActivityStatusOffThread)
+        # entry actions and do activities
+        if self._status == Lamp.Status.On :
+            self._doActivityStatusOnThread = Lamp.DoActivityThread(self, "doActivityStatusOn")
+        elif self._status == Lamp.Status.Off :
+            self._doActivityStatusOffThread = Lamp.DoActivityThread(self, "doActivityStatusOff")
 
-    def doActivityStatusOn(self, thread):
-        self.alsoDo()
+    def doActivityStatusOn(self):
+        try:
+            alsoDo()
+        except :
+            pass
 
-    def doActivityStatusOff(self, thread):
-        self.keepDoing()
+    def doActivityStatusOff(self):
+        try:
+            keepDoing()
+        except :
+            pass
+
+    class DoActivityThread(Thread):
+        def __init__(self, aController, aDoActivityMethodName):
+            self._doActivityMethodName = None
+            self._controller = None
+            self._controller = aController
+            self._doActivityMethodName = aDoActivityMethodName
+            # The equivalent of "start();" for starting a python thread
+            super().__init__()
+            self.start()
+
+        def run(self):
+            if "doActivityStatusOn" == self._doActivityMethodName :
+                self._controller.doActivityStatusOn()
+            elif "doActivityStatusOff" == self._doActivityMethodName :
+                self._controller.doActivityStatusOff()
 
     def delete(self):
-        self._deleted = True
-        if self._doActivityStatusOnThread is not None:
-            self._doActivityStatusOnThread.cancelled.set()
-        if self._doActivityStatusOffThread is not None:
-            self._doActivityStatusOffThread.cancelled.set()
-
-    def alsoDo(self):
         pass
 
-    def keepDoing(self):
-        pass

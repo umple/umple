@@ -1,6 +1,6 @@
 // The value comes from a method with a Java body and a
 // Python body, so each language uses its own library
-generate Python;
+generate PythonNext;
 class Timer {
   Double started = now();
   Double now() Java { return (double) System.currentTimeMillis(); }

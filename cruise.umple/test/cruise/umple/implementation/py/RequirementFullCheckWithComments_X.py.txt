@@ -1,125 +1,157 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#*
+
+#   * R1: There should be a class called X
+
+#   
 
 
-class X:
+class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X Attributes
+    #X Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aA, aB):
+        self._ies = None
+        self._b = None
+        self._a = None
         self._a = aA
         self._b = aB
         self._ies = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setA(self, aA):
+        wasSet = False
         self._a = aA
-        return True
+        wasSet = True
+        return wasSet
 
     def setB(self, aB):
+        wasSet = False
         self._b = aB
-        return True
+        wasSet = True
+        return wasSet
 
+    #*
+    
+    #   * R1a: The reason it should be called X is because it is secret
+    
+    #   * R2: Class X should have several attribites
+    
+    #   
     def getA(self):
         return self._a
 
+    #*
+    
+    #   * This is another attribute
+    
+    #   * R2: Class X should have several attribites
+    
+    #   
     def getB(self):
-        """This is another attribute"""
         return self._b
 
+    # Code from template association_GetMany 
     def getY(self, index):
-        return self._ies[index]
+        aY = self._ies[index]
+        return aY
 
     def getIes(self):
-        return tuple(self._ies)
+        newIes = tuple(self._ies)
+        return newIes
 
     def numberOfIes(self):
-        return len(self._ies)
+        number = len(self._ies)
+        return number
 
     def hasIes(self):
-        return len(self._ies) > 0
+        has = len(self._ies) > 0
+        return has
 
     def indexOfY(self, aY):
-        return next((i for i, x in enumerate(self._ies) if x is aY), -1)
+        index = (-1 if not aY in self._ies else self._ies.index(aY))
+        return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfIes():
         return 0
 
+    # Code from template association_AddManyToOne 
     def addY1(self, aC):
         from Y import Y
         return Y(aC, self)
 
     def addY2(self, aY):
-        if any(x is aY for x in self._ies):
+        wasAdded = False
+        if (aY) in self._ies :
             return False
         existingX = aY.getX()
-        isNewX = existingX is not None and existingX is not self
-        if isNewX:
-            if not aY.setX(self):
-                return False
-        else:
+        isNewX = not (existingX is None) and not self == existingX
+        if isNewX :
+            aY.setX(self)
+        else :
             self._ies.append(aY)
-        return True
-
-    def addY(self, *args, **kwargs):
-        from Y import Y
-        bound = __class__._bindArguments(("aY",), False, args, kwargs)
-        if bound is not None and (bound[0] is None or isinstance(bound[0], Y)):
-            return __class__.addY2(self, *bound)
-        bound = __class__._bindArguments(("aC",), False, args, kwargs)
-        if bound is not None and (bound[0] is None or isinstance(bound[0], str)):
-            return __class__.addY1(self, *bound)
-        raise TypeError("No method matches provided parameters")
+        wasAdded = True
+        return wasAdded
 
     def removeY(self, aY):
-        if aY.getX() is self:
-            return False
-        index = next((i for i, x in enumerate(self._ies) if x is aY), -1)
-        if index >= 0:
-            del self._ies[index]
-        return True
+        wasRemoved = False
+        #Unable to remove aY, as it must always have a x
+        if not self == aY.getX() :
+            self._ies.remove(aY)
+            wasRemoved = True
+        return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addYAt(self, aY, index):
-        if not self.addY2(aY):
-            return False
-        if index < 0:
-            index = 0
-        if index > self.numberOfIes():
-            index = self.numberOfIes() - 1
-        del self._ies[next((i for i, x in enumerate(self._ies) if x is aY), -1)]
-        self._ies.insert(index, aY)
-        return True
+        wasAdded = False
+        if self.addY(aY) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfIes() :
+                index = self.numberOfIes() - 1
+            self._ies.remove(aY)
+            self._ies.insert(index, aY)
+            wasAdded = True
+        return wasAdded
 
     def addOrMoveYAt(self, aY, index):
-        if not any(x is aY for x in self._ies):
-            return self.addYAt(aY, index)
-        if index < 0:
-            index = 0
-        if index > self.numberOfIes():
-            index = self.numberOfIes() - 1
-        del self._ies[next((i for i, x in enumerate(self._ies) if x is aY), -1)]
-        self._ies.insert(index, aY)
-        return True
+        wasAdded = False
+        if (aY) in self._ies :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfIes() :
+                index = self.numberOfIes() - 1
+            self._ies.remove(aY)
+            self._ies.insert(index, aY)
+            wasAdded = True
+        else :
+            wasAdded = self.addYAt(aY, index)
+        return wasAdded
 
     def delete(self):
-        for i in range(len(self._ies), 0, -1):
+        i = len(self._ies)
+        while i > 0 :
             aY = self._ies[i - 1]
             aY.delete()
-
-    @staticmethod
-    def _bindArguments(names, varargs, args, kwargs):
-        if len(args) > len(names) and not varargs:
-            return None
-        bound = list(args[:len(names)])
-        for name in names[len(bound):]:
-            if name not in kwargs:
-                return None
-            bound.append(kwargs[name])
-        if len(kwargs) != len(names) - min(len(args), len(names)):
-            return None
-        if varargs:
-            bound.append(args[len(names):])
-        return bound
+            i -= 1
 
     def __str__(self):
-        return (super().__str__() + "["
-                + "a:" + str(self.getA()) + ","
-                + "b:" + str(self.getB())
-                + "]")
+        return str(super().__str__()) + "[" + "a" + ":" + str(self.getA()) + "," + "b" + ":" + str(self.getB()) + "]"
+
+    def addY(self, *argv):
+        from Y import Y
+        if len(argv) == 1 and isinstance(argv[0], str) :
+            return self.addY1(argv[0])
+        if len(argv) == 1 and isinstance(argv[0], Y) :
+            return self.addY2(argv[0])
+        raise TypeError("No method matches provided parameters")

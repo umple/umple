@@ -1,0 +1,250 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+*/
+
+namespace cruise.umple.util;
+
+// Lexical handling of Python source written in models: where its strings and comments are, and how
+// to re-indent it
+class PythonSource
+{
+  depend java.util.*;
+
+  private static final int LOGICAL = 0;
+  private static final int BLANK = 1;
+  private static final int COMMENT = 2;
+  private static final int CONTINUATION = 3;
+  private static final int IN_STRING = 4;
+
+  // Re-indents Python source so its outermost statements start at indent, by a lexical scan that knows
+  // strings, brackets, continuations and comments. Lines that start inside a string are kept byte for
+  // byte; the others keep their indentation relative to the outermost statements (measured with
+  // Python's tab rule). firstLineIndent is the indentation the first line had in the model; null means
+  // it is not known and is worked out from the lines after it. Code without statements gets pass.
+  public static String reindent(String code, String firstLineIndent, String indent)
+  {
+    String[] lines = ((firstLineIndent == null ? "" : firstLineIndent) + (code == null ? "" : code).replaceFirst("\\s+$", ""))
+      .replace("\r\n", "\n").replace('\r', '\n').split("\n", -1);
+    char[] lastCode = new char[lines.length];
+    int[] kinds = lineKinds(lines, lastCode);
+
+    int[] widths = new int[lines.length];
+    int othersBaseline = Integer.MAX_VALUE;
+    int commentBaseline = Integer.MAX_VALUE;
+    int firstLogical = -1;
+    for (int n = 0; n < lines.length; n++)
+    {
+      widths[n] = indentWidth(lines[n]);
+      if (kinds[n] == LOGICAL && firstLogical < 0)
+      {
+        firstLogical = n;
+      }
+      else if (kinds[n] == LOGICAL)
+      {
+        othersBaseline = Math.min(othersBaseline, widths[n]);
+      }
+      else if (kinds[n] == COMMENT && (n > 0 || firstLineIndent != null))
+      {
+        commentBaseline = Math.min(commentBaseline, widths[n]);
+      }
+    }
+    if (firstLogical == 0 && firstLineIndent == null)
+    {
+      widths[0] = firstLineWidth(kinds, lastCode, widths, othersBaseline);
+    }
+    // Without statements, the comments keep their indentation relative to the least indented one
+    int baseline = firstLogical >= 0 ? Math.min(othersBaseline, widths[firstLogical])
+      : commentBaseline == Integer.MAX_VALUE ? 0 : commentBaseline;
+    if (firstLineIndent == null && kinds[0] == COMMENT)
+    {
+      widths[0] = baseline; // its indentation is not known, so it goes with the code around it
+    }
+
+    StringBuilder out = new StringBuilder();
+    for (int n = 0; n < lines.length; n++)
+    {
+      out.append("\n");
+      if (kinds[n] == IN_STRING)
+      {
+        out.append(lines[n]);
+      }
+      else if (kinds[n] != BLANK)
+      {
+        out.append(indent).append(spaces(Math.max(0, widths[n] - baseline))).append(lines[n].substring(leadingWhitespace(lines[n])));
+      }
+    }
+    if (firstLogical < 0)
+    {
+      out.append("\n").append(indent).append("pass");
+    }
+    return out.toString();
+  }
+
+  // The kind of each physical line of Python source (LOGICAL, BLANK, COMMENT, CONTINUATION or
+  // IN_STRING) from a lexical scan, and in lastCode the last character of code on each line.
+  private static int[] lineKinds(String[] lines, char[] lastCode)
+  {
+    int[] kinds = new int[lines.length];
+    String quote = null;
+    int depth = 0;
+    boolean continued = false;
+    for (int n = 0; n < lines.length; n++)
+    {
+      String line = lines[n];
+      String content = line.substring(leadingWhitespace(line));
+      kinds[n] = quote != null ? IN_STRING : content.isEmpty() ? BLANK : depth > 0 || continued ? CONTINUATION
+        : content.startsWith("#") ? COMMENT : LOGICAL;
+      continued = false;
+      boolean escapedEnd = false;
+      for (int i = 0; i < line.length(); i++)
+      {
+        char c = line.charAt(i);
+        if (quote != null)
+        {
+          if (c == '\\')
+          {
+            escapedEnd = ++i >= line.length();
+          }
+          else if (line.startsWith(quote, i))
+          {
+            i += quote.length() - 1;
+            quote = null;
+            lastCode[n] = c;
+          }
+        }
+        else if (c == '#')
+        {
+          break;
+        }
+        else if (c == '"' || c == '\'')
+        {
+          // Prefixes (r, b, f, u) need no handling: a backslash always protects the next character.
+          quote = line.startsWith("" + c + c + c, i) ? "" + c + c + c : "" + c;
+          i += quote.length() - 1;
+          lastCode[n] = c;
+        }
+        else if (!Character.isWhitespace(c))
+        {
+          depth += "([{".indexOf(c) >= 0 ? 1 : ")]}".indexOf(c) >= 0 && depth > 0 ? -1 : 0;
+          continued = c == '\\' && i == line.length() - 1;
+          lastCode[n] = c;
+        }
+      }
+      if (quote != null && quote.length() == 1 && !escapedEnd)
+      {
+        quote = null; // an unterminated single-quoted string ends with its line
+      }
+    }
+    return kinds;
+  }
+
+  // Where keyword first stands as code in Python source, outside strings and comments and not as the
+  // end of a longer name or of a member access (self.superCall); -1 when it does not. It reads strings
+  // and comments as lineKinds does.
+  public static int codeAt(String code, String keyword)
+  {
+    String quote = null;
+    for (int i = 0; i < code.length(); i++)
+    {
+      char c = code.charAt(i);
+      if (quote != null)
+      {
+        if (c == '\\')
+        {
+          i++;
+        }
+        else if (code.startsWith(quote, i))
+        {
+          i += quote.length() - 1;
+          quote = null;
+        }
+        else if (c == '\n' && quote.length() == 1)
+        {
+          quote = null; // an unterminated single-quoted string ends with its line
+        }
+      }
+      else if (c == '#')
+      {
+        i = code.indexOf('\n', i);
+        if (i < 0)
+        {
+          return -1;
+        }
+      }
+      else if (code.startsWith(keyword, i) && (i == 0 || !Character.isJavaIdentifierPart(code.charAt(i - 1)) && code.charAt(i - 1) != '.'))
+      {
+        return i;
+      }
+      else if (c == '"' || c == '\'')
+      {
+        quote = code.startsWith("" + c + c + c, i) ? "" + c + c + c : "" + c;
+        i += quote.length() - 1;
+      }
+    }
+    return -1;
+  }
+
+  // Whether each line of Python source starts inside a string literal
+  public static boolean[] linesInsideStrings(List<String> lines)
+  {
+    int[] kinds = lineKinds(lines.toArray(new String[0]), new char[lines.size()]);
+    boolean[] inside = new boolean[kinds.length];
+    for (int n = 0; n < kinds.length; n++)
+    {
+      inside[n] = kinds[n] == IN_STRING;
+    }
+    return inside;
+  }
+
+  // The width of a first line whose indentation is unknown. It starts the body, so it is at the body's
+  // baseline: level with the next statement, unless it opens a block and that next statement is the
+  // least indented of the rest, in which case the block holds everything and the first line is
+  // shallower than all of it.
+  private static int firstLineWidth(int[] kinds, char[] lastCode, int[] widths, int othersBaseline)
+  {
+    int next = 1;
+    char end = lastCode[0];
+    while (next < kinds.length && kinds[next] != LOGICAL)
+    {
+      end = lastCode[next] != 0 ? lastCode[next] : end;
+      next++;
+    }
+    if (next == kinds.length)
+    {
+      return 0;
+    }
+    return end == ':' && widths[next] == othersBaseline ? 0 : othersBaseline;
+  }
+
+  private static int leadingWhitespace(String line)
+  {
+    int i = 0;
+    while (i < line.length() && " \t\f".indexOf(line.charAt(i)) >= 0)
+    {
+      i++;
+    }
+    return i;
+  }
+
+  // Indentation width with Python's rules: a tab advances to the next multiple of eight.
+  private static int indentWidth(String line)
+  {
+    int width = 0;
+    for (int i = 0; i < leadingWhitespace(line); i++)
+    {
+      char c = line.charAt(i);
+      width = c == ' ' ? width + 1 : c == '\t' ? (width / 8 + 1) * 8 : 0;
+    }
+    return width;
+  }
+
+  private static String spaces(int count)
+  {
+    return new String(new char[count]).replace('\0', ' ');
+  }
+}

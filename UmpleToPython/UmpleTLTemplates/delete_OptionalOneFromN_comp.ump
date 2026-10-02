@@ -1,8 +1,0 @@
-class UmpleToPython {
-    // A composition's optional one end whose whole needs exactly n parts: the whole is deleted.
-    delete_OptionalOneFromN_comp <<!<</*delete_OptionalOneFromN_comp*/>>
-        if <<=field>> is not None:
-            <<=gen.translate("removeParameterOne", av)>> = <<=field>>
-            <<=field>> = None
-            <<=gen.translate("removeParameterOne", av)>>.delete()!>>
-}

@@ -1,0 +1,25 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from example.Person import Person
+
+
+class Student(Person):
+    def __init__(self, aName, aAge, aLocker):
+        self._locker = aLocker
+        super().__init__(aName, aAge)
+
+    def setLocker(self, aLocker):
+        self._locker = aLocker
+        return True
+
+    def getLocker(self):
+        return self._locker
+
+    def delete(self):
+        super().delete()
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "locker:" + str(self.getLocker())
+                + "]")

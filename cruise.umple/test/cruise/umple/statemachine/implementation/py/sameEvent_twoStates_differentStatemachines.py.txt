@@ -1,37 +1,34 @@
-#PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+from enum import Enum, auto
 
-from enum import Enum
-
-
-class LightFixture:
+class LightFixture():
     class Bulb(Enum):
-        On = "On"
-        Off = "Off"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        On = auto()
+        Off = auto()
 
     class AnotherBulb(Enum):
-        On = "On"
-        Amber = "Amber"
-
+        def _generate_next_value_(name, start, count, last_values):
+            return name
         def __str__(self):
-            return self.value
+            return str(self.value)
+        On = auto()
+        Amber = auto()
 
     def __init__(self):
-        self._bulb = None
         self._anotherBulb = None
-        self._deleted = False
-        self.setBulb(__class__.Bulb.On)
-        self.setAnotherBulb(__class__.AnotherBulb.On)
+        self._bulb = None
+        self.setBulb(LightFixture.Bulb.On)
+        self.setAnotherBulb(LightFixture.AnotherBulb.On)
 
     def getBulbFullName(self):
-        answer = str(self._bulb)
+        answer = self._bulb.__str__()
         return answer
 
     def getAnotherBulbFullName(self):
-        answer = str(self._anotherBulb)
+        answer = self._anotherBulb.__str__()
         return answer
 
     def getBulb(self):
@@ -41,30 +38,32 @@ class LightFixture:
         return self._anotherBulb
 
     def flip(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aBulb = self._bulb
         aAnotherBulb = self._anotherBulb
-        if aBulb is __class__.Bulb.On:
-            self.setBulb(__class__.Bulb.Off)
+        if aBulb == LightFixture.Bulb.On :
+            self.setBulb(LightFixture.Bulb.Off)
             wasEventProcessed = True
-        elif aBulb is __class__.Bulb.Off:
-            self.setBulb(__class__.Bulb.On)
+        elif aBulb == LightFixture.Bulb.Off :
+            self.setBulb(LightFixture.Bulb.On)
             wasEventProcessed = True
-        if aAnotherBulb is __class__.AnotherBulb.On:
-            self.setAnotherBulb(__class__.AnotherBulb.Amber)
+        else :
+            pass
+        if aAnotherBulb == LightFixture.AnotherBulb.On :
+            self.setAnotherBulb(LightFixture.AnotherBulb.Amber)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def unflip(self):
-        if self._deleted:
-            return False
         wasEventProcessed = False
         aAnotherBulb = self._anotherBulb
-        if aAnotherBulb is __class__.AnotherBulb.Amber:
-            self.setAnotherBulb(__class__.AnotherBulb.On)
+        if aAnotherBulb == LightFixture.AnotherBulb.Amber :
+            self.setAnotherBulb(LightFixture.AnotherBulb.On)
             wasEventProcessed = True
+        else :
+            pass
         return wasEventProcessed
 
     def setBulb(self, aBulb):
@@ -74,4 +73,4 @@ class LightFixture:
         self._anotherBulb = aAnotherBulb
 
     def delete(self):
-        self._deleted = True
+        pass

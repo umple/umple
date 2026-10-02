@@ -1,6 +1,6 @@
 // len is a Python built-in that generated code calls,
 // so a class named len would hide it: E9215
-generate Python;
+generate PythonNext;
 namespace shapes;
 class len {
   Double value;

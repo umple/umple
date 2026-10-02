@@ -1,0 +1,103 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Foo:
+    def __init__(self):
+        self._bars = []
+
+    def getBar(self, index):
+        return self._bars[index]
+
+    def getBars(self):
+        """I am a inline comment above an association."""
+        return tuple(self._bars)
+
+    def numberOfBars(self):
+        return len(self._bars)
+
+    def hasBars(self):
+        return len(self._bars) > 0
+
+    def indexOfBar(self, aBar):
+        return next((i for i, x in enumerate(self._bars) if x is aBar), -1)
+
+    @staticmethod
+    def minimumNumberOfBars():
+        return 0
+
+    def addBar1(self):
+        from Bar import Bar
+        return Bar(self)
+
+    def addBar2(self, aBar):
+        if any(x is aBar for x in self._bars):
+            return False
+        existingFoo = aBar.getFoo()
+        isNewFoo = existingFoo is not None and existingFoo is not self
+        if isNewFoo:
+            if not aBar.setFoo(self):
+                return False
+        else:
+            self._bars.append(aBar)
+        return True
+
+    def addBar(self, *args, **kwargs):
+        from Bar import Bar
+        bound = __class__._bindArguments(("aBar",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or isinstance(bound[0], Bar)):
+            return __class__.addBar2(self, *bound)
+        bound = __class__._bindArguments((), False, args, kwargs)
+        if bound is not None:
+            return __class__.addBar1(self, *bound)
+        raise TypeError("No method matches provided parameters")
+
+    def removeBar(self, aBar):
+        if aBar.getFoo() is self:
+            return False
+        index = next((i for i, x in enumerate(self._bars) if x is aBar), -1)
+        if index >= 0:
+            del self._bars[index]
+        return True
+
+    def addBarAt(self, aBar, index):
+        if not self.addBar2(aBar):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfBars():
+            index = self.numberOfBars() - 1
+        del self._bars[next((i for i, x in enumerate(self._bars) if x is aBar), -1)]
+        self._bars.insert(index, aBar)
+        return True
+
+    def addOrMoveBarAt(self, aBar, index):
+        if not any(x is aBar for x in self._bars):
+            return self.addBarAt(aBar, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfBars():
+            index = self.numberOfBars() - 1
+        del self._bars[next((i for i, x in enumerate(self._bars) if x is aBar), -1)]
+        self._bars.insert(index, aBar)
+        return True
+
+    def delete(self):
+        for i in range(len(self._bars), 0, -1):
+            aBar = self._bars[i - 1]
+            aBar.delete()
+
+    @staticmethod
+    def _bindArguments(names, varargs, args, kwargs):
+        if len(args) > len(names) and not varargs:
+            return None
+        bound = list(args[:len(names)])
+        for name in names[len(bound):]:
+            if name not in kwargs:
+                return None
+            bound.append(kwargs[name])
+        if len(kwargs) != len(names) - min(len(args), len(names)):
+            return None
+        if varargs:
+            bound.append(args[len(names):])
+        return bound

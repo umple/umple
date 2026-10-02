@@ -1,0 +1,113 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class Animal:
+    class State(Enum):
+        alive = "alive"
+        dead = "dead"
+
+        def __str__(self):
+            return self.value
+
+    class StateAlive(Enum):
+        Null = "Null"
+        normal = "normal"
+        zombie = "zombie"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self, aIsAlive):
+        self._isAlive = aIsAlive
+        self._state = None
+        self._stateAlive = None
+        self._deleted = False
+        self.setStateAlive(__class__.StateAlive.Null)
+        self.setState(__class__.State.alive)
+
+    def setIsAlive(self, aIsAlive):
+        self._isAlive = aIsAlive
+        return True
+
+    def getIsAlive(self):
+        return self._isAlive
+
+    def isIsAlive(self):
+        return self._isAlive
+
+    def getStateFullName(self):
+        answer = str(self._state)
+        if self._stateAlive is not __class__.StateAlive.Null:
+            answer += "." + str(self._stateAlive)
+        return answer
+
+    def getState(self):
+        return self._state
+
+    def getStateAlive(self):
+        return self._stateAlive
+
+    def kill(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aState = self._state
+        if aState is __class__.State.alive:
+            self.exitState()
+            self.setState(__class__.State.dead)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def zombify(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aStateAlive = self._stateAlive
+        if aStateAlive is __class__.StateAlive.normal:
+            self.exitStateAlive()
+            self.setStateAlive(__class__.StateAlive.zombie)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def haveBaby(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aStateAlive = self._stateAlive
+        if aStateAlive is __class__.StateAlive.zombie:
+            self.exitStateAlive()
+            self.setStateAlive(__class__.StateAlive.normal)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def exitState(self):
+        if self._state is __class__.State.alive:
+            self.exitStateAlive()
+
+    def setState(self, aState):
+        self._state = aState
+        if self._state is __class__.State.alive:
+            if self._stateAlive is __class__.StateAlive.Null:
+                self.setStateAlive(__class__.StateAlive.normal)
+
+    def exitStateAlive(self):
+        if self._stateAlive is __class__.StateAlive.normal:
+            self.setStateAlive(__class__.StateAlive.Null)
+        elif self._stateAlive is __class__.StateAlive.zombie:
+            self.setStateAlive(__class__.StateAlive.Null)
+
+    def setStateAlive(self, aStateAlive):
+        self._stateAlive = aStateAlive
+        if self._state is not __class__.State.alive and aStateAlive is not __class__.StateAlive.Null:
+            self.setState(__class__.State.alive)
+
+    def delete(self):
+        self._deleted = True
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "isAlive:" + str(self.getIsAlive())
+                + "]")

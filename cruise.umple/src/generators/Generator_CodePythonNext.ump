@@ -1,0 +1,1928 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+*/
+
+namespace cruise.umple.compiler;
+
+// Generates Python directly from the Umple model with the templates in UmpleToPythonNext.
+class PythonNextGenerator
+{
+  isA SuperCodeGenerator;
+  isA CodeTranslator;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.parser.Position;
+  depend cruise.umple.parser.ErrorMessage;
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.pythonnext.*;
+
+  // Generated Python keeps the public method names of the Java output, so public names come from
+  // Java's naming rules (glossary plurals, role names, event qualification). This generator is used
+  // for names only and is never prepared.
+  public JavaGenerator names = new JavaGenerator();
+
+  // Standard-library modules a class without a namespace may not be named like: those the generated
+  // code imports, which the class's module would hide, and those Python has already loaded when the
+  // program starts, which an import of the class's module would find instead.
+  private static final List<String> STANDARD_MODULES = Arrays.asList("abc", "enum", "threading", "datetime", "sys",
+    "math", "fractions", "codecs", "collections", "copyreg", "encodings", "functools", "genericpath", "io", "keyword",
+    "ntpath", "operator", "os", "posixpath", "re", "reprlib", "site", "stat", "types", "zipimport");
+
+  // Built-ins the generated code uses. A class with one of these names would hide it in its own
+  // module and in every function that imports the class.
+  private static final List<String> BUILTINS = Arrays.asList("all", "any", "bool", "globals", "enumerate", "float", "format", "hash", "id", "int",
+    "isinstance", "len", "list", "min", "next", "print", "range", "set", "str", "super", "tuple", "type", "classmethod",
+    "staticmethod", "NotImplemented", "BaseException", "RuntimeError", "TypeError");
+
+  // Where the messages of the class being generated start (see report); -1 outside generation.
+  private int firstMessageOfClass = -1;
+
+  // Imports collected while one class is generated: module-level lines, in first-use order.
+  private Set<String> moduleImports = new LinkedHashSet<String>();
+
+  // Classes prepared in the current run.
+  private Set<UmpleClass> preparedClasses = new HashSet<UmpleClass>();
+
+  // Names the module being generated defines at module level or in a class body; a standard-library
+  // import with the same name gets an alias.
+  private Set<String> moduleNames = new HashSet<String>();
+
+  public void initializeLangaugeBasedVariables()
+  {
+    UmpleToPrimitiveMap.put("Integer", "int");
+    UmpleToPrimitiveMap.put("Boolean", "bool");
+    UmpleToPrimitiveMap.put("Double", "float");
+    UmpleToPrimitiveMap.put("Float", "float");
+    UmpleToPrimitiveMap.put("String", "str");
+    UmpleToPrimitiveMap.put("Date", "datetime.date");
+    UmpleToPrimitiveMap.put("Time", "datetime.time");
+  }
+
+  public void generate()
+  {
+    GeneratorHelper.generator = this; // the templates render through this prepared instance
+    CodeBlock.languageUsed = "Python"; // the code it reads is tagged Python, not PythonNext
+    firstMessageOfClass = getModel().getLastResult().numberOfErrorMessages();
+    prepare();
+    try
+    {
+      for (UmpleElement element : getModel().getUmpleElements())
+      {
+        if ("external".equals(element.getModifier()))
+        {
+          continue;
+        }
+        writeFile(element);
+      }
+    }
+    finally
+    {
+      postpareStateMachines();
+      postpare();
+      firstMessageOfClass = -1;
+      GeneratorHelper.generator = null; // generators that run later read it when they do not set it
+    }
+  }
+
+  public void prepare()
+  {
+    preparedClasses.clear();
+    for (UmpleClass aClass : getModel().getUmpleClasses())
+    {
+      prepare(aClass);
+    }
+    for (UmpleClass aClass : getModel().getUmpleClasses())
+    {
+      prepareOneToOneConstructors(aClass);
+    }
+  }
+
+  // Classes are prepared after their parents, whose constructor parameters they extend, and once per
+  // run. A generated class left by an earlier run does not count: postpare undid that run's changes.
+  private void prepare(UmpleClass aClass)
+  {
+    if (!preparedClasses.add(aClass))
+    {
+      return;
+    }
+    markSpecializations(aClass);
+    UmpleClass parent = aClass.getExtendsClass();
+    if (parent != null)
+    {
+      prepare(parent);
+    }
+    GeneratedClass genClass = aClass.createGeneratedClass(getModel());
+    if (parent != null)
+    {
+      genClass.setParentClass(parent.getGeneratedClass());
+    }
+    prepareConstructorParameters(genClass);
+    prepareStateMachines(aClass);
+  }
+
+  // Marks the ends of associations that specialize another, which Python reports as unsupported
+  // (Java's generator marks them when it runs, which a Python-only run does not)
+  private static void markSpecializations(UmpleClass aClass)
+  {
+    for (AssociationVariable av : aClass.getAssociationVariables())
+    {
+      int index = aClass.indexOfAssociationVariable(av);
+      if (index < 0 || index >= aClass.getAssociations().length)
+      {
+        continue; // symmetric reflexive and some trait associations have no matching association
+      }
+      Association association = aClass.getAssociation(index);
+      av.setIsSpecialization(association.getIsSpecialization());
+    }
+  }
+
+  //------------------------
+  // Constructor parameters
+  //------------------------
+
+  // Lookups on GeneratedClass holding comma-separated Python parameter lists. A parameter written
+  // "*allXs" collects the remaining arguments; the same text also forwards them in a call.
+  public static final String CONSTRUCTOR_PARAMETERS = "pythonConstructorParameters";
+  public static final String MANDATORY_CONSTRUCTOR_PARAMETERS = "pythonConstructorParametersMandatory";
+  public static final String MANDATORY_CONSTRUCTOR_CALLER = "pythonConstructorCallerMandatory_";
+
+  // The parameter name for an attribute or association end, as in the Java output (aName, allStudents).
+  public String parameterName(UmpleVariable av, boolean isMany)
+  {
+    return javaNames().nameOf(av.getName(), isMany);
+  }
+
+  // Same parameters and order as the Java constructor (Generator_CodeJava.generateConstructorSignature),
+  // with Java varargs as *name and Java arrays as ordinary list parameters.
+  private void prepareConstructorParameters(GeneratedClass genClass)
+  {
+    UmpleClass uClass = genClass.getUClass();
+    List<String> parameters = new ArrayList<String>();
+    for (Attribute av : attributes(uClass))
+    {
+      // A derived attribute is computed, also when its code is only for other languages
+      if (av.getIsAutounique() || av.getIsList() || "defaulted".equals(av.getModifier()) || av.getIsLazy() || av.getIsDerived()
+          || (av.getValue() != null && !"fixml".equals(av.getModifier())))
+      {
+        continue;
+      }
+      parameters.add(parameterName(av, false));
+    }
+
+    List<AssociationVariable> manyEnds = new ArrayList<AssociationVariable>();
+    for (AssociationVariable av : uClass.getAssociationVariables())
+    {
+      if (!appearsInConstructor(av))
+      {
+        continue;
+      }
+      if (av.isMany())
+      {
+        manyEnds.add(av);
+      }
+      else
+      {
+        parameters.add(parameterName(av, false));
+      }
+    }
+
+    boolean parentHasManyList = false;
+    if (uClass.getExtendsClass() != null)
+    {
+      List<String> parentParameters = splitParameters(genClass.getParentClass().getLookup(CONSTRUCTOR_PARAMETERS));
+      String parentVarargs = !parentParameters.isEmpty() && parentParameters.get(parentParameters.size() - 1).startsWith("*")
+        ? parentParameters.get(parentParameters.size() - 1) : null;
+      if (parameters.isEmpty() && manyEnds.isEmpty())
+      {
+        parameters.addAll(parentParameters);
+        parentHasManyList = hasManyList(genClass.getParentClass());
+      }
+      else if (parentVarargs != null && !manyEnds.isEmpty())
+      {
+        // several collections cannot all be varargs, so the parent's becomes a list
+        parentHasManyList = true;
+        parentParameters.set(parentParameters.size() - 1, parentVarargs.substring(1));
+        parameters.addAll(0, parentParameters);
+      }
+      else if (parentVarargs != null)
+      {
+        // the parent's varargs must stay last
+        parameters.addAll(0, parentParameters.subList(0, parentParameters.size() - 1));
+        parameters.add(parentVarargs);
+      }
+      else
+      {
+        parentHasManyList = hasManyList(genClass.getParentClass());
+        parameters.addAll(0, parentParameters);
+      }
+    }
+
+    boolean useLists = manyEnds.size() > 1 || parentHasManyList;
+    for (AssociationVariable manyEnd : manyEnds)
+    {
+      parameters.add((useLists ? "" : "*") + parameterName(manyEnd, true));
+    }
+    genClass.setLookup(CONSTRUCTOR_PARAMETERS, String.join(", ", parameters));
+    genClass.setLookup(MANY_LIST, useLists && !manyEnds.isEmpty() || parentHasManyList ? "true" : "false");
+  }
+
+  private static final String MANY_LIST = "pythonConstructorHasManyList";
+
+  private static boolean hasManyList(GeneratedClass genClass)
+  {
+    return "true".equals(genClass.getLookup(MANY_LIST));
+  }
+
+  // Java's rule for which association ends are constructor parameters.
+  public static boolean appearsInConstructor(AssociationVariable av)
+  {
+    AssociationVariable related = av.getRelatedAssociation();
+    if ((av.getMultiplicity().getLowerBound() == 0 && !av.isImmutable()) || !av.getIsNavigable())
+    {
+      return false;
+    }
+    if (related.getIsNavigable())
+    {
+      if (av.isMandatoryMany() && related.isMandatory())
+      {
+        return false;
+      }
+      if ((av.isMN() || av.isN()) && related.isOptionalN())
+      {
+        return false;
+      }
+      if (av.getIsSpecialization())
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // For one-to-one pairs, the constructor that creates its partner takes the partner's parameters
+  // (suffixed For<Role>) instead of the partner (Generator_CodeJava.generateSecondaryConstructorSignatures).
+  private void prepareOneToOneConstructors(UmpleClass uClass)
+  {
+    GeneratedClass genClass = uClass.getGeneratedClass();
+    String mandatory = genClass.getLookup(CONSTRUCTOR_PARAMETERS);
+    for (AssociationVariable av : uClass.getAssociationVariables())
+    {
+      AssociationVariable related = av.getRelatedAssociation();
+      if (!(av.isOnlyOne() && related.isOnlyOne() && av.getIsNavigable() && related.getIsNavigable()))
+      {
+        continue;
+      }
+      GeneratedClass relatedGen = getModel().getUmpleClass(av.getType()).getGeneratedClass();
+      String partnerParameters = StringFormatter.replaceParameter(relatedGen.getLookup(CONSTRUCTOR_PARAMETERS), parameterName(related, false), null);
+      partnerParameters = StringFormatter.appendParameter(partnerParameters, "For" + av.getUpperCaseName());
+      mandatory = StringFormatter.replaceParameter(mandatory, parameterName(av, false), partnerParameters);
+      genClass.setLookup(MANDATORY_CONSTRUCTOR_PARAMETERS, mandatory);
+
+      String relatedFor = "For" + related.getUpperCaseName();
+      String caller = StringFormatter.replaceParameter(genClass.getLookup(CONSTRUCTOR_PARAMETERS), parameterName(av, false), "_THIS_");
+      caller = StringFormatter.appendParameter(caller, relatedFor);
+      caller = StringFormatter.replaceParameter(caller, "_THIS_" + relatedFor, "self");
+      relatedGen.setLookup(MANDATORY_CONSTRUCTOR_CALLER + related.getName(), caller);
+    }
+    if (genClass.getLookup(MANDATORY_CONSTRUCTOR_PARAMETERS) != null)
+    {
+      // Only the last parameter can collect the remaining arguments, so a partner's collection that
+      // lands before it becomes a list; the caller's *allXs unpacks a list as well.
+      List<String> parameters = splitParameters(mandatory);
+      for (int i = 0; i < parameters.size() - 1; i++)
+      {
+        parameters.set(i, parameters.get(i).replaceFirst("^\\*", ""));
+      }
+      genClass.setLookup(MANDATORY_CONSTRUCTOR_PARAMETERS, String.join(", ", parameters));
+    }
+  }
+
+  private static List<String> splitParameters(String parameters)
+  {
+    List<String> list = new ArrayList<String>();
+    if (parameters != null)
+    {
+      for (String parameter : parameters.split(","))
+      {
+        if (parameter.trim().length() > 0)
+        {
+          list.add(parameter.trim());
+        }
+      }
+    }
+    return list;
+  }
+
+  public ILang getLanguageFor(UmpleElement element)
+  {
+    if (element instanceof UmpleInterface)
+    {
+      return new PythonNextInterfaceGenerator();
+    }
+    else if (element instanceof UmpleClass)
+    {
+      return new PythonNextClassGenerator();
+    }
+    return null;
+  }
+
+  private void writeFile(UmpleElement element)
+  {
+    if (element instanceof UmpleClass && ((UmpleClass) element).hasOuterClass())
+    {
+      return; // generated inside its outer class
+    }
+    // Diagnostics are told apart per class, from its first check on (see report)
+    firstMessageOfClass = getModel().getLastResult().numberOfErrorMessages();
+    if (!canGenerate(element))
+    {
+      return;
+    }
+
+    String code;
+    int errorsBefore = errorCount();
+    try
+    {
+      moduleImports.clear();
+      moduleNames = namesDefinedIn(element);
+      code = getLanguageFor(element).getCode(getModel(), element);
+    }
+    catch (UmpleCompilerException e)
+    {
+      throw e;
+    }
+    catch (PythonSnippetException e)
+    {
+      error(9210, element, e.getMessage(), element.getName()); // a guard, contract or invariant Python cannot run
+      return;
+    }
+    catch (RuntimeException e)
+    {
+      // One class failing must not stop the others; the run is still reported as failed.
+      error(9200, element, "Could not generate " + element.getName() + " in Python: "
+        + cruise.umple.util.ExceptionDumper.dumpCompilerError(e));
+      return;
+    }
+
+    if (errorCount() > errorsBefore)
+    {
+      return; // code the generator reported as wrong (for example an untranslatable snippet) is not written
+    }
+
+    String path = StringFormatter.addPathOrAbsolute(getModel().getUmpleFile().getPath(), getOutput())
+      + element.getPackageName().replace(".", File.separator);
+    File directory = new File(path);
+    directory.mkdirs();
+    File file = new File(directory, element.getName() + ".py");
+    // The platform's charset, which the model was read with, as the other generators write: a UTF-8
+    // model's bytes reach the module as they were, for Python to read as UTF-8 (on a Cp1252 platform
+    // the five bytes Cp1252 does not define are lost, as for every target)
+    try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file))))
+    {
+      out.write(code);
+    }
+    catch (IOException e)
+    {
+      throw new UmpleCompilerException("Unable to write " + file.getPath(), e);
+    }
+    getModel().getGeneratedCode().put(element.getName(), code);
+  }
+
+  // Reports model elements Python cannot represent; the element is then not generated.
+  private boolean canGenerate(UmpleElement element)
+  {
+    if (element.getPackageName().length() == 0 && STANDARD_MODULES.contains(element.getName()))
+    {
+      error(9213, element, (element instanceof UmpleInterface ? "Interface " : "Class ") + element.getName());
+      return false;
+    }
+    for (String segment : element.getPackageName().isEmpty() ? new String[0] : element.getPackageName().split("\\.", -1))
+    {
+      if (!segment.matches("[A-Za-z_][A-Za-z0-9_]*") || PYTHON_KEYWORDS.contains(segment))
+      {
+        error(9217, element, element.getPackageName(), (element instanceof UmpleInterface ? "interface " : "class ") + element.getName());
+        return false;
+      }
+    }
+    if (BUILTINS.contains(element.getName()))
+    {
+      error(9215, element, (element instanceof UmpleInterface ? "Interface " : "Class ") + element.getName());
+      return false;
+    }
+    if (element instanceof UmpleClassifier && !checkKeywordNames((UmpleClassifier) element))
+    {
+      return false;
+    }
+    if (element instanceof UmpleInterface)
+    {
+      boolean ok = true;
+      for (Method m : ((UmpleInterface) element).getMethods())
+      {
+        ok = checkSignature(m) && ok;
+      }
+      return ok;
+    }
+    if (element instanceof UmpleClass)
+    {
+      String feature = getModel().modelHasSuboption("PythonNext", "genJson") ? "JSON generation (genJson)" : unsupportedFeature((UmpleClass) element);
+      if (feature != null)
+      {
+        error(9210, element, feature, element.getName());
+        return false;
+      }
+      if (!checkStateMachines((UmpleClass) element))
+      {
+        return false;
+      }
+      boolean ok = checkUserCode((UmpleClass) element);
+      return oneOneCheckNames((UmpleClass) element) && ok;
+    }
+    return true;
+  }
+
+  // The first class-level feature this generator does not support yet, or null. Nested classes are
+  // generated inside their outer class, so their features count for it.
+  private static String unsupportedFeature(UmpleClass uClass)
+  {
+    if (uClass.numberOfTraceDirectives() > 0 || uClass.numberOfTraceCases() > 0)
+    {
+      return "Tracing";
+    }
+    if (uClass.getIsDistributed() || uClass.getHasProxyPattern())
+    {
+      return "A distributed class";
+    }
+    for (AssociationVariable av : uClass.getAssociationVariables())
+    {
+      if (av.getIsSpecialization())
+      {
+        return "Association specialization";
+      }
+    }
+    // Python runs a nested class statement inside its outer class's body, where only a sibling
+    // defined before it can be named; another class of the same module is not bound yet.
+    UmpleClass parent = uClass.getExtendsClass();
+    if (uClass.hasOuterClass() && parent != null && outermost(parent) == outermost(uClass) && parent.getOuterClass() != uClass.getOuterClass())
+    {
+      return "An inner class that extends a class not declared beside it";
+    }
+    for (UmpleClass inner : uClass.getInnerClasses())
+    {
+      String feature = unsupportedFeature(inner);
+      if (feature != null)
+      {
+        return feature;
+      }
+    }
+    return null;
+  }
+
+  //------------------------
+  // Diagnostics
+  //------------------------
+
+  private int errorCount()
+  {
+    int count = 0;
+    for (ErrorMessage message : getModel().getLastResult().getErrorMessages())
+    {
+      if (message.getErrorType().getSeverity() <= 2)
+      {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  public void error(int code, UmpleElement element, String... arguments)
+  {
+    Position position = element != null && element.numberOfPositions() > 0 ? element.getPosition(0) : new Position("", 0, 0, 0);
+    report(new ErrorMessage(code, position, arguments));
+  }
+
+  // Adds a diagnostic unless the class being generated reported the same one already: some templates
+  // render code twice (to collect its local names, then to emit it), and the user hears about it once.
+  public void report(ErrorMessage message)
+  {
+    List<ErrorMessage> all = getModel().getLastResult().getErrorMessages();
+    for (ErrorMessage m : all.subList(firstMessageOfClass < 0 ? all.size() : Math.min(firstMessageOfClass, all.size()), all.size()))
+    {
+      if (m.getFormattedMessage().equals(message.getFormattedMessage())
+        && m.getPosition().getLineNumber() == message.getPosition().getLineNumber()
+        && java.util.Objects.equals(m.getPosition().getFilename(), message.getPosition().getFilename()))
+      {
+        return;
+      }
+    }
+    getModel().getLastResult().addErrorMessage(message);
+  }
+
+  //------------------------
+  // Names
+  //------------------------
+
+  // The analyzer asks for names before generation starts, so the model is attached on first use.
+  private JavaGenerator javaNames()
+  {
+    if (names.getModel() != getModel())
+    {
+      names.setModel(getModel());
+    }
+    return names;
+  }
+
+  // A variable's type is its Python type; every other key is a public name taken from Java.
+  public String translate(String keyName, Attribute av)
+  {
+    return "type".equals(keyName) ? pythonType(av.getType()) : javaNames().translate(keyName, av);
+  }
+
+  public String translate(String keyName, AssociationVariable av)
+  {
+    return "type".equals(keyName) ? pythonType(av.getType()) : javaNames().translate(keyName, av);
+  }
+
+  public String relatedTranslate(String keyName, AssociationVariable av)
+  {
+    return translate(keyName, av.getRelatedAssociation());
+  }
+
+  public String translate(String keyName, UmpleClass aClass)
+  {
+    if ("isA".equals(keyName))
+    {
+      return bases(aClass);
+    }
+    else if ("packageDefinition".equals(keyName))
+    {
+      return "";
+    }
+    else if ("type".equals(keyName))
+    {
+      return aClass.getName();
+    }
+    return javaNames().translate(keyName, aClass);
+  }
+
+  public String translate(String keyName, UmpleInterface anInterface)
+  {
+    return javaNames().translate(keyName, anInterface);
+  }
+
+  public String translate(String keyName, State state)
+  {
+    return javaNames().translate(keyName, state);
+  }
+
+  public String translate(String keyName, StateMachine sm)
+  {
+    return javaNames().translate(keyName, sm);
+  }
+
+  public String translate(String keyName, Event event)
+  {
+    return javaNames().translate(keyName, event);
+  }
+
+  public String translate(String keyName, Activity activity)
+  {
+    return javaNames().translate(keyName, activity);
+  }
+
+  // Python's keywords (keyword.kwlist). Umple admits some of them as names, Java keywords among them
+  // (an event named break).
+  private static final List<String> PYTHON_KEYWORDS = Arrays.asList("False", "None", "True", "and", "as", "assert",
+    "async", "await", "break", "class", "continue", "def", "del", "elif", "else", "except", "finally", "for", "from",
+    "global", "if", "import", "in", "is", "lambda", "nonlocal", "not", "or", "pass", "raise", "return", "try", "while",
+    "with", "yield");
+
+  // A Python keyword cannot name a class, interface, constant, enumeration or enumeration value as
+  // generated (enumerations in PascalCase, so the value none becomes None). Nested classes are
+  // generated inside their outer class. Reports each such name; false when one is found.
+  private boolean checkKeywordNames(UmpleClassifier element)
+  {
+    boolean ok = reportKeyword(element, element instanceof UmpleInterface ? "Interface " : "Class ", element.getName());
+    List<Constant> constants = element instanceof UmpleInterface ? ((UmpleInterface) element).getConstants() : ((UmpleClass) element).getConstants();
+    for (Constant aConstant : constants)
+    {
+      ok = reportKeyword(element, "Constant ", aConstant.getName()) && ok;
+    }
+    if (element instanceof UmpleClass)
+    {
+      UmpleClass uClass = (UmpleClass) element;
+      for (Attribute av : uClass.getAttributes())
+      {
+        if (av.isConstant())
+        {
+          ok = reportKeyword(element, "Constant ", av.getName()) && ok;
+        }
+      }
+      for (UmpleEnumeration umpleEnum : enumerations(uClass))
+      {
+        ok = reportKeyword(element, "Enumeration ", StringFormatter.toPascalCase(umpleEnum.getName())) && ok;
+        for (String value : umpleEnum.getEnumValues())
+        {
+          ok = reportKeyword(element, "Enumeration value ", StringFormatter.toPascalCase(value)) && ok;
+        }
+      }
+      for (UmpleClass inner : uClass.getInnerClasses())
+      {
+        ok = checkKeywordNames(inner) && ok;
+      }
+    }
+    return ok;
+  }
+
+  private boolean reportKeyword(UmpleElement element, String kind, String name)
+  {
+    if (!PYTHON_KEYWORDS.contains(name))
+    {
+      return true;
+    }
+    error(9215, element, kind + name);
+    return false;
+  }
+
+  // The enumerations generated inside a class, as Java nests them: its own, and the model-level ones
+  // it uses unless it has its own of that name.
+  public List<UmpleEnumeration> enumerations(UmpleClass uClass)
+  {
+    List<UmpleEnumeration> enums = new ArrayList<UmpleEnumeration>();
+    for (UmpleEnumeration umpleEnum : getModel().getEnums())
+    {
+      if (!uClass.hasEnum(umpleEnum.getName()) && usesEnum(uClass, StringFormatter.toPascalCase(umpleEnum.getName())))
+      {
+        enums.add(umpleEnum);
+      }
+    }
+    enums.addAll(uClass.getEnums());
+    return enums;
+  }
+
+  // Reports a method signature Python cannot represent: a method named like a Python keyword, or
+  // parameters checkParameters rejects. False when one is found.
+  public boolean checkSignature(Method m)
+  {
+    boolean ok = true;
+    if (PYTHON_KEYWORDS.contains(m.getName()))
+    {
+      errorAt(9215, m.getPosition(), "Method " + m.getName());
+      ok = false;
+    }
+    return checkParameters(m.getMethodParameters(), "Method " + m.getName(), m.getPosition()) && ok;
+  }
+
+  // Reports parameters Python cannot represent: one named self, one named __class__ (which generated
+  // methods use for their declaring class), or two that get the same Python name.
+  public boolean checkParameters(List<MethodParameter> parameters, String owner, Position position)
+  {
+    boolean ok = true;
+    Set<String> names = new HashSet<String>();
+    for (MethodParameter p : parameters)
+    {
+      if ("self".equals(p.getName()))
+      {
+        errorAt(9214, position, owner);
+        ok = false;
+      }
+      else if (DECLARING_CLASS.equals(p.getName()))
+      {
+        errorAt(9215, position, "Parameter " + p.getName() + " of " + Character.toLowerCase(owner.charAt(0)) + owner.substring(1));
+        ok = false;
+      }
+      else if (!names.add(parameterName(p.getName())))
+      {
+        errorAt(9216, position, owner, parameterName(p.getName()));
+        ok = false;
+      }
+    }
+    return ok;
+  }
+
+  public static boolean isPythonKeyword(String name)
+  {
+    return PYTHON_KEYWORDS.contains(name);
+  }
+
+  // A method parameter's Python name: "in" stays "input" as in earlier Python output, and other
+  // Python keywords get a trailing underscore.
+  public static String parameterName(String name)
+  {
+    if ("in".equals(name))
+    {
+      return "input";
+    }
+    return PYTHON_KEYWORDS.contains(name) ? name + "_" : name;
+  }
+
+  // ", a, b" for a method's parameters after self, or "" when it has none.
+  public String parameterList(List<MethodParameter> parameters)
+  {
+    StringBuilder text = new StringBuilder();
+    for (MethodParameter p : parameters)
+    {
+      text.append(", ").append(parameterName(p.getName()));
+    }
+    return text.toString();
+  }
+
+  //------------------------
+  // Types and literals
+  //------------------------
+
+  // The Python type of an Umple type: a built-in type for Umple's primitives (an attribute without a
+  // type is a String), the type name itself for model classes and enums.
+  public String pythonType(String umpleType)
+  {
+    if (umpleType == null || umpleType.length() == 0)
+    {
+      return "str";
+    }
+    String primitive = UmpleToPrimitiveMap.get(umpleType);
+    if (primitive != null)
+    {
+      return primitive;
+    }
+    switch (umpleType)
+    {
+      case "int": case "long": case "short": case "byte": return "int";
+      case "double": case "float": return "float";
+      case "boolean": return "bool";
+      case "char": return "str";
+      default: return umpleType;
+    }
+  }
+
+  // The Python form of a literal default value written in the model, or null when the value is not a
+  // literal and must be translated as code.
+  public String literal(String umpleType, String value)
+  {
+    if (value == null)
+    {
+      return "None";
+    }
+    String v = value.trim();
+    if ("null".equals(v))
+    {
+      return "None";
+    }
+    if ("true".equals(v))
+    {
+      return "True";
+    }
+    if ("false".equals(v))
+    {
+      return "False";
+    }
+    if (v.length() >= 2 && ((v.startsWith("\"") && v.endsWith("\"")) || (v.startsWith("'") && v.endsWith("'"))))
+    {
+      String text = javaText(v.substring(1, v.length() - 1), v.charAt(0));
+      if (text == null || (v.charAt(0) == '\'' && text.codePointCount(0, text.length()) != 1))
+      {
+        return null;
+      }
+      if ("Date".equals(umpleType) || "Time".equals(umpleType))
+      {
+        return standardName("datetime", null) + ("Date".equals(umpleType) ? ".date" : ".time") + ".fromisoformat(" + pythonString(text) + ")";
+      }
+      return pythonString(text);
+    }
+    if (!PythonSnippetTranslator.isJavaNumber(v.startsWith("-") ? v.substring(1) : v))
+    {
+      return null; // a name such as _3D, or code
+    }
+    String number = v.replace("_", "");
+    boolean negative = number.startsWith("-");
+    String digits = negative ? number.substring(1) : number;
+    java.math.BigInteger integer = null;
+    if (digits.matches("0[xX][0-9a-fA-F]+[lL]?"))
+    {
+      integer = new java.math.BigInteger(digits.replaceAll("^0[xX]|[lL]$", ""), 16);
+    }
+    else if (digits.matches("0[bB][01]+[lL]?"))
+    {
+      integer = new java.math.BigInteger(digits.replaceAll("^0[bB]|[lL]$", ""), 2);
+    }
+    else if (digits.matches("0[0-7]+[lL]?"))
+    {
+      integer = new java.math.BigInteger(digits.replaceAll("[lL]$", ""), 8);
+    }
+    else if (digits.matches("0[0-9]+[lL]?"))
+    {
+      return null; // an octal literal with 8 or 9 is not Java
+    }
+    else if (digits.matches("[0-9]+[lL]?"))
+    {
+      integer = new java.math.BigInteger(digits.replaceAll("[lL]$", ""));
+    }
+    int bits = digits.matches(".*[lL]") ? 64 : 32;
+    if (integer != null && !digits.matches("[1-9][0-9]*[lL]?|0[lL]?"))
+    {
+      // Java reads a hexadecimal, octal or binary literal as the bits of a signed int, or long with L,
+      // and negating the smallest one gives itself
+      java.math.BigInteger range = java.math.BigInteger.ONE.shiftLeft(bits);
+      integer = (negative ? integer.negate() : integer).mod(range);
+      integer = integer.testBit(bits - 1) ? integer.subtract(range) : integer;
+      negative = false;
+    }
+    if (integer != null)
+    {
+      String text = (negative ? integer.negate() : integer).toString();
+      return "float".equals(pythonType(umpleType)) ? text + ".0" : text; // Java widens it to a double
+    }
+    if (digits.matches("([0-9]+\\.[0-9]*|\\.[0-9]+)([eE][-+]?[0-9]+)?[fFdD]?|[0-9]+([eE][-+]?[0-9]+)?[fFdD]|[0-9]+[eE][-+]?[0-9]+"))
+    {
+      String text = digits.replaceAll("[fFdD]$", "");
+      return (negative ? "-" : "") + (text.matches("[0-9]+") ? text + ".0" : text);
+    }
+    return null;
+  }
+
+  // The value of the text between the quotes of a Java string or char literal, or null when it is not
+  // one literal (an unescaped quote inside, or an escape Java does not have).
+  private static String javaText(String body, char quote)
+  {
+    StringBuilder text = new StringBuilder();
+    for (int i = 0; i < body.length(); i++)
+    {
+      char c = body.charAt(i);
+      if (c == quote)
+      {
+        return null;
+      }
+      if (c != '\\')
+      {
+        text.append(c);
+        continue;
+      }
+      if (++i == body.length())
+      {
+        return null;
+      }
+      char e = body.charAt(i);
+      switch (e)
+      {
+        case 'b': text.append('\b'); break;
+        case 't': text.append('\t'); break;
+        case 'n': text.append('\n'); break;
+        case 'f': text.append('\f'); break;
+        case 'r': text.append('\r'); break;
+        case 's': text.append(' '); break;
+        case '"': case '\'': case '\\': text.append(e); break;
+        case 'u':
+          while (i < body.length() && body.charAt(i) == 'u')
+          {
+            i++;
+          }
+          if (i + 4 > body.length() || !body.substring(i, i + 4).matches("[0-9a-fA-F]{4}"))
+          {
+            return null;
+          }
+          text.append((char) Integer.parseInt(body.substring(i, i + 4), 16));
+          i += 3;
+          break;
+        default:
+          if (e < '0' || e > '7')
+          {
+            return null;
+          }
+          int end = i + 1;
+          int max = e <= '3' ? i + 3 : i + 2;
+          while (end < body.length() && end < max && body.charAt(end) >= '0' && body.charAt(end) <= '7')
+          {
+            end++;
+          }
+          text.append((char) Integer.parseInt(body.substring(i, end), 8));
+          i = end - 1;
+      }
+    }
+    return text.toString();
+  }
+
+  // A Python string literal with the given value.
+  public static String pythonString(String text)
+  {
+    StringBuilder out = new StringBuilder("\"");
+    for (int i = 0; i < text.length(); i++)
+    {
+      char c = text.charAt(i);
+      if (c == '\\' || c == '"')
+      {
+        out.append('\\').append(c);
+      }
+      else if (c == '\n')
+      {
+        out.append("\\n");
+      }
+      else if (c == '\r')
+      {
+        out.append("\\r");
+      }
+      else if (c == '\t')
+      {
+        out.append("\\t");
+      }
+      else if (c < 0x20 || c == 0x7f)
+      {
+        out.append(String.format("\\x%02x", (int) c));
+      }
+      else if (Character.isHighSurrogate(c) && i + 1 < text.length() && Character.isLowSurrogate(text.charAt(i + 1)))
+      {
+        out.append(c).append(text.charAt(++i));
+      }
+      else if (Character.isSurrogate(c))
+      {
+        out.append(String.format("\\u%04x", (int) c));
+      }
+      else
+      {
+        out.append(c);
+      }
+    }
+    return out.append('"').toString();
+  }
+
+  //------------------------
+  // Fields and values
+  //------------------------
+
+  // Whether an attribute has a mutator: set, or add and remove for a list. The templates, the event
+  // named like a setter and the snippet translator's table all follow this rule.
+  public static boolean hasSetter(Attribute av)
+  {
+    return !(av.isConstant() || av.getIsAutounique() || av.isInternal() || av.getIsDerived()
+      || (av.isImmutable() && !av.getIsLazy() && !av.getIsUnique()));
+  }
+
+  // The attributes Python generates code for. Sorted associations add an internal Comparator
+  // attribute that only Java needs; Python sorts with a key function instead.
+  public static List<Attribute> attributes(UmpleClass uClass)
+  {
+    List<Attribute> attributes = new ArrayList<Attribute>();
+    for (Attribute av : uClass.getAttributes())
+    {
+      if (!av.getIsInternalTransient())
+      {
+        attributes.add(av);
+      }
+    }
+    return attributes;
+  }
+
+  // Generator-owned fields of keyed and immutable classes: the once-only flag of a member and the
+  // cached hash, named so that no modelled member of the object's ancestors or subclasses can alias
+  // them.
+  public String canSetField(UmpleClass uClass, UmpleVariable av)
+  {
+    String flag = av instanceof Attribute ? translate("attributeCanSet", (Attribute) av) : translate("associationCanSet", (AssociationVariable) av);
+    return "self." + fieldName(uClass, flag);
+  }
+
+  public String hashCacheField(UmpleClass uClass)
+  {
+    return "self." + fieldName(uClass, "cachedHashCode");
+  }
+
+  // The class-level registry of a unique attribute, named as in Java (mentorsById). Named from the
+  // class being generated, because an attribute a trait copied into it has no owning class.
+  public static String uniqueMap(UmpleClass uClass, Attribute av)
+  {
+    return uClass.getName().toLowerCase() + "sBy" + av.getUpperCaseName();
+  }
+
+  // The attributes of a class's ancestors, nearest first.
+  public static List<Attribute> inheritedAttributes(UmpleClass uClass)
+  {
+    List<Attribute> inherited = new ArrayList<Attribute>();
+    for (UmpleClass parent = uClass.getExtendsClass(); parent != null; parent = parent.getExtendsClass())
+    {
+      inherited.addAll(attributes(parent));
+    }
+    return inherited;
+  }
+
+  // The instance field that stores an attribute, association end or state machine.
+  public String field(UmpleVariable av)
+  {
+    return "self._" + av.getName();
+  }
+
+  // Association links are object identity: these never call __eq__, so a keyed class
+  // cannot be unlinked or found through an equal but different object.
+  public static String identityIndex(String list, String object)
+  {
+    return "next((i for i, x in enumerate(" + list + ") if x is " + object + "), -1)";
+  }
+
+  public static String containsIdentity(String list, String object)
+  {
+    return "any(x is " + object + " for x in " + list + ")";
+  }
+
+  // How a class is named inside its module's methods: nested classes through their outer classes.
+  public String classReference(UmpleClass aClass)
+  {
+    return aClass.getOuterClass() == null ? aClass.getName() : classReference(aClass.getOuterClass()) + "." + aClass.getName();
+  }
+
+  // What a field holds before the constructor assigns it, as Java initializes fields.
+  public String fieldDefault(Attribute av)
+  {
+    if (av.getIsList())
+    {
+      return "[]";
+    }
+    switch (pythonType(av.getType()))
+    {
+      case "int": return "0";
+      case "float": return "0.0";
+      case "bool": return "False";
+      default: return "None";
+    }
+  }
+
+  // A value written in the model as Python: a literal when it is one, otherwise the snippet
+  // translated as an expression. A snippet that cannot be translated is reported (9211) at its own
+  // position and gives None, so the class is reported and not written. In a class body (isStatic)
+  // the imports the expression needs go to the module; in a method they are returned in imports.
+  private String expression(UmpleClass uClass, String type, String code, boolean isStatic, Position position, String slot, List<String> imports)
+  {
+    String python = literal(type, code);
+    if (python != null)
+    {
+      return python;
+    }
+    python = translateSnippetAt(code, uClass, new ArrayList<MethodParameter>(), isStatic, true, position, slot);
+    for (String line : getSnippetImports())
+    {
+      if (isStatic)
+      {
+        addModuleImport(line);
+      }
+      else
+      {
+        imports.add(line);
+      }
+    }
+    return python == null ? "None" : python;
+  }
+
+  // Adds lines to a method body, leaving out an import the body already has.
+  public static void addLines(List<String> body, List<String> lines)
+  {
+    for (String line : lines)
+    {
+      if (!(line.startsWith("from ") || line.startsWith("import ")) || !body.contains(line))
+      {
+        body.add(line);
+      }
+    }
+  }
+
+  // The lines of a method that use an attribute's model value: the imports the value needs, then
+  // prefix + value + suffix.
+  public List<String> valueLines(UmpleClass uClass, String prefix, Attribute av, String suffix)
+  {
+    List<String> lines = new ArrayList<String>();
+    String value = expression(uClass, av.getType(), av.getValue(), false, av.getPosition(), "the default value of " + av.getName(), lines);
+    lines.add(prefix + value + suffix);
+    return lines;
+  }
+
+  // The same for a list attribute's initial items (the model keeps {"a", "b"} as "a", "b").
+  public List<String> listLines(UmpleClass uClass, String prefix, Attribute av)
+  {
+    List<String> lines = new ArrayList<String>();
+    if (hasLiteralItems(av))
+    {
+      lines.add(prefix + literalList(av));
+      return lines;
+    }
+    String value = translateListDefault(av.getValue(), uClass, false, av.getPosition(), "the default value of " + av.getName());
+    lines.addAll(getSnippetImports());
+    lines.add(prefix + (value == null ? "[]" : value));
+    return lines;
+  }
+
+  // The lines of a derived attribute's getter: its Python expression when one is written, else its
+  // untagged expression translated. Code only for other languages is reported (9211), as the getter
+  // would have no value.
+  public List<String> derivedLines(UmpleClass uClass, String prefix, Attribute av)
+  {
+    List<String> lines = new ArrayList<String>();
+    CodeBlock code = av.getCodeblock();
+    if (code != null && pythonLanguage(code) == null && !taggedLanguages(code).isEmpty())
+    {
+      reportSnippetError(av.getPosition(), "the derived attribute " + av.getName(),
+        "it has code only for " + String.join(", ", taggedLanguages(code)));
+      lines.add(prefix + "None");
+      return lines;
+    }
+    String value = "Python".equals(pythonLanguage(code)) ? code.getCode("Python").trim()
+      : expression(uClass, av.getType(), av.getValue(), false, av.getPosition(), "the derived attribute " + av.getName(), lines);
+    lines.add(prefix + value);
+    return lines;
+  }
+
+  // A class-level value: a constant or the first value of an autounique counter. It is evaluated
+  // while the class body runs, so model classes it uses are imported at module level.
+  public String classValue(UmpleClass uClass, Attribute av)
+  {
+    if (av.getIsList())
+    {
+      if (hasLiteralItems(av))
+      {
+        return literalList(av);
+      }
+      String value = translateListDefault(av.getValue(), uClass, true, av.getPosition(), "the constant " + av.getName());
+      for (String line : getSnippetImports())
+      {
+        addModuleImport(line);
+      }
+      return value == null ? "[]" : value;
+    }
+    return expression(uClass, av.getType(), av.getValue(), true, av.getPosition(), "the constant " + av.getName(), null);
+  }
+
+  public String classValue(UmpleClass uClass, Constant aConstant)
+  {
+    return expression(uClass, aConstant.getType(), aConstant.getValue(), true, null, "the constant " + aConstant.getName(), null);
+  }
+
+  // An interface constant has no class to resolve names in, so it must be a literal.
+  public String interfaceValue(UmpleInterface anInterface, Constant aConstant)
+  {
+    String python = literal(aConstant.getType(), aConstant.getValue());
+    if (python == null)
+    {
+      error(9211, anInterface, "the constant " + aConstant.getName(), "an interface constant must be a literal in Python",
+        "a literal value, or a constant in a class that implements the interface");
+      return "None";
+    }
+    return python;
+  }
+
+  //------------------------
+  // Invariants and injections in generated methods
+  //------------------------
+
+  // A parameter of a generated method, so injections and constraints can refer to it.
+  public static MethodParameter parameter(String name, String type)
+  {
+    return new MethodParameter(name, type, null, null, false);
+  }
+
+  // The before or after injections of a generated method taking the given parameters, at method-body
+  // indentation; "" when there are none.
+  public String injected(UmpleClass uClass, String type, String methodName, MethodParameter... parameters)
+  {
+    return injections(uClass, type, methodName, Arrays.asList(parameters), false, "        ");
+  }
+
+  // The body of a generated accessor: its before-injections, then the value it returns. With
+  // after-injections the value is kept in local (Java's name for it, which injected code may use)
+  // until they have run.
+  public String accessorBody(UmpleClass uClass, String methodName, String local, String value, MethodParameter... parameters)
+  {
+    return accessorBody(uClass, methodName, local, value, false, parameters);
+  }
+
+  // accessorBody of a static method, whose injected code has no self
+  public String staticAccessorBody(UmpleClass uClass, String methodName, String local, String value, MethodParameter... parameters)
+  {
+    return accessorBody(uClass, methodName, local, value, true, parameters);
+  }
+
+  private String accessorBody(UmpleClass uClass, String methodName, String local, String value, boolean isStatic, MethodParameter... parameters)
+  {
+    String before = injections(uClass, "before", methodName, Arrays.asList(parameters), isStatic, "        ");
+    String after = injections(uClass, "after", methodName, Arrays.asList(parameters), isStatic, "        ");
+    if (after.isEmpty())
+    {
+      return before + "\n        return " + value;
+    }
+    return before + "\n        " + local + " = " + value + after + "\n        return " + local;
+  }
+
+  // An override of an inherited generated method that adds this class's guards and injections
+  // around the parent's method, as Java's *_subclass templates do. A mutator returns False when a
+  // guard or the parent refuses; an accessor returns the parent's value. "" when there is nothing
+  // to add.
+  public String inheritedOverride(UmpleClass uClass, String methodName, String guards, boolean mutator, String local,
+    MethodParameter... parameters)
+  {
+    String before = injected(uClass, "before", methodName, parameters);
+    String after = injected(uClass, "after", methodName, parameters);
+    if (guards.isEmpty() && before.isEmpty() && after.isEmpty())
+    {
+      return "";
+    }
+    List<String> names = new ArrayList<String>();
+    for (MethodParameter p : parameters)
+    {
+      names.add(p.getName());
+    }
+    String arguments = String.join(", ", names);
+    String call = "super()." + methodName + "(" + arguments + ")";
+    StringBuilder code = new StringBuilder("\n\n    def " + methodName + "(self" + (arguments.isEmpty() ? "" : ", " + arguments) + "):");
+    code.append(before).append(guards); // the user's before injection first, as in Java
+    if (mutator && !after.isEmpty())
+    {
+      code.append("\n        if not " + call + ":\n            return False").append(after).append("\n        return True");
+    }
+    else if (after.isEmpty())
+    {
+      code.append("\n        return " + call);
+    }
+    else
+    {
+      code.append("\n        " + local + " = " + call).append(after).append("\n        return " + local);
+    }
+    return code.toString();
+  }
+
+  // The class invariants that mention an attribute or association end.
+  public List<ConstraintTree> invariantsOn(UmpleClass uClass, UmpleVariable av)
+  {
+    List<ConstraintTree> invariants = new ArrayList<ConstraintTree>();
+    for (ConstraintTree invariant : uClass.getConstraintTrees())
+    {
+      if (mentions(invariant, av))
+      {
+        invariants.add(invariant);
+      }
+    }
+    return invariants;
+  }
+
+  private static boolean mentions(ConstraintVariable v, UmpleVariable av)
+  {
+    if (v instanceof ConstraintAttribute)
+    {
+      return ((ConstraintAttribute) v).getAttribute() == av;
+    }
+    if (v instanceof ConstraintAssociation)
+    {
+      return ((ConstraintAssociation) v).getAssociation() == av;
+    }
+    if (v instanceof ConstraintTree)
+    {
+      return mentions(((ConstraintTree) v).getRoot(), av);
+    }
+    if (v instanceof ConstraintOperator)
+    {
+      return mentions(((ConstraintOperator) v).getLeft(), av) || mentions(((ConstraintOperator) v).getRight(), av);
+    }
+    return false;
+  }
+
+  // Guards in a setter of av: it returns False, before any change, when an invariant would not hold
+  // with the new value (read from the setter's parameter, other members from the object).
+  public String invariantGuards(UmpleClass uClass, Attribute av)
+  {
+    StringBuilder code = new StringBuilder();
+    for (ConstraintTree invariant : invariantsOn(uClass, av))
+    {
+      code.append("\n        if not (" + condition(invariant, uClass, null, false, Arrays.asList(av)) + "):");
+      code.append("\n            return False");
+    }
+    return code.toString();
+  }
+
+  // The constructor's check that the new object satisfies every invariant, with Java's message.
+  public String invariantChecks(UmpleClass uClass)
+  {
+    StringBuilder code = new StringBuilder();
+    for (ConstraintTree invariant : uClass.getConstraintTrees())
+    {
+      if (invariant.getNumberOfElements() == 0)
+      {
+        continue;
+      }
+      Set<String> names = new TreeSet<String>(invariant.getNames());
+      names.removeAll(constantNames(invariant));
+      code.append("\n        if not (" + condition(invariant, uClass, null) + "):");
+      code.append("\n            raise RuntimeError(" + pythonString("Please provide a valid " + namesText(names)
+        + " [" + constraintText(invariant).replace("object", "") + "]") + ")");
+    }
+    return code.toString();
+  }
+
+  // "a", "a and b", "a, b, and c", as in Java's message.
+  private static String namesText(Set<String> names)
+  {
+    List<String> list = new ArrayList<String>(names);
+    if (list.size() <= 1)
+    {
+      return list.isEmpty() ? "" : list.get(0);
+    }
+    String last = list.remove(list.size() - 1);
+    return String.join(list.size() > 1 ? ", " : " ", list) + (list.size() > 1 ? ", " : " ") + "and " + last;
+  }
+
+  // The constraint as written, without spaces, as Java's message shows it.
+  private static String constraintText(ConstraintVariable v)
+  {
+    if (v instanceof ConstraintOperator)
+    {
+      ConstraintOperator operator = (ConstraintOperator) v;
+      return constraintText(operator.getLeft()) + operator.getValue() + constraintText(operator.getRight());
+    }
+    if (v instanceof ConstraintLiteral)
+    {
+      return ((ConstraintLiteral) v).getValue();
+    }
+    if (v instanceof ConstraintAttribute)
+    {
+      return ((ConstraintAttribute) v).getName();
+    }
+    if (v instanceof ConstraintTree)
+    {
+      return constraintText(((ConstraintTree) v).getRoot());
+    }
+    return "";
+  }
+
+  private static Set<String> constantNames(ConstraintVariable v)
+  {
+    Set<String> constants = new HashSet<String>();
+    if (v instanceof ConstraintOperator)
+    {
+      constants.addAll(constantNames(((ConstraintOperator) v).getLeft()));
+      constants.addAll(constantNames(((ConstraintOperator) v).getRight()));
+    }
+    else if (v instanceof ConstraintTree)
+    {
+      constants.addAll(constantNames(((ConstraintTree) v).getRoot()));
+    }
+    else if (v instanceof ConstraintAttribute && "const".equals(((ConstraintAttribute) v).getAttribute().getModifier()))
+    {
+      constants.add(((ConstraintAttribute) v).getName());
+    }
+    return constants;
+  }
+
+  // Types whose values the string form shows inside its brackets, as Java does.
+  private static final List<String> SIMPLE_TYPES = Arrays.asList("String", "int", "Integer", "boolean", "Boolean", "float",
+    "Float", "double", "Double", "byte", "Byte", "char", "Character", "long", "Long", "short", "Short");
+
+  public static boolean isSimpleType(String type)
+  {
+    return SIMPLE_TYPES.contains(type);
+  }
+
+  // True when the class has a toString method written in the model or in its extra code.
+  public static boolean definesToString(UmpleClass uClass)
+  {
+    return definesMethod(uClass, "toString");
+  }
+
+  // True when the class writes its own __str__, which then replaces the generated one.
+  public static boolean definesStr(UmpleClass uClass)
+  {
+    return definesMethod(uClass, "__str__");
+  }
+
+  private static boolean definesMethod(UmpleClass uClass, String name)
+  {
+    if (uClass == null)
+    {
+      return false;
+    }
+    for (Method m : uClass.getMethods())
+    {
+      if (name.equals(m.getName()) && pythonLanguage(m) != null)
+      {
+        return true;
+      }
+    }
+    return uClass.getExtraCode() != null && uClass.getExtraCode().matches("(?s)(.*\\n)?\\s*def\\s+" + name + "\\s*\\(.*");
+  }
+
+  public static boolean hasAbstractMethod(UmpleClass uClass)
+  {
+    for (Method m : uClass.getMethods())
+    {
+      if (m.getIsAbstract())
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // True when the class refers to the enumeration in an attribute, method or event (as Java decides
+  // which model-level enumerations to copy into a class).
+  public boolean usesEnum(UmpleClass uClass, String enumName)
+  {
+    for (Attribute a : uClass.getAttributes())
+    {
+      if (enumName.equals(a.getType()))
+      {
+        return true;
+      }
+    }
+    for (Method m : uClass.getMethods())
+    {
+      if (enumName.equals(m.getType()))
+      {
+        return true;
+      }
+      for (MethodParameter p : m.getMethodParameters())
+      {
+        if (enumName.equals(p.getType()))
+        {
+          return true;
+        }
+      }
+    }
+    for (StateMachine sm : uClass.getStateMachines())
+    {
+      for (Event e : sm.getEvents())
+      {
+        for (MethodParameter p : e.getParams())
+        {
+          if (enumName.equals(p.getType()))
+          {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  // The initial items of a list attribute, split at the commas that separate them (not those
+  // inside strings or brackets).
+  public List<String> listItems(String value)
+  {
+    List<String> items = new ArrayList<String>();
+    if (value == null || value.trim().isEmpty())
+    {
+      return items;
+    }
+    int depth = 0;
+    char quote = 0;
+    int start = 0;
+    for (int i = 0; i < value.length(); i++)
+    {
+      char c = value.charAt(i);
+      if (quote != 0)
+      {
+        if (c == '\\')
+        {
+          i++;
+        }
+        else if (c == quote)
+        {
+          quote = 0;
+        }
+      }
+      else if (c == '"' || c == '\'')
+      {
+        quote = c;
+      }
+      else if (c == '(' || c == '[' || c == '{')
+      {
+        depth++;
+      }
+      else if (c == ')' || c == ']' || c == '}')
+      {
+        depth--;
+      }
+      else if (c == ',' && depth == 0)
+      {
+        items.add(value.substring(start, i).trim());
+        start = i + 1;
+      }
+    }
+    items.add(value.substring(start).trim());
+    return items;
+  }
+
+  public boolean hasLiteralItems(Attribute av)
+  {
+    for (String item : listItems(av.getValue()))
+    {
+      if (literal(av.getType(), item) == null)
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private String literalList(Attribute av)
+  {
+    List<String> items = new ArrayList<String>();
+    for (String item : listItems(av.getValue()))
+    {
+      items.add(literal(av.getType(), item));
+    }
+    return "[" + String.join(", ", items) + "]";
+  }
+
+  // The model comments of an element as a docstring at the given indentation, starting on a new
+  // line, or "" when there are none. Annotations such as @Override are Java-only and left out.
+  public String docstring(List<Comment> comments, String indent)
+  {
+    List<String> lines = new ArrayList<String>();
+    for (Comment comment : comments)
+    {
+      if (!comment.getAnnotation())
+      {
+        for (String line : comment.getText().split("\\r?\\n", -1))
+        {
+          lines.add(line.replace("\\", "\\\\").replace("\"", "\\\""));
+        }
+      }
+    }
+    while (!lines.isEmpty() && lines.get(lines.size() - 1).trim().isEmpty())
+    {
+      lines.remove(lines.size() - 1);
+    }
+    if (lines.isEmpty())
+    {
+      return "";
+    }
+    if (lines.size() == 1)
+    {
+      return "\n" + indent + "\"\"\"" + lines.get(0).trim() + "\"\"\"";
+    }
+    StringBuilder text = new StringBuilder("\n" + indent + "\"\"\"");
+    for (String line : lines)
+    {
+      text.append("\n").append(line.trim().isEmpty() ? "" : indent + line.trim());
+    }
+    return text.append("\n").append(indent).append("\"\"\"").toString();
+  }
+
+  //------------------------
+  // Imports and bases
+  //------------------------
+
+  public void addModuleImport(String line)
+  {
+    if (line != null)
+    {
+      moduleImports.add(line);
+    }
+  }
+
+  // The name generated code uses for a standard-library module (member null) or one of its members,
+  // imported at module level. When the module defines the same name itself (a class named datetime,
+  // an enumeration named Enum) the import gets an alias, so neither hides the other.
+  public String standardName(String module, String member)
+  {
+    String alias = standardAlias(member == null ? module : member);
+    moduleImports.add(standardImport(module, member, alias));
+    return alias;
+  }
+
+  // The name standardName binds a standard module or member to, without importing it
+  public String standardAlias(String name)
+  {
+    String alias = name;
+    while (moduleNames.contains(alias))
+    {
+      alias += "_";
+    }
+    return alias;
+  }
+
+  // The import line binding a standard module (member null) or one of its members to alias
+  public static String standardImport(String module, String member, String alias)
+  {
+    String line = member == null ? "import " + module : "from " + module + " import " + member;
+    return alias.equals(member == null ? module : member) ? line : line + " as " + alias;
+  }
+
+  // The names a generated module binds outside functions: the classifier, and for classes their
+  // nested classes and enumerations and their class-level members.
+  private Set<String> namesDefinedIn(UmpleElement element)
+  {
+    Set<String> names = new HashSet<String>();
+    names.add(element.getName());
+    if (element instanceof UmpleClassifier)
+    {
+      for (Constant aConstant : ((UmpleClassifier) element).getConstants())
+      {
+        names.add(aConstant.getName());
+      }
+    }
+    if (element instanceof UmpleClass)
+    {
+      addClassBodyNames((UmpleClass) element, names);
+    }
+    return names;
+  }
+
+  private void addClassBodyNames(UmpleClass uClass, Set<String> names)
+  {
+    names.add(uClass.getName());
+    for (UmpleEnumeration anEnum : uClass.getEnums())
+    {
+      names.add(StringFormatter.toPascalCase(anEnum.getName()));
+    }
+    for (UmpleEnumeration anEnum : getModel().getEnums())
+    {
+      names.add(StringFormatter.toPascalCase(anEnum.getName()));
+    }
+    for (StateMachine sm : uClass.getStateMachines())
+    {
+      addStateMachineNames(sm, names);
+    }
+    for (Attribute av : attributes(uClass))
+    {
+      if (av.isConstant())
+      {
+        names.add(av.getName());
+      }
+      else if (av.getIsAutounique())
+      {
+        names.add("next" + av.getUpperCaseName());
+      }
+      else if (av.getIsUnique())
+      {
+        names.add(uniqueMap(uClass, av));
+      }
+    }
+    for (UmpleClass inner : uClass.getInnerClasses())
+    {
+      addClassBodyNames(inner, names);
+    }
+  }
+
+  private void addStateMachineNames(StateMachine sm, Set<String> names)
+  {
+    names.add(translate("type", sm));
+    for (StateMachine nested : sm.getNestedStateMachines())
+    {
+      addStateMachineNames(nested, names);
+    }
+  }
+
+  // How a method of uClass names a model class, and the line that makes the name available inside the
+  // method (null when none is needed). A nested class lives in the module of its outermost class. When
+  // one of the method's local names hides that class, it is bound under another name: imported from
+  // another module, or taken from this module's globals (importing the module a script runs as would
+  // load a second copy of its classes).
+  public String[] classUse(UmpleClass uClass, String className, String localNames)
+  {
+    UmpleClassifier target = getModel().getUmpleClass(className);
+    if (target == null)
+    {
+      target = getModel().getUmpleInterface(className);
+    }
+    if (target == uClass)
+    {
+      return new String[] { DECLARING_CLASS, null };
+    }
+    UmpleClassifier module = target instanceof UmpleClass ? outermost((UmpleClass) target) : target;
+    String reference = target instanceof UmpleClass ? classReference((UmpleClass) target) : target.getName();
+    boolean sameModule = module == outermost(uClass);
+    List<String> taken = Arrays.asList(localNames.replace("*", "").split(",\\s*"));
+    if (sameModule && !taken.contains(module.getName()))
+    {
+      return new String[] { reference, null };
+    }
+    // An import must not hide this module's own outer class, which the method may name, nor the
+    // globals() the same-module binding calls.
+    String ownModule = outermost(uClass).getName();
+    String alias = module.getName();
+    while (taken.contains(alias) || (!sameModule && alias.equals(ownModule)) || alias.equals("globals"))
+    {
+      alias += "_";
+    }
+    String line = sameModule ? alias + " = globals()[" + pythonString(module.getName()) + "]"
+      : importOf(module) + (alias.equals(module.getName()) ? "" : " as " + alias);
+    return new String[] { alias + reference.substring(module.getName().length()), line };
+  }
+
+  // The import statement for another model class, resolved through that class's own namespace.
+  public String importOf(String className)
+  {
+    UmpleClassifier target = getModel().getUmpleClass(className);
+    if (target == null)
+    {
+      target = getModel().getUmpleInterface(className);
+    }
+    return target == null ? "from " + className + " import " + className : importOf(target);
+  }
+
+  // Built-in classes an external class may name; they are available without an import.
+  private static final List<String> BUILTIN_CLASSES = Arrays.asList("object", "BaseException", "Exception", "RuntimeError",
+    "ValueError", "TypeError", "KeyError", "IndexError", "LookupError", "ArithmeticError", "OSError", "dict", "list",
+    "set", "tuple", "str", "int", "float");
+
+  // The import of a base class or interface, or null when there is nothing to import. An external
+  // class is not generated: a Python built-in (such as Exception) needs no import, anything else is
+  // expected as a module of its namespace, as generated classes are.
+  private String baseImport(UmpleClassifier base)
+  {
+    return "external".equals(base.getModifier()) && BUILTIN_CLASSES.contains(base.getName()) ? null : importOf(base);
+  }
+
+  // The same for a known classifier; names alone can be ambiguous (a nested class and an interface
+  // in another package may share one).
+  public String importOf(UmpleClassifier target)
+  {
+    String name = target.getName();
+    String module = target.getPackageName().length() == 0 ? name : target.getPackageName() + "." + name;
+    return "from " + module + " import " + name;
+  }
+
+  // Module-level imports gathered so far, each on its own line after a blank line, or nothing.
+  public String moduleImports()
+  {
+    StringBuilder text = new StringBuilder();
+    for (String line : moduleImports)
+    {
+      text.append("\n").append(line);
+    }
+    return text.length() == 0 ? "" : "\n" + text.toString().substring(1) + "\n";
+  }
+
+  // Template text ends its lines with the platform's separator, the generator's own code with "\n":
+  // Python output uses "\n" on every platform.
+  private static void unixLines(StringBuilder code)
+  {
+    if (code.indexOf("\r\n") >= 0)
+    {
+      String text = code.toString().replace("\r\n", "\n");
+      code.setLength(0);
+      code.append(text);
+    }
+  }
+
+  // Completes a generated module: puts the collected imports where the placeholder is, starts the
+  // class body right after the class line, gives an empty body a pass statement, and ends the file
+  // with exactly one newline.
+  public void finishClass(StringBuilder code, String placeholder)
+  {
+    unixLines(code);
+    int at = placeholder == null ? -1 : code.indexOf(placeholder);
+    if (at >= 0)
+    {
+      code.replace(at, at + placeholder.length(), moduleImports());
+    }
+    int classLine = code.indexOf("class ") == 0 ? 0 : code.indexOf("\nclass ");
+    int bodyStart = classLine < 0 ? -1 : code.indexOf(":\n\n", classLine);
+    if (bodyStart >= 0 && code.indexOf("\n", classLine + 1) == bodyStart + 1)
+    {
+      code.deleteCharAt(bodyStart + 1);
+    }
+    while (code.length() > 0 && Character.isWhitespace(code.charAt(code.length() - 1)))
+    {
+      code.setLength(code.length() - 1);
+    }
+    if (code.charAt(code.length() - 1) == ':')
+    {
+      code.append("\n    pass");
+    }
+    code.append("\n");
+  }
+
+  // The base list of a class: its superclass, then interfaces not already provided by another base,
+  // then ABC last when the class is abstract and no base already is.
+  private String bases(UmpleClass aClass)
+  {
+    List<String> bases = new ArrayList<String>();
+    UmpleClass parent = aClass.getExtendsClass();
+    if (parent != null && parent.hasOuterClass() && parent.getOuterClass() == aClass.getOuterClass())
+    {
+      bases.add(parent.getName()); // a sibling, which innerClasses places first
+    }
+    else if (parent != null && parent.hasOuterClass())
+    {
+      bases.add(classReference(parent));
+      addModuleImport(importOf(outermost(parent)));
+    }
+    else if (parent != null)
+    {
+      bases.add(parent.getName());
+      addModuleImport(baseImport(parent));
+    }
+    for (UmpleInterface anInterface : aClass.getParentInterface())
+    {
+      if (!isProvidedBy(anInterface, aClass))
+      {
+        bases.add(anInterface.getName());
+        addModuleImport(baseImport(anInterface));
+      }
+    }
+    boolean baseProvidesAbc = (parent != null && providesAbc(parent)) || bases.size() > (parent == null ? 0 : 1);
+    if (aClass.getIsAbstract() && !baseProvidesAbc)
+    {
+      bases.add(standardName("abc", "ABC"));
+    }
+    return bases.isEmpty() ? "" : "(" + String.join(", ", bases) + ")";
+  }
+
+  // Nested classes in declaration order, except that a sibling base comes before the classes that
+  // extend it: Python runs the class statements in order, and a base must exist when it is named.
+  public List<UmpleClass> innerClasses(UmpleClass uClass)
+  {
+    List<UmpleClass> ordered = new ArrayList<UmpleClass>();
+    for (UmpleClass inner : uClass.getInnerClasses())
+    {
+      addAfterSiblingBase(inner, ordered);
+    }
+    return ordered;
+  }
+
+  private static void addAfterSiblingBase(UmpleClass inner, List<UmpleClass> ordered)
+  {
+    if (ordered.contains(inner))
+    {
+      return;
+    }
+    UmpleClass parent = inner.getExtendsClass();
+    if (parent != null && parent.getOuterClass() != null && parent.getOuterClass() == inner.getOuterClass())
+    {
+      addAfterSiblingBase(parent, ordered);
+    }
+    ordered.add(inner);
+  }
+
+  public static UmpleClass outermost(UmpleClass aClass)
+  {
+    return aClass.getOuterClass() == null ? aClass : outermost(aClass.getOuterClass());
+  }
+
+  // True when the generated class already derives from ABC: it is abstract, implements an
+  // interface (interfaces are generated as ABCs), or inherits from such a class.
+  private static boolean providesAbc(UmpleClass aClass)
+  {
+    return aClass.getIsAbstract() || aClass.hasParentInterface()
+      || (aClass.getExtendsClass() != null && providesAbc(aClass.getExtendsClass()));
+  }
+
+  // True when another direct base of aClass already provides the interface.
+  private boolean isProvidedBy(UmpleInterface anInterface, UmpleClass aClass)
+  {
+    for (UmpleInterface other : aClass.getParentInterface())
+    {
+      if (other != anInterface && extendsInterface(other, anInterface))
+      {
+        return true;
+      }
+    }
+    return aClass.getExtendsClass() != null && implementsInterface(aClass.getExtendsClass(), anInterface);
+  }
+
+  // The parent interfaces an interface lists as bases: those not already inherited through another.
+  public List<String> interfaceBases(UmpleInterface anInterface)
+  {
+    List<String> bases = new ArrayList<String>();
+    for (UmpleInterface parent : anInterface.getExtendsInterface())
+    {
+      boolean provided = false;
+      for (UmpleInterface other : anInterface.getExtendsInterface())
+      {
+        provided = provided || (other != parent && extendsInterface(other, parent));
+      }
+      if (!provided)
+      {
+        bases.add(parent.getName());
+        addModuleImport(baseImport(parent));
+      }
+    }
+    return bases;
+  }
+
+  private static boolean extendsInterface(UmpleInterface child, UmpleInterface ancestor)
+  {
+    for (UmpleInterface parent : child.getExtendsInterface())
+    {
+      if (parent == ancestor || extendsInterface(parent, ancestor))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static boolean implementsInterface(UmpleClass aClass, UmpleInterface anInterface)
+  {
+    for (UmpleInterface implemented : aClass.getParentInterface())
+    {
+      if (implemented == anInterface || extendsInterface(implemented, anInterface))
+      {
+        return true;
+      }
+    }
+    return aClass.getExtendsClass() != null && implementsInterface(aClass.getExtendsClass(), anInterface);
+  }
+}
+
+use Generator_CodePythonNextCode.ump;
+use Generator_CodePythonNextSnippet.ump;
+use Generator_CodePythonNextAssociations.ump;
+use Generator_CodePythonNextStateMachines.ump;

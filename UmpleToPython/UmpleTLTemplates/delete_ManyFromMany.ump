@@ -1,9 +1,0 @@
-class UmpleToPython {
-    // delete, for a many end whose other end is many without a lower bound: every linked object is
-    // told to drop this one.
-    delete_ManyFromMany <<!<</*delete_ManyFromMany*/>>
-        <<=gen.translate("parameterCopyOfMany", av)>> = tuple(<<=field>>)
-        <<=field>>.clear()
-        for <<=parameter>> in <<=gen.translate("parameterCopyOfMany", av)>>:
-            <<=parameter>>.<<=gen.relatedTranslate("removeMethod", av)>>(self)!>>
-}

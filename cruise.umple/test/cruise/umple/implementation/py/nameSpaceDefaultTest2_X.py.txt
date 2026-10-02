@@ -3,73 +3,105 @@
 
 from J import J
 
-
 class X(J):
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
+        self._ies = None
         self._ies = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetMany 
     def getY(self, index):
-        return self._ies[index]
+        aY = self._ies[index]
+        return aY
 
     def getIes(self):
-        return tuple(self._ies)
+        newIes = tuple(self._ies)
+        return newIes
 
     def numberOfIes(self):
-        return len(self._ies)
+        number = len(self._ies)
+        return number
 
     def hasIes(self):
-        return len(self._ies) > 0
+        has = len(self._ies) > 0
+        return has
 
     def indexOfY(self, aY):
-        return next((i for i, x in enumerate(self._ies) if x is aY), -1)
+        index = (-1 if not aY in self._ies else self._ies.index(aY))
+        return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfIes():
         return 0
 
+    # Code from template association_AddManyToManyMethod 
     def addY(self, aY):
-        if any(x is aY for x in self._ies):
+        wasAdded = False
+        if (aY) in self._ies :
             return False
         self._ies.append(aY)
-        if aY.indexOfX(self) == -1 and not aY.addX(self):
-            del self._ies[next((i for i, x in enumerate(self._ies) if x is aY), -1)]
-            return False
-        return True
+        if aY.indexOfX(self) != -1 :
+            wasAdded = True
+        else :
+            wasAdded = aY.addX(self)
+            if not wasAdded :
+                self._ies.remove(aY)
+        return wasAdded
 
+    # Code from template association_RemoveMany 
     def removeY(self, aY):
-        oldIndex = next((i for i, x in enumerate(self._ies) if x is aY), -1)
-        if oldIndex == -1:
-            return False
-        del self._ies[oldIndex]
-        if aY.indexOfX(self) != -1 and not aY.removeX(self):
-            self._ies.insert(oldIndex, aY)
-            return False
-        return True
+        wasRemoved = False
+        if not (aY) in self._ies :
+            return wasRemoved
+        oldIndex = (-1 if not aY in self._ies else self._ies.index(aY))
+        self._ies.remove(oldIndex)
+        if aY.indexOfX(self) == -1 :
+            wasRemoved = True
+        else :
+            wasRemoved = aY.removeX(self)
+            if not wasRemoved :
+                self._ies.insert(oldIndex, aY)
+        return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addYAt(self, aY, index):
-        if not self.addY(aY):
-            return False
-        if index < 0:
-            index = 0
-        if index > self.numberOfIes():
-            index = self.numberOfIes() - 1
-        del self._ies[next((i for i, x in enumerate(self._ies) if x is aY), -1)]
-        self._ies.insert(index, aY)
-        return True
+        wasAdded = False
+        if self.addY(aY) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfIes() :
+                index = self.numberOfIes() - 1
+            self._ies.remove(aY)
+            self._ies.insert(index, aY)
+            wasAdded = True
+        return wasAdded
 
     def addOrMoveYAt(self, aY, index):
-        if not any(x is aY for x in self._ies):
-            return self.addYAt(aY, index)
-        if index < 0:
-            index = 0
-        if index > self.numberOfIes():
-            index = self.numberOfIes() - 1
-        del self._ies[next((i for i, x in enumerate(self._ies) if x is aY), -1)]
-        self._ies.insert(index, aY)
-        return True
+        wasAdded = False
+        if (aY) in self._ies :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfIes() :
+                index = self.numberOfIes() - 1
+            self._ies.remove(aY)
+            self._ies.insert(index, aY)
+            wasAdded = True
+        else :
+            wasAdded = self.addYAt(aY, index)
+        return wasAdded
 
     def delete(self):
-        copyOfIes = tuple(self._ies)
+        copyOfIes = self._ies.copy()
         self._ies.clear()
         for aY in copyOfIes:
             aY.removeX(self)

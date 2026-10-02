@@ -1,6 +1,0 @@
-class UmpleToPython {
-    // A mandatory one end given to the constructor is linked through its setter, which may refuse.
-    constructor_AssociationAssignOne <<!<</*constructor_AssociationAssignOne*/>>
-        if not self.<<=gen.translate("setMethod", av)>>(<<=parameter>>):
-            raise RuntimeError(<<=gen.pythonString("Unable to create " + gen.relatedTranslate("associationOne", av) + " due to " + gen.translate("associationOne", av) + ". See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")>>)!>>
-}
