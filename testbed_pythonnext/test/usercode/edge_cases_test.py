@@ -11,7 +11,7 @@ from ImportModules import importModules
 
 importModules(["LoudGreeter", "Checks", "AlwaysEqual", "Pair", "CountedChild", "ContractCalls", "ContractCallsChild",
                "KeyedPart", "PartBox", "PartBoxPair", "BoxedNull", "TextualSetter", "TextualStr", "LabelCrate",
-               "CrateItem", "CountingTagged", "DependMaker", "ImplicitUser", "PickOverride", "PickWider", "ScopedUser", "ValueOwner", "LiteralOwner", "ValueFirst", "ValueSecond", "ValueNaming", "LazyOrder", "LazyReceiver", "LazyGuard", "LazyCycle", "LazyOnce", "LazyChain",
+               "CrateItem", "CountingTagged", "DependMaker", "ImplicitUser", "PickOverride", "PickWider", "ScopedUser", "ValueOwner", "LiteralOwner", "ValueFirst", "ValueSecond", "ValueNaming", "LazyOrder", "LazyReceiver", "LazyGuard", "LazyCycle", "LazyOnce", "LazyChain", "LazyWalk",
                "ValueDerived", "EventChild",
                "VarargsChild", "TypedChecks"], ["usercode", "test"])
 from ImportModules import *
@@ -204,6 +204,16 @@ class EdgeCasesTest(unittest.TestCase):
             reader.join(5)
         self.assertFalse(any(reader.is_alive() for reader in readers))
         self.assertEqual(2, len(errors))
+        # a reader outside a cycle of other threads stops following it, and waits for them to report it
+        a, b = LazyWalk.LazyWalk.__dict__["A"], LazyWalk.LazyWalk.__dict__["B"]
+        first, second = threading.Thread(), threading.Thread()
+        a._computer, b._computer = first, second
+        first.classValueWanted, second.classValueWanted = b, a
+        try:
+            self.assertFalse(a._waitsFor(threading.current_thread()))
+        finally:
+            a._computer = b._computer = None
+        self.assertEqual((1, 1), (LazyWalk.LazyWalk.A, LazyWalk.LazyWalk.B))
         self.assertTrue(all("is needed to compute itself" in error for error in errors), errors)
 
     def test_inheritedEventsAndVarargsCompete(self):

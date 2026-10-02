@@ -27,12 +27,15 @@ class PythonNextGenerator
   public JavaGenerator names = new JavaGenerator();
 
   // Standard modules a class module or top-level package must not be named after: those generated
-  // code imports, directly or through the standard library, those built into the interpreter, and
-  // those Python loads at startup, which an import would find instead.
+  // code imports, directly or through the standard library, those built into the interpreter (as
+  // Python 3.9 to 3.12 list them, with Windows' own), and those Python loads at startup, which an
+  // import would find instead.
   private static final List<String> STANDARD_MODULES = Arrays.asList("abc", "enum", "threading", "datetime", "sys",
     "math", "fractions", "random", "time", "decimal", "numbers", "bisect", "heapq", "warnings", "sre_compile", "sre_constants",
     "sre_parse", "builtins", "atexit", "errno", "faulthandler", "gc", "itertools", "marshal", "posix", "pwd", "xxsubtype", "nt",
-    "winreg", "msvcrt", "codecs", "collections", "copyreg", "encodings", "functools", "genericpath", "io", "keyword",
+    "winreg", "msvcrt", "_abc", "_ast", "_codecs", "_collections", "_functools", "_imp", "_io", "_locale", "_operator", "_peg_parser",
+    "_signal", "_sre", "_stat", "_string", "_symtable", "_thread", "_tokenize", "_tracemalloc", "_typing", "_warnings", "_weakref",
+    "_winapi", "codecs", "collections", "copyreg", "encodings", "functools", "genericpath", "io", "keyword",
     "ntpath", "operator", "os", "posixpath", "re", "reprlib", "site", "stat", "types", "zipimport");
 
   // Built-ins the generated code uses. A class with one of these names would hide it in its own

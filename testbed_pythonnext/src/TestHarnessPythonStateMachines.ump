@@ -1035,6 +1035,31 @@ class SmLifecycleTraitBilingual {
 }
 
 trait SmLifecycleContinuedCounting { sm { S { entry / Python { self.setLog(self.getLog() + "trait;") } } } }
+class SmLifecycleTraitAnnotation {
+  isA SmLifecycleContinuedCounting;
+  String log = "";
+  sm { S { entry / Python {
+    case = {}
+    case[0]: int; superCall; self.setLog(self.getLog() + "class;")
+  } } }
+}
+
+trait SmLifecycleUntaggedBase { sm { S { entry / { log = log + "base;"; } } } }
+trait SmLifecycleUntaggedMiddle { isA SmLifecycleUntaggedBase; sm { S { entry / { superCall; log = log + "middle;"; } } } }
+class SmLifecycleTraitUntaggedChain {
+  isA SmLifecycleUntaggedMiddle;
+  String log = "";
+  sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+class SmLifecycleTraitStringHeader {
+  isA SmLifecycleContinuedCounting;
+  String log = "";
+  sm { S { entry / Python {
+    if """one
+two""": superCall; self.setLog(self.getLog() + "class;")
+  } } }
+}
 class SmLifecycleTraitContinued {
   isA SmLifecycleContinuedCounting;
   String log = "";

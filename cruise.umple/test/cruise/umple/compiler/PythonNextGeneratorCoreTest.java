@@ -178,6 +178,11 @@ public class PythonNextGeneratorCoreTest
     {
       Assert.assertEquals(builtIn, Arrays.asList(9213), errorCodes(generate("class " + builtIn + " { }\n")));
     }
+    for (String builtIn : Arrays.asList("_thread", "_abc", "builtins"))
+    {
+      Assert.assertEquals(builtIn, Arrays.asList(9213), errorCodes(generate("namespace " + builtIn + ";\nclass A { }\n")));
+      Assert.assertEquals(builtIn, new ArrayList<Integer>(), errorCodes(generate("namespace app." + builtIn + ";\nclass A { }\n")));
+    }
     UmpleModel anInterface = generate("interface math { }\n");
     Assert.assertTrue(messageOf(anInterface, 9213), messageOf(anInterface, 9213).startsWith("Interface math conflicts"));
     // A namespace's first part is resolved first: sys.Main could not be imported

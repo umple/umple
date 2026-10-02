@@ -75,7 +75,10 @@ mixset Trait {
       // code without a Python version already carries the guard in its own syntax (Action.wrapInGuard)
       String placeholder = cBlock.codes.get("Python") == null ? PythonSource.placeholder("trait_code") : null;
       if (placeholder != null) {
-        pythonTraitBlocks.put(placeholder, cBlock);
+        // without the markers its own composition left, as the class's code loses them later
+        CodeBlock slot = new CodeBlock(cBlock);
+        slot.removeKeyword(keyword);
+        pythonTraitBlocks.put(placeholder, slot);
       }
       String condition = guard == null || placeholder != null ? null : PythonSource.placeholder("trait_guard");
       if (condition != null) {

@@ -361,6 +361,9 @@ public class PythonNextUserCodeTest
     }
     // outside a match statement, case is a name: case[Item]: int annotates a subscript
     Assert.assertFalse(cruise.umple.util.PythonSource.boundNames("case = {}\ncase[Item]: int").contains("Item"));
+    Assert.assertFalse(cruise.umple.util.PythonSource.boundNames("case = {}\ncase[Item]: \"int\"").contains("Item"));
+    // a line break inside a string does not end the match statement's header
+    Assert.assertTrue(cruise.umple.util.PythonSource.boundNames("match \"\"\"one\ntwo\"\"\":\n    case Item: pass").contains("Item"));
   }
 
   // A trait's code goes where superCall stands once that statement has a line of its own, also after
@@ -372,6 +375,11 @@ public class PythonNextUserCodeTest
     Assert.assertEquals("if (\n    True\n):\n    superCall;\n    x()\ny()",
       cruise.umple.util.PythonSource.ownLine(code, code.indexOf("superCall")));
     Assert.assertEquals("a()", cruise.umple.util.PythonSource.ownLine("a()", 0));
+    String withString = "if \"\"\"one\ntwo\"\"\": superCall; x()";
+    Assert.assertEquals("if \"\"\"one\ntwo\"\"\":\n    superCall;\n    x()", cruise.umple.util.PythonSource.ownLine(withString, withString.indexOf("superCall")));
+    // an annotation's colon is no header's, outside a match statement's cases
+    String annotated = "case = {}\ncase[0]: int; superCall; x()";
+    Assert.assertEquals("case = {}\ncase[0]: int;\nsuperCall;\nx()", cruise.umple.util.PythonSource.ownLine(annotated, annotated.indexOf("superCall")));
     String withLambda = "if lambda: True: superCall; x()";
     Assert.assertEquals("if lambda: True:\n    superCall;\n    x()", cruise.umple.util.PythonSource.ownLine(withLambda, withLambda.indexOf("superCall")));
     Assert.assertEquals("x = \"__t__\"\ny(1)", cruise.umple.util.PythonSource.replaceCode("x = \"__t__\"\ny(__t__)", "__t__", "1"));

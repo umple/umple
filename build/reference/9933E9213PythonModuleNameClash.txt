@@ -6,7 +6,7 @@ noreferences
 
 <h2>A class or namespace is named like a standard Python module</h2>
 
-<p>Each class becomes a Python module named after its namespace and class, and Python resolves the first part of that name before anything else. When that part is a standard module the generated code uses (abc, enum, threading, datetime, sys, math, fractions, random, time) or one Python loads at startup (such as os, io, re, site and types), the model's module would hide the standard one or could not be imported. PythonNext reports the class or interface and does not generate it.</p>
+<p>Each class becomes a Python module named after its namespace and class, and Python resolves the first part of that name before anything else. When that part is a standard module the generated code uses (abc, enum, threading, datetime, sys, math, fractions, random, time, and those they load), one built into the interpreter (such as builtins, gc, itertools and _thread) or one Python loads at startup (such as os, io, re, site and types), the model's module would hide the standard one or could not be imported. PythonNext reports the class or interface and does not generate it.</p>
 
 <p>Rename the class, or use a namespace whose first part is not a standard module name (<code>app.sys</code> is fine).</p>
 

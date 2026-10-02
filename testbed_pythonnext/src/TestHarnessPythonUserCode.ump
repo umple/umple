@@ -735,6 +735,14 @@ class LazyCycle
   }
 }
 
+// Values whose computers wait on each other, for a reader outside their cycle
+class LazyWalk
+{
+  const Integer A = one();
+  const Integer B = one();
+  public static int one() Python { return 1 }
+}
+
 // Threads reading a value at once compute it once
 class LazyOnce
 {
