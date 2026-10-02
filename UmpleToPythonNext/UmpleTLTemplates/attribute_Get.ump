@@ -32,10 +32,11 @@ class UmpleToPythonNext {
         return <<=parameter>><<#
     }
   }
-  if (av.getIsUnique())
+  if (av.getIsUnique() || av.getIsAutounique())
   {
     String registry = "__class__." + gen.uniqueMap(uClass, av);
-    // As in Java, the has-query asks the get-query, whose injections then run too
+    // As in Java, the has-query asks the get-query, whose injections then run too. An autounique key
+    // gets the same queries (issue 2165).
     MethodParameter key = gen.parameter(parameter, av.getType());
     #>>
 

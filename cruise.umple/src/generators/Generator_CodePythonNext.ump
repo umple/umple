@@ -38,7 +38,7 @@ class PythonNextGenerator
   // module and in every function that imports the class.
   private static final List<String> BUILTINS = Arrays.asList("abs", "all", "any", "bool", "globals", "enumerate", "float", "format", "hash", "id", "int",
     "isinstance", "len", "list", "max", "min", "next", "print", "range", "set", "str", "super", "tuple", "type", "classmethod",
-    "staticmethod", "NotImplemented", "BaseException", "RuntimeError", "TypeError");
+    "staticmethod", "NotImplemented", "BaseException", "RuntimeError", "TypeError", "ValueError", "OverflowError", "getattr", "setattr");
 
   // Index of the current class's first diagnostic, for report()'s deduplication; -1 outside generation.
   private int firstMessageOfClass = -1;
@@ -1160,6 +1160,28 @@ class PythonNextGenerator
     return literal != null ? literal : computedValue(uClass, aConstant.getName(), aConstant.getType(), aConstant.getValue(), false, null);
   }
 
+  // Whether reading a constant may compute it and so run model code; a literal is a plain class
+  // attribute
+  public boolean isComputedConstant(UmpleClassifier classifier, String name)
+  {
+    for (UmpleClass c = classifier instanceof UmpleClass ? (UmpleClass) classifier : null; c != null; c = c.getExtendsClass())
+    {
+      Attribute attribute = c.getAttribute(name);
+      if (attribute != null && attribute.isConstant())
+      {
+        return !(attribute.getIsList() ? hasLiteralItems(attribute) : literal(attribute.getType(), attribute.getValue()) != null);
+      }
+      for (Constant constant : c.getConstants())
+      {
+        if (constant.getName().equals(name))
+        {
+          return literal(constant.getType(), constant.getValue()) == null;
+        }
+      }
+    }
+    return false;
+  }
+
   // The imports the computed class values of a module need, by its outermost class
   private Map<UmpleClass, Set<String>> classValueImports = new HashMap<UmpleClass, Set<String>>();
 
@@ -1191,35 +1213,60 @@ class PythonNextGenerator
     return imports == null || imports.isEmpty() ? "" : "\n\n\n" + String.join("\n", imports);
   }
 
-  // The module-level class whose objects are computed class values: each computes its value when first
-  // read, under a lock, and puts it in place of itself. A value whose computation needs the value
-  // itself is an error that names it, rather than a value read too early.
+  // The module-level class whose objects are computed class values: each computes its value once, when
+  // first read, and puts it in place of itself. A thread that finds another computing it waits, unless
+  // that thread is itself waiting, directly or through others, for a value this one is computing: then
+  // waiting would never end, and the value is reported as needed to compute itself, as in a single
+  // thread. A failed computation lets the next reader try again.
   private String classValueHelper()
   {
     String threading = standardName("threading", null);
-    moduleDefinitions.add("class _ClassValue:"
-      + "\n    \"\"\"A class value computed when first read, so that it can use any class.\"\"\""
+    String helper = standardAlias("_ClassValue"); // not a constant's name, which the class body would see instead
+    moduleDefinitions.add("class " + helper + ":"
+      + "\n    \"\"\"A class value computed once, when first read, so that it can use any class.\"\"\""
       + "\n\n    def __init__(self, compute):"
       + "\n        self._compute = compute"
-      + "\n        self._lock = " + threading + ".RLock()"
-      + "\n        self._computing = False"
+      + "\n        self._condition = " + threading + ".Condition()"
+      + "\n        self._computer = None"
       + "\n\n    def __set_name__(self, owner, name):"
       + "\n        self._owner = owner"
       + "\n        self._name = name"
       + "\n\n    def __get__(self, instance, owner):"
-      + "\n        with self._lock:"
-      + "\n            if self._owner.__dict__[self._name] is not self:"
+      + "\n        me = " + threading + ".current_thread()"
+      + "\n        with self._condition:"
+      + "\n            while self._owner.__dict__[self._name] is self:"
+      + "\n                if self._computer is None:"
+      + "\n                    self._computer = me"
+      + "\n                    break"
+      + "\n                if self._waitsFor(me):"
+      + "\n                    raise RuntimeError(self._owner.__qualname__ + \".\" + self._name + \" is needed to compute itself\")"
+      + "\n                me.classValueWanted = self"
+      + "\n                try:"
+      + "\n                    self._condition.wait(0.05)"
+      + "\n                finally:"
+      + "\n                    me.classValueWanted = None"
+      + "\n            else:"
       + "\n                return self._owner.__dict__[self._name]"
-      + "\n            if self._computing:"
-      + "\n                raise RuntimeError(self._owner.__qualname__ + \".\" + self._name + \" is needed to compute itself\")"
-      + "\n            self._computing = True"
-      + "\n            try:"
-      + "\n                value = self._compute()"
-      + "\n            finally:"
-      + "\n                self._computing = False"
+      + "\n        try:"
+      + "\n            value = self._compute()"
+      + "\n        except BaseException:"
+      + "\n            with self._condition:"
+      + "\n                self._computer = None"
+      + "\n                self._condition.notify_all()"
+      + "\n            raise"
+      + "\n        with self._condition:"
       + "\n            setattr(self._owner, self._name, value)"
-      + "\n            return value");
-    return "_ClassValue";
+      + "\n            self._computer = None"
+      + "\n            self._condition.notify_all()"
+      + "\n        return value"
+      + "\n\n    def _waitsFor(self, me):"
+      + "\n        # whether the thread computing this value waits, directly or through others, for me"
+      + "\n        thread = self._computer"
+      + "\n        while thread is not None and thread is not me:"
+      + "\n            wanted = getattr(thread, \"classValueWanted\", None)"
+      + "\n            thread = wanted._computer if wanted is not None else None"
+      + "\n        return thread is me");
+    return helper;
   }
 
   // Only a literal is supported as an interface constant's value.
@@ -1779,6 +1826,7 @@ class PythonNextGenerator
       else if (av.getIsAutounique())
       {
         names.add("next" + av.getUpperCaseName());
+        names.add(uniqueMap(uClass, av));
       }
       else if (av.getIsUnique())
       {

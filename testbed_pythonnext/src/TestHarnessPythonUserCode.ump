@@ -646,6 +646,85 @@ class LiteralOwner
   }
 }
 
+// A computed constant runs model code on its first read, so that read keeps its place in the order:
+// before what follows it in an expression, through a receiver of a static call, and in a guard,
+// which then sees a deletion
+class LazyOrder
+{
+  const Integer N = fail();
+  Integer count = 0;
+  public static int fail() Python { raise ValueError("first") }
+  sm { S { go / { count = N + (count++); } -> T; } T { } }
+}
+
+class LazyReceiver
+{
+  const LazyHelper REF = make();
+  Integer n = 0;
+  public static LazyHelper make() Python {
+    print("created")
+    return LazyHelper()
+  }
+  sm { S { go / { n = REF.value(); } -> T; } T { } }
+}
+
+class LazyHelper
+{
+  public static int value() Python { return 5 }
+}
+
+class LazyGuard
+{
+  singleton;
+  const Boolean ALLOW = drop();
+  public static boolean drop() Python {
+    LazyGuard.getInstance().delete()
+    return True
+  }
+  sm { S { go [ALLOW] -> T; } T { } }
+}
+
+// Two threads reading two values that need each other both hear of the cycle
+class LazyCycle
+{
+  const Integer X = left();
+  const Integer Y = right();
+  public static int left() Python {
+    import time
+    time.sleep(0.1)
+    return LazyCycle.Y
+  }
+  public static int right() Python {
+    import time
+    time.sleep(0.1)
+    return LazyCycle.X
+  }
+}
+
+// Threads reading a value at once compute it once
+class LazyOnce
+{
+  const Integer ONE = count();
+  public static int count() Python {
+    import time
+    LazyOnce.computations = getattr(LazyOnce, "computations", 0) + 1
+    time.sleep(0.05)
+    return 1
+  }
+}
+
+// A constant may have the name the generated code gives its class-value helper
+class ValueNaming
+{
+  const Integer _ClassValue = 3;
+  const Integer LIMIT = ValueInnerSeed.five();
+}
+
+class ValueInnerSeed
+{
+  public static int five() Python { return 5 }
+}
+
 class ValueFirst
 {
   const Integer FIRST = start();

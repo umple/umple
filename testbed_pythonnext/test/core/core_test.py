@@ -209,6 +209,10 @@ class CoreTest(unittest.TestCase):
         self.assertEqual((1, 2), (first.getId(), second.getId()))
         self.assertIs(second, aTitle.aTitle.getWithCode(2))
         self.assertFalse(first.setCode(2))
+        # an autounique key has the unique lookups too (issue 2165)
+        self.assertIs(first, aTitle.aTitle.getWithId(first.getId()))
+        first.delete()
+        self.assertEqual((False, True), (aTitle.aTitle.hasWithId(first.getId()), aTitle.aTitle.hasWithId(second.getId())))
 
     def test_overloadsOnClassesNamedLikeDispatcherLocalsAndOnTheClassItself(self):
         user = OvUser.OvUser()

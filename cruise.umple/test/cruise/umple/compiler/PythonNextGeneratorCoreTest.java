@@ -191,6 +191,11 @@ public class PythonNextGeneratorCoreTest
     Assert.assertEquals(Arrays.asList(9215), errorCodes(generate("namespace n;\nclass globals { }\n")));
     // The overload dispatcher calls all() for variable arguments
     Assert.assertEquals(Arrays.asList(9215), errorCodes(generate("namespace n;\nclass all { }\n")));
+    // Built-ins of the generated helpers: class values, Math functions, queue workers
+    for (String helperName : Arrays.asList("setattr", "getattr", "ValueError", "OverflowError", "abs", "max"))
+    {
+      Assert.assertEquals(helperName, Arrays.asList(9215), errorCodes(generate("namespace n;\nclass " + helperName + " { }\n")));
+    }
   }
 
   @Test

@@ -1,3 +1,6 @@
+import contextlib
+import io
+import threading
 import unittest
 
 # Test classes are imported dynamically
@@ -6,7 +9,7 @@ from ImportModules import importModules
 
 importModules(["LoudGreeter", "Checks", "AlwaysEqual", "Pair", "CountedChild", "ContractCalls", "ContractCallsChild",
                "KeyedPart", "PartBox", "PartBoxPair", "BoxedNull", "TextualSetter", "TextualStr", "LabelCrate",
-               "CrateItem", "CountingTagged", "DependMaker", "ImplicitUser", "PickOverride", "PickWider", "ScopedUser", "ValueOwner", "LiteralOwner", "ValueFirst", "ValueSecond", "EventChild",
+               "CrateItem", "CountingTagged", "DependMaker", "ImplicitUser", "PickOverride", "PickWider", "ScopedUser", "ValueOwner", "LiteralOwner", "ValueFirst", "ValueSecond", "ValueNaming", "LazyOrder", "LazyReceiver", "LazyGuard", "LazyCycle", "LazyOnce", "EventChild",
                "VarargsChild", "TypedChecks"], ["usercode", "test"])
 from ImportModules import *
 
@@ -153,6 +156,44 @@ class EdgeCasesTest(unittest.TestCase):
             owner.PENDING
         self.assertEqual((6, 6), (LiteralOwner.LiteralOwner.N, LiteralOwner.LiteralOwner.LiteralInner.K))
         self.assertEqual((5, 5, 5), (ValueFirst.ValueFirst.FIRST, ValueFirst.ValueFirst.SECOND, ValueSecond.ValueSecond.VALUE))
+        self.assertEqual((5, 3), (ValueNaming.ValueNaming.LIMIT, ValueNaming.ValueNaming._ClassValue))
+
+    def test_computedConstantsKeepTheirPlaceInTheOrder(self):
+        order = LazyOrder.LazyOrder()
+        with self.assertRaises(ValueError):
+            order.go()
+        self.assertEqual(0, order.getCount())
+        printed = io.StringIO()
+        with contextlib.redirect_stdout(printed):
+            receiver = LazyReceiver.LazyReceiver()
+            receiver.go()
+        self.assertEqual(("created\n", 5), (printed.getvalue(), receiver.getN()))
+        guard = LazyGuard.LazyGuard.getInstance()
+        guard.go()
+        self.assertIs(LazyGuard.LazyGuard.Sm.S, guard.getSm())
+
+    def test_computedConstantsAreComputedOnceAndReportCyclesAcrossThreads(self):
+        threads = [threading.Thread(target=lambda: LazyOnce.LazyOnce.ONE) for _ in range(8)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join(5)
+        self.assertEqual((1, 1), (LazyOnce.LazyOnce.ONE, LazyOnce.LazyOnce.computations))
+        errors = []
+
+        def read(name):
+            try:
+                getattr(LazyCycle.LazyCycle, name)
+            except RuntimeError as e:
+                errors.append(str(e))
+        readers = [threading.Thread(target=read, args=(name,), daemon=True) for name in ("X", "Y")]
+        for reader in readers:
+            reader.start()
+        for reader in readers:
+            reader.join(5)
+        self.assertFalse(any(reader.is_alive() for reader in readers))
+        self.assertEqual(2, len(errors))
+        self.assertTrue(all("is needed to compute itself" in error for error in errors), errors)
 
     def test_inheritedEventsAndVarargsCompete(self):
         child = EventChild.EventChild()

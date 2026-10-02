@@ -352,10 +352,10 @@ public class PythonNextUserCodeTest
     }
     // a case pattern binds its captures, not its class patterns, values, keywords or guard
     java.util.Set<String> cases = cruise.umple.util.PythonSource.boundNames("match p:\n    case Point(x=0, y=Y1):\n        pass\n"
-      + "    case [A1, *Rest] if Limit.ok(A1):\n        pass\n    case Color.RED | {\"k\": V1}:\n        pass\n    case _ as Other:\n        pass\n"
-      + "case = 1");
-    Assert.assertTrue(cases.toString(), cases.containsAll(Arrays.asList("Y1", "A1", "Rest", "V1", "Other", "case")));
-    for (String name : Arrays.asList("Point", "x", "Limit", "Color", "RED", "k", "p", "_"))
+      + "    case Holder . Value1:\n        pass\n    case [A1, *Rest] if Limit.ok(A1):\n        pass\n    case Color.RED | {\"k\": V1}:\n        pass\n    case _ as Other:\n        pass\n"
+      + "case = 1\ncase(Called)\ncase[Indexed] = 2\nwith o as ((N1, N2), N3): pass");
+    Assert.assertTrue(cases.toString(), cases.containsAll(Arrays.asList("Y1", "A1", "Rest", "V1", "Other", "case", "N1", "N2", "N3")));
+    for (String name : Arrays.asList("Point", "x", "Limit", "Color", "RED", "k", "p", "_", "Holder", "Value1", "Called", "Indexed"))
     {
       Assert.assertFalse(name, cases.contains(name));
     }

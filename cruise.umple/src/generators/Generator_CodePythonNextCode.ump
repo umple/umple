@@ -309,7 +309,7 @@ class PythonNextGenerator
       Boolean otherIsStatic = staticByName.put(m.getName(), isStatic(m));
       if (otherIsStatic != null && otherIsStatic != isStatic(m))
       {
-        // One Python name cannot be both a static method and an instance method.
+        // This generator does not dispatch mixed static and instance methods under one name.
         errorAt(9210, m.getPosition(), "Overloads of " + m.getName() + " that mix static and instance methods", className);
       }
       if (m.getName().equals(className) && "".equals(m.getType()))
@@ -575,11 +575,12 @@ class PythonNextGenerator
   // The constant of an interface that the class or an ancestor implements with the given name, or null.
   private static Constant interfaceConstant(UmpleClass uClass, String name)
   {
+    Set<UmpleInterface> seen = new HashSet<UmpleInterface>();
     for (UmpleClass c = uClass; c != null; c = c.getExtendsClass())
     {
       for (UmpleInterface anInterface : c.getParentInterface())
       {
-        Constant constant = declaredConstant(anInterface, name);
+        Constant constant = declaredConstant(anInterface, name, seen);
         if (constant != null)
         {
           return constant;
@@ -591,6 +592,16 @@ class PythonNextGenerator
 
   private static Constant declaredConstant(UmpleInterface anInterface, String name)
   {
+    return declaredConstant(anInterface, name, new HashSet<UmpleInterface>());
+  }
+
+  // Visits each interface once per lookup, in declaration order: shared ancestors are not searched again
+  private static Constant declaredConstant(UmpleInterface anInterface, String name, Set<UmpleInterface> seen)
+  {
+    if (!seen.add(anInterface))
+    {
+      return null;
+    }
     for (Constant constant : anInterface.getConstants())
     {
       if (constant.getName().equals(name))
@@ -600,7 +611,7 @@ class PythonNextGenerator
     }
     for (UmpleInterface parent : anInterface.getExtendsInterface())
     {
-      Constant constant = declaredConstant(parent, name);
+      Constant constant = declaredConstant(parent, name, seen);
       if (constant != null)
       {
         return constant;
@@ -1581,7 +1592,34 @@ class PythonNextGenerator
     }
     if ("Python".equals(language))
     {
-      return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass);
+      // a guarded trait action composed with superCall: its guard, untagged code, becomes the condition
+      // of the if around its lines (CodeBlock.pythonTraitGuards)
+      String python = code.getCode(language);
+      StringBuilder imports = new StringBuilder();
+      for (Map.Entry<String, String> guard : code.getPythonTraitGuards().entrySet())
+      {
+        String condition = translateSnippetAt(guard.getValue(), uClass, parameters, isStatic, true, at, "the guard of " + slot);
+        if (condition == null)
+        {
+          return "";
+        }
+        python = python.replace(guard.getKey(), condition);
+        for (String line : getSnippetImports())
+        {
+          imports.append("\n").append(indent).append(line);
+        }
+      }
+      // trait code without a Python version, composed with superCall, is rendered as its own slot
+      for (Map.Entry<String, CodeBlock> part : code.getPythonTraitBlocks().entrySet())
+      {
+        Matcher line = Pattern.compile("(?m)^([ \t]*)" + Pattern.quote(part.getKey()) + "$").matcher(python);
+        if (line.find())
+        {
+          String body = slotCode(part.getValue(), uClass, parameters, isStatic, line.group(1), slot, at);
+          python = python.substring(0, line.start()) + (body.isEmpty() ? line.group(1) + "pass" : body.substring(1)) + python.substring(line.end());
+        }
+      }
+      return imports + functionCode(python, code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass);
     }
     String translated = translateSnippetAt(code.getCode(language), uClass, parameters, isStatic, false, at, slot);
     if (translated != null && slot.startsWith("the action of the transition") && Pattern.compile("(?m)^\\s*return\\s*$").matcher(translated).find())

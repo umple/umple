@@ -258,6 +258,8 @@ class CodeBlock
   	this.codes.putAll(another.codes);
   	this.authoredIndents = new HashMap<String,String>(another.authoredIndents);
   	this.authoredPositions = new HashMap<String,Position>(another.authoredPositions);
+  	this.pythonTraitGuards = new HashMap<String,String>(another.pythonTraitGuards);
+  	this.pythonTraitBlocks = new HashMap<String,CodeBlock>(another.pythonTraitBlocks);
   } 
   // The same code with every language's text passed through change (language, text), as when a
   // guard is applied to each body of a copied action (Action.wrapInGuard)
@@ -401,6 +403,16 @@ class CodeBlock
   public Position getAuthoredPosition(String lang)
   {
     return authoredPositions.get(lang);
+  }
+
+  public Map<String,String> getPythonTraitGuards()
+  {
+    return pythonTraitGuards;
+  }
+
+  public Map<String,CodeBlock> getPythonTraitBlocks()
+  {
+    return pythonTraitBlocks;
   }
   public String getCode()
   {

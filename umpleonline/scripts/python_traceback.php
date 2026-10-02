@@ -74,7 +74,7 @@ function pythonModelLocation($modelDir, $relativePath, $pythonLine) {
 }
 
 // Which lines of Python source start inside a string literal, by the same lexical scan as the
-// generator's (PythonGenerator.linesInsideStrings): a backslash protects the next character, a
+// generator's (PythonSource.linesInsideStrings): a backslash protects the next character, a
 // comment ends the line's code, and a single-quoted string not continued by a backslash ends with
 // its line (a Windows line ending is not part of the line, as in Java).
 function pythonLinesInsideStrings($lines) {

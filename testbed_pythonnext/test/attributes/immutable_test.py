@@ -11,8 +11,7 @@ IMMUTABLE_ATTRIBUTES = ["Id", "IntId", "DoubleId", "DateId", "TimeId", "BooleanI
 
 class ImmutableTest(unittest.TestCase):
     # testbed/test/cruise/attributes/test/ImmutableTest.java: Immutable
-    # The Java test's commented-out setter checks and TODO ask that immutable attributes have no
-    # setter; the last assertion checks exactly that.
+    # Immutable attributes expose getters but no setters; the last assertion checks that.
     def test_Immutable(self):
         door = DoorC.DoorC(
             "1", 2, 3.4, datetime.date(1978, 12, 1), datetime.time(12, 51, 51), False, DoorB.DoorB(5)

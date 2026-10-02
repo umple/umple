@@ -1628,7 +1628,9 @@ class PythonSnippetTranslator
     String[] constant = findConstant(uClass, name);
     if (constant != null)
     {
-      return set(n, constantRef(constant[0], name), constant[1], ATOM, true, true);
+      // a computed constant can run model code on its first read, so its place in the order counts
+      boolean computed = gen.isComputedConstant(uClass, name);
+      return set(n, constantRef(constant[0], name), constant[1], ATOM, !computed, !computed);
     }
     String type = resolveType(name, uClass);
     if (type != null)
@@ -1676,7 +1678,8 @@ class PythonSnippetTranslator
       String[] constant = findConstant(owner, name);
       if (constant != null)
       {
-        return set(n, constantRef(constant[0], name), constant[1], ATOM, true, true);
+        boolean computed = gen.isComputedConstant(owner, name);
+        return set(n, constantRef(constant[0], name), constant[1], ATOM, !computed, !computed);
       }
       String type = owner instanceof UmpleClass ? memberType((UmpleClass) owner, name) : null;
       if (type != null)
@@ -1713,7 +1716,8 @@ class PythonSnippetTranslator
     {
       String member = constantRef(constant[0], name);
       String code = afterEvaluating(target, member);
-      return set(n, code, constant[1], ATOM, code.equals(member), true);
+      boolean computed = gen.isComputedConstant(classifier(kind.substring(7)), name);
+      return set(n, code, constant[1], ATOM, code.equals(member) && !computed, !computed);
     }
     if (kind.startsWith("object:"))
     {
@@ -1980,7 +1984,7 @@ class PythonSnippetTranslator
   // Reads that can do neither (a local, a parameter, this or its fields, a kept value) are left out.
   private String afterEvaluating(PythonSnippetNode target, String code)
   {
-    if (target.stable || target.getType().equals("name") || target.getType().equals("field") && target.child(0).getType().equals("this"))
+    if (target.stable || target.pure && (target.getType().equals("name") || target.getType().equals("field") && target.child(0).getType().equals("this")))
     {
       return code;
     }

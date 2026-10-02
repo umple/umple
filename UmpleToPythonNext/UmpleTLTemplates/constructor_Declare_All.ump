@@ -113,6 +113,7 @@ class UmpleToPythonNext {
     {
       codeLines.add(gen.field(av) + " = __class__.next" + av.getUpperCaseName());
       codeLines.add("__class__.next" + av.getUpperCaseName() + " += 1");
+      codeLines.add("__class__." + gen.uniqueMap(uClass, av) + "[" + gen.field(av) + "] = self");
     }
     else if (av.getIsUnique())
     {

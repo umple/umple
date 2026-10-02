@@ -585,6 +585,12 @@ class CodeBlock
   // setAuthoredCode, getFirstLineIndent and getAuthoredPosition)
   internal HashMap<String,String> authoredIndents = new HashMap<String,String>();
   internal HashMap<String,Position> authoredPositions = new HashMap<String,Position>();
+  // The guards, as untagged code, of the guarded trait actions composed into the Python code with
+  // superCall, by the placeholder that stands for each condition there (see pythonTraitCode)
+  internal HashMap<String,String> pythonTraitGuards = new HashMap<String,String>();
+  // The trait code without a Python version composed into the Python code with superCall, by the
+  // placeholder line that stands for it there; the generator renders it as any other code slot
+  internal HashMap<String,CodeBlock> pythonTraitBlocks = new HashMap<String,CodeBlock>();
   public static String languageUsed = "";
   lazy String name;
 }

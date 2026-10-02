@@ -10,7 +10,7 @@ class UmpleToPythonNext {
   #>><<@ UmpleToPythonNext.delete_StateMachine_All >><<#
   for (Attribute av : gen.attributes(uClass))
   {
-    if (av.getIsUnique())
+    if (av.getIsUnique() || av.getIsAutounique())
     {
       String registry = "__class__." + gen.uniqueMap(uClass, av);
       realSb.append("\n        if " + registry + ".get(" + gen.field(av) + ") is self:");

@@ -1379,10 +1379,11 @@ class UmpleInternalParser
 		if (checkAvailability) {
 			  for(Action mAction: bState.getActionsByType(type)){
 				  for(Action cAction : cState.getActionsByType(type)){
-					  // The trait action's guard is kept apart from its bodies, so the copied bodies take it with them;
-					  // its Java-style conditional does not fit Python code, which keeps the body alone
+					  // The trait action's guard is kept apart from its bodies, so the copied bodies take it with them.
+					  // Its Java-style conditional does not fit Python code: the Python composition takes the guard
+					  // itself, for the generator to translate.
 					  CodeBlock traitCode = cAction.getCodeblock().map((language, code) -> "Python".equals(language) ? code : cAction.wrapInGuard(code));
-					  mAction.getCodeblock().findKeywordAndReplace("superCall;", traitCode, inSMachine);
+					  mAction.getCodeblock().findKeywordAndReplace("superCall;", traitCode, inSMachine, cAction.getGuardCode());
 				  }
 			  }
 		  }else  {

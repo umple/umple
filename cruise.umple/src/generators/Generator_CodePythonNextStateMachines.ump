@@ -663,7 +663,11 @@ class PythonNextGenerator
     {
       ConstraintAttribute read = (ConstraintAttribute) variable;
       Attribute attribute = read.getAttribute();
-      if (attribute.isConstant() || "internal".equals(attribute.getModifier())
+      if (attribute.isConstant())
+      {
+        return isComputedConstant(context.getUClass(), attribute.getName()); // its first read can run model code
+      }
+      if ("internal".equals(attribute.getModifier())
         || read.getIndex() == -1 && context.getParameters().containsKey(attribute.getName()))
       {
         return false;
@@ -720,6 +724,12 @@ class PythonNextGenerator
     {
       return guardCallsMethod(operator.getRight(), new PythonConstraintScope(context.getUClass(),
         new HashMap<String, MethodParameter>(), context.getReceiver(), context.getAttributesAsParameters()));
+    }
+    Object[] foreign = ".".equals(operator.getValue()) ? foreignMember(operator, context) : null;
+    if (foreign != null)
+    {
+      List<String> names = (List<String>) foreign[1];
+      return names.size() == 1 && isComputedConstant((UmpleClassifier) foreign[0], names.get(0));
     }
     return guardCallsMethod(operator.getLeft(), context) || guardCallsMethod(operator.getRight(), context);
   }

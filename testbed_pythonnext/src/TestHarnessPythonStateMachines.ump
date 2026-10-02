@@ -986,6 +986,30 @@ class SmLifecycleTraitEntry {
   sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") } } }
 }
 
+// A guarded trait action keeps its guard, and superCall works in a one-line suite and more than once
+trait SmLifecycleGuardedCounting { sm { S { entry [false] / Python { self.setLog(self.getLog() + "never;") } } } }
+class SmLifecycleTraitGuard {
+  isA SmLifecycleGuardedCounting;
+  String log = "";
+  sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+trait SmLifecycleOpenCounting { sm { S { entry [true] / Python { self.setLog(self.getLog() + "trait;") } } } }
+class SmLifecycleTraitSuite {
+  isA SmLifecycleOpenCounting;
+  String log = "";
+  sm { S { entry / Python { if True: superCall; self.setLog(self.getLog() + "class;"); superCall; } } }
+}
+
+// Untagged trait code is translated where superCall puts it, with its guard
+trait SmLifecycleUntaggedCounting { sm { S { entry [!skip] / { log = log + "trait;"; } } } }
+class SmLifecycleTraitUntagged {
+  isA SmLifecycleUntaggedCounting;
+  String log = "";
+  Boolean skip = false;
+  sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
 // A deleted object takes no events, also when its machines have no actions
 class SmLifecyclePlainDelete { sm { Off { turnOn -> On; } On { turnOff -> Off; } } }
 

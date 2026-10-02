@@ -16,6 +16,7 @@ class UmpleToPythonNext {
     else if (av.getIsAutounique())
     {
       realSb.append("\n    next" + av.getUpperCaseName() + " = " + (av.getValue() == null ? "1" : gen.classValue(uClass, av)));
+      realSb.append("\n    " + gen.uniqueMap(uClass, av) + " = {}");
     }
     else if (av.getIsUnique())
     {

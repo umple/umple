@@ -26,7 +26,7 @@ _NAMES = [
     "DeletedPair", "DeletedPartner", "DeletedBarePair", "DeletedBarePartner",
     "MultipleAfterLeaves", "MultipleAfterReentry",
     "MixedGuards", "GuardReceiver", "ReceiverGuard", "DependentGuard", "NoEventsAfterDelete",
-    "PlainDelete", "Ring", "Telemetry", "TraitEntry",
+    "PlainDelete", "Ring", "Telemetry", "TraitEntry", "TraitGuard", "TraitSuite", "TraitUntagged",
 ]
 importModules(["SmLifecycle" + name for name in _NAMES], ["sm"])
 importModules(["visit", "SmLifecycleDelayClassName", "SmLifecycleDelayValueName",
@@ -119,6 +119,11 @@ class LifecycleTest(unittest.TestCase):
 
     def test_trait_entry_code_runs_at_super_call(self):
         self.assertEqual("trait;class;", self._model("TraitEntry").getLog())
+
+    def test_trait_entry_code_keeps_its_guard_and_every_super_call(self):
+        self.assertEqual("class;", self._model("TraitGuard").getLog())
+        self.assertEqual("trait;class;trait;", self._model("TraitSuite").getLog())
+        self.assertEqual("trait;class;", self._model("TraitUntagged").getLog())
 
     def test_plain_machine_takes_no_events_after_delete(self):
         obj = self._model("PlainDelete")

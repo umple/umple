@@ -9,6 +9,7 @@ class Mentor:
     MIN = -99
     HELLO = "Hello"
     nextX = 1
+    mentorsByX = {}
     mentorsById = {}
 
     def __init__(self, aStr, aD, aI, aId):
@@ -38,6 +39,7 @@ class Mentor:
         self.resetW()
         self._x = __class__.nextX
         __class__.nextX += 1
+        __class__.mentorsByX[self._x] = self
         if not self.setId(aId):
             raise RuntimeError("Cannot create due to duplicate id. See https://manual.umple.org?RE003ViolationofUniqueness.html")
 
@@ -205,10 +207,20 @@ class Mentor:
     def getX(self):
         return self._x
 
+    @staticmethod
+    def getWithX(aX):
+        return __class__.mentorsByX.get(aX)
+
+    @staticmethod
+    def hasWithX(aX):
+        return __class__.getWithX(aX) is not None
+
     def isLBool(self):
         return self._lBool
 
     def delete(self):
+        if __class__.mentorsByX.get(self._x) is self:
+            del __class__.mentorsByX[self._x]
         if __class__.mentorsById.get(self._id) is self:
             del __class__.mentorsById[self._id]
 
