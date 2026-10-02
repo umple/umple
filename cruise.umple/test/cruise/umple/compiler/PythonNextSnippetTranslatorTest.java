@@ -625,7 +625,7 @@ public class PythonNextSnippetTranslatorTest
     Assert.assertNotNull(newSnippetErrors().toString(), python);
     String program = lines(
       gen.moduleImports(),
-      gen.mathFunctions(),
+      gen.moduleDefinitions(),
       "class Child:",
       "    def __init__(self):",
       "        self._n = 2",

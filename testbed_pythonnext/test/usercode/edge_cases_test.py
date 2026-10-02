@@ -148,7 +148,9 @@ class EdgeCasesTest(unittest.TestCase):
     def test_aClassValueIsSetOnceItsClassExists(self):
         self.assertEqual("seed 1", ValueOwner.ValueOwner.LABEL)
         owner = ValueOwner.ValueOwner
-        self.assertEqual((0, 5, 5, "\x00"), (owner.PENDING, owner.FROM_INNER, owner.ValueInner.K, owner.MARK))
+        self.assertEqual((5, 5, 7), (owner.FROM_INNER, owner.ValueInner.K, owner.UNTAKEN))
+        with self.assertRaisesRegex(RuntimeError, "ValueOwner.PENDING is needed to compute itself"):
+            owner.PENDING
         self.assertEqual((6, 6), (LiteralOwner.LiteralOwner.N, LiteralOwner.LiteralOwner.LiteralInner.K))
         self.assertEqual((5, 5, 5), (ValueFirst.ValueFirst.FIRST, ValueFirst.ValueFirst.SECOND, ValueSecond.ValueSecond.VALUE))
 

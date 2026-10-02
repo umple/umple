@@ -350,6 +350,15 @@ public class PythonNextUserCodeTest
     {
       Assert.assertFalse(name, more.contains(name));
     }
+    // a case pattern binds its captures, not its class patterns, values, keywords or guard
+    java.util.Set<String> cases = cruise.umple.util.PythonSource.boundNames("match p:\n    case Point(x=0, y=Y1):\n        pass\n"
+      + "    case [A1, *Rest] if Limit.ok(A1):\n        pass\n    case Color.RED | {\"k\": V1}:\n        pass\n    case _ as Other:\n        pass\n"
+      + "case = 1");
+    Assert.assertTrue(cases.toString(), cases.containsAll(Arrays.asList("Y1", "A1", "Rest", "V1", "Other", "case")));
+    for (String name : Arrays.asList("Point", "x", "Limit", "Color", "RED", "k", "p", "_"))
+    {
+      Assert.assertFalse(name, cases.contains(name));
+    }
   }
 
   // A docstring is a statement of string literals alone, however written; anything else gets its

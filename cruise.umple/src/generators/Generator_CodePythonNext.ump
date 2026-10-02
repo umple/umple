@@ -46,8 +46,9 @@ class PythonNextGenerator
   // Imports collected while one class is generated: module-level lines, in first-use order.
   private Set<String> moduleImports = new LinkedHashSet<String>();
 
-  // The module-level functions giving Java's Math results that the module's translated code calls
-  private Set<String> mathDefinitions = new LinkedHashSet<String>();
+  // The module-level functions and classes the module's code uses: Java's Math functions and the
+  // computed class values
+  private Set<String> moduleDefinitions = new LinkedHashSet<String>();
 
   private Set<UmpleClass> preparedClasses = new HashSet<UmpleClass>();
 
@@ -350,7 +351,7 @@ class PythonNextGenerator
     try
     {
       moduleImports.clear();
-      mathDefinitions.clear();
+      moduleDefinitions.clear();
       moduleNames = namesDefinedIn(element);
       code = getLanguageFor(element).getCode(getModel(), element);
     }
@@ -1139,10 +1140,10 @@ class PythonNextGenerator
     return lines;
   }
 
-  // A class-level value: a constant or the first value of an autounique counter. A literal is set in
-  // the class body. Any other value is set once the module has defined the class, so that it may use
-  // the class and modules that import it (classInitializers); until then it has its type's default,
-  // as a Java static field has while its class initializes.
+  // A class-level value: a constant or the first value of an autounique counter. A value of literals
+  // and operators alone is set in the class body. Any other is computed when first read and then kept
+  // (ClassValue), so it can use any class of any module, in whatever order they are loaded; the
+  // imports it needs follow the module's class (classValueImports).
   public String classValue(UmpleClass uClass, Attribute av)
   {
     if (av.getIsList() && hasLiteralItems(av))
@@ -1150,160 +1151,75 @@ class PythonNextGenerator
       return literalList(av);
     }
     String literal = av.getIsList() ? null : literal(av.getType(), av.getValue());
-    return literal != null ? literal : initializeLater(uClass, av.getName(), av.getType(), av.getValue(), av.getIsList(), av.getPosition());
+    return literal != null ? literal : computedValue(uClass, av.getName(), av.getType(), av.getValue(), av.getIsList(), av.getPosition());
   }
 
   public String classValue(UmpleClass uClass, Constant aConstant)
   {
     String literal = literal(aConstant.getType(), aConstant.getValue());
-    return literal != null ? literal : initializeLater(uClass, aConstant.getName(), aConstant.getType(), aConstant.getValue(), false, null);
+    return literal != null ? literal : computedValue(uClass, aConstant.getName(), aConstant.getType(), aConstant.getValue(), false, null);
   }
 
-  // The class values set after their module's class, by class in model order: {target, value, the
-  // imports it needs}
-  private Map<UmpleClass, List<String[]>> classInitializers = new LinkedHashMap<UmpleClass, List<String[]>>();
+  // The imports the computed class values of a module need, by its outermost class
+  private Map<UmpleClass, Set<String>> classValueImports = new HashMap<UmpleClass, Set<String>>();
 
-  // The class values made of literals and operators alone (classReference.name), which, like Java's
-  // constant expressions, are set in the class body and initialize no class when read
-  private Set<String> constantExpressions = new HashSet<String>();
-
-  private String initializeLater(UmpleClass uClass, String name, String type, String code, boolean isList, Position position)
+  private String computedValue(UmpleClass uClass, String name, String type, String code, boolean isList, Position position)
   {
     String value = translateClassValue(code, uClass, isList, position, "the constant " + name);
-    Set<String> names = value == null ? null : PythonSource.codeNames(value);
-    if (names != null && !isList && getSnippetImports().isEmpty() && Arrays.asList("True", "False", "None").containsAll(names))
+    if (value == null)
     {
-      constantExpressions.add(classReference(uClass) + "." + name);
+      return defaultValue(type, isList);
+    }
+    Set<String> names = PythonSource.codeNames(value);
+    if (!isList && getSnippetImports().isEmpty() && Arrays.asList("True", "False", "None").containsAll(names))
+    {
       return value;
     }
-    String pending = defaultValue(type, isList);
-    if (!classInitializers.containsKey(uClass))
+    UmpleClass module = outermost(uClass);
+    if (!classValueImports.containsKey(module))
     {
-      classInitializers.put(uClass, new ArrayList<String[]>());
+      classValueImports.put(module, new LinkedHashSet<String>());
     }
-    classInitializers.get(uClass).add(new String[] { classReference(uClass) + "." + name, value == null ? pending : value,
-      String.join("\n", getSnippetImports()) });
-    return pending;
+    classValueImports.get(module).addAll(getSnippetImports());
+    return classValueHelper() + "(lambda: " + value + ")";
   }
 
-  // The module-level statements that set the class values of a top-level class and its nested
-  // classes, each after the imports it needs. As Java initializes a class when a value first calls it
-  // or reads a field that is not a literal constant, such a use of another of these classes comes
-  // after that class's own values, unless that class is the one being initialized.
-  public String classInitializers(UmpleClass uClass)
+  // The module-level imports of a top-level class's computed class values and its nested classes'
+  public String classValueImports(UmpleClass uClass)
   {
-    if (uClass.getOuterClass() != null)
-    {
-      return ""; // set by its outermost class
-    }
-    List<String> lines = new ArrayList<String>();
-    for (UmpleClass k : new ArrayList<UmpleClass>(classInitializers.keySet()))
-    {
-      if (outermost(k) == uClass)
-      {
-        initialize(k, lines);
-      }
-    }
-    return lines.isEmpty() ? "" : "\n\n\n" + String.join("\n", lines);
+    Set<String> imports = uClass.getOuterClass() == null ? classValueImports.remove(uClass) : null;
+    return imports == null || imports.isEmpty() ? "" : "\n\n\n" + String.join("\n", imports);
   }
 
-  private void initialize(UmpleClass uClass, List<String> lines)
+  // The module-level class whose objects are computed class values: each computes its value when first
+  // read, under a lock, and puts it in place of itself. A value whose computation needs the value
+  // itself is an error that names it, rather than a value read too early.
+  private String classValueHelper()
   {
-    UmpleClass parent = uClass.getExtendsClass();
-    if (parent != null && outermost(parent) == outermost(uClass))
-    {
-      initialize(parent, lines); // Java initializes a superclass first
-    }
-    List<String[]> values = classInitializers.remove(uClass);
-    for (String[] value : values == null ? new ArrayList<String[]>() : values)
-    {
-      String code = PythonSource.codeText(value[1]);
-      Matcher use = DOTTED_NAME.matcher(code);
-      while (use.find())
-      {
-        UmpleClass used = initializedClass(outermost(uClass), use.group(), code.substring(use.end()).trim().startsWith("("));
-        if (used != null)
-        {
-          initialize(used, lines);
-        }
-      }
-      for (String line : value[2].isEmpty() ? new String[0] : value[2].split("\n"))
-      {
-        if (!lines.contains(line))
-        {
-          lines.add(line);
-        }
-      }
-      lines.add(value[0] + " = " + value[1]);
-    }
-  }
-
-  private static final Pattern DOTTED_NAME = Pattern.compile("(?<![\\w.])[A-Za-z_]\\w*(?:\\s*\\.\\s*[A-Za-z_]\\w*)*");
-
-  // The class of module that a dotted name uses so that Java would initialize it, or null: the class
-  // its longest leading part names when the name calls it, or the class declaring the method it calls
-  // or the field it reads, unless that field is a constant expression
-  private UmpleClass initializedClass(UmpleClass module, String dotted, boolean called)
-  {
-    List<String> names = Arrays.asList(dotted.replaceAll("\\s", "").split("\\."));
-    for (int length = names.size(); length > 0; length--)
-    {
-      String prefix = String.join(".", names.subList(0, length));
-      for (UmpleClass k : getModel().getUmpleClasses())
-      {
-        if (outermost(k) == module && classReference(k).equals(prefix))
-        {
-          UmpleClass owner = length < names.size() ? declaringClass(k, names.get(length)) : called ? k : null;
-          return owner == null || outermost(owner) != module ? null : owner;
-        }
-      }
-    }
-    return null;
-  }
-
-  // The class of uClass's hierarchy declaring member, a method or a field; null for a constant
-  // expression, which Java reads without initializing its class; uClass when none declares it
-  private UmpleClass declaringClass(UmpleClass uClass, String member)
-  {
-    for (UmpleClass c = uClass; c != null; c = c.getExtendsClass())
-    {
-      Attribute attribute = c.getAttribute(member);
-      boolean constant = attribute != null && attribute.isConstant() && !attribute.getIsList()
-        && literal(attribute.getType(), attribute.getValue()) != null;
-      for (Constant declared : c.getConstants())
-      {
-        constant = constant || declared.getName().equals(member) && literal(declared.getType(), declared.getValue()) != null;
-      }
-      if (constant || constantExpressions.contains(classReference(c) + "." + member))
-      {
-        return null;
-      }
-      if (attribute != null || declares(c, member))
-      {
-        return c;
-      }
-    }
-    return uClass;
-  }
-
-  // Whether a class declares a method or a constant of that name
-  private static boolean declares(UmpleClass uClass, String name)
-  {
-    for (Method method : uClass.getMethods())
-    {
-      if (method.getName().equals(name))
-      {
-        return true;
-      }
-    }
-    for (Constant constant : uClass.getConstants())
-    {
-      if (constant.getName().equals(name))
-      {
-        return true;
-      }
-    }
-    return false;
+    String threading = standardName("threading", null);
+    moduleDefinitions.add("class _ClassValue:"
+      + "\n    \"\"\"A class value computed when first read, so that it can use any class.\"\"\""
+      + "\n\n    def __init__(self, compute):"
+      + "\n        self._compute = compute"
+      + "\n        self._lock = " + threading + ".RLock()"
+      + "\n        self._computing = False"
+      + "\n\n    def __set_name__(self, owner, name):"
+      + "\n        self._owner = owner"
+      + "\n        self._name = name"
+      + "\n\n    def __get__(self, instance, owner):"
+      + "\n        with self._lock:"
+      + "\n            if self._owner.__dict__[self._name] is not self:"
+      + "\n                return self._owner.__dict__[self._name]"
+      + "\n            if self._computing:"
+      + "\n                raise RuntimeError(self._owner.__qualname__ + \".\" + self._name + \" is needed to compute itself\")"
+      + "\n            self._computing = True"
+      + "\n            try:"
+      + "\n                value = self._compute()"
+      + "\n            finally:"
+      + "\n                self._computing = False"
+      + "\n            setattr(self._owner, self._name, value)"
+      + "\n            return value");
+    return "_ClassValue";
   }
 
   // Only a literal is supported as an interface constant's value.
@@ -1763,7 +1679,7 @@ class PythonNextGenerator
     {
       case "round":
         String fractions = standardName("fractions", null);
-        mathDefinitions.add(header
+        moduleDefinitions.add(header
           + "\n    \"\"\"Java's Math.round: the nearest whole number, halves rounding up, 0 for NaN, within largest.\"\"\""
           + "\n    if x != x:\n        return 0"
           + "\n    if x >= largest or x <= -largest - 1:"
@@ -1772,19 +1688,19 @@ class PythonNextGenerator
         break;
       case "max": case "min":
         boolean max = name.equals("max");
-        mathDefinitions.add(header
+        moduleDefinitions.add(header
           + "\n    \"\"\"Java's Math." + name + " of doubles: NaN when either is NaN, and " + (max ? "0.0 above -0.0" : "-0.0 below 0.0") + ".\"\"\""
           + "\n    if a != a or b != b:\n        return " + math + ".nan"
           + "\n    if a == b:\n        return float(" + (max ? "b" : "a") + " if " + math + ".copysign(1, a) < 0 else " + (max ? "a" : "b") + ")"
           + "\n    return float(" + name + "(a, b))");
         break;
       case "sqrt":
-        mathDefinitions.add(header
+        moduleDefinitions.add(header
           + "\n    \"\"\"Java's Math.sqrt: NaN for a negative number.\"\"\""
           + "\n    return " + math + ".nan if x < 0 else " + math + ".sqrt(x)");
         break;
       case "pow":
-        mathDefinitions.add(header
+        moduleDefinitions.add(header
           + "\n    \"\"\"Java's Math.pow: NaN or an infinity where Python raises or answers otherwise.\"\"\""
           + "\n    if b != b or abs(a) == 1 and " + math + ".isinf(b):\n        return " + math + ".nan"
           + "\n    negative = b % 2 == 1 and " + math + ".copysign(1, a) < 0"
@@ -1794,7 +1710,7 @@ class PythonNextGenerator
           + "\n    except OverflowError:\n        return -" + math + ".inf if negative else " + math + ".inf");
         break;
       default: // floor and ceil
-        mathDefinitions.add(header
+        moduleDefinitions.add(header
           + "\n    \"\"\"Java's Math." + name + ": a float, keeping infinities, NaN and the sign of zero.\"\"\""
           + "\n    return float(x) if " + math + ".isinf(x) or " + math + ".isnan(x) else " + math + ".copysign(" + math + "." + name + "(x), x)");
     }
@@ -1952,10 +1868,10 @@ class PythonNextGenerator
     return "from " + module + " import " + name;
   }
 
-  // The definitions of the Java Math functions the module's code calls (javaMath)
-  public String mathFunctions()
+  // The module-level definitions the module's code uses (javaMath, classValueHelper)
+  public String moduleDefinitions()
   {
-    return mathDefinitions.isEmpty() ? "" : "\n\n" + String.join("\n\n\n", mathDefinitions) + "\n";
+    return moduleDefinitions.isEmpty() ? "" : "\n\n" + String.join("\n\n\n", moduleDefinitions) + "\n";
   }
 
   public String moduleImports()
@@ -1998,7 +1914,7 @@ class PythonNextGenerator
           lines.add(line);
         }
       }
-      code.replace(at, at + placeholder.length(), lines.isEmpty() ? "" : "\n" + String.join("\n", lines) + "\n" + mathFunctions());
+      code.replace(at, at + placeholder.length(), lines.isEmpty() ? "" : "\n" + String.join("\n", lines) + "\n" + moduleDefinitions());
     }
     int classLine = code.indexOf("class ") == 0 ? 0 : code.indexOf("\nclass ");
     int bodyStart = classLine < 0 ? -1 : code.indexOf(":\n\n", classLine);

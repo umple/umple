@@ -611,16 +611,15 @@ class ScopedUser
   }
 }
 
-// A class value that is not a literal is set once its class exists, so what it calls may import
-// the class. Until then it has its type's default, and a nested class it uses gets its values first,
-// as in Java.
+// A class value that is not a literal is computed when first read, so it can use any class of any
+// module; one that needs itself is reported.
 class ValueOwner
 {
   const Integer SEED = 1;
   const String LABEL = ValueSource.label();
   const Integer PENDING = ValueSource.pending();
+  const Integer UNTAKEN = false ? ValueSource.never() : 7;
   const Integer FROM_INNER = ValueInner.value();
-  const char MARK = ValueSource.mark();
   inner class ValueInner
   {
     const Integer K = seed();
@@ -633,10 +632,10 @@ class ValueSource
 {
   public static String label() Python { return "seed " + str(ValueOwner.SEED) }
   public static int pending() Python { return ValueOwner.PENDING }
-  public static char mark() Python { return ValueOwner.MARK }
+  public static int never() Python { raise ValueError("an untaken branch ran") }
 }
 
-// Reading a literal constant does not initialize its class, as in Java
+// Values that read each other's classes, in either order, each get their own value
 class LiteralOwner
 {
   const Integer N = LiteralInner.LIT + 1;
@@ -647,7 +646,6 @@ class LiteralOwner
   }
 }
 
-// A value another module reads is set before that module is imported
 class ValueFirst
 {
   const Integer FIRST = start();
