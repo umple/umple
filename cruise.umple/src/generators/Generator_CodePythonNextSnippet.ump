@@ -187,7 +187,8 @@ class PythonSnippetTranslator
   // Names the translation itself uses, or a constraint in the same method (len, Fraction), which a
   // snippet's locals therefore cannot keep.
   private static final List<String> TRANSLATION_NAMES = Arrays.asList("self", "str", "int", "float", "print", "math", "RuntimeError",
-    "len", "Fraction", "time", "random", "abs", "max", "min", "thread");
+    "len", "Fraction", "fractions", "time", "random", "abs", "max", "min", "thread", "_javaRound", "_javaMax", "_javaMin", "_javaFloor",
+    "_javaCeil", "_javaSqrt", "_javaPow");
 
   // Java's numeric literals, which model values share: underscores only between digits.
   private static final String DIGITS = "[0-9](?:[0-9_]*[0-9])?";
@@ -1730,8 +1731,7 @@ class PythonSnippetTranslator
 
   // The Java library calls untagged code may make: Thread.sleep, which in a do activity ends the
   // activity when it is cancelled, as Java's InterruptedException does; System.currentTimeMillis; and
-  // Math's abs, max, min, sqrt, pow, floor, ceil, round and random, with Java's results except the
-  // recorded domain errors of sqrt and pow
+  // Math's abs, max, min, sqrt, pow, floor, ceil, round and random, with Java's results
   private PythonSnippetNode emitLibraryCall(PythonSnippetNode n, String library, String name, List<PythonSnippetNode> values)
   {
     String call = library + "." + name + "/" + values.size();
@@ -1774,13 +1774,15 @@ class PythonSnippetTranslator
           return set(n, name + "(" + argumentList(values) + ")", integral ? promotedInteger(values.get(0).kind, values.get(1).kind) : "unknown",
             ATOM, false, false);
         }
-        return set(n, gen.javaMath(name) + "(" + argumentList(values) + ")", "float", ATOM, false, false);
+        return set(n, javaMath(name) + "(" + argumentList(values) + ")", "float", ATOM, false, false);
       case "Math.sqrt/1": case "Math.pow/2":
-        return set(n, module("math") + "." + name + "(" + argumentList(values) + ")", "float", ATOM, false, false);
+        return set(n, javaMath(name) + "(" + argumentList(values) + ")", "float", ATOM, false, false);
       case "Math.floor/1": case "Math.ceil/1":
-        return set(n, gen.javaMath(name) + "(" + first + ")", "float", ATOM, false, false);
+        return set(n, javaMath(name) + "(" + first + ")", "float", ATOM, false, false);
       case "Math.round/1":
-        return set(n, gen.javaMath(name) + "(" + first + ")", "long", ATOM, false, false);
+        // Java rounds an integer as a float, to an int; a double to a long (Float is a double here)
+        return integral ? set(n, javaMath(name) + "(" + first + ", 2147483647)", "int", ATOM, false, false)
+          : set(n, javaMath(name) + "(" + first + ")", "long", ATOM, false, false);
       default: // Math.random/0
         return set(n, module("random") + ".random()", "float", ATOM, false, false);
     }
@@ -1788,6 +1790,14 @@ class PythonSnippetTranslator
 
   private static final List<String> LIBRARY_CALLS = Arrays.asList("Thread.sleep/1", "System.currentTimeMillis/0", "Math.abs/1",
     "Math.max/2", "Math.min/2", "Math.sqrt/1", "Math.pow/2", "Math.floor/1", "Math.ceil/1", "Math.round/1", "Math.random/0");
+
+  // The module-level function giving Java's result of Math's name, which a parameter must not hide
+  private String javaMath(String name)
+  {
+    String function = gen.javaMath(name);
+    requireBuiltin(function);
+    return function;
+  }
 
   // A standard module the translation calls, imported as the generated code's other standard modules
   // are, under an alias when the module defines the name itself

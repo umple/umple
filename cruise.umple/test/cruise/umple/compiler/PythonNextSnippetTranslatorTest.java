@@ -886,10 +886,13 @@ public class PythonNextSnippetTranslatorTest
       + " System.out.println(Math.max(3, 4)); System.out.println(Math.floor(2.7)); System.out.println(Math.round(2.5));"
       + " System.out.println(Math.abs(-1)); System.out.println(Math.sqrt(4)); System.out.println(Math.pow(2, 3));"
       + " System.out.println(System.currentTimeMillis() > 0);"));
-    // Halves, the sign of zero and NaN as Java has them
-    Assert.assertEquals("0\n-2\n0.0\n-0.0\n-0.0\n0.5\n", runTranslated("System.out.println(Math.round(0.49999999999999994));"
+    // Halves, signed zeros, an integer's int range, NaN and overflow as Java has them
+    Assert.assertEquals("0\n-2\n0.0\n-0.0\n-0.0\n0.5\n2147483647\ntrue\ntrue\n", runTranslated("System.out.println(Math.round(0.49999999999999994));"
       + " System.out.println(Math.round(-2.5)); System.out.println(Math.max(-0.0, 0.0)); System.out.println(Math.min(0.0, -0.0));"
-      + " System.out.println(Math.ceil(-0.2)); System.out.println(Math.min(0.5, 1));"));
+      + " System.out.println(Math.ceil(-0.2)); System.out.println(Math.min(0.5, 1)); System.out.println(Math.round(3000000000L));"
+      + " System.out.println(Math.sqrt(-1) != Math.sqrt(-1)); System.out.println(Math.pow(10, 400) > 1e308);"));
+    // a local named like a helper is renamed
+    Assert.assertEquals("2\n", runTranslated("double _javaRound = 3.0; System.out.println(Math.round(2.0));"));
   }
 
   @Test

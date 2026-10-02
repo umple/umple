@@ -341,6 +341,15 @@ public class PythonNextUserCodeTest
     Assert.assertFalse(cruise.umple.util.PythonSource.isGenerator("def values():\n    yield 1\nreturn list(values())"));
     Assert.assertFalse(cruise.umple.util.PythonSource.isGenerator("g = lambda: (yield)\nreturn g"));
     Assert.assertFalse(cruise.umple.util.PythonSource.codeNames("return f\"{1:\\N{SPACE}>3}\"").contains("SPACE"));
+    Assert.assertTrue(cruise.umple.util.PythonSource.codeNames("return f\"{e:\\\\N{Item}}\"").contains("Item"));
+    Assert.assertTrue(cruise.umple.util.PythonSource.isGenerator("def f(x=(yield 1)): pass"));
+    java.util.Set<String> more = cruise.umple.util.PythonSource.boundNames("(R).x = 1\n[S][0] = 1\nwith o as (T, U): pass\n"
+      + "def h() -> (V := int): pass\nw = lambda: \\\n  (W := 1)");
+    Assert.assertTrue(more.toString(), more.containsAll(Arrays.asList("T", "U", "h", "V", "w")));
+    for (String name : Arrays.asList("R", "S", "W"))
+    {
+      Assert.assertFalse(name, more.contains(name));
+    }
   }
 
   // A docstring is a statement of string literals alone, however written; anything else gets its

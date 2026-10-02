@@ -27,9 +27,11 @@ class PythonNextGenerator
   public JavaGenerator names = new JavaGenerator();
 
   // Standard modules a class module or top-level package must not be named after: those generated
-  // code imports, and those Python loads at startup, which an import would find instead.
+  // code imports, directly or through the standard library, and those Python loads at startup, which
+  // an import would find instead.
   private static final List<String> STANDARD_MODULES = Arrays.asList("abc", "enum", "threading", "datetime", "sys",
-    "math", "fractions", "random", "time", "codecs", "collections", "copyreg", "encodings", "functools", "genericpath", "io", "keyword",
+    "math", "fractions", "random", "time", "decimal", "numbers", "bisect", "heapq", "warnings", "sre_compile", "sre_constants",
+    "sre_parse", "codecs", "collections", "copyreg", "encodings", "functools", "genericpath", "io", "keyword",
     "ntpath", "operator", "os", "posixpath", "re", "reprlib", "site", "stat", "types", "zipimport");
 
   // Built-ins the generated code uses. A class with one of these names would hide it in its own
@@ -1161,9 +1163,19 @@ class PythonNextGenerator
   // imports it needs}
   private Map<UmpleClass, List<String[]>> classInitializers = new LinkedHashMap<UmpleClass, List<String[]>>();
 
+  // The class values made of literals and operators alone (classReference.name), which, like Java's
+  // constant expressions, are set in the class body and initialize no class when read
+  private Set<String> constantExpressions = new HashSet<String>();
+
   private String initializeLater(UmpleClass uClass, String name, String type, String code, boolean isList, Position position)
   {
     String value = translateClassValue(code, uClass, isList, position, "the constant " + name);
+    Set<String> names = value == null ? null : PythonSource.codeNames(value);
+    if (names != null && !isList && getSnippetImports().isEmpty() && Arrays.asList("True", "False", "None").containsAll(names))
+    {
+      constantExpressions.add(classReference(uClass) + "." + name);
+      return value;
+    }
     String pending = defaultValue(type, isList);
     if (!classInitializers.containsKey(uClass))
     {
@@ -1197,6 +1209,11 @@ class PythonNextGenerator
 
   private void initialize(UmpleClass uClass, List<String> lines)
   {
+    UmpleClass parent = uClass.getExtendsClass();
+    if (parent != null && outermost(parent) == outermost(uClass))
+    {
+      initialize(parent, lines); // Java initializes a superclass first
+    }
     List<String[]> values = classInitializers.remove(uClass);
     for (String[] value : values == null ? new ArrayList<String[]>() : values)
     {
@@ -1223,9 +1240,9 @@ class PythonNextGenerator
 
   private static final Pattern DOTTED_NAME = Pattern.compile("(?<![\\w.])[A-Za-z_]\\w*(?:\\s*\\.\\s*[A-Za-z_]\\w*)*");
 
-  // The class of module that a dotted name uses so that Java would initialize it: the class its
-  // longest leading part names, when the name calls it or one of its methods or reads a field of it
-  // that is not a literal constant; otherwise null
+  // The class of module that a dotted name uses so that Java would initialize it, or null: the class
+  // its longest leading part names when the name calls it, or the class declaring the method it calls
+  // or the field it reads, unless that field is a constant expression
   private UmpleClass initializedClass(UmpleClass module, String dotted, boolean called)
   {
     List<String> names = Arrays.asList(dotted.replaceAll("\\s", "").split("\\."));
@@ -1236,29 +1253,54 @@ class PythonNextGenerator
       {
         if (outermost(k) == module && classReference(k).equals(prefix))
         {
-          boolean initializes = length < names.size() ? !isLiteralConstant(k, names.get(length)) : called;
-          return initializes ? k : null;
+          UmpleClass owner = length < names.size() ? declaringClass(k, names.get(length)) : called ? k : null;
+          return owner == null || outermost(owner) != module ? null : owner;
         }
       }
     }
     return null;
   }
 
-  private boolean isLiteralConstant(UmpleClass uClass, String name)
+  // The class of uClass's hierarchy declaring member, a method or a field; null for a constant
+  // expression, which Java reads without initializing its class; uClass when none declares it
+  private UmpleClass declaringClass(UmpleClass uClass, String member)
   {
     for (UmpleClass c = uClass; c != null; c = c.getExtendsClass())
     {
-      Attribute attribute = c.getAttribute(name);
-      if (attribute != null && attribute.isConstant())
+      Attribute attribute = c.getAttribute(member);
+      boolean constant = attribute != null && attribute.isConstant() && !attribute.getIsList()
+        && literal(attribute.getType(), attribute.getValue()) != null;
+      for (Constant declared : c.getConstants())
       {
-        return !attribute.getIsList() && literal(attribute.getType(), attribute.getValue()) != null;
+        constant = constant || declared.getName().equals(member) && literal(declared.getType(), declared.getValue()) != null;
       }
-      for (Constant constant : c.getConstants())
+      if (constant || constantExpressions.contains(classReference(c) + "." + member))
       {
-        if (constant.getName().equals(name))
-        {
-          return literal(constant.getType(), constant.getValue()) != null;
-        }
+        return null;
+      }
+      if (attribute != null || declares(c, member))
+      {
+        return c;
+      }
+    }
+    return uClass;
+  }
+
+  // Whether a class declares a method or a constant of that name
+  private static boolean declares(UmpleClass uClass, String name)
+  {
+    for (Method method : uClass.getMethods())
+    {
+      if (method.getName().equals(name))
+      {
+        return true;
+      }
+    }
+    for (Constant constant : uClass.getConstants())
+    {
+      if (constant.getName().equals(name))
+      {
+        return true;
       }
     }
     return false;
@@ -1707,23 +1749,25 @@ class PythonNextGenerator
     return alias;
   }
 
-  // The module-level function that gives Java's Math.round, max, min, floor or ceil of doubles, whose
-  // Python counterparts differ for halves, NaN, infinities or the sign of zero; the module defines it
-  // once
+  // The module-level function that gives Java's Math.round, max, min, floor, ceil, sqrt or pow of
+  // doubles, whose Python counterparts differ for halves, NaN, infinities or the sign of zero, or
+  // raise; the module defines it once. Its round takes the largest result, long's unless the argument
+  // is an integer (int's).
   public String javaMath(String name)
   {
     String math = standardName("math", null);
     String function = "_java" + Character.toUpperCase(name.charAt(0)) + name.substring(1);
-    String header = "def " + function + (name.equals("max") || name.equals("min") ? "(a, b):" : "(x):");
+    String header = "def " + function + (name.equals("max") || name.equals("min") || name.equals("pow") ? "(a, b):"
+      : name.equals("round") ? "(x, largest=9223372036854775807):" : "(x):");
     switch (name)
     {
       case "round":
         String fractions = standardName("fractions", null);
         mathDefinitions.add(header
-          + "\n    \"\"\"Java's Math.round: the nearest long, halves rounding up; 0 for NaN.\"\"\""
+          + "\n    \"\"\"Java's Math.round: the nearest whole number, halves rounding up, 0 for NaN, within largest.\"\"\""
           + "\n    if x != x:\n        return 0"
-          + "\n    if x >= 9223372036854775807 or x <= -9223372036854775808:"
-          + "\n        return 9223372036854775807 if x > 0 else -9223372036854775808"
+          + "\n    if x >= largest or x <= -largest - 1:"
+          + "\n        return largest if x > 0 else -largest - 1"
           + "\n    return " + math + ".floor(" + fractions + ".Fraction(x) + " + fractions + ".Fraction(1, 2))");
         break;
       case "max": case "min":
@@ -1733,6 +1777,21 @@ class PythonNextGenerator
           + "\n    if a != a or b != b:\n        return " + math + ".nan"
           + "\n    if a == b:\n        return float(" + (max ? "b" : "a") + " if " + math + ".copysign(1, a) < 0 else " + (max ? "a" : "b") + ")"
           + "\n    return float(" + name + "(a, b))");
+        break;
+      case "sqrt":
+        mathDefinitions.add(header
+          + "\n    \"\"\"Java's Math.sqrt: NaN for a negative number.\"\"\""
+          + "\n    return " + math + ".nan if x < 0 else " + math + ".sqrt(x)");
+        break;
+      case "pow":
+        mathDefinitions.add(header
+          + "\n    \"\"\"Java's Math.pow: NaN or an infinity where Python raises or answers otherwise.\"\"\""
+          + "\n    if b != b or abs(a) == 1 and " + math + ".isinf(b):\n        return " + math + ".nan"
+          + "\n    negative = b % 2 == 1 and " + math + ".copysign(1, a) < 0"
+          + "\n    if a == 0 and b < 0:\n        return -" + math + ".inf if negative else " + math + ".inf"
+          + "\n    try:\n        return " + math + ".pow(a, b)"
+          + "\n    except ValueError:\n        return " + math + ".nan"
+          + "\n    except OverflowError:\n        return -" + math + ".inf if negative else " + math + ".inf");
         break;
       default: // floor and ceil
         mathDefinitions.add(header
