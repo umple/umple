@@ -1,5 +1,7 @@
 import contextlib
 import io
+import subprocess
+import sys
 import threading
 import unittest
 
@@ -9,7 +11,8 @@ from ImportModules import importModules
 
 importModules(["LoudGreeter", "Checks", "AlwaysEqual", "Pair", "CountedChild", "ContractCalls", "ContractCallsChild",
                "KeyedPart", "PartBox", "PartBoxPair", "BoxedNull", "TextualSetter", "TextualStr", "LabelCrate",
-               "CrateItem", "CountingTagged", "DependMaker", "ImplicitUser", "PickOverride", "PickWider", "ScopedUser", "ValueOwner", "LiteralOwner", "ValueFirst", "ValueSecond", "ValueNaming", "LazyOrder", "LazyReceiver", "LazyGuard", "LazyCycle", "LazyOnce", "EventChild",
+               "CrateItem", "CountingTagged", "DependMaker", "ImplicitUser", "PickOverride", "PickWider", "ScopedUser", "ValueOwner", "LiteralOwner", "ValueFirst", "ValueSecond", "ValueNaming", "LazyOrder", "LazyReceiver", "LazyGuard", "LazyCycle", "LazyOnce", "LazyChain",
+               "ValueDerived", "EventChild",
                "VarargsChild", "TypedChecks"], ["usercode", "test"])
 from ImportModules import *
 
@@ -171,6 +174,14 @@ class EdgeCasesTest(unittest.TestCase):
         guard = LazyGuard.LazyGuard.getInstance()
         guard.go()
         self.assertIs(LazyGuard.LazyGuard.Sm.S, guard.getSm())
+        printed = io.StringIO()
+        with contextlib.redirect_stdout(printed):
+            chain = LazyChain.LazyChain()
+        self.assertEqual(("made\n", 5), (printed.getvalue(), chain.getResult()))
+        code = ("import sys; sys.path[:] = " + repr(sys.path) + "; "
+                "from " + ValueDerived.__name__ + " import ValueDerived; print(ValueDerived.N)")
+        result = subprocess.run([sys.executable, "-B", "-c", code], capture_output=True, text=True, timeout=10)
+        self.assertEqual("7", result.stdout.strip(), result.stderr)
 
     def test_computedConstantsAreComputedOnceAndReportCyclesAcrossThreads(self):
         threads = [threading.Thread(target=lambda: LazyOnce.LazyOnce.ONE) for _ in range(8)]

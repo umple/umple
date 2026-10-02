@@ -109,6 +109,9 @@ class KmTag { name; }
 // The constructor parameter aTitle does not hide the class's own counter and registry
 class aTitle { title; autounique id; unique Integer code; }
 
+// Translated code can use the queries of an autounique key
+class AutoFinder { autounique id; Boolean found = false; sm { S { go / { found = hasWithId(id); } -> T; } T { } } }
+
 // Overloads on a model class whose name is also a local name of the dispatcher, and on the class itself
 class bound { }
 class OvUser {

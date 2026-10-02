@@ -176,29 +176,59 @@ class PythonSource
   }
 
   // Python source in which the statement starting at position at has a line of its own: when other
-  // statements share its line, each gets a line, and a one-line suite (if x: a(); b()) moves below
-  // its header, one level deeper
+  // statements share its logical line, each gets a line, and a one-line suite (if x: a(); b()) moves
+  // below its header, one level deeper. A header continued over lines stays as it is.
   public static String ownLine(String code, int at)
   {
-    int start = code.lastIndexOf('\n', at - 1) + 1;
+    String visible = codeText(code);
+    int start = 0;
+    int depth = 0;
+    for (int i = 0; i < at; i++)
+    {
+      char c = visible.charAt(i);
+      depth += "([{".indexOf(c) >= 0 ? 1 : ")]}".indexOf(c) >= 0 ? -1 : 0;
+      if (c == '\n' && depth <= 0 && !continuedBefore(visible, i))
+      {
+        start = i + 1;
+        depth = 0;
+      }
+    }
     if (code.substring(start, at).trim().isEmpty())
     {
       return code;
     }
-    int end = code.indexOf('\n', at) < 0 ? code.length() : code.indexOf('\n', at);
+    int end = at;
+    while (end < code.length() && !(visible.charAt(end) == '\n' && depth <= 0 && !continuedBefore(visible, end)))
+    {
+      depth += "([{".indexOf(visible.charAt(end)) >= 0 ? 1 : ")]}".indexOf(visible.charAt(end)) >= 0 ? -1 : 0;
+      end++;
+    }
     String line = code.substring(start, end);
-    String visible = codeText(code).substring(start, end);
+    String shown = visible.substring(start, end);
     String indent = line.substring(0, leadingWhitespace(line));
     StringBuilder rewritten = new StringBuilder();
     String inner = indent;
-    int depth = 0;
+    depth = 0;
+    int lambdas = 0; // lambdas whose colon is still to come: theirs is not the header's
     int from = indent.length();
     for (int i = from; i <= line.length(); i++)
     {
-      char c = i < line.length() ? visible.charAt(i) : ';';
+      char c = i < line.length() ? shown.charAt(i) : ';';
       depth += "([{".indexOf(c) >= 0 ? 1 : ")]}".indexOf(c) >= 0 ? -1 : 0;
-      if (depth == 0 && c == ':' && rewritten.length() == 0 && inner.equals(indent) && !visible.startsWith(":=", i)
-        && COMPOUND.matcher(visible.substring(indent.length())).lookingAt())
+      if (depth == 0 && shown.startsWith("lambda", i) && startsName(shown, i)
+        && !(i + 6 < shown.length() && Character.isJavaIdentifierPart(shown.charAt(i + 6))))
+      {
+        lambdas++;
+      }
+      boolean colon = depth == 0 && c == ':' && !shown.startsWith(":=", i);
+      if (colon && lambdas > 0)
+      {
+        lambdas--;
+        continue;
+      }
+      String rest = shown.substring(indent.length());
+      if (colon && rewritten.length() == 0 && inner.equals(indent)
+        && (COMPOUND.matcher(rest).lookingAt() || CASE_START.matcher(rest).lookingAt()))
       {
         rewritten.append(indent).append(line.substring(indent.length(), i + 1).trim());
         inner = indent + "    ";
@@ -214,7 +244,34 @@ class PythonSource
         from = i + 1;
       }
     }
-    return code.substring(0, start) + rewritten + code.substring(end);
+    return rewritten.length() == 0 ? code : code.substring(0, start) + rewritten + code.substring(end);
+  }
+
+  // Whether the line break at position at follows a backslash, which continues the line
+  private static boolean continuedBefore(String text, int at)
+  {
+    int before = at > 0 && text.charAt(at - 1) == '\r' ? at - 2 : at - 1;
+    return before >= 0 && text.charAt(before) == '\\';
+  }
+
+  // Python source with every place token stands as code replaced by replacement; text in strings
+  // and comments stays
+  public static String replaceCode(String code, String token, String replacement)
+  {
+    List<Integer> found = codePositions(code, token);
+    for (int k = found.size() - 1; k >= 0; k--)
+    {
+      code = code.substring(0, found.get(k)) + replacement + code.substring(found.get(k) + token.length());
+    }
+    return code;
+  }
+
+  private static int placeholders = 0;
+
+  // A name no Python source uses, standing for code a later stage puts in its place
+  public static synchronized String placeholder(String kind)
+  {
+    return "__umple_" + kind + "_" + (++placeholders) + "__";
   }
 
   // The names Python source uses as code, the expressions of f-strings included, other than members
@@ -248,8 +305,25 @@ class PythonSource
   public static Set<String> boundNames(String code)
   {
     Set<String> names = new HashSet<String>();
-    for (String text : ownStatements(code))
+    Deque<int[]> matches = new ArrayDeque<int[]>(); // the match statements around, innermost first: {indentation, cases' indentation}
+    for (String statement : ownStatements(code))
     {
+      String text = statement.trim();
+      int indent = indentWidth(statement);
+      while (!matches.isEmpty() && indent <= matches.peek()[0])
+      {
+        matches.pop();
+      }
+      // case starts a header only at the cases' level of a match statement; elsewhere it is a name
+      boolean cases = !matches.isEmpty() && (matches.peek()[1] < 0 || matches.peek()[1] == indent);
+      if (cases)
+      {
+        matches.peek()[1] = indent;
+      }
+      if (MATCH_START.matcher(text).lookingAt() && text.endsWith(":"))
+      {
+        matches.push(new int[] { indent, -1 });
+      }
       Matcher block = NESTED_BLOCK.matcher(text);
       if (block.lookingAt())
       {
@@ -258,7 +332,7 @@ class PythonSource
       }
       else
       {
-        for (String simple : simpleStatements(text))
+        for (String simple : simpleStatements(text, cases))
         {
           names.addAll(statementNames(simple));
         }
@@ -282,8 +356,9 @@ class PythonSource
   // the headers of nested definitions included
   public static boolean isGenerator(String code)
   {
-    for (String text : ownStatements(code))
+    for (String statement : ownStatements(code))
     {
+      String text = statement.trim();
       Matcher block = NESTED_BLOCK.matcher(text);
       if (YIELD.matcher(block.lookingAt() ? header(text, block.end()) : text).find())
       {
@@ -293,7 +368,7 @@ class PythonSource
     return false;
   }
 
-  // The logical lines of a Python function body that run in its own scope, trimmed, with strings,
+  // The logical lines of a Python function body that run in its own scope, at their indentation, with strings,
   // comments and what lambdas keep to themselves blanked out. Nested functions and classes keep their
   // header lines; their bodies are left out.
   private static List<String> ownStatements(String code)
@@ -323,7 +398,7 @@ class PythonSource
         continue;
       }
       nested = NESTED_BLOCK.matcher(text).lookingAt() ? indent : -1;
-      statements.add(text);
+      statements.add(spaces(indent) + text);
     }
     return statements;
   }
@@ -442,13 +517,16 @@ class PythonSource
   // What follows the soft keywords match and case when they start a statement rather than name a variable
   private static final String SOFT_KEYWORD_END = "(?:\\s+(?![=:.,;)\\]])|\\s*(?=[(\\[{]))";
   private static final Pattern COMPOUND = Pattern.compile("(?:if|elif|else|while|for|with|async\\s+for|async\\s+with|try|except|finally)\\b"
-    + "|(?:match|case)" + SOFT_KEYWORD_END);
+    + "|match" + SOFT_KEYWORD_END);
+  private static final Pattern MATCH_START = Pattern.compile("match" + SOFT_KEYWORD_END);
+  private static final Pattern CASE_START = Pattern.compile("case" + SOFT_KEYWORD_END);
   // A case header, with the colon of its suite; case(x) or case[x] = 1 is ordinary code
   private static final Pattern CASE = Pattern.compile("case" + SOFT_KEYWORD_END + "(.*):");
 
   // The simple statements of a logical line: those its semicolons separate, and the one after a
-  // compound statement's header (if x: y = 1). A for or case header counts too, for what it binds.
-  private static List<String> simpleStatements(String text)
+  // compound statement's header (if x: y = 1). A for header counts too, for what it binds, and so does
+  // a case header where the line can be one (cases).
+  private static List<String> simpleStatements(String text, boolean cases)
   {
     List<String> statements = new ArrayList<String>();
     int depth = 0;
@@ -457,13 +535,14 @@ class PythonSource
     {
       char c = i < text.length() ? text.charAt(i) : ';';
       depth += "([{".indexOf(c) >= 0 ? 1 : ")]}".indexOf(c) >= 0 ? -1 : 0;
-      boolean header = c == ':' && !text.startsWith(":=", i) && COMPOUND.matcher(text.substring(start).trim()).lookingAt();
+      boolean header = c == ':' && !text.startsWith(":=", i) && (COMPOUND.matcher(text.substring(start).trim()).lookingAt()
+        || cases && CASE_START.matcher(text.substring(start).trim()).lookingAt());
       if (depth == 0 && (c == ';' || header))
       {
-        String statement = text.substring(start, header ? i + 1 : i).trim();
-        if (!header || statement.matches("(?:async\\s+)?for\\b.*") || CASE.matcher(statement).matches())
+        String simple = text.substring(start, header ? i + 1 : i).trim();
+        if (!header || simple.matches("(?:async\\s+)?for\\b.*") || cases && CASE.matcher(simple).matches())
         {
-          statements.add(statement);
+          statements.add(simple);
         }
         start = i + 1;
       }

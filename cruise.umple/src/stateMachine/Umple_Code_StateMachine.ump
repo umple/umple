@@ -40,11 +40,16 @@ mixset Trait {
               codes.put(language, composed);
               // the composed lines no longer line up with the class's source
               authoredPositions.remove(language);
+              // the trait's code brings the placeholders of its own compositions with it
+              pythonTraitGuards.putAll(cBlock.pythonTraitGuards);
+              pythonTraitBlocks.putAll(cBlock.pythonTraitBlocks);
             }
             continue;
           }
+          // the trait's body for this language, or its untagged one
+          String traitBody = cBlock.codes.get(language) != null ? cBlock.codes.get(language) : cBlock.codes.get("");
           String replacement=System.lineSeparator()+"\t\t//This part of code comes from the trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' -> begins"+System.lineSeparator()+"\t\t";
-          replacement = replacement+cBlock.codes.get(language).replace(keyword, "");
+          replacement = replacement+(traitBody == null ? "" : traitBody.replace(keyword, ""));
           replacement=replacement+System.lineSeparator()+"\t\t//The code coming from trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' ends here"+System.lineSeparator()+"\t\t";
           codes.put(language,codes.get(language).replace(keyword,replacement+keyword)) ;
         }
@@ -68,18 +73,22 @@ mixset Trait {
         authoredIndents.put("Python", "");
       }
       // code without a Python version already carries the guard in its own syntax (Action.wrapInGuard)
-      String placeholder = cBlock.codes.get("Python") == null ? "__umple_trait_code_" + pythonTraitBlocks.size() + "__" : null;
+      String placeholder = cBlock.codes.get("Python") == null ? PythonSource.placeholder("trait_code") : null;
       if (placeholder != null) {
         pythonTraitBlocks.put(placeholder, cBlock);
       }
-      String condition = guard == null || placeholder != null ? null : "__umple_trait_guard_" + pythonTraitGuards.size() + "__";
+      String condition = guard == null || placeholder != null ? null : PythonSource.placeholder("trait_guard");
       if (condition != null) {
         pythonTraitGuards.put(condition, guard);
       }
       // from the last keyword back, so that each edit leaves the earlier positions in place
       for (int k = found.size() - 1; k >= 0; k--) {
         code = PythonSource.ownLine(code, found.get(k));
-        int at = PythonSource.codePositions(code, keyword).get(k);
+        List<Integer> now = PythonSource.codePositions(code, keyword);
+        if (k >= now.size()) {
+          continue;
+        }
+        int at = now.get(k);
         String indent = code.substring(code.lastIndexOf('\n', at) + 1, at);
         String inner = condition == null ? indent : indent + "    ";
         String traitCode = placeholder != null ? "\n" + inner + placeholder

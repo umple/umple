@@ -6,7 +6,7 @@ from ImportModules import importModules
 
 importModules(["CoreItem", "CoreBook", "CoreCode", "CoreRegistry", "CoreSettings", "CoreLazy", "CorePriced",
                "CoreTagged", "CoreBothI", "CoreEnumNames", "CoreOuter", "CoreNestedUser", "FpOwner", "FpItem", "FpDetail",
-               "KfFlagChild", "KfCacheChild", "KmOwner", "KmTag", "aTitle", "bound", "OvUser",
+               "KfFlagChild", "KfCacheChild", "KmOwner", "KmTag", "aTitle", "AutoFinder", "bound", "OvUser",
                "aName", "args", "bound_", "OvPair", "MgBox", "MgItem", "MgNamed", "MgSwitch", "MgView",
                "OvShape", "OvCircle", "OvSpecific", "InjTeam", "InjPlayer", "SortBoard", "SortCard",
                "FacGarage", "FacCar", "MgProduct", "MgDoc", "OvCanvas", "TxBox", "TxLabel",
@@ -213,6 +213,9 @@ class CoreTest(unittest.TestCase):
         self.assertIs(first, aTitle.aTitle.getWithId(first.getId()))
         first.delete()
         self.assertEqual((False, True), (aTitle.aTitle.hasWithId(first.getId()), aTitle.aTitle.hasWithId(second.getId())))
+        finder = AutoFinder.AutoFinder()
+        finder.go()
+        self.assertTrue(finder.getFound())
 
     def test_overloadsOnClassesNamedLikeDispatcherLocalsAndOnTheClassItself(self):
         user = OvUser.OvUser()

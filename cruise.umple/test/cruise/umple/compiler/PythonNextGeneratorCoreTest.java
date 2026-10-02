@@ -173,12 +173,32 @@ public class PythonNextGeneratorCoreTest
     Assert.assertEquals(Arrays.asList(9213), errorCodes(model));
     // Python has loaded os before the program runs, so importing a module os would get that one
     Assert.assertEquals(Arrays.asList(9213), errorCodes(generate("class os { }\n")));
+    // modules built into the interpreter are found before any file
+    for (String builtIn : Arrays.asList("builtins", "gc", "itertools", "atexit"))
+    {
+      Assert.assertEquals(builtIn, Arrays.asList(9213), errorCodes(generate("class " + builtIn + " { }\n")));
+    }
     UmpleModel anInterface = generate("interface math { }\n");
     Assert.assertTrue(messageOf(anInterface, 9213), messageOf(anInterface, 9213).startsWith("Interface math conflicts"));
     // A namespace's first part is resolved first: sys.Main could not be imported
     UmpleModel inNamespace = generate("namespace sys;\nclass Main { }\n");
     Assert.assertTrue(messageOf(inNamespace, 9213), messageOf(inNamespace, 9213).startsWith("The namespace sys of class Main conflicts"));
     Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("namespace app.sys;\nclass Main { }\n")));
+  }
+
+  // Each interface is searched once per constant, so a deep diamond of interfaces stays quick
+  @Test(timeout = 30000)
+  public void constantsOfInterfaceDiamondsAreFoundQuickly() throws Exception
+  {
+    StringBuilder model = new StringBuilder("interface A0 { }\ninterface B0 { }\n");
+    for (int i = 1; i <= 30; i++)
+    {
+      model.append("interface A" + i + " { isA A" + (i - 1) + ", B" + (i - 1) + "; }\n");
+      model.append("interface B" + i + " { isA A" + (i - 1) + ", B" + (i - 1) + "; }\n");
+    }
+    model.append("interface Limit { const Integer MAX = 5; }\ninterface Top { isA A30, B30, Limit; }\n");
+    model.append("class Check { sm { S { go [Top.MAX > 0] -> T; } T { } } }\n");
+    Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate(model.toString())));
   }
 
   @Test

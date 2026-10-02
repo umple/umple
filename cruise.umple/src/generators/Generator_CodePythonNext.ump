@@ -27,11 +27,12 @@ class PythonNextGenerator
   public JavaGenerator names = new JavaGenerator();
 
   // Standard modules a class module or top-level package must not be named after: those generated
-  // code imports, directly or through the standard library, and those Python loads at startup, which
-  // an import would find instead.
+  // code imports, directly or through the standard library, those built into the interpreter, and
+  // those Python loads at startup, which an import would find instead.
   private static final List<String> STANDARD_MODULES = Arrays.asList("abc", "enum", "threading", "datetime", "sys",
     "math", "fractions", "random", "time", "decimal", "numbers", "bisect", "heapq", "warnings", "sre_compile", "sre_constants",
-    "sre_parse", "codecs", "collections", "copyreg", "encodings", "functools", "genericpath", "io", "keyword",
+    "sre_parse", "builtins", "atexit", "errno", "faulthandler", "gc", "itertools", "marshal", "posix", "pwd", "xxsubtype", "nt",
+    "winreg", "msvcrt", "codecs", "collections", "copyreg", "encodings", "functools", "genericpath", "io", "keyword",
     "ntpath", "operator", "os", "posixpath", "re", "reprlib", "site", "stat", "types", "zipimport");
 
   // Built-ins the generated code uses. A class with one of these names would hide it in its own
@@ -1140,24 +1141,46 @@ class PythonNextGenerator
     return lines;
   }
 
-  // A class-level value: a constant or the first value of an autounique counter. A value of literals
-  // and operators alone is set in the class body. Any other is computed when first read and then kept
-  // (ClassValue), so it can use any class of any module, in whatever order they are loaded; the
-  // imports it needs follow the module's class (classValueImports).
-  public String classValue(UmpleClass uClass, Attribute av)
+  // A class-level value, a constant or the first value of an autounique counter, as the class body
+  // member named member. A literal, or a value of literals and operators alone, is assigned there.
+  // Any other is a function of the value, imports included, that ClassValue computes once, when the
+  // value is first read: it can then use any class of any module, whatever order they load in.
+  public String classMember(UmpleClass uClass, String member, Attribute av)
   {
     if (av.getIsList() && hasLiteralItems(av))
     {
-      return literalList(av);
+      return "\n    " + member + " = " + literalList(av);
     }
     String literal = av.getIsList() ? null : literal(av.getType(), av.getValue());
-    return literal != null ? literal : computedValue(uClass, av.getName(), av.getType(), av.getValue(), av.getIsList(), av.getPosition());
+    return literal != null ? "\n    " + member + " = " + literal
+      : computedMember(uClass, member, av.getName(), av.getType(), av.getValue(), av.getIsList(), av.getPosition());
   }
 
-  public String classValue(UmpleClass uClass, Constant aConstant)
+  public String classMember(UmpleClass uClass, Constant aConstant)
   {
     String literal = literal(aConstant.getType(), aConstant.getValue());
-    return literal != null ? literal : computedValue(uClass, aConstant.getName(), aConstant.getType(), aConstant.getValue(), false, null);
+    return literal != null ? "\n    " + aConstant.getName() + " = " + literal
+      : computedMember(uClass, aConstant.getName(), aConstant.getName(), aConstant.getType(), aConstant.getValue(), false, null);
+  }
+
+  private String computedMember(UmpleClass uClass, String member, String name, String type, String code, boolean isList, Position position)
+  {
+    String value = translateClassValue(code, uClass, isList, position, "the constant " + name);
+    if (value == null)
+    {
+      return "\n    " + member + " = " + defaultValue(type, isList);
+    }
+    Set<String> names = PythonSource.codeNames(value);
+    if (!isList && getSnippetImports().isEmpty() && Arrays.asList("True", "False", "None").containsAll(names))
+    {
+      return "\n    " + member + " = " + value;
+    }
+    StringBuilder function = new StringBuilder("\n\n    @" + classValueHelper() + "\n    def " + member + "():");
+    for (String line : getSnippetImports())
+    {
+      function.append("\n        ").append(line);
+    }
+    return function.append("\n        return ").append(value).append("\n").toString();
   }
 
   // Whether reading a constant may compute it and so run model code; a literal is a plain class
@@ -1182,39 +1205,8 @@ class PythonNextGenerator
     return false;
   }
 
-  // The imports the computed class values of a module need, by its outermost class
-  private Map<UmpleClass, Set<String>> classValueImports = new HashMap<UmpleClass, Set<String>>();
-
-  private String computedValue(UmpleClass uClass, String name, String type, String code, boolean isList, Position position)
-  {
-    String value = translateClassValue(code, uClass, isList, position, "the constant " + name);
-    if (value == null)
-    {
-      return defaultValue(type, isList);
-    }
-    Set<String> names = PythonSource.codeNames(value);
-    if (!isList && getSnippetImports().isEmpty() && Arrays.asList("True", "False", "None").containsAll(names))
-    {
-      return value;
-    }
-    UmpleClass module = outermost(uClass);
-    if (!classValueImports.containsKey(module))
-    {
-      classValueImports.put(module, new LinkedHashSet<String>());
-    }
-    classValueImports.get(module).addAll(getSnippetImports());
-    return classValueHelper() + "(lambda: " + value + ")";
-  }
-
-  // The module-level imports of a top-level class's computed class values and its nested classes'
-  public String classValueImports(UmpleClass uClass)
-  {
-    Set<String> imports = uClass.getOuterClass() == null ? classValueImports.remove(uClass) : null;
-    return imports == null || imports.isEmpty() ? "" : "\n\n\n" + String.join("\n", imports);
-  }
-
-  // The module-level class whose objects are computed class values: each computes its value once, when
-  // first read, and puts it in place of itself. A thread that finds another computing it waits, unless
+  // The module-level class that makes a class body function a computed class value (classMember): it
+  // computes the value once, when first read, and puts it in place of itself. A thread that finds another computing it waits, unless
   // that thread is itself waiting, directly or through others, for a value this one is computing: then
   // waiting would never end, and the value is reported as needed to compute itself, as in a single
   // thread. A failed computation lets the next reader try again.
@@ -1260,9 +1252,12 @@ class PythonNextGenerator
       + "\n            self._condition.notify_all()"
       + "\n        return value"
       + "\n\n    def _waitsFor(self, me):"
-      + "\n        # whether the thread computing this value waits, directly or through others, for me"
+      + "\n        # whether the thread computing this value waits, directly or through others, for me; a"
+      + "\n        # cycle of other threads ends the walk, as those threads report it themselves"
       + "\n        thread = self._computer"
-      + "\n        while thread is not None and thread is not me:"
+      + "\n        seen = set()"
+      + "\n        while thread is not None and thread is not me and thread not in seen:"
+      + "\n            seen.add(thread)"
       + "\n            wanted = getattr(thread, \"classValueWanted\", None)"
       + "\n            thread = wanted._computer if wanted is not None else None"
       + "\n        return thread is me");

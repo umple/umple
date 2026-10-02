@@ -1598,25 +1598,33 @@ class PythonNextGenerator
       StringBuilder imports = new StringBuilder();
       for (Map.Entry<String, String> guard : code.getPythonTraitGuards().entrySet())
       {
+        if (PythonSource.codePositions(python, guard.getKey()).isEmpty())
+        {
+          continue;
+        }
         String condition = translateSnippetAt(guard.getValue(), uClass, parameters, isStatic, true, at, "the guard of " + slot);
         if (condition == null)
         {
           return "";
         }
-        python = python.replace(guard.getKey(), condition);
+        python = PythonSource.replaceCode(python, guard.getKey(), condition);
         for (String line : getSnippetImports())
         {
           imports.append("\n").append(indent).append(line);
         }
       }
-      // trait code without a Python version, composed with superCall, is rendered as its own slot
+      // trait code without a Python version, composed with superCall, is rendered as its own slot at
+      // each line that holds its placeholder
       for (Map.Entry<String, CodeBlock> part : code.getPythonTraitBlocks().entrySet())
       {
-        Matcher line = Pattern.compile("(?m)^([ \t]*)" + Pattern.quote(part.getKey()) + "$").matcher(python);
-        if (line.find())
+        List<Integer> found = PythonSource.codePositions(python, part.getKey());
+        String body = found.isEmpty() ? "" : slotCode(part.getValue(), uClass, parameters, isStatic, "", slot, at);
+        for (int k = found.size() - 1; k >= 0; k--)
         {
-          String body = slotCode(part.getValue(), uClass, parameters, isStatic, line.group(1), slot, at);
-          python = python.substring(0, line.start()) + (body.isEmpty() ? line.group(1) + "pass" : body.substring(1)) + python.substring(line.end());
+          int lineStart = python.lastIndexOf('\n', found.get(k)) + 1;
+          String lineIndent = python.substring(lineStart, found.get(k));
+          python = python.substring(0, lineStart) + (body.isEmpty() ? lineIndent + "pass" : PythonSource.reindent(body, "", lineIndent).substring(1))
+            + python.substring(found.get(k) + part.getKey().length());
         }
       }
       return imports + functionCode(python, code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass);

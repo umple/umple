@@ -4,18 +4,17 @@ class UmpleToPythonNext {
   int start = realSb.length();
   for (Constant aConstant : uClass.getConstants())
   {
-    realSb.append("\n    " + aConstant.getName() + " = " + gen.classValue(uClass, aConstant));
+    realSb.append(gen.classMember(uClass, aConstant));
   }
   for (Attribute av : gen.attributes(uClass))
   {
     if (av.isConstant())
     {
-      String value = gen.classValue(uClass, av);
-      realSb.append("\n    " + av.getName() + " = " + value);
+      realSb.append(gen.classMember(uClass, av.getName(), av));
     }
     else if (av.getIsAutounique())
     {
-      realSb.append("\n    next" + av.getUpperCaseName() + " = " + (av.getValue() == null ? "1" : gen.classValue(uClass, av)));
+      realSb.append(av.getValue() == null ? "\n    next" + av.getUpperCaseName() + " = 1" : gen.classMember(uClass, "next" + av.getUpperCaseName(), av));
       realSb.append("\n    " + gen.uniqueMap(uClass, av) + " = {}");
     }
     else if (av.getIsUnique())

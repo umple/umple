@@ -1704,7 +1704,7 @@ class PythonSnippetTranslator
       // its enumeration's name, as in Light.Green where Light is also the machine's field.
       String member = typeRef("enumtype:" + kind.substring(5)) + "." + name;
       String code = afterEvaluating(target, member);
-      return set(n, code, kind, ATOM, code.equals(member), true);
+      return set(n, code, kind, ATOM, code.equals(member), code.equals(member));
     }
     String[] field = kind.startsWith("object:") ? fieldOf(kind, name) : null;
     if (field != null)
@@ -1716,8 +1716,8 @@ class PythonSnippetTranslator
     {
       String member = constantRef(constant[0], name);
       String code = afterEvaluating(target, member);
-      boolean computed = gen.isComputedConstant(classifier(kind.substring(7)), name);
-      return set(n, code, constant[1], ATOM, code.equals(member) && !computed, !computed);
+      boolean plain = code.equals(member) && !gen.isComputedConstant(classifier(kind.substring(7)), name);
+      return set(n, code, constant[1], ATOM, plain, plain);
     }
     if (kind.startsWith("object:"))
     {
@@ -3229,7 +3229,7 @@ class PythonSnippetTranslator
         method(methods, gen.translate("getDefaultMethod", a), "", kind);
         method(methods, gen.translate("resetMethod", a), "", "bool");
       }
-      if (a.getIsUnique())
+      if (a.getIsUnique() || a.getIsAutounique())
       {
         method(methods, gen.translate("getUniqueMethod", a), kind, "static object:" + k.getName());
         method(methods, gen.translate("hasUniqueMethod", a), kind, "static bool");

@@ -27,6 +27,7 @@ _NAMES = [
     "MultipleAfterLeaves", "MultipleAfterReentry",
     "MixedGuards", "GuardReceiver", "ReceiverGuard", "DependentGuard", "NoEventsAfterDelete",
     "PlainDelete", "Ring", "Telemetry", "TraitEntry", "TraitGuard", "TraitSuite", "TraitUntagged",
+    "TraitNested", "TraitRepeated", "TraitOtherLanguage", "TraitBilingual", "TraitContinued",
 ]
 importModules(["SmLifecycle" + name for name in _NAMES], ["sm"])
 importModules(["visit", "SmLifecycleDelayClassName", "SmLifecycleDelayValueName",
@@ -124,6 +125,11 @@ class LifecycleTest(unittest.TestCase):
         self.assertEqual("class;", self._model("TraitGuard").getLog())
         self.assertEqual("trait;class;trait;", self._model("TraitSuite").getLog())
         self.assertEqual("trait;class;", self._model("TraitUntagged").getLog())
+        self.assertEqual("middle;class;", self._model("TraitNested").getLog())
+        self.assertEqual("trait;trait;class;", self._model("TraitRepeated").getLog())
+        self.assertEqual("class;", self._model("TraitOtherLanguage").getLog())
+        self.assertEqual("trait;class;", self._model("TraitBilingual").getLog())
+        self.assertEqual("trait;class;", self._model("TraitContinued").getLog())
 
     def test_plain_machine_takes_no_events_after_delete(self):
         obj = self._model("PlainDelete")

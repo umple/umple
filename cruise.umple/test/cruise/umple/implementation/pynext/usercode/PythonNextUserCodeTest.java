@@ -359,6 +359,26 @@ public class PythonNextUserCodeTest
     {
       Assert.assertFalse(name, cases.contains(name));
     }
+    // outside a match statement, case is a name: case[Item]: int annotates a subscript
+    Assert.assertFalse(cruise.umple.util.PythonSource.boundNames("case = {}\ncase[Item]: int").contains("Item"));
+  }
+
+  // A trait's code goes where superCall stands once that statement has a line of its own, also after
+  // a header continued over lines; placeholders are replaced only where they are code
+  @Test
+  public void givesAStatementItsOwnLine() throws Exception
+  {
+    String code = "if (\n    True\n): superCall; x()\ny()";
+    Assert.assertEquals("if (\n    True\n):\n    superCall;\n    x()\ny()",
+      cruise.umple.util.PythonSource.ownLine(code, code.indexOf("superCall")));
+    Assert.assertEquals("a()", cruise.umple.util.PythonSource.ownLine("a()", 0));
+    String withLambda = "if lambda: True: superCall; x()";
+    Assert.assertEquals("if lambda: True:\n    superCall;\n    x()", cruise.umple.util.PythonSource.ownLine(withLambda, withLambda.indexOf("superCall")));
+    Assert.assertEquals("x = \"__t__\"\ny(1)", cruise.umple.util.PythonSource.replaceCode("x = \"__t__\"\ny(__t__)", "__t__", "1"));
+    // the shared composition also serves Java, whose body takes the trait's untagged code
+    UmpleModel model = generate("generate Java;\ntrait T { sm { S { entry / { System.out.println(\"trait\"); } } } }\n"
+      + "class A { isA T; sm { S { entry / Python { superCall; print(\"class\") } Java { superCall; System.out.println(\"class\"); } } } }\n");
+    Assert.assertTrue(model.getGeneratedCode().toString(), model.getGeneratedCode().containsKey("A"));
   }
 
   // A docstring is a statement of string literals alone, however written; anything else gets its

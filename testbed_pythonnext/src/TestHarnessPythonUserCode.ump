@@ -684,6 +684,40 @@ class LazyGuard
   sm { S { go [ALLOW] -> T; } T { } }
 }
 
+// A receiver read through a literal member is still evaluated
+class LazyChain
+{
+  const LazyHolder REF = make();
+  Integer result = REF.END.value();
+  public static LazyHolder make() Python {
+    print("made")
+    return LazyHolder()
+  }
+}
+
+class LazyHolder
+{
+  const LazyEnd END = null;
+}
+
+class LazyEnd
+{
+  public static int value() Python { return 5 }
+}
+
+// A computed constant imports what it uses when it is computed, so the module of a subclass it uses
+// can be imported first
+class ValueBase
+{
+  const Integer N = ValueDerived.seven();
+}
+
+class ValueDerived
+{
+  isA ValueBase;
+  public static int seven() Python { return 7 }
+}
+
 // Two threads reading two values that need each other both hear of the cycle
 class LazyCycle
 {

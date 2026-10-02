@@ -1001,6 +1001,50 @@ class SmLifecycleTraitSuite {
   sm { S { entry / Python { if True: superCall; self.setLog(self.getLog() + "class;"); superCall; } } }
 }
 
+// A trait composed into a trait keeps its own guard; untagged trait code fills every superCall,
+// code only for other languages fills none; a class action in two languages takes the trait's
+// untagged code; a header continued over lines keeps its suite
+trait SmLifecycleBaseGuarded { sm { S { entry [false] / Python { self.setLog(self.getLog() + "base;") } } } }
+trait SmLifecycleMiddle { isA SmLifecycleBaseGuarded; sm { S { entry [true] / Python { superCall; self.setLog(self.getLog() + "middle;") } } } }
+class SmLifecycleTraitNested {
+  isA SmLifecycleMiddle;
+  String log = "";
+  sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+trait SmLifecycleUntaggedTwice { sm { S { entry / { log = log + "trait;"; } } } }
+class SmLifecycleTraitRepeated {
+  isA SmLifecycleUntaggedTwice;
+  String log = "";
+  sm { S { entry / Python { superCall; superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+trait SmLifecycleJavaOnly { sm { S { entry / Java { System.out.println("java"); } } } }
+class SmLifecycleTraitOtherLanguage {
+  isA SmLifecycleJavaOnly;
+  String log = "";
+  sm { S { entry / Python { superCall; superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+trait SmLifecycleUntaggedFallback { sm { S { entry / { log = log + "trait;"; } } } }
+class SmLifecycleTraitBilingual {
+  isA SmLifecycleUntaggedFallback;
+  String log = "";
+  sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") }
+    Java { superCall; log = log + "class;"; } } }
+}
+
+trait SmLifecycleContinuedCounting { sm { S { entry / Python { self.setLog(self.getLog() + "trait;") } } } }
+class SmLifecycleTraitContinued {
+  isA SmLifecycleContinuedCounting;
+  String log = "";
+  sm { S { entry / Python {
+    if (
+        True
+    ): superCall; self.setLog(self.getLog() + "class;")
+  } } }
+}
+
 // Untagged trait code is translated where superCall puts it, with its guard
 trait SmLifecycleUntaggedCounting { sm { S { entry [!skip] / { log = log + "trait;"; } } } }
 class SmLifecycleTraitUntagged {
