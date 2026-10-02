@@ -178,7 +178,7 @@ public class PythonNextGeneratorCoreTest
     {
       Assert.assertEquals(builtIn, Arrays.asList(9213), errorCodes(generate("class " + builtIn + " { }\n")));
     }
-    for (String builtIn : Arrays.asList("_thread", "_abc", "builtins"))
+    for (String builtIn : Arrays.asList("_thread", "_abc", "builtins", "calendar", "email", "json"))
     {
       Assert.assertEquals(builtIn, Arrays.asList(9213), errorCodes(generate("namespace " + builtIn + ";\nclass A { }\n")));
       Assert.assertEquals(builtIn, new ArrayList<Integer>(), errorCodes(generate("namespace app." + builtIn + ";\nclass A { }\n")));

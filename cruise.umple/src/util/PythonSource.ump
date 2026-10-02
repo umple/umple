@@ -195,7 +195,7 @@ class PythonSource
     {
       return code;
     }
-    boolean caseLevel = caseLevels(visible).contains(start);
+    boolean caseLevel = caseLevels(code, visible).contains(start);
     String line = code.substring(start, end);
     String shown = visible.substring(start, end);
     String indent = line.substring(0, leadingWhitespace(line));
@@ -269,15 +269,15 @@ class PythonSource
   }
 
   // The starts of the logical lines at the cases' level of a match statement, where case begins a
-  // case header; elsewhere case is a name
-  private static Set<Integer> caseLevels(String visible)
+  // case header; elsewhere case is a name. code is the source of visible, its code text.
+  private static Set<Integer> caseLevels(String code, String visible)
   {
     Set<Integer> levels = new HashSet<Integer>();
     Deque<int[]> matches = new ArrayDeque<int[]>(); // the match statements around, innermost first: {indentation, cases' indentation}
     for (int[] line : logicalLines(visible))
     {
       String text = lineText(visible, line);
-      int indent = indentWidth(visible.substring(line[0], line[1]));
+      int indent = indentWidth(code.substring(line[0], line[1])); // a string opening the line is no indentation
       if (text.isEmpty())
       {
         continue;
@@ -369,9 +369,11 @@ class PythonSource
       }
       else
       {
-        for (String simple : simpleStatements(text, cases))
+        // only the line's first statement can be a case header; its suite holds ordinary statements
+        List<String> simples = simpleStatements(text, cases);
+        for (int k = 0; k < simples.size(); k++)
         {
-          names.addAll(statementNames(simple, cases));
+          names.addAll(statementNames(simples.get(k), cases && k == 0));
         }
       }
       Matcher bound = BINDING.matcher(text);
@@ -413,13 +415,13 @@ class PythonSource
     StringBuilder blanked = new StringBuilder(codeText(code));
     blankLambdas(blanked);
     String visible = blanked.toString();
-    Set<Integer> caseLevels = caseLevels(visible);
+    Set<Integer> caseLevels = caseLevels(code, visible);
     List<String[]> statements = new ArrayList<String[]>();
     int nested = -1; // the indentation of a nested def or class whose body is being skipped
     for (int[] line : logicalLines(visible))
     {
       String text = lineText(visible, line);
-      int indent = indentWidth(visible.substring(line[0], line[1]));
+      int indent = indentWidth(code.substring(line[0], line[1])); // a string opening the line is no indentation
       if (text.isEmpty() || nested >= 0 && indent > nested)
       {
         continue;
@@ -570,6 +572,7 @@ class PythonSource
         {
           statements.add(simple);
         }
+        cases = cases && !header; // what follows a header on its line is its suite
         start = i + 1;
       }
     }

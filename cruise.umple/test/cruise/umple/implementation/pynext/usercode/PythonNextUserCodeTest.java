@@ -362,6 +362,10 @@ public class PythonNextUserCodeTest
     // outside a match statement, case is a name: case[Item]: int annotates a subscript
     Assert.assertFalse(cruise.umple.util.PythonSource.boundNames("case = {}\ncase[Item]: int").contains("Item"));
     Assert.assertFalse(cruise.umple.util.PythonSource.boundNames("case = {}\ncase[Item]: \"int\"").contains("Item"));
+    // only a case header's own statement is read as a pattern, not its one-line suite
+    Assert.assertFalse(cruise.umple.util.PythonSource.boundNames("match p:\n    case 0: case[Item]: \"int\"").contains("Item"));
+    // a string opening a line is not that line's indentation
+    Assert.assertTrue(cruise.umple.util.PythonSource.boundNames("def f():\n    pass\n\"\"\"a\nb\"\"\"; Item = 1").contains("Item"));
     // a line break inside a string does not end the match statement's header
     Assert.assertTrue(cruise.umple.util.PythonSource.boundNames("match \"\"\"one\ntwo\"\"\":\n    case Item: pass").contains("Item"));
   }
