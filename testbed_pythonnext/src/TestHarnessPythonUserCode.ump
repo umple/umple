@@ -597,6 +597,18 @@ class ScopedUser
     """Names the item class."""
     return CrateItem.__name__
   }
+  String documentedTersely() Python {
+    "Names it tersely."; return CrateItem.__name__
+  }
+  String notDocumented() Python {
+    "prefix " + CrateItem.__name__
+    return CrateItem.__name__
+  }
+  before viaYielded Python { CrateItem = "before" }
+  String viaYielded() Python {
+    yielded = 1
+    return CrateItem
+  }
 }
 
 // A class value that is not a literal is set once its class exists, so what it calls may import
@@ -608,6 +620,7 @@ class ValueOwner
   const String LABEL = ValueSource.label();
   const Integer PENDING = ValueSource.pending();
   const Integer FROM_INNER = ValueInner.value();
+  const char MARK = ValueSource.mark();
   inner class ValueInner
   {
     const Integer K = seed();
@@ -620,6 +633,31 @@ class ValueSource
 {
   public static String label() Python { return "seed " + str(ValueOwner.SEED) }
   public static int pending() Python { return ValueOwner.PENDING }
+  public static char mark() Python { return ValueOwner.MARK }
+}
+
+// Reading a literal constant does not initialize its class, as in Java
+class LiteralOwner
+{
+  const Integer N = LiteralInner.LIT + 1;
+  inner class LiteralInner
+  {
+    const Integer LIT = 5;
+    const Integer K = LiteralOwner.N;
+  }
+}
+
+// A value another module reads is set before that module is imported
+class ValueFirst
+{
+  const Integer FIRST = start();
+  const Integer SECOND = ValueSecond.VALUE;
+  public static int start() Python { return 5 }
+}
+
+class ValueSecond
+{
+  const Integer VALUE = ValueFirst.FIRST;
 }
 
 // Inherited events and variable-argument methods compete with a subclass's overloads too.

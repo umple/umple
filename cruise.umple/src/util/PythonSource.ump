@@ -183,45 +183,27 @@ class PythonSource
 
   // The names a Python function body binds in its own scope: by import, def and class (their names,
   // not what their bodies bind), global, nonlocal, assignment (annotated or augmented too), del, a for
-  // statement, as and :=. An annotation alone makes its name local too. Names that nested functions,
-  // classes, lambdas and comprehensions bind belong to those scopes, and attributes and subscripts are
-  // not names.
+  // statement, as and :=. An annotation alone makes its name local too. Nested functions, lambdas and
+  // comprehensions keep their parameters and what their bodies bind, but the default values of nested
+  // functions and lambdas run here. Attribute and subscript targets bind no name of their receiver or
+  // index.
   public static Set<String> boundNames(String code)
   {
-    boolean[] isCode = codeChars(code, true);
-    StringBuilder visible = new StringBuilder(code);
-    for (int i = 0; i < code.length(); i++)
-    {
-      if (!isCode[i] && code.charAt(i) != '\n')
-      {
-        visible.setCharAt(i, ' ');
-      }
-    }
-    blankLambdas(visible);
     Set<String> names = new HashSet<String>();
-    int brackets = 0;
-    int nested = -1; // the indentation of a nested def or class whose body is being skipped
-    for (String line : visible.toString().split("\n", -1))
+    for (String text : ownStatements(code))
     {
-      boolean statement = brackets <= 0;
-      brackets += bracketBalance(line);
-      String text = line.trim();
-      int indent = indentWidth(line);
-      if (text.isEmpty() || nested >= 0 && (!statement || indent > nested))
-      {
-        continue;
-      }
-      nested = -1;
       Matcher block = NESTED_BLOCK.matcher(text);
-      if (statement && block.lookingAt())
+      if (block.lookingAt())
       {
         names.add(block.group(1));
-        nested = indent;
-        continue;
+        text = bracketed(text, block.end());
       }
-      for (String simple : statement ? simpleStatements(text) : new ArrayList<String>())
+      else
       {
-        names.addAll(statementNames(simple));
+        for (String simple : simpleStatements(text))
+        {
+          names.addAll(statementNames(simple));
+        }
       }
       Matcher bound = BINDING.matcher(text);
       while (bound.find())
@@ -233,7 +215,145 @@ class PythonSource
     return names;
   }
 
+  // Whether a Python function body is a generator's: it yields in its own scope, f-string fields
+  // included
+  public static boolean isGenerator(String code)
+  {
+    for (String text : ownStatements(code))
+    {
+      if (!NESTED_BLOCK.matcher(text).lookingAt() && YIELD.matcher(text).find())
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // The logical lines of a Python function body that run in its own scope, trimmed, with strings,
+  // comments and what lambdas keep to themselves blanked out. Nested functions and classes keep their
+  // header lines; their bodies are left out.
+  private static List<String> ownStatements(String code)
+  {
+    StringBuilder visible = new StringBuilder(codeText(code));
+    blankLambdas(visible);
+    List<String> statements = new ArrayList<String>();
+    StringBuilder logical = new StringBuilder();
+    int brackets = 0;
+    int indent = 0;
+    int nested = -1; // the indentation of a nested def or class whose body is being skipped
+    for (String line : visible.toString().split("\n", -1))
+    {
+      indent = logical.length() == 0 ? indentWidth(line) : indent;
+      brackets += bracketBalance(line);
+      boolean continued = line.trim().endsWith("\\");
+      logical.append(continued ? line.substring(0, line.lastIndexOf('\\')) : line).append(' ');
+      if (brackets > 0 || continued)
+      {
+        continue;
+      }
+      String text = logical.toString().trim();
+      logical.setLength(0);
+      brackets = 0;
+      if (text.isEmpty() || nested >= 0 && indent > nested)
+      {
+        continue;
+      }
+      nested = NESTED_BLOCK.matcher(text).lookingAt() ? indent : -1;
+      statements.add(text);
+    }
+    return statements;
+  }
+
+  // Python source with its strings and comments blanked out, line breaks kept; the replacement fields
+  // of f-strings stay, as code
+  public static String codeText(String code)
+  {
+    boolean[] isCode = codeChars(code, true);
+    StringBuilder text = new StringBuilder(code);
+    for (int i = 0; i < code.length(); i++)
+    {
+      if (!isCode[i] && code.charAt(i) != '\n')
+      {
+        text.setCharAt(i, ' ');
+      }
+    }
+    return text.toString();
+  }
+
+  // Where the docstring opening Python source ends: after a statement made only of string literals
+  // (adjacent ones and brackets around them included; not f-strings or bytes), at the comment, semicolon
+  // or line break after it. -1 when the source does not open with one.
+  public static int docstringEnd(String code)
+  {
+    int depth = 0;
+    boolean strings = false;
+    for (int i = 0; i < code.length(); i++)
+    {
+      char c = code.charAt(i);
+      boolean quote = c == '"' || c == '\'';
+      if (depth == 0 && (c == '#' || c == ';' || c == '\n' || c == '\r') && strings)
+      {
+        return i;
+      }
+      if (c == '#' && depth > 0)
+      {
+        i = code.indexOf('\n', i) < 0 ? code.length() : code.indexOf('\n', i);
+      }
+      else if (c == '(' && !strings)
+      {
+        depth++;
+      }
+      else if (c == ')' && strings && depth > 0)
+      {
+        depth--;
+      }
+      else if (quote || "rRuU".indexOf(c) >= 0 && i + 1 < code.length() && "\"'".indexOf(code.charAt(i + 1)) >= 0)
+      {
+        int open = quote ? i : i + 1;
+        String single = code.substring(open, open + 1);
+        String delimiter = code.startsWith(single + single + single, open) ? single + single + single : single;
+        int close = open + delimiter.length();
+        while (close < code.length() && !code.startsWith(delimiter, close))
+        {
+          close += code.charAt(close) == '\\' ? 2 : 1;
+        }
+        i = close + delimiter.length() - 1;
+        strings = true;
+      }
+      else if (c == '\\' && i + 1 < code.length() && code.charAt(i + 1) == '\n')
+      {
+        i++;
+      }
+      else if (" \t\f\n\r".indexOf(c) < 0 || depth == 0 && !strings && (c == '\n' || c == '\r'))
+      {
+        return -1;
+      }
+    }
+    return strings && depth == 0 ? code.length() : -1;
+  }
+
+  // The bracketed text right after position from (a definition's parameters or bases), or ""
+  private static String bracketed(String text, int from)
+  {
+    int open = text.indexOf('(', from);
+    if (open < 0 || !text.substring(from, open).trim().isEmpty())
+    {
+      return "";
+    }
+    int depth = 0;
+    for (int i = open; i < text.length(); i++)
+    {
+      depth += text.charAt(i) == '(' ? 1 : text.charAt(i) == ')' ? -1 : 0;
+      if (depth == 0)
+      {
+        return text.substring(open, i + 1);
+      }
+    }
+    return text.substring(open);
+  }
+
   private static final Pattern NESTED_BLOCK = Pattern.compile("(?:async\\s+)?(?:def|class)\\s+(\\w+)");
+  private static final Pattern YIELD = Pattern.compile("(?<![\\w.])yield\\b");
   private static final Pattern IMPORT = Pattern.compile("import\\s+([^;]+)|from\\s+\\S+\\s+import\\s+(?:\\(([^)]*)\\)?|([^;]+))");
   // A binding anywhere in a line: as and :=
   private static final Pattern BINDING = Pattern.compile("\\bas\\s+(\\w+)|(\\w+)\\s*:=");
@@ -304,10 +424,6 @@ class PythonSource
     return names;
   }
 
-  // A subscript or a call, with what it holds, after a name or another one
-  private static final Pattern SUBSCRIPT = Pattern.compile("(?<=[\\w)\\]@])\\s*[\\[(][^\\[\\]()]*[\\])]");
-  private static final Pattern TARGET_NAME = Pattern.compile("(?<![\\w.])\\w+(?![\\w.@])");
-
   // The names an assignment statement binds: the targets before each = of the line, outside
   // brackets, chained, annotated or augmented
   private static List<String> assignedNames(String text)
@@ -331,60 +447,102 @@ class PythonSource
     return names;
   }
 
-  // The plain names of a target list: neither attributes nor subscripted, nor in a subscript or an
-  // annotation
+  // The plain names of a target list, up to an annotation: not attributes, not subscripted or called,
+  // and not inside a subscript or call
   private static List<String> targetNames(String targets)
   {
-    String plain = targets.replaceAll("\\s*\\.\\s*", ".");
-    for (String before = null; !plain.equals(before); )
-    {
-      before = plain;
-      plain = SUBSCRIPT.matcher(plain).replaceAll("@");
-    }
     List<String> names = new ArrayList<String>();
-    Matcher name = TARGET_NAME.matcher(plain.split(":")[0]);
-    while (name.find())
+    Deque<Boolean> brackets = new ArrayDeque<Boolean>(); // whether each open bracket holds an index or arguments
+    int accesses = 0;
+    char previous = ' ';
+    for (int i = 0; i < targets.length(); i++)
     {
-      names.add(name.group());
+      char c = targets.charAt(i);
+      if (c == ':' && brackets.isEmpty())
+      {
+        break;
+      }
+      if ("([{".indexOf(c) >= 0)
+      {
+        boolean access = Character.isJavaIdentifierPart(previous) || previous == ')' || previous == ']';
+        brackets.push(access);
+        accesses += access ? 1 : 0;
+      }
+      else if (")]}".indexOf(c) >= 0 && !brackets.isEmpty())
+      {
+        accesses -= brackets.pop() ? 1 : 0;
+      }
+      else if (Character.isJavaIdentifierStart(c) && !Character.isJavaIdentifierPart(previous))
+      {
+        int end = i;
+        while (end < targets.length() && Character.isJavaIdentifierPart(targets.charAt(end)))
+        {
+          end++;
+        }
+        String next = targets.substring(end).trim();
+        if (accesses == 0 && previous != '.' && !next.startsWith(".") && !next.startsWith("[") && !next.startsWith("("))
+        {
+          names.add(targets.substring(i, end));
+        }
+        i = end - 1;
+        c = targets.charAt(i);
+      }
+      previous = Character.isWhitespace(c) ? previous : c;
     }
     return names;
   }
 
-  // Blanks out each lambda, its parameters and its body, so that what it binds stays its own. A lambda
-  // ends at a comma, colon or semicolon of its own bracket level after its parameters, at a bracket
-  // closing that level, or with its logical line.
+  private static final int PARAMETERS = 0;
+  private static final int DEFAULT = 1;
+  private static final int BODY = 2;
+
+  // Blanks out each lambda's parameters and body, which are its own scope; its default values run in
+  // the enclosing scope and stay. A lambda ends at a comma, colon or semicolon of its own bracket level
+  // after its parameters, at a bracket closing that level, or with its logical line.
   private static void blankLambdas(StringBuilder visible)
   {
     String text = visible.toString();
-    Deque<int[]> open = new ArrayDeque<int[]>(); // {bracket depth, 1 while in its parameters}, innermost first
-    int start = 0;
+    Deque<int[]> open = new ArrayDeque<int[]>(); // {bracket depth, PARAMETERS, DEFAULT or BODY}, innermost first
     int depth = 0;
     for (int i = 0; i <= text.length(); i++)
     {
       char c = i < text.length() ? text.charAt(i) : '\n';
-      if (text.startsWith("lambda", i) && startsName(text, i) && !(i + 6 < text.length() && Character.isJavaIdentifierPart(text.charAt(i + 6))))
-      {
-        start = open.isEmpty() ? i : start;
-        open.push(new int[] { depth, 1 });
-        i += 5;
-        continue;
-      }
       boolean colon = c == ':' && !text.startsWith(":=", i);
       boolean lineEnds = i == text.length() || c == '\n' && depth <= 0;
       while (!open.isEmpty())
       {
         int[] lambda = open.peek();
         boolean level = depth == lambda[0];
-        if (!lineEnds && !(level && ")]}".indexOf(c) >= 0) && !(level && lambda[1] == 0 && (c == ',' || c == ';' || colon)))
+        if (!lineEnds && !(level && ")]}".indexOf(c) >= 0) && !(level && lambda[1] == BODY && (c == ',' || c == ';' || colon)))
         {
-          lambda[1] = level && colon ? 0 : lambda[1];
           break;
         }
         open.pop();
-        for (int j = start; open.isEmpty() && j < i; j++)
+      }
+      if (text.startsWith("lambda", i) && startsName(text, i) && !(i + 6 < text.length() && Character.isJavaIdentifierPart(text.charAt(i + 6))))
+      {
+        open.push(new int[] { depth, PARAMETERS });
+        for (int j = i; j < i + 6; j++)
         {
-          visible.setCharAt(j, text.charAt(j) == '\n' ? '\n' : ' ');
+          visible.setCharAt(j, ' ');
         }
+        i += 5;
+        continue;
+      }
+      boolean own = false;
+      int[] innermost = open.peek();
+      if (innermost != null && depth == innermost[0] && innermost[1] != BODY && (colon || c == ',' || c == '=' && innermost[1] == PARAMETERS))
+      {
+        innermost[1] = colon ? BODY : c == ',' ? PARAMETERS : DEFAULT;
+        own = true; // the separator itself
+      }
+      for (int[] lambda : open)
+      {
+        own = own || lambda[1] == BODY || lambda == innermost && lambda[1] == PARAMETERS;
+      }
+      if (own && i < text.length() && c != '\n')
+      {
+        visible.setCharAt(i, ' ');
       }
       depth += "([{".indexOf(c) >= 0 ? 1 : ")]}".indexOf(c) >= 0 ? -1 : 0;
     }
@@ -452,7 +610,11 @@ class PythonSource
       else if (top != null && (Boolean) top[2])
       {
         // a format spec is text, but may hold nested replacement fields
-        if (c == '{')
+        if (c == '\\' && code.startsWith("N{", i + 1) && hasEscapes(open))
+        {
+          i = Math.max(i + 1, code.indexOf('}', i)); // a named character, not a replacement field
+        }
+        else if (c == '{')
         {
           open.add(new Object[] { null, 0, false });
           isCode[i] = true;
@@ -496,6 +658,19 @@ class PythonSource
       }
     }
     return isCode;
+  }
+
+  // Whether the innermost string open is not raw, so that its backslashes escape
+  private static boolean hasEscapes(List<Object[]> open)
+  {
+    for (int k = open.size() - 1; k >= 0; k--)
+    {
+      if (open.get(k)[0] != null)
+      {
+        return (Boolean) open.get(k)[2];
+      }
+    }
+    return false;
   }
 
   // The prefix of the string literal opening at quote (f, rf, b ...), in lower case

@@ -90,6 +90,13 @@ class QueuedTest(unittest.TestCase):
             self.assertTrue(waitFor(lambda: machine.getSmFullName() == "V"), machine.getSmFullName())
             machine.delete()
 
+    def test_anActivitySleepsForANonNegativeTime(self):
+        worker = SmSleepingActivity.SmSleepingActivity.DoActivityThread(None, "none")
+        with self.assertRaises(ValueError):
+            worker.sleep(-1)
+        worker.cancelled.set()
+        self.assertTrue(worker.sleep(1000))
+
     def test_aSleepingActivityEndsWhenItsStateIsLeft(self):
         activity = SmSleepingActivity.SmSleepingActivity()
         self.assertTrue(waitFor(lambda: activity.getTicks() >= 2))

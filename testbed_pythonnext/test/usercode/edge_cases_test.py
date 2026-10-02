@@ -6,7 +6,7 @@ from ImportModules import importModules
 
 importModules(["LoudGreeter", "Checks", "AlwaysEqual", "Pair", "CountedChild", "ContractCalls", "ContractCallsChild",
                "KeyedPart", "PartBox", "PartBoxPair", "BoxedNull", "TextualSetter", "TextualStr", "LabelCrate",
-               "CrateItem", "CountingTagged", "DependMaker", "ImplicitUser", "PickOverride", "PickWider", "ScopedUser", "ValueOwner", "EventChild",
+               "CrateItem", "CountingTagged", "DependMaker", "ImplicitUser", "PickOverride", "PickWider", "ScopedUser", "ValueOwner", "LiteralOwner", "ValueFirst", "ValueSecond", "EventChild",
                "VarargsChild", "TypedChecks"], ["usercode", "test"])
 from ImportModules import *
 
@@ -141,11 +141,16 @@ class EdgeCasesTest(unittest.TestCase):
         self.assertEqual("local", user.getSeen())
         self.assertEqual(("CrateItem1", "before", "unbound"), (user.viaLambda(), user.viaBefore(), user.viaAnnotation()))
         self.assertEqual(("CrateItem", "Names the item class."), (user.documented(), ScopedUser.ScopedUser.documented.__doc__))
+        self.assertEqual(("CrateItem", "Names it tersely."), (user.documentedTersely(), ScopedUser.ScopedUser.documentedTersely.__doc__))
+        self.assertEqual(("CrateItem", None), (user.notDocumented(), ScopedUser.ScopedUser.notDocumented.__doc__))
+        self.assertEqual("before", user.viaYielded())
 
     def test_aClassValueIsSetOnceItsClassExists(self):
         self.assertEqual("seed 1", ValueOwner.ValueOwner.LABEL)
         owner = ValueOwner.ValueOwner
-        self.assertEqual((0, 5, 5), (owner.PENDING, owner.FROM_INNER, owner.ValueInner.K))
+        self.assertEqual((0, 5, 5, "\x00"), (owner.PENDING, owner.FROM_INNER, owner.ValueInner.K, owner.MARK))
+        self.assertEqual((6, 6), (LiteralOwner.LiteralOwner.N, LiteralOwner.LiteralOwner.LiteralInner.K))
+        self.assertEqual((5, 5, 5), (ValueFirst.ValueFirst.FIRST, ValueFirst.ValueFirst.SECOND, ValueSecond.ValueSecond.VALUE))
 
     def test_inheritedEventsAndVarargsCompete(self):
         child = EventChild.EventChild()

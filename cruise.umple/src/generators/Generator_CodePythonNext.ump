@@ -29,13 +29,13 @@ class PythonNextGenerator
   // Standard modules a class module or top-level package must not be named after: those generated
   // code imports, and those Python loads at startup, which an import would find instead.
   private static final List<String> STANDARD_MODULES = Arrays.asList("abc", "enum", "threading", "datetime", "sys",
-    "math", "fractions", "codecs", "collections", "copyreg", "encodings", "functools", "genericpath", "io", "keyword",
+    "math", "fractions", "random", "time", "codecs", "collections", "copyreg", "encodings", "functools", "genericpath", "io", "keyword",
     "ntpath", "operator", "os", "posixpath", "re", "reprlib", "site", "stat", "types", "zipimport");
 
   // Built-ins the generated code uses. A class with one of these names would hide it in its own
   // module and in every function that imports the class.
-  private static final List<String> BUILTINS = Arrays.asList("all", "any", "bool", "globals", "enumerate", "float", "format", "hash", "id", "int",
-    "isinstance", "len", "list", "min", "next", "print", "range", "set", "str", "super", "tuple", "type", "classmethod",
+  private static final List<String> BUILTINS = Arrays.asList("abs", "all", "any", "bool", "globals", "enumerate", "float", "format", "hash", "id", "int",
+    "isinstance", "len", "list", "max", "min", "next", "print", "range", "set", "str", "super", "tuple", "type", "classmethod",
     "staticmethod", "NotImplemented", "BaseException", "RuntimeError", "TypeError");
 
   // Index of the current class's first diagnostic, for report()'s deduplication; -1 outside generation.
@@ -43,6 +43,9 @@ class PythonNextGenerator
 
   // Imports collected while one class is generated: module-level lines, in first-use order.
   private Set<String> moduleImports = new LinkedHashSet<String>();
+
+  // The module-level functions giving Java's Math results that the module's translated code calls
+  private Set<String> mathDefinitions = new LinkedHashSet<String>();
 
   private Set<UmpleClass> preparedClasses = new HashSet<UmpleClass>();
 
@@ -345,6 +348,7 @@ class PythonNextGenerator
     try
     {
       moduleImports.clear();
+      mathDefinitions.clear();
       moduleNames = namesDefinedIn(element);
       code = getLanguageFor(element).getCode(getModel(), element);
     }
@@ -1036,6 +1040,10 @@ class PythonNextGenerator
     {
       return "[]";
     }
+    if ("char".equals(type))
+    {
+      return "\"\\x00\"";
+    }
     switch (pythonType(type))
     {
       case "int": return "0";
@@ -1149,41 +1157,34 @@ class PythonNextGenerator
     return literal != null ? literal : initializeLater(uClass, aConstant.getName(), aConstant.getType(), aConstant.getValue(), false, null);
   }
 
-  // The class values set after their module's class, {target, value} by class in model order, and the
-  // imports they need by module
+  // The class values set after their module's class, by class in model order: {target, value, the
+  // imports it needs}
   private Map<UmpleClass, List<String[]>> classInitializers = new LinkedHashMap<UmpleClass, List<String[]>>();
-  private Map<UmpleClass, Set<String>> classInitializerImports = new HashMap<UmpleClass, Set<String>>();
 
   private String initializeLater(UmpleClass uClass, String name, String type, String code, boolean isList, Position position)
   {
     String value = translateClassValue(code, uClass, isList, position, "the constant " + name);
     String pending = defaultValue(type, isList);
-    UmpleClass module = outermost(uClass);
     if (!classInitializers.containsKey(uClass))
     {
       classInitializers.put(uClass, new ArrayList<String[]>());
     }
-    if (!classInitializerImports.containsKey(module))
-    {
-      classInitializerImports.put(module, new LinkedHashSet<String>());
-    }
-    classInitializers.get(uClass).add(new String[] { classReference(uClass) + "." + name, value == null ? pending : value });
-    classInitializerImports.get(module).addAll(getSnippetImports());
+    classInitializers.get(uClass).add(new String[] { classReference(uClass) + "." + name, value == null ? pending : value,
+      String.join("\n", getSnippetImports()) });
     return pending;
   }
 
   // The module-level statements that set the class values of a top-level class and its nested
-  // classes, after their imports. Java initializes a class when a value first uses it, so a value
-  // naming another of these classes comes after that class's own values, unless that class is the
-  // one being initialized.
+  // classes, each after the imports it needs. As Java initializes a class when a value first calls it
+  // or reads a field that is not a literal constant, such a use of another of these classes comes
+  // after that class's own values, unless that class is the one being initialized.
   public String classInitializers(UmpleClass uClass)
   {
-    Set<String> imports = uClass.getOuterClass() == null ? classInitializerImports.remove(uClass) : null;
-    if (imports == null)
+    if (uClass.getOuterClass() != null)
     {
-      return "";
+      return ""; // set by its outermost class
     }
-    List<String> lines = new ArrayList<String>(imports);
+    List<String> lines = new ArrayList<String>();
     for (UmpleClass k : new ArrayList<UmpleClass>(classInitializers.keySet()))
     {
       if (outermost(k) == uClass)
@@ -1191,7 +1192,7 @@ class PythonNextGenerator
         initialize(k, lines);
       }
     }
-    return "\n\n\n" + String.join("\n", lines);
+    return lines.isEmpty() ? "" : "\n\n\n" + String.join("\n", lines);
   }
 
   private void initialize(UmpleClass uClass, List<String> lines)
@@ -1199,38 +1200,68 @@ class PythonNextGenerator
     List<String[]> values = classInitializers.remove(uClass);
     for (String[] value : values == null ? new ArrayList<String[]>() : values)
     {
-      Matcher name = DOTTED_NAME.matcher(value[1]);
-      while (name.find())
+      String code = PythonSource.codeText(value[1]);
+      Matcher use = DOTTED_NAME.matcher(code);
+      while (use.find())
       {
-        UmpleClass used = namedClass(outermost(uClass), name.group());
+        UmpleClass used = initializedClass(outermost(uClass), use.group(), code.substring(use.end()).trim().startsWith("("));
         if (used != null)
         {
           initialize(used, lines);
+        }
+      }
+      for (String line : value[2].isEmpty() ? new String[0] : value[2].split("\n"))
+      {
+        if (!lines.contains(line))
+        {
+          lines.add(line);
         }
       }
       lines.add(value[0] + " = " + value[1]);
     }
   }
 
-  private static final Pattern DOTTED_NAME = Pattern.compile("(?<![\\w.])[A-Za-z_]\\w*(?:\\.[A-Za-z_]\\w*)*");
+  private static final Pattern DOTTED_NAME = Pattern.compile("(?<![\\w.])[A-Za-z_]\\w*(?:\\s*\\.\\s*[A-Za-z_]\\w*)*");
 
-  // The class of module that the longest leading part of a dotted name names, or null
-  private UmpleClass namedClass(UmpleClass module, String dotted)
+  // The class of module that a dotted name uses so that Java would initialize it: the class its
+  // longest leading part names, when the name calls it or one of its methods or reads a field of it
+  // that is not a literal constant; otherwise null
+  private UmpleClass initializedClass(UmpleClass module, String dotted, boolean called)
   {
-    for (String prefix = dotted; ; prefix = prefix.substring(0, prefix.lastIndexOf('.')))
+    List<String> names = Arrays.asList(dotted.replaceAll("\\s", "").split("\\."));
+    for (int length = names.size(); length > 0; length--)
     {
+      String prefix = String.join(".", names.subList(0, length));
       for (UmpleClass k : getModel().getUmpleClasses())
       {
         if (outermost(k) == module && classReference(k).equals(prefix))
         {
-          return k;
+          boolean initializes = length < names.size() ? !isLiteralConstant(k, names.get(length)) : called;
+          return initializes ? k : null;
         }
       }
-      if (prefix.indexOf('.') < 0)
+    }
+    return null;
+  }
+
+  private boolean isLiteralConstant(UmpleClass uClass, String name)
+  {
+    for (UmpleClass c = uClass; c != null; c = c.getExtendsClass())
+    {
+      Attribute attribute = c.getAttribute(name);
+      if (attribute != null && attribute.isConstant())
       {
-        return null;
+        return !attribute.getIsList() && literal(attribute.getType(), attribute.getValue()) != null;
+      }
+      for (Constant constant : c.getConstants())
+      {
+        if (constant.getName().equals(name))
+        {
+          return literal(constant.getType(), constant.getValue()) != null;
+        }
       }
     }
+    return false;
   }
 
   // Only a literal is supported as an interface constant's value.
@@ -1676,6 +1707,41 @@ class PythonNextGenerator
     return alias;
   }
 
+  // The module-level function that gives Java's Math.round, max, min, floor or ceil of doubles, whose
+  // Python counterparts differ for halves, NaN, infinities or the sign of zero; the module defines it
+  // once
+  public String javaMath(String name)
+  {
+    String math = standardName("math", null);
+    String function = "_java" + Character.toUpperCase(name.charAt(0)) + name.substring(1);
+    String header = "def " + function + (name.equals("max") || name.equals("min") ? "(a, b):" : "(x):");
+    switch (name)
+    {
+      case "round":
+        String fractions = standardName("fractions", null);
+        mathDefinitions.add(header
+          + "\n    \"\"\"Java's Math.round: the nearest long, halves rounding up; 0 for NaN.\"\"\""
+          + "\n    if x != x:\n        return 0"
+          + "\n    if x >= 9223372036854775807 or x <= -9223372036854775808:"
+          + "\n        return 9223372036854775807 if x > 0 else -9223372036854775808"
+          + "\n    return " + math + ".floor(" + fractions + ".Fraction(x) + " + fractions + ".Fraction(1, 2))");
+        break;
+      case "max": case "min":
+        boolean max = name.equals("max");
+        mathDefinitions.add(header
+          + "\n    \"\"\"Java's Math." + name + " of doubles: NaN when either is NaN, and " + (max ? "0.0 above -0.0" : "-0.0 below 0.0") + ".\"\"\""
+          + "\n    if a != a or b != b:\n        return " + math + ".nan"
+          + "\n    if a == b:\n        return float(" + (max ? "b" : "a") + " if " + math + ".copysign(1, a) < 0 else " + (max ? "a" : "b") + ")"
+          + "\n    return float(" + name + "(a, b))");
+        break;
+      default: // floor and ceil
+        mathDefinitions.add(header
+          + "\n    \"\"\"Java's Math." + name + ": a float, keeping infinities, NaN and the sign of zero.\"\"\""
+          + "\n    return float(x) if " + math + ".isinf(x) or " + math + ".isnan(x) else " + math + ".copysign(" + math + "." + name + "(x), x)");
+    }
+    return function;
+  }
+
   // The name standardName binds a standard module or member to, without importing it
   public String standardAlias(String name)
   {
@@ -1827,6 +1893,12 @@ class PythonNextGenerator
     return "from " + module + " import " + name;
   }
 
+  // The definitions of the Java Math functions the module's code calls (javaMath)
+  public String mathFunctions()
+  {
+    return mathDefinitions.isEmpty() ? "" : "\n\n" + String.join("\n\n\n", mathDefinitions) + "\n";
+  }
+
   public String moduleImports()
   {
     StringBuilder text = new StringBuilder();
@@ -1867,7 +1939,7 @@ class PythonNextGenerator
           lines.add(line);
         }
       }
-      code.replace(at, at + placeholder.length(), lines.isEmpty() ? "" : "\n" + String.join("\n", lines) + "\n");
+      code.replace(at, at + placeholder.length(), lines.isEmpty() ? "" : "\n" + String.join("\n", lines) + "\n" + mathFunctions());
     }
     int classLine = code.indexOf("class ") == 0 ? 0 : code.indexOf("\nclass ");
     int bodyStart = classLine < 0 ? -1 : code.indexOf(":\n\n", classLine);
@@ -1957,44 +2029,40 @@ class PythonNextGenerator
           imports.add(indent + line);
         }
       }
-      // A docstring stays the first statement. An authored one is in a source region, which ends
+      // A docstring stays the first statement: the imports follow it, and what follows it on its line
+      // after a semicolon moves below them. An authored docstring is in a source region, which ends
       // before the imports and resumes after them.
-      int docstring = docstringLines(lines.subList(first, end));
-      if (docstring > 0 && marker >= 0 && !imports.isEmpty())
+      String statements = String.join("\n", lines.subList(first, end));
+      int docstringEnd = imports.isEmpty() ? -1 : PythonSource.docstringEnd(statements);
+      int at = start;
+      if (docstringEnd >= 0)
       {
-        Matcher region = SOURCE_MARKER.matcher(lines.get(marker).trim());
-        region.matches();
-        imports.add(0, indent + "# end line");
-        imports.add(indent + "# line " + (Integer.parseInt(region.group(1)) + first + docstring - marker - 1) + " " + region.group(2));
+        int last = first + statements.substring(0, docstringEnd).split("\n", -1).length - 1;
+        int column = docstringEnd - (statements.lastIndexOf('\n', docstringEnd - 1) + 1);
+        String rest = lines.get(last).substring(column).trim();
+        boolean split = rest.startsWith(";") && !rest.substring(1).trim().isEmpty();
+        if (split)
+        {
+          String statement = lines.get(first).substring(0, leadingSpaces(lines.get(first))) + rest.substring(1).trim();
+          lines.set(last, lines.get(last).substring(0, column));
+          lines.add(last + 1, statement);
+        }
+        at = last + 1;
+        if (marker >= 0)
+        {
+          Matcher region = SOURCE_MARKER.matcher(lines.get(marker).trim());
+          region.matches();
+          imports.add(0, indent + "# end line");
+          imports.add(indent + "# line " + (Integer.parseInt(region.group(1)) + (split ? last : at) - marker - 1) + " " + region.group(2));
+        }
       }
-      lines.addAll(docstring > 0 ? first + docstring : start, imports);
+      lines.addAll(at, imports);
     }
     code.setLength(0);
     code.append(String.join("\n", lines));
   }
 
   private static final Pattern SOURCE_MARKER = Pattern.compile("# line (\\d+) (\".*\")");
-  private static final Pattern STRING_START = Pattern.compile("(?i)[ru]?(\"\"\"|'''|\"|')");
-
-  // How many lines a docstring at the start of these takes, or 0 when they do not start with a string
-  // statement
-  private static int docstringLines(List<String> lines)
-  {
-    Matcher opening = STRING_START.matcher(lines.isEmpty() ? "" : lines.get(0).trim());
-    if (!opening.lookingAt())
-    {
-      return 0;
-    }
-    boolean[] insideString = PythonSource.linesInsideStrings(lines);
-    int next = 1;
-    while (next < lines.size() && insideString[next])
-    {
-      next++;
-    }
-    String last = next == 1 ? lines.get(0).trim().substring(opening.end()) : lines.get(next - 1).trim();
-    return last.endsWith(opening.group(1)) ? next : 0;
-  }
-
   private static int leadingSpaces(String line)
   {
     int count = 0;

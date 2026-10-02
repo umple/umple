@@ -23,6 +23,11 @@ class Lamp:
             self._siblings = ()
             self.cancelled = threading.Event()
 
+        def sleep(self, milliseconds):
+            if milliseconds < 0:
+                raise ValueError("timeout value is negative")
+            return self.cancelled.wait(milliseconds / 1000)
+
         @staticmethod
         def startAll(*workers):
             for worker in workers:

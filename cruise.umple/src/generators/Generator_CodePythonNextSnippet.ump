@@ -1728,9 +1728,10 @@ class PythonSnippetTranslator
       && lookupVariable(n.getText()) == null && findField(uClass, n.getText()) == null && resolveType(n.getText(), uClass) == null;
   }
 
-  // The Java library calls untagged code may make, with Java's results: Thread.sleep, which in a do
-  // activity ends the activity when it is cancelled, as Java's InterruptedException does;
-  // System.currentTimeMillis; and Math's abs, max, min, sqrt, pow, floor, ceil, round and random
+  // The Java library calls untagged code may make: Thread.sleep, which in a do activity ends the
+  // activity when it is cancelled, as Java's InterruptedException does; System.currentTimeMillis; and
+  // Math's abs, max, min, sqrt, pow, floor, ceil, round and random, with Java's results except the
+  // recorded domain errors of sqrt and pow
   private PythonSnippetNode emitLibraryCall(PythonSnippetNode n, String library, String name, List<PythonSnippetNode> values)
   {
     String call = library + "." + name + "/" + values.size();
@@ -1757,27 +1758,29 @@ class PythonSnippetTranslator
     switch (call)
     {
       case "Thread.sleep/1":
-        String seconds = wrap(values.get(0), PRODUCT) + " / 1000";
         return inActivity
-          ? set(n, "if thread.cancelled.wait(" + seconds + "): return", "void", ATOM, false, false)
-          : set(n, module("time") + ".sleep(" + seconds + ")", "void", ATOM, false, false);
+          ? set(n, "if thread.sleep(" + first + "): return", "void", ATOM, false, false)
+          : set(n, module("time") + ".sleep(" + wrap(values.get(0), PRODUCT) + " / 1000)", "void", ATOM, false, false);
       case "System.currentTimeMillis/0":
         return set(n, "int(" + module("time") + ".time() * 1000)", "long", ATOM, false, false);
       case "Math.abs/1":
         requireBuiltin("abs");
         return set(n, "abs(" + first + ")", values.get(0).kind, ATOM, false, false);
       case "Math.max/2": case "Math.min/2":
-        // Java widens both to the wider type, so a double result stays a double
-        requireBuiltin(name);
-        String extreme = name + "(" + argumentList(values) + ")";
-        return floating ? set(n, "float(" + extreme + ")", "float", ATOM, false, false)
-          : set(n, extreme, integral ? promotedInteger(values.get(0).kind, values.get(1).kind) : "unknown", ATOM, false, false);
+        // Java widens both to the wider type: integers compare as Python's do, doubles need Java's rules
+        if (!floating)
+        {
+          requireBuiltin(name);
+          return set(n, name + "(" + argumentList(values) + ")", integral ? promotedInteger(values.get(0).kind, values.get(1).kind) : "unknown",
+            ATOM, false, false);
+        }
+        return set(n, gen.javaMath(name) + "(" + argumentList(values) + ")", "float", ATOM, false, false);
       case "Math.sqrt/1": case "Math.pow/2":
         return set(n, module("math") + "." + name + "(" + argumentList(values) + ")", "float", ATOM, false, false);
       case "Math.floor/1": case "Math.ceil/1":
-        return set(n, "float(" + module("math") + "." + name + "(" + first + "))", "float", ATOM, false, false);
+        return set(n, gen.javaMath(name) + "(" + first + ")", "float", ATOM, false, false);
       case "Math.round/1":
-        return set(n, module("math") + ".floor(" + wrap(values.get(0), SUM) + " + 0.5)", "long", ATOM, false, false);
+        return set(n, gen.javaMath(name) + "(" + first + ")", "long", ATOM, false, false);
       default: // Math.random/0
         return set(n, module("random") + ".random()", "float", ATOM, false, false);
     }

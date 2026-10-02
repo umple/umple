@@ -1679,7 +1679,7 @@ class PythonNextGenerator
     }
     // The parser keeps the body without its first line's indentation and records that separately.
     CodeBlock block = method.getMethodBody().getCodeblock();
-    boolean wrapped = after.length() > 0 || before.length() > 0 && PythonSource.codeAt(block.getCode(language), "yield") >= 0;
+    boolean wrapped = after.length() > 0 || before.length() > 0 && PythonSource.isGenerator(block.getCode(language));
     String body = functionCode(block.getCode(language), block.getFirstLineIndent(language), wrapped ? "        " : indent,
       block.getAuthoredPosition(language), uClass);
     if (!wrapped)

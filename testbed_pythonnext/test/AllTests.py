@@ -162,7 +162,7 @@ def outputErrors(errorList, suites_names):
 TEST_HOOKS = {"setUp", "tearDown", "setUpClass", "tearDownClass"}
 
 # The number of tests in the suite (see the check after the run)
-INVENTORY = 1049
+INVENTORY = 1050
 
 
 def uncollectedMethods(module_name):

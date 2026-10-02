@@ -150,7 +150,7 @@ class PythonNextGenerator
     return code.toString();
   }
 
-  // Starts the queues' workers, once the object is ready
+  // Starts the class's queues, after its machines have entered their start states
   public String queueStarts(UmpleClass uClass)
   {
     StringBuilder code = new StringBuilder();

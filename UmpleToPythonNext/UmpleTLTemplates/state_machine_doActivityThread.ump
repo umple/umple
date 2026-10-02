@@ -4,7 +4,8 @@ class UmpleToPythonNext {
     // delete set the tokens without waiting. The completion worker waits for its visit's other workers
     // and fires only while the visit is current. startAll starts it last, so it never waits for an
     // unstarted worker, and checks deletion and cancellation before each start. Activity exceptions
-    // are not caught, so threading.excepthook reports them.
+    // are not caught, so threading.excepthook reports them. sleep is Java's Thread.sleep for the
+    // activity: it returns True as soon as the activity is cancelled.
     state_machine_doActivityThread <<!<</*state_machine_doActivityThread*/>>
 
     class <<=gen.activityThreadClass(uClass)>>(<<=threading>>.Thread):
@@ -14,6 +15,11 @@ class UmpleToPythonNext {
             self._doActivityMethodName = doActivityMethodName
             self._siblings = ()
             self.cancelled = <<=threading>>.Event()
+
+        def sleep(self, milliseconds):
+            if milliseconds < 0:
+                raise ValueError("timeout value is negative")
+            return self.cancelled.wait(milliseconds / 1000)
 
         @staticmethod
         def startAll(*workers):

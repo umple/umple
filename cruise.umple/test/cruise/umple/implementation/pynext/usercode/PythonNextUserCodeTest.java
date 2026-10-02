@@ -322,6 +322,47 @@ public class PythonNextUserCodeTest
     Assert.assertFalse(used.toString(), used.contains("BULLET"));
   }
 
+  // Default values of nested functions and lambdas, and statements continued over lines, belong to
+  // the function; a grouped subscript binds nothing. Only the function's own yield makes a generator.
+  @Test
+  public void readsLogicalStatementsAndEnclosingDefaults() throws Exception
+  {
+    java.util.Set<String> bound = cruise.umple.util.PythonSource.boundNames(
+      "f = lambda x=(A := 1): x\ndef g(y=(B := 2)): return (C := y)\ncache[(D)] = 1\n(E,\n F) = 1, 2\nG \\\n  = 3\n"
+      + "for (H,\n I) in r: pass");
+    Assert.assertTrue(bound.toString(), bound.containsAll(Arrays.asList("f", "A", "g", "B", "E", "F", "G", "H", "I")));
+    for (String name : Arrays.asList("x", "y", "C", "cache", "D"))
+    {
+      Assert.assertFalse(name, bound.contains(name));
+    }
+    Assert.assertTrue(cruise.umple.util.PythonSource.isGenerator("x = 1\nyield x"));
+    Assert.assertTrue(cruise.umple.util.PythonSource.isGenerator("return f\"{(yield 1)}\""));
+    Assert.assertFalse(cruise.umple.util.PythonSource.isGenerator("yielded = 1\nreturn yielded"));
+    Assert.assertFalse(cruise.umple.util.PythonSource.isGenerator("def values():\n    yield 1\nreturn list(values())"));
+    Assert.assertFalse(cruise.umple.util.PythonSource.isGenerator("g = lambda: (yield)\nreturn g"));
+    Assert.assertFalse(cruise.umple.util.PythonSource.codeNames("return f\"{1:\\N{SPACE}>3}\"").contains("SPACE"));
+  }
+
+  // A docstring is a statement of string literals alone, however written; anything else gets its
+  // imports first
+  @Test
+  public void recognizesDocstrings() throws Exception
+  {
+    Assert.assertEquals(5, cruise.umple.util.PythonSource.docstringEnd("\"doc\"\nreturn 1"));
+    Assert.assertEquals(10, cruise.umple.util.PythonSource.docstringEnd("'''doc''' # why\nreturn 1"));
+    Assert.assertEquals(11, cruise.umple.util.PythonSource.docstringEnd("(\"a\"\n r\"b\")\nreturn 1"));
+    Assert.assertEquals(5, cruise.umple.util.PythonSource.docstringEnd("\"doc\"; return 1"));
+    for (String code : Arrays.asList("\"a\" + Item.LABEL", "\"a\".join(x)", "f\"doc\"", "b\"doc\"", "(\"a\")(1)", "x = \"doc\""))
+    {
+      Assert.assertEquals(code, -1, cruise.umple.util.PythonSource.docstringEnd(code));
+    }
+    UmpleModel model = generate("class Item {}\nclass A {\n  String call() Python {\n    \"prefix\" + Item.__name__\n    return Item.__name__\n  }\n"
+      + "  String doc() Python {\n    \"native-doc\"; return Item.__name__\n  }\n}\n");
+    String a = model.getGeneratedCode().get("A");
+    Assert.assertTrue(a, a.contains("    def call(self):\n        from Item import Item\n"));
+    Assert.assertTrue(a, a.contains("\"native-doc\"\n        # end line\n        from Item import Item\n        # line 9 \"model.ump\"\n        return Item.__name__"));
+  }
+
   // Before code runs in the method with its body, so the body sees what it binds. An authored
   // docstring stays first: its source region ends before the imports and resumes after them.
   @Test
