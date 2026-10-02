@@ -1111,39 +1111,68 @@ class PythonNextGenerator
       lines.add(prefix + "None");
       return lines;
     }
-    String value = "Python".equals(pythonLanguage(code)) ? code.getCode("Python").trim()
-      : expression(uClass, av.getType(), av.getValue(), false, av.getPosition(), "the derived attribute " + av.getName(), lines);
     if ("Python".equals(pythonLanguage(code)))
     {
-      lines.addAll(modelImports(value, uClass, null));
+      // native, so in its own source region, as other native code
+      String value = code.getCode("Python").trim();
+      Position start = code.getAuthoredPosition("Python");
+      lines.addAll(modelImports(value, uClass));
+      lines.addAll(start == null ? Arrays.asList(prefix + value) : Arrays.asList(sourceMarker(start, uClass), prefix + value, "# end line"));
+      return lines;
     }
-    lines.add(prefix + value);
+    lines.add(prefix + expression(uClass, av.getType(), av.getValue(), false, av.getPosition(), "the derived attribute " + av.getName(), lines));
     return lines;
   }
 
-  // A class-level value: a constant or the first value of an autounique counter. It is evaluated
-  // while the class body runs, so model classes it uses are imported at module level.
+  // A class-level value: a constant or the first value of an autounique counter. A literal is set in
+  // the class body. Any other value is None there and is set once the class exists, as Java runs a
+  // class's static initializers once it is loaded: it may then use the class, and modules that
+  // import the class (classInitializers).
   public String classValue(UmpleClass uClass, Attribute av)
   {
-    if (av.getIsList())
+    if (av.getIsList() && hasLiteralItems(av))
     {
-      if (hasLiteralItems(av))
-      {
-        return literalList(av);
-      }
-      String value = translateListDefault(av.getValue(), uClass, true, av.getPosition(), "the constant " + av.getName());
-      for (String line : getSnippetImports())
-      {
-        addModuleImport(line);
-      }
-      return value == null ? "[]" : value;
+      return literalList(av);
     }
-    return expression(uClass, av.getType(), av.getValue(), true, av.getPosition(), "the constant " + av.getName(), null);
+    String literal = av.getIsList() ? null : literal(av.getType(), av.getValue());
+    return literal != null ? literal : initializeLater(uClass, av.getName(), av.getValue(), av.getIsList(), av.getPosition());
   }
 
   public String classValue(UmpleClass uClass, Constant aConstant)
   {
-    return expression(uClass, aConstant.getType(), aConstant.getValue(), true, null, "the constant " + aConstant.getName(), null);
+    String literal = literal(aConstant.getType(), aConstant.getValue());
+    return literal != null ? literal : initializeLater(uClass, aConstant.getName(), aConstant.getValue(), false, null);
+  }
+
+  // The statements setting the class values of the classes of a module, with the imports they need,
+  // in model order, by outermost class
+  private Map<UmpleClass, List<String>> classInitializers = new HashMap<UmpleClass, List<String>>();
+
+  private String initializeLater(UmpleClass uClass, String name, String code, boolean isList, Position position)
+  {
+    String value = translateClassValue(code, uClass, isList, position, "the constant " + name);
+    UmpleClass module = outermost(uClass);
+    if (!classInitializers.containsKey(module))
+    {
+      classInitializers.put(module, new ArrayList<String>());
+    }
+    List<String> lines = classInitializers.get(module);
+    for (String line : getSnippetImports())
+    {
+      if (!lines.contains(line))
+      {
+        lines.add(line);
+      }
+    }
+    lines.add(classReference(uClass) + "." + name + " = " + (value == null ? (isList ? "[]" : "None") : value));
+    return isList ? "[]" : "None";
+  }
+
+  // The module-level statements that set the class values of a top-level class and its nested classes
+  public String classInitializers(UmpleClass uClass)
+  {
+    List<String> lines = uClass.getOuterClass() == null ? classInitializers.remove(uClass) : null;
+    return lines == null ? "" : "\n\n\n" + String.join("\n", lines);
   }
 
   // Only a literal is supported as an interface constant's value.
@@ -1768,6 +1797,7 @@ class PythonNextGenerator
   public void finishClass(UmpleClassifier classifier, StringBuilder code, String placeholder)
   {
     unixLines(code);
+    placeModelImports(code);
     int at = placeholder == null ? -1 : code.indexOf(placeholder);
     if (at >= 0)
     {
@@ -1796,6 +1826,99 @@ class PythonNextGenerator
       code.append("\n    pass");
     }
     code.append("\n");
+  }
+
+  // Moves each import native code marked (modelImports) to the start of the function holding it,
+  // after its docstring, where it binds the class for all the function's code. Names the function
+  // binds itself, its parameters included, keep their meaning and get no import.
+  private static void placeModelImports(StringBuilder code)
+  {
+    if (code.indexOf(PythonNextGenerator.MODEL_IMPORT) < 0)
+    {
+      return;
+    }
+    List<String> lines = new ArrayList<String>(Arrays.asList(code.toString().split("\n", -1)));
+    boolean[] insideString = PythonSource.linesInsideStrings(lines);
+    Pattern definition = Pattern.compile("( *)def \\w+\\((.*)\\):");
+    // From the last definition up, so that edits below never move one still to do
+    for (int d = lines.size() - 1; d >= 0; d--)
+    {
+      Matcher def = definition.matcher(lines.get(d));
+      if (insideString[d] || !def.matches())
+      {
+        continue;
+      }
+      int end = d + 1;
+      while (end < lines.size() && (insideString[end] || lines.get(end).trim().isEmpty() || leadingSpaces(lines.get(end)) > def.group(1).length()))
+      {
+        end++;
+      }
+      List<String> requested = new ArrayList<String>();
+      StringBuilder body = new StringBuilder();
+      for (int i = end - 1; i > d; i--)
+      {
+        if (!insideString[i] && lines.get(i).trim().startsWith(PythonNextGenerator.MODEL_IMPORT))
+        {
+          String line = lines.remove(i).trim().substring(PythonNextGenerator.MODEL_IMPORT.length());
+          requested.add(0, line);
+          end--;
+        }
+      }
+      if (requested.isEmpty())
+      {
+        continue;
+      }
+      for (int i = d + 1; i < end; i++)
+      {
+        body.append(lines.get(i)).append("\n");
+      }
+      Set<String> bound = PythonSource.boundNames(body.toString());
+      for (String parameter : def.group(2).split(","))
+      {
+        bound.add(parameter.replaceAll("[*\\s]|=.*", ""));
+      }
+      int start = d + 1;
+      while (start < end && lines.get(start).trim().isEmpty())
+      {
+        start++;
+      }
+      String indent = start < end ? lines.get(start).substring(0, leadingSpaces(lines.get(start))) : def.group(1) + "    ";
+      if (start < end && lines.get(start).trim().startsWith("\"\"\""))
+      {
+        // the docstring stays the first statement
+        String first = lines.get(start).trim();
+        if (first.length() < 6 || !first.endsWith("\"\"\""))
+        {
+          start++;
+          while (start < end && !lines.get(start).contains("\"\"\""))
+          {
+            start++;
+          }
+        }
+        start++;
+      }
+      List<String> imports = new ArrayList<String>();
+      for (String line : requested)
+      {
+        if (!bound.contains(line.substring(line.lastIndexOf(' ') + 1)) && !imports.contains(indent + line))
+        {
+          imports.add(indent + line);
+        }
+      }
+      lines.addAll(start, imports);
+    }
+    code.setLength(0);
+    code.append(String.join("\n", lines));
+  }
+
+  private static int leadingSpaces(String line)
+  {
+    int count = 0;
+    while (count < line.length() && line.charAt(count) == ' ')
+    {
+      count++;
+    }
+    return count;
   }
 
   // The base list of a class: its superclass, then interfaces not already provided by another base,

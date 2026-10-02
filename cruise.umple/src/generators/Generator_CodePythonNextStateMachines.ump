@@ -19,17 +19,11 @@ class PythonNextGenerator
   // Diagnostics
   //------------------------
 
-  // Queued and pooled machines are not supported (9210). Events, state-dependent methods and states
-  // become methods and enum members, so their names must not be Python keywords, and parameters are
-  // checked as for other methods. Nested classes, generated inside this one, are checked too.
+  // Events, state-dependent methods and states become methods and enum members, so their names must
+  // not be Python keywords, and parameters are checked as for other methods. Nested classes,
+  // generated inside this one, are checked too.
   public boolean checkStateMachines(UmpleClass uClass)
   {
-    String feature = unsupportedStateMachine(uClass);
-    if (feature != null)
-    {
-      error(9210, uClass, feature, uClass.getName());
-      return false;
-    }
     return checkStateMachineNames(uClass);
   }
 
@@ -73,29 +67,148 @@ class PythonNextGenerator
     return ok;
   }
 
-  private static String unsupportedStateMachine(UmpleClass uClass)
+  //------------------------
+  // Queued and pooled machines, queued methods
+  //------------------------
+
+  // Whether the class's events go through a queue: its machines are queued or pooled (Umple does not
+  // let a class mix them with plain machines, error 58)
+  public boolean queuesEvents(UmpleClass uClass)
   {
     for (StateMachine sm : uClass.getStateMachines())
     {
-      if (sm.isQueued())
+      if (sm.isQueued() || sm.isPooled())
       {
-        return "Queued state machines";
+        return true;
       }
+    }
+    return false;
+  }
+
+  public boolean poolsEvents(UmpleClass uClass)
+  {
+    for (StateMachine sm : uClass.getStateMachines())
+    {
       if (sm.isPooled())
       {
-        return "Pooled state machines";
+        return true;
       }
     }
-    for (UmpleClass inner : uClass.getInnerClasses())
-    {
-      String feature = unsupportedStateMachine(inner);
-      if (feature != null)
-      {
-        return feature;
-      }
-    }
-    return null;
+    return false;
   }
+
+  public boolean queuesMethods(UmpleClass uClass)
+  {
+    for (Method m : uClass.getMethods())
+    {
+      if (m.getIsQueued() && pythonLanguage(m) != null)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public String messageQueueClass(UmpleClass uClass)
+  {
+    return freshMemberName(uClass, "MessageQueue");
+  }
+
+  // The fields holding the class's queues, or null when it has none
+  public String eventQueue(UmpleClass uClass)
+  {
+    return queuesEvents(uClass) ? fieldName(uClass, "eventQueue") : null;
+  }
+
+  public String methodQueue(UmpleClass uClass)
+  {
+    return queuesMethods(uClass) ? fieldName(uClass, "methodQueue") : null;
+  }
+
+  // The method that does the work of a queued event or method, whose own method puts a call to it
+  // in the queue
+  public String queuedName(UmpleClass uClass, String name)
+  {
+    return freshMemberName(uClass, "_" + name);
+  }
+
+  // The statements creating the class's queues, at the start of its constructor; a pooled queue
+  // takes a call when the object can process it now
+  public String queueCreation(UmpleClass uClass)
+  {
+    StringBuilder code = new StringBuilder();
+    String ready = poolsEvents(uClass) ? "self." + poolPredicateName(uClass) : "None";
+    if (eventQueue(uClass) != null)
+    {
+      code.append("\n        self." + eventQueue(uClass) + " = " + DECLARING_CLASS + "." + messageQueueClass(uClass) + "(" + ready + ")");
+    }
+    if (methodQueue(uClass) != null)
+    {
+      code.append("\n        self." + methodQueue(uClass) + " = " + DECLARING_CLASS + "." + messageQueueClass(uClass) + "(None)");
+    }
+    return code.toString();
+  }
+
+  // Starts the queues' workers, once the object is ready
+  public String queueStarts(UmpleClass uClass)
+  {
+    StringBuilder code = new StringBuilder();
+    for (String queue : Arrays.asList(eventQueue(uClass), methodQueue(uClass)))
+    {
+      if (queue != null)
+      {
+        code.append("\n        self." + queue + ".start()");
+      }
+    }
+    return code.toString();
+  }
+
+  private String poolPredicateName(UmpleClass uClass)
+  {
+    return freshMemberName(uClass, "_canProcess");
+  }
+
+  // A pooled queue's predicate: some state the object is in has a transition for the call's event, as
+  // Java's stateMessageMap says for each state
+  public String poolPredicate(UmpleClass uClass)
+  {
+    List<String> terms = new ArrayList<String>();
+    for (StateMachine sm : uClass.getAllStateMachines())
+    {
+      for (State state : sm.getStates())
+      {
+        Set<String> events = new LinkedHashSet<String>();
+        for (Transition t : state.getTransitions())
+        {
+          if (t.getEvent() != null)
+          {
+            events.add(pythonString(queuedName(uClass, translate("eventMethod", t.getEvent()))));
+          }
+        }
+        if (!events.isEmpty())
+        {
+          terms.add(smField(sm) + " is " + stateReference(state) + " and name in (" + String.join(", ", events) + ",)");
+        }
+      }
+    }
+    return "\n\n    def " + poolPredicateName(uClass) + "(self, call):\n        name = call.__name__\n        return "
+      + (terms.isEmpty() ? "False" : "(" + String.join("\n            or ", terms) + ")");
+  }
+
+  // A queued event's or method's own method: it puts a call to the method doing the work in the queue
+  // and returns, nothing as in Java, or True for a timeout event, which tells its timer the event was
+  // taken
+  public String enqueuer(String name, String worker, String queue, List<MethodParameter> parameters, boolean timeout)
+  {
+    StringBuilder arguments = new StringBuilder();
+    for (MethodParameter p : parameters)
+    {
+      arguments.append(", ").append(parameterName(p.getName()));
+    }
+    return "\n\n    def " + name + "(self" + parameterList(parameters) + "):\n        self." + queue + ".put(self." + worker + arguments + ")"
+      + (timeout ? "\n        return True" : "");
+  }
+
 
   //------------------------
   // Preparation
@@ -1042,7 +1155,7 @@ class PythonNextGenerator
     Function<String, String> body;
     if (classBody != null)
     {
-      body = indent -> bodyCode(classBody, uClass, method, indent);
+      body = indent -> bodyCode(classBody, uClass, indent);
     }
     else if (!"void".equals(method.getType()))
     {
@@ -1057,20 +1170,19 @@ class PythonNextGenerator
       if (hasStateBody(sm, bodies))
       {
         Function<String, String> previous = body;
-        body = indent -> stateSwitch(uClass, method, sm, bodies, previous, indent);
+        body = indent -> stateSwitch(uClass, sm, bodies, previous, indent);
       }
     }
     return body;
   }
 
-  private String stateSwitch(UmpleClass uClass, Method method, StateMachine sm, Map<State, MethodBody> bodies, Function<String, String> fallback,
-    String indent)
+  private String stateSwitch(UmpleClass uClass, StateMachine sm, Map<State, MethodBody> bodies, Function<String, String> fallback, String indent)
   {
     StringBuilder code = new StringBuilder();
     for (State state : sm.getStates())
     {
       MethodBody own = pythonBody(bodies.get(state));
-      Function<String, String> childFallback = own == null ? fallback : i -> bodyCode(own, uClass, method, i);
+      Function<String, String> childFallback = own == null ? fallback : i -> bodyCode(own, uClass, i);
       // Of a concurrent state's regions, the first with bodies decides; Java emits a case for each
       // region, which does not compile
       String branch = null;
@@ -1078,13 +1190,13 @@ class PythonNextGenerator
       {
         if (hasStateBody(nested, bodies))
         {
-          branch = stateSwitch(uClass, method, nested, bodies, childFallback, indent + "    ");
+          branch = stateSwitch(uClass, nested, bodies, childFallback, indent + "    ");
           break;
         }
       }
       if (branch == null && own != null)
       {
-        branch = bodyCode(own, uClass, method, indent + "    ");
+        branch = bodyCode(own, uClass, indent + "    ");
       }
       if (branch != null)
       {
@@ -1128,12 +1240,11 @@ class PythonNextGenerator
   }
 
   // Method bodies are native code, never translated.
-  private String bodyCode(MethodBody body, UmpleClass uClass, Method method, String indent)
+  private String bodyCode(MethodBody body, UmpleClass uClass, String indent)
   {
     String language = bodyLanguage(body);
     CodeBlock code = body.getCodeblock();
-    return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass,
-      method.getMethodParameters());
+    return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass);
   }
 
   // What Java's generated state-dependent method returns when no body applies: zero or false for a

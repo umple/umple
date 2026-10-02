@@ -3,7 +3,8 @@ use constructor_StateMachineAssignDefault.ump;
 
 class UmpleToPythonNext {
     // Entering the start states, after the attributes and associations are assigned: nested machines
-    // start in Null, then each machine enters its start state, which enters its nested machines.
+    // start in Null, then each machine enters its start state, which enters its nested machines. Then
+    // the queues' workers start, as Java's does, so they never run a call before the object is ready.
     constructor_StateMachine_All <<!<</*constructor_StateMachine_All*/>><<#
 {
   for (StateMachine sm : uClass.getStateMachines())
@@ -19,6 +20,7 @@ class UmpleToPythonNext {
     }
     #>><<@ UmpleToPythonNext.constructor_StateMachineAssignDefault >><<#
   }
+  realSb.append(gen.queueStarts(uClass));
 }
 #>>!>>
 }

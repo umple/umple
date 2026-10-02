@@ -1,0 +1,200 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+import threading
+
+
+class Mentor:
+    class Status(Enum):
+        Ok = "Ok"
+        NotOk = "NotOk"
+
+        def __str__(self):
+            return self.value
+
+    class TimedEventHandler:
+        def __init__(self, controller, timeoutMethodName, howLongInSeconds):
+            self._controller = controller
+            self._timeoutMethodName = timeoutMethodName
+            self._timer = threading.Timer(howLongInSeconds, self.run)
+            self._timer.daemon = False
+
+        def start(self):
+            self._timer.start()
+
+        def stop(self):
+            self._timer.cancel()
+
+        def isCurrent(self, handler, state, armedState):
+            return not self._timer.finished.is_set() and not self._controller._deleted and handler is self and state is armedState
+
+        def run(self):
+            controller = self._controller
+            if self._timeoutMethodName == "timeoutOkToNotOk":
+                if self.isCurrent(controller._timeoutOkToNotOkHandler, controller._status, Mentor.Status.Ok):
+                    if not controller.timeoutOkToNotOk() and self.isCurrent(controller._timeoutOkToNotOkHandler, controller._status, Mentor.Status.Ok):
+                        controller.startTimeoutOkToNotOkHandler()
+            elif self._timeoutMethodName == "timeoutNotOkToOk":
+                if self.isCurrent(controller._timeoutNotOkToOkHandler, controller._status, Mentor.Status.NotOk):
+                    if not controller.timeoutNotOkToOk() and self.isCurrent(controller._timeoutNotOkToOkHandler, controller._status, Mentor.Status.NotOk):
+                        controller.startTimeoutNotOkToOkHandler()
+    class MessageQueue:
+        def __init__(self, ready):
+            self._calls = []
+            self._ready = ready
+            self._stopped = False
+            self._condition = threading.Condition()
+            self._worker = threading.Thread(target=self._run, daemon=False)
+            self._worker.isIdle = False
+        def start(self):
+            self._worker.start()
+        def put(self, call, *args):
+            with self._condition:
+                self._calls.append((call, args))
+                self._condition.notify()
+        def stop(self):
+            with self._condition:
+                self._stopped = True
+                self._condition.notify()
+        def _run(self):
+            while True:
+                with self._condition:
+                    call = None
+                    while not self._stopped:
+                        call = self._next()
+                        self._worker.isIdle = call is None
+                        if call is not None or self._unreachable():
+                            break
+                        self._condition.wait(0.25)
+                    if self._stopped or call is None:
+                        return
+                call[0](*call[1])
+        def _next(self):
+            for i, call in enumerate(self._calls):
+                if self._ready is None or self._ready(call[0]):
+                    return self._calls.pop(i)
+            return None
+        def _unreachable(self):
+            ended = (threading.main_thread(), threading.current_thread())
+            return not ended[0].is_alive() and all(t in ended or t.daemon or getattr(t, "isIdle", False)
+                for t in threading.enumerate())
+
+    def __init__(self):
+        self._howLongUntilOk = 3
+        self._eventQueue = __class__.MessageQueue(None)
+        self._status = None
+        self._statusVisit = 0
+        self._timeoutOkToNotOkHandler = None
+        self._timeoutNotOkToOkHandler = None
+        self._deleted = False
+        self.setStatus(__class__.Status.Ok)
+        if self._deleted:
+            return
+        self._eventQueue.start()
+
+    def setHowLongUntilOk(self, aHowLongUntilOk):
+        self._howLongUntilOk = aHowLongUntilOk
+        return True
+
+    def getHowLongUntilOk(self):
+        return self._howLongUntilOk
+
+    def getStatusFullName(self):
+        answer = str(self._status)
+        return answer
+
+    def getStatus(self):
+        return self._status
+
+    def _timeoutOkToNotOk(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus is __class__.Status.Ok:
+            self.exitStatus()
+            if self._deleted:
+                return True
+            self.setStatus(__class__.Status.NotOk)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def timeoutOkToNotOk(self):
+        self._eventQueue.put(self._timeoutOkToNotOk)
+        return True
+
+    def _timeoutNotOkToOk(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aStatus = self._status
+        if aStatus is __class__.Status.NotOk:
+            self.exitStatus()
+            if self._deleted:
+                return True
+            self.setStatus(__class__.Status.Ok)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def timeoutNotOkToOk(self):
+        self._eventQueue.put(self._timeoutNotOkToOk)
+        return True
+
+    def exitStatus(self):
+        self._statusVisit += 1
+        if self._status is __class__.Status.Ok:
+            self.stopTimeoutOkToNotOkHandler()
+        elif self._status is __class__.Status.NotOk:
+            self.stopTimeoutNotOkToOkHandler()
+
+    def setStatus(self, aStatus):
+        self._status = aStatus
+        self._statusVisit += 1
+        if self._status is __class__.Status.Ok:
+            self.startTimeoutOkToNotOkHandler()
+        elif self._status is __class__.Status.NotOk:
+            self.startTimeoutNotOkToOkHandler()
+
+    def startTimeoutOkToNotOkHandler(self):
+        if self._deleted:
+            return
+        if self._timeoutOkToNotOkHandler is not None:
+            self._timeoutOkToNotOkHandler.stop()
+        visit = self._statusVisit
+        delay = 4
+        if self._deleted or self._statusVisit != visit:
+            return
+        self._timeoutOkToNotOkHandler = __class__.TimedEventHandler(self, "timeoutOkToNotOk", delay)
+        self._timeoutOkToNotOkHandler.start()
+
+    def stopTimeoutOkToNotOkHandler(self):
+        if self._timeoutOkToNotOkHandler is not None:
+            self._timeoutOkToNotOkHandler.stop()
+
+    def startTimeoutNotOkToOkHandler(self):
+        if self._deleted:
+            return
+        if self._timeoutNotOkToOkHandler is not None:
+            self._timeoutNotOkToOkHandler.stop()
+        visit = self._statusVisit
+        delay = self._howLongUntilOk
+        if self._deleted or self._statusVisit != visit:
+            return
+        self._timeoutNotOkToOkHandler = __class__.TimedEventHandler(self, "timeoutNotOkToOk", delay)
+        self._timeoutNotOkToOkHandler.start()
+
+    def stopTimeoutNotOkToOkHandler(self):
+        if self._timeoutNotOkToOkHandler is not None:
+            self._timeoutNotOkToOkHandler.stop()
+
+    def delete(self):
+        self._deleted = True
+        self.stopTimeoutOkToNotOkHandler()
+        self.stopTimeoutNotOkToOkHandler()
+        self._eventQueue.stop()
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "howLongUntilOk:" + str(self.getHowLongUntilOk())
+                + "]")

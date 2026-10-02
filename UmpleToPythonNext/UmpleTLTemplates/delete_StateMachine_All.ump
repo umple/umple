@@ -1,6 +1,6 @@
 class UmpleToPythonNext {
-    // First in delete: mark the object deleted, then stop its timers and cancel its activities without
-    // waiting for them.
+    // First in delete: mark the object deleted, then stop its timers, cancel its activities and stop its
+    // queues, without waiting for any of them.
     delete_StateMachine_All <<!<</*delete_StateMachine_All*/>><<#
 {
   String deletedFlag = gen.deletedFlag(uClass);
@@ -17,6 +17,13 @@ class UmpleToPythonNext {
     String worker = "self." + gen.activityWorker(uClass, activity);
     realSb.append("\n        if " + worker + " is not None:");
     realSb.append("\n            " + worker + ".cancelled.set()");
+  }
+  for (String queue : Arrays.asList(gen.eventQueue(uClass), gen.methodQueue(uClass)))
+  {
+    if (queue != null)
+    {
+      realSb.append("\n        self." + queue + ".stop()");
+    }
   }
 }
 #>>!>>

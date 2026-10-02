@@ -35,7 +35,12 @@ class SynchronizedTest(unittest.TestCase):
 
     def test_aSubclassSharesItsParentsMonitor(self):
         counter = SyncSubCounter.SyncSubCounter()
-        runTogether(counter.bump, 500)
+        threads = [threading.Thread(target=counter.bump, args=(500,)) for _ in range(4)]
+        threads += [threading.Thread(target=counter.bumpBy, args=(500,)) for _ in range(4)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
         self.assertEqual(4000, counter.getCount())
         counter.reset()
         self.assertEqual(0, counter.getCount())

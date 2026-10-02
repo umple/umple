@@ -17,7 +17,13 @@ class UmpleToPythonNext {
   setBefore = gen.stateMachineInjections(uClass, "before", setMethod, gen.deletedCheck(deletingFlag, "        ", ""), setParameter);
   setAfter = gen.stateMachineInjections(uClass, "after", setMethod, gen.visitCheck(deletingFlag, visitField, visit, "        "), setParameter);
   String exitMethod = gen.translate("exitMethod", sm);
-  String exitAfter = gen.stateMachineInjections(uClass, "after", exitMethod, gen.deletedCheck(deletingFlag, "        ", ""));
+  // The exit method exists only for exit actions, and only then are its injections translated
+  boolean hasExitActions = false;
+  for (State state : sm.getStates())
+  {
+    hasExitActions = hasExitActions || !gen.actionsOf(state, "exit").isEmpty();
+  }
+  String exitAfter = hasExitActions ? gen.stateMachineInjections(uClass, "after", exitMethod, gen.deletedCheck(deletingFlag, "        ", "")) : "";
   State parentState = sm.getParentState();
   boolean captureVisit = parentState != null || !setAfter.isEmpty();
   StringBuilder entryActions = new StringBuilder();

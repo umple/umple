@@ -1,0 +1,48 @@
+class UmpleToPythonNext {
+    // Java's MessageQueue and MessagePool with their worker thread: calls run one at a time on the
+    // worker, in the order they were put; a pooled queue runs the first call that ready accepts and
+    // keeps the others. Stopping drops the calls still waiting, as Java's interrupt does. Unlike Java's,
+    // the worker also ends once nothing can reach it any more: the main thread has ended and every
+    // other thread left is an idle queue worker.
+    state_machine_MessageQueue <<!<</*state_machine_MessageQueue*/>>
+    class <<=gen.messageQueueClass(uClass)>>:
+        def __init__(self, ready):
+            self._calls = []
+            self._ready = ready
+            self._stopped = False
+            self._condition = <<=threading>>.Condition()
+            self._worker = <<=threading>>.Thread(target=self._run, daemon=False)
+            self._worker.isIdle = False
+        def start(self):
+            self._worker.start()
+        def put(self, call, *args):
+            with self._condition:
+                self._calls.append((call, args))
+                self._condition.notify()
+        def stop(self):
+            with self._condition:
+                self._stopped = True
+                self._condition.notify()
+        def _run(self):
+            while True:
+                with self._condition:
+                    call = None
+                    while not self._stopped:
+                        call = self._next()
+                        self._worker.isIdle = call is None
+                        if call is not None or self._unreachable():
+                            break
+                        self._condition.wait(0.25)
+                    if self._stopped or call is None:
+                        return
+                call[0](*call[1])
+        def _next(self):
+            for i, call in enumerate(self._calls):
+                if self._ready is None or self._ready(call[0]):
+                    return self._calls.pop(i)
+            return None
+        def _unreachable(self):
+            ended = (<<=threading>>.main_thread(), <<=threading>>.current_thread())
+            return not ended[0].is_alive() and all(t in ended or t.daemon or getattr(t, "isIdle", False)
+                for t in <<=threading>>.enumerate())!>>
+}

@@ -32,6 +32,8 @@ mixset Trait {
               : pythonTraitCode(keyword, cBlock, inStateMachine.getRootStateMachine().getUmpleTrait().getName());
             if (composed != null) {
               codes.put(language, composed);
+              // the composed lines no longer line up with the class's source
+              authoredPositions.remove(language);
             }
             continue;
           }

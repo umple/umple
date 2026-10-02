@@ -39,6 +39,25 @@ class PythonNextGenerator
     }
   }
 
+  // A class value, translated to run once the class exists (classValue): the class's own names are
+  // qualified and the imports it needs are in getSnippetImports
+  public String translateClassValue(String code, UmpleClass uClass, boolean isList, Position position, String slot)
+  {
+    snippetImports.clear();
+    PythonSnippetTranslator translator = PythonSnippetTranslator.forClassValue(this, uClass);
+    try
+    {
+      String python = isList ? translator.translateList(code) : translator.translateExpression(code);
+      useImports(translator);
+      return python;
+    }
+    catch (PythonSnippetException e)
+    {
+      reportSnippetError(position, slot, e.getMessage());
+      return null;
+    }
+  }
+
   // The Python list for the initial value of a list attribute. The model keeps {"a", "b"} as the
   // comma-separated elements "a", "b"; each element is translated as an expression.
   public String translateListDefault(String code, UmpleClass uClass, boolean isStatic, Position position, String slot)
@@ -189,6 +208,8 @@ class PythonSnippetTranslator
   // The snippet being translated
   private boolean expressionOnly;
   private boolean classBody;
+  // A class value evaluated once the class exists, at module level, rather than in its body
+  private boolean afterClass;
   private String source;
   private List<PythonSnippetNode> tokens;
   private List<PythonSnippetNode> comments;
@@ -223,6 +244,14 @@ class PythonSnippetTranslator
           new String[] { PythonNextGenerator.parameterName(parameter.getName()), parameter.getIsList() ? "list:" + kind : kind });
       }
     }
+    return translator;
+  }
+
+  // For a class value evaluated once the class exists (PythonNextGenerator.classValue)
+  public static PythonSnippetTranslator forClassValue(PythonNextGenerator gen, UmpleClass uClass)
+  {
+    PythonSnippetTranslator translator = forClass(gen, uClass, null, true);
+    translator.afterClass = true;
     return translator;
   }
 
@@ -288,7 +317,7 @@ class PythonSnippetTranslator
   private void begin(String code, boolean isExpression)
   {
     expressionOnly = isExpression;
-    classBody = isExpression && isStatic;
+    classBody = isExpression && isStatic && !afterClass;
     tokenize(code == null ? "" : code);
     pos = 0;
     out = new ArrayList<String>();

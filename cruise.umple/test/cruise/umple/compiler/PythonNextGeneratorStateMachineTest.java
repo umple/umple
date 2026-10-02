@@ -63,17 +63,24 @@ public class PythonNextGeneratorStateMachineTest
     SampleFileWriter.destroy(dir.getPath());
   }
 
+  // As in Java, a queued machine's events put a call to the method doing their work in a queue,
+  // whose worker runs them in order; a pooled queue runs first a call the current state can process
   @Test
-  public void queuedAndPooledMachinesAreReportedAsUnsupported() throws Exception
+  public void queuedAndPooledMachinesProcessEventsOnAWorker() throws Exception
   {
     UmpleModel model = generate(
-      "class Waiter { queued sm { A { go -> B; } B {} } }\n" +
-      "class Pool { pooled sm { A { go -> B; } B {} } }\n" +
-      "class Plain { sm { A { go -> B; } B {} } }\n");
-    Assert.assertEquals(Arrays.asList(9210, 9210), errorCodes(model));
-    Assert.assertEquals(Arrays.asList("Plain"), new ArrayList<String>(model.getGeneratedCode().keySet()));
-    String messages = model.getLastResult().toString();
-    Assert.assertTrue(messages, messages.contains("Queued state machines") && messages.contains("Pooled state machines"));
+      "class Waiter { queued sm { A { go(Integer n) -> B; } B {} } }\n" +
+      "class Pool { pooled sm { A { go -> B; } B { stop -> A; } } }\n");
+    Assert.assertEquals(new ArrayList<Integer>(), errorCodes(model));
+    String waiter = model.getGeneratedCode().get("Waiter");
+    Assert.assertTrue(waiter, waiter.contains("        self._eventQueue = __class__.MessageQueue(None)\n"));
+    Assert.assertTrue(waiter, waiter.contains("    def _go(self, n):\n"));
+    Assert.assertTrue(waiter, waiter.contains("    def go(self, n):\n        self._eventQueue.put(self._go, n)\n"));
+    Assert.assertTrue(waiter, waiter.contains("        self._eventQueue.stop()"));
+    String pool = model.getGeneratedCode().get("Pool");
+    Assert.assertTrue(pool, pool.contains("        self._eventQueue = __class__.MessageQueue(self._canProcess)\n"));
+    Assert.assertTrue(pool, pool.contains("        return (self._sm is __class__.Sm.A and name in (\"_go\",)\n"
+      + "            or self._sm is __class__.Sm.B and name in (\"_stop\",))"));
   }
 
   // Python reserves self for the object

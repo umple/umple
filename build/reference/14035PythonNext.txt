@@ -13,7 +13,7 @@ PythonNext is Umple's newer Python generator, chosen with <code>generate PythonN
 
 <p>To create a <b>main Python function</b>, use the same signature as for Java with the code tagged as Python: <code>public static void main(String [ ] args) Python {</code>. Running the generated module calls main with the full <code>sys.argv</code>. From the folder Umple generated into, run <code>python3 -m shop.Main</code> for a class Main in namespace shop, or <code>python3 Main.py</code> for a class without a namespace. Other modules that import the main class get the running one.</p>
 
-<p>Python code can use the classes of its own namespace, and those listed with <code>depend</code> (<code>depend shop.Item;</code> or <code>depend shop.*;</code>), without importing them: Umple imports such a class in each method that names it, as Java sees these classes without an import. Other classes are imported as in any Python code, for example <code>from shop.Item import Item</code>, where <code>shop</code> is the class's namespace.</p>
+<p>Python code can use the classes of its own namespace, and those listed with <code>depend</code> (<code>depend shop.Item;</code> or <code>depend shop.*;</code>), without importing them: Umple imports such a class at the start of each method that names it, as Java sees these classes without an import, unless the method binds that name itself (as a parameter, a local variable or its own import). Other classes are imported as in any Python code, for example <code>from shop.Item import Item</code>, where <code>shop</code> is the class's namespace.</p>
 
 &nbsp;<br/>
 
@@ -33,15 +33,17 @@ PythonNext is Umple's newer Python generator, chosen with <code>generate PythonN
     <li>Overloaded methods become one method that calls the most specific overload matching the arguments, judged by their types when the program runs (Java judges by the declared types of the expressions passed). <code>None</code> matches any reference type, boxed numbers such as <code>Integer</code> included; when several overloads take it, the most specific is called, then the first declared, where Java may report the call as ambiguous.</li>
     <li>A method written in the model with the same parameter types as a method Python generates (for example a Python <code>delete()</code>) replaces that method; other overloads of the name stay. <code>int</code> and <code>Integer</code> count as one type.</li>
     <li>A subclass's methods compete with the inherited methods of their name that they do not override: the most specific one is called, wherever it is declared. A subclass method reaches the parent's methods through <code>super()</code> (calling <code>self</code> would call its own method again). A static method a subclass declares hides the inherited methods of its name.</li>
-    <li>Guards, preconditions and invariants can use Java's <code>equals</code>, <code>contains</code> and a String's <code>length()</code>, and the constants of other classes (<code>Limit.MAX</code>), which the method imports. A String's length counts UTF-16 code units, as in Java.</li>
+    <li>Guards, preconditions and invariants can use Java's <code>equals</code>, <code>contains</code> and a String's <code>length()</code>, and the constants of other classes (<code>Limit.MAX</code>, <code>shop.Limit.MAX</code>, <code>Outer.Inner.MAX</code>), which the method imports. A String's length counts UTF-16 code units, as in Java.</li>
+    <li>A class constant whose value is not a literal is set once the class exists, as Java runs a class's static initializers, so its value can come from methods of classes that use this one.</li>
     <li>A synchronized method holds a reentrant lock of its object while it runs, contracts and injections included, as Java's holds the object's monitor; the object's class and its subclasses share that lock. A static synchronized method holds its class's lock.</li>
     <li>Translated code computes with Python's numbers: integers do not overflow at 32 or 64 bits, <code>Float</code> has double precision, and a floating division by zero raises <code>ZeroDivisionError</code> where Java gives NaN or infinity.</li>
+    <li>Queued and pooled state machines and queued methods take events or calls on a worker thread of their object, which runs them one at a time in the order they were made; as in Java, the event's or method's own call returns at once. A pooled machine first runs an event its current state can take, leaving the others waiting. Deleting the object drops what is still waiting. Unlike Java's, the worker also ends by itself once the main thread has finished and nothing is left for it to do, so a program ends without deleting its objects.</li>
     <li>Timers and do activities of state machines use Python threads. Leaving a state or deleting the object cancels its timers and asks its do activity to stop; an activity that runs for long checks <code>thread.cancelled.is_set()</code>, where <code>thread</code> is the worker it runs in, and returns when it is set. An event on a deleted object does nothing and returns <code>False</code>.</li>
 </ul>
 
 &nbsp;<br/>
 
-<p><b>Python in UmpleOnline:</b> Select Python Code (PythonNext) from the Generate menu, then click Execute It. The model needs a main method written in Python. An error in Python code you wrote names its line in your model; an error in code Umple translated or generated names the line of the generated Python.</p>
+<p><b>Python in UmpleOnline:</b> Select Python Code (PythonNext) from the Generate menu, then click Execute It. The model needs a main method written in Python. An error in Python code you wrote names its line in your model, except in code a trait adds with <code>superCall</code>; an error in code Umple translated or generated names the line of the generated Python.</p>
 
 &nbsp;<br/>
 
@@ -54,7 +56,7 @@ Currently unsupported features, reported with error <a href="E9210PythonUnsuppor
 <ul>
     <li>Tracing.</li>
     <li>Distributed classes.</li>
-    <li>Queued and pooled state machines, and queued methods.</li>
+    <li>Static queued methods.</li>
     <li>Custom constructors and <code>emit</code> template methods.</li>
     <li>Around injections and injections at code labels.</li>
     <li>Association specialization.</li>

@@ -34,6 +34,8 @@ public class PythonNextStateMachineTest extends StateMachineTest
 	SampleFileWriter.destroy(pathToInput + "/Game.py");
 	SampleFileWriter.destroy(pathToInput + "/LightFixture.py");
 	SampleFileWriter.destroy(pathToInput + "/Moose.py");
+	SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.py");
+	SampleFileWriter.destroy(pathToInput + "/QSMwithUnspecifiedRecep.py");
 	SampleFileWriter.destroy(pathToInput + "/Player.py");
 	SampleFileWriter.destroy(pathToInput + "/Session.py");
 	SampleFileWriter.destroy(pathToInput + "/Sheep.py");
@@ -44,6 +46,7 @@ public class PythonNextStateMachineTest extends StateMachineTest
 	SampleFileWriter.destroy(pathToInput + "/World.py");
 	SampleFileWriter.destroy(pathToInput + "/pynext/A.py");
 	SampleFileWriter.destroy(pathToInput + "/pynext/X.py");
+	SampleFileWriter.destroy(pathToInput + "/pynext/QSMwithUnspecifiedRecep.py");
   }
   @Test
   @Override
@@ -70,7 +73,6 @@ public class PythonNextStateMachineTest extends StateMachineTest
     assertPythonDiagnostic(languagePath + "/guardNameBothAttributeAndMethod2Python.ump", 9210);
   }
 
-
   @Override
   @Test
   public void guardNameBothAttributeAndMethod3()
@@ -82,6 +84,18 @@ public class PythonNextStateMachineTest extends StateMachineTest
 
   @Override
   @Test
+  public void stateMachine_unSpecifiedReception_QSM() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+    Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+    f1.setAccessible(true);
+    f1.setInt(null, 1);
+    // the shared model's method body is Java
+    assertUmpleTemplateFor(languagePath + "/stateMachine_unSpecifiedReception_QSMPython.ump",
+      languagePath + "/stateMachine_unSpecifiedReception_QSM." + languagePath + ".txt", "QSMwithUnspecifiedRecep");
+  }
+
+  @Override
+  @Test
   public void checkExternalTransitions_withExitActions_1()
   {
     assertUmpleTemplateFor(languagePath + "/checkExternalTransitions_withExitActions_1Python.ump",languagePath + "/checkExternalTransitions_withExitActions_1."+ languagePath +".txt","X");
@@ -89,66 +103,18 @@ public class PythonNextStateMachineTest extends StateMachineTest
 
   @Override
   @Test
-  public void eventlessStateMachine_before_QueuedStateMachine()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("eventlessStateMachine_QueuedStateMachine.ump", 9210);
-  }
-
-  @Override
-  @Test
   public void queuedSM_UnspecifiedReception() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedSM_UnspecifiedRecep.ump", 9210);
+    // its untagged actions are Java, which Python does not translate
+    assertPythonDiagnostic("queuedSM_UnspecifiedRecep.ump", 9211);
   }
 
   @Override
   @Test
   public void queuedSMwithConcurrentStatesTest()
   {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedSMwithConcurrentStatesTest.ump", 9210);
-  }
-
-  @Override
-  @Test
-  public void queuedStateMachine()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedStateMachine.ump", 9210);
-  }
-
-  @Override
-  @Test
-  public void queuedStateMachine_2()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedStateMachine_2.ump", 9210);
-  }
-
-  @Override
-  @Test
-  public void queuedStateMachine_timedEvents_and_autoTansitions() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedStateMachine_timedEvents_and_autoTansitions.ump", 9210);
-  }
-
-  @Override
-  @Test
-  public void queuedStateMachine_timedTransition_1()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedStateMachine_timedTransition_1.ump", 9210);
-  }
-
-  @Override
-  @Test
-  public void queuedStateMachine_timedTransition_2()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedStateMachine_timedTransition_2.ump", 9210);
+    // its untagged actions are Java, which Python does not translate
+    assertPythonDiagnostic("queuedSMwithConcurrentStatesTest.ump", 9211);
   }
 
   @Override
@@ -171,24 +137,16 @@ public class PythonNextStateMachineTest extends StateMachineTest
   @Test
   public void queuedWithConcurrensStatesCourseAttempt() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedWithConcurrensStatesCourseAttempt.ump", 9210);
-  }
-
-  @Override
-  @Test
-  public void queuedWithConcurrentStateMachines()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedWithConcurrentStateMachines.ump", 9210);
+    // its untagged actions are Java, which Python does not translate
+    assertPythonDiagnostic("queuedWithConcurrensStatesCourseAttempt.ump", 9211);
   }
 
   @Override
   @Test
   public void queuedWithNestingStatesATM()
   {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedWithNestingStatesATM.ump", 9210);
+    // its untagged actions are Java, which Python does not translate
+    assertPythonDiagnostic("queuedWithNestingStatesATM.ump", 9211);
   }
 
   @Override
@@ -207,171 +165,20 @@ public class PythonNextStateMachineTest extends StateMachineTest
 
   @Override
   @Test
-  public void stateMachine_unSpecifiedReception_QSM() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("stateMachine_unSpecifiedReception_QSM.ump", 9210);
-  }
-
-  @Override
-  @Test
-  public void queuedStateMachine_implements()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedStateMachine_implementsInterface.ump", 9210);
-  }
-
-  @Override
-  @Test
-  public void queuedWithNestingStateMachines()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedWithNestedStateMachines.ump", 9210);
-  }
-
-  @Override
-  @Test
-  public void queuedStateMachine_timedEvents()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedStateMachine_timedEvents.ump", 9210);
-  }
-
-  @Override
-  @Test
-  public void queuedStateMachine_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("queuedStateMachine_autoTransition.ump", 9210);
-  }
-
-  @Override
-  @Test
-  public void testMultipleQSMs()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("testMultipleQSMs.ump", 9210);
-  }
-
-
-
-@Override
-  @Test
-  public void pooledStateMachine()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("pooledStateMachine.ump", 9210);
-  }
-  @Override
-  @Test
   public void pooledStateMachine_withParameters()
   {
     // a feature Python does not generate yet is reported
     assertPythonDiagnostic("pooledStateMachine_withParameters.ump", 9210);
-  }
-  @Override
-  @Test
-  public void pooledStateMachine_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("pooledStateMachine_autoTransition.ump", 9210);
   }
 
 @Override
   @Test
   public void pooledStateMachineWithConcurrentStates_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("pooledStateMachineWithConcurrentStates_autoTransition.ump", 9210);
+    // its untagged actions are Java, which Python does not translate
+    assertPythonDiagnostic("pooledStateMachineWithConcurrentStates_autoTransition.ump", 9211);
   }
 
-  @Override
-  @Test
-  public void pooledStateMachine_timedEvents_and_autoTansitions() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("pooledStateMachine_timedEvents_and_autoTansitions.ump", 9210);
-  }
-
-@Override
-@Test
-  public void pooledStateMachine_timedTransition_2()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("pooledStateMachine_timedTransition_2.ump", 9210);
-  }
-
-@Override
- @Test
-  public void pooledStateMachine_timedTransition_1()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("pooledStateMachine_timedTransition_1.ump", 9210);
-  }
-@Override
-
-  @Test
-  public void pooledStateMachine_UnspecifiedReception() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("pooledStateMachine_UnspecifiedReception.ump", 9210);
-  }
-  @Override
-  @Test
-  public void testPooledwithNestedStates()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("testPooledwithNestedStates.ump", 9210);
-  }
-  @Override
-  @Test
-  public void testPooledwithNestedStates_2()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("testPooledwithNestedStates_2.ump", 9210);
-  }
-  @Override
-  @Test
-  public void testPooledwithNestedStates_3()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("testPooledwithNestedStates_3.ump", 9210);
-  }
-  @Override
-  @Test
-  public void testPooledwithNestedStates_4()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("testPooledwithNestedStates_4.ump", 9210);
-  }
-  @Override
-  @Test
-  public void multiplePooledStateMachine()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("multiplePooledStateMachine.ump", 9210);
-  }
-  @Override
-  @Test
-  public void multiplePooledStateMachine_EventlessStateMachine()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("multiplePooledStateMachine_EventlessStateMachine.ump", 9210);
-  }
-  @Override
-  @Test
-  public void multiplePooledStateMachine_nestedStates()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("multiplePooledStateMachine_nestedStates.ump", 9210);
-  }
-  @Override
-  @Test
-  public void multiplePooledStateMachines_sameEvents()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("multiplePooledStateMachines_sameEvents.ump", 9210);
-  }
 @Override
   @Test
   public void exitAction()
@@ -420,8 +227,8 @@ public class PythonNextStateMachineTest extends StateMachineTest
 @Test
 public void queuedSMwithConcurrentStatesTest_2()
 {
-  // a feature Python does not generate yet is reported
-  assertPythonDiagnostic("queuedSMwithConcurrentStatesTest_2.ump", 9210);
+  // its untagged actions are Java, which Python does not translate
+  assertPythonDiagnostic("queuedSMwithConcurrentStatesTest_2.ump", 9211);
 }
 
 @Override
@@ -495,60 +302,11 @@ public void queuedSMwithConcurrentStatesTest_2()
     // the guards name x, y and z, which the model does not define
     assertPythonDiagnostic("equivalentGuards.ump", 9210);
   }
-@Override
-   @Test
-  public void eventlessStateMachine_before_PooledStateMachine()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("eventlessStateMachine_PooledStateMachine.ump", 9210);
-  }
-  @Override
-  @Test
-  public void pooledStateMachine_timedEvents()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("pooledStateMachine_timedEvents.ump", 9210);
-  }
   @Override
   @Test
   public void testRegionFinalStates_6()
   {
     assertUmpleTemplateFor(languagePath + "/testRegionFinalStates_6Python.ump",languagePath + "/testRegionFinalStates_6."+ languagePath +".txt","X");
-  }
-@Override
-@Test
-  public void multipleQSM()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("multipleQSM.ump", 9210);
-  }
-@Override
-  @Test
-  public void multipleQSM_EventlessStateMachine()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("multipleQSM_EventlessStateMachine.ump", 9210);
-  }
-  @Override
-  @Test
-  public void multipleQSMe_nestedStates()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("multipleQSMe_nestedStates.ump", 9210);
-  }
-  @Override
-  @Test
-  public void multipleQSM_sameEvents()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("multipleQSM_sameEvents.ump", 9210);
-  }
-    @Override
-  @Test
-  public void nestedStatesOfQSMwithSameEventNames()
-  {
-    // a feature Python does not generate yet is reported
-    assertPythonDiagnostic("nestedStatesOfQSMwithSameEventNames.ump", 9210);
   }
 @Ignore("the shared model has Java in untagged method bodies or extra code, which Python emits as native code; the corpus gate classifies it as generation-only")
 @Override

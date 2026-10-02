@@ -6,7 +6,8 @@ from ImportModules import importModules
 
 importModules(["LoudGreeter", "Checks", "AlwaysEqual", "Pair", "CountedChild", "ContractCalls", "ContractCallsChild",
                "KeyedPart", "PartBox", "PartBoxPair", "BoxedNull", "TextualSetter", "TextualStr", "LabelCrate",
-               "CrateItem", "CountingTagged", "DependMaker", "ImplicitUser", "PickOverride", "PickWider"], ["usercode", "test"])
+               "CrateItem", "CountingTagged", "DependMaker", "ImplicitUser", "PickOverride", "PickWider", "ScopedUser", "ValueOwner", "EventChild",
+               "VarargsChild", "TypedChecks"], ["usercode", "test"])
 from ImportModules import *
 
 
@@ -131,4 +132,30 @@ class EdgeCasesTest(unittest.TestCase):
         self.assertEqual("base-int", wider.pick(1))
         self.assertEqual("wider-double", wider.pick(1.5))
         self.assertEqual("base-string", wider.pick("x"))
+
+    def test_importsFollowPythonScopes(self):
+        user = ScopedUser.ScopedUser()
+        self.assertEqual("CrateItem", user.viaComprehension())
+        self.assertEqual("CrateItem1", user.viaNested())
+        user.setShared("x")
+        self.assertEqual("local", user.getSeen())
+
+    def test_aClassValueIsSetOnceItsClassExists(self):
+        self.assertEqual("seed 1", ValueOwner.ValueOwner.LABEL)
+
+    def test_inheritedEventsAndVarargsCompete(self):
+        child = EventChild.EventChild()
+        self.assertFalse(child.go(1.5))
+        self.assertTrue(child.go(1))
+        self.assertEqual("On", child.getSmFullName())
+        self.assertEqual("base", VarargsChild.VarargsChild().pick())
+        self.assertEqual("child", VarargsChild.VarargsChild().pick(1, 2))
+
+    def test_otherClassesConstantsKeepTheirTypes(self):
+        checks = TypedChecks.TypedChecks()
+        self.assertEqual((1, 2, 3), (checks.half(), checks.length(), checks.has()))
+        self.assertEqual((4, 4), (checks.qualified(4), checks.nested(4)))
+        for call in (checks.qualified, checks.nested):
+            with self.assertRaises(RuntimeError):
+                call(5)
 

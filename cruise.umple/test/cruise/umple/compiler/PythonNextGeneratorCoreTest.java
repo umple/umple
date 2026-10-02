@@ -417,10 +417,14 @@ public class PythonNextGeneratorCoreTest
       + "    Integer size() Python {\n"
       + "      return len(None)\n"
       + "    } } }\n"
+      + "  Integer broken = Python {\n"
+      + "    1 / 0\n"
+      + "  };\n"
       + "}\n");
     Assert.assertTrue(tracebackOf("Runner().work()"), tracebackOf("Runner().work()").contains("[model.ump:5]"));
     Assert.assertTrue(tracebackOf("Runner().go()"), tracebackOf("Runner().go()").contains("[model.ump:7]"));
     Assert.assertTrue(tracebackOf("Runner().size()"), tracebackOf("Runner().size()").contains("[model.ump:9]"));
+    Assert.assertTrue(tracebackOf("Runner().getBroken()"), tracebackOf("Runner().getBroken()").contains("[model.ump:12]"));
   }
 
   // The traceback of a statement run on the generated classes, mapped to the model

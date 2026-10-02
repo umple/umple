@@ -89,39 +89,32 @@ class PythonNextGenerator
   // Native code
   //------------------------
 
-  // nativeCode for the body of a function, preceded by its modelImports
-  public String functionCode(String code, String firstLineIndent, String indent, Position position, UmpleClassifier owner,
-    List<MethodParameter> parameters)
+  // nativeCode for the body of a function, preceded by the marked imports of its modelImports
+  public String functionCode(String code, String firstLineIndent, String indent, Position position, UmpleClassifier owner)
   {
     StringBuilder imports = new StringBuilder();
-    for (String line : modelImports(code, owner, parameters))
+    for (String line : modelImports(code, owner))
     {
       imports.append("\n").append(indent).append(line);
     }
     return imports + nativeCode(code, firstLineIndent, indent, position, owner);
   }
 
-  // The imports of the model classes native code names that Java would see without an import: those
-  // of the owner's namespace and those it lists with depend. Java imports them for the whole class,
-  // Python in the function that uses them. A name the code or a parameter binds keeps its meaning.
-  public List<String> modelImports(String code, UmpleClassifier owner, List<MethodParameter> parameters)
+  // Marks an import native code needs; placeModelImports moves it to the start of its function
+  public static final String MODEL_IMPORT = "#<<MODEL IMPORT>>";
+
+  // The imports, marked, of the model classes native code names that Java would see without an
+  // import: those of the owner's namespace and those it lists with depend. Java imports them for the
+  // whole class, Python in the function that uses them.
+  public List<String> modelImports(String code, UmpleClassifier owner)
   {
     List<String> imports = new ArrayList<String>();
-    if (code == null)
-    {
-      return imports;
-    }
-    Set<String> names = PythonSource.codeNames(code);
-    names.removeAll(PythonSource.boundNames(code));
-    for (MethodParameter parameter : parameters == null ? new ArrayList<MethodParameter>() : parameters)
-    {
-      names.remove(parameterName(parameter.getName()));
-    }
+    Set<String> names = code == null ? new HashSet<String>() : PythonSource.codeNames(code);
     for (UmpleClassifier target : visibleClassifiers(owner))
     {
       if (names.contains(target.getName()))
       {
-        imports.add(importOf(target));
+        imports.add(MODEL_IMPORT + importOf(target));
       }
     }
     return imports;
@@ -169,8 +162,13 @@ class PythonNextGenerator
     {
       return block;
     }
-    return "\n" + indent + "# line " + position.getLineNumber() + " \"" + owner.getRelativePath(position.getFilename(), "Python") + "\""
-      + block + "\n" + indent + "# end line";
+    return "\n" + indent + sourceMarker(position, owner) + block + "\n" + indent + "# end line";
+  }
+
+  // The comment starting a source region, which maps the lines after it to the model from position on
+  public static String sourceMarker(Position position, UmpleClassifier owner)
+  {
+    return "# line " + position.getLineNumber() + " \"" + owner.getRelativePath(position.getFilename(), "Python") + "\"";
   }
 
   //------------------------
@@ -318,9 +316,9 @@ class PythonNextGenerator
       {
         errorAt(9210, m.getPosition(), "The custom constructor " + m.getName(), className);
       }
-      else if (m.getIsQueued())
+      else if (m.getIsQueued() && isStatic(m))
       {
-        errorAt(9210, m.getPosition(), "The queued method " + m.getName(), className);
+        errorAt(9210, m.getPosition(), "The static queued method " + m.getName(), className);
       }
       checkSignature(m);
     }
@@ -650,27 +648,67 @@ class PythonNextGenerator
       : v instanceof ConstraintAttribute ? ((ConstraintAttribute) v).getAttribute().getName() : null;
   }
 
-  // The model class or interface name stands for in a constraint when it is not the class, one of its
-  // ancestors or a name in scope; null otherwise
-  private UmpleClassifier otherClassifier(PythonConstraintScope context, String name)
+  // Another model class's constant or enumeration value that a constraint names through its class
+  // (Limit.MAX, shop.Limit.MAX, Outer.Limits.MAX, Limit.Level.High): the classifier and the names
+  // after it, or null. The longest leading path that names a classifier counts; a first name the
+  // constraint already has in scope keeps its meaning.
+  private Object[] foreignMember(ConstraintVariable v, PythonConstraintScope context)
   {
-    if (context.getParameters().containsKey(name) || inheritedMember(context.getUClass(), name) != null
-      || inherits(context.getUClass(), name))
+    List<String> path = dottedNames(v);
+    if (path == null || path.size() < 2 || context.getParameters().containsKey(path.get(0))
+      || inheritedMember(context.getUClass(), path.get(0)) != null || inherits(context.getUClass(), path.get(0)))
     {
       return null;
     }
-    UmpleClass uClass = getModel().getUmpleClass(name);
-    return uClass != null ? uClass : getModel().getUmpleInterface(name);
+    for (int length = path.size() - 1; length >= 1; length--)
+    {
+      String prefix = String.join(".", path.subList(0, length));
+      List<UmpleClassifier> classifiers = new ArrayList<UmpleClassifier>(getModel().getUmpleClasses());
+      classifiers.addAll(getModel().getUmpleInterfaces());
+      for (UmpleClassifier c : classifiers)
+      {
+        String reference = c instanceof UmpleClass ? classReference((UmpleClass) c) : c.getName();
+        if (prefix.equals(reference) || prefix.equals(c.getPackageName() + "." + reference))
+        {
+          return new Object[] { c, path.subList(length, path.size()) };
+        }
+      }
+    }
+    return null;
   }
 
-  // Another model class's constant or enumeration, read through that class, which the function
-  // imports
-  private String otherClassConstant(UmpleClassifier other, String name, PythonConstraintScope context)
+  // The names of a chain of member accesses (a.b.c), or null when a part is anything else
+  private static List<String> dottedNames(ConstraintVariable v)
   {
-    if (name == null || !hasConstant(other, name))
+    v = unwrap(v);
+    if (v instanceof ConstraintUnassignedName)
     {
-      throw new PythonSnippetException("A constraint naming " + other.getName() + "." + name + ", which is not a constant of "
-        + other.getName() + ",", null);
+      return new ArrayList<String>(Arrays.asList(((ConstraintUnassignedName) v).getValue()));
+    }
+    if (!(v instanceof ConstraintOperator) || !".".equals(((ConstraintOperator) v).getValue()) || ((ConstraintOperator) v).numberOfSubConstraints() != 2)
+    {
+      return null;
+    }
+    List<String> left = dottedNames(((ConstraintOperator) v).getLeft());
+    ConstraintVariable right = unwrap(((ConstraintOperator) v).getRight());
+    List<String> rest = right instanceof ConstraintAttribute ? Arrays.asList(memberName(right)) : dottedNames(right);
+    if (left == null || rest == null)
+    {
+      return null;
+    }
+    left.addAll(rest);
+    return left;
+  }
+
+  // A foreign constant or enumeration value, read through its class, which the function imports
+  private String foreignReference(UmpleClassifier other, List<String> names, PythonConstraintScope context)
+  {
+    boolean constant = names.size() == 1 && constantType(other, names.get(0)) != null;
+    boolean enumValue = names.size() == 2 && other instanceof UmpleClass && isEnumeration((UmpleClass) other, names.get(0));
+    if (!constant && !enumValue)
+    {
+      throw new PythonSnippetException("A constraint naming " + other.getName() + "." + String.join(".", names)
+        + ", which is not a constant of " + other.getName() + ",", null);
     }
     List<String> locals = new ArrayList<String>();
     for (String parameter : context.getParameters().keySet())
@@ -682,32 +720,34 @@ class PythonNextGenerator
     {
       conditionImports.add(use[1]);
     }
-    return use[0] + "." + name;
+    return use[0] + "." + String.join(".", names);
   }
 
-  // Whether name is a constant or an enumeration that classifier declares or inherits
-  private boolean hasConstant(UmpleClassifier classifier, String name)
+  // The declared type of a constant classifier has or inherits, or null when it has none of that name
+  private static String constantType(UmpleClassifier classifier, String name)
   {
     if (classifier instanceof UmpleInterface)
     {
-      return declaredConstant((UmpleInterface) classifier, name) != null;
+      Constant constant = declaredConstant((UmpleInterface) classifier, name);
+      return constant == null ? null : constant.getType();
     }
     for (UmpleClass c = (UmpleClass) classifier; c != null; c = c.getExtendsClass())
     {
       Attribute attribute = c.getAttribute(name);
       if (attribute != null && attribute.isConstant())
       {
-        return true;
+        return attribute.getType() + (attribute.getIsList() ? "[]" : "");
       }
       for (Constant constant : c.getConstants())
       {
         if (constant.getName().equals(name))
         {
-          return true;
+          return constant.getType();
         }
       }
     }
-    return interfaceConstant((UmpleClass) classifier, name) != null || isEnumeration((UmpleClass) classifier, name);
+    Constant inherited = interfaceConstant((UmpleClass) classifier, name);
+    return inherited == null ? null : inherited.getType();
   }
 
   // The attribute or association of a class or its ancestors with the given name, which the front end
@@ -789,17 +829,16 @@ class PythonNextGenerator
       // The parser leaves this.x unresolved when x is an inherited attribute or association
       ConstraintVariable target = unwrap(left);
       ConstraintVariable name = unwrap(right);
-      UmpleClassifier other = target instanceof ConstraintUnassignedName
-        ? otherClassifier(context, ((ConstraintUnassignedName) target).getValue()) : null;
+      Object[] foreign = foreignMember(op, context);
+      if (foreign != null)
+      {
+        return foreignReference((UmpleClassifier) foreign[0], (List<String>) foreign[1], context);
+      }
       if (target instanceof ConstraintUnassignedName && "this".equals(((ConstraintUnassignedName) target).getValue())
         && name instanceof ConstraintUnassignedName)
       {
         ConstraintVariable inherited = inheritedMember(context.getUClass(), ((ConstraintUnassignedName) name).getValue());
         right = inherited == null ? right : inherited;
-      }
-      else if (other != null)
-      {
-        return otherClassConstant(other, memberName(name), context);
       }
       else if (target instanceof ConstraintUnassignedName && !"this".equals(((ConstraintUnassignedName) target).getValue())
         && !((ConstraintUnassignedName) target).getValue().equals(context.getUClass().getName())
@@ -1125,6 +1164,12 @@ class PythonNextGenerator
     if (isLength(inner, context) || isCall(inner) && isLength(((ConstraintOperator) inner).getLeft(), context))
     {
       return "int";
+    }
+    Object[] foreign = foreignMember(inner, context);
+    if (foreign != null)
+    {
+      List<String> names = (List<String>) foreign[1];
+      return names.size() == 1 ? constantType((UmpleClassifier) foreign[0], names.get(0)) : null;
     }
     ConstraintVariable member = thisMember(inner);
     ConstraintVariable qualified = inner instanceof ConstraintOperator && ".".equals(((ConstraintOperator) inner).getValue())
@@ -1512,8 +1557,7 @@ class PythonNextGenerator
     }
     if ("Python".equals(language))
     {
-      return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass,
-        parameters);
+      return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass);
     }
     String translated = translateSnippetAt(code.getCode(language), uClass, parameters, isStatic, false, at, slot);
     if (translated != null && slot.startsWith("the action of the transition") && Pattern.compile("(?m)^\\s*return\\s*$").matcher(translated).find())
@@ -1568,11 +1612,23 @@ class PythonNextGenerator
       : new ArrayList<ConstraintTree>(uClass.getMethodPostconditions(method, "Python"));
   }
 
-  // A user method under name (its own, or its number in an overload group). With contracts or
-  // injections it wraps a helper holding the body, called through the declaring class so that a
-  // super() call never reaches a subclass's helper. A synchronized method holds its monitor for all
-  // of it, contracts and injections included, as Java's does.
+  // A user method under name (its own, or its number in an overload group). A queued one, as in Java,
+  // only puts a call to the method doing its work in the object's method queue.
   public String userMethod(UmpleClass uClass, Method method, String name)
+  {
+    if (!method.getIsQueued())
+    {
+      return methodWithBody(uClass, method, name);
+    }
+    String worker = queuedName(uClass, name);
+    return methodWithBody(uClass, method, worker)
+      + emitted(uClass, method, enqueuer(name, worker, methodQueue(uClass), method.getMethodParameters(), false));
+  }
+
+  // With contracts or injections the method wraps a helper holding the body, called through the
+  // declaring class so that a super() call never reaches a subclass's helper. A synchronized method
+  // holds its monitor for all of it, contracts and injections included, as Java's does.
+  private String methodWithBody(UmpleClass uClass, Method method, String name)
   {
     boolean isStatic = isStatic(method);
     String language = pythonLanguage(method);
@@ -1599,7 +1655,7 @@ class PythonNextGenerator
     CodeBlock block = method.getMethodBody().getCodeblock();
     boolean wrapped = before.length() > 0 || after.length() > 0;
     String body = functionCode(block.getCode(language), block.getFirstLineIndent(language), wrapped ? "        " : indent,
-      block.getAuthoredPosition(language), uClass, scope);
+      block.getAuthoredPosition(language), uClass);
     if (!wrapped)
     {
       return emitted(uClass, method, header + docstring + lock + body);
@@ -1882,7 +1938,7 @@ class PythonNextGenerator
         boolean overridden = false;
         for (List<MethodParameter> other : seen)
         {
-          overridden = overridden || indistinct(signature, other);
+          overridden = overridden || sameSignature(signature, other);
         }
         if (!overridden)
         {
@@ -1894,8 +1950,8 @@ class PythonNextGenerator
     return inherited;
   }
 
-  // The parameters of the instance methods of the model named name that class k declares for Python
-  private static List<List<MethodParameter>> inheritedSignatures(UmpleClass k, String name)
+  // The parameters of the instance methods and events named name that class k declares for Python
+  private List<List<MethodParameter>> inheritedSignatures(UmpleClass k, String name)
   {
     List<List<MethodParameter>> signatures = new ArrayList<List<MethodParameter>>();
     List<Method> methods = new ArrayList<Method>(k.getMethods());
@@ -1907,7 +1963,26 @@ class PythonNextGenerator
         signatures.add(m.getMethodParameters());
       }
     }
+    for (Event e : k.getEvents())
+    {
+      if (!e.isUnspecified() && name.equals(translate("eventMethod", e)))
+      {
+        signatures.add(e.getParams());
+      }
+    }
     return signatures;
+  }
+
+  // Whether one signature overrides the other: the same parameters as Python sees them, as many, a
+  // variable one in the same place, and of the same types (int and Integer are one)
+  private static boolean sameSignature(List<MethodParameter> a, List<MethodParameter> b)
+  {
+    boolean same = a.size() == b.size() && isVarargs(a) == isVarargs(b);
+    for (int k = 0; same && k < a.size(); k++)
+    {
+      same = boxed(typeAt(a, k)).equals(boxed(typeAt(b, k)));
+    }
+    return same;
   }
 
   private static int lineAt(String text, int index)
@@ -2367,8 +2442,8 @@ class PythonNextGenerator
     {
       text.append("\n        ").append(line);
     }
-    // Calls none of the candidates takes go on to an ancestor's method of the name, as Java's overload
-    // resolution also considers inherited methods
+    // A call none of the candidates takes goes on to an ancestor's method of the name, which may be a
+    // generated one the candidates do not list
     String noMatch = !isStatic && ancestorHas(uClass, name) ? "return super()." + name + "(*args, **kwargs)" : "raise TypeError(\"No method matches provided parameters\")";
     String dispatcher = text.append(candidates).append("\n        ").append(noMatch).toString();
     String key = uClass.getName() + "." + name;

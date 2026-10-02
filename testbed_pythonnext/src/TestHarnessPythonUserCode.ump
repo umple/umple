@@ -488,6 +488,13 @@ class SyncSubCounter
 {
   isA SyncCounter;
   synchronized void reset() Python { self.setCount(0) }
+  synchronized void bumpBy(int times) Python {
+    import time
+    for _ in range(times):
+        c = self.getCount()
+        time.sleep(0)
+        self.setCount(c + 1)
+  }
 }
 
 // Guards and contracts read another class's constants through that class.
@@ -553,4 +560,100 @@ class PickWider
 {
   isA PickBase;
   String pick(double d) Python { return "wider-double" }
+}
+
+// Imports of namespace classes follow Python's scopes: a name a comprehension or a nested function
+// binds is theirs, and a name the injections of one method share stays theirs.
+class ScopedUser
+{
+  String shared = "";
+  String seen = "";
+  before setShared Python { CrateItem = "local" }
+  after setShared Python { self._seen = CrateItem }
+  String viaComprehension() Python {
+    ignored = [CrateItem for CrateItem in [1]]
+    return CrateItem.__name__
+  }
+  String viaNested() Python {
+    def helper():
+        CrateItem = 1
+        return CrateItem
+    return CrateItem.__name__ + str(helper())
+  }
+}
+
+// A class value that is not a literal is set once its class exists, so what it calls may import
+// the class.
+class ValueOwner
+{
+  const Integer SEED = 1;
+  const String LABEL = ValueSource.label();
+}
+
+class ValueSource
+{
+  public static String label() Python { return "seed " + str(ValueOwner.SEED) }
+}
+
+// Inherited events and variable-argument methods compete with a subclass's overloads too.
+class EventBase
+{
+  sm { Off { go(int n) -> On; } On { } }
+}
+
+class EventChild
+{
+  isA EventBase;
+  boolean go(double n) Python { return False }
+}
+
+class VarargsBase
+{
+  String pick(int... ns) Python { return "base" }
+}
+
+class VarargsChild
+{
+  isA VarargsBase;
+  String pick(int n, int... ns) Python { return "child" }
+}
+
+// Guards and contracts use another class's constants with their declared types, also through a
+// namespace or an outer class.
+class Limits
+{
+  const int N = 5;
+  const String TEXT = "a😀";
+}
+
+class LimitsOuter
+{
+  inner class InnerLimits
+  {
+    const int MAX = 5;
+  }
+}
+
+class TypedChecks
+{
+  int half() Python {
+    [pre: (Limits.N / 2) == 2]
+    return 1
+  }
+  int length() Python {
+    [pre: Limits.TEXT.length() == 3]
+    return 2
+  }
+  int has() Python {
+    [pre: Limits.TEXT.contains("a")]
+    return 3
+  }
+  int qualified(int n) Python {
+    [pre: n < cruise.usercode.test.Limits.N]
+    return n
+  }
+  int nested(int n) Python {
+    [pre: n < LimitsOuter.InnerLimits.MAX]
+    return n
+  }
 }

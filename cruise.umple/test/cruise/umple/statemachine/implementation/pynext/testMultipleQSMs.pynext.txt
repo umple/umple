@@ -1,0 +1,254 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+import threading
+
+
+class X:
+    class Sm(Enum):
+        s1 = "s1"
+        s2 = "s2"
+        s3 = "s3"
+        s4 = "s4"
+
+        def __str__(self):
+            return self.value
+
+    class Sm2(Enum):
+        sm21 = "sm21"
+        sm22 = "sm22"
+
+        def __str__(self):
+            return self.value
+    class MessageQueue:
+        def __init__(self, ready):
+            self._calls = []
+            self._ready = ready
+            self._stopped = False
+            self._condition = threading.Condition()
+            self._worker = threading.Thread(target=self._run, daemon=False)
+            self._worker.isIdle = False
+        def start(self):
+            self._worker.start()
+        def put(self, call, *args):
+            with self._condition:
+                self._calls.append((call, args))
+                self._condition.notify()
+        def stop(self):
+            with self._condition:
+                self._stopped = True
+                self._condition.notify()
+        def _run(self):
+            while True:
+                with self._condition:
+                    call = None
+                    while not self._stopped:
+                        call = self._next()
+                        self._worker.isIdle = call is None
+                        if call is not None or self._unreachable():
+                            break
+                        self._condition.wait(0.25)
+                    if self._stopped or call is None:
+                        return
+                call[0](*call[1])
+        def _next(self):
+            for i, call in enumerate(self._calls):
+                if self._ready is None or self._ready(call[0]):
+                    return self._calls.pop(i)
+            return None
+        def _unreachable(self):
+            ended = (threading.main_thread(), threading.current_thread())
+            return not ended[0].is_alive() and all(t in ended or t.daemon or getattr(t, "isIdle", False)
+                for t in threading.enumerate())
+
+    def __init__(self):
+        self._ev = ""
+        self._eventQueue = __class__.MessageQueue(None)
+        self._sm = None
+        self._sm2 = None
+        self._deleted = False
+        self.setSm(__class__.Sm.s1)
+        if self._deleted:
+            return
+        self.setSm2(__class__.Sm2.sm21)
+        if self._deleted:
+            return
+        self._eventQueue.start()
+
+    def setEv(self, aEv):
+        self._ev = aEv
+        return True
+
+    def getEv(self):
+        return self._ev
+
+    def getSmFullName(self):
+        answer = str(self._sm)
+        return answer
+
+    def getSm2FullName(self):
+        answer = str(self._sm2)
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSm2(self):
+        return self._sm2
+
+    def _ev1(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm = self._sm
+        aSm2 = self._sm2
+        if aSm is __class__.Sm.s1:
+            self._ev = "ev1"
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.s2)
+            wasEventProcessed = True
+        if self._deleted:
+            return True
+        if aSm2 is __class__.Sm2.sm21:
+            self._ev = "ev1 in sm2"
+            if self._deleted:
+                return True
+            self.setSm2(__class__.Sm2.sm22)
+            wasEventProcessed = True
+        if self._deleted:
+            return wasEventProcessed
+        if wasEventProcessed:
+            print(self._ev)
+        if self._deleted:
+            return wasEventProcessed
+        return wasEventProcessed
+
+    def ev1(self):
+        self._eventQueue.put(self._ev1)
+
+    def _ev5(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm is __class__.Sm.s1:
+            self._ev = "ev5"
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.s2)
+            wasEventProcessed = True
+        if self._deleted:
+            return wasEventProcessed
+        if wasEventProcessed:
+            print(self._ev)
+        if self._deleted:
+            return wasEventProcessed
+        return wasEventProcessed
+
+    def ev5(self):
+        self._eventQueue.put(self._ev5)
+
+    def _ev2(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm is __class__.Sm.s2:
+            self._ev = "ev2"
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.s3)
+            wasEventProcessed = True
+        if self._deleted:
+            return wasEventProcessed
+        if wasEventProcessed:
+            print(self._ev)
+        if self._deleted:
+            return wasEventProcessed
+        return wasEventProcessed
+
+    def ev2(self):
+        self._eventQueue.put(self._ev2)
+
+    def _ev3(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm is __class__.Sm.s3:
+            self._ev = "ev3"
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.s4)
+            wasEventProcessed = True
+        if self._deleted:
+            return wasEventProcessed
+        if wasEventProcessed:
+            print(self._ev)
+        if self._deleted:
+            return wasEventProcessed
+        return wasEventProcessed
+
+    def ev3(self):
+        self._eventQueue.put(self._ev3)
+
+    def _ev4(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm is __class__.Sm.s4:
+            self._ev = "ev4"
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.s1)
+            wasEventProcessed = True
+        if self._deleted:
+            return wasEventProcessed
+        if wasEventProcessed:
+            print(self._ev)
+        if self._deleted:
+            return wasEventProcessed
+        return wasEventProcessed
+
+    def ev4(self):
+        self._eventQueue.put(self._ev4)
+
+    def _ev7(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm2 = self._sm2
+        if aSm2 is __class__.Sm2.sm22:
+            self._ev = "ev7 in sm2"
+            if self._deleted:
+                return True
+            self.setSm2(__class__.Sm2.sm21)
+            wasEventProcessed = True
+        if self._deleted:
+            return wasEventProcessed
+        if wasEventProcessed:
+            print(self._ev)
+        if self._deleted:
+            return wasEventProcessed
+        return wasEventProcessed
+
+    def ev7(self):
+        self._eventQueue.put(self._ev7)
+
+    def setSm(self, aSm):
+        self._sm = aSm
+
+    def setSm2(self, aSm2):
+        self._sm2 = aSm2
+
+    def delete(self):
+        self._deleted = True
+        self._eventQueue.stop()
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "ev:" + str(self.getEv())
+                + "]")

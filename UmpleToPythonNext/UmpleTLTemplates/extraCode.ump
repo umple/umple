@@ -1,9 +1,11 @@
 class UmpleToPythonNext {
-    // Extra class code is native Python. It is the last part of the class body, so the
-    // launcher of a Python main, which follows the class at module level, comes here too.
+    // Extra class code is native Python. It is the last part of the class body, so what follows the
+    // class at module level comes here too: the class values set once the class exists, then the
+    // launcher of a Python main.
     extraCode <<!<</*extraCode*/>><<#
 {
   realSb.append(gen.classExtraCode(uClass));
+  realSb.append(gen.classInitializers(uClass));
   realSb.append(gen.mainLauncher(uClass));
 }
 #>>!>>

@@ -21,9 +21,16 @@ class UmpleToPythonNext {
     injectionParameters.add(gen.parameter("event", "String"));
   }
   MethodParameter[] injectable = injectionParameters.toArray(new MethodParameter[0]);
+  // After injections may read whether the event was processed, as Java's read its local of that name
+  List<MethodParameter> afterParameters = new ArrayList<MethodParameter>(injectionParameters);
+  if (processed.equals("wasEventProcessed"))
+  {
+    afterParameters.add(gen.parameter(processed, "boolean"));
+  }
+  MethodParameter[] afterInjectable = afterParameters.toArray(new MethodParameter[0]);
   // Guard results and visit captures share the scope of authored event code.
   locals.addAll(gen.localNames(gen.injected(uClass, "before", methodName, injectable),
-    gen.injected(uClass, "after", methodName, injectable)));
+    gen.injected(uClass, "after", methodName, afterInjectable)));
   Set<StateMachine> guardedMachines = new HashSet<StateMachine>();
   // Guards sit in if-elif chains, so the classes they read are imported at the start
   Set<String> guardImports = new LinkedHashSet<String>();
@@ -57,7 +64,8 @@ class UmpleToPythonNext {
   String guard = gen.localName("guard", locals);
   String matched = gen.localName("matched", locals);
   String before = gen.stateMachineInjections(uClass, "before", methodName, gen.deletedCheck(deletingFlag, "        ", "True"), injectable);
-  String after = gen.stateMachineInjections(uClass, "after", methodName, gen.deletedCheck(deletingFlag, "        ", processed), injectable);
+  String after = gen.stateMachineInjections(uClass, "after", methodName, gen.deletedCheck(deletingFlag, "        ", processed),
+    afterInjectable);
 
   StringBuilder declarations = new StringBuilder();
   for (String line : guardImports)
@@ -271,11 +279,21 @@ class UmpleToPythonNext {
     <<=implementations.get(0)>> = <<=inherited>><<=methodName>><<#
   }
   int eventStart = realSb.length();
+  // In a queued or pooled machine the event's method puts a call to the method doing its work in the
+  // queue, as Java's does; the unspecified event is the other events' fallback and runs at once
+  String eventQueue = e.isUnspecified() ? null : gen.eventQueue(uClass);
+  String eventMethod = implementations.get(implementations.size() - 1);
+  String worker = eventQueue == null ? eventMethod : gen.queuedName(uClass, methodName);
 #>>
 
-    def <<=implementations.get(implementations.size() - 1)>>(self<<=gen.parameterList(eventParameters)>><<=e.isUnspecified() ? ", state, event" : "">>):<<=gen.deletedCheck(deletedFlag, "        ", "False")>><<=before>>
+    def <<=worker>>(self<<=gen.parameterList(eventParameters)>><<=e.isUnspecified() ? ", state, event" : "">>):<<=gen.deletedCheck(deletedFlag, "        ", "False")>><<=before>>
         <<=processed>> = False<<=declarations>><<=cases>><<=after>>
         return <<=processed>><<#
+  if (eventQueue != null)
+  {
+    eventStart = realSb.length();
+    realSb.append(gen.enqueuer(eventMethod, worker, eventQueue, injectionParameters, e.getIsTimer()));
+  }
   // The event's method is typed from the event when it meets a method of the same name (an
   // unspecified event's method also takes the state and event)
   if (!e.isUnspecified())

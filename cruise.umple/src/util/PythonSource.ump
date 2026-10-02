@@ -143,11 +143,12 @@ class PythonSource
     return kinds;
   }
 
-  // Where keyword first stands as code in Python source, outside strings and comments and not as the
-  // end of a longer name or of a member access (self.superCall); -1 when it does not.
+  // Where keyword first stands as a statement word in Python source, outside strings (f-strings
+  // included) and comments and not as the end of a longer name or of a member access (self.superCall);
+  // -1 when it does not.
   public static int codeAt(String code, String keyword)
   {
-    boolean[] isCode = codeChars(code);
+    boolean[] isCode = codeChars(code, false);
     for (int i = 0; i < code.length(); i++)
     {
       if (isCode[i] && code.startsWith(keyword, i) && startsName(code, i))
@@ -158,11 +159,11 @@ class PythonSource
     return -1;
   }
 
-  // The names that stand as code in Python source: outside strings and comments, and not members
+  // The names Python source uses as code, the expressions of f-strings included, other than members
   // after a dot
   public static Set<String> codeNames(String code)
   {
-    boolean[] isCode = codeChars(code);
+    boolean[] isCode = codeChars(code, true);
     Set<String> names = new HashSet<String>();
     for (int i = 0; i < code.length(); i++)
     {
@@ -180,11 +181,12 @@ class PythonSource
     return names;
   }
 
-  // The names Python source binds itself: by import, def, class, global, nonlocal, assignment, for,
-  // as and :=. A lexical approximation, which errs towards finding a binding.
+  // The names a Python function body binds in its own scope: by import, def and class (their names,
+  // not what their bodies bind), global, nonlocal, assignment, a for statement, as and :=. Names that
+  // nested functions, classes, lambdas and comprehensions bind belong to those scopes.
   public static Set<String> boundNames(String code)
   {
-    boolean[] isCode = codeChars(code);
+    boolean[] isCode = codeChars(code, true);
     StringBuilder visible = new StringBuilder(code);
     for (int i = 0; i < code.length(); i++)
     {
@@ -194,24 +196,46 @@ class PythonSource
       }
     }
     Set<String> names = new HashSet<String>();
-    Matcher imported = IMPORT.matcher(visible);
-    while (imported.find())
+    int brackets = 0;
+    int nested = -1; // the indentation of a nested def or class whose body is being skipped
+    for (String line : visible.toString().split("\n", -1))
     {
-      String items = imported.group(1) != null ? imported.group(1) : imported.group(2) != null ? imported.group(2) : imported.group(3);
-      for (String item : items.split(","))
+      boolean statement = brackets <= 0;
+      brackets += bracketBalance(line);
+      String text = line.trim();
+      int indent = indentWidth(line);
+      if (text.isEmpty() || nested >= 0 && (!statement || indent > nested))
       {
-        String[] words = item.trim().split("\\s+as\\s+");
-        names.add(words.length > 1 ? words[1].trim() : words[0].trim().split("\\.")[0]);
+        continue;
       }
-    }
-    Matcher bound = BINDING.matcher(visible);
-    while (bound.find())
-    {
-      for (int group = 1; group <= bound.groupCount(); group++)
+      nested = -1;
+      Matcher block = NESTED_BLOCK.matcher(text);
+      if (statement && block.lookingAt())
       {
-        if (bound.group(group) != null)
+        names.add(block.group(1));
+        nested = indent;
+        continue;
+      }
+      Matcher imported = IMPORT.matcher(text);
+      if (statement && imported.lookingAt())
+      {
+        String items = imported.group(1) != null ? imported.group(1) : imported.group(2) != null ? imported.group(2) : imported.group(3);
+        for (String item : items.split(","))
         {
-          names.addAll(Arrays.asList(bound.group(group).split("[^\\w]+")));
+          String[] words = item.trim().split("\\s+as\\s+");
+          names.add(words.length > 1 ? words[1].trim() : words[0].trim().split("\\.")[0]);
+        }
+        continue;
+      }
+      Matcher bound = (statement ? STATEMENT_BINDING : BINDING).matcher(text);
+      while (bound.find())
+      {
+        for (int group = 1; group <= bound.groupCount(); group++)
+        {
+          if (bound.group(group) != null)
+          {
+            names.addAll(Arrays.asList(bound.group(group).split("[^\\w]+")));
+          }
         }
       }
     }
@@ -219,10 +243,24 @@ class PythonSource
     return names;
   }
 
-  private static final Pattern IMPORT = Pattern.compile(
-    "(?m)^[ \\t]*(?:import\\s+([^\\n;]+)|from\\s+\\S+\\s+import\\s+(?:\\(([^)]*)\\)|([^\\n;]+)))");
-  private static final Pattern BINDING = Pattern.compile("(?m)\\b(?:def|class)\\s+(\\w+)|\\b(?:global|nonlocal)\\s+([\\w \\t,]+)"
-    + "|^[ \\t]*([\\w \\t,()]+?)\\s*(?::[^=\\n]*)?=(?!=)|\\bfor\\s+([\\w \\t,()]+?)\\s+in\\b|\\bas\\s+(\\w+)|(\\w+)\\s*:=");
+  private static final Pattern NESTED_BLOCK = Pattern.compile("(?:async\\s+)?(?:def|class)\\s+(\\w+)");
+  private static final Pattern IMPORT = Pattern.compile("import\\s+([^;]+)|from\\s+\\S+\\s+import\\s+(?:\\(([^)]*)\\)?|([^;]+))");
+  // A binding anywhere in a line: as and :=
+  private static final Pattern BINDING = Pattern.compile("\\bas\\s+(\\w+)|(\\w+)\\s*:=");
+  // A line that starts a statement can also bind by global, nonlocal, assignment and for
+  private static final Pattern STATEMENT_BINDING = Pattern.compile("^(?:global|nonlocal)\\s+([\\w \\t,]+)"
+    + "|^([\\w \\t,()\\[\\]*]+?)\\s*(?::[^=]*)?=(?!=)|^(?:async\\s+)?for\\s+([\\w \\t,()\\[\\]*]+?)\\s+in\\b|\\bas\\s+(\\w+)|(\\w+)\\s*:=");
+
+  // How many more brackets a line opens than it closes
+  private static int bracketBalance(String line)
+  {
+    int balance = 0;
+    for (char c : line.toCharArray())
+    {
+      balance += "([{".indexOf(c) >= 0 ? 1 : ")]}".indexOf(c) >= 0 ? -1 : 0;
+    }
+    return balance;
+  }
 
   private static boolean startsName(String code, int i)
   {
@@ -230,61 +268,82 @@ class PythonSource
   }
 
   // Which characters of Python source are code rather than part of a string or a comment, reading
-  // strings and comments as lineKinds does. The replacement fields of an f-string are code.
-  private static boolean[] codeChars(String code)
+  // strings and comments as lineKinds does. With fields, the replacement fields of f-strings are code,
+  // except the strings inside them and their format specs.
+  private static boolean[] codeChars(String code, boolean fields)
   {
     boolean[] isCode = new boolean[code.length()];
-    String quote = null;
-    boolean formatted = false;
-    int depth = 0;
+    // What is open, innermost last: a string {quote, formatted} or a replacement field {null, open
+    // brackets, in its format spec}
+    List<Object[]> open = new ArrayList<Object[]>();
     for (int i = 0; i < code.length(); i++)
     {
       char c = code.charAt(i);
-      if (depth > 0)
+      Object[] top = open.isEmpty() ? null : open.get(open.size() - 1);
+      if (top != null && top[0] != null)
       {
-        depth += c == '{' ? 1 : c == '}' ? -1 : 0;
-        isCode[i] = depth > 0;
-      }
-      else if (quote != null)
-      {
+        String quote = (String) top[0];
         if (c == '\\')
         {
           i++;
         }
-        else if (formatted && c == '{')
+        else if ((Boolean) top[1] && c == '{' && code.startsWith("{{", i))
         {
-          if (code.startsWith("{{", i))
-          {
-            i++;
-          }
-          else
-          {
-            depth = 1;
-          }
+          i++;
+        }
+        else if ((Boolean) top[1] && c == '{')
+        {
+          open.add(new Object[] { null, 0, false });
         }
         else if (code.startsWith(quote, i))
         {
           i += quote.length() - 1;
-          quote = null;
+          open.remove(open.size() - 1);
         }
         else if (c == '\n' && quote.length() == 1)
         {
-          quote = null; // an unterminated single-quoted string ends with its line
+          open.remove(open.size() - 1); // an unterminated single-quoted string ends with its line
         }
       }
-      else if (c == '#')
+      else if (top != null && (Boolean) top[2])
+      {
+        // a format spec is text, but may hold nested replacement fields
+        if (c == '{')
+        {
+          open.add(new Object[] { null, 0, false });
+        }
+        else if (c == '}')
+        {
+          open.remove(open.size() - 1);
+        }
+      }
+      else if (top == null && c == '#')
       {
         int newline = code.indexOf('\n', i);
         i = newline < 0 ? code.length() : newline;
       }
       else if (c == '"' || c == '\'')
       {
-        quote = code.startsWith("" + c + c + c, i) ? "" + c + c + c : "" + c;
-        formatted = hasFormatPrefix(code, i);
+        String quote = code.startsWith("" + c + c + c, i) ? "" + c + c + c : "" + c;
+        open.add(new Object[] { quote, fields && hasFormatPrefix(code, i) });
         i += quote.length() - 1;
+      }
+      else if (top != null && c == '}' && (Integer) top[1] == 0)
+      {
+        open.remove(open.size() - 1);
+      }
+      else if (top != null && (Integer) top[1] == 0 && (c == ':' && !code.startsWith(":=", i)
+        || c == '!' && i + 2 < code.length() && "rsa".indexOf(code.charAt(i + 1)) >= 0 && "}:".indexOf(code.charAt(i + 2)) >= 0))
+      {
+        top[2] = c == ':'; // a conversion (!r) is not code either, and a format spec may follow it
+        i += c == '!' ? 1 : 0;
       }
       else
       {
+        if (top != null)
+        {
+          top[1] = (Integer) top[1] + ("([{".indexOf(c) >= 0 ? 1 : ")]}".indexOf(c) >= 0 ? -1 : 0);
+        }
         isCode[i] = true;
       }
     }
@@ -301,6 +360,7 @@ class PythonSource
     }
     return code.substring(start, quote).toLowerCase().contains("f") && startsName(code, start);
   }
+
 
   // Whether each line of Python source starts inside a string literal
   public static boolean[] linesInsideStrings(List<String> lines)

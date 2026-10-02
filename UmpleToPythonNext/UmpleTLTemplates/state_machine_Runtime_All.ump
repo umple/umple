@@ -1,9 +1,11 @@
 use state_machine_timedEvent_Handler.ump;
 use state_machine_doActivityThread.ump;
+use state_machine_MessageQueue.ump;
 
 class UmpleToPythonNext {
-    // Class-level helpers of the state machine runtime: the timer handler and the
-    // do-activity worker. Both run on non-daemon threads, so pending work keeps the process alive.
+    // Class-level helpers of the state machine runtime: the timer handler, the do-activity worker and
+    // the queue of queued and pooled machines and queued methods, with a pooled queue's predicate. All
+    // run on non-daemon threads, so pending work keeps the process alive.
     state_machine_Runtime_All <<!<</*state_machine_Runtime_All*/>><<#
 {
   List<Transition> timedTransitions = gen.timedTransitions(uClass);
@@ -18,6 +20,15 @@ class UmpleToPythonNext {
   {
     String threading = gen.standardName("threading", null);
     #>><<@ UmpleToPythonNext.state_machine_doActivityThread >><<#
+  }
+  if (gen.queuesEvents(uClass) || gen.queuesMethods(uClass))
+  {
+    String threading = gen.standardName("threading", null);
+    #>><<@ UmpleToPythonNext.state_machine_MessageQueue >><<#
+  }
+  if (gen.poolsEvents(uClass))
+  {
+    realSb.append(gen.poolPredicate(uClass));
   }
 }
 #>>!>>

@@ -215,7 +215,7 @@ public class PythonNextUserCodeTest
   public void unsupportedUserCodeIsReportedAtItsLocation() throws Exception
   {
     assertUnsupported("class X { X(int a) { pass } }", 9210, 2);
-    assertUnsupported("class X { queued void f() { pass } }", 9210, 2);
+    assertUnsupported("class X { static queued void f() { pass } }", 9210, 2);
     assertUnsupported("class X { int f(int self) { return self } }", 9214, 2);
     assertUnsupported("class X { Integer n;\n around getN { around_proceed: pass } }", 9210, 3);
     assertUnsupported("class X { void f() { pass } }\nclass Y { emit render()(t); t <<!hi!>> }", 9210, 3);
@@ -285,6 +285,38 @@ public class PythonNextUserCodeTest
     {
       Assert.assertFalse(name, bound.contains(name));
     }
+    // In an f-string's fields, strings and format specs are text; a format spec may hold a field
+    java.util.Set<String> formatted = cruise.umple.util.PythonSource.codeNames("t = f\"{'Item'} {x:Spec} {y!r:>{Width}} {d['}']}\"");
+    Assert.assertTrue(formatted.toString(), formatted.containsAll(Arrays.asList("t", "x", "y", "Width", "d")));
+    for (String name : Arrays.asList("Item", "Spec", "r"))
+    {
+      Assert.assertFalse(name, formatted.contains(name));
+    }
+    // What comprehensions, lambdas and nested functions bind is theirs
+    java.util.Set<String> scoped = cruise.umple.util.PythonSource.boundNames(
+      "values = [A for A in r]\nf = lambda B: B\ndef helper(C):\n    D = C\n    return D\nfor E in r:\n    pass\nwith (\n    x for F in r):\n    pass");
+    Assert.assertTrue(scoped.toString(), scoped.containsAll(Arrays.asList("values", "f", "helper", "E")));
+    for (String name : Arrays.asList("A", "B", "C", "D", "F"))
+    {
+      Assert.assertFalse(name, scoped.contains(name));
+    }
+  }
+
+  // An import native code needs goes to the start of its function, after its docstring and before its
+  // source regions, and is left out where it would replace a name the function binds: its object
+  // (self), a parameter, or a local another injection of it sets
+  @Test
+  public void importsOfNativeCodeKeepTheFunctionsOwnNames() throws Exception
+  {
+    UmpleModel model = generate("class self {}\nclass Item {}\n"
+      + "class A { name;\n  String m(String Item) Python { return self.getName() + Item }\n"
+      + "  before setName Python { Item = \"mine\" }\n  after setName Python { print(Item) }\n"
+      + "  // Makes one.\n  String make() Python { return Item() }\n}\n");
+    String a = model.getGeneratedCode().get("A");
+    Assert.assertFalse(a, a.contains("from self import self"));
+    Assert.assertFalse(a, a.contains("#<<"));
+    Assert.assertEquals(a, 1, a.split("from Item import Item", -1).length - 1);
+    Assert.assertTrue(a, a.contains("        \"\"\"Makes one.\"\"\"\n        from Item import Item\n"));
   }
 
   @Test

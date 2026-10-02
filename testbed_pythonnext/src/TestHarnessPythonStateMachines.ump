@@ -1133,3 +1133,37 @@ class SmLifecycleMultipleAfterReentry {
   after setSm Python { self.setLog(self.getLog() + str(aSm) + ";") }
   sm { A { again -> A; } }
 }
+
+// Queued and pooled machines and queued methods: calls run one at a time on the object's worker, in
+// the order they were made; a pooled machine first runs a call its current state can take.
+class SmQueuedGarage
+{
+  Integer opened = 0;
+  queued status {
+    Open { close -> Closing; }
+    Closing { done -> Closed; open -> Open; }
+    Closed { open(int speed) / { opened = opened + speed; } -> Open; }
+  }
+}
+
+class SmPooledOrder
+{
+  String log = "";
+  pooled status {
+    A { go -> B; }
+    B { finish / { log = log + "f"; } -> C; }
+    C { go -> A; }
+  }
+  after go { if (wasEventProcessed) { log = log + "g"; } }
+}
+
+class SmQueuedWorker
+{
+  String log = "";
+  queued void work(int n) Python { self.setLog(self.getLog() + str(n)) }
+}
+
+class SmQueuedTimer
+{
+  queued sm { A { after(0.1) -> B; } B { } }
+}
