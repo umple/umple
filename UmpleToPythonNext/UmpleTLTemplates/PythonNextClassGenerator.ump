@@ -71,6 +71,6 @@ class PythonNextClassGenerator {
   // Before extra code, whose native definitions may redefine a generated method on purpose
   gen.mergeSameNameMethods(uClass, realSb);
   #>><<@ UmpleToPythonNext.extraCode >><<#
-  gen.finishClass(realSb, nested ? null : IMPORTS); // a nested class's imports go to its module
+  gen.finishClass(uClass, realSb, nested ? null : IMPORTS); // a nested class's imports go to its module
 #>>!>>
 }

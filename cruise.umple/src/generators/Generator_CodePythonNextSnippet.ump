@@ -1785,13 +1785,14 @@ class PythonSnippetTranslator
     throw fail(name + "() is called on " + describeKind(kind) + ", which is not supported");
   }
 
-  // The String methods untagged code may call. They go through str and len, so a null string raises
-  // as Java's NullPointerException does, and equals of something other than a string is false.
+  // The String methods untagged code may call, with Java's null, type and UTF-16 rules: they go through
+  // str, so a null string raises as Java's NullPointerException does; equals of anything but a string,
+  // a char included, is false; length counts UTF-16 code units.
   private PythonSnippetNode stringMethod(PythonSnippetNode n, PythonSnippetNode target, String name, List<PythonSnippetNode> values)
   {
     String receiver = target.code;
     String argument = values.size() == 1 ? values.get(0).code : null;
-    if (values.size() == 1 && !name.equals("equals") && !Arrays.asList("str", "unknown").contains(values.get(0).kind))
+    if (values.size() == 1 && !name.equals("equals") && !Arrays.asList("str", "unknown", "null").contains(values.get(0).kind))
     {
       throw fail(name + "() takes a string");
     }
@@ -1799,7 +1800,9 @@ class PythonSnippetTranslator
     {
       case "equals/1":
         requireBuiltin("str");
-        return set(n, "(str.__eq__(" + receiver + ", " + argument + ") is True)", "bool", ATOM, false, false);
+        // a char is a one-character str in Python, but a Character in Java
+        return set(n, "(str.__eq__(" + receiver + ", " + argument + ")" + ("char".equals(values.get(0).kind) ? " and False)" : " is True)"),
+          "bool", ATOM, false, false);
       case "contains/1":
         requireBuiltin("str");
         return set(n, "str.__contains__(" + receiver + ", " + argument + ")", "bool", ATOM, false, false);
@@ -1811,7 +1814,8 @@ class PythonSnippetTranslator
         return set(n, "str.endswith(" + receiver + ", " + argument + ")", "bool", ATOM, false, false);
       case "length/0":
         requireBuiltin("len");
-        return set(n, "len(" + receiver + ")", "int", ATOM, false, false);
+        requireBuiltin("str");
+        return set(n, PythonNextGenerator.javaStringLength(receiver), "int", ATOM, false, false);
       case "isEmpty/0":
         requireBuiltin("len");
         return set(n, "(len(" + receiver + ") == 0)", "bool", ATOM, false, false);

@@ -1042,7 +1042,7 @@ class PythonNextGenerator
     Function<String, String> body;
     if (classBody != null)
     {
-      body = indent -> bodyCode(classBody, uClass, indent);
+      body = indent -> bodyCode(classBody, uClass, method, indent);
     }
     else if (!"void".equals(method.getType()))
     {
@@ -1057,19 +1057,20 @@ class PythonNextGenerator
       if (hasStateBody(sm, bodies))
       {
         Function<String, String> previous = body;
-        body = indent -> stateSwitch(uClass, sm, bodies, previous, indent);
+        body = indent -> stateSwitch(uClass, method, sm, bodies, previous, indent);
       }
     }
     return body;
   }
 
-  private String stateSwitch(UmpleClass uClass, StateMachine sm, Map<State, MethodBody> bodies, Function<String, String> fallback, String indent)
+  private String stateSwitch(UmpleClass uClass, Method method, StateMachine sm, Map<State, MethodBody> bodies, Function<String, String> fallback,
+    String indent)
   {
     StringBuilder code = new StringBuilder();
     for (State state : sm.getStates())
     {
       MethodBody own = pythonBody(bodies.get(state));
-      Function<String, String> childFallback = own == null ? fallback : i -> bodyCode(own, uClass, i);
+      Function<String, String> childFallback = own == null ? fallback : i -> bodyCode(own, uClass, method, i);
       // Of a concurrent state's regions, the first with bodies decides; Java emits a case for each
       // region, which does not compile
       String branch = null;
@@ -1077,13 +1078,13 @@ class PythonNextGenerator
       {
         if (hasStateBody(nested, bodies))
         {
-          branch = stateSwitch(uClass, nested, bodies, childFallback, indent + "    ");
+          branch = stateSwitch(uClass, method, nested, bodies, childFallback, indent + "    ");
           break;
         }
       }
       if (branch == null && own != null)
       {
-        branch = bodyCode(own, uClass, indent + "    ");
+        branch = bodyCode(own, uClass, method, indent + "    ");
       }
       if (branch != null)
       {
@@ -1127,11 +1128,12 @@ class PythonNextGenerator
   }
 
   // Method bodies are native code, never translated.
-  private String bodyCode(MethodBody body, UmpleClass uClass, String indent)
+  private String bodyCode(MethodBody body, UmpleClass uClass, Method method, String indent)
   {
     String language = bodyLanguage(body);
     CodeBlock code = body.getCodeblock();
-    return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass);
+    return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass,
+      method.getMethodParameters());
   }
 
   // What Java's generated state-dependent method returns when no body applies: zero or false for a

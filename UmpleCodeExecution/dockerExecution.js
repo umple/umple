@@ -46,9 +46,8 @@ class DockerExecution {
         const pathArr=path.split('/');
 
         if(this.language=="PythonNext"){
-            // PythonNext modules import each other by package from the generated root, the first folder
-            const [root, ...packages] = pathArr;
-            return `-m ${root || "."} ${[...packages, this.mainFile].join('.')}`;
+            // The model's folder is the generated root, so the path is the main module's package
+            return `-m ${[...pathArr.filter(part => part), this.mainFile].join('.')}`;
         }
         if(this.language=="Python"){
             return path ? `${path}/${this.mainFile}.py` : `${this.mainFile}.py`;

@@ -608,6 +608,8 @@ class CodeInjection
   lazy Position position;
   lazy Position codePosition;
   Boolean isInternal = false;
+  // Written with around; one without code labels has type before, which Java splits at around_proceed:
+  Boolean isAround = false;
 }
 
 class ExtraCode

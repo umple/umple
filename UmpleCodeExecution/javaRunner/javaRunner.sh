@@ -6,10 +6,9 @@ cd /input/
 
 case "$1" in
   -m)
-    # PythonNext: from its generated root, run the main module by its dotted name
+    # PythonNext: run the main module by its dotted name, so it imports its package
     echo "Python result:"
-    cd "$2" || exit 1
-    shift 2
+    shift
     python3 -m "$@"
     ;;
   *.py)

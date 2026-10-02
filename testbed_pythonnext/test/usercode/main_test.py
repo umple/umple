@@ -34,3 +34,11 @@ class MainTest(unittest.TestCase):
         for command in ([script], ["-m", "cruise.usercode.test.IdentityMain"]):
             run = subprocess.run([sys.executable] + command, env=env, capture_output=True, text=True, timeout=60)
             self.assertEqual((0, "main\n"), (run.returncode, run.stdout), run.stderr)
+
+    def test_theMainIsRegisteredBeforeItsClassBodyRuns(self):
+        script = os.path.join(GENERATED_ROOT, "cruise", "usercode", "test", "InitMain.py")
+        env = dict(os.environ, PYTHONPATH=GENERATED_ROOT)
+        for command in ([script], ["-m", "cruise.usercode.test.InitMain"]):
+            run = subprocess.run([sys.executable] + command, env=env, capture_output=True, text=True, timeout=60)
+            self.assertEqual((0, "main\n"), (run.returncode, run.stdout), run.stderr)
+

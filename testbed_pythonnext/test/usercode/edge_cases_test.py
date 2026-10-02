@@ -6,7 +6,7 @@ from ImportModules import importModules
 
 importModules(["LoudGreeter", "Checks", "AlwaysEqual", "Pair", "CountedChild", "ContractCalls", "ContractCallsChild",
                "KeyedPart", "PartBox", "PartBoxPair", "BoxedNull", "TextualSetter", "TextualStr", "LabelCrate",
-               "CrateItem", "CountingTagged", "DependMaker"], ["usercode", "test"])
+               "CrateItem", "CountingTagged", "DependMaker", "ImplicitUser", "PickOverride", "PickWider"], ["usercode", "test"])
 from ImportModules import *
 
 
@@ -114,4 +114,21 @@ class EdgeCasesTest(unittest.TestCase):
 
     def test_dependedClassIsImportedWhereTheBodyRuns(self):
         self.assertIsInstance(DependMaker.DependMaker().make(), CrateItem.CrateItem)
+
+    def test_classesOfTheNamespaceNeedNoImport(self):
+        user = ImplicitUser.ImplicitUser()
+        self.assertIsInstance(user.make(), CrateItem.CrateItem)
+        self.assertEqual("given", user.echo("given"))
+        self.assertEqual("high 5", user.label())
+        self.assertEqual(5, user.getHigh())
+
+    def test_inheritedOverloadsCompeteWithTheSubclasses(self):
+        override = PickOverride.PickOverride()
+        self.assertEqual("override-int", override.pick(1))
+        self.assertEqual("base-string", override.pick("x"))
+        self.assertEqual("base-string", override.pick(s="y"))
+        wider = PickWider.PickWider()
+        self.assertEqual("base-int", wider.pick(1))
+        self.assertEqual("wider-double", wider.pick(1.5))
+        self.assertEqual("base-string", wider.pick("x"))
 

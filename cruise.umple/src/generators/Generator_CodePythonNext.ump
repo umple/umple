@@ -1113,6 +1113,10 @@ class PythonNextGenerator
     }
     String value = "Python".equals(pythonLanguage(code)) ? code.getCode("Python").trim()
       : expression(uClass, av.getType(), av.getValue(), false, av.getPosition(), "the derived attribute " + av.getName(), lines);
+    if ("Python".equals(pythonLanguage(code)))
+    {
+      lines.addAll(modelImports(value, uClass, null));
+    }
     lines.add(prefix + value);
     return lines;
   }
@@ -1758,15 +1762,24 @@ class PythonNextGenerator
     }
   }
 
-  // Completes a module: the collected imports replace the placeholder, the class body starts right
-  // after the class line, an empty body gets pass, and the file ends with one newline.
-  public void finishClass(StringBuilder code, String placeholder)
+  // Completes a module: its main's registration and the collected imports replace the placeholder,
+  // the class body starts right after the class line, an empty body gets pass, and the file ends with
+  // one newline.
+  public void finishClass(UmpleClassifier classifier, StringBuilder code, String placeholder)
   {
     unixLines(code);
     int at = placeholder == null ? -1 : code.indexOf(placeholder);
     if (at >= 0)
     {
-      code.replace(at, at + placeholder.length(), moduleImports());
+      List<String> lines = new ArrayList<String>(mainRegistration(classifier));
+      for (String line : moduleImports)
+      {
+        if (!lines.contains(line))
+        {
+          lines.add(line);
+        }
+      }
+      code.replace(at, at + placeholder.length(), lines.isEmpty() ? "" : "\n" + String.join("\n", lines) + "\n");
     }
     int classLine = code.indexOf("class ") == 0 ? 0 : code.indexOf("\nclass ");
     int bodyStart = classLine < 0 ? -1 : code.indexOf(":\n\n", classLine);

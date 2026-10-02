@@ -89,30 +89,71 @@ class PythonNextGenerator
   // Native code
   //------------------------
 
-  // nativeCode for the body of a function, preceded by imports of the model classes the owner lists
-  // with depend that the code refers to: Java imports them for the whole class, Python where it uses them
-  public String functionCode(String code, String firstLineIndent, String indent, Position position, UmpleClassifier owner)
+  // nativeCode for the body of a function, preceded by its modelImports
+  public String functionCode(String code, String firstLineIndent, String indent, Position position, UmpleClassifier owner,
+    List<MethodParameter> parameters)
   {
     StringBuilder imports = new StringBuilder();
-    if (code != null)
+    for (String line : modelImports(code, owner, parameters))
     {
-      List<UmpleClassifier> classifiers = new ArrayList<UmpleClassifier>(getModel().getUmpleClasses());
-      classifiers.addAll(getModel().getUmpleInterfaces());
-      for (Depend depend : owner.getDepends())
-      {
-        for (UmpleClassifier target : classifiers)
-        {
-          String qualified = target.getPackageName().isEmpty() ? target.getName() : target.getPackageName() + "." + target.getName();
-          boolean named = depend.getName().equals(qualified)
-            || depend.getName().endsWith(".*") && depend.getName().equals(target.getPackageName() + ".*");
-          if (named && target != owner && PythonSource.codeAt(code, target.getName()) >= 0)
-          {
-            imports.append("\n").append(indent).append(importOf(target));
-          }
-        }
-      }
+      imports.append("\n").append(indent).append(line);
     }
     return imports + nativeCode(code, firstLineIndent, indent, position, owner);
+  }
+
+  // The imports of the model classes native code names that Java would see without an import: those
+  // of the owner's namespace and those it lists with depend. Java imports them for the whole class,
+  // Python in the function that uses them. A name the code or a parameter binds keeps its meaning.
+  public List<String> modelImports(String code, UmpleClassifier owner, List<MethodParameter> parameters)
+  {
+    List<String> imports = new ArrayList<String>();
+    if (code == null)
+    {
+      return imports;
+    }
+    Set<String> names = PythonSource.codeNames(code);
+    names.removeAll(PythonSource.boundNames(code));
+    for (MethodParameter parameter : parameters == null ? new ArrayList<MethodParameter>() : parameters)
+    {
+      names.remove(parameterName(parameter.getName()));
+    }
+    for (UmpleClassifier target : visibleClassifiers(owner))
+    {
+      if (names.contains(target.getName()))
+      {
+        imports.add(importOf(target));
+      }
+    }
+    return imports;
+  }
+
+  // The other modules' model classes and interfaces that code of owner may name: those of its
+  // namespace and those it lists with depend, by name or by namespace
+  private List<UmpleClassifier> visibleClassifiers(UmpleClassifier owner)
+  {
+    List<UmpleClassifier> all = new ArrayList<UmpleClassifier>(getModel().getUmpleClasses());
+    all.addAll(getModel().getUmpleInterfaces());
+    UmpleClassifier ownModule = owner instanceof UmpleClass ? outermost((UmpleClass) owner) : owner;
+    List<UmpleClassifier> visible = new ArrayList<UmpleClassifier>();
+    for (UmpleClassifier target : all)
+    {
+      boolean module = !(target instanceof UmpleClass) || outermost((UmpleClass) target) == target;
+      if (!module || target == ownModule || "external".equals(target.getModifier()))
+      {
+        continue;
+      }
+      boolean seen = target.getPackageName().equals(owner.getPackageName());
+      for (Depend depend : owner.getDepends())
+      {
+        String qualified = target.getPackageName().isEmpty() ? target.getName() : target.getPackageName() + "." + target.getName();
+        seen = seen || depend.getName().equals(qualified) || depend.getName().equals(target.getPackageName() + ".*");
+      }
+      if (seen)
+      {
+        visible.add(target);
+      }
+    }
+    return visible;
   }
 
   // Native Python for a code slot, re-indented to indent and, when its model position is known,
@@ -290,8 +331,7 @@ class PythonNextGenerator
       {
         continue;
       }
-      // Without labels an around injection is parsed as a before one, which Java splits at around_proceed:
-      if ("around".equals(injection.getType()) || PythonSource.codeAt(injection.getSnippet().getCode(language), "around_proceed:") >= 0)
+      if (injection.getIsAround())
       {
         errorAt(9210, injection.getPosition(), "The around injection on " + injection.getOperation(), className);
       }
@@ -726,7 +766,9 @@ class PythonNextGenerator
       String arguments = render(right instanceof ConstraintTree ? ((ConstraintTree) right).getRoot() : right, context, false);
       if (isLength(left, context) && arguments.isEmpty())
       {
-        return "len(" + render(((ConstraintOperator) left).getLeft(), context, member) + ")"; // a String's length()
+        ConstraintVariable string = ((ConstraintOperator) left).getLeft();
+        String text = render(string, context, member);
+        return "String".equals(declaredType(string, context)) ? javaStringLength(text) : "len(" + text + ")";
       }
       String library = libraryCall(unwrap(left), right, context);
       if (library != null)
@@ -877,8 +919,9 @@ class PythonNextGenerator
   }
 
   // Java's equals on any value, or a method of a String, number, boolean or array, which is a Java
-  // library method; null for any other call. Python spells equals and contains as operators; any other
-  // library method would fail each time the constraint runs, so the constraint is reported instead.
+  // library method; null for any other call. Python spells equals as == and contains as a membership
+  // test; any other library method would fail each time the constraint runs, so the constraint is
+  // reported instead.
   private String libraryCall(ConstraintVariable callee, ConstraintVariable argumentList, PythonConstraintScope context)
   {
     if (!(callee instanceof ConstraintOperator) || !".".equals(((ConstraintOperator) callee).getValue())
@@ -906,9 +949,18 @@ class PythonNextGenerator
     }
     if ("contains".equals(name) && arguments.size() == 1)
     {
-      return "(" + comparand(unwrap(arguments.get(0)), context) + " in " + comparand(receiver, context) + ")";
+      // Java evaluates the String before its argument, which in would reverse
+      return "String".equals(type) ? "str.__contains__(" + render(receiver, context, false) + ", " + render(unwrap(arguments.get(0)), context, false) + ")"
+        : "(" + comparand(unwrap(arguments.get(0)), context) + " in " + comparand(receiver, context) + ")";
     }
     throw new PythonSnippetException("A constraint calling the Java method " + name + "()", null);
+  }
+
+  // Java's String.length(): the number of UTF-16 code units, two for a character beyond the Basic
+  // Multilingual Plane
+  public static String javaStringLength(String value)
+  {
+    return "(len(str.encode(" + value + ", \"utf-16-le\", \"surrogatepass\")) // 2)";
   }
 
   // Only strings and arrays have a built-in length; a model's length member keeps its own meaning.
@@ -1460,7 +1512,8 @@ class PythonNextGenerator
     }
     if ("Python".equals(language))
     {
-      return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass);
+      return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass,
+        parameters);
     }
     String translated = translateSnippetAt(code.getCode(language), uClass, parameters, isStatic, false, at, slot);
     if (translated != null && slot.startsWith("the action of the transition") && Pattern.compile("(?m)^\\s*return\\s*$").matcher(translated).find())
@@ -1546,7 +1599,7 @@ class PythonNextGenerator
     CodeBlock block = method.getMethodBody().getCodeblock();
     boolean wrapped = before.length() > 0 || after.length() > 0;
     String body = functionCode(block.getCode(language), block.getFirstLineIndent(language), wrapped ? "        " : indent,
-      block.getAuthoredPosition(language), uClass);
+      block.getAuthoredPosition(language), uClass, scope);
     if (!wrapped)
     {
       return emitted(uClass, method, header + docstring + lock + body);
@@ -1744,26 +1797,39 @@ class PythonNextGenerator
     return code.trim().isEmpty() ? "" : "\n" + nativeCode(code.replaceFirst("^[ \t\f]+", ""), null, "    ", position, uClass);
   }
 
-  // Runs a top-level class's Python main with the full sys.argv. The running module is also registered
-  // under its own name, so that other modules importing the class get this one and not a second copy
-  // whose instances fail their type checks.
+  // Runs a top-level class's Python main with the full sys.argv.
   public String mainLauncher(UmpleClass uClass)
   {
-    if (uClass.getOuterClass() != null)
+    return hasPythonMain(uClass)
+      ? "\n\n\nif __name__ == \"__main__\":\n    " + uClass.getName() + ".main(" + standardName("sys", null) + ".argv)" : "";
+  }
+
+  // The first lines of a module whose class has a Python main: run as a program, the module registers
+  // itself under its model name before its imports and class body run, so that a module importing
+  // that name gets this one, and one class, rather than a second copy.
+  public List<String> mainRegistration(UmpleClassifier classifier)
+  {
+    if (!(classifier instanceof UmpleClass) || !hasPythonMain((UmpleClass) classifier))
     {
-      return "";
+      return new ArrayList<String>();
     }
-    for (Method m : uClass.getMethods())
+    UmpleClass uClass = (UmpleClass) classifier;
+    String sys = standardAlias("sys");
+    String module = uClass.getPackageName().isEmpty() ? uClass.getName() : uClass.getPackageName() + "." + uClass.getName();
+    return Arrays.asList(standardImport("sys", null, sys), "if __name__ == \"__main__\":",
+      "    " + sys + ".modules.setdefault(\"" + module + "\", " + sys + ".modules[__name__])");
+  }
+
+  private static boolean hasPythonMain(UmpleClass uClass)
+  {
+    for (Method m : uClass.getOuterClass() == null ? uClass.getMethods() : new ArrayList<Method>())
     {
       if (isPythonMain(m))
       {
-        String sys = standardName("sys", null);
-        String module = uClass.getPackageName().isEmpty() ? uClass.getName() : uClass.getPackageName() + "." + uClass.getName();
-        return "\n\n\nif __name__ == \"__main__\":\n    " + sys + ".modules.setdefault(\"" + module + "\", " + sys + ".modules[__name__])\n    "
-          + uClass.getName() + ".main(" + sys + ".argv)";
+        return true;
       }
     }
-    return "";
+    return false;
   }
 
   //------------------------
@@ -1784,24 +1850,51 @@ class PythonNextGenerator
     return false;
   }
 
-  // Whether a method of the model overloads an inherited method of its name, rather than overriding one
-  // with the same parameters
+  // Whether a lone method of the model needs a dispatcher: an inherited method of its name that it does
+  // not override stays callable, or an ancestor generates a method of its name
   private boolean overloadsInherited(UmpleClass uClass, String name, List<MethodParameter> parameters)
   {
+    if (!inheritedCandidates(uClass, name, Arrays.asList(parameters)).isEmpty())
+    {
+      return true;
+    }
     for (UmpleClass k = uClass.getExtendsClass(); k != null; k = k.getExtendsClass())
     {
-      for (List<MethodParameter> inherited : inheritedSignatures(k, name))
+      if (PythonSnippetTranslator.forClass(this, k, null, false).generates(k, name))
       {
-        if (indistinct(parameters, inherited))
-        {
-          return false;
-        }
+        return true;
       }
     }
-    return ancestorHas(uClass, name);
+    return false;
   }
 
-  // The parameters of the methods of the model named name that class k declares for Python
+  // The signatures of the instance methods of the model named name that uClass inherits and the local
+  // candidates do not override, nearest ancestor first: Java resolves a call among them and the class's
+  // own, so the dispatcher ranks them together
+  private List<List<MethodParameter>> inheritedCandidates(UmpleClass uClass, String name, List<List<MethodParameter>> local)
+  {
+    List<List<MethodParameter>> seen = new ArrayList<List<MethodParameter>>(local);
+    List<List<MethodParameter>> inherited = new ArrayList<List<MethodParameter>>();
+    for (UmpleClass k = uClass.getExtendsClass(); k != null; k = k.getExtendsClass())
+    {
+      for (List<MethodParameter> signature : inheritedSignatures(k, name))
+      {
+        boolean overridden = false;
+        for (List<MethodParameter> other : seen)
+        {
+          overridden = overridden || indistinct(signature, other);
+        }
+        if (!overridden)
+        {
+          inherited.add(signature);
+        }
+        seen.add(signature);
+      }
+    }
+    return inherited;
+  }
+
+  // The parameters of the instance methods of the model named name that class k declares for Python
   private static List<List<MethodParameter>> inheritedSignatures(UmpleClass k, String name)
   {
     List<List<MethodParameter>> signatures = new ArrayList<List<MethodParameter>>();
@@ -1809,7 +1902,7 @@ class PythonNextGenerator
     methods.addAll(k.getStateDependentMethods());
     for (Method m : methods)
     {
-      if (name.equals(m.getName()) && pythonLanguage(m) != null)
+      if (name.equals(m.getName()) && pythonLanguage(m) != null && !isStatic(m))
       {
         signatures.add(m.getMethodParameters());
       }
@@ -2030,8 +2123,8 @@ class PythonNextGenerator
           kept.add(joining.get(i));
         }
       }
-      // A lone definition of the model that overloads an inherited method also needs a dispatcher, which
-      // passes the calls it does not take on to the ancestor
+      // A lone definition of the model also needs a dispatcher while inherited methods of its name stay
+      // callable (overloadsInherited)
       boolean overloads = existing.isEmpty() && kept.size() == 1 && keptPositions.size() == 1 && written.containsKey(keptPositions.get(0))
         && instanceKinds.get(name).contains(true) && overloadsInherited(uClass, name, kept.get(0));
       if (existing.isEmpty() ? kept.size() < 2 && !overloads : keptPositions.isEmpty() && existing.size() == 1)
@@ -2217,7 +2310,9 @@ class PythonNextGenerator
   // The dispatcher name(self, *args, **kwargs) of an overload group. Candidates are tried most
   // specific first (dispatchOrder); the first whose parameters bind the arguments and pass their type
   // tests is called. implementations[i] takes parameters[i] and is called through the declaring class,
-  // so a subclass implementation calling super() reaches this class's, not itself.
+  // so a subclass implementation calling super() reaches this class's, not itself. Inherited
+  // candidates compete too; one that wins passes the call on to the parent, whose dispatcher then
+  // chooses it among its own.
   public String overloadDispatcher(UmpleClass uClass, String name, boolean isStatic, List<String> implementations,
     List<List<MethodParameter>> parameters)
   {
@@ -2225,12 +2320,17 @@ class PythonNextGenerator
     String binder = DECLARING_CLASS + "." + freshMemberName(uClass, "_bindArguments");
     Map<String, String[]> types = new HashMap<String, String[]>();
     StringBuilder candidates = new StringBuilder();
-    for (int i : dispatchOrder(parameters))
+    List<List<MethodParameter>> all = new ArrayList<List<MethodParameter>>(parameters);
+    if (!isStatic)
+    {
+      all.addAll(inheritedCandidates(uClass, name, parameters));
+    }
+    for (int i : dispatchOrder(all))
     {
       List<String> names = new ArrayList<String>();
       boolean varargs = false;
       StringBuilder tests = new StringBuilder();
-      List<MethodParameter> candidate = parameters.get(i);
+      List<MethodParameter> candidate = all.get(i);
       for (int k = 0; k < candidate.size(); k++)
       {
         MethodParameter p = candidate.get(k);
@@ -2247,11 +2347,12 @@ class PythonNextGenerator
           tests.append(" and ").append(test);
         }
       }
-      String call = DECLARING_CLASS + "." + implementations.get(i);
+      String call = i >= parameters.size() ? "super()." + name + "(*args, **kwargs)"
+        : DECLARING_CLASS + "." + implementations.get(i) + (isStatic ? "(" : "(self, ") + (varargs ? "*bound[:-1], *bound[-1])" : "*bound)");
       candidates.append("\n        bound = ").append(binder).append("((").append(String.join(", ", names)).append(names.size() == 1 ? "," : "")
         .append("), ").append(varargs ? "True" : "False").append(", args, kwargs)")
         .append("\n        if bound is not None").append(tests).append(":")
-        .append("\n            return ").append(call).append(isStatic ? "(" : "(self, ").append(varargs ? "*bound[:-1], *bound[-1])" : "*bound)");
+        .append("\n            return ").append(call);
     }
     StringBuilder text = new StringBuilder(isStatic ? "\n\n    @staticmethod\n    def " + name + "(*args, **kwargs):" : "\n\n    def " + name + "(self, *args, **kwargs):");
     Set<String> lines = new TreeSet<String>();

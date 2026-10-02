@@ -870,6 +870,11 @@ public class PythonNextSnippetTranslatorTest
       + " System.out.println(s.equals(\"abc\")); System.out.println(s.equals(n)); System.out.println(s.contains(\"b\"));"
       + " System.out.println(s.startsWith(\"ab\")); System.out.println(s.endsWith(\"bc\")); System.out.println(s.length());"
       + " System.out.println(s.isEmpty()); System.out.println(\"\".isEmpty());"));
+    // A char is a Character in Java, never equal to a String; length counts UTF-16 code units
+    Assert.assertEquals("false\n3\n", runTranslated("String a = \"a\"; System.out.println(a.equals('a'));"
+      + " String e = \"a\\uD83D\\uDE00\"; System.out.println(e.length());"));
+    // null is a valid argument, which raises when the call runs, as Java's NullPointerException
+    Assert.assertEquals("str.__contains__(self._name, None)", expression("Child", "name.contains(null)"));
   }
 
   @Test

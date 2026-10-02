@@ -505,3 +505,52 @@ class Thermostat
     return n
   }
 }
+
+// Native code uses classes of its namespace without importing them, as Java does; a parameter of
+// such a name keeps its value, and f-strings and derived values see the classes too.
+class ImplicitUser
+{
+  Integer high = Python { Thresholds.HIGH }
+  CrateItem make() Python { return CrateItem() }
+  String echo(String CrateItem) Python { return CrateItem }
+  String label() Python { return f"high {Thresholds.HIGH}" }
+}
+
+// A main's module is registered before its class body runs, which may import it again.
+class InitMain
+{
+  const Integer COUNT = InitBoot.init();
+  public static void main(String[] args) Python {
+    print(InitBoot().pick(InitMain()))
+  }
+}
+
+class InitBoot
+{
+  public static int init() Python {
+    import cruise.usercode.test.InitMain
+    return 1
+  }
+  String pick(InitMain value) Python { return "main" }
+  String pick(String value) Python { return "string" }
+}
+
+// A subclass's overloads compete with the inherited ones it does not override: the most specific
+// candidate is called, wherever it is declared.
+class PickBase
+{
+  String pick(int n) Python { return "base-int" }
+  String pick(String s) Python { return "base-string" }
+}
+
+class PickOverride
+{
+  isA PickBase;
+  String pick(int n) Python { return "override-int" }
+}
+
+class PickWider
+{
+  isA PickBase;
+  String pick(double d) Python { return "wider-double" }
+}

@@ -432,7 +432,7 @@
   "testbed_pythonnext/src/TestHarnessPythonUserCode.ump": "fragment: a Python testbed harness, generated and exercised by testbed_pythonnext/test/AllTests.py",
   "testbed_pythonnext/src/TestHarnessStateMachineBehaviour.ump": "supported",
   "testbed_pythonnext/src/TestHarnessUserCode.ump": "supported",
-  "umpleonline/umplibrary/2DShapes.ump": "generation-only: its Python main imports RegularPolygon by its short name, the original generator's layout",
+  "umpleonline/umplibrary/2DShapes.ump": "supported",
   "umpleonline/umplibrary/AccessControl.ump": "supported",
   "umpleonline/umplibrary/AccessControl2.ump": "unsupported 9211: untagged snippets calling the Java library",
   "umpleonline/umplibrary/Accidents.ump": "supported",

@@ -2,6 +2,8 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 import sys
+if __name__ == "__main__":
+    sys.modules.setdefault("MainAndExtraCode", sys.modules[__name__])
 
 
 class MainAndExtraCode:
@@ -27,5 +29,4 @@ class MainAndExtraCode:
 
 
 if __name__ == "__main__":
-    sys.modules.setdefault("MainAndExtraCode", sys.modules[__name__])
     MainAndExtraCode.main(sys.argv)

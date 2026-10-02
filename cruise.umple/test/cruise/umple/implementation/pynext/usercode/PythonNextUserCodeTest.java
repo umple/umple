@@ -189,9 +189,11 @@ public class PythonNextUserCodeTest
     Assert.assertFalse(PythonNextGenerator.isPythonMain(method(model.getUmpleClass("B"), "main")));
     Assert.assertFalse(PythonNextGenerator.isPythonMain(method(model.getUmpleClass("C"), "main")));
     Assert.assertFalse(PythonNextGenerator.isPythonMain(method(model.getUmpleClass("D"), "main")));
-    // registered under its module name, so that a module importing A shares the running class
-    Assert.assertTrue(model.getGeneratedCode().get("A").contains("\n\n\nif __name__ == \"__main__\":\n"
-      + "    sys.modules.setdefault(\"A\", sys.modules[__name__])\n    A.main(sys.argv)\n"));
+    // registered under its module name before its imports and class body run, so that a module
+    // importing A shares the running class
+    String a = model.getGeneratedCode().get("A");
+    Assert.assertTrue(a, a.contains("\nimport sys\nif __name__ == \"__main__\":\n    sys.modules.setdefault(\"A\", sys.modules[__name__])\n"));
+    Assert.assertTrue(a, a.endsWith("\n\n\nif __name__ == \"__main__\":\n    A.main(sys.argv)\n"));
     Assert.assertFalse(model.getGeneratedCode().get("C").contains("__main__"));
   }
 
@@ -255,10 +257,34 @@ public class PythonNextUserCodeTest
   }
 
   @Test
-  public void aroundProceedInAStringIsNotAnAroundInjection() throws Exception
+  public void onlyInjectionsWrittenWithAroundAreAroundInjections() throws Exception
   {
-    UmpleModel model = generate("class A { name; before setName Python { print(\"around_proceed:\") } }");
+    UmpleModel model = generate("class A { name; before setName Python { print(\"around_proceed:\") } }\n"
+      + "class B { name; before setName Python {\n    around_proceed: str = \"a local\"\n    print(around_proceed)\n  } }");
     Assert.assertTrue(generator(model).checkUserCode(model.getUmpleClass("A")));
+    Assert.assertTrue(generator(model).checkUserCode(model.getUmpleClass("B")));
+  }
+
+  // Native code is read lexically: strings and comments are not code, the replacement fields of an
+  // f-string are, and a binding errs towards being found
+  @Test
+  public void namesNativeCodeUsesAndBinds() throws Exception
+  {
+    java.util.Set<String> used = cruise.umple.util.PythonSource.codeNames(
+      "x = Item()  # Other\ns = \"Thing\"\nt = f\"{Label.TEXT} {{Brace}}\"\ny = self.Member");
+    Assert.assertTrue(used.toString(), used.containsAll(Arrays.asList("x", "Item", "s", "t", "Label", "y", "self")));
+    for (String name : Arrays.asList("Other", "Thing", "Brace", "TEXT", "Member"))
+    {
+      Assert.assertFalse(name, used.contains(name));
+    }
+    java.util.Set<String> bound = cruise.umple.util.PythonSource.boundNames("import a.b\nfrom x import B, C as c\nd = 1\ne: int = 2\n"
+      + "def F(): pass\nclass G: pass\nglobal h\nfor i in r: pass\nwith o as j: pass\nif (k := 3): pass\nm, n = 1, 2\n"
+      + "print(\"q = 1\")\n# z = 2\nw == 1");
+    Assert.assertTrue(bound.toString(), bound.containsAll(Arrays.asList("a", "B", "c", "d", "e", "F", "G", "h", "i", "j", "k", "m", "n")));
+    for (String name : Arrays.asList("b", "C", "q", "z", "w", "o", "r"))
+    {
+      Assert.assertFalse(name, bound.contains(name));
+    }
   }
 
   @Test
@@ -450,8 +476,8 @@ public class PythonNextUserCodeTest
       "\"a\" in values and \"b\" in values",
       "len(values) > 0",
       "len(self.getTags()) > 0",
-      "len(self.getText()) > 0",
-      "len(name) > 1",
+      "(len(str.encode(self.getText(), \"utf-16-le\", \"surrogatepass\")) // 2) > 0",
+      "(len(str.encode(name, \"utf-16-le\", \"surrogatepass\")) // 2) > 1",
       "a in self.getItems() and b in self.getItems()",
       "(int(Fraction(a, b))) == a",
       "((a - b * int(Fraction(a, b)))) == 1",
@@ -487,7 +513,7 @@ public class PythonNextUserCodeTest
       "(int(Fraction(self.getCount(), 2))) == 1",
       "((lambda x, y: x - y * int(Fraction(x, y)))(self.getOne().size(), a)) == 1",
       "((lambda x, y: x - y * int(Fraction(x, y)))(self.getOne().getN(), 2)) == -1",
-      "(int(Fraction(len(self.getText()), 2))) == 1",
+      "(int(Fraction((len(str.encode(self.getText(), \"utf-16-le\", \"surrogatepass\")) // 2), 2))) == 1",
       "self.getOne().getItem() is not self.getTwo().getItem()",
       "self.getOne().getItem() is b.getItem()",
       "self.getOne().getN() == self.getTwo().getN()"), preconditions(model, "X", "f"));
@@ -596,7 +622,7 @@ public class PythonNextUserCodeTest
       "(int(Fraction(self.getItem().length(1), 2))) == -1",
       "(measured.length() / 2) == -1.5",
       "(other.length() / 2) == -1.5",
-      "(int(Fraction(len(self.getText()), 2))) == 1",
+      "(int(Fraction((len(str.encode(self.getText(), \"utf-16-le\", \"surrogatepass\")) // 2), 2))) == 1",
       "len(self.getTags()) == 2",
       "(int(Fraction(len(values), 2))) == 1"), preconditions(model, "X", "f"));
   }
@@ -626,7 +652,7 @@ public class PythonNextUserCodeTest
       + "[pre: (pick(values.length) / 2) == -1]\n"
       + "[pre: (pick(getTags().length) / 2) == -1]\n"
       + "return 7 } }");
-    Assert.assertEquals(Arrays.asList("(int(Fraction(self.pick(len(text)), 2))) == -1",
+    Assert.assertEquals(Arrays.asList("(int(Fraction(self.pick((len(str.encode(text, \"utf-16-le\", \"surrogatepass\")) // 2)), 2))) == -1",
       "(int(Fraction(self.pick(len(values)), 2))) == -1",
       "(int(Fraction(self.pick(len(self.getTags())), 2))) == -1"), preconditions(model, "X", "f"));
   }
@@ -686,7 +712,7 @@ public class PythonNextUserCodeTest
         "(int(Fraction(large, 2)) " + op + " (step & 63)) == 8",
         "((large - 3 * int(Fraction(large, 3))) " + op + " (step & 63)) == 8",
         "(self.number() " + op + " (self.distance() & 63)) == 8",
-        "(len(self.getText()) " + op + " (step & 31)) == 8",
+        "((len(str.encode(self.getText(), \"utf-16-le\", \"surrogatepass\")) // 2) " + op + " (step & 31)) == 8",
         "(len(self.getTags()) " + op + " (step & 31)) == 8",
         "(value " + op + " 31) == 8",
         "(large " + op + " 63) == 8",
@@ -803,7 +829,7 @@ public class PythonNextUserCodeTest
       + "return 7 } }");
     UmpleClass f = model.getUmpleClass("F");
     Assert.assertEquals("self.getPower() == __class__.Power.On", generator(model).condition(transition(f, "spin").getGuard(), f, null));
-    Assert.assertEquals(Arrays.asList("(c == self.getCode())", "(\"rush\" in self.getNote())", "e.startsWith(\"x\")"),
+    Assert.assertEquals(Arrays.asList("(c == self.getCode())", "str.__contains__(self.getNote(), \"rush\")", "e.startsWith(\"x\")"),
       preconditions(model, "F", "f"));
     for (String guard : new String[] { "[note.isEmpty()]", "[missing > 1]", "[result > 1]" })
     {

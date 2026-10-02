@@ -68,6 +68,6 @@ class <<=uInterface.getName()>>(<<=String.join(", ", bases)>>):<<=gen.docstring(
     def <<=m.getName()>>(self<<=parameters>>):
         pass<<#
   }
-  gen.finishClass(realSb, IMPORTS);
+  gen.finishClass(uInterface, realSb, IMPORTS);
 #>>!>>
 }

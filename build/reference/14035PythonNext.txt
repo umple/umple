@@ -3,7 +3,7 @@ Generators
 noreferences
 @@description
 <p>
-PythonNext is Umple's newer Python generator, chosen with <code>generate PythonNext;</code> in a model, <code>-g PythonNext</code> on the command line or Python Code (PythonNext) in UmpleOnline. It generates Python 3 classes directly from the model and lets you embed Python methods in Umple. The generated classes have the methods of the Java generator's classes, with the same names and parameters (except the accessors of a sorted association's comparator), and the Python behaviour described below.</p>
+PythonNext is Umple's newer Python generator, chosen with <code>generate PythonNext;</code> in a model, <code>-g PythonNext</code> on the command line or Python Code (PythonNext) in UmpleOnline. It generates Python 3 classes directly from the model and lets you embed Python methods in Umple. The generated classes follow the public API of the Java generator's classes, with the Python behaviour described below.</p>
 
 &nbsp;<br/>
 
@@ -13,7 +13,7 @@ PythonNext is Umple's newer Python generator, chosen with <code>generate PythonN
 
 <p>To create a <b>main Python function</b>, use the same signature as for Java with the code tagged as Python: <code>public static void main(String [ ] args) Python {</code>. Running the generated module calls main with the full <code>sys.argv</code>. From the folder Umple generated into, run <code>python3 -m shop.Main</code> for a class Main in namespace shop, or <code>python3 Main.py</code> for a class without a namespace. Other modules that import the main class get the running one.</p>
 
-<p>Code that uses another class of the model imports it inside the method, as generated code does, for example <code>from shop.Item import Item</code>, where <code>shop</code> is the class's namespace. A class listed with <code>depend shop.Item;</code> is imported for you in the methods that use it.</p>
+<p>Python code can use the classes of its own namespace, and those listed with <code>depend</code> (<code>depend shop.Item;</code> or <code>depend shop.*;</code>), without importing them: Umple imports such a class in each method that names it, as Java sees these classes without an import. Other classes are imported as in any Python code, for example <code>from shop.Item import Item</code>, where <code>shop</code> is the class's namespace.</p>
 
 &nbsp;<br/>
 
@@ -24,16 +24,16 @@ PythonNext is Umple's newer Python generator, chosen with <code>generate PythonN
 <p><b>The generated Python:</b></p>
 <ul>
     <li>Each class is a module <code>ClassName.py</code> in the package given by its namespace. Files are written in UTF-8.</li>
-    <li>Setters and the methods that add or remove links return <code>True</code>, or <code>False</code> when the change is refused (for example by a constraint, a multiplicity bound or a key that can no longer change). An add method that creates the linked object from constructor arguments returns it, or <code>None</code> when the association is full.</li>
+    <li>Attribute setters and the methods that set, add or remove links return <code>True</code>, or <code>False</code> when the change is refused (for example by a constraint, a multiplicity bound or a key that can no longer change). An add method that creates the linked object from constructor arguments returns it, or <code>None</code> when the association is full.</li>
     <li>Getters of association ends with many objects return tuples; getters of list attributes return copies.</li>
     <li>Links between objects are compared by identity. Classes with a <a href="KeysforEqualityandHashing.html">key</a> also get <code>__eq__</code> and <code>__hash__</code> based on the key.</li>
     <li><code>str()</code> of an object has the layout of Java's toString, with Python's spelling of values (<code>True</code>, <code>None</code>) except that a missing date or linked object prints <code>null</code> as in Java. A toString method written in the model replaces it.</li>
     <li>Comments on classes, attributes, associations and methods, and the requirements they implement, become docstrings.</li>
     <li>Parameters named like Python keywords are renamed: <code>in</code> becomes <code>input</code>, and other keywords get a trailing underscore.</li>
-    <li>Overloaded methods become one method that calls the most specific overload matching the arguments, judged by their types when the program runs (Java judges by the declared types of the expressions passed). <code>None</code> matches any reference type, boxed numbers such as <code>Integer</code> included; when several overloads take it, the first one declared is called, where Java would report the call as ambiguous.</li>
+    <li>Overloaded methods become one method that calls the most specific overload matching the arguments, judged by their types when the program runs (Java judges by the declared types of the expressions passed). <code>None</code> matches any reference type, boxed numbers such as <code>Integer</code> included; when several overloads take it, the most specific is called, then the first declared, where Java may report the call as ambiguous.</li>
     <li>A method written in the model with the same parameter types as a method Python generates (for example a Python <code>delete()</code>) replaces that method; other overloads of the name stay. <code>int</code> and <code>Integer</code> count as one type.</li>
-    <li>A subclass method with the name of inherited methods adds to them: a call that matches none of the subclass's overloads goes to the parent's, through <code>super()</code>. A subclass method reaches the parent's methods the same way (calling <code>self</code> would call its own method again).</li>
-    <li>Guards, preconditions and invariants can use Java's <code>equals</code> and <code>contains</code>, which become <code>==</code> and <code>in</code>, and the constants of other classes (<code>Limit.MAX</code>), which the method imports.</li>
+    <li>A subclass's methods compete with the inherited methods of their name that they do not override: the most specific one is called, wherever it is declared. A subclass method reaches the parent's methods through <code>super()</code> (calling <code>self</code> would call its own method again). A static method a subclass declares hides the inherited methods of its name.</li>
+    <li>Guards, preconditions and invariants can use Java's <code>equals</code>, <code>contains</code> and a String's <code>length()</code>, and the constants of other classes (<code>Limit.MAX</code>), which the method imports. A String's length counts UTF-16 code units, as in Java.</li>
     <li>A synchronized method holds a reentrant lock of its object while it runs, contracts and injections included, as Java's holds the object's monitor; the object's class and its subclasses share that lock. A static synchronized method holds its class's lock.</li>
     <li>Translated code computes with Python's numbers: integers do not overflow at 32 or 64 bits, <code>Float</code> has double precision, and a floating division by zero raises <code>ZeroDivisionError</code> where Java gives NaN or infinity.</li>
     <li>Timers and do activities of state machines use Python threads. Leaving a state or deleting the object cancels its timers and asks its do activity to stop; an activity that runs for long checks <code>thread.cancelled.is_set()</code>, where <code>thread</code> is the worker it runs in, and returns when it is set. An event on a deleted object does nothing and returns <code>False</code>.</li>
@@ -61,7 +61,7 @@ Currently unsupported features, reported with error <a href="E9210PythonUnsuppor
     <li>An inner class whose superclass is an inner class declared elsewhere in the same outer class, or is that outer class (a superclass declared beside it works).</li>
     <li>JSON generation (the genJson suboption).</li>
     <li>A guard testing a state with <code>is in state</code>.</li>
-    <li>A guard, precondition or invariant that calls a Java library method other than <code>equals</code> and <code>contains</code>, or that names something the model does not define or a member of another class other than a constant.</li>
+    <li>A guard, precondition or invariant that calls a Java library method other than <code>equals</code>, <code>contains</code> and a String's <code>length()</code>, or that names something the model does not define or a member of another class other than a constant.</li>
     <li>A method named like another that is static where the other is not, including a method Python generates for the class.</li>
 </ul>
 </p>

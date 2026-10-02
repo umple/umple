@@ -287,7 +287,7 @@
 9214: 2, "https://manual.umple.org/?E9214PythonSelfParameter.html", {0} has a parameter named self, the name generated methods give the object they are called on, so rename the parameter ;
 9215: 2, "https://manual.umple.org/?E9215PythonReservedName.html", {0} has a name that Python reserves or that generated code uses, so give it another name ;
 9216: 2, "https://manual.umple.org/?E9216PythonDuplicateParameter.html", {0} has two parameters named {1} in Python, so rename one of them ;
-9217: 2, "https://manual.umple.org/?E9217PythonPackageName.html", The namespace {0} of {1} is not a valid Python package name, so use a namespace made of Python identifiers ;
+9217: 2, "https://manual.umple.org/?E9217PythonPackageName.html", The namespace {0} of {1} is not a valid Python package name, so use dot-separated ASCII names that are not Python keywords ;
 
 # Message to emit when you are parsing a construct but are not yet processing it in a sensible way/
 9999: 5, "https://manual.umple.org/?W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;
