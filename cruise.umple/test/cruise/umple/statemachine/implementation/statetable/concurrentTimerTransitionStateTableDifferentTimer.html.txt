@@ -31,7 +31,7 @@
 
     <tr>
       <td class="state-header" data-parent="0">- On</td>
-      <td class="event-entry"><span>Off</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*after(1)*^*OverState.On*^*OverState.Off*^*">Off</span></td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
@@ -41,14 +41,14 @@
       <td class="state-header" data-parent="0">- Off</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span>On</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*power*^*OverState.Off*^*OverState.On*^*">On</span></td>
       <td class="event-entry">&nbsp;</td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="0">- Yes</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span>No</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*after(2)*^*OverState.Yes*^*OverState.No*^*">No</span></td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
     </tr>
@@ -58,7 +58,7 @@
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span>Yes</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*test*^*OverState.No*^*OverState.Yes*^*">Yes</span></td>
     </tr>
 
   </table>
@@ -89,7 +89,7 @@
       <td class="state-header" data-parent="0">- On</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>after(1)</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*after(1)*^*OverState.On*^*OverState.Off*^*">after(1)</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
     </tr>
@@ -97,7 +97,7 @@
     <tr>
       <td class="state-header" data-parent="0">- Off</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>power</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*power*^*OverState.Off*^*OverState.On*^*">power</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
@@ -109,7 +109,7 @@
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>after(2)</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*after(2)*^*OverState.Yes*^*OverState.No*^*">after(2)</span></td>
     </tr>
 
     <tr>
@@ -117,7 +117,7 @@
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>test</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*test*^*OverState.No*^*OverState.Yes*^*">test</span></td>
       <td class="state-entry">&nbsp;</td>
     </tr>
 

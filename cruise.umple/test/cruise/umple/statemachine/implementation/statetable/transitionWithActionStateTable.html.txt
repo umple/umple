@@ -20,12 +20,12 @@
 
     <tr>
       <td class="state-header" data-parent="">On</td>
-      <td class="event-entry"><span data-action="/ someAction();">Off</span></td>
+      <td class="event-entry"><span data-action="/ someAction();" data-transition="Student*^*status*^*power*^*On*^*Off*^*">Off</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="">Off</td>
-      <td class="event-entry"><span>On</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*power*^*Off*^*On*^*">On</span></td>
     </tr>
 
   </table>
@@ -43,12 +43,12 @@
     <tr>
       <td class="state-header" data-parent="">On</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>power</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*power*^*On*^*Off*^*">power</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="">Off</td>
-      <td class="state-entry"><span>power</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*power*^*Off*^*On*^*">power</span></td>
       <td class="state-entry">&nbsp;</td>
     </tr>
 
