@@ -1027,11 +1027,16 @@ class PythonNextGenerator
   // What a field holds before the constructor assigns it, as Java initializes fields.
   public String fieldDefault(Attribute av)
   {
-    if (av.getIsList())
+    return defaultValue(av.getType(), av.getIsList());
+  }
+
+  private String defaultValue(String type, boolean isList)
+  {
+    if (isList)
     {
       return "[]";
     }
-    switch (pythonType(av.getType()))
+    switch (pythonType(type))
     {
       case "int": return "0";
       case "float": return "0.0";
@@ -1125,9 +1130,9 @@ class PythonNextGenerator
   }
 
   // A class-level value: a constant or the first value of an autounique counter. A literal is set in
-  // the class body. Any other value is None there and is set once the class exists, as Java runs a
-  // class's static initializers once it is loaded: it may then use the class, and modules that
-  // import the class (classInitializers).
+  // the class body. Any other value is set once the module has defined the class, so that it may use
+  // the class and modules that import it (classInitializers); until then it has its type's default,
+  // as a Java static field has while its class initializes.
   public String classValue(UmpleClass uClass, Attribute av)
   {
     if (av.getIsList() && hasLiteralItems(av))
@@ -1135,44 +1140,97 @@ class PythonNextGenerator
       return literalList(av);
     }
     String literal = av.getIsList() ? null : literal(av.getType(), av.getValue());
-    return literal != null ? literal : initializeLater(uClass, av.getName(), av.getValue(), av.getIsList(), av.getPosition());
+    return literal != null ? literal : initializeLater(uClass, av.getName(), av.getType(), av.getValue(), av.getIsList(), av.getPosition());
   }
 
   public String classValue(UmpleClass uClass, Constant aConstant)
   {
     String literal = literal(aConstant.getType(), aConstant.getValue());
-    return literal != null ? literal : initializeLater(uClass, aConstant.getName(), aConstant.getValue(), false, null);
+    return literal != null ? literal : initializeLater(uClass, aConstant.getName(), aConstant.getType(), aConstant.getValue(), false, null);
   }
 
-  // The statements setting the class values of the classes of a module, with the imports they need,
-  // in model order, by outermost class
-  private Map<UmpleClass, List<String>> classInitializers = new HashMap<UmpleClass, List<String>>();
+  // The class values set after their module's class, {target, value} by class in model order, and the
+  // imports they need by module
+  private Map<UmpleClass, List<String[]>> classInitializers = new LinkedHashMap<UmpleClass, List<String[]>>();
+  private Map<UmpleClass, Set<String>> classInitializerImports = new HashMap<UmpleClass, Set<String>>();
 
-  private String initializeLater(UmpleClass uClass, String name, String code, boolean isList, Position position)
+  private String initializeLater(UmpleClass uClass, String name, String type, String code, boolean isList, Position position)
   {
     String value = translateClassValue(code, uClass, isList, position, "the constant " + name);
+    String pending = defaultValue(type, isList);
     UmpleClass module = outermost(uClass);
-    if (!classInitializers.containsKey(module))
+    if (!classInitializers.containsKey(uClass))
     {
-      classInitializers.put(module, new ArrayList<String>());
+      classInitializers.put(uClass, new ArrayList<String[]>());
     }
-    List<String> lines = classInitializers.get(module);
-    for (String line : getSnippetImports())
+    if (!classInitializerImports.containsKey(module))
     {
-      if (!lines.contains(line))
-      {
-        lines.add(line);
-      }
+      classInitializerImports.put(module, new LinkedHashSet<String>());
     }
-    lines.add(classReference(uClass) + "." + name + " = " + (value == null ? (isList ? "[]" : "None") : value));
-    return isList ? "[]" : "None";
+    classInitializers.get(uClass).add(new String[] { classReference(uClass) + "." + name, value == null ? pending : value });
+    classInitializerImports.get(module).addAll(getSnippetImports());
+    return pending;
   }
 
-  // The module-level statements that set the class values of a top-level class and its nested classes
+  // The module-level statements that set the class values of a top-level class and its nested
+  // classes, after their imports. Java initializes a class when a value first uses it, so a value
+  // naming another of these classes comes after that class's own values, unless that class is the
+  // one being initialized.
   public String classInitializers(UmpleClass uClass)
   {
-    List<String> lines = uClass.getOuterClass() == null ? classInitializers.remove(uClass) : null;
-    return lines == null ? "" : "\n\n\n" + String.join("\n", lines);
+    Set<String> imports = uClass.getOuterClass() == null ? classInitializerImports.remove(uClass) : null;
+    if (imports == null)
+    {
+      return "";
+    }
+    List<String> lines = new ArrayList<String>(imports);
+    for (UmpleClass k : new ArrayList<UmpleClass>(classInitializers.keySet()))
+    {
+      if (outermost(k) == uClass)
+      {
+        initialize(k, lines);
+      }
+    }
+    return "\n\n\n" + String.join("\n", lines);
+  }
+
+  private void initialize(UmpleClass uClass, List<String> lines)
+  {
+    List<String[]> values = classInitializers.remove(uClass);
+    for (String[] value : values == null ? new ArrayList<String[]>() : values)
+    {
+      Matcher name = DOTTED_NAME.matcher(value[1]);
+      while (name.find())
+      {
+        UmpleClass used = namedClass(outermost(uClass), name.group());
+        if (used != null)
+        {
+          initialize(used, lines);
+        }
+      }
+      lines.add(value[0] + " = " + value[1]);
+    }
+  }
+
+  private static final Pattern DOTTED_NAME = Pattern.compile("(?<![\\w.])[A-Za-z_]\\w*(?:\\.[A-Za-z_]\\w*)*");
+
+  // The class of module that the longest leading part of a dotted name names, or null
+  private UmpleClass namedClass(UmpleClass module, String dotted)
+  {
+    for (String prefix = dotted; ; prefix = prefix.substring(0, prefix.lastIndexOf('.')))
+    {
+      for (UmpleClass k : getModel().getUmpleClasses())
+      {
+        if (outermost(k) == module && classReference(k).equals(prefix))
+        {
+          return k;
+        }
+      }
+      if (prefix.indexOf('.') < 0)
+      {
+        return null;
+      }
+    }
   }
 
   // Only a literal is supported as an interface constant's value.
@@ -1829,8 +1887,8 @@ class PythonNextGenerator
   }
 
   // Moves each import native code marked (modelImports) to the start of the function holding it,
-  // after its docstring, where it binds the class for all the function's code. Names the function
-  // binds itself, its parameters included, keep their meaning and get no import.
+  // after its docstring, generated or authored, where it binds the class for all the function's code.
+  // Names the function binds itself, its parameters included, keep their meaning and get no import.
   private static void placeModelImports(StringBuilder code)
   {
     if (code.indexOf(PythonNextGenerator.MODEL_IMPORT) < 0)
@@ -1882,21 +1940,15 @@ class PythonNextGenerator
       {
         start++;
       }
-      String indent = start < end ? lines.get(start).substring(0, leadingSpaces(lines.get(start))) : def.group(1) + "    ";
-      if (start < end && lines.get(start).trim().startsWith("\"\"\""))
+      // The first statement, past comments, and the marker of the source region open there, if any
+      int first = start;
+      int marker = -1;
+      for (; first < end && (lines.get(first).trim().isEmpty() || lines.get(first).trim().startsWith("#")); first++)
       {
-        // the docstring stays the first statement
-        String first = lines.get(start).trim();
-        if (first.length() < 6 || !first.endsWith("\"\"\""))
-        {
-          start++;
-          while (start < end && !lines.get(start).contains("\"\"\""))
-          {
-            start++;
-          }
-        }
-        start++;
+        String comment = lines.get(first).trim();
+        marker = SOURCE_MARKER.matcher(comment).matches() ? first : comment.equals("# end line") ? -1 : marker;
       }
+      String indent = start < end ? lines.get(start).substring(0, leadingSpaces(lines.get(start))) : def.group(1) + "    ";
       List<String> imports = new ArrayList<String>();
       for (String line : requested)
       {
@@ -1905,10 +1957,42 @@ class PythonNextGenerator
           imports.add(indent + line);
         }
       }
-      lines.addAll(start, imports);
+      // A docstring stays the first statement. An authored one is in a source region, which ends
+      // before the imports and resumes after them.
+      int docstring = docstringLines(lines.subList(first, end));
+      if (docstring > 0 && marker >= 0 && !imports.isEmpty())
+      {
+        Matcher region = SOURCE_MARKER.matcher(lines.get(marker).trim());
+        region.matches();
+        imports.add(0, indent + "# end line");
+        imports.add(indent + "# line " + (Integer.parseInt(region.group(1)) + first + docstring - marker - 1) + " " + region.group(2));
+      }
+      lines.addAll(docstring > 0 ? first + docstring : start, imports);
     }
     code.setLength(0);
     code.append(String.join("\n", lines));
+  }
+
+  private static final Pattern SOURCE_MARKER = Pattern.compile("# line (\\d+) (\".*\")");
+  private static final Pattern STRING_START = Pattern.compile("(?i)[ru]?(\"\"\"|'''|\"|')");
+
+  // How many lines a docstring at the start of these takes, or 0 when they do not start with a string
+  // statement
+  private static int docstringLines(List<String> lines)
+  {
+    Matcher opening = STRING_START.matcher(lines.isEmpty() ? "" : lines.get(0).trim());
+    if (!opening.lookingAt())
+    {
+      return 0;
+    }
+    boolean[] insideString = PythonSource.linesInsideStrings(lines);
+    int next = 1;
+    while (next < lines.size() && insideString[next])
+    {
+      next++;
+    }
+    String last = next == 1 ? lines.get(0).trim().substring(opening.end()) : lines.get(next - 1).trim();
+    return last.endsWith(opening.group(1)) ? next : 0;
   }
 
   private static int leadingSpaces(String line)

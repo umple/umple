@@ -20,44 +20,49 @@ class MethodWrappers:
         return result
 
     def half_Original(self, x):
+        # line 7 "MethodWrappers.ump"
         return x // 2
+        # end line
 
     @staticmethod
     def bounded(x):
         if not (x < 100):
             raise RuntimeError("Please provide a valid x")
-        result = __class__.bounded_Original(x)
-        return result
-
-    @staticmethod
-    def bounded_Original(x):
+        # line 12 "MethodWrappers.ump"
         return x
+        # end line
 
     def logged(self, x):
+        # line 28 "MethodWrappers.ump"
         print("before", x)
+        # end line
         result = __class__.logged_Original(self, x)
+        # line 29 "MethodWrappers.ump"
         print("after")
+        # end line
         return result
 
     def logged_Original(self, x):
+        # line 16 "MethodWrappers.ump"
         return x + 1
+        # end line
 
     def keep(self, result):
         if not (result > 0):
             raise RuntimeError("Please provide a valid result")
-        result_ = __class__.keep_Original(self, result)
-        return result_
-
-    def keep_Original(self, result):
+        # line 21 "MethodWrappers.ump"
         return result * 2
+        # end line
 
     def m(self):
+        # line 30 "MethodWrappers.ump"
         print("m")
-        result = __class__.m_Original2(self)
-        return result
-
-    def m_Original2(self):
+        # end line
+        # line 24 "MethodWrappers.ump"
         return 1
+        # end line
 
     def m_Original(self):
+        # line 26 "MethodWrappers.ump"
         return 2
+        # end line

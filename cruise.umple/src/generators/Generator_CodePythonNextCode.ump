@@ -649,9 +649,10 @@ class PythonNextGenerator
   }
 
   // Another model class's constant or enumeration value that a constraint names through its class
-  // (Limit.MAX, shop.Limit.MAX, Outer.Limits.MAX, Limit.Level.High): the classifier and the names
-  // after it, or null. The longest leading path that names a classifier counts; a first name the
-  // constraint already has in scope keeps its meaning.
+  // (Limit.MAX, shop.Limit.MAX, Outer.Limits.MAX, Sub.Limits.MAX, Limit.Level.High): the classifier
+  // and the names after it, or null. The longest leading path that names a classifier counts, then
+  // the nested classes after it, inherited ones included; a first name the constraint already has in
+  // scope keeps its meaning.
   private Object[] foreignMember(ConstraintVariable v, PythonConstraintScope context)
   {
     List<String> path = dottedNames(v);
@@ -670,7 +671,30 @@ class PythonNextGenerator
         String reference = c instanceof UmpleClass ? classReference((UmpleClass) c) : c.getName();
         if (prefix.equals(reference) || prefix.equals(c.getPackageName() + "." + reference))
         {
-          return new Object[] { c, path.subList(length, path.size()) };
+          UmpleClassifier owner = c;
+          List<String> names = path.subList(length, path.size());
+          while (names.size() > 1 && owner instanceof UmpleClass && nestedClass((UmpleClass) owner, names.get(0)) != null)
+          {
+            owner = nestedClass((UmpleClass) owner, names.get(0));
+            names = names.subList(1, names.size());
+          }
+          return new Object[] { owner, names };
+        }
+      }
+    }
+    return null;
+  }
+
+  // The nested class of that name that uClass declares or inherits, or null
+  private UmpleClass nestedClass(UmpleClass uClass, String name)
+  {
+    for (UmpleClass k = uClass; k != null; k = k.getExtendsClass())
+    {
+      for (UmpleClass inner : getModel().getUmpleClasses())
+      {
+        if (inner.getOuterClass() == k && inner.getName().equals(name))
+        {
+          return inner;
         }
       }
     }
@@ -1625,9 +1649,11 @@ class PythonNextGenerator
       + emitted(uClass, method, enqueuer(name, worker, methodQueue(uClass), method.getMethodParameters(), false));
   }
 
-  // With contracts or injections the method wraps a helper holding the body, called through the
-  // declaring class so that a super() call never reaches a subclass's helper. A synchronized method
-  // holds its monitor for all of it, contracts and injections included, as Java's does.
+  // Preconditions and before injections run in the method, ahead of its body, as Java's do. With after
+  // injections or postconditions, or a generator body (which runs only once iterated), the method
+  // wraps a helper holding the body, called through the declaring class so that a super() call never
+  // reaches a subclass's helper. A synchronized method holds its monitor for all of it, contracts and
+  // injections included, as Java's does.
   private String methodWithBody(UmpleClass uClass, Method method, String name)
   {
     boolean isStatic = isStatic(method);
@@ -1653,12 +1679,12 @@ class PythonNextGenerator
     }
     // The parser keeps the body without its first line's indentation and records that separately.
     CodeBlock block = method.getMethodBody().getCodeblock();
-    boolean wrapped = before.length() > 0 || after.length() > 0;
+    boolean wrapped = after.length() > 0 || before.length() > 0 && PythonSource.codeAt(block.getCode(language), "yield") >= 0;
     String body = functionCode(block.getCode(language), block.getFirstLineIndent(language), wrapped ? "        " : indent,
       block.getAuthoredPosition(language), uClass);
     if (!wrapped)
     {
-      return emitted(uClass, method, header + docstring + lock + body);
+      return emitted(uClass, method, header + docstring + lock + before + body);
     }
     String helper = freshMemberName(uClass, name + "_Original");
     // Postconditions name the returned value result; the local gets underscores while a parameter has its name.

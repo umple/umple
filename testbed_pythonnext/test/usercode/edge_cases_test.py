@@ -139,9 +139,13 @@ class EdgeCasesTest(unittest.TestCase):
         self.assertEqual("CrateItem1", user.viaNested())
         user.setShared("x")
         self.assertEqual("local", user.getSeen())
+        self.assertEqual(("CrateItem1", "before", "unbound"), (user.viaLambda(), user.viaBefore(), user.viaAnnotation()))
+        self.assertEqual(("CrateItem", "Names the item class."), (user.documented(), ScopedUser.ScopedUser.documented.__doc__))
 
     def test_aClassValueIsSetOnceItsClassExists(self):
         self.assertEqual("seed 1", ValueOwner.ValueOwner.LABEL)
+        owner = ValueOwner.ValueOwner
+        self.assertEqual((0, 5, 5), (owner.PENDING, owner.FROM_INNER, owner.ValueInner.K))
 
     def test_inheritedEventsAndVarargsCompete(self):
         child = EventChild.EventChild()
@@ -154,8 +158,8 @@ class EdgeCasesTest(unittest.TestCase):
     def test_otherClassesConstantsKeepTheirTypes(self):
         checks = TypedChecks.TypedChecks()
         self.assertEqual((1, 2, 3), (checks.half(), checks.length(), checks.has()))
-        self.assertEqual((4, 4), (checks.qualified(4), checks.nested(4)))
-        for call in (checks.qualified, checks.nested):
+        self.assertEqual((4, 4, 4), (checks.qualified(4), checks.nested(4), checks.inherited(4)))
+        for call in (checks.qualified, checks.nested, checks.inherited):
             with self.assertRaises(RuntimeError):
                 call(5)
 

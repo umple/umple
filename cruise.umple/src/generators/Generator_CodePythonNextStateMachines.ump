@@ -114,15 +114,16 @@ class PythonNextGenerator
     return freshMemberName(uClass, "MessageQueue");
   }
 
-  // The fields holding the class's queues, or null when it has none
+  // The fields holding the class's queues, or null when it has none. Their double underscore makes
+  // Python keep a parent's and a subclass's queues apart, as Java does.
   public String eventQueue(UmpleClass uClass)
   {
-    return queuesEvents(uClass) ? fieldName(uClass, "eventQueue") : null;
+    return queuesEvents(uClass) ? fieldName(uClass, "_eventQueue") : null;
   }
 
   public String methodQueue(UmpleClass uClass)
   {
-    return queuesMethods(uClass) ? fieldName(uClass, "methodQueue") : null;
+    return queuesMethods(uClass) ? fieldName(uClass, "_methodQueue") : null;
   }
 
   // The method that does the work of a queued event or method, whose own method puts a call to it
@@ -163,9 +164,10 @@ class PythonNextGenerator
     return code.toString();
   }
 
+  // Private to its class, so a pooled subclass does not replace its parent's
   private String poolPredicateName(UmpleClass uClass)
   {
-    return freshMemberName(uClass, "_canProcess");
+    return freshMemberName(uClass, "__canProcess");
   }
 
   // A pooled queue's predicate: some state the object is in has a transition for the call's event, as
@@ -180,7 +182,7 @@ class PythonNextGenerator
         Set<String> events = new LinkedHashSet<String>();
         for (Transition t : state.getTransitions())
         {
-          if (t.getEvent() != null)
+          if (t.getEvent() != null && !t.getEvent().isAutoTransition())
           {
             events.add(pythonString(queuedName(uClass, translate("eventMethod", t.getEvent()))));
           }

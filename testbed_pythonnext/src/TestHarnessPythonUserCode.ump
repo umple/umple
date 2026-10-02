@@ -580,19 +580,46 @@ class ScopedUser
         return CrateItem
     return CrateItem.__name__ + str(helper())
   }
+  String viaLambda() Python {
+    f = lambda: (CrateItem := 1)
+    return CrateItem.__name__ + str(f())
+  }
+  before viaBefore Python { CrateItem = "before" }
+  String viaBefore() Python { return CrateItem }
+  String viaAnnotation() Python {
+    CrateItem: type
+    try:
+        return CrateItem.__name__
+    except UnboundLocalError:
+        return "unbound"
+  }
+  String documented() Python {
+    """Names the item class."""
+    return CrateItem.__name__
+  }
 }
 
 // A class value that is not a literal is set once its class exists, so what it calls may import
-// the class.
+// the class. Until then it has its type's default, and a nested class it uses gets its values first,
+// as in Java.
 class ValueOwner
 {
   const Integer SEED = 1;
   const String LABEL = ValueSource.label();
+  const Integer PENDING = ValueSource.pending();
+  const Integer FROM_INNER = ValueInner.value();
+  inner class ValueInner
+  {
+    const Integer K = seed();
+    public static int seed() Python { return 5 }
+    public static int value() Python { return ValueOwner.ValueInner.K }
+  }
 }
 
 class ValueSource
 {
   public static String label() Python { return "seed " + str(ValueOwner.SEED) }
+  public static int pending() Python { return ValueOwner.PENDING }
 }
 
 // Inherited events and variable-argument methods compete with a subclass's overloads too.
@@ -634,6 +661,11 @@ class LimitsOuter
   }
 }
 
+class LimitsSub
+{
+  isA LimitsOuter;
+}
+
 class TypedChecks
 {
   int half() Python {
@@ -654,6 +686,10 @@ class TypedChecks
   }
   int nested(int n) Python {
     [pre: n < LimitsOuter.InnerLimits.MAX]
+    return n
+  }
+  int inherited(int n) Python {
+    [pre: n < LimitsSub.InnerLimits.MAX]
     return n
   }
 }

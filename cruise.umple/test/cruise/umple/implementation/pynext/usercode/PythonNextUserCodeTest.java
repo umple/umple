@@ -302,6 +302,39 @@ public class PythonNextUserCodeTest
     }
   }
 
+  // A lambda's bindings are its own; an annotation or del alone makes a name local; attributes,
+  // subscripts and keyword arguments bind nothing. A backslash never hides an f-string's field.
+  @Test
+  public void bindsWhatPythonScopesBind() throws Exception
+  {
+    java.util.Set<String> bound = cruise.umple.util.PythonSource.boundNames(
+      "f = lambda: (A := 1)\ng = sorted(r, key=lambda x, y=1: x)\nC: int\ndel D, self.e, cache[F]\ncache[G] = 1\n"
+      + "print(H(n=1))\nI = J = 2\nK += 1\nfor L in r: M = 1\nif N.ready(): O = 2\nP = f\"{Q=}\"\nimport R; S = 1\n"
+      + "U = [(T := v) for v in r]");
+    Assert.assertTrue(bound.toString(), bound.containsAll(Arrays.asList("f", "g", "C", "D", "I", "J", "K", "L", "M", "O", "P", "R", "S", "T", "U")));
+    for (String name : Arrays.asList("A", "x", "y", "self", "e", "cache", "F", "G", "H", "n", "N", "Q", "v", "r"))
+    {
+      Assert.assertFalse(name, bound.contains(name));
+    }
+    java.util.Set<String> used = cruise.umple.util.PythonSource.codeNames(
+      "a = rf\"\\{Item.__name__}\"\nb = f\"\\\\{Other}\"\nc = f\"\\N{BULLET} {Label}\"");
+    Assert.assertTrue(used.toString(), used.containsAll(Arrays.asList("Item", "Other", "Label")));
+    Assert.assertFalse(used.toString(), used.contains("BULLET"));
+  }
+
+  // Before code runs in the method with its body, so the body sees what it binds. An authored
+  // docstring stays first: its source region ends before the imports and resumes after them.
+  @Test
+  public void importsFollowBeforeCodeAndAuthoredDocstrings() throws Exception
+  {
+    UmpleModel model = generate("class Item {}\nclass A {\n  before name Python { Item = \"provided\" }\n"
+      + "  String name() Python { return Item }\n  String call() Python {\n    '''Calls.'''\n    return Item.__name__\n  }\n}\n");
+    String a = model.getGeneratedCode().get("A");
+    Assert.assertFalse(a, a.contains("name_Original"));
+    Assert.assertEquals(a, 1, a.split("from Item import Item", -1).length - 1);
+    Assert.assertTrue(a, a.contains("'''Calls.'''\n        # end line\n        from Item import Item\n        # line 8 \""));
+  }
+
   // An import native code needs goes to the start of its function, after its docstring and before its
   // source regions, and is left out where it would replace a name the function binds: its object
   // (self), a parameter, or a local another injection of it sets

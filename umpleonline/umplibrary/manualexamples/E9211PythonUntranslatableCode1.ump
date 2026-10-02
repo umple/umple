@@ -1,6 +1,6 @@
 // The default value calls the Java library, which cannot be
 // translated to Python, so PythonNext reports E9211
 generate PythonNext;
-class Timer {
-  Long started = System.currentTimeMillis();
+class Session {
+  String user = System.getProperty("user.name");
 }

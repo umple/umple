@@ -878,6 +878,16 @@ public class PythonNextSnippetTranslatorTest
   }
 
   @Test
+  public void runsJavaLibraryCallsWithJavasResults()
+  {
+    Assert.assertEquals("time.sleep(self._n / 1000)", statements("Child", "Thread.sleep(n);"));
+    Assert.assertEquals("2.5\n4\n2.0\n3\n1\n2.0\n8.0\ntrue\n", runTranslated("System.out.println(Math.max(1, 2.5));"
+      + " System.out.println(Math.max(3, 4)); System.out.println(Math.floor(2.7)); System.out.println(Math.round(2.5));"
+      + " System.out.println(Math.abs(-1)); System.out.println(Math.sqrt(4)); System.out.println(Math.pow(2, 3));"
+      + " System.out.println(System.currentTimeMillis() > 0);"));
+  }
+
+  @Test
   public void runsContinueWithTheUpdateOfTheLoopHeader()
   {
     // The body's local n hides the attribute n, which the update still means.
@@ -939,8 +949,8 @@ public class PythonNextSnippetTranslatorTest
       { "n = missing;", "'missing' is not a local variable, parameter, attribute, association, state machine or constant of class Child" },
       { "blahblah;", "'blahblah' is not a statement" },
       { "n = twiceN;", "'twiceN' is a derived attribute, which has no field; call getTwiceN() instead" },
-      { "Math.sqrt(4);", "Math is a Java library class" },
-      { "n = Thread.currentThread();", "Thread is a Java library class" },
+      { "Collections.sort(tags);", "Collections is a Java library class" },
+      { "n = Thread.currentThread();", "Thread.currentThread(...) is a Java library call; the ones translated are Thread.sleep" },
       { "Date d = new Date();", "new Date(...) creates a Java library object" },
       { "Object o = null;", "variables of type Object are not supported" },
       { "int k = name.indexOf(\"a\");", "String methods other than equals, contains, startsWith, endsWith, length and isEmpty, such as indexOf(), are not supported" },

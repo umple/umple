@@ -182,8 +182,10 @@ class PythonSource
   }
 
   // The names a Python function body binds in its own scope: by import, def and class (their names,
-  // not what their bodies bind), global, nonlocal, assignment, a for statement, as and :=. Names that
-  // nested functions, classes, lambdas and comprehensions bind belong to those scopes.
+  // not what their bodies bind), global, nonlocal, assignment (annotated or augmented too), del, a for
+  // statement, as and :=. An annotation alone makes its name local too. Names that nested functions,
+  // classes, lambdas and comprehensions bind belong to those scopes, and attributes and subscripts are
+  // not names.
   public static Set<String> boundNames(String code)
   {
     boolean[] isCode = codeChars(code, true);
@@ -195,6 +197,7 @@ class PythonSource
         visible.setCharAt(i, ' ');
       }
     }
+    blankLambdas(visible);
     Set<String> names = new HashSet<String>();
     int brackets = 0;
     int nested = -1; // the indentation of a nested def or class whose body is being skipped
@@ -216,27 +219,14 @@ class PythonSource
         nested = indent;
         continue;
       }
-      Matcher imported = IMPORT.matcher(text);
-      if (statement && imported.lookingAt())
+      for (String simple : statement ? simpleStatements(text) : new ArrayList<String>())
       {
-        String items = imported.group(1) != null ? imported.group(1) : imported.group(2) != null ? imported.group(2) : imported.group(3);
-        for (String item : items.split(","))
-        {
-          String[] words = item.trim().split("\\s+as\\s+");
-          names.add(words.length > 1 ? words[1].trim() : words[0].trim().split("\\.")[0]);
-        }
-        continue;
+        names.addAll(statementNames(simple));
       }
-      Matcher bound = (statement ? STATEMENT_BINDING : BINDING).matcher(text);
+      Matcher bound = BINDING.matcher(text);
       while (bound.find())
       {
-        for (int group = 1; group <= bound.groupCount(); group++)
-        {
-          if (bound.group(group) != null)
-          {
-            names.addAll(Arrays.asList(bound.group(group).split("[^\\w]+")));
-          }
-        }
+        names.add(bound.group(1) != null ? bound.group(1) : bound.group(2));
       }
     }
     names.remove("");
@@ -247,9 +237,158 @@ class PythonSource
   private static final Pattern IMPORT = Pattern.compile("import\\s+([^;]+)|from\\s+\\S+\\s+import\\s+(?:\\(([^)]*)\\)?|([^;]+))");
   // A binding anywhere in a line: as and :=
   private static final Pattern BINDING = Pattern.compile("\\bas\\s+(\\w+)|(\\w+)\\s*:=");
-  // A line that starts a statement can also bind by global, nonlocal, assignment and for
-  private static final Pattern STATEMENT_BINDING = Pattern.compile("^(?:global|nonlocal)\\s+([\\w \\t,]+)"
-    + "|^([\\w \\t,()\\[\\]*]+?)\\s*(?::[^=]*)?=(?!=)|^(?:async\\s+)?for\\s+([\\w \\t,()\\[\\]*]+?)\\s+in\\b|\\bas\\s+(\\w+)|(\\w+)\\s*:=");
+  // Statements binding names other than by assignment
+  private static final Pattern DECLARED = Pattern.compile("(?:global|nonlocal)\\s+([\\w \\t,]+)");
+  private static final Pattern TARGETS = Pattern.compile("(?:del\\b|(?:async\\s+)?for\\s)\\s*(.+?)(?:\\s+in\\b|$)");
+  private static final Pattern ANNOTATED = Pattern.compile("(\\w+)\\s*:(?!=)");
+  private static final Pattern COMPOUND = Pattern.compile("(?:if|elif|else|while|for|with|async\\s+for|async\\s+with|try|except|finally)\\b");
+
+  // The simple statements of a logical line: those its semicolons separate, and the one after a
+  // compound statement's header (if x: y = 1). A for header counts too, for its targets.
+  private static List<String> simpleStatements(String text)
+  {
+    List<String> statements = new ArrayList<String>();
+    int depth = 0;
+    int start = 0;
+    for (int i = 0; i <= text.length(); i++)
+    {
+      char c = i < text.length() ? text.charAt(i) : ';';
+      depth += "([{".indexOf(c) >= 0 ? 1 : ")]}".indexOf(c) >= 0 ? -1 : 0;
+      boolean header = c == ':' && !text.startsWith(":=", i) && COMPOUND.matcher(text.substring(start).trim()).lookingAt();
+      if (depth == 0 && (c == ';' || header))
+      {
+        String statement = text.substring(start, i).trim();
+        if (!header || statement.matches("(?:async\\s+)?for\\b.*"))
+        {
+          statements.add(statement);
+        }
+        start = i + 1;
+      }
+    }
+    return statements;
+  }
+
+  // The names a simple statement binds, other than by as and :=
+  private static List<String> statementNames(String text)
+  {
+    List<String> names = new ArrayList<String>();
+    Matcher imported = IMPORT.matcher(text);
+    Matcher declared = DECLARED.matcher(text);
+    Matcher targets = TARGETS.matcher(text);
+    Matcher annotated = ANNOTATED.matcher(text);
+    if (imported.lookingAt())
+    {
+      String items = imported.group(1) != null ? imported.group(1) : imported.group(2) != null ? imported.group(2) : imported.group(3);
+      for (String item : items.split(","))
+      {
+        String[] words = item.trim().split("\\s+as\\s+");
+        names.add(words.length > 1 ? words[1].trim() : words[0].trim().split("\\.")[0]);
+      }
+    }
+    else if (declared.lookingAt())
+    {
+      names.addAll(Arrays.asList(declared.group(1).split("[^\\w]+")));
+    }
+    else if (targets.lookingAt())
+    {
+      names.addAll(targetNames(targets.group(1)));
+    }
+    else
+    {
+      if (annotated.lookingAt())
+      {
+        names.add(annotated.group(1));
+      }
+      names.addAll(assignedNames(text));
+    }
+    return names;
+  }
+
+  // A subscript or a call, with what it holds, after a name or another one
+  private static final Pattern SUBSCRIPT = Pattern.compile("(?<=[\\w)\\]@])\\s*[\\[(][^\\[\\]()]*[\\])]");
+  private static final Pattern TARGET_NAME = Pattern.compile("(?<![\\w.])\\w+(?![\\w.@])");
+
+  // The names an assignment statement binds: the targets before each = of the line, outside
+  // brackets, chained, annotated or augmented
+  private static List<String> assignedNames(String text)
+  {
+    List<String> names = new ArrayList<String>();
+    int depth = 0;
+    int start = 0;
+    for (int i = 0; i < text.length(); i++)
+    {
+      char c = text.charAt(i);
+      depth += "([{".indexOf(c) >= 0 ? 1 : ")]}".indexOf(c) >= 0 ? -1 : 0;
+      char previous = i > 0 ? text.charAt(i - 1) : ' ';
+      boolean comparison = text.startsWith("==", i) || "=!:".indexOf(previous) >= 0
+        || "<>".indexOf(previous) >= 0 && (i < 2 || text.charAt(i - 2) != previous);
+      if (depth == 0 && c == '=' && !comparison)
+      {
+        names.addAll(targetNames(text.substring(start, i)));
+        start = i + 1;
+      }
+    }
+    return names;
+  }
+
+  // The plain names of a target list: neither attributes nor subscripted, nor in a subscript or an
+  // annotation
+  private static List<String> targetNames(String targets)
+  {
+    String plain = targets.replaceAll("\\s*\\.\\s*", ".");
+    for (String before = null; !plain.equals(before); )
+    {
+      before = plain;
+      plain = SUBSCRIPT.matcher(plain).replaceAll("@");
+    }
+    List<String> names = new ArrayList<String>();
+    Matcher name = TARGET_NAME.matcher(plain.split(":")[0]);
+    while (name.find())
+    {
+      names.add(name.group());
+    }
+    return names;
+  }
+
+  // Blanks out each lambda, its parameters and its body, so that what it binds stays its own. A lambda
+  // ends at a comma, colon or semicolon of its own bracket level after its parameters, at a bracket
+  // closing that level, or with its logical line.
+  private static void blankLambdas(StringBuilder visible)
+  {
+    String text = visible.toString();
+    Deque<int[]> open = new ArrayDeque<int[]>(); // {bracket depth, 1 while in its parameters}, innermost first
+    int start = 0;
+    int depth = 0;
+    for (int i = 0; i <= text.length(); i++)
+    {
+      char c = i < text.length() ? text.charAt(i) : '\n';
+      if (text.startsWith("lambda", i) && startsName(text, i) && !(i + 6 < text.length() && Character.isJavaIdentifierPart(text.charAt(i + 6))))
+      {
+        start = open.isEmpty() ? i : start;
+        open.push(new int[] { depth, 1 });
+        i += 5;
+        continue;
+      }
+      boolean colon = c == ':' && !text.startsWith(":=", i);
+      boolean lineEnds = i == text.length() || c == '\n' && depth <= 0;
+      while (!open.isEmpty())
+      {
+        int[] lambda = open.peek();
+        boolean level = depth == lambda[0];
+        if (!lineEnds && !(level && ")]}".indexOf(c) >= 0) && !(level && lambda[1] == 0 && (c == ',' || c == ';' || colon)))
+        {
+          lambda[1] = level && colon ? 0 : lambda[1];
+          break;
+        }
+        open.pop();
+        for (int j = start; open.isEmpty() && j < i; j++)
+        {
+          visible.setCharAt(j, text.charAt(j) == '\n' ? '\n' : ' ');
+        }
+      }
+      depth += "([{".indexOf(c) >= 0 ? 1 : ")]}".indexOf(c) >= 0 ? -1 : 0;
+    }
+  }
 
   // How many more brackets a line opens than it closes
   private static int bracketBalance(String line)
@@ -269,12 +408,12 @@ class PythonSource
 
   // Which characters of Python source are code rather than part of a string or a comment, reading
   // strings and comments as lineKinds does. With fields, the replacement fields of f-strings are code,
-  // except the strings inside them and their format specs.
+  // their braces included, except the strings inside them and their format specs.
   private static boolean[] codeChars(String code, boolean fields)
   {
     boolean[] isCode = new boolean[code.length()];
-    // What is open, innermost last: a string {quote, formatted} or a replacement field {null, open
-    // brackets, in its format spec}
+    // What is open, innermost last: a string {quote, formatted, has escapes} or a replacement field
+    // {null, open brackets, in its format spec}
     List<Object[]> open = new ArrayList<Object[]>();
     for (int i = 0; i < code.length(); i++)
     {
@@ -283,9 +422,13 @@ class PythonSource
       if (top != null && top[0] != null)
       {
         String quote = (String) top[0];
-        if (c == '\\')
+        if (c == '\\' && (Boolean) top[1] && (Boolean) top[2] && code.startsWith("N{", i + 1))
         {
-          i++;
+          i = Math.max(i + 1, code.indexOf('}', i)); // a named character, not a replacement field
+        }
+        else if (c == '\\' && !((Boolean) top[1] && i + 1 < code.length() && "{}".indexOf(code.charAt(i + 1)) >= 0))
+        {
+          i++; // the escaped character, but never a replacement field's brace
         }
         else if ((Boolean) top[1] && c == '{' && code.startsWith("{{", i))
         {
@@ -294,6 +437,7 @@ class PythonSource
         else if ((Boolean) top[1] && c == '{')
         {
           open.add(new Object[] { null, 0, false });
+          isCode[i] = true;
         }
         else if (code.startsWith(quote, i))
         {
@@ -311,10 +455,12 @@ class PythonSource
         if (c == '{')
         {
           open.add(new Object[] { null, 0, false });
+          isCode[i] = true;
         }
         else if (c == '}')
         {
           open.remove(open.size() - 1);
+          isCode[i] = true;
         }
       }
       else if (top == null && c == '#')
@@ -325,12 +471,14 @@ class PythonSource
       else if (c == '"' || c == '\'')
       {
         String quote = code.startsWith("" + c + c + c, i) ? "" + c + c + c : "" + c;
-        open.add(new Object[] { quote, fields && hasFormatPrefix(code, i) });
+        String prefix = stringPrefix(code, i);
+        open.add(new Object[] { quote, fields && prefix.contains("f"), !prefix.contains("r") });
         i += quote.length() - 1;
       }
       else if (top != null && c == '}' && (Integer) top[1] == 0)
       {
         open.remove(open.size() - 1);
+        isCode[i] = true;
       }
       else if (top != null && (Integer) top[1] == 0 && (c == ':' && !code.startsWith(":=", i)
         || c == '!' && i + 2 < code.length() && "rsa".indexOf(code.charAt(i + 1)) >= 0 && "}:".indexOf(code.charAt(i + 2)) >= 0))
@@ -350,15 +498,15 @@ class PythonSource
     return isCode;
   }
 
-  // Whether the string literal opening at quote has an f prefix (f, rf, Fr ...)
-  private static boolean hasFormatPrefix(String code, int quote)
+  // The prefix of the string literal opening at quote (f, rf, b ...), in lower case
+  private static String stringPrefix(String code, int quote)
   {
     int start = quote;
     while (start > 0 && quote - start < 2 && "rRbBuUfF".indexOf(code.charAt(start - 1)) >= 0)
     {
       start--;
     }
-    return code.substring(start, quote).toLowerCase().contains("f") && startsName(code, start);
+    return startsName(code, start) ? code.substring(start, quote).toLowerCase() : "";
   }
 
 

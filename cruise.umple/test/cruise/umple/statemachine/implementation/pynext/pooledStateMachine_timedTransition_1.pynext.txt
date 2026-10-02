@@ -42,31 +42,42 @@ class X:
         def __init__(self, ready):
             self._calls = []
             self._ready = ready
+            self._started = False
             self._stopped = False
+            self._worker = None
             self._condition = threading.Condition()
-            self._worker = threading.Thread(target=self._run, daemon=False)
-            self._worker.isIdle = False
         def start(self):
-            self._worker.start()
+            with self._condition:
+                self._started = True
+                self._wake()
         def put(self, call, *args):
             with self._condition:
                 self._calls.append((call, args))
-                self._condition.notify()
+                self._wake()
         def stop(self):
             with self._condition:
                 self._stopped = True
                 self._condition.notify()
+        def _wake(self):
+            if self._started and not self._stopped and self._worker is None:
+                self._worker = threading.Thread(target=self._run, daemon=False)
+                self._worker.start()
+            if self._worker is not None:
+                self._worker.isIdle = False
+            self._condition.notify()
         def _run(self):
             while True:
                 with self._condition:
                     call = None
-                    while not self._stopped:
+                    while not self._stopped and call is None:
                         call = self._next()
                         self._worker.isIdle = call is None
-                        if call is not None or self._unreachable():
-                            break
-                        self._condition.wait(0.25)
-                    if self._stopped or call is None:
+                        if call is None and self._programIdle():
+                            self._worker = None
+                            return
+                        if call is None:
+                            self._condition.wait(0.25)
+                    if call is None:
                         return
                 call[0](*call[1])
         def _next(self):
@@ -74,12 +85,12 @@ class X:
                 if self._ready is None or self._ready(call[0]):
                     return self._calls.pop(i)
             return None
-        def _unreachable(self):
+        def _programIdle(self):
             ended = (threading.main_thread(), threading.current_thread())
             return not ended[0].is_alive() and all(t in ended or t.daemon or getattr(t, "isIdle", False)
                 for t in threading.enumerate())
 
-    def _canProcess(self, call):
+    def __canProcess(self, call):
         name = call.__name__
         return (self._sm is __class__.Sm.s0 and name in ("_ev0",)
             or self._sm is __class__.Sm.s1 and name in ("_timeouts1Tos2",)
@@ -87,7 +98,7 @@ class X:
             or self._sm is __class__.Sm.s3 and name in ("_ev3",))
 
     def __init__(self):
-        self._eventQueue = __class__.MessageQueue(self._canProcess)
+        self.__eventQueue = __class__.MessageQueue(self.__canProcess)
         self._sm = None
         self._smVisit = 0
         self._timeouts1Tos2Handler = None
@@ -95,7 +106,7 @@ class X:
         self.setSm(__class__.Sm.s0)
         if self._deleted:
             return
-        self._eventQueue.start()
+        self.__eventQueue.start()
 
     def getSmFullName(self):
         answer = str(self._sm)
@@ -115,7 +126,7 @@ class X:
         return wasEventProcessed
 
     def ev0(self):
-        self._eventQueue.put(self._ev0)
+        self.__eventQueue.put(self._ev0)
 
     def _timeouts1Tos2(self):
         if self._deleted:
@@ -131,7 +142,7 @@ class X:
         return wasEventProcessed
 
     def timeouts1Tos2(self):
-        self._eventQueue.put(self._timeouts1Tos2)
+        self.__eventQueue.put(self._timeouts1Tos2)
         return True
 
     def _ev2(self):
@@ -145,7 +156,7 @@ class X:
         return wasEventProcessed
 
     def ev2(self):
-        self._eventQueue.put(self._ev2)
+        self.__eventQueue.put(self._ev2)
 
     def _ev3(self):
         if self._deleted:
@@ -158,7 +169,7 @@ class X:
         return wasEventProcessed
 
     def ev3(self):
-        self._eventQueue.put(self._ev3)
+        self.__eventQueue.put(self._ev3)
 
     def exitSm(self):
         self._smVisit += 1
@@ -194,7 +205,7 @@ class X:
     def delete(self):
         self._deleted = True
         self.stopTimeouts1Tos2Handler()
-        self._eventQueue.stop()
+        self.__eventQueue.stop()
 
     def a(self):
         # line 19 "pooledStateMachine_timedTransition_1.ump"

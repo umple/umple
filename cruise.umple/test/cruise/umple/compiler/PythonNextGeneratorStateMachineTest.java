@@ -64,21 +64,28 @@ public class PythonNextGeneratorStateMachineTest
   }
 
   // As in Java, a queued machine's events put a call to the method doing their work in a queue,
-  // whose worker runs them in order; a pooled queue runs first a call the current state can process
+  // whose worker runs them in order; a pooled queue runs first a call the current state can process.
+  // Automatic transitions run at once, and each class of a hierarchy has its own queue.
   @Test
   public void queuedAndPooledMachinesProcessEventsOnAWorker() throws Exception
   {
     UmpleModel model = generate(
-      "class Waiter { queued sm { A { go(Integer n) -> B; } B {} } }\n" +
-      "class Pool { pooled sm { A { go -> B; } B { stop -> A; } } }\n");
+      "class Waiter { queued sm { A { go(Integer n) -> B; } B { -> C; } C {} } }\n" +
+      "class Pool { pooled sm { A { go -> B; } B { stop -> A; } } }\n" +
+      "class Sub { isA Pool; pooled sub { X { push -> Y; } Y {} } }\n");
     Assert.assertEquals(new ArrayList<Integer>(), errorCodes(model));
     String waiter = model.getGeneratedCode().get("Waiter");
-    Assert.assertTrue(waiter, waiter.contains("        self._eventQueue = __class__.MessageQueue(None)\n"));
+    Assert.assertTrue(waiter, waiter.contains("        self.__eventQueue = __class__.MessageQueue(None)\n"));
     Assert.assertTrue(waiter, waiter.contains("    def _go(self, n):\n"));
-    Assert.assertTrue(waiter, waiter.contains("    def go(self, n):\n        self._eventQueue.put(self._go, n)\n"));
-    Assert.assertTrue(waiter, waiter.contains("        self._eventQueue.stop()"));
+    Assert.assertTrue(waiter, waiter.contains("    def go(self, n):\n        self.__eventQueue.put(self._go, n)\n"));
+    Assert.assertTrue(waiter, waiter.contains("        self.__eventQueue.stop()"));
+    Assert.assertTrue(waiter, waiter.contains("    def __autotransition"));
+    Assert.assertFalse(waiter, waiter.contains("___autotransition"));
     String pool = model.getGeneratedCode().get("Pool");
-    Assert.assertTrue(pool, pool.contains("        self._eventQueue = __class__.MessageQueue(self._canProcess)\n"));
+    Assert.assertTrue(pool, pool.contains("        self.__eventQueue = __class__.MessageQueue(self.__canProcess)\n"));
+    String sub = model.getGeneratedCode().get("Sub");
+    Assert.assertTrue(sub, sub.contains("        self.__eventQueue = __class__.MessageQueue(self.__canProcess)\n"));
+    Assert.assertTrue(sub, sub.contains("    def __canProcess(self, call):\n"));
     Assert.assertTrue(pool, pool.contains("        return (self._sm is __class__.Sm.A and name in (\"_go\",)\n"
       + "            or self._sm is __class__.Sm.B and name in (\"_stop\",))"));
   }

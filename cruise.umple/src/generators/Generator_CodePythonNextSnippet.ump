@@ -26,6 +26,7 @@ class PythonNextGenerator
   {
     snippetImports.clear();
     PythonSnippetTranslator translator = PythonSnippetTranslator.forClass(this, uClass, parameters, isStatic);
+    translator.setInActivity(slot.startsWith("the do activity"));
     try
     {
       String python = isExpression ? translator.translateExpression(code) : translator.translateStatements(code);
@@ -186,7 +187,7 @@ class PythonSnippetTranslator
   // Names the translation itself uses, or a constraint in the same method (len, Fraction), which a
   // snippet's locals therefore cannot keep.
   private static final List<String> TRANSLATION_NAMES = Arrays.asList("self", "str", "int", "float", "print", "math", "RuntimeError",
-    "len", "Fraction");
+    "len", "Fraction", "time", "random", "abs", "max", "min", "thread");
 
   // Java's numeric literals, which model values share: underscores only between digits.
   private static final String DIGITS = "[0-9](?:[0-9_]*[0-9])?";
@@ -210,6 +211,8 @@ class PythonSnippetTranslator
   private boolean classBody;
   // A class value evaluated once the class exists, at module level, rather than in its body
   private boolean afterClass;
+  // Code of a do activity, which runs with its worker, thread, in scope
+  private boolean inActivity;
   private String source;
   private List<PythonSnippetNode> tokens;
   private List<PythonSnippetNode> comments;
@@ -245,6 +248,11 @@ class PythonSnippetTranslator
       }
     }
     return translator;
+  }
+
+  public void setInActivity(boolean inActivity)
+  {
+    this.inActivity = inActivity;
   }
 
   // For a class value evaluated once the class exists (PythonNextGenerator.classValue)
@@ -1713,6 +1721,84 @@ class PythonSnippetTranslator
     throw fail("'." + name + "' cannot be used on " + describeKind(kind) + (kind.startsWith("list:") ? " (arrays are not supported)" : ""));
   }
 
+  // Thread, Math or System as Java's classes, when the snippet does not name something of its own so
+  private boolean isLibraryClass(PythonSnippetNode n)
+  {
+    return n != null && n.getType().equals("name") && Arrays.asList("Thread", "Math", "System").contains(n.getText())
+      && lookupVariable(n.getText()) == null && findField(uClass, n.getText()) == null && resolveType(n.getText(), uClass) == null;
+  }
+
+  // The Java library calls untagged code may make, with Java's results: Thread.sleep, which in a do
+  // activity ends the activity when it is cancelled, as Java's InterruptedException does;
+  // System.currentTimeMillis; and Math's abs, max, min, sqrt, pow, floor, ceil, round and random
+  private PythonSnippetNode emitLibraryCall(PythonSnippetNode n, String library, String name, List<PythonSnippetNode> values)
+  {
+    String call = library + "." + name + "/" + values.size();
+    if (!LIBRARY_CALLS.contains(call))
+    {
+      throw fail(library + "." + name + "(...) is a Java library call; the ones translated are Thread.sleep,"
+        + " System.currentTimeMillis and Math's abs, max, min, sqrt, pow, floor, ceil, round and random");
+    }
+    for (PythonSnippetNode value : values)
+    {
+      if (!isInteger(value.kind) && !value.kind.equals("float") && !value.kind.equals("unknown"))
+      {
+        throw fail(library + "." + name + "(...) takes numbers");
+      }
+    }
+    String first = values.isEmpty() ? null : values.get(0).code;
+    boolean floating = false;
+    boolean integral = true;
+    for (PythonSnippetNode value : values)
+    {
+      floating = floating || value.kind.equals("float");
+      integral = integral && isInteger(value.kind);
+    }
+    switch (call)
+    {
+      case "Thread.sleep/1":
+        String seconds = wrap(values.get(0), PRODUCT) + " / 1000";
+        return inActivity
+          ? set(n, "if thread.cancelled.wait(" + seconds + "): return", "void", ATOM, false, false)
+          : set(n, module("time") + ".sleep(" + seconds + ")", "void", ATOM, false, false);
+      case "System.currentTimeMillis/0":
+        return set(n, "int(" + module("time") + ".time() * 1000)", "long", ATOM, false, false);
+      case "Math.abs/1":
+        requireBuiltin("abs");
+        return set(n, "abs(" + first + ")", values.get(0).kind, ATOM, false, false);
+      case "Math.max/2": case "Math.min/2":
+        // Java widens both to the wider type, so a double result stays a double
+        requireBuiltin(name);
+        String extreme = name + "(" + argumentList(values) + ")";
+        return floating ? set(n, "float(" + extreme + ")", "float", ATOM, false, false)
+          : set(n, extreme, integral ? promotedInteger(values.get(0).kind, values.get(1).kind) : "unknown", ATOM, false, false);
+      case "Math.sqrt/1": case "Math.pow/2":
+        return set(n, module("math") + "." + name + "(" + argumentList(values) + ")", "float", ATOM, false, false);
+      case "Math.floor/1": case "Math.ceil/1":
+        return set(n, "float(" + module("math") + "." + name + "(" + first + "))", "float", ATOM, false, false);
+      case "Math.round/1":
+        return set(n, module("math") + ".floor(" + wrap(values.get(0), SUM) + " + 0.5)", "long", ATOM, false, false);
+      default: // Math.random/0
+        return set(n, module("random") + ".random()", "float", ATOM, false, false);
+    }
+  }
+
+  private static final List<String> LIBRARY_CALLS = Arrays.asList("Thread.sleep/1", "System.currentTimeMillis/0", "Math.abs/1",
+    "Math.max/2", "Math.min/2", "Math.sqrt/1", "Math.pow/2", "Math.floor/1", "Math.ceil/1", "Math.round/1", "Math.random/0");
+
+  // A standard module the translation calls, imported as the generated code's other standard modules
+  // are, under an alias when the module defines the name itself
+  private String module(String name)
+  {
+    String alias = gen.standardAlias(name);
+    requireBuiltin(alias);
+    if (!moduleImports.contains(PythonNextGenerator.standardImport(name, null, alias)))
+    {
+      moduleImports.add(PythonNextGenerator.standardImport(name, null, alias));
+    }
+    return alias;
+  }
+
   // System.out or System.err, which only the print calls can use.
   private boolean isSystemStream(PythonSnippetNode n)
   {
@@ -1753,6 +1839,10 @@ class PythonSnippetTranslator
       }
       requireObject(name + "(...)");
       return set(n, "self." + name + "(" + argumentList(values) + ")", method[0], ATOM, false, false);
+    }
+    if (isLibraryClass(receiver))
+    {
+      return emitLibraryCall(n, receiver.getText(), name, emitArguments(arguments, null));
     }
     List<PythonSnippetNode> values = emitArguments(arguments, receiver);
     PythonSnippetNode target = values.remove(0);
@@ -2179,12 +2269,7 @@ class PythonSnippetTranslator
         {
           return plain(n, "/", PRODUCT, left, right, "float");
         }
-        // Imported as the generated code's other standard modules are, under an alias when the
-        // module defines the name math itself
-        String math = gen.standardAlias("math");
-        requireBuiltin(math);
-        moduleImports.add(PythonNextGenerator.standardImport("math", null, math));
-        return set(n, math + ".fmod(" + left.code + ", " + right.code + ")", "float", ATOM, false, false);
+        return set(n, module("math") + ".fmod(" + left.code + ", " + right.code + ")", "float", ATOM, false, false);
       case "*": return plain(n, "*", PRODUCT, left, right, kind);
       case "+": case "-": return plain(n, op, SUM, left, right, kind);
       case "<<": case ">>": return plain(n, op, SHIFT, left, shiftDistance(right, lk), lk);

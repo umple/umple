@@ -280,8 +280,8 @@ class UmpleToPythonNext {
   }
   int eventStart = realSb.length();
   // In a queued or pooled machine the event's method puts a call to the method doing its work in the
-  // queue, as Java's does; the unspecified event is the other events' fallback and runs at once
-  String eventQueue = e.isUnspecified() ? null : gen.eventQueue(uClass);
+  // queue, as Java's does. The unspecified event and automatic transitions run at once.
+  String eventQueue = e.isUnspecified() || e.isAutoTransition() ? null : gen.eventQueue(uClass);
   String eventMethod = implementations.get(implementations.size() - 1);
   String worker = eventQueue == null ? eventMethod : gen.queuedName(uClass, methodName);
 #>>

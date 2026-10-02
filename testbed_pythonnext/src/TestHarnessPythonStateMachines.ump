@@ -1167,3 +1167,56 @@ class SmQueuedTimer
 {
   queued sm { A { after(0.1) -> B; } B { } }
 }
+
+// A parent's and a subclass's queued methods each have their own queue
+class SmQueuedBase
+{
+  String log = "";
+  queued void base() Python { self.setLog(self.getLog() + "b") }
+}
+
+class SmQueuedChild
+{
+  isA SmQueuedBase;
+  queued void child() Python { self.setLog(self.getLog() + "c") }
+}
+
+// An automatic transition runs at once, before an event already waiting in the queue
+class SmQueuedAuto
+{
+  queued sm {
+    S { go / Python { import time; time.sleep(0.1) } -> T; }
+    T { -> U; }
+    U { finish -> V; }
+    V { }
+  }
+}
+
+class SmPooledAuto
+{
+  pooled sm {
+    S { go / Python { import time; time.sleep(0.1) } -> T; }
+    T { -> U; }
+    U { finish -> V; }
+    V { }
+  }
+  pooled other { X { finish -> Y; } Y { } }
+}
+
+// Objects sending each other queued calls once the main thread has ended
+class SmQueuedActor
+{
+  SmQueuedActor peer = null;
+  queued void ping(int n) Python {
+    print("ping", n, flush=True)
+    if n > 0:
+        self.getPeer().ping(n - 1)
+  }
+}
+
+// Thread.sleep in a do activity ends the activity once it is cancelled, as Java's interrupt does
+class SmSleepingActivity
+{
+  Integer ticks = 0;
+  sm { On { do { while (true) { Thread.sleep(20); ticks = ticks + 1; } } off -> Off; } Off { } }
+}
