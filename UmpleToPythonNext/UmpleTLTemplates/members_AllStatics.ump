@@ -1,5 +1,4 @@
 class UmpleToPythonNext {
-    // Class-level members: constants, autounique counters, unique registries and the singleton.
     members_AllStatics <<!<</*members_AllStatics*/>><<#
 {
   int start = realSb.length();

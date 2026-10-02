@@ -42,11 +42,10 @@ mixset Trait {
         }
       } 
 
-    // Python has no statement brackets, so the trait's code goes in as lines at the indentation of
-    // the statement the keyword stands for, re-indented as the Python generator re-indents native
-    // code, and what follows the keyword on its line starts a new line. The class's code is first
-    // brought to a known indentation, which becomes its first line's. null when the keyword is not a
-    // statement of the class's code (only text in a string or a comment).
+    // Python has no statement brackets, so the trait's code goes in as lines at the indentation of the
+    // standalone statement the keyword stands for, and text after the keyword starts a new line. The
+    // class's code is first re-indented to column zero, which becomes its first-line indentation. null
+    // when the keyword occurs only in a string or comment.
     private String pythonTraitCode(String keyword, CodeBlock cBlock, String trait){
       String code = PythonSource.reindent(codes.get("Python"), getFirstLineIndent("Python"), "").substring(1);
       int at = PythonSource.codeAt(code, keyword);

@@ -9,9 +9,8 @@ use constructor_AssociationAssignDefault.ump;
 
 class UmpleToPythonNext {
     // Association part of the constructor, chosen as in Java's constructor_DeclareDefault. The fields
-    // themselves already exist (constructor_Declare_All creates them before the parent constructor
-    // runs); these leaves link the constructor's arguments. Every emitted line starts with a newline
-    // and eight spaces.
+    // already exist (constructor_Declare_All creates them before the parent constructor runs), so these
+    // leaves only link the arguments. Each emitted line starts with a newline and eight spaces.
     constructor_Association_All <<!<</*constructor_Association_All*/>><<#
 {
   // With several one ends whose other ends are sorted, the fields are set directly first so each

@@ -45,7 +45,12 @@ class DockerExecution {
         }
         const pathArr=path.split('/');
 
-        if(this.language=="Python" || this.language=="PythonNext"){
+        if(this.language=="PythonNext"){
+            // PythonNext modules import each other by package from the generated root, the first folder
+            const [root, ...packages] = pathArr;
+            return `-m ${root || "."} ${[...packages, this.mainFile].join('.')}`;
+        }
+        if(this.language=="Python"){
             return path ? `${path}/${this.mainFile}.py` : `${this.mainFile}.py`;
         }
         return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;    

@@ -1,7 +1,6 @@
 class UmpleToPythonNext {
     // A composition's many end whose objects may lose their owner: each is unlinked through its own
-    // setter and then removed here if still present. Java names the list with the singular role
-    // (a list that does not exist); this uses the end's own list.
+    // setter, then removed here if still present.
     delete_OptionalOneFromMany_comp <<!<</*delete_OptionalOneFromMany_comp*/>>
         while len(<<=field>>) > 0:
             <<=parameter>> = <<=field>>[0]

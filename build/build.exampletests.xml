@@ -328,6 +328,8 @@
       <exclude name="E2*.ump" />
       <exclude name="E3*.ump" />
       <exclude name="E4*.ump" />      
+      <!-- PythonNext's error examples: their generate PythonNext directive reports the error -->
+      <exclude name="E921*.ump" />
       <exclude name="ExtendedDistributedExample3.ump"/>
       <exclude name="WE1xxIdentifierInvalid1.ump" />
       <exclude name="WE1xxIdentifierInvalid3.ump" />
@@ -456,6 +458,8 @@
       <exclude name="WE1xxIdentifierInvalid3.ump"/>
       <exclude name="E112DuplicateConstantsinInterface1.ump"/>
       <exclude name="E081InvalidMultivaluedAttributeAssignment1.ump"/>
+      <!-- PythonNext's error examples: their generate PythonNext directive reports the error -->
+      <exclude name="E921*.ump" />
       <exclude name="E095DuplicateEnumerations1.ump"/>
       <exclude name="E026DuplicateKeyItem1.ump"/>
       <exclude name="E092ClassIsNotSubclassConstraint1.ump"/>

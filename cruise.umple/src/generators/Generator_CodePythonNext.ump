@@ -22,14 +22,12 @@ class PythonNextGenerator
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.pythonnext.*;
 
-  // Generated Python keeps the public method names of the Java output, so public names come from
-  // Java's naming rules (glossary plurals, role names, event qualification). This generator is used
-  // for names only and is never prepared.
+  // Public names follow Java's rules (glossary plurals, role names, event qualification) so the
+  // Python API matches Java's. Used for names only; never prepared.
   public JavaGenerator names = new JavaGenerator();
 
-  // Standard-library modules a class without a namespace may not be named like: those the generated
-  // code imports, which the class's module would hide, and those Python has already loaded when the
-  // program starts, which an import of the class's module would find instead.
+  // Standard modules a class module or top-level package must not be named after: those generated
+  // code imports, and those Python loads at startup, which an import would find instead.
   private static final List<String> STANDARD_MODULES = Arrays.asList("abc", "enum", "threading", "datetime", "sys",
     "math", "fractions", "codecs", "collections", "copyreg", "encodings", "functools", "genericpath", "io", "keyword",
     "ntpath", "operator", "os", "posixpath", "re", "reprlib", "site", "stat", "types", "zipimport");
@@ -40,13 +38,12 @@ class PythonNextGenerator
     "isinstance", "len", "list", "min", "next", "print", "range", "set", "str", "super", "tuple", "type", "classmethod",
     "staticmethod", "NotImplemented", "BaseException", "RuntimeError", "TypeError");
 
-  // Where the messages of the class being generated start (see report); -1 outside generation.
+  // Index of the current class's first diagnostic, for report()'s deduplication; -1 outside generation.
   private int firstMessageOfClass = -1;
 
   // Imports collected while one class is generated: module-level lines, in first-use order.
   private Set<String> moduleImports = new LinkedHashSet<String>();
 
-  // Classes prepared in the current run.
   private Set<UmpleClass> preparedClasses = new HashSet<UmpleClass>();
 
   // Names the module being generated defines at module level or in a class body; a standard-library
@@ -103,8 +100,8 @@ class PythonNextGenerator
     }
   }
 
-  // Classes are prepared after their parents, whose constructor parameters they extend, and once per
-  // run. A generated class left by an earlier run does not count: postpare undid that run's changes.
+  // Prepares a class once per run, after its parent, whose constructor parameters it extends. A
+  // GeneratedClass left by an earlier run does not count, as postpare undid that run.
   private void prepare(UmpleClass aClass)
   {
     if (!preparedClasses.add(aClass))
@@ -126,8 +123,7 @@ class PythonNextGenerator
     prepareStateMachines(aClass);
   }
 
-  // Marks the ends of associations that specialize another, which Python reports as unsupported
-  // (Java's generator marks them when it runs, which a Python-only run does not)
+  // Marks specializing association ends for validation; otherwise only Java's generator marks them.
   private static void markSpecializations(UmpleClass aClass)
   {
     for (AssociationVariable av : aClass.getAssociationVariables())
@@ -338,7 +334,6 @@ class PythonNextGenerator
     {
       return; // generated inside its outer class
     }
-    // Diagnostics are told apart per class, from its first check on (see report)
     firstMessageOfClass = getModel().getLastResult().numberOfErrorMessages();
     if (!canGenerate(element))
     {
@@ -380,10 +375,8 @@ class PythonNextGenerator
     File directory = new File(path);
     directory.mkdirs();
     File file = new File(directory, element.getName() + ".py");
-    // The platform's charset, which the model was read with, as the other generators write: a UTF-8
-    // model's bytes reach the module as they were, for Python to read as UTF-8 (on a Cp1252 platform
-    // the five bytes Cp1252 does not define are lost, as for every target)
-    try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file))))
+    // Python reads source files as UTF-8, whatever the platform's charset
+    try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), java.nio.charset.StandardCharsets.UTF_8)))
     {
       out.write(code);
     }
@@ -397,16 +390,20 @@ class PythonNextGenerator
   // Reports model elements Python cannot represent; the element is then not generated.
   private boolean canGenerate(UmpleElement element)
   {
-    if (element.getPackageName().length() == 0 && STANDARD_MODULES.contains(element.getName()))
+    // The first part of the module's name is what Python resolves first
+    String kind = element instanceof UmpleInterface ? "interface " : "class ";
+    if (element.getPackageName().isEmpty() ? STANDARD_MODULES.contains(element.getName())
+      : STANDARD_MODULES.contains(element.getPackageName().split("\\.")[0]))
     {
-      error(9213, element, (element instanceof UmpleInterface ? "Interface " : "Class ") + element.getName());
+      error(9213, element, element.getPackageName().isEmpty() ? Character.toUpperCase(kind.charAt(0)) + kind.substring(1) + element.getName()
+        : "The namespace " + element.getPackageName() + " of " + kind + element.getName());
       return false;
     }
     for (String segment : element.getPackageName().isEmpty() ? new String[0] : element.getPackageName().split("\\.", -1))
     {
       if (!segment.matches("[A-Za-z_][A-Za-z0-9_]*") || PYTHON_KEYWORDS.contains(segment))
       {
-        error(9217, element, element.getPackageName(), (element instanceof UmpleInterface ? "interface " : "class ") + element.getName());
+        error(9217, element, element.getPackageName(), kind + element.getName());
         return false;
       }
     }
@@ -465,8 +462,8 @@ class PythonNextGenerator
         return "Association specialization";
       }
     }
-    // Python runs a nested class statement inside its outer class's body, where only a sibling
-    // defined before it can be named; another class of the same module is not bound yet.
+    // Python runs a nested class statement inside its outer class's body, where the only classes of
+    // the same module it can name are its siblings.
     UmpleClass parent = uClass.getExtendsClass();
     if (uClass.hasOuterClass() && parent != null && outermost(parent) == outermost(uClass) && parent.getOuterClass() != uClass.getOuterClass())
     {
@@ -506,8 +503,8 @@ class PythonNextGenerator
     report(new ErrorMessage(code, position, arguments));
   }
 
-  // Adds a diagnostic unless the class being generated reported the same one already: some templates
-  // render code twice (to collect its local names, then to emit it), and the user hears about it once.
+  // Skips a diagnostic the current class already reported: some templates render a body twice (to
+  // collect its local names, then to emit it).
   public void report(ErrorMessage message)
   {
     List<ErrorMessage> all = getModel().getLastResult().getErrorMessages();
@@ -595,16 +592,14 @@ class PythonNextGenerator
     return javaNames().translate(keyName, activity);
   }
 
-  // Python's keywords (keyword.kwlist). Umple admits some of them as names, Java keywords among them
-  // (an event named break).
+  // Python's keywords (keyword.kwlist), some of which Umple accepts as names (an event named break).
   private static final List<String> PYTHON_KEYWORDS = Arrays.asList("False", "None", "True", "and", "as", "assert",
     "async", "await", "break", "class", "continue", "def", "del", "elif", "else", "except", "finally", "for", "from",
     "global", "if", "import", "in", "is", "lambda", "nonlocal", "not", "or", "pass", "raise", "return", "try", "while",
     "with", "yield");
 
-  // A Python keyword cannot name a class, interface, constant, enumeration or enumeration value as
-  // generated (enumerations in PascalCase, so the value none becomes None). Nested classes are
-  // generated inside their outer class. Reports each such name; false when one is found.
+  // Reports each class, interface, constant, enumeration or enumeration value, nested classes included,
+  // whose generated name is a Python keyword (enumerations are PascalCase, so none becomes None).
   private boolean checkKeywordNames(UmpleClassifier element)
   {
     boolean ok = reportKeyword(element, element instanceof UmpleInterface ? "Interface " : "Class ", element.getName());
@@ -710,8 +705,8 @@ class PythonNextGenerator
     return PYTHON_KEYWORDS.contains(name);
   }
 
-  // A method parameter's Python name: "in" stays "input" as in earlier Python output, and other
-  // Python keywords get a trailing underscore.
+  // A parameter's Python name: in becomes input, as in the original Python generator; other keywords
+  // get a trailing underscore.
   public static String parameterName(String name)
   {
     if ("in".equals(name))
@@ -905,7 +900,6 @@ class PythonNextGenerator
     return text.toString();
   }
 
-  // A Python string literal with the given value.
   public static String pythonString(String text)
   {
     StringBuilder out = new StringBuilder("\"");
@@ -1007,7 +1001,6 @@ class PythonNextGenerator
     return inherited;
   }
 
-  // The instance field that stores an attribute, association end or state machine.
   public String field(UmpleVariable av)
   {
     return "self._" + av.getName();
@@ -1047,10 +1040,9 @@ class PythonNextGenerator
     }
   }
 
-  // A value written in the model as Python: a literal when it is one, otherwise the snippet
-  // translated as an expression. A snippet that cannot be translated is reported (9211) at its own
-  // position and gives None, so the class is reported and not written. In a class body (isStatic)
-  // the imports the expression needs go to the module; in a method they are returned in imports.
+  // A model value as Python: a literal, or the snippet translated as an expression. An untranslatable
+  // snippet is reported (9211) and gives None. Imports go to the module for a class-body value
+  // (isStatic), otherwise into imports.
   private String expression(UmpleClass uClass, String type, String code, boolean isStatic, Position position, String slot, List<String> imports)
   {
     String python = literal(type, code);
@@ -1085,8 +1077,6 @@ class PythonNextGenerator
     }
   }
 
-  // The lines of a method that use an attribute's model value: the imports the value needs, then
-  // prefix + value + suffix.
   public List<String> valueLines(UmpleClass uClass, String prefix, Attribute av, String suffix)
   {
     List<String> lines = new ArrayList<String>();
@@ -1095,7 +1085,6 @@ class PythonNextGenerator
     return lines;
   }
 
-  // The same for a list attribute's initial items (the model keeps {"a", "b"} as "a", "b").
   public List<String> listLines(UmpleClass uClass, String prefix, Attribute av)
   {
     List<String> lines = new ArrayList<String>();
@@ -1110,9 +1099,7 @@ class PythonNextGenerator
     return lines;
   }
 
-  // The lines of a derived attribute's getter: its Python expression when one is written, else its
-  // untagged expression translated. Code only for other languages is reported (9211), as the getter
-  // would have no value.
+  // Code only for other languages is reported (9211), since a derived getter must return a value.
   public List<String> derivedLines(UmpleClass uClass, String prefix, Attribute av)
   {
     List<String> lines = new ArrayList<String>();
@@ -1155,7 +1142,7 @@ class PythonNextGenerator
     return expression(uClass, aConstant.getType(), aConstant.getValue(), true, null, "the constant " + aConstant.getName(), null);
   }
 
-  // An interface constant has no class to resolve names in, so it must be a literal.
+  // Only a literal is supported as an interface constant's value.
   public String interfaceValue(UmpleInterface anInterface, Constant aConstant)
   {
     String python = literal(aConstant.getType(), aConstant.getValue());
@@ -1185,9 +1172,8 @@ class PythonNextGenerator
     return injections(uClass, type, methodName, Arrays.asList(parameters), false, "        ");
   }
 
-  // The body of a generated accessor: its before-injections, then the value it returns. With
-  // after-injections the value is kept in local (Java's name for it, which injected code may use)
-  // until they have run.
+  // With after-injections, the returned value is held in local (Java's name for it, which injected
+  // code may use) until they have run.
   public String accessorBody(UmpleClass uClass, String methodName, String local, String value, MethodParameter... parameters)
   {
     return accessorBody(uClass, methodName, local, value, false, parameters);
@@ -1210,10 +1196,9 @@ class PythonNextGenerator
     return before + "\n        " + local + " = " + value + after + "\n        return " + local;
   }
 
-  // An override of an inherited generated method that adds this class's guards and injections
-  // around the parent's method, as Java's *_subclass templates do. A mutator returns False when a
-  // guard or the parent refuses; an accessor returns the parent's value. "" when there is nothing
-  // to add.
+  // Overrides an inherited generated method to add this class's guards and injections, as Java's
+  // *_subclass templates do; "" when there are none. A refused mutation returns False and skips the
+  // after-injections.
   public String inheritedOverride(UmpleClass uClass, String methodName, String guards, boolean mutator, String local,
     MethodParameter... parameters)
   {
@@ -1247,7 +1232,6 @@ class PythonNextGenerator
     return code.toString();
   }
 
-  // The class invariants that mention an attribute or association end.
   public List<ConstraintTree> invariantsOn(UmpleClass uClass, UmpleVariable av)
   {
     List<ConstraintTree> invariants = new ArrayList<ConstraintTree>();
@@ -1377,19 +1361,18 @@ class PythonNextGenerator
     return SIMPLE_TYPES.contains(type);
   }
 
-  // True when the class has a toString method written in the model or in its extra code.
-  public static boolean definesToString(UmpleClass uClass)
+  public boolean definesToString(UmpleClass uClass)
   {
     return definesMethod(uClass, "toString");
   }
 
-  // True when the class writes its own __str__, which then replaces the generated one.
-  public static boolean definesStr(UmpleClass uClass)
+  public boolean definesStr(UmpleClass uClass)
   {
     return definesMethod(uClass, "__str__");
   }
 
-  private static boolean definesMethod(UmpleClass uClass, String name)
+  // A method of the model, or a def at member level of the extra code (not nested, not in a string)
+  private boolean definesMethod(UmpleClass uClass, String name)
   {
     if (uClass == null)
     {
@@ -1402,7 +1385,16 @@ class PythonNextGenerator
         return true;
       }
     }
-    return uClass.getExtraCode() != null && uClass.getExtraCode().matches("(?s)(.*\\n)?\\s*def\\s+" + name + "\\s*\\(.*");
+    String[] lines = classExtraCode(uClass).split("\n", -1);
+    boolean[] insideString = PythonSource.linesInsideStrings(Arrays.asList(lines));
+    for (int i = 0; i < lines.length; i++)
+    {
+      if (!insideString[i] && lines[i].matches("    def " + name + "\\s*\\(.*"))
+      {
+        return true;
+      }
+    }
+    return false;
   }
 
   public static boolean hasAbstractMethod(UmpleClass uClass)
@@ -1526,6 +1518,14 @@ class PythonNextGenerator
       items.add(literal(av.getType(), item));
     }
     return "[" + String.join(", ", items) + "]";
+  }
+
+  // docstring with the requirements the element implements, as Java's Javadoc has them
+  public String docstring(List<Comment> comments, List<ReqImplementation> requirements, String indent)
+  {
+    List<Comment> all = new ArrayList<Comment>(comments);
+    all.addAll(Requirement.convertToComment(requirements, getModel()));
+    return docstring(all, indent);
   }
 
   // The model comments of an element as a docstring at the given indentation, starting on a new
@@ -1668,11 +1668,10 @@ class PythonNextGenerator
     }
   }
 
-  // How a method of uClass names a model class, and the line that makes the name available inside the
-  // method (null when none is needed). A nested class lives in the module of its outermost class. When
-  // one of the method's local names hides that class, it is bound under another name: imported from
-  // another module, or taken from this module's globals (importing the module a script runs as would
-  // load a second copy of its classes).
+  // How a method of uClass names a model class, and the line binding that name, or null. A nested
+  // class lives in its outermost class's module. A module hidden by a local name gets an alias:
+  // imported, or taken from globals() for this module, since importing a module that runs as a
+  // script loads a second copy of it.
   public String[] classUse(UmpleClass uClass, String className, String localNames)
   {
     UmpleClassifier target = getModel().getUmpleClass(className);
@@ -1721,9 +1720,8 @@ class PythonNextGenerator
     "ValueError", "TypeError", "KeyError", "IndexError", "LookupError", "ArithmeticError", "OSError", "dict", "list",
     "set", "tuple", "str", "int", "float");
 
-  // The import of a base class or interface, or null when there is nothing to import. An external
-  // class is not generated: a Python built-in (such as Exception) needs no import, anything else is
-  // expected as a module of its namespace, as generated classes are.
+  // The import of a base class or interface, or null for an external Python built-in such as
+  // Exception. Other external classes are expected as modules of their namespace, like generated ones.
   private String baseImport(UmpleClassifier base)
   {
     return "external".equals(base.getModifier()) && BUILTIN_CLASSES.contains(base.getName()) ? null : importOf(base);
@@ -1738,7 +1736,6 @@ class PythonNextGenerator
     return "from " + module + " import " + name;
   }
 
-  // Module-level imports gathered so far, each on its own line after a blank line, or nothing.
   public String moduleImports()
   {
     StringBuilder text = new StringBuilder();
@@ -1761,9 +1758,8 @@ class PythonNextGenerator
     }
   }
 
-  // Completes a generated module: puts the collected imports where the placeholder is, starts the
-  // class body right after the class line, gives an empty body a pass statement, and ends the file
-  // with exactly one newline.
+  // Completes a module: the collected imports replace the placeholder, the class body starts right
+  // after the class line, an empty body gets pass, and the file ends with one newline.
   public void finishClass(StringBuilder code, String placeholder)
   {
     unixLines(code);
@@ -1864,7 +1860,6 @@ class PythonNextGenerator
       || (aClass.getExtendsClass() != null && providesAbc(aClass.getExtendsClass()));
   }
 
-  // True when another direct base of aClass already provides the interface.
   private boolean isProvidedBy(UmpleInterface anInterface, UmpleClass aClass)
   {
     for (UmpleInterface other : aClass.getParentInterface())
@@ -1899,9 +1894,15 @@ class PythonNextGenerator
 
   private static boolean extendsInterface(UmpleInterface child, UmpleInterface ancestor)
   {
+    return extendsInterface(child, ancestor, new HashSet<UmpleInterface>());
+  }
+
+  // seen keeps a hierarchy where several paths meet from being walked once per path
+  private static boolean extendsInterface(UmpleInterface child, UmpleInterface ancestor, Set<UmpleInterface> seen)
+  {
     for (UmpleInterface parent : child.getExtendsInterface())
     {
-      if (parent == ancestor || extendsInterface(parent, ancestor))
+      if (parent == ancestor || seen.add(parent) && extendsInterface(parent, ancestor, seen))
       {
         return true;
       }

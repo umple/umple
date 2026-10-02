@@ -1,5 +1,4 @@
 class UmpleToPythonNext {
-    // A defaulted attribute: reset puts the default value back.
     attribute_SetDefaulted <<!<</*attribute_SetDefaulted*/>>
 
     def <<=gen.translate("setMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("setMethod", av), setterParameter)>><<#

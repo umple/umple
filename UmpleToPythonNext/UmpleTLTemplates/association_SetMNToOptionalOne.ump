@@ -1,11 +1,10 @@
 use association_Guards.ump;
 
 class UmpleToPythonNext {
-    // Replaces the objects of an m..n or m..* end whose other end is optional one. Every check comes
-    // before any change: the count, duplicates (by identity), that each old owner keeps its lower
-    // bound, and that no frozen key member would change (association_LinkedKeyGuard). Objects left
-    // out lose their owner; the other end's field is written directly, as Java does through
-    // reflection.
+    // Replaces the objects of an m..n or m..* end whose other end is optional one; objects left out
+    // lose their owner. Every check comes first: count, duplicates (by identity), old owners' lower
+    // bounds, and frozen key members (association_LinkedKeyGuard). The other end's field is written
+    // directly, as Java does through reflection.
     association_SetMNToOptionalOne <<!<</*association_SetMNToOptionalOne*/>><<#
   String checkNew = gen.translate("parameterCheckNewMany", av);
   String existing = gen.relatedTranslate("parameterExisting", av);

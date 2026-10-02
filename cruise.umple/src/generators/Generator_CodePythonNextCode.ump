@@ -19,15 +19,15 @@ class PythonNextGenerator
 
   // Classes whose overload dispatchers call the argument binding helper, which class_MethodDeclaration emits.
   private Set<UmpleClass> classesNeedingBinder = new HashSet<UmpleClass>();
-  // The dispatchers overloadDispatcher wrote, by "Class.method", and the implementations and parameters
-  // of each, by its text, so that mergeSameNameMethods can join them and methods of the same name.
+  // Dispatchers overloadDispatcher wrote, keyed by "Class.method", and each one's implementations and
+  // parameters, keyed by its text, for mergeSameNameMethods.
   private Map<String, List<String>> dispatcherTexts = new HashMap<String, List<String>>();
   private Map<String, List<String>> dispatcherImplementations = new HashMap<String, List<String>>();
   private Map<String, List<List<MethodParameter>>> dispatcherParameters = new HashMap<String, List<List<MethodParameter>>>();
-  // The numbered names handed to each overload group, by "Class.method/group", so that a generated
-  // group and a user group of one name (a factory add and user overloads of add) never share one.
+  // Numbered implementation names per "Class.method/group", so a generated group and a user group of
+  // one name (a factory add and user overloads of add) never share one.
   private Map<String, List<String>> overloadGroups = new HashMap<String, List<String>>();
-  // The methods written in the model as emitted for each class: their text and parameters (emitted).
+  // Emitted model-method text mapped to its parameters, per class (see emitted).
   private Map<String, Map<String, List<MethodParameter>>> emittedMethods = new HashMap<String, Map<String, List<MethodParameter>>>();
 
   //------------------------
@@ -89,8 +89,34 @@ class PythonNextGenerator
   // Native code
   //------------------------
 
-  // Native Python code for a code slot, re-indented to indent and, when where it starts in the model is
-  // known, bracketed by the source markers that map tracebacks back to the model. An empty slot is pass.
+  // nativeCode for the body of a function, preceded by imports of the model classes the owner lists
+  // with depend that the code refers to: Java imports them for the whole class, Python where it uses them
+  public String functionCode(String code, String firstLineIndent, String indent, Position position, UmpleClassifier owner)
+  {
+    StringBuilder imports = new StringBuilder();
+    if (code != null)
+    {
+      List<UmpleClassifier> classifiers = new ArrayList<UmpleClassifier>(getModel().getUmpleClasses());
+      classifiers.addAll(getModel().getUmpleInterfaces());
+      for (Depend depend : owner.getDepends())
+      {
+        for (UmpleClassifier target : classifiers)
+        {
+          String qualified = target.getPackageName().isEmpty() ? target.getName() : target.getPackageName() + "." + target.getName();
+          boolean named = depend.getName().equals(qualified)
+            || depend.getName().endsWith(".*") && depend.getName().equals(target.getPackageName() + ".*");
+          if (named && target != owner && PythonSource.codeAt(code, target.getName()) >= 0)
+          {
+            imports.append("\n").append(indent).append(importOf(target));
+          }
+        }
+      }
+    }
+    return imports + nativeCode(code, firstLineIndent, indent, position, owner);
+  }
+
+  // Native Python for a code slot, re-indented to indent and, when its model position is known,
+  // bracketed by the source markers that map tracebacks to the model. An empty slot is pass.
   public String nativeCode(String code, String firstLineIndent, String indent, Position position, UmpleClassifier owner)
   {
     if (code == null || code.trim().isEmpty())
@@ -110,9 +136,9 @@ class PythonNextGenerator
   // Member names
   //------------------------
 
-  // How the methods this file emits name their declaring class: Python's __class__, which is always
-  // the class whose body defines the method. Unlike the class's name it cannot be hidden by a
-  // parameter, needs no import, and is never a subclass, so calls through it are not virtual.
+  // How emitted methods name their declaring class. Unlike the class's name, __class__ cannot be
+  // hidden by a parameter, needs no import, and is never a subclass, so calls through it are not
+  // virtual.
   private static final String DECLARING_CLASS = "__class__";
 
   // A generator-owned member name for uClass: base unless a modelled member of the class or its
@@ -223,10 +249,8 @@ class PythonNextGenerator
     report(new ErrorMessage(code, position == null ? new Position("", 0, 0, 0) : position, arguments));
   }
 
-  // Reports what Python cannot generate yet among the methods and injections of a class and its inner
-  // classes: error 9210 for emit templates, custom constructors, synchronized and queued methods,
-  // overloads mixing static and instance methods, and around and labelled injections, and error 9214
-  // for a parameter named self. Only code that Python would use counts. Returns false when the class
+  // Reports methods and injections of a class and its inner classes that Python cannot generate
+  // (9210) or whose signatures it rejects. Only code Python would use counts. False when the class
   // must not be generated.
   public boolean checkUserCode(UmpleClass uClass)
   {
@@ -270,7 +294,8 @@ class PythonNextGenerator
       {
         continue;
       }
-      if ("around".equals(injection.getType()) || injection.getSnippet().getCode(language).contains("around_proceed:"))
+      // Without labels an around injection is parsed as a before one, which Java splits at around_proceed:
+      if ("around".equals(injection.getType()) || PythonSource.codeAt(injection.getSnippet().getCode(language), "around_proceed:") >= 0)
       {
         errorAt(9210, injection.getPosition(), "The around injection on " + injection.getOperation(), className);
       }
@@ -286,7 +311,6 @@ class PythonNextGenerator
     return getModel().getLastResult().numberOfErrorMessages() == errors;
   }
 
-  // The warning for a method left out because it has bodies only for other languages.
   public void warnNoPythonBody(Method method)
   {
     errorAt(9212, method.getPosition(), "Method " + method.getName(), String.join(", ", taggedLanguages(method.getMethodBody().getCodeblock())));
@@ -296,14 +320,11 @@ class PythonNextGenerator
   // Constraints
   //------------------------
 
-  // A constraint as a Python boolean expression. Attributes and associations are read through their
-  // getters on the object (the class for static methods), except the attributes in
-  // attributesAsParameters, which are read from the aX parameter a setter or constructor receives.
-  // Names of the parameters in scope (method or event parameters) are plain names, though a name
-  // that is also an attribute reads the attribute, as in Java's output. Like the Java
-  // output, the expression keeps the user's grouping and relies on the operator precedence the two
-  // languages share; negations are bracketed because Python's not binds more loosely than Java's !,
-  // and comparisons inside comparisons are bracketed because Python would chain them.
+  // A constraint as a Python boolean expression. Attributes and associations are read through getters
+  // (on the class in a static method), except attributesAsParameters, read from the aX parameter of a
+  // setter or constructor. A parameter named like an attribute reads the attribute, as Java's output
+  // does. Negations are bracketed because Python's not binds more loosely than Java's !, and nested
+  // comparisons because Python would chain them.
   public String condition(ConstraintTree constraint, UmpleClass uClass, List<MethodParameter> parameters,
     boolean isStatic, Collection<Attribute> attributesAsParameters)
   {
@@ -340,13 +361,12 @@ class PythonNextGenerator
   // The names of builtins and modules that rendered constraints call.
   private static final List<String> RENDERER_NAMES = Arrays.asList("len", "str", "int", "math", "Fraction");
 
-  // The same for a guard or invariant in an instance context.
   public String condition(ConstraintTree constraint, UmpleClass uClass, List<MethodParameter> parameters)
   {
     return condition(constraint, uClass, parameters, false, null);
   }
 
-  // The message of the RuntimeError raised when a pre- or postcondition fails, as in the Java output.
+  // Java's message for a failed pre- or postcondition.
   public String contractMessage(ConstraintTree constraint)
   {
     return pythonString("Please provide a valid " + constraint.getNamedNames());
@@ -960,10 +980,8 @@ class PythonNextGenerator
     return isModelType(type) || type != null && type.endsWith("[]") && isModelType(type.substring(0, type.length() - 2));
   }
 
-  // The type the model declares for the value of v: an attribute's or a parameter's type, the class at
-  // the other end of an association (an int for its number of objects), or the return type of a called
-  // method, generated getters included. A method called through a receiver, as in getOne().getItem(),
-  // is looked up in the receiver's declared class or interface. null when the model does not say.
+  // The type the model declares for v's value (an int for an association's count), including the
+  // return type of a method or generated getter called on a receiver; null when unknown.
   private String declaredType(ConstraintVariable v, PythonConstraintScope context)
   {
     ConstraintVariable inner = unwrap(v);
@@ -1339,11 +1357,9 @@ class PythonNextGenerator
     return code.toString();
   }
 
-  // The Python statements of a code slot such as an action or an injection, at indent:
-  // its Python body as native code, else its untagged body through the snippet translator with the
-  // parameters in scope, else "" when it has neither or they are empty. slot names it in diagnostics.
-  // Tagged code has no source markers because the parser does not record where it starts. An
-  // untranslatable untagged body is reported at position (the class when null).
+  // A code slot's statements at indent: its Python body, else its untagged body translated, else "".
+  // slot names it in diagnostics, reported at position (the class's when null). Tagged code gets no
+  // source markers because the parser does not record where it starts.
   public String slotCode(CodeBlock code, UmpleClass uClass, List<MethodParameter> parameters, boolean isStatic, String indent, String slot,
     Position position)
   {
@@ -1360,7 +1376,7 @@ class PythonNextGenerator
     }
     if ("Python".equals(language))
     {
-      return nativeCode(code.getCode(language), code.getFirstLineIndent(language), indent, null, uClass);
+      return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, null, uClass);
     }
     String translated = translateSnippetAt(code.getCode(language), uClass, parameters, isStatic, false, at, slot);
     if (translated != null && slot.startsWith("the action of the transition") && Pattern.compile("(?m)^\\s*return\\s*$").matcher(translated).find())
@@ -1415,11 +1431,9 @@ class PythonNextGenerator
       : new ArrayList<ConstraintTree>(uClass.getMethodPostconditions(method, "Python"));
   }
 
-  // A user method with its selected body B, under name (the method's name, or its number in an overload
-  // group), starting with a blank line. Without contracts or injections this is the method itself;
-  // otherwise it is a wrapper that checks preconditions, runs before injections, calls B in a helper
-  // through the declaring class (so a subclass's helper is never reached through super()), runs after
-  // injections, checks postconditions and returns the result.
+  // A user method under name (its own, or its number in an overload group). With contracts or
+  // injections it wraps a helper holding the body, called through the declaring class so that a
+  // super() call never reaches a subclass's helper.
   public String userMethod(UmpleClass uClass, Method method, String name)
   {
     boolean isStatic = isStatic(method);
@@ -1428,9 +1442,9 @@ class PythonNextGenerator
     String header = "\n" + decorator + "\n    def " + name + "(" + methodParameters(method) + "):";
     // The parser keeps the body without its first line's indentation and records that separately.
     CodeBlock block = method.getMethodBody().getCodeblock();
-    String body = nativeCode(block.getCode(language), block.getFirstLineIndent(language), "        ",
+    String body = functionCode(block.getCode(language), block.getFirstLineIndent(language), "        ",
       bodyPosition(method, language), uClass);
-    String docstring = docstring(method.getComments(), "        ");
+    String docstring = docstring(method.getComments(), method.getReqImplementations(), "        ");
     List<MethodParameter> scope = method.getMethodParameters();
     StringBuilder before = new StringBuilder();
     for (ConstraintTree pre : contracts(uClass, method, true))
@@ -1470,7 +1484,6 @@ class PythonNextGenerator
     return emitted(uClass, method.getMethodParameters(), text);
   }
 
-  // The same for an event's method, typed by the event's parameters
   public String emitted(UmpleClass uClass, List<MethodParameter> parameters, String text)
   {
     if (!emittedMethods.containsKey(uClass.getName()))
@@ -1523,7 +1536,7 @@ class PythonNextGenerator
   public String abstractMethod(Method method, String name, boolean inGroup)
   {
     return "\n\n" + (inGroup ? "" : "    @" + standardName("abc", "abstractmethod") + "\n") + "    def " + name + "(" + methodParameters(method) + "):"
-      + docstring(method.getComments(), "        ") + "\n        pass";
+      + docstring(method.getComments(), method.getReqImplementations(), "        ") + "\n        pass";
   }
 
   // The dispatcher text of an overload group with an abstract member, made abstract. The recorded
@@ -1566,9 +1579,8 @@ class PythonNextGenerator
   // The parser's marker in Java form (the file quoted or not) or in Python form (always quoted).
   private static final Pattern EXTRA_CODE_MARKER = Pattern.compile("\\s*(?:// line (\\d+) \"?([^\"]*?)\"?|# line (\\d+) \"([^\"]*)\")\\s*");
 
-  // The class's extra code, which is native Python, at member indentation: one region per piece the
-  // parser kept. Before each piece the parser puts a line comment saying where it was written, in
-  // Java form (//) or, once the parser gives it a Python alternative, in Python form (#).
+  // The class's extra code, native Python, at member indentation with one source region per piece.
+  // The parser marks each piece with a line comment in Java (//) or Python (#) form.
   public String classExtraCode(UmpleClass uClass)
   {
     String text = uClass.getExtraCode();
@@ -1603,8 +1615,9 @@ class PythonNextGenerator
     return code.trim().isEmpty() ? "" : "\n" + nativeCode(code.replaceFirst("^[ \t\f]+", ""), null, "    ", position, uClass);
   }
 
-  // The launcher at the end of the module that runs a top-level class's Python main with the full
-  // sys.argv, as the previous generator did; "" when the class has none.
+  // Runs a top-level class's Python main with the full sys.argv. The running module is also registered
+  // under its own name, so that other modules importing the class get this one and not a second copy
+  // whose instances fail their type checks.
   public String mainLauncher(UmpleClass uClass)
   {
     if (uClass.getOuterClass() != null)
@@ -1615,7 +1628,10 @@ class PythonNextGenerator
     {
       if (isPythonMain(m))
       {
-        return "\n\n\nif __name__ == \"__main__\":\n    " + uClass.getName() + ".main(" + standardName("sys", null) + ".argv)";
+        String sys = standardName("sys", null);
+        String module = uClass.getPackageName().isEmpty() ? uClass.getName() : uClass.getPackageName() + "." + uClass.getName();
+        return "\n\n\nif __name__ == \"__main__\":\n    " + sys + ".modules.setdefault(\"" + module + "\", " + sys + ".modules[__name__])\n    "
+          + uClass.getName() + ".main(" + sys + ".argv)";
       }
     }
     return "";
@@ -1625,17 +1641,68 @@ class PythonNextGenerator
   // Overload dispatch
   //------------------------
 
-  // Generated and user methods Python would define twice in one class (getC() of one association end
-  // and getC(index) of another, an event and its setter, a generated getter and user overloads of it)
-  // become candidates of one dispatcher, static when they are, as Java keeps them as overloads (a
-  // unique attribute's getWithX beside a user getWithX with more parameters). Dispatchers already
-  // there (a user overload group, a generated one) and the other definitions join into one; it is
-  // abstract when one of them is. The dispatcher tells candidates apart by the number of arguments
-  // or by a known parameter type: methods written in the model and events are typed from their
-  // declarations (emitted), generated ones from their machine's enum, association end or the model's
-  // generated API. Two it cannot tell apart have the same parameter types, or one it does not know:
-  // one redefines the other, per overload (redefined below). Definitions inside string literals are
-  // text, not methods. code is the class up to its extra code, whose native definitions are left alone.
+  // Whether an ancestor of uClass has a method of this name: written in the model, or generated for
+  // its members and events
+  private boolean ancestorHas(UmpleClass uClass, String name)
+  {
+    for (UmpleClass k = uClass.getExtendsClass(); k != null; k = k.getExtendsClass())
+    {
+      if (!inheritedSignatures(k, name).isEmpty() || PythonSnippetTranslator.forClass(this, k, null, false).generates(k, name))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Whether a method of the model overloads an inherited method of its name, rather than overriding one
+  // with the same parameters
+  private boolean overloadsInherited(UmpleClass uClass, String name, List<MethodParameter> parameters)
+  {
+    for (UmpleClass k = uClass.getExtendsClass(); k != null; k = k.getExtendsClass())
+    {
+      for (List<MethodParameter> inherited : inheritedSignatures(k, name))
+      {
+        if (indistinct(parameters, inherited))
+        {
+          return false;
+        }
+      }
+    }
+    return ancestorHas(uClass, name);
+  }
+
+  // The parameters of the methods of the model named name that class k declares for Python
+  private static List<List<MethodParameter>> inheritedSignatures(UmpleClass k, String name)
+  {
+    List<List<MethodParameter>> signatures = new ArrayList<List<MethodParameter>>();
+    List<Method> methods = new ArrayList<Method>(k.getMethods());
+    methods.addAll(k.getStateDependentMethods());
+    for (Method m : methods)
+    {
+      if (name.equals(m.getName()) && pythonLanguage(m) != null)
+      {
+        signatures.add(m.getMethodParameters());
+      }
+    }
+    return signatures;
+  }
+
+  private static int lineAt(String text, int index)
+  {
+    int line = 0;
+    for (int i = text.indexOf('\n'); i >= 0 && i < index; i = text.indexOf('\n', i + 1))
+    {
+      line++;
+    }
+    return line;
+  }
+
+  // Joins generated and model methods Python would define twice in one class (an event and its
+  // setter, a generated getter and user overloads of it) into one dispatcher, as Java keeps them as
+  // overloads. Candidates differ by argument count or a known parameter type; of two that do not,
+  // one redefines the other. Definitions inside strings are ignored. code is the class up to its
+  // extra code, whose native definitions are left alone.
   public void mergeSameNameMethods(UmpleClass uClass, StringBuilder code)
   {
     unixLines(code);
@@ -1652,10 +1719,15 @@ class PythonNextGenerator
       ? emittedMethods.get(uClass.getName()) : new HashMap<String, List<MethodParameter>>();
     for (Map.Entry<String, List<MethodParameter>> method : emittedHere.entrySet())
     {
-      int at = text.indexOf(method.getKey());
-      if (at >= 0)
+      // The method itself, not a copy of its text in a string of another method
+      for (int at = text.indexOf(method.getKey()); at >= 0; at = text.indexOf(method.getKey(), at + 1))
       {
-        written.put(text.indexOf("    def ", at) + "    def ".length(), method.getValue());
+        int definition = text.indexOf("    def ", at);
+        if (definition >= 0 && !insideString[lineAt(text, definition)])
+        {
+          written.put(definition + "    def ".length(), method.getValue());
+          break;
+        }
       }
     }
     Matcher def = Pattern.compile("(?m)^    def (\\w+)\\(([^)]*)\\):$").matcher(text);
@@ -1728,8 +1800,7 @@ class PythonNextGenerator
     StringBuilder dispatchers = new StringBuilder();
     for (String name : starts.keySet())
     {
-      // The dispatchers of this name already in the class (a user group, a generated group), whose
-      // candidates, each with the index of its dispatcher, join into one
+      // Dispatchers of this name already in the class (a user group, a generated group) join into one
       List<String> existing = new ArrayList<String>();
       for (String dispatcher : dispatcherTexts.containsKey(uClass.getName() + "." + name)
         ? dispatcherTexts.get(uClass.getName() + "." + name) : new ArrayList<String>())
@@ -1775,10 +1846,9 @@ class PythonNextGenerator
       {
         continue;
       }
-      // Two definitions of different origins that the dispatcher cannot tell apart have the same
-      // parameter types, or one it does not know: one redefines the other. One written in the model (or
-      // an event) redefines a generated one, otherwise the later wins, as in any Python class. The
-      // redefined one leaves its dispatcher, or is renamed where it would come later in the class.
+      // Of two definitions the dispatcher cannot tell apart, a model one (or an event) redefines a
+      // generated one, otherwise the later wins, as in any Python class. The redefined one leaves its
+      // dispatcher, or is renamed where it would come later in the class.
       List<List<MethodParameter>> all = new ArrayList<List<MethodParameter>>(candidates);
       all.addAll(joining);
       List<Integer> at = new ArrayList<Integer>();
@@ -1831,7 +1901,11 @@ class PythonNextGenerator
           kept.add(joining.get(i));
         }
       }
-      if (existing.isEmpty() ? kept.size() < 2 : keptPositions.isEmpty() && existing.size() == 1)
+      // A lone definition of the model that overloads an inherited method also needs a dispatcher, which
+      // passes the calls it does not take on to the ancestor
+      boolean overloads = existing.isEmpty() && kept.size() == 1 && keptPositions.size() == 1 && written.containsKey(keptPositions.get(0))
+        && instanceKinds.get(name).contains(true) && overloadsInherited(uClass, name, kept.get(0));
+      if (existing.isEmpty() ? kept.size() < 2 && !overloads : keptPositions.isEmpty() && existing.size() == 1)
       {
         continue; // nothing to join (a lone definition, or a dispatcher no other definition meets)
       }
@@ -1885,13 +1959,9 @@ class PythonNextGenerator
     code.append(bindingHelper(uClass));
   }
 
-  // The parameters, named names, of the generated definition name of uClass: a state machine's setter
-  // takes its enum; an association end's setter, add or remove takes its object, adding or moving at
-  // a position also an index, and a many end's indexed getter an index; a list attribute's indexOf
-  // takes an element and its indexed getter an index; a keyed class's equals any object; otherwise
-  // the types of a generated method the model lists with those parameter names or else the only one
-  // with that many parameters. null when none is known. Events, like methods written in the model,
-  // are typed when they are emitted (emitted).
+  // The parameters, named names, of uClass's generated method name: typed from its state machine,
+  // association end, list attribute or key, else from the model's generated API; null when unknown.
+  // Events and model methods are typed when emitted.
   private List<MethodParameter> generatedParameters(UmpleClass uClass, String name, List<String> names)
   {
     for (StateMachine sm : uClass.getAllStateMachines())
@@ -1912,13 +1982,13 @@ class PythonNextGenerator
         parameters.add(parameter(names.get(0), av.getType()));
         if (takesIndex)
         {
-          parameters.add(parameter(names.get(1), "Integer"));
+          parameters.add(parameter(names.get(1), "int"));
         }
         return parameters;
       }
       if (av.getIsNavigable() && av.isMany() && names.size() == 1 && name.equals(translate("getMethod", av)))
       {
-        return Arrays.asList(parameter(names.get(0), "Integer"));
+        return Arrays.asList(parameter(names.get(0), "int"));
       }
     }
     for (Attribute av : attributes(uClass))
@@ -1929,7 +1999,7 @@ class PythonNextGenerator
       }
       if (av.getIsList() && names.size() == 1 && name.equals(translate("getMethod", av)))
       {
-        return Arrays.asList(parameter(names.get(0), "Integer"));
+        return Arrays.asList(parameter(names.get(0), "int"));
       }
     }
     if (names.size() == 1 && "equals".equals(name) && uClass.getKey().isProvided())
@@ -1959,7 +2029,6 @@ class PythonNextGenerator
     return withSameCount == 1 ? new ArrayList<MethodParameter>(sameCount) : null;
   }
 
-  // Whether the Python parameters names (a variable one written *name) are those of parameters
   private boolean namedAs(List<MethodParameter> parameters, List<String> names)
   {
     boolean same = parameters.size() == names.size();
@@ -1973,10 +2042,8 @@ class PythonNextGenerator
   // The type of a parameter of a definition the model does not describe, which accepts any value.
   private static final String UNKNOWN_TYPE = "?";
 
-  // Whether the dispatcher could not choose between a and b: their numbers of arguments overlap, both
-  // or neither take a variable number (Java tries a fixed number first), and no argument position has
-  // two known types that differ. mergeSameNameMethods takes one of two such definitions as redefining
-  // the other.
+  // Whether the dispatcher cannot choose between a and b: argument counts overlap, both or neither are
+  // varargs (Java tries a fixed count first), and no position has two different known types.
   private static boolean indistinct(List<MethodParameter> a, List<MethodParameter> b)
   {
     if (!argumentCountsOverlap(a, b) || isVarargs(a) != isVarargs(b))
@@ -2009,7 +2076,6 @@ class PythonNextGenerator
     return p == null ? null : p.getType().replace("...", "") + (p.getIsList() ? "[]" : "");
   }
 
-  // Whether two candidates could both accept the same number of positional arguments.
   private static boolean argumentCountsOverlap(List<MethodParameter> a, List<MethodParameter> b)
   {
     boolean aVarargs = !a.isEmpty() && a.get(a.size() - 1).getType().endsWith("...");
@@ -2019,13 +2085,10 @@ class PythonNextGenerator
     return aFixed == bFixed || aVarargs && bFixed >= aFixed || bVarargs && aFixed >= bFixed;
   }
 
-  // The dispatcher name(self, *args, **kwargs) of an overload group, starting with a blank line.
-  // Candidates are tried most specific first (dispatchOrder): a candidate matches when the arguments
-  // bind to its parameter names and every value passes its parameter's type test; the first match is
-  // called, and no match raises TypeError. implementations[i] is the numbered method taking
-  // parameters[i]; it is called through the declaring class, so a subclass implementation that calls
-  // super() reaches this class's implementation instead of itself. The class then needs the binding
-  // helper (bindingHelper).
+  // The dispatcher name(self, *args, **kwargs) of an overload group. Candidates are tried most
+  // specific first (dispatchOrder); the first whose parameters bind the arguments and pass their type
+  // tests is called. implementations[i] takes parameters[i] and is called through the declaring class,
+  // so a subclass implementation calling super() reaches this class's, not itself.
   public String overloadDispatcher(UmpleClass uClass, String name, boolean isStatic, List<String> implementations,
     List<List<MethodParameter>> parameters)
   {
@@ -2074,7 +2137,10 @@ class PythonNextGenerator
     {
       text.append("\n        ").append(line);
     }
-    String dispatcher = text.append(candidates).append("\n        raise TypeError(\"No method matches provided parameters\")").toString();
+    // Calls none of the candidates takes go on to an ancestor's method of the name, as Java's overload
+    // resolution also considers inherited methods
+    String noMatch = !isStatic && ancestorHas(uClass, name) ? "return super()." + name + "(*args, **kwargs)" : "raise TypeError(\"No method matches provided parameters\")";
+    String dispatcher = text.append(candidates).append("\n        ").append(noMatch).toString();
     String key = uClass.getName() + "." + name;
     if (!dispatcherTexts.containsKey(key))
     {
@@ -2142,8 +2208,8 @@ class PythonNextGenerator
     return narrower;
   }
 
-  // Java's number widening order; a wrapper ranks as its primitive. A Python float is a double, so a
-  // double parameter is tried before a float one.
+  // Numeric dispatch order: Java's widening order, except that double precedes float because a Python
+  // float is a double. A wrapper ranks as its primitive.
   private static final List<String> NUMBER_WIDTHS = Arrays.asList("byte", "short", "int", "long", "double", "float");
   private static final List<String> WRAPPER_WIDTHS = Arrays.asList("Byte", "Short", "Integer", "Long", "Double", "Float");
 
@@ -2174,17 +2240,26 @@ class PythonNextGenerator
   // Whether classifier c is type or inherits it through its superclasses or interfaces.
   private static boolean inherits(UmpleClassifier c, String type)
   {
+    return inherits(c, type, new HashSet<UmpleClassifier>());
+  }
+
+  private static boolean inherits(UmpleClassifier c, String type, Set<UmpleClassifier> seen)
+  {
     if (c == null || c.getName().equals(type))
     {
       return c != null;
     }
-    if (c instanceof UmpleClass && inherits(((UmpleClass) c).getExtendsClass(), type))
+    if (!seen.add(c))
+    {
+      return false; // reached already through another path
+    }
+    if (c instanceof UmpleClass && inherits(((UmpleClass) c).getExtendsClass(), type, seen))
     {
       return true;
     }
     for (UmpleInterface parent : c instanceof UmpleClass ? ((UmpleClass) c).getParentInterface() : ((UmpleInterface) c).getExtendsInterface())
     {
-      if (inherits(parent, type))
+      if (inherits(parent, type, seen))
       {
         return true;
       }
@@ -2217,8 +2292,11 @@ class PythonNextGenerator
       + "\n        return bound";
   }
 
+  private static final List<String> BOXED_TYPES = Arrays.asList("Integer", "Long", "Short", "Byte", "Double", "Float", "Boolean", "Character");
+
   // The Python test that value has the Umple type: bool is never an int, int is accepted for floats,
-  // None is accepted for reference types, lists check every element. "True" when anything goes.
+  // None is accepted for reference types (boxed numbers included), lists check every element. "True"
+  // when anything goes.
   private String typeTest(String value, String type, boolean isList, UmpleClass uClass, Map<String, String[]> types)
   {
     if (isList)
@@ -2227,6 +2305,12 @@ class PythonNextGenerator
       return "(" + value + " is None or isinstance(" + value + ", (list, tuple))"
         + ("True".equals(element) ? "" : " and all(" + element + " for e in " + value + ")") + ")";
     }
+    String test = valueTest(value, type, uClass, types);
+    return BOXED_TYPES.contains(type) ? "(" + value + " is None or " + test + ")" : test;
+  }
+
+  private String valueTest(String value, String type, UmpleClass uClass, Map<String, String[]> types)
+  {
     switch (type)
     {
       case "Integer": case "int": case "long": case "short": case "byte": case "Long": case "Short": case "Byte":

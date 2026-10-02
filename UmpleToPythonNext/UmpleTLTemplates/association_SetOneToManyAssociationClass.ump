@@ -1,10 +1,9 @@
 use association_Guards.ump;
 
 class UmpleToPythonNext {
-    // Setter of an association class's end: as association_SetOneToMany, but the new end may refuse
-    // the link (it already links an equal instance, the same pair). The old end is then restored on
-    // both sides, at the object's old position; Java restores only this side, leaving the object out
-    // of its old end's list.
+    // As association_SetOneToMany, but the new end may refuse the link when it already links an equal
+    // instance (the same pair). Both sides of the old link are then restored, at the old position;
+    // Java restores only this side.
     association_SetOneToManyAssociationClass <<!<</*association_SetOneToManyAssociationClass*/>>
 
     def <<=gen.translate("setMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("setMethod", av), gen.parameter(parameter, av.getType()))>><<@ UmpleToPythonNext.association_SetGuards >>

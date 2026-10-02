@@ -189,7 +189,9 @@ public class PythonNextUserCodeTest
     Assert.assertFalse(PythonNextGenerator.isPythonMain(method(model.getUmpleClass("B"), "main")));
     Assert.assertFalse(PythonNextGenerator.isPythonMain(method(model.getUmpleClass("C"), "main")));
     Assert.assertFalse(PythonNextGenerator.isPythonMain(method(model.getUmpleClass("D"), "main")));
-    Assert.assertTrue(model.getGeneratedCode().get("A").contains("\n\n\nif __name__ == \"__main__\":\n    A.main(sys.argv)\n"));
+    // registered under its module name, so that a module importing A shares the running class
+    Assert.assertTrue(model.getGeneratedCode().get("A").contains("\n\n\nif __name__ == \"__main__\":\n"
+      + "    sys.modules.setdefault(\"A\", sys.modules[__name__])\n    A.main(sys.argv)\n"));
     Assert.assertFalse(model.getGeneratedCode().get("C").contains("__main__"));
   }
 
@@ -251,6 +253,13 @@ public class PythonNextUserCodeTest
   {
     UmpleModel returning = generate("class Q { Integer n; sm { A { go / { n = 1; return; } -> B; } B { } } }");
     Assert.assertTrue(message(returning, 9211).getFormattedMessage().contains("a return without a value"));
+  }
+
+  @Test
+  public void aroundProceedInAStringIsNotAnAroundInjection() throws Exception
+  {
+    UmpleModel model = generate("class A { name; before setName Python { print(\"around_proceed:\") } }");
+    Assert.assertTrue(generator(model).checkUserCode(model.getUmpleClass("A")));
   }
 
   @Test

@@ -22,6 +22,7 @@ umpleonline/scripts/codemirror6-plugins/collaboration-test-client/node_modules
 
 build/UserManualAndExampleTests_output.txt
 build/txl
+cruise.umple/txl
 umpleonline/manual
 umpleonline/qr*
 umpleonline/countlog.txt

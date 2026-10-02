@@ -375,3 +375,86 @@ class Launcher
     print("arguments", len(args), args[1:])
   }
 }
+
+// Running a main's module as a program registers it under its module name, so a module that imports
+// the main's class gets the running class rather than a second copy.
+class IdentityMain
+{
+  public static void main(String[] args) Python {
+    from cruise.usercode.test.IdentityBox import IdentityBox
+    print(IdentityBox().pick(IdentityMain()))
+  }
+}
+
+class IdentityBox
+{
+  String pick(IdentityMain value) Python { return "main" }
+  String pick(String value) Python { return "string" }
+}
+
+// A boxed parameter takes null, as in Java; a primitive one does not.
+class BoxedNull
+{
+  String m(Integer value) Python { return "null" if value is None else "value" }
+  String m(Integer value, int extra) Python { return "two" }
+}
+
+// Method text inside a string is data: it neither stands for the method nor replaces the generated
+// setter or __str__.
+class TextualSetter
+{
+  Integer x;
+  String example() Python {
+      return """
+
+    def setX(self, label):
+        return "custom"
+"""
+  }
+  String setX(String label) Python { return "custom" }
+}
+
+class TextualStr
+{
+  name;
+  def helper(self):
+      return """example
+    def __str__(self):
+        return 'text'
+"""
+}
+
+// A subclass method named like inherited ones adds an overload: calls that match the inherited ones
+// still reach them, so the association stays linked at both ends.
+class Crate
+{
+  0..1 crate -- * CrateItem items;
+}
+
+class CrateItem
+{
+}
+
+class LabelCrate
+{
+  isA Crate;
+  Boolean addItem(String label) Python { return label == "label" }
+}
+
+class Tagged
+{
+  String[] tags;
+}
+
+class CountingTagged
+{
+  isA Tagged;
+  int getTags(int n) Python { return n }
+}
+
+// A native body uses a class its owner lists with depend without importing it.
+class DependMaker
+{
+  depend cruise.usercode.test.CrateItem;
+  CrateItem make() Python { return CrateItem() }
+}

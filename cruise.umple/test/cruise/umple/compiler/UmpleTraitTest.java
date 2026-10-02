@@ -43,6 +43,20 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, uMode.getUmpleClass("A").numberOfAttributes());
 	}
 
+	// in the order the traits are listed, not one that changes between runs
+	@Test
+	public void attributesFromSeveralTraitsKeepTheirOrderTest() {
+		String code = "class C { isA T1, T2, T3, T4, T5, T6, T7, T8; }";
+		for (int i = 1; i <= 8; i++) {
+			code += " trait T" + i + " { a" + i + "; }";
+		}
+		StringBuilder names = new StringBuilder();
+		for (Attribute attribute : getRunModel(code).getUmpleClass("C").getAttributes()) {
+			names.append(attribute.getName()).append(' ');
+		}
+		Assert.assertEquals("a1 a2 a3 a4 a5 a6 a7 a8 ", names.toString());
+	}
+
 	@Test
 	public void traitInheritanceTest() {
 		Assert.assertEquals(1, uMode.getUmpleClass("A").numberOfExtendsTraits());

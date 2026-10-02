@@ -3753,15 +3753,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   }
 
   /*
-   * Makes method from the blocks of all its declarations, whatever their order (#1488, #2250). Each
-   * language ("" for the untagged body) takes the first block with code for it, or an empty body when
-   * none has code; another body for it, from the declaration whose blocks start at first, is reported
-   * and disregarded. A language with a block of conditions but no body of its own takes the untagged
-   * body as its own entry, so those conditions go with it alone. A pre- or postcondition goes with
-   * the body of its block, and the untagged body's also with the languages that take it; those of an
-   * untagged block with no code go with every body; those of a disregarded body are dropped. Once
-   * the method has a body for some language, a block with conditions only is no body: a language with
-   * neither its own body nor an untagged one has no method.
+   * Makes method from the blocks of all its declarations, whatever their order. Each language ("" for
+   * untagged) takes the first block with code for it, else an empty body; another body for it from
+   * the declaration whose blocks start at first is reported and disregarded. A language with only
+   * conditions gets its own copy of the untagged body, or no body when there is none and some other
+   * language has one. Conditions follow their block's body, an untagged body's also its copies; those
+   * of an untagged block without code go with every body, those of a disregarded body nowhere.
    */
   private void mergeBlocks(UmpleClass uClass, Method method, List<MethodBlock> blocks, int first, Method redeclared)
   {

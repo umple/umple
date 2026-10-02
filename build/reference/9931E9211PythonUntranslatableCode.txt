@@ -6,7 +6,9 @@ noreferences
 
 <h2>Untagged code cannot be translated to Python</h2>
 
-<p>Code written without a language tag in an action, an entry, exit or do activity, a code injection, a derived attribute or a default value is written in Java syntax. For Python, Umple translates such code when it uses a small subset of Java: literals, local variables, assignments, <code>if</code>, loops, calls to the model&apos;s own methods and generated API, <code>new</code> for model classes, <code>System.out.println</code> and <code>throw new RuntimeException</code>. Code outside that subset, for example calls to the Java library or to methods the model does not define, is reported with this error, which names the code and shows how a Python version of that kind of code is written. A derived attribute written only for other languages is reported too, since it would have no value in Python, and so is an interface constant whose value is not a literal, since an interface has no class body to evaluate it in. The class is then not generated.</p>
+<p>Code written without a language tag in an action, an entry, exit or do activity, a code injection, a derived attribute or an initial value is Java. For Python, PythonNext translates such code when it keeps to the subset of Java listed on the <a href="PythonNext.html">PythonNext</a> page. Code outside that subset, for example a call to the Java library or to a method the model does not define, is reported with this error, which names the code and shows how that kind of code is written in Python. The class is then not generated.</p>
+
+<p>The error is also reported for a derived attribute written only for other languages, which would have no value in Python, and for an interface constant whose value is not a literal, which PythonNext does not translate.</p>
 
 <p>Give the code a Python version: add a Python block beside the Java one, or move the code into a method with a Python body and call that method. Method bodies and extra code are never translated: an untagged method body is taken to be Python already.</p>
 

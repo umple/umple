@@ -167,14 +167,18 @@ public class PythonNextGeneratorCoreTest
   }
 
   @Test
-  public void aModuleNamedLikeAStandardModuleNeedsANamespace() throws Exception
+  public void aModuleOrNamespaceNamedLikeAStandardModuleIsReported() throws Exception
   {
     UmpleModel model = generate("class threading { }\n");
     Assert.assertEquals(Arrays.asList(9213), errorCodes(model));
     // Python has loaded os before the program runs, so importing a module os would get that one
     Assert.assertEquals(Arrays.asList(9213), errorCodes(generate("class os { }\n")));
     UmpleModel anInterface = generate("interface math { }\n");
-    Assert.assertTrue(messageOf(anInterface, 9213), messageOf(anInterface, 9213).startsWith("Interface math has the name"));
+    Assert.assertTrue(messageOf(anInterface, 9213), messageOf(anInterface, 9213).startsWith("Interface math conflicts"));
+    // A namespace's first part is resolved first: sys.Main could not be imported
+    UmpleModel inNamespace = generate("namespace sys;\nclass Main { }\n");
+    Assert.assertTrue(messageOf(inNamespace, 9213), messageOf(inNamespace, 9213).startsWith("The namespace sys of class Main conflicts"));
+    Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("namespace app.sys;\nclass Main { }\n")));
   }
 
   @Test
@@ -366,6 +370,37 @@ public class PythonNextGeneratorCoreTest
       Assert.assertFalse(file.getName(), new String(Files.readAllBytes(file.toPath()), "UTF-8").contains("\r"));
     }
     Assert.assertFalse(generatedFiles().isEmpty());
+  }
+
+  // Python reads source as UTF-8; the JVM's default charset (Cp1252 on many Windows machines) would
+  // replace the characters it lacks or write bytes Python rejects
+  @Test
+  public void generatedPythonIsUtf8WhateverTheDefaultCharset() throws Exception
+  {
+    File file = new File(dir, "model.ump");
+    Files.write(file.toPath(), "generate PythonNext;\nclass A { String text = \"\\u20ac\\u0100\"; }\n".getBytes("UTF-8"));
+    String jvm = new File(new File(System.getProperty("java.home"), "bin"), "java").getPath();
+    Process process = new ProcessBuilder(jvm, "-Dfile.encoding=ISO-8859-1", "-cp", System.getProperty("java.class.path"),
+      "cruise.umple.UmpleConsoleMain", file.getPath()).redirectErrorStream(true).redirectOutput(new File(dir, "umple.out")).start();
+    Assert.assertTrue(process.waitFor(60, java.util.concurrent.TimeUnit.SECONDS));
+    Assert.assertEquals(0, process.exitValue());
+    String code = new String(Files.readAllBytes(new File(dir, "A.py").toPath()), "UTF-8");
+    Assert.assertTrue(code, code.contains("\"\u20ac\u0100\""));
+  }
+
+  // Each ancestry question visits an interface once, however many paths lead to it
+  @Test(timeout = 20000)
+  public void interfacesWithManySharedAncestorsGenerateQuickly() throws Exception
+  {
+    StringBuilder model = new StringBuilder("interface A0 { }\ninterface B0 { }\n");
+    for (int i = 1; i < 40; i++)
+    {
+      for (String name : Arrays.asList("A", "B"))
+      {
+        model.append("interface " + name + i + " { isA A" + (i - 1) + ", B" + (i - 1) + "; }\n");
+      }
+    }
+    Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate(model.toString())));
   }
 
   private UmpleModel generate(String code) throws Exception

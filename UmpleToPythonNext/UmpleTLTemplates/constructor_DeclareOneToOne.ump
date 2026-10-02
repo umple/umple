@@ -1,14 +1,11 @@
 use constructor_AssociationCreateOneToOne.ump;
 
 class UmpleToPythonNext {
-    // A class in a mandatory one-to-one pair is constructed from its partner's values and creates the
-    // partner (constructor_AssociationCreateOneToOne in __init__). alternateConstructor takes an
-    // existing partner instead, as Java's constructor with the partner does; the partner's own
-    // constructor calls it. Its body is an instance method (oneOneAlternateInit) built from the same
-    // parts in the same order as __init__ (constructor_Declare_All), so a subclass initializes its
-    // parent part in place with it (oneOneParentInit), as a Java subclass calls that constructor.
-    // __class__ is the class that defines the method, so neither a subclass's method nor a parameter
-    // named like the class can hide the helper.
+    // In a mandatory one-to-one pair, __init__ creates the partner and alternateConstructor, which the
+    // partner's constructor calls, takes an existing one. Its body is an instance method
+    // (oneOneAlternateInit) built like __init__, so a subclass initializes its parent part in place
+    // with it (oneOneParentInit). It is called through __class__, which neither a subclass's method
+    // nor a parameter named like the class can hide.
     constructor_DeclareOneToOne <<!<</*constructor_DeclareOneToOne*/>><<#
   if (createsPartners)
   {

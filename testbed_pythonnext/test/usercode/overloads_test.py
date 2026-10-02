@@ -34,8 +34,11 @@ class OverloadsTest(unittest.TestCase):
             self.overloads.describe(True)
 
     def test_noneAcceptedForReferenceTypesOnly(self):
-        self.assertEqual("text None", self.overloads.describe(None))
+        # Java rejects describe(null) as ambiguous; the first reference overload declared takes it
+        self.assertEqual("int None", self.overloads.describe(None))
         self.assertEqual("object", self.overloads.describe(other=None))
+        with self.assertRaises(TypeError):
+            Overloads.Overloads.combine(None)
 
     def test_argumentsThatBindToNoCandidate(self):
         for args, kwargs in (((1, 2, 3), {}), ((), {"nope": 1}), ((1,), {"value": 2}), ((1.5,), {})):

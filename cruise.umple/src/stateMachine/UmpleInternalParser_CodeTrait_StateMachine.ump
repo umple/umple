@@ -25,8 +25,8 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
 //----------------------------------------------------------------------------   
   private void copyStateMachinesFromTraiToClass(UmpleClass inClass) {
-    Map<UmpleTrait, List<StateMachine>> traitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
-		Map<UmpleTrait, List<StateMachine>> tempTraitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();
+    Map<UmpleTrait, List<StateMachine>> traitStateMachine = new LinkedHashMap<UmpleTrait, List<StateMachine>>();
+		Map<UmpleTrait, List<StateMachine>> tempTraitStateMachine = new LinkedHashMap<UmpleTrait, List<StateMachine>>();
 		for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 			tempTraitStateMachine = gatherStateMachinesFromTrait(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
 			CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine, tempTraitStateMachine, inClass);
@@ -75,8 +75,8 @@ class UmpleInternalParser
 //---------------------------------Start--------------------------------------
   private Map<UmpleTrait, List<StateMachine>> gatherStateMachinesFromTrait (UmpleTrait inTrait,GeneralTPApplied inGTPApplied, UmpleClass inClass) 
   {
-    Map<UmpleTrait, List<StateMachine>> traitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>(); 
-  	Map<UmpleTrait, List<StateMachine>> tempTraitStateMachine = new HashMap<UmpleTrait, List<StateMachine>>();  	
+    Map<UmpleTrait, List<StateMachine>> traitStateMachine = new LinkedHashMap<UmpleTrait, List<StateMachine>>(); 
+  	Map<UmpleTrait, List<StateMachine>> tempTraitStateMachine = new LinkedHashMap<UmpleTrait, List<StateMachine>>();  	
 
   	
   	/*
@@ -102,7 +102,7 @@ class UmpleInternalParser
     for (StateMachine sm: inTrait.getStateMachines()){
        sMList.add(sm.clone());
     }
-    Map<UmpleTrait, List<StateMachine>> traitStateMachine2 = new HashMap<UmpleTrait, List<StateMachine>>();
+    Map<UmpleTrait, List<StateMachine>> traitStateMachine2 = new LinkedHashMap<UmpleTrait, List<StateMachine>>();
     if (sMList.size()>0) traitStateMachine2.put(inTrait,sMList);
   	if (!CheckSMFromTraitIsNotAvaialbleInOtherTraits(traitStateMachine2,traitStateMachine,inTrait)) return traitStateMachine2;
   	AddStateMachineMapToAnother(traitStateMachine2,traitStateMachine);

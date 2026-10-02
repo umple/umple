@@ -30,7 +30,7 @@ class UmpleToPythonNext {
     String parameter = gen.translate("parameterOne", av);
     if (av.getIsList() && !gen.translate("getMethod", av).equals(gen.translate("getManyMethod", av)))
     {
-      realSb.append(gen.inheritedOverride(uClass, gen.translate("getMethod", av), "", false, parameter, gen.parameter("index", "Integer")));
+      realSb.append(gen.inheritedOverride(uClass, gen.translate("getMethod", av), "", false, parameter, gen.parameter("index", "int")));
       realSb.append(gen.inheritedOverride(uClass, gen.translate("getManyMethod", av), "", false, gen.translate("parameterMany", av)));
       realSb.append(gen.inheritedOverride(uClass, gen.translate("numberOfMethod", av), "", false, "number"));
       realSb.append(gen.inheritedOverride(uClass, gen.translate("hasManyMethod", av), "", false, "has"));

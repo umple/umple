@@ -1,11 +1,9 @@
 class UmpleToPythonNext {
-    // Java's add overload that creates the object to add from the constructor arguments of its class,
-    // passing this object for the end back here. It is the first numbered implementation of the add
-    // method; a bounded end returns None when full. An abstract class gets none, since it cannot be
-    // created. The class is always another one: Umple rejects a reflexive association whose one end
-    // is mandatory, and only such an end has a factory. The arguments follow the class's ordinary
-    // constructor, which is alternateConstructor when its constructor creates a one-to-one partner
-    // (constructor_DeclareOneToOne).
+    // Java's add overload that creates the object from its class's constructor arguments, passing this
+    // object as its partner: the add method's first numbered implementation. A bounded end returns
+    // None when full; an abstract class gets none. Only a mandatory end has a factory, and Umple
+    // rejects those on reflexive associations, so the class is always another one. The arguments
+    // follow its ordinary constructor, alternateConstructor when it creates a one-to-one partner.
     association_AddFactory <<!<</*association_AddFactory*/>><<#
   if (!relatedAssociation.getUmpleClass().getIsAbstract())
   {
@@ -30,7 +28,6 @@ class UmpleToPythonNext {
   }
 #>>!>>
 
-    // The add taking the object: the second numbered implementation when there is a factory.
     association_AddName <<!<</*association_AddName*/>><<=relatedAssociation.getUmpleClass().getIsAbstract() ? gen.translate("addMethod", av) : gen.addImplementationNames(uClass, av).get(1)>>!>>
 
     // The add method's dispatcher when there is a factory; the class's binding helper comes with the

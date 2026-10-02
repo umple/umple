@@ -1,13 +1,12 @@
 UmpleToPythonNext holds the UmpleTL templates of PythonNext, the Python generator that works from
 the model directly. The build compiles UmpleTLTemplates/Master.ump into
 cruise.umple.compiler.pythonnext.PythonNextClassGenerator and PythonNextInterfaceGenerator, which
-cruise.umple/src/generators/Generator_CodePythonNext*.ump drive. The original Python generator
-(UmpleToPython, TXL) is unchanged and still selected by "generate Python".
+cruise.umple/src/generators/Generator_CodePythonNext*.ump drive. "generate Python" still selects the
+original Python generator (UmpleToPython, TXL); fixes to the shared front end apply to both.
 
-A template with a Java counterpart has the name of the Java template with the same behaviour
-(UmpleToJava/UmpleTLTemplates/<same name>.ump), so the two can be read side by side. A change to the
-behaviour of a Java template needs the same change here, with a test, or an issue that records the
-difference.
+A template with a Java counterpart has its name (UmpleToJava/UmpleTLTemplates/<same name>.ump), so
+the two can be compared. When the behaviour of one changes, change the other too, or record and test
+the intended difference.
 
 Tests: the template tests in cruise.umple/test/.../implementation/pynext and
 statemachine/implementation/pynext, the compiler tests named PythonNext*Test, and the runtime

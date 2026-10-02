@@ -1,5 +1,4 @@
 class UmpleToPythonNext {
-    // Boolean attributes also get isX, answering the same as getX.
     attribute_IsBoolean_All <<!<</*attribute_IsBoolean_All*/>><<#
   for (Attribute av : gen.attributes(uClass))
   {

@@ -27,4 +27,5 @@ class MainAndExtraCode:
 
 
 if __name__ == "__main__":
+    sys.modules.setdefault("MainAndExtraCode", sys.modules[__name__])
     MainAndExtraCode.main(sys.argv)

@@ -4,35 +4,23 @@ import unittest
 import os
 import sys
 
-"""
-Formats the output of the tests to be more user-friendly
-Currently outputted as a table in order to increase readability.
-"""
-
 
 class UmpleTestTableResult(unittest.TextTestResult):
-    """
-    Opens tag for results table and adds a little css
-    Adds the top row of table
-    """
+    """Reports unittest results as an HTML table while keeping unittest's own failure accounting."""
 
     def __init__(self, stream, descriptions, verbosity):
         super().__init__(stream, descriptions, verbosity)
         self.stream = stream
         self.verbosity = verbosity
-        # Removes a useless line of '-'
+        # Drop unittest's dashed separator line
         self.separator2 = ""
 
-        # Used to calculate % of passing tests
         self.testid = 0
         self.success = 0
         self.failure = 0
 
-        # Container for the table
         self.resultTable = "<div style='display: flex; flex-direction: column;'>"
-        # Separator div to add spacing between tables
         self.resultTable += "<div style='height: 35px; order: 2'></div>"
-        # Creates HTML table
         self.resultTable += "<style> table, th, td {\
                                 border-collapse: collapse;\
                                 padding: 12px 15px;\
@@ -43,20 +31,10 @@ class UmpleTestTableResult(unittest.TextTestResult):
         self.resultTable += "<table style='order: 3;'>"
         self.resultTable += "<tr><td>ID</td><td>Module</td><td>Test</td><td>Status</td><td>Message</td></tr>"
 
-    """
-    Called after a test passes
-    Adds output to results table
-    """
-
     def addSuccess(self, test):
         super().addSuccess(test)
         self.resultTable += "<td style='background-color:#66CD00'>PASS</td></tr>"
         self.success += 1
-
-    """
-    Called after a test throws an error
-    Adds output to results table
-    """
 
     def addError(self, test, err):
         super().addError(test, err)
@@ -67,15 +45,9 @@ class UmpleTestTableResult(unittest.TextTestResult):
         )
         self.failure += 1
 
-    """
-    Called after a test does not satisfy the expected results
-    Adds output to results table
-    """
-
     def addFailure(self, test, err):
         super().addFailure(test, err)
-        # Format failure message to be more tester friendly
-        # Original format looks like "2 == 2" or "2 != 2"
+        # Split unittest's equality message ("2 != 3") into the report's value columns
         err_msg = str(err[1]).split("\n")[0]
         err_args = err_msg
         assert_type = ""
@@ -99,11 +71,6 @@ class UmpleTestTableResult(unittest.TextTestResult):
 
         self.failure += 1
 
-    """
-    Called after a test is skipped
-    Adds output to results table
-    """
-
     def addSkip(self, test, reason):
         super().addSkip(test, reason)
         self.resultTable += (
@@ -112,21 +79,12 @@ class UmpleTestTableResult(unittest.TextTestResult):
             )
         )
 
-    """
-    Called after a test passes unexpectedly
-    Adds output to results table
-    """
-
     def addUnexpectedSuccess(self, test):
         super().addUnexpectedSuccess(test)
         self.resultTable += "<td style='background-color:#FF0000'>FAIL</td><td>unexpected success</td></tr>"
         self.failure += 1
 
-    """
-    Called after a test passes
-    Adds output to results table
-    """
-
+    # Opens the test's row, which the add method for its outcome completes
     def startTest(self, test):
         unittest.TestResult.startTest(self, test)
         self.testid += 1
@@ -134,11 +92,6 @@ class UmpleTestTableResult(unittest.TextTestResult):
         self.resultTable += "<tr><td>{0}</td><td>{1}</td><td>{2}</td>".format(
             self.testid, test_info[1][: test_info[1].rfind(".")], test_info[0]
         )
-
-    """
-    Called once all tests have run to finish the HTML table
-    Prints results as a percentage
-    """
 
     def finishTable(self):
         self.resultTable += "</table>"
@@ -209,7 +162,7 @@ def outputErrors(errorList, suites_names):
 TEST_HOOKS = {"setUp", "tearDown", "setUpClass", "tearDownClass"}
 
 # The number of tests in the suite (see the check after the run)
-INVENTORY = 1022
+INVENTORY = 1027
 
 
 def uncollectedMethods(module_name):

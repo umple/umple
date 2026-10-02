@@ -3,6 +3,11 @@
 
 
 class Item:
+    """
+    R1: track quality items
+    [Quality: Performance, Security]
+    """
+
     def __init__(self, aName):
         self._name = aName
 

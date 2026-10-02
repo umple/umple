@@ -87,11 +87,9 @@ class Method
   }
 
   /*
-   * Whether a generator for lang emits this method: a body was written for lang or an untagged body
-   * was written, since the untagged body is every language's fallback. A method whose only bodies
-   * are for other languages does not exist in lang. Abstract declarations and methods the compiler
-   * creates have no authored body and keep the rule based on the languages their code block holds.
-   * Use CodeBlock.isAuthored to ask whether exactly one language's body was written.
+   * Whether a generator for lang emits this method: a body was written for lang, or an untagged one,
+   * which every language falls back to. Methods without authored code (abstract declarations,
+   * compiler-created methods) keep the rule based on the languages their code block holds.
    */
   public boolean getExistsInLanguage(String lang)
   {
@@ -379,11 +377,9 @@ class CodeBlock
   }
 
   /*
-   * The whitespace (spaces, tabs) that indented the first line of lang's authored code in the
-   * source. getCode(lang) keeps the code trimmed, as every target has always received it; putting
-   * this before it restores the first line as written. Null when lang's code was not authored, when
-   * its first line shares its source line with other text (as in "{ return x; }", so the line has no
-   * indentation of its own), or when the code has been replaced since it was parsed.
+   * The whitespace that indented the first line of lang's authored code, which getCode(lang) keeps
+   * trimmed. Null when the code was not authored, shares its first source line with other text (as
+   * in "{ return x; }"), or has been replaced since it was parsed.
    */
   public String getFirstLineIndent(String lang)
   {

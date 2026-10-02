@@ -57,7 +57,7 @@ install:
 
 - ps: $env:JAVA_HOME="C:\Program Files\Java\jdk11" 
 
-# Python 3 checks and runs generated Python; the compiler and the testbeds use the interpreter named here
+# The compiler and the PythonNext tests use this Python 3; the original Python testbed runs python
 - ps: $env:UMPLE_PYTHON="C:\Python38-x64\python.exe"
 - ps: $env:UMPLE_REQUIRE_PYTHON="1"
 - ps: '& $env:UMPLE_PYTHON --version'

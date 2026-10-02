@@ -51,11 +51,10 @@ class PythonNextClassGenerator {
 
     emit getCode(UmpleModel model, UmpleElement uElement)(PythonNextClassGenerator);
 
-    // Each included selector owns one part of the class, in the order of the Java output.
+    // The parts of the class follow the order of the Java output.
     PythonNextClassGenerator <<!<</*PythonNextClassGenerator*/>><<#
   UmpleClass uClass = (UmpleClass) uElement;
   PythonNextGenerator gen = (PythonNextGenerator) GeneratorHelper.generator;
-  // A nested class is generated as its own text and placed, re-indented, inside its outer class.
   boolean nested = uClass.hasOuterClass();
   if (!nested)
   {
@@ -63,7 +62,7 @@ class PythonNextClassGenerator {
     realSb.append("\n" + IMPORTS + "\n\n");
   }
   String bases = gen.translate("isA", uClass);
-  #>>class <<=uClass.getName()>><<=bases>>:<<=gen.docstring(uClass.getComments(), "    ")>><<@ UmpleToPythonNext.enumerations_All >><<@ UmpleToPythonNext.state_machine_Enums_All >><<@ UmpleToPythonNext.members_AllStatics >><<#
+  #>>class <<=uClass.getName()>><<=bases>>:<<=gen.docstring(uClass.getComments(), uClass.getReqImplementations(), "    ")>><<@ UmpleToPythonNext.enumerations_All >><<@ UmpleToPythonNext.state_machine_Enums_All >><<@ UmpleToPythonNext.members_AllStatics >><<#
   for (UmpleClass inner : gen.innerClasses(uClass))
   {
     realSb.append("\n" + PythonSource.reindent(new PythonNextClassGenerator().getCode(model, inner), "", "    "));

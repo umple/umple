@@ -6,9 +6,7 @@ noreferences
 
 <h2>Python generation does not support a feature the class uses yet</h2>
 
-<p>A few Umple features are generated for Java but not yet by PythonNext. When a class uses one of them, PythonNext reports this error at the class and does not write a Python file for it, so no class is generated with part of its behaviour missing. Generation for other languages is not affected.</p>
-
-<p>The features concerned are: tracing, distributed classes, queued and pooled state machines, queued methods, synchronized methods, <code>emit</code> template methods, custom constructors, around injections and injections at code labels, association specialization, an inner class whose superclass is an inner class declared elsewhere in the same outer class or is that outer class, JSON generation (the genJson suboption), a guard testing a state with <code>is in state</code>, a guard, precondition or invariant that calls a Java library method other than <code>equals</code> and <code>contains</code> or that names something the model does not define or another class (such a constraint would fail each time it is checked), and methods sharing a name where one is static and another is not (including a method Python generates, such as a getter): one Python name cannot be both.</p>
+<p>A few Umple features are generated for Java but not yet by PythonNext. When a class uses one of them, PythonNext reports this error, which names the feature, and does not write a Python file for the class. Other classes are still generated, and generation for other languages is not affected. The <a href="PythonNext.html">PythonNext</a> page lists the features concerned.</p>
 
 <p>To generate Python with PythonNext, leave the feature out of the classes you generate as Python, or put it in a <a href="BasicMixsets.html">mixset</a> that is only used for Java.</p>
 

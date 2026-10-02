@@ -16,17 +16,15 @@ class PythonNextGenerator
   // Ends at most one on both sides, directed ends and immutable ends
   //------------------------
 
-  // Java makes the setters of an immutable end private, since only the constructor calls them.
-  // Python marks them private with a leading underscore, so an immutable class has no public
-  // mutator.
+  // Java makes an immutable end's setters private, as only the constructor calls them; a leading
+  // underscore keeps them out of the Python class's public API.
   public String immutableEndSetterName(AssociationVariable av, String nameKey)
   {
     return (av.isImmutable() ? "_" : "") + translate(nameKey, av);
   }
 
-  // Java injects into set and setMany of an immutable end a guard that also closes it, so the end
-  // is set once (by the constructor). A key member's guard (association_KeyGuard) checks the same
-  // flag, so it is not repeated here. Lines of the method body, or "".
+  // The guard Java injects into an immutable end's setters, closing the end after its first set. A
+  // key member's guard (association_KeyGuard) already checks the flag, so only the close is added.
   public String immutableEndGuard(UmpleClass uClass, AssociationVariable av)
   {
     if (!av.isImmutable())
@@ -38,10 +36,9 @@ class PythonNextGenerator
     return check + "\n        " + canSet + " = False";
   }
 
-  // A sorted end is put back in the order of its priority attribute after its objects change and
-  // after the user's after injection, as Java's injected Collections.sort does after an add (both
-  // sorts are stable; Java leaves a batch set unsorted). A line of the method body, or "" for an end
-  // that is not sorted.
+  // Re-sorts a sorted end by its priority attribute after a change and after the user's after
+  // injection, like Java's injected Collections.sort (both stable), and also after a batch set,
+  // which Java leaves unsorted. "" for an unsorted end.
   public String sortAfterChange(AssociationVariable av)
   {
     if (!av.isSorted())
@@ -52,19 +49,17 @@ class PythonNextGenerator
     return "\n        " + field(av) + ".sort(key=lambda x: x." + translate("getMethod", priority) + "())";
   }
 
-  // The instance method holding the body of alternateConstructor of a class in a mandatory one-to-one
-  // pair: it initializes an object from an existing partner. Its name avoids every modelled member,
-  // and it is always called through its class, so no user method can hide it.
+  // The instance method holding alternateConstructor's body in a mandatory one-to-one pair. Its name
+  // avoids every modelled member, and calls go through its class, so no user method can hide it.
   public String oneOneAlternateInit(UmpleClass uClass)
   {
     return freshMemberName(uClass, "_alternateInit");
   }
 
-  // How a constructor initializes the parent part of its object. A parent in a mandatory one-to-one
-  // pair has a constructor that creates its partner, so the parent part, which takes the parent's
-  // usual parameters (an existing partner), is initialized in place by the body of its
-  // alternateConstructor, as Java's child constructor calls the parent's usual constructor. super()
-  // starts after the class being initialized, so no subclass method can hide the parent's helper.
+  // How a constructor initializes its object's parent part. A parent in a mandatory one-to-one pair
+  // creates its partner in __init__, so its part is initialized from an existing partner by its
+  // alternateConstructor body, as in Java. super() starts after this class, so no subclass method
+  // can hide that helper.
   public String oneOneParentInit(UmpleClass parent)
   {
     GeneratedClass parentClass = parent.getGeneratedClass();
@@ -72,10 +67,9 @@ class PythonNextGenerator
     return "super()." + method + "(" + parentClass.getLookup(CONSTRUCTOR_PARAMETERS) + ")";
   }
 
-  // The partner's constructor calls alternateConstructor, so a user method with that name in a class
-  // of a mandatory one-to-one pair (or in its ancestors) would replace it or be replaced by it
-  // without notice: error 9215. Inner classes are generated in their outer class's module and
-  // checked with it. False when one is found.
+  // The partner's constructor calls alternateConstructor, so a model method of that name in a
+  // mandatory one-to-one class or its ancestors is error 9215. Inner classes are checked with their
+  // outer class.
   public boolean oneOneCheckNames(UmpleClass uClass)
   {
     boolean ok = true;

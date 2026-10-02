@@ -3,7 +3,10 @@
 
 
 class Y:
-    """This is class Y"""
+    """
+    This is class Y
+    R3: There must be a class called Y
+    """
 
     def __init__(self, aC, aX):
         self._c = aC
@@ -16,7 +19,10 @@ class Y:
         return True
 
     def getC(self):
-        """This is an important attribute"""
+        """
+        This is an important attribute
+        R5: A Y should have a c
+        """
         return self._c
 
     def getX(self):

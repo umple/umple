@@ -4,11 +4,11 @@ noreferences
 
 @@description
 
-<h2>A class outside a namespace is named like a standard Python module</h2>
+<h2>A class or namespace is named like a standard Python module</h2>
 
-<p>Each class becomes a Python module of the same name. Generated code imports a few standard modules (abc, enum, threading, datetime, sys, math and fractions), which a class or interface with one of these names and no namespace would hide. Python itself loads others when it starts (such as os, io, re, site and types), so an import of a class module with one of those names would find the standard module instead. Such a class or interface is reported and not generated.</p>
+<p>Each class becomes a Python module named after its namespace and class, and Python resolves the first part of that name before anything else. When that part is a standard module the generated code uses (abc, enum, threading, datetime, sys, math, fractions) or one Python loads at startup (such as os, io, re, site and types), the model's module would hide the standard one or could not be imported. PythonNext reports the class or interface and does not generate it.</p>
 
-<p>Put the class in a namespace, which makes it a module of that package, or give it another name.</p>
+<p>Rename the class, or use a namespace whose first part is not a standard module name (<code>app.sys</code> is fine).</p>
 
 @@example
 @@source manualexamples/E9213PythonModuleNameClash1.ump

@@ -13,8 +13,8 @@ plugins {
   id 'com.netflix.nebula.ospackage' version '12.3.0'
 }
 
-// Python 3 used to check and run generated Python, chosen as the compiler chooses it: UMPLE_PYTHON if
-// set, otherwise python3, otherwise python, each accepted only if it reports Python 3
+// Python 3 for checking and running generated Python, chosen as the compiler chooses it:
+// UMPLE_PYTHON if set, else python3, else python
 String pythonInterpreter() {
     def configured = System.getenv("UMPLE_PYTHON")
     def candidates = configured ? [configured] : ["python3", "python"]
@@ -244,6 +244,7 @@ ext.runUmpleJar = { umpleJar, masterFile, args = "", jvmArgs = "" ->
     println(command)
     def proc = command.execute();
     proc.waitForProcessOutput(System.out, System.err);
+    return proc.exitValue()
 }
 
 subprojects{
@@ -1469,10 +1470,12 @@ task pythonNextTestbedCompileUmple {
   group = "Custom"
   description = "Compiling PythonNext testbed source files"
   doLast{
-    // The harnesses are UTF-8 with identifiers beyond ASCII, which the generator compares, so they are
-    // read as UTF-8 whatever the platform's charset (as in build.testbed.xml)
-    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_pythonnext/src/TestHarnessPython.ump", "", "-Dfile.encoding=UTF-8")
-    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_pythonnext/src/TestHarnessPythonTimerLocals.ump", "", "-Dfile.encoding=UTF-8")
+    // The harnesses are UTF-8 with identifiers beyond ASCII, so they are read as UTF-8 on every platform
+    for (harness in ["TestHarnessPython.ump", "TestHarnessPythonTimerLocals.ump"]) {
+        if (runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_pythonnext/src/${harness}", "", "-Dfile.encoding=UTF-8") != 0) {
+            throw new GradleException("Generating the PythonNext testbed from ${harness} failed")
+        }
+    }
     }
 }
 

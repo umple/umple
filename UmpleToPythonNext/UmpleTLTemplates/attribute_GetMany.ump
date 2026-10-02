@@ -2,12 +2,12 @@ class UmpleToPythonNext {
     // A list attribute: indexed access (negative indices count from the end), a copy of the list,
     // its size, and the index of a value or -1. Each accessor runs its injections.
     attribute_GetMany <<!<</*attribute_GetMany*/>><<#
-  MethodParameter indexParameter = gen.parameter("index", "Integer");
+  MethodParameter indexParameter = gen.parameter("index", "int");
   MethodParameter valueParameter = gen.parameter(parameter, av.getType());
   if (gen.translate("getMethod", av).equals(gen.translate("getManyMethod", av)))
   {
     // Singular and plural are the same word: Java's two overloads become numbered methods behind
-    // one dispatcher, as earlier Python output had them.
+    // one dispatcher.
     List<String> getters = gen.overloadNames(uClass, gen.translate("getMethod", av), 2, "getters");
     List<List<MethodParameter>> getterParameters = new ArrayList<List<MethodParameter>>();
     getterParameters.add(Arrays.asList(indexParameter));
@@ -16,7 +16,7 @@ class UmpleToPythonNext {
 
     def <<=getters.get(0)>>(self, index):<<=gen.accessorBody(uClass, gen.translate("getMethod", av), parameter, field + "[index]", indexParameter)>>
 
-    def <<=getters.get(1)>>(self):<<=gen.docstring(av.getComments(), "        ")>><<=gen.accessorBody(uClass, gen.translate("getManyMethod", av), gen.translate("parameterMany", av), "list(" + field + ")")>><<=gen.overloadDispatcher(uClass, gen.translate("getMethod", av), false, getters, getterParameters)>><<#
+    def <<=getters.get(1)>>(self):<<=gen.docstring(av.getComments(), av.getReqImplementations(), "        ")>><<=gen.accessorBody(uClass, gen.translate("getManyMethod", av), gen.translate("parameterMany", av), "list(" + field + ")")>><<=gen.overloadDispatcher(uClass, gen.translate("getMethod", av), false, getters, getterParameters)>><<#
   }
   else
   {
@@ -24,7 +24,7 @@ class UmpleToPythonNext {
 
     def <<=gen.translate("getMethod", av)>>(self, index):<<=gen.accessorBody(uClass, gen.translate("getMethod", av), parameter, field + "[index]", indexParameter)>>
 
-    def <<=gen.translate("getManyMethod", av)>>(self):<<=gen.docstring(av.getComments(), "        ")>><<=gen.accessorBody(uClass, gen.translate("getManyMethod", av), gen.translate("parameterMany", av), "list(" + field + ")")>><<#
+    def <<=gen.translate("getManyMethod", av)>>(self):<<=gen.docstring(av.getComments(), av.getReqImplementations(), "        ")>><<=gen.accessorBody(uClass, gen.translate("getManyMethod", av), gen.translate("parameterMany", av), "list(" + field + ")")>><<#
   }
   #>>
 

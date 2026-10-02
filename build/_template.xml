@@ -14,8 +14,8 @@
   <local name="env" />
   <property environment="env"/>
 
-  <!-- Python 3 used to check and run generated Python, chosen as the compiler chooses it: UMPLE_PYTHON
-       if set, otherwise python3, otherwise python, each accepted only if it reports Python 3 -->
+  <!-- Python 3 for checking and running generated Python, chosen as the compiler chooses it:
+       UMPLE_PYTHON if set, else python3, else python -->
   <condition property="python.configured">
     <and>
       <isset property="env.UMPLE_PYTHON" />

@@ -1,7 +1,5 @@
 class UmpleToPythonNext {
-    // The multiplicity bounds of a many end and whether the current count is within them.
     association_IsNumberOfValidMethod <<!<</*association_IsNumberOfValidMethod*/>><<#
-  // A query with before and after injections around it, as Java's
   String count = "self." + gen.translate("numberOfMethod", av) + "()";
   String validity = count + " >= __class__." + gen.translate("minimumNumberOfMethod", av) + "()"
     + (av.getMultiplicity().isUpperBoundMany() ? "" : " and " + count + " <= __class__." + gen.translate("maximumNumberOfMethod", av) + "()");

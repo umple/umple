@@ -731,10 +731,9 @@ class Terminal
   }
 
   /*
-    Arbitrary-text values (such as native code bodies) are stored trimmed, which loses the indentation
-    of their first line. For those, record on the token the whitespace between the start of the source
-    line and the value's first character (start), or null when other text, such as an opening brace,
-    precedes the value on that line. Tabs are kept as written.
+    Arbitrary-text values such as native code bodies are stored trimmed, so record on the token the
+    whitespace before the value's first character (start), tabs as written, or null when other text,
+    such as an opening brace, precedes the value on that line.
   */
   private void recordFirstLineIndent(Token tok, String input, int start)
   {

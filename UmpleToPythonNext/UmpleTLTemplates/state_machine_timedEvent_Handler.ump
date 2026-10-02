@@ -1,9 +1,8 @@
 class UmpleToPythonNext {
     // Java's TimedEventHandler on a threading.Timer. A callback fires the timeout event only while
-    // it is current: the object is not deleted, the handler is still the one its field holds and the
-    // machine is still in the state that armed it. When the event is rejected (a false guard), the
-    // timer is armed again if it is still current after the event. Cancellation
-    // ends the visit even when an explicit exit leaves the state enum and handler field unchanged.
+    // current: the object is not deleted, its field still holds this handler, and the machine is still
+    // in the state that armed it. A rejected event (false guard) rearms the timer if still current.
+    // Cancellation ends the visit even when an explicit exit leaves the state and handler unchanged.
     state_machine_timedEvent_Handler <<!<</*state_machine_timedEvent_Handler*/>>
 
     class <<=gen.timerHandlerClass(uClass)>>:

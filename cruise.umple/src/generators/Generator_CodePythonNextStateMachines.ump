@@ -19,9 +19,9 @@ class PythonNextGenerator
   // Diagnostics
   //------------------------
 
-  // Queued and pooled state machines are not supported yet: error 9210, and the class is not
-  // generated. Nested classes are generated inside their outer class, so their machines count too.
-  // An event or state-dependent method parameter named self is error 9214, as for methods.
+  // Queued and pooled machines are not supported (9210). Events, state-dependent methods and states
+  // become methods and enum members, so their names must not be Python keywords, and parameters are
+  // checked as for other methods. Nested classes, generated inside this one, are checked too.
   public boolean checkStateMachines(UmpleClass uClass)
   {
     String feature = unsupportedStateMachine(uClass);
@@ -33,9 +33,6 @@ class PythonNextGenerator
     return checkStateMachineNames(uClass);
   }
 
-  // Events and state-dependent methods become methods and states enum members, so none can be named
-  // like a Python keyword, and their parameters are checked like those of other methods. Nested
-  // classes are generated inside this one.
   private boolean checkStateMachineNames(UmpleClass uClass)
   {
     boolean ok = true;
@@ -107,10 +104,10 @@ class PythonNextGenerator
   // Undoes the model changes of prepareStateMachines that postpare does not remove, latest first.
   private List<Runnable> stateMachineRestores = new ArrayList<Runnable>();
 
-  // Adds the actions that Java's preparation adds for final states, nested and concurrent machines,
-  // automatic transitions, do activities and timers, written in Python. Their code goes in the
-  // Python slot of the action, so the snippet translator never sees it, and they are internal, so
-  // postpare removes them and other generators never see them.
+  // Adds, in Python, the actions Java's preparation adds for final states, nested and concurrent
+  // machines, automatic transitions, do activities and timers. They use the Python slot, so the
+  // snippet translator skips them, and are internal, so postpare removes them and other generators
+  // never see them.
   public void prepareStateMachines(UmpleClass uClass)
   {
     Set<Action> existing = Collections.newSetFromMap(new IdentityHashMap<Action, Boolean>());
@@ -204,9 +201,8 @@ class PythonNextGenerator
     GeneratorHelper.prepareFinalState(sm, lookups);
   }
 
-  // Java's prepareConcurrentFinalStatesFor (Issue 140): in a concurrent region, a final state deletes
-  // the object only when every region of it is final too. null when a region can never be,
-  // such as one without final states, where Java deletes anyway.
+  // A final state in a concurrent region deletes the object only when every region is final, as in
+  // Java's prepareConcurrentFinalStatesFor; null when a region can never be final (Java deletes then).
   private String concurrentFinalStateCode(State concurrentRegion, StateMachine currentSm)
   {
     List<String> conditions = new ArrayList<String>();
@@ -222,10 +218,9 @@ class PythonNextGenerator
     return conditions.isEmpty() ? "self.delete()" : "if " + String.join(" and ", conditions) + ":\n    self.delete()";
   }
 
-  // The conditions that together hold when machine is final: it is in one of its final states (Java
-  // checks only its first), or in a state whose nested machines are all final, as the container state
-  // of a named region is. currentSm, whose final state is being entered, is final. Empty when machine
-  // is always final, null when it never is.
+  // The conditions under which machine is final: in any of its final states (Java checks only the
+  // first) or in a state whose nested machines are all final. currentSm, whose final state is being
+  // entered, counts as final. Empty means always final; null means never.
   private List<String> finalConditions(StateMachine machine, StateMachine currentSm)
   {
     if (machine == currentSm)
@@ -343,8 +338,8 @@ class PythonNextGenerator
     }
   }
 
-  // Issue 923: an event or state-dependent method that implements an interface method replaces the
-  // stub the class would otherwise get.
+  // An event or state-dependent method that implements an interface method replaces the stub the
+  // class would otherwise get.
   private void removeStubsImplementedByMachines(UmpleClass uClass)
   {
     List<Method> implementations = new ArrayList<Method>(uClass.getStateDependentMethods());
@@ -381,7 +376,6 @@ class PythonNextGenerator
     return javaNames().translate(keyName, event, sm);
   }
 
-  // The attribute holding a machine's current state, and that attribute on self.
   public String smAttribute(StateMachine sm)
   {
     return "_" + translate("stateMachineOne", sm);
@@ -392,9 +386,8 @@ class PythonNextGenerator
     return "self." + smAttribute(sm);
   }
 
-  // A machine's nested enum, qualified by the class that owns the machine. The methods of
-  // that class name it __class__, which no parameter or local can hide; the helper classes nested in
-  // it use the class's name, because there __class__ is the helper.
+  // A machine's nested enum, reached through __class__ in the owning class's methods. Helper classes
+  // nested in it use helperStateReference, because there __class__ is the helper.
   public String smType(StateMachine sm)
   {
     return DECLARING_CLASS + "." + translate("type", sm);
@@ -830,7 +823,6 @@ class PythonNextGenerator
     return name;
   }
 
-  // True when c is ancestor or one of its subclasses.
   private static boolean inherits(UmpleClass c, UmpleClass ancestor)
   {
     for (UmpleClass k = c; k != null; k = k.getExtendsClass())
@@ -843,7 +835,6 @@ class PythonNextGenerator
     return false;
   }
 
-  // The timed transitions of a class's machines, one per timer.
   public List<Transition> timedTransitions(UmpleClass uClass)
   {
     List<Transition> timed = new ArrayList<Transition>();
@@ -884,10 +875,9 @@ class PythonNextGenerator
       "the delay of the timed transition from state " + timed.getFromState().getName(), imports);
   }
 
-  // The attribute whose setter, generated in this class or an ancestor, has the name of event e, or
-  // null. Java overloads the two; here the setter becomes the first numbered implementation, the event
-  // the second, and a dispatcher takes the name. The test mirrors the setters
-  // attribute_Set_All emits.
+  // The attribute whose setter, generated here or in an ancestor, has event e's name, or null. Java
+  // overloads the two; here they become numbered implementations behind one dispatcher. The test
+  // mirrors the setters attribute_Set_All emits.
   public Attribute setterSharingName(UmpleClass uClass, Event e)
   {
     for (UmpleClass c = uClass; c != null; c = c.getExtendsClass())
@@ -930,11 +920,8 @@ class PythonNextGenerator
   // Code in state machines
   //------------------------
 
-  // An action's statements at indent, each line starting with a newline: its Python body as native
-  // code, else its untagged body through the snippet translator, else nothing. Prepared actions have
-  // only a Python body.
-  // A guarded entry or exit action (entry [g] / {...}) runs its body only when its guard, written as an
-  // untagged expression, holds.
+  // An action's statements at indent (see slotCode). A guarded entry or exit action (entry [g] / {...})
+  // runs its body only when its untagged guard holds.
   public String actionCode(Action action, UmpleClass uClass, List<MethodParameter> parameters, String indent, String slot)
   {
     if (action.getGuardCode() == null)
@@ -951,7 +938,6 @@ class PythonNextGenerator
     return guard == null ? "" : code + "\n" + indent + "if " + guard + ":" + (body.isEmpty() ? "\n" + indent + "    pass" : body);
   }
 
-  // Code this generator prepared, at indent.
   public String preparedCode(String code, UmpleClass uClass, String indent)
   {
     return nativeCode(code, null, indent, null, uClass);
@@ -968,12 +954,10 @@ class PythonNextGenerator
   // State-dependent methods
   //------------------------
 
-  // A state-dependent method under name, starting with a blank line. Its body is a port of Java's
-  // state_machine_StateDependentMethods_All: the body of the current state, else of its nearest
-  // enclosing state that has one, else the class's default body; with several machines, the next
-  // machine's default is the previous one's. With contracts or injections it is wrapped as userMethod
-  // wraps a user method: Java inserts after injections before each return, which Python cannot do to
-  // native code, so the selection runs in a helper and the wrapper checks around it.
+  // A state-dependent method under name, selecting as Java's state_machine_StateDependentMethods_All
+  // does: the current state's body, else its nearest enclosing state's, else the default. With
+  // contracts or injections the selection runs in a helper, as in userMethod: Java puts after
+  // injections before each return, which Python cannot do to native code.
   public String stateDependentMethod(UmpleClass uClass, Method method, String name)
   {
     String parameters = methodParameters(method);
@@ -1045,6 +1029,7 @@ class PythonNextGenerator
     return all;
   }
 
+  // With several machines, each later machine falls back to the earlier one's selection.
   private Function<String, String> stateDependentSwitch(UmpleClass uClass, Method method)
   {
     Map<State, MethodBody> bodies = uClass.getStateDependentMethodBodyMap().get(method);
@@ -1126,7 +1111,6 @@ class PythonNextGenerator
     return false;
   }
 
-  // A state's body when it has one Python uses, chosen by the rule for method bodies.
   private static MethodBody pythonBody(MethodBody body)
   {
     return body == null || bodyLanguage(body) == null ? null : body;
@@ -1141,7 +1125,7 @@ class PythonNextGenerator
   private String bodyCode(MethodBody body, UmpleClass uClass, String indent)
   {
     String language = bodyLanguage(body);
-    return nativeCode(body.getCodeblock().getCode(language), body.getCodeblock().getFirstLineIndent(language), indent, null, uClass);
+    return functionCode(body.getCodeblock().getCode(language), body.getCodeblock().getFirstLineIndent(language), indent, null, uClass);
   }
 
   // What Java's generated state-dependent method returns when no body applies: zero or false for a

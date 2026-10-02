@@ -15,17 +15,12 @@ class PythonNextGenerator
   // Function-level imports needed by the last translated snippet; see getSnippetImports.
   private List<String> snippetImports = new ArrayList<String>();
 
-  // Translates an untagged snippet into Python, resolving names against uClass and the parameters in
-  // scope. isExpression means a single expression (default value, derived attribute) rather than
-  // statements. isStatic means there is no object: a static method, or, for an expression, an
-  // initializer that runs while the class body is being defined (a constant).
-  // Statements come back unindented, one per line, preceded by the imports they need; an expression
-  // comes back alone, and the imports its function needs are in getSnippetImports.
-  // Reports error 9211 at position and returns null when the snippet uses something outside the
-  // supported subset. slot names the code for the user and starts with its kind, which chooses the
-  // suggested Python alternative: "the entry action ...", "the exit action ...", "the do activity ...",
-  // "the action ...", "the before injection ...", "the after injection ...", "the derived attribute ...",
-  // "the default value ..." or "the constant ...".
+  // Translates an untagged snippet, resolving names against uClass and the parameters in scope.
+  // isExpression means a single expression (default value, derived attribute); isStatic means there
+  // is no object (a static method, or a class-body initializer such as a constant). Statements come
+  // back unindented, preceded by their imports; an expression's imports are in getSnippetImports.
+  // Unsupported code is reported (9211) at position and gives null. slot names the code for the user
+  // and starts with its kind (see snippetSuggestion).
   public String translateSnippetAt(String code, UmpleClass uClass, List<MethodParameter> parameters,
     boolean isStatic, boolean isExpression, Position position, String slot)
   {
@@ -123,12 +118,10 @@ class PythonNextGenerator
   }
 }
 
-// Translates untagged Java snippets for one class: a tokenizer for Java's lexical syntax, a recursive
-// descent parser for the supported subset into PythonSnippetNode trees, and an emitter
-// that resolves names against the model, records each expression's kind and writes Python. Where
-// Java's evaluation order needs it (x++ inside an expression, a receiver read once, effects inside a
-// short-circuit branch) the emitter writes statements before the expression, and values computed
-// earlier are first kept in temporaries.
+// Translates untagged Java snippets for one class: a tokenizer, a recursive descent parser for the
+// supported subset, and an emitter that resolves names against the model and writes typed Python.
+// Where Java's evaluation order needs it (x++ inside an expression, a receiver read once, effects in
+// a short-circuit branch) the emitter writes statements first, keeping earlier values in temporaries.
 class PythonSnippetTranslator
 {
   depend java.util.*;
@@ -254,7 +247,6 @@ class PythonSnippetTranslator
     return String.join("\n", lines);
   }
 
-  // The Python expression for a snippet holding one Java expression.
   public String translateExpression(String code)
   {
     begin(code, true);
@@ -264,7 +256,6 @@ class PythonSnippetTranslator
     return value(emit(node)).code;
   }
 
-  // A Python list for comma-separated Java expressions.
   public String translateList(String code)
   {
     begin(code, true);
@@ -1167,7 +1158,6 @@ class PythonSnippetTranslator
     return String.join("", Collections.nCopies(level, "    "));
   }
 
-  // Removes and returns the lines emitted since mark.
   private List<String> cut(int mark)
   {
     List<String> lines = new ArrayList<String>(out.subList(mark, out.size()));
@@ -1780,15 +1770,55 @@ class PythonSnippetTranslator
     {
       throw fail("methods of enumerations, such as " + name + "(), are not supported");
     }
-    if (kind.equals("str") || kind.equals("char"))
+    if (kind.equals("str"))
     {
-      throw fail("String methods such as " + name + "() are not supported");
+      return stringMethod(n, target, name, values);
+    }
+    if (kind.equals("char"))
+    {
+      throw fail("methods of characters, such as " + name + "(), are not supported");
     }
     if (kind.startsWith("list:"))
     {
       throw fail("collection methods such as " + name + "() are not supported; use the generated methods such as numberOfX() or getX(index)");
     }
     throw fail(name + "() is called on " + describeKind(kind) + ", which is not supported");
+  }
+
+  // The String methods untagged code may call. They go through str and len, so a null string raises
+  // as Java's NullPointerException does, and equals of something other than a string is false.
+  private PythonSnippetNode stringMethod(PythonSnippetNode n, PythonSnippetNode target, String name, List<PythonSnippetNode> values)
+  {
+    String receiver = target.code;
+    String argument = values.size() == 1 ? values.get(0).code : null;
+    if (values.size() == 1 && !name.equals("equals") && !Arrays.asList("str", "unknown").contains(values.get(0).kind))
+    {
+      throw fail(name + "() takes a string");
+    }
+    switch (name + "/" + values.size())
+    {
+      case "equals/1":
+        requireBuiltin("str");
+        return set(n, "(str.__eq__(" + receiver + ", " + argument + ") is True)", "bool", ATOM, false, false);
+      case "contains/1":
+        requireBuiltin("str");
+        return set(n, "str.__contains__(" + receiver + ", " + argument + ")", "bool", ATOM, false, false);
+      case "startsWith/1":
+        requireBuiltin("str");
+        return set(n, "str.startswith(" + receiver + ", " + argument + ")", "bool", ATOM, false, false);
+      case "endsWith/1":
+        requireBuiltin("str");
+        return set(n, "str.endswith(" + receiver + ", " + argument + ")", "bool", ATOM, false, false);
+      case "length/0":
+        requireBuiltin("len");
+        return set(n, "len(" + receiver + ")", "int", ATOM, false, false);
+      case "isEmpty/0":
+        requireBuiltin("len");
+        return set(n, "(len(" + receiver + ") == 0)", "bool", ATOM, false, false);
+      default:
+        throw fail("String methods other than equals, contains, startsWith, endsWith, length and isEmpty, such as "
+          + name + "(), are not supported");
+    }
   }
 
   // A call's receiver, when it has one, and its arguments, in Java's order. Arguments must be
@@ -1809,10 +1839,9 @@ class PythonSnippetTranslator
     return values;
   }
 
-  // code, which reaches a static member through target, preceded by the evaluation of target: Java
-  // evaluates it and does not use its value, so null is fine, but a failure (s.child when s is null) or
-  // an effect must still happen. Reading a local, a parameter, this or one of its attributes can
-  // neither fail nor have an effect, and a value already kept has been evaluated, so these are left out.
+  // code, which reaches a static member through target, preceded by target's evaluation: Java
+  // evaluates target without using it, so its effects and failures (s.child when s is null) must stay.
+  // Reads that can do neither (a local, a parameter, this or its fields, a kept value) are left out.
   private String afterEvaluating(PythonSnippetNode target, String code)
   {
     if (target.stable || target.getType().equals("name") || target.getType().equals("field") && target.child(0).getType().equals("this"))
@@ -1875,7 +1904,6 @@ class PythonSnippetTranslator
     return allSafeArguments(value.children);
   }
 
-  // System.out.println(x) prints a line and System.out.print(x) prints without one.
   private PythonSnippetNode emitPrint(PythonSnippetNode n, String stream, List<PythonSnippetNode> arguments)
   {
     String name = n.getText();
@@ -2164,9 +2192,8 @@ class PythonSnippetTranslator
   }
 
   // Java's integer division and remainder truncate toward zero; Python's // and % round toward
-  // negative infinity, so negative operands take the other branch. The operands appear more than
-  // once, so values with effects are computed once first: into temporaries, or, where no statements
-  // may come first, through a lambda's parameters.
+  // negative infinity. The operands appear more than once, so effectful ones are computed once first,
+  // into temporaries or, where no statement may come first, through a lambda's parameters.
   private PythonSnippetNode integerDivision(PythonSnippetNode n, String op, PythonSnippetNode left, PythonSnippetNode right, String kind)
   {
     if (isLiteral(left, "[0-9][0-9_]*") && isLiteral(right, "[1-9][0-9_]*"))
@@ -2207,7 +2234,6 @@ class PythonSnippetTranslator
     return n.code.matches("[A-Za-z_][\\w.]*|\\(?-?[0-9][\\w.]*\\)?");
   }
 
-  // Whether n is an int literal whose Python spelling matches pattern.
   private static boolean isLiteral(PythonSnippetNode n, String pattern)
   {
     return n.getType().equals("literal") && n.code.matches(pattern);
@@ -2218,10 +2244,9 @@ class PythonSnippetTranslator
     return code.startsWith("-") || code.startsWith("+") ? "(" + code + ")" : code;
   }
 
-  // An operand of string concatenation: strings and chars as they are, booleans and null spelt as
-  // Java spells them, other values through str(). A model object or enumeration value that can
-  // change (not self or an enumeration constant) may be None, which Java writes as null; the operand
-  // is evaluated once.
+  // A string concatenation operand: booleans and null spelt as in Java, other non-strings through
+  // str(). A value that may be None (a model object or enumeration value other than self or a
+  // constant) is evaluated once.
   private PythonSnippetNode text(PythonSnippetNode operand)
   {
     if (operand.kind.equals("str") || operand.kind.equals("char"))
@@ -2416,9 +2441,9 @@ class PythonSnippetTranslator
     return kind.startsWith("list:") ? "a collection" : "an enumeration value";
   }
 
-  // Whether Java passes or stores a value of kind value where kind target is expected: the same kind,
-  // an int where a float is expected, null, any model object, enumeration value or collection where
-  // another is expected (subclasses are not checked), or a kind that is not known.
+  // Whether the translator accepts a value of kind value where kind target is expected: the same
+  // kind, an int for a float, null, an unknown kind, or any object, enumeration value or list where
+  // another is expected. Looser than Java: subtyping is not checked.
   private static boolean assignable(String value, String target)
   {
     return value.equals(target) || value.equals("unknown") || target.equals("unknown") || value.equals("null")
@@ -2563,10 +2588,9 @@ class PythonSnippetTranslator
     return resolved.startsWith("enumtype:") ? "enum:" + resolved.substring(9) : "object:" + resolved.substring(5);
   }
 
-  // A type name as seen from owner: the enumeration of one of its state machines, an enumeration of
-  // the class or of the model (which, as in Java, is generated inside each class that uses it), or a
-  // model class or interface; Outer.Inner names an inner class or enumeration of Outer.
-  // Enumerations are "enumtype:Owner.Name", classes "type:Name".
+  // A type name as seen from owner: a state machine's or a class's enumeration, a model enumeration
+  // (generated inside each class that uses it, as in Java), or a model class or interface; Outer.Inner
+  // names a nested one. Enumerations are "enumtype:Owner.Name", classes "type:Name".
   private String resolveType(String name, UmpleClassifier owner)
   {
     if (name.contains("."))
@@ -2819,6 +2843,15 @@ class PythonSnippetTranslator
   // A constant declared with the Java syntax in c, or in an interface it implements or extends.
   private String[] declaredConstant(UmpleClassifier c, String name)
   {
+    return declaredConstant(c, name, new HashSet<UmpleClassifier>());
+  }
+
+  private String[] declaredConstant(UmpleClassifier c, String name, Set<UmpleClassifier> seen)
+  {
+    if (!seen.add(c))
+    {
+      return null; // reached already through another path
+    }
     for (Constant constant : c.getConstants())
     {
       if (constant.getName().equals(name))
@@ -2829,7 +2862,7 @@ class PythonSnippetTranslator
     List<UmpleInterface> parents = c instanceof UmpleClass ? ((UmpleClass) c).getParentInterface() : ((UmpleInterface) c).getExtendsInterface();
     for (UmpleInterface parent : parents)
     {
-      String[] constant = declaredConstant(parent, name);
+      String[] constant = declaredConstant(parent, name, seen);
       if (constant != null)
       {
         return constant;
@@ -2838,10 +2871,9 @@ class PythonSnippetTranslator
     return null;
   }
 
-  // The method of c, its superclasses or interfaces that a call with these arguments reaches, among
-  // user methods and the generated API: as the kind it returns, "static" or "", and the declaring
-  // class; null when there is no method of that name. Overloads are told apart by the number and
-  // kinds of the arguments; when several still fit, a return kind they do not share is unknown.
+  // The method of c or its ancestors, user or generated, that a call with these arguments reaches, as
+  // { returned kind, "static" or "", declaring class }, or null when none has the name. When several
+  // overloads still fit, a return kind they do not share is unknown.
   private String[] findMethod(UmpleClassifier c, String name, List<PythonSnippetNode> arguments)
   {
     List<String[]> candidates = new ArrayList<String[]>();
@@ -2952,6 +2984,16 @@ class PythonSnippetTranslator
   // the methods named name in k, its superclasses and interfaces.
   private void collectMethods(UmpleClassifier k, String name, List<String[]> signatures)
   {
+    collectMethods(k, name, signatures, new HashSet<UmpleClassifier>());
+  }
+
+  // seen keeps an interface reached through several paths from being collected once per path
+  private void collectMethods(UmpleClassifier k, String name, List<String[]> signatures, Set<UmpleClassifier> seen)
+  {
+    if (!seen.add(k))
+    {
+      return;
+    }
     List<Method> declared = new ArrayList<Method>(k.getMethods());
     if (k instanceof UmpleClass)
     {
@@ -2982,20 +3024,32 @@ class PythonSnippetTranslator
       }
       if (((UmpleClass) k).getExtendsClass() != null)
       {
-        collectMethods(((UmpleClass) k).getExtendsClass(), name, signatures);
+        collectMethods(((UmpleClass) k).getExtendsClass(), name, signatures, seen);
       }
     }
     List<UmpleInterface> parents = k instanceof UmpleClass ? ((UmpleClass) k).getParentInterface() : ((UmpleInterface) k).getExtendsInterface();
     for (UmpleInterface parent : parents)
     {
-      collectMethods(parent, name, signatures);
+      collectMethods(parent, name, signatures, seen);
     }
   }
 
-  // The public methods generated for the members of class k, as { name, parameter kinds, returned
-  // kind, "static" or "" }. Names come from the generator's naming keys, and which methods exist
-  // follows the Python templates (the setter of a state machine with events returns nothing; that of
-  // a simple machine returns True).
+  // Whether Python generates a public method of this name for the members or events of class k
+  public boolean generates(UmpleClass k, String name)
+  {
+    for (String[] method : generatedMethods(k))
+    {
+      if (method[0].equals(name))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // The public methods generated for class k's members, as { name, parameter kinds, returned kind,
+  // "static" or "" }. Must match the Python templates (a state machine's setter returns nothing when
+  // the machine has events, True otherwise).
   private List<String[]> generatedMethods(UmpleClass k)
   {
     List<String[]> methods = generatedMethods.get(k);
@@ -3146,11 +3200,10 @@ class PythonSnippetTranslator
   }
 }
 
-// A token or a node of a parsed snippet. The parser sets type, text and children; the emitter sets
-// the Python code, the kind of value (int, float, bool, str, char, null, unknown, void,
-// object:Class, enum:Owner.Name, list:kind, and type:Class or enumtype:Owner.Name for type names),
-// the Python precedence, whether evaluating it again has no effect (pure) and whether its value can
-// no longer change (stable).
+// A token or node of a parsed snippet. The parser sets type, text and children; the emitter sets
+// code, kind (int, float, bool, str, char, null, unknown, void, object:Class, enum:Owner.Name,
+// list:kind, or type:Class and enumtype:Owner.Name for type names), prec, pure (evaluating it again
+// has no effect) and stable (its value can no longer change).
 class PythonSnippetNode
 {
   depend java.util.*;

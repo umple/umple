@@ -16,9 +16,11 @@ class Example:
         return True
 
     def getA(self):
+        """R01: this is a requirement for an attribute"""
         return self._a
 
     def getB(self):
+        """R01: this is a requirement for an attribute"""
         return self._b
 
     def delete(self):

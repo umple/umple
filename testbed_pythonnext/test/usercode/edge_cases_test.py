@@ -5,7 +5,8 @@ import unittest
 from ImportModules import importModules
 
 importModules(["LoudGreeter", "Checks", "AlwaysEqual", "Pair", "CountedChild", "ContractCalls", "ContractCallsChild",
-               "KeyedPart", "PartBox", "PartBoxPair"], ["usercode", "test"])
+               "KeyedPart", "PartBox", "PartBoxPair", "BoxedNull", "TextualSetter", "TextualStr", "LabelCrate",
+               "CrateItem", "CountingTagged", "DependMaker"], ["usercode", "test"])
 from ImportModules import *
 
 
@@ -84,3 +85,33 @@ class EdgeCasesTest(unittest.TestCase):
         part = KeyedPart.KeyedPart(1)
         with self.assertRaises(RuntimeError):
             PartBoxPair.PartBoxPair(PartBox.PartBox(part), PartBox.PartBox(part)).distinct()
+
+    def test_boxedParametersTakeNone(self):
+        boxed = BoxedNull.BoxedNull()
+        self.assertEqual("null", boxed.m(None))
+        self.assertEqual("two", boxed.m(None, 1))
+        with self.assertRaises(TypeError):
+            boxed.m(1, None)
+
+    def test_methodTextInAStringIsNotAMethod(self):
+        textual = TextualSetter.TextualSetter(1)
+        self.assertTrue(textual.setX(2))
+        self.assertEqual(2, textual.getX())
+        self.assertEqual("custom", textual.setX("label"))
+        self.assertIn("[name:value]", str(TextualStr.TextualStr("value")))
+
+    def test_subclassOverloadKeepsTheInheritedOnes(self):
+        crate = LabelCrate.LabelCrate()
+        item = CrateItem.CrateItem()
+        self.assertTrue(item.setCrate(crate))
+        self.assertEqual(1, crate.numberOfItems())
+        self.assertTrue(crate.addItem("label"))
+        self.assertFalse(crate.addItem("other"))
+        tagged = CountingTagged.CountingTagged()
+        self.assertTrue(tagged.addTag("a"))
+        self.assertEqual(["a"], list(tagged.getTags()))
+        self.assertEqual(3, tagged.getTags(3))
+
+    def test_dependedClassIsImportedWhereTheBodyRuns(self):
+        self.assertIsInstance(DependMaker.DependMaker().make(), CrateItem.CrateItem)
+

@@ -1,7 +1,6 @@
 use state_machine_Event.ump;
 
 class UmpleToPythonNext {
-    // One method per event, dispatching to every machine that handles it.
     state_machine_Events_All <<!<</*state_machine_Events_All*/>><<#
 {
   String deletedFlag = gen.deletedFlag(uClass);

@@ -1049,8 +1049,8 @@ mixset Association {
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------    
 private void copyMethodsFromTraitToClass(UmpleClass inClass){
-    Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>();
-	Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+    Map<UmpleTrait, List<Method>> traitMethods = new LinkedHashMap<UmpleTrait, List<Method>>();
+	Map<UmpleTrait, List<Method>> tempTraitMethods = new LinkedHashMap<UmpleTrait, List<Method>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 		checkClassSupportTraitsInterfaces(inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
 		if ( ! getParseResult().getWasSuccess() ) return;
@@ -1145,8 +1145,8 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 //---------------------------------Start--------------------------------------     
    private Map<UmpleTrait, List<Method>> gatherConcreteMethods (UmpleTrait inTrait, GeneralTPApplied inGTPApplied) 
   {
-	 Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>(); 
- 	 Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+	 Map<UmpleTrait, List<Method>> traitMethods = new LinkedHashMap<UmpleTrait, List<Method>>(); 
+ 	 Map<UmpleTrait, List<Method>> tempTraitMethods = new LinkedHashMap<UmpleTrait, List<Method>>();
  	 //----------------------------------------------------------------------------------------
   	 if (inGTPApplied!=null){
 	 	 for (MethodTemplateSignature mTSignature : inGTPApplied.getMethodTemplateSignatures()) {
@@ -1895,8 +1895,8 @@ mixset StateMachine {
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 private void copyAttributesFromTraitsToClass(UmpleClass inClass){
-	Map<UmpleTrait, List<Attribute>> traitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
-	Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	Map<UmpleTrait, List<Attribute>> traitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>();
+	Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 		tempTraitAttributes = gatherAttributes(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
 		if ( ! getParseResult().getWasSuccess() ) return;
@@ -1922,8 +1922,8 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 //---------------------------------Start--------------------------------------
 mixset Association {
   private void copyAssociationsFromTraitToClass(UmpleClass inClass) {
-    Map<UmpleTrait, List<AssociationVariable>> traiAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
-	Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+    Map<UmpleTrait, List<AssociationVariable>> traiAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>();
+	Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 		tempTraitAssociationVariables = gatherAssociations(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
 		if ( ! getParseResult().getWasSuccess() ) return;
@@ -1967,8 +1967,8 @@ mixset Association {
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, GeneralTPApplied inGTPApplied) {
-	 Map<UmpleTrait, List<Attribute>> traitAttributes = new HashMap<UmpleTrait, List<Attribute>>(); 
-	 Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	 Map<UmpleTrait, List<Attribute>> traitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>(); 
+	 Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>();
 	 //----------------------------------------------------------------------------------------
 	 List<Attribute> attributes = new ArrayList<Attribute>();	  
 	 for (Attribute attribute : inTrait.getAttributes()) {
@@ -1997,8 +1997,8 @@ private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, Ge
 //---------------------------------Start--------------------------------------
 mixset Association {
 private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait inTrait, GeneralTPApplied inGTPApplied, UmpleClass inClass) {
-     Map<UmpleTrait, List<AssociationVariable>> traitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>(); 
- 	 Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+     Map<UmpleTrait, List<AssociationVariable>> traitAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>(); 
+ 	 Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>();
  	 //----------------------------------------------------------------------------------------
  	 List<AssociationVariable> associationVariables = new ArrayList<AssociationVariable>();	  
  	 for (AssociationVariable associationVariable : inTrait.getAssociationVariables()) {

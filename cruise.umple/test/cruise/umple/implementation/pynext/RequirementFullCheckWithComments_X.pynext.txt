@@ -3,6 +3,8 @@
 
 
 class X:
+    """R1: There should be a class called X"""
+
     def __init__(self, aA, aB):
         self._a = aA
         self._b = aB
@@ -17,10 +19,17 @@ class X:
         return True
 
     def getA(self):
+        """
+        R1a: The reason it should be called X is because it is secret
+        R2: Class X should have several attribites
+        """
         return self._a
 
     def getB(self):
-        """This is another attribute"""
+        """
+        This is another attribute
+        R2: Class X should have several attribites
+        """
         return self._b
 
     def getY(self, index):

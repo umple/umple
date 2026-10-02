@@ -1,7 +1,7 @@
 class UmpleToPythonNext {
     association_GetOne <<!<</*association_GetOne*/>>
 
-    def <<=gen.translate("getMethod", av)>>(self):<<=gen.docstring(av.getComments(), "        ")>><<=gen.accessorBody(uClass, gen.translate("getMethod", av), parameter, field)>><<#
+    def <<=gen.translate("getMethod", av)>>(self):<<=gen.docstring(av.getComments(), av.getReqImplementations(), "        ")>><<=gen.accessorBody(uClass, gen.translate("getMethod", av), parameter, field)>><<#
   if (av.getMultiplicity().getLowerBound() == 0)
   {
     #>>

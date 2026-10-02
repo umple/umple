@@ -5,7 +5,7 @@ class UmpleToPythonNext {
   String getterAfter = gen.injected(uClass, "after", gen.translate("getMethod", av));
   #>>
 
-    def <<=gen.translate("getMethod", av)>>(self):<<=gen.docstring(av.getComments(), "        ")>><<=gen.injected(uClass, "before", gen.translate("getMethod", av))>><<#
+    def <<=gen.translate("getMethod", av)>>(self):<<=gen.docstring(av.getComments(), av.getReqImplementations(), "        ")>><<=gen.injected(uClass, "before", gen.translate("getMethod", av))>><<#
   String getterTarget = getterAfter.isEmpty() ? "return " : parameter + " = ";
   for (String line : av.getIsDerived() ? gen.derivedLines(uClass, getterTarget, av) : Arrays.asList(getterTarget + field))
   {

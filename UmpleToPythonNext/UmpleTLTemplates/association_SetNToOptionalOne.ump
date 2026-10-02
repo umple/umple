@@ -1,10 +1,9 @@
 use association_Guards.ump;
 
 class UmpleToPythonNext {
-    // Replaces the objects of an end of exactly n whose other end is optional one. The new objects
-    // must be n distinct objects (by identity) without another owner, and no frozen key member may
-    // change (association_LinkedKeyGuard); objects left out lose their owner. The other end's field
-    // is written directly, as Java does through reflection.
+    // Replaces the objects of an end of exactly n whose other end is optional one: n distinct unowned
+    // objects (by identity), with no frozen key member changing (association_LinkedKeyGuard). Objects
+    // left out lose their owner; the other end's field is written directly, as Java does by reflection.
     association_SetNToOptionalOne <<!<</*association_SetNToOptionalOne*/>><<#
   String checkNew = gen.translate("parameterCheckNewMany", av);
   String newObjects = gen.translate("parameterMany", av);

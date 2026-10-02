@@ -10,8 +10,8 @@ class UmpleToPythonNext {
   }
 #>>!>>
 
-    // Java wraps set and add of an end that a class invariant mentions in that invariant. (The front
-    // end reports error 28 for association ends in invariants, so none are found for now.)
+    // Java wraps set and add of an end that a class invariant mentions in that invariant. The front
+    // end rejects such invariants (error 28), so this finds none until it accepts them.
     association_InvariantGuards <<!<</*association_InvariantGuards*/>><<#
   for (ConstraintTree invariant : gen.invariantsOn(uClass, av))
   {
@@ -26,9 +26,8 @@ class UmpleToPythonNext {
     association_SetGuards <<!<</*association_SetGuards*/>><<@ UmpleToPythonNext.association_KeyGuard >><<@ UmpleToPythonNext.association_OwnerKeyGuard >><<@ UmpleToPythonNext.association_InvariantGuards >>!>>
 
     // The guards of an add, after the user's before injection and before any change, as in Java: the
-    // key guard and the duplicate check Java injects, then invariants. Links are found by identity, except for an association class,
-    // whose key is its link: an equal instance links the same pair, which Java rejects through
-    // equals and so does this.
+    // key guard, the duplicate check, then invariants. Duplicates are found by identity, except for an
+    // association class, where an equal instance links the same pair and Java's equals rejects it.
     association_AddGuards <<!<</*association_AddGuards*/>><<@ UmpleToPythonNext.association_KeyGuard >><<#
   if (model.getUmpleClass(av.getType()) instanceof AssociationClass)
   {

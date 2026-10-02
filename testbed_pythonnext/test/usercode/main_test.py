@@ -27,3 +27,10 @@ class MainTest(unittest.TestCase):
         run = subprocess.run([sys.executable, script, "a", "b"], env=env, capture_output=True, text=True, timeout=60)
         self.assertEqual(0, run.returncode, run.stderr)
         self.assertEqual("arguments 3 ['a', 'b']\n", run.stdout)
+
+    def test_theRunningMainClassIsTheOneOtherModulesImport(self):
+        script = os.path.join(GENERATED_ROOT, "cruise", "usercode", "test", "IdentityMain.py")
+        env = dict(os.environ, PYTHONPATH=GENERATED_ROOT)
+        for command in ([script], ["-m", "cruise.usercode.test.IdentityMain"]):
+            run = subprocess.run([sys.executable] + command, env=env, capture_output=True, text=True, timeout=60)
+            self.assertEqual((0, "main\n"), (run.returncode, run.stdout), run.stderr)

@@ -39,9 +39,9 @@ use association_RemoveMany.ump;
 use association_AddIndexControlFunctions.ump;
 
 class UmpleToPythonNext {
-    // Chooses the mutators of each navigable association end from both ends' multiplicities, exactly
-    // as Java's association_Set_All does (without specialization, which is not supported yet). Each
-    // leaf template keeps the name of the Java template with the same behaviour.
+    // Chooses each navigable end's mutators from both ends' multiplicities, as Java's
+    // association_Set_All does (specialization is unsupported). Leaf templates keep the names of
+    // their Java counterparts.
     association_Set_All <<!<</*association_Set_All*/>><<#
 {
   for (AssociationVariable av : uClass.getAssociationVariables())

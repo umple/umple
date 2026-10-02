@@ -31,10 +31,10 @@ class OverloadedMethods:
     def describe(self, *args, **kwargs):
         from Part import Part
         bound = __class__._bindArguments(("value",), False, args, kwargs)
-        if bound is not None and (isinstance(bound[0], int) and not isinstance(bound[0], bool)):
+        if bound is not None and (bound[0] is None or (isinstance(bound[0], int) and not isinstance(bound[0], bool))):
             return __class__.describe1(self, *bound)
         bound = __class__._bindArguments(("value", "flag"), False, args, kwargs)
-        if bound is not None and (isinstance(bound[0], (int, float)) and not isinstance(bound[0], bool)) and isinstance(bound[1], bool):
+        if bound is not None and (bound[0] is None or (isinstance(bound[0], (int, float)) and not isinstance(bound[0], bool))) and (bound[1] is None or isinstance(bound[1], bool)):
             return __class__.describe2(self, *bound)
         bound = __class__._bindArguments(("part",), False, args, kwargs)
         if bound is not None and (bound[0] is None or isinstance(bound[0], Part)):

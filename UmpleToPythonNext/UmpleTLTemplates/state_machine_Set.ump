@@ -1,9 +1,8 @@
 class UmpleToPythonNext {
-    // Java's exit and set methods: exit runs the exit actions of the current state; set changes the
-    // state, enters the parent state of a nested machine, then runs the entry actions of the new
-    // state, which include starting its nested machines, activities and timers. Code that deletes the
-    // object ends both; entry code that leaves the state ends the entry of that visit, so the
-    // visit starts nothing more, even when the state was entered again meanwhile.
+    // Java's exit and set methods: exit runs the current state's exit actions; set changes the state,
+    // enters a nested machine's parent state, then runs the new state's entry actions, which start its
+    // nested machines, activities and timers. Deleting the object ends both. Entry code that leaves the
+    // state ends that visit's entry, so it starts nothing more even if the state was entered again.
     state_machine_Set <<!<</*state_machine_Set*/>><<#
   String field = gen.smField(sm);
   String type = gen.smType(sm);

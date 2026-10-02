@@ -21,11 +21,10 @@ class PythonSource
   private static final int CONTINUATION = 3;
   private static final int IN_STRING = 4;
 
-  // Re-indents Python source so its outermost statements start at indent, by a lexical scan that knows
-  // strings, brackets, continuations and comments. Lines that start inside a string are kept byte for
-  // byte; the others keep their indentation relative to the outermost statements (measured with
-  // Python's tab rule). firstLineIndent is the indentation the first line had in the model; null means
-  // it is not known and is worked out from the lines after it. Code without statements gets pass.
+  // Re-indents Python source so its outermost statements start at indent. Other lines keep their
+  // relative indentation (Python's tab rule), and lines inside strings are kept as they are.
+  // firstLineIndent is the first line's indentation in the model, null when unknown. Code without
+  // statements gets pass.
   public static String reindent(String code, String firstLineIndent, String indent)
   {
     String[] lines = ((firstLineIndent == null ? "" : firstLineIndent) + (code == null ? "" : code).replaceFirst("\\s+$", ""))
@@ -201,10 +200,8 @@ class PythonSource
     return inside;
   }
 
-  // The width of a first line whose indentation is unknown. It starts the body, so it is at the body's
-  // baseline: level with the next statement, unless it opens a block and that next statement is the
-  // least indented of the rest, in which case the block holds everything and the first line is
-  // shallower than all of it.
+  // The width of a first line whose indentation is unknown: level with the next statement, or
+  // shallower than all the rest when it opens a block whose first statement is the least indented.
   private static int firstLineWidth(int[] kinds, char[] lastCode, int[] widths, int othersBaseline)
   {
     int next = 1;

@@ -49,7 +49,7 @@ class PythonNextInterfaceGenerator {
 #>>
 <<=IMPORTS>>
 
-class <<=uInterface.getName()>>(<<=String.join(", ", bases)>>):<<=gen.docstring(uInterface.getComments(), "    ")>><<#
+class <<=uInterface.getName()>>(<<=String.join(", ", bases)>>):<<=gen.docstring(uInterface.getComments(), uInterface.getReqImplementations(), "    ")>><<#
   if (!uInterface.getConstants().isEmpty())
   {
     realSb.append("\n");

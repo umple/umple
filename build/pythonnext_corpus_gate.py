@@ -390,8 +390,10 @@ class Gate:
         for module in launchers:
             directory = case / "run" / module.replace("/", ".")
             directory.mkdir(parents=True, exist_ok=True)
-            environment = dict(os.environ, PYTHONPATH=str(root), PYTHONNOUSERSITE="1", PYTHONDONTWRITEBYTECODE="1")
-            status, output = run([self.python, str(root / (module + ".py"))], directory, timeout=self.timeout, env=environment)
+            # As UmpleOnline's runner does: the module by its dotted name, from the generated root
+            environment = dict(os.environ, PYTHONNOUSERSITE="1", PYTHONDONTWRITEBYTECODE="1")
+            environment.pop("PYTHONPATH", None)
+            status, output = run([self.python, "-m", module.replace("/", ".")], root, timeout=self.timeout, env=environment)
             (directory / "main.log").write_text(output)
             printed += output
             if status != 0:

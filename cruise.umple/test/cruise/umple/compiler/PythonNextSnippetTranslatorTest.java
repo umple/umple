@@ -861,6 +861,18 @@ public class PythonNextSnippetTranslatorTest
   }
 
   @Test
+  public void runsStringMethodsWithJavaResults()
+  {
+    Assert.assertEquals("(str.__eq__(self._name, \"x\") is True)", expression("Child", "name.equals(\"x\")"));
+    Assert.assertEquals("(len(self._name) == 0)", expression("Child", "name.isEmpty()"));
+    // equals of a number is false, as in Java
+    Assert.assertEquals("true\nfalse\ntrue\ntrue\ntrue\n3\nfalse\ntrue\n", runTranslated("String s = \"abc\";"
+      + " System.out.println(s.equals(\"abc\")); System.out.println(s.equals(n)); System.out.println(s.contains(\"b\"));"
+      + " System.out.println(s.startsWith(\"ab\")); System.out.println(s.endsWith(\"bc\")); System.out.println(s.length());"
+      + " System.out.println(s.isEmpty()); System.out.println(\"\".isEmpty());"));
+  }
+
+  @Test
   public void runsContinueWithTheUpdateOfTheLoopHeader()
   {
     // The body's local n hides the attribute n, which the update still means.
@@ -926,8 +938,8 @@ public class PythonNextSnippetTranslatorTest
       { "n = Thread.currentThread();", "Thread is a Java library class" },
       { "Date d = new Date();", "new Date(...) creates a Java library object" },
       { "Object o = null;", "variables of type Object are not supported" },
-      { "int k = name.length();", "String methods such as length() are not supported" },
-      { "if (name.equals(\"x\")) { }", "String methods such as equals() are not supported" },
+      { "int k = name.indexOf(\"a\");", "String methods other than equals, contains, startsWith, endsWith, length and isEmpty, such as indexOf(), are not supported" },
+      { "boolean b = name.contains(n);", "contains() takes a string" },
       { "int k = getItems().size();", "collection methods such as size() are not supported" },
       { "mode.name();", "methods of enumerations, such as name(), are not supported" },
       { "byte b = (byte) n;", "casts to byte are not supported (they need Java's narrowing)" },

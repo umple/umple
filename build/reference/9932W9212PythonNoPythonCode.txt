@@ -6,7 +6,7 @@ noreferences
 
 <h2>Code has versions only for other languages</h2>
 
-<p>A method, action, entry, exit or do activity, or code injection has code only for languages other than Python (for example a Java body), and no untagged code. Python has no code to use for it, so it is left out of the generated Python and this warning names it.</p>
+<p>A method, action, entry, exit or do activity, or code injection has code only for languages other than Python (for example a Java body), and no untagged code. PythonNext has no code to use for it, so it leaves it out of the generated Python and this warning names it.</p>
 
 <p>Add a Python version, or untagged code, if the Python classes need that behaviour.</p>
 

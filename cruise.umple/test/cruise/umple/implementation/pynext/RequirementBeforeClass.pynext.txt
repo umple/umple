@@ -3,6 +3,8 @@
 
 
 class Example:
+    """R01: this is a requirement"""
+
     def __init__(self):
         pass
 
