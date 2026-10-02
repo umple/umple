@@ -523,7 +523,7 @@
   "umpleonline/umplibrary/SecurityLight.ump": "unsupported 9210 generation-only: queued or pooled state machine or queued method; the model's method bodies are Java",
   "umpleonline/umplibrary/SpecificFlight.ump": "supported",
   "umpleonline/umplibrary/SpecificFlightFlat.ump": "supported",
-  "umpleonline/umplibrary/TcpIpSimulation.ump": "unsupported 9210,9211 generation-only: synchronized method; a Java Semaphore default; the model's method bodies are Java",
+  "umpleonline/umplibrary/TcpIpSimulation.ump": "unsupported 9211 generation-only: a Java Semaphore default; the model's method bodies are Java",
   "umpleonline/umplibrary/TelephoneSystem.ump": "supported",
   "umpleonline/umplibrary/TelephoneSystem2.ump": "supported",
   "umpleonline/umplibrary/TicTacToe.ump": "generation-only: an untagged method body is not Python (`return false;`)",

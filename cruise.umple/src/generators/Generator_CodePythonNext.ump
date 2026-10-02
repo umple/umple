@@ -1273,7 +1273,7 @@ class PythonNextGenerator
     StringBuilder code = new StringBuilder();
     for (ConstraintTree invariant : invariantsOn(uClass, av))
     {
-      code.append("\n        if not (" + condition(invariant, uClass, null, false, Arrays.asList(av)) + "):");
+      code.append(conditionCheck(invariant, uClass, null, false, Arrays.asList(av), "        "));
       code.append("\n            return False");
     }
     return code.toString();
@@ -1291,7 +1291,7 @@ class PythonNextGenerator
       }
       Set<String> names = new TreeSet<String>(invariant.getNames());
       names.removeAll(constantNames(invariant));
-      code.append("\n        if not (" + condition(invariant, uClass, null) + "):");
+      code.append(conditionCheck(invariant, uClass, null, false, null, "        "));
       code.append("\n            raise RuntimeError(" + pythonString("Please provide a valid " + namesText(names)
         + " [" + constraintText(invariant).replace("object", "") + "]") + ")");
     }

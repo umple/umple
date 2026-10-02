@@ -92,10 +92,14 @@ class Lamp:
             __class__.DoActivityThread.startAll(self._doActivityStatusOffThread)
 
     def doActivityStatusOn(self, thread):
+        # line 12 "../doActivityMultiplePython.ump"
         self.alsoDo()
+        # end line
 
     def doActivityStatusOff(self, thread):
+        # line 18 "../doActivityMultiplePython.ump"
         self.keepDoing()
+        # end line
 
     def delete(self):
         self._deleted = True
@@ -105,7 +109,11 @@ class Lamp:
             self._doActivityStatusOffThread.cancelled.set()
 
     def alsoDo(self):
+        # line 21 "../doActivityMultiplePython.ump"
         pass
+        # end line
 
     def keepDoing(self):
+        # line 22 "../doActivityMultiplePython.ump"
         pass
+        # end line

@@ -22,15 +22,21 @@ class NativeMethods:
         # end line
 
     def text(self):
+        # line 14 "NativeMethods.ump"
         return """one
   two"""
+        # end line
 
     def chosen(self):
+        # line 21 "NativeMethods.ump"
         return "python"
+        # end line
 
     def nothing(self):
         pass
 
     @staticmethod
     def twice(input):
+        # line 30 "NativeMethods.ump"
         return input * 2
+        # end line

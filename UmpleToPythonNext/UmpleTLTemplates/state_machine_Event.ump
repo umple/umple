@@ -25,6 +25,8 @@ class UmpleToPythonNext {
   locals.addAll(gen.localNames(gen.injected(uClass, "before", methodName, injectable),
     gen.injected(uClass, "after", methodName, injectable)));
   Set<StateMachine> guardedMachines = new HashSet<StateMachine>();
+  // Guards sit in if-elif chains, so the classes they read are imported at the start
+  Set<String> guardImports = new LinkedHashSet<String>();
   for (StateMachine sm : uClass.getStateMachines(e))
   {
     for (State state : sm.getStates())
@@ -38,6 +40,7 @@ class UmpleToPythonNext {
             guardedMachines.add(sm);
           }
           locals.addAll(gen.localNames(gen.condition(t.getGuard(), uClass, eventParameters)));
+          guardImports.addAll(gen.getConditionImports());
         }
         if (t.getAction() != null)
         {
@@ -57,6 +60,10 @@ class UmpleToPythonNext {
   String after = gen.stateMachineInjections(uClass, "after", methodName, gen.deletedCheck(deletingFlag, "        ", processed), injectable);
 
   StringBuilder declarations = new StringBuilder();
+  for (String line : guardImports)
+  {
+    declarations.append("\n        " + line);
+  }
   StringBuilder cases = new StringBuilder();
   for (StateMachine sm : uClass.getStateMachines(e))
   {

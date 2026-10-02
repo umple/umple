@@ -94,10 +94,11 @@ public class PythonNextOneManyAssociationsTest
       "  before addKid Python { print(\"b\") }\n  after addKid Python { print(\"a\") } }\n" +
       "class Kid { before setCoach Python { print(\"s\") } }\n");
     String coach = model.getGeneratedCode().get("Coach");
-    Assert.assertTrue(coach, coach.contains("    def addKid(self, aKid):\n        print(\"b\")\n"
+    Assert.assertTrue(coach, coach.contains("    def addKid(self, aKid):\n        # line 3 \"model.ump\"\n        print(\"b\")\n        # end line\n"
       + "        if any(x is aKid for x in self._kids):\n            return False\n"));
-    Assert.assertTrue(coach, coach.contains("            self._kids.append(aKid)\n        print(\"a\")\n        return True\n"));
-    Assert.assertTrue(model.getGeneratedCode().get("Kid"), model.getGeneratedCode().get("Kid").contains("    def setCoach(self, aCoach):\n        print(\"s\")\n"));
+    Assert.assertTrue(coach, coach.contains("            self._kids.append(aKid)\n        # line 4 \"model.ump\"\n        print(\"a\")\n"
+      + "        # end line\n        return True\n"));
+    Assert.assertTrue(model.getGeneratedCode().get("Kid"), model.getGeneratedCode().get("Kid").contains("    def setCoach(self, aCoach):\n        # line 5 \"model.ump\"\n        print(\"s\")\n"));
   }
 
   @Test

@@ -1919,13 +1919,13 @@ class UmpleInternalParser
       {
         if(codelangs.isEmpty())
         {
-          cb.setAuthoredCode("", tkn.getValue(), tkn.getFirstLineIndent());
+          cb.setAuthoredCode("", tkn.getValue(), tkn.getFirstLineIndent(), tkn.getPosition());
           implementationPositions.put("", tkn.getPosition());
         } 
         else 
         {
           for(String lang: codelangs){
-            cb.setAuthoredCode(lang, tkn.getValue(), tkn.getFirstLineIndent());
+            cb.setAuthoredCode(lang, tkn.getValue(), tkn.getFirstLineIndent(), tkn.getPosition());
           }
           codelangs.clear();
         }
@@ -1962,12 +1962,12 @@ class UmpleInternalParser
       {
     		if(codelangs.isEmpty())
     		{
-    		  cb.setAuthoredCode("", tkn.getValue(), tkn.getFirstLineIndent());
+    		  cb.setAuthoredCode("", tkn.getValue(), tkn.getFirstLineIndent(), tkn.getPosition());
     		} 
     		else {
     		  for(String lang: codelangs)
           {
-    		    cb.setAuthoredCode(lang, tkn.getValue(), tkn.getFirstLineIndent());
+    		    cb.setAuthoredCode(lang, tkn.getValue(), tkn.getFirstLineIndent(), tkn.getPosition());
           }
           codelangs.clear();
       	}

@@ -581,8 +581,10 @@ class CodeBlock
   internal HashMap<String,String> codes = new HashMap<String,String>();
 
   // The languages whose code was written in the model ("" is the untagged body), each mapped to the
-  // indentation of the code's first line in the source (see setAuthoredCode and getFirstLineIndent)
+  // indentation of the code's first line in the source and to where the code starts there (see
+  // setAuthoredCode, getFirstLineIndent and getAuthoredPosition)
   internal HashMap<String,String> authoredIndents = new HashMap<String,String>();
+  internal HashMap<String,Position> authoredPositions = new HashMap<String,Position>();
   public static String languageUsed = "";
   lazy String name;
 }

@@ -403,6 +403,38 @@ public class PythonNextGeneratorCoreTest
     Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate(model.toString())));
   }
 
+  // A runtime error in Python-tagged code is reported at its line of the model
+  @Test
+  public void tracebacksOfTaggedCodeNameTheModelLine() throws Exception
+  {
+    cruise.umple.implementation.TemplateTest.assumePython();
+    generate("class Runner {\n"
+      + "  void work() Python {\n"
+      + "    total = 1\n"
+      + "    raise ValueError(total)\n"
+      + "  }\n"
+      + "  sm { Idle { go / Python { x = 1 / 0 } -> Idle;\n"
+      + "    Integer size() Python {\n"
+      + "      return len(None)\n"
+      + "    } } }\n"
+      + "}\n");
+    Assert.assertTrue(tracebackOf("Runner().work()"), tracebackOf("Runner().work()").contains("[model.ump:5]"));
+    Assert.assertTrue(tracebackOf("Runner().go()"), tracebackOf("Runner().go()").contains("[model.ump:7]"));
+    Assert.assertTrue(tracebackOf("Runner().size()"), tracebackOf("Runner().size()").contains("[model.ump:9]"));
+  }
+
+  // The traceback of a statement run on the generated classes, mapped to the model
+  private String tracebackOf(String statement) throws Exception
+  {
+    String root = dir.getCanonicalPath() + File.separator;
+    File script = new File(root + "run.py");
+    Files.write(script.toPath(), ("from Runner import Runner\n" + statement + "\n").getBytes("UTF-8"));
+    Process process = new ProcessBuilder(CodeCompiler.getPythonInterpreter(), script.getPath()).redirectErrorStream(true).start();
+    String output = new String(process.getInputStream().readAllBytes(), "UTF-8");
+    Assert.assertTrue(process.waitFor(30, java.util.concurrent.TimeUnit.SECONDS));
+    return CodeCompiler.mapPythonTraceback(output, new String[] { root, root });
+  }
+
   private UmpleModel generate(String code) throws Exception
   {
     File file = new File(dir, "model.ump");

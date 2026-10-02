@@ -458,3 +458,50 @@ class DependMaker
   depend cruise.usercode.test.CrateItem;
   CrateItem make() Python { return CrateItem() }
 }
+
+// A synchronized method holds the object's monitor, which its subclasses share, for its whole run; a
+// static one holds its class's. The bodies yield between reading and writing to invite a race.
+class SyncCounter
+{
+  Integer count = 0;
+  synchronized void bump(int times) Python {
+    import time
+    for _ in range(times):
+        c = self.getCount()
+        time.sleep(0)
+        self.setCount(c + 1)
+  }
+  synchronized int bumpOnce() Python {
+    self.bump(1)
+    return self.getCount()
+  }
+  static synchronized void tally(int times) Python {
+    import time
+    for _ in range(times):
+        t = SyncCounter.tallied
+        time.sleep(0)
+        SyncCounter.tallied = t + 1
+  }
+}
+
+class SyncSubCounter
+{
+  isA SyncCounter;
+  synchronized void reset() Python { self.setCount(0) }
+}
+
+// Guards and contracts read another class's constants through that class.
+class Thresholds
+{
+  const Integer HIGH = 5;
+}
+
+class Thermostat
+{
+  Integer reading = 0;
+  mode { Normal { check [reading > Thresholds.HIGH] -> Alarm; } Alarm { } }
+  int clamp(int n) Python {
+    [pre: n <= Thresholds.HIGH]
+    return n
+  }
+}

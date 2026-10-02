@@ -33,14 +33,15 @@ PythonNext is Umple's newer Python generator, chosen with <code>generate PythonN
     <li>Overloaded methods become one method that calls the most specific overload matching the arguments, judged by their types when the program runs (Java judges by the declared types of the expressions passed). <code>None</code> matches any reference type, boxed numbers such as <code>Integer</code> included; when several overloads take it, the first one declared is called, where Java would report the call as ambiguous.</li>
     <li>A method written in the model with the same parameter types as a method Python generates (for example a Python <code>delete()</code>) replaces that method; other overloads of the name stay. <code>int</code> and <code>Integer</code> count as one type.</li>
     <li>A subclass method with the name of inherited methods adds to them: a call that matches none of the subclass's overloads goes to the parent's, through <code>super()</code>. A subclass method reaches the parent's methods the same way (calling <code>self</code> would call its own method again).</li>
-    <li>Guards, preconditions and invariants can use Java's <code>equals</code> and <code>contains</code>, which become <code>==</code> and <code>in</code>.</li>
+    <li>Guards, preconditions and invariants can use Java's <code>equals</code> and <code>contains</code>, which become <code>==</code> and <code>in</code>, and the constants of other classes (<code>Limit.MAX</code>), which the method imports.</li>
+    <li>A synchronized method holds a reentrant lock of its object while it runs, contracts and injections included, as Java's holds the object's monitor; the object's class and its subclasses share that lock. A static synchronized method holds its class's lock.</li>
     <li>Translated code computes with Python's numbers: integers do not overflow at 32 or 64 bits, <code>Float</code> has double precision, and a floating division by zero raises <code>ZeroDivisionError</code> where Java gives NaN or infinity.</li>
     <li>Timers and do activities of state machines use Python threads. Leaving a state or deleting the object cancels its timers and asks its do activity to stop; an activity that runs for long checks <code>thread.cancelled.is_set()</code>, where <code>thread</code> is the worker it runs in, and returns when it is set. An event on a deleted object does nothing and returns <code>False</code>.</li>
 </ul>
 
 &nbsp;<br/>
 
-<p><b>Python in UmpleOnline:</b> Select Python Code (PythonNext) from the Generate menu, then click Execute It. The model needs a main method written in Python. An error in code written without a language tag names the line of your model; an error in Python-tagged code or in the body of a state-dependent method names the line of the generated Python.</p>
+<p><b>Python in UmpleOnline:</b> Select Python Code (PythonNext) from the Generate menu, then click Execute It. The model needs a main method written in Python. An error in Python code you wrote names its line in your model; an error in code Umple translated or generated names the line of the generated Python.</p>
 
 &nbsp;<br/>
 
@@ -54,14 +55,13 @@ Currently unsupported features, reported with error <a href="E9210PythonUnsuppor
     <li>Tracing.</li>
     <li>Distributed classes.</li>
     <li>Queued and pooled state machines, and queued methods.</li>
-    <li>Synchronized methods.</li>
     <li>Custom constructors and <code>emit</code> template methods.</li>
     <li>Around injections and injections at code labels.</li>
     <li>Association specialization.</li>
     <li>An inner class whose superclass is an inner class declared elsewhere in the same outer class, or is that outer class (a superclass declared beside it works).</li>
     <li>JSON generation (the genJson suboption).</li>
     <li>A guard testing a state with <code>is in state</code>.</li>
-    <li>A guard, precondition or invariant that calls a Java library method other than <code>equals</code> and <code>contains</code>, or that names something the model does not define or another class.</li>
+    <li>A guard, precondition or invariant that calls a Java library method other than <code>equals</code> and <code>contains</code>, or that names something the model does not define or a member of another class other than a constant.</li>
     <li>A method named like another that is static where the other is not, including a method Python generates for the class.</li>
 </ul>
 </p>

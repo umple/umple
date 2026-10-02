@@ -26,6 +26,11 @@ class UmpleToPythonNext {
   {
     realSb.append("\n    theInstance = None");
   }
+  String classMonitor = gen.classMonitor(uClass);
+  if (classMonitor != null)
+  {
+    realSb.append("\n    " + classMonitor + " = " + gen.standardName("threading", "RLock") + "()");
+  }
   if (realSb.length() > start)
   {
     realSb.insert(start, "\n");

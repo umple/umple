@@ -243,6 +243,7 @@ class MethodParameter
 class CodeBlock
 {	
   depend cruise.umple.util.PythonSource;
+  depend cruise.umple.parser.Position;
 
   /*
    * @author Vahdat
@@ -256,6 +257,7 @@ class CodeBlock
   	this.codes = new HashMap<String,String>();
   	this.codes.putAll(another.codes);
   	this.authoredIndents = new HashMap<String,String>(another.authoredIndents);
+  	this.authoredPositions = new HashMap<String,Position>(another.authoredPositions);
   } 
   // The same code with every language's text passed through change (language, text), as when a
   // guard is applied to each body of a copied action (Action.wrapInGuard)
@@ -264,6 +266,8 @@ class CodeBlock
     for (String language : codes.keySet()) {
       mapped.codes.put(language, change.apply(language, codes.get(language)));
     }
+    // the changed lines no longer line up with the source
+    mapped.authoredPositions.clear();
     return mapped;
   }
 
@@ -335,19 +339,24 @@ class CodeBlock
       codes.put(lang,add);
     else
       codes.put(lang,"");
-    // Replaced text keeps its authorship, but the recorded source indentation no longer applies to it
+    // Replaced text keeps its authorship, but the recorded source indentation and position no longer
+    // apply to it
     if(authoredIndents.containsKey(lang))
       authoredIndents.put(lang,null);
+    authoredPositions.remove(lang);
   }
 
   /*
    * Stores code written in the model for lang ("" for the untagged body), recording that it was
-   * authored and the indentation its first line had in the source (see getFirstLineIndent).
+   * authored, the indentation its first line had in the source (see getFirstLineIndent) and where it
+   * starts there.
    */
-  public void setAuthoredCode(String lang, String add, String firstLineIndent)
+  public void setAuthoredCode(String lang, String add, String firstLineIndent, Position start)
   {
     setCode(lang,add);
     authoredIndents.put(lang,firstLineIndent);
+    if(start != null)
+      authoredPositions.put(lang,start);
   }
 
   // Copies lang's code and its provenance from another block, as when merging method declarations
@@ -358,6 +367,8 @@ class CodeBlock
       authoredIndents.put(lang,source.getFirstLineIndent(lang));
     else
       authoredIndents.remove(lang);
+    if(source.getAuthoredPosition(lang) != null)
+      authoredPositions.put(lang,source.getAuthoredPosition(lang));
   }
 
   /*
@@ -384,6 +395,12 @@ class CodeBlock
   public String getFirstLineIndent(String lang)
   {
     return authoredIndents.get(lang);
+  }
+
+  // Where lang's authored code starts in the source; null when not known or the code was replaced
+  public Position getAuthoredPosition(String lang)
+  {
+    return authoredPositions.get(lang);
   }
   public String getCode()
   {

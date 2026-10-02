@@ -277,10 +277,6 @@ class PythonNextGenerator
       {
         errorAt(9210, m.getPosition(), "The custom constructor " + m.getName(), className);
       }
-      else if (m.getModifier().contains("synchronized"))
-      {
-        errorAt(9210, m.getPosition(), "The synchronized method " + m.getName(), className);
-      }
       else if (m.getIsQueued())
       {
         errorAt(9210, m.getPosition(), "The queued method " + m.getName(), className);
@@ -338,6 +334,7 @@ class PythonNextGenerator
     }
     PythonConstraintScope context = new PythonConstraintScope(uClass, scope, isStatic ? DECLARING_CLASS : "self",
       attributesAsParameters == null ? new ArrayList<Attribute>() : attributesAsParameters);
+    conditionImports.clear();
     ConstraintVariable top = constraint;
     while (top instanceof ConstraintTree && !((ConstraintTree) top).getDisplayNegation()
       && !((ConstraintTree) top).getDisplayBrackets() && ((ConstraintTree) top).getRoot() instanceof ConstraintTree)
@@ -364,6 +361,28 @@ class PythonNextGenerator
   public String condition(ConstraintTree constraint, UmpleClass uClass, List<MethodParameter> parameters)
   {
     return condition(constraint, uClass, parameters, false, null);
+  }
+
+  // The imports the last condition needs in its function, for the other model classes whose
+  // constants it reads (imported there, as everywhere, so that modules can import each other)
+  private List<String> conditionImports = new ArrayList<String>();
+
+  public List<String> getConditionImports()
+  {
+    return new ArrayList<String>(conditionImports);
+  }
+
+  // The statements that test a condition at indent: the imports it needs, then "if not (...):"
+  public String conditionCheck(ConstraintTree constraint, UmpleClass uClass, List<MethodParameter> parameters,
+    boolean isStatic, Collection<Attribute> attributesAsParameters, String indent)
+  {
+    String check = condition(constraint, uClass, parameters, isStatic, attributesAsParameters);
+    StringBuilder code = new StringBuilder();
+    for (String line : conditionImports)
+    {
+      code.append("\n" + indent + line);
+    }
+    return code + "\n" + indent + "if not (" + check + "):";
   }
 
   // Java's message for a failed pre- or postcondition.
@@ -591,6 +610,66 @@ class PythonNextGenerator
       : v instanceof ConstraintAttribute ? ((ConstraintAttribute) v).getAttribute().getName() : null;
   }
 
+  // The model class or interface name stands for in a constraint when it is not the class, one of its
+  // ancestors or a name in scope; null otherwise
+  private UmpleClassifier otherClassifier(PythonConstraintScope context, String name)
+  {
+    if (context.getParameters().containsKey(name) || inheritedMember(context.getUClass(), name) != null
+      || inherits(context.getUClass(), name))
+    {
+      return null;
+    }
+    UmpleClass uClass = getModel().getUmpleClass(name);
+    return uClass != null ? uClass : getModel().getUmpleInterface(name);
+  }
+
+  // Another model class's constant or enumeration, read through that class, which the function
+  // imports
+  private String otherClassConstant(UmpleClassifier other, String name, PythonConstraintScope context)
+  {
+    if (name == null || !hasConstant(other, name))
+    {
+      throw new PythonSnippetException("A constraint naming " + other.getName() + "." + name + ", which is not a constant of "
+        + other.getName() + ",", null);
+    }
+    List<String> locals = new ArrayList<String>();
+    for (String parameter : context.getParameters().keySet())
+    {
+      locals.add(parameterName(parameter));
+    }
+    String[] use = classUse(context.getUClass(), other.getName(), String.join(", ", locals));
+    if (use[1] != null && !conditionImports.contains(use[1]))
+    {
+      conditionImports.add(use[1]);
+    }
+    return use[0] + "." + name;
+  }
+
+  // Whether name is a constant or an enumeration that classifier declares or inherits
+  private boolean hasConstant(UmpleClassifier classifier, String name)
+  {
+    if (classifier instanceof UmpleInterface)
+    {
+      return declaredConstant((UmpleInterface) classifier, name) != null;
+    }
+    for (UmpleClass c = (UmpleClass) classifier; c != null; c = c.getExtendsClass())
+    {
+      Attribute attribute = c.getAttribute(name);
+      if (attribute != null && attribute.isConstant())
+      {
+        return true;
+      }
+      for (Constant constant : c.getConstants())
+      {
+        if (constant.getName().equals(name))
+        {
+          return true;
+        }
+      }
+    }
+    return interfaceConstant((UmpleClass) classifier, name) != null || isEnumeration((UmpleClass) classifier, name);
+  }
+
   // The attribute or association of a class or its ancestors with the given name, which the front end
   // leaves unresolved when it is inherited, or null.
   private static ConstraintVariable inheritedMember(UmpleClass uClass, String name)
@@ -668,11 +747,17 @@ class PythonNextGenerator
       // The parser leaves this.x unresolved when x is an inherited attribute or association
       ConstraintVariable target = unwrap(left);
       ConstraintVariable name = unwrap(right);
+      UmpleClassifier other = target instanceof ConstraintUnassignedName
+        ? otherClassifier(context, ((ConstraintUnassignedName) target).getValue()) : null;
       if (target instanceof ConstraintUnassignedName && "this".equals(((ConstraintUnassignedName) target).getValue())
         && name instanceof ConstraintUnassignedName)
       {
         ConstraintVariable inherited = inheritedMember(context.getUClass(), ((ConstraintUnassignedName) name).getValue());
         right = inherited == null ? right : inherited;
+      }
+      else if (other != null)
+      {
+        return otherClassConstant(other, memberName(name), context);
       }
       else if (target instanceof ConstraintUnassignedName && !"this".equals(((ConstraintUnassignedName) target).getValue())
         && !((ConstraintUnassignedName) target).getValue().equals(context.getUClass().getName())
@@ -1358,8 +1443,7 @@ class PythonNextGenerator
   }
 
   // A code slot's statements at indent: its Python body, else its untagged body translated, else "".
-  // slot names it in diagnostics, reported at position (the class's when null). Tagged code gets no
-  // source markers because the parser does not record where it starts.
+  // slot names it in diagnostics, reported at position (the class's when null).
   public String slotCode(CodeBlock code, UmpleClass uClass, List<MethodParameter> parameters, boolean isStatic, String indent, String slot,
     Position position)
   {
@@ -1376,7 +1460,7 @@ class PythonNextGenerator
     }
     if ("Python".equals(language))
     {
-      return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, null, uClass);
+      return functionCode(code.getCode(language), code.getFirstLineIndent(language), indent, code.getAuthoredPosition(language), uClass);
     }
     String translated = translateSnippetAt(code.getCode(language), uClass, parameters, isStatic, false, at, slot);
     if (translated != null && slot.startsWith("the action of the transition") && Pattern.compile("(?m)^\\s*return\\s*$").matcher(translated).find())
@@ -1433,35 +1517,39 @@ class PythonNextGenerator
 
   // A user method under name (its own, or its number in an overload group). With contracts or
   // injections it wraps a helper holding the body, called through the declaring class so that a
-  // super() call never reaches a subclass's helper.
+  // super() call never reaches a subclass's helper. A synchronized method holds its monitor for all
+  // of it, contracts and injections included, as Java's does.
   public String userMethod(UmpleClass uClass, Method method, String name)
   {
     boolean isStatic = isStatic(method);
     String language = pythonLanguage(method);
     String decorator = isStatic ? "\n    @staticmethod" : "";
     String header = "\n" + decorator + "\n    def " + name + "(" + methodParameters(method) + "):";
-    // The parser keeps the body without its first line's indentation and records that separately.
-    CodeBlock block = method.getMethodBody().getCodeblock();
-    String body = functionCode(block.getCode(language), block.getFirstLineIndent(language), "        ",
-      bodyPosition(method, language), uClass);
     String docstring = docstring(method.getComments(), method.getReqImplementations(), "        ");
+    String lock = isSynchronized(method) ? "\n        with " + monitor(uClass, isStatic) + ":" : "";
+    String indent = isSynchronized(method) ? "            " : "        ";
     List<MethodParameter> scope = method.getMethodParameters();
     StringBuilder before = new StringBuilder();
     for (ConstraintTree pre : contracts(uClass, method, true))
     {
-      before.append(contractCheck(pre, uClass, scope, isStatic));
+      before.append(contractCheck(pre, uClass, scope, isStatic, indent));
     }
     before.append(injectionCode(uClass, uClass.getApplicableCodeInjectionsCustomMethod("before", method.getName(), scope),
-      "before injection of " + method.getName(), scope, isStatic, "        "));
+      "before injection of " + method.getName(), scope, isStatic, indent));
     StringBuilder after = new StringBuilder(injectionCode(uClass, uClass.getApplicableCodeInjectionsCustomMethod("after", method.getName(), scope),
-      "after injection of " + method.getName(), scope, isStatic, "        "));
+      "after injection of " + method.getName(), scope, isStatic, indent));
     for (ConstraintTree post : contracts(uClass, method, false))
     {
-      after.append(contractCheck(post, uClass, postconditionScope(uClass, method), isStatic));
+      after.append(contractCheck(post, uClass, postconditionScope(uClass, method), isStatic, indent));
     }
-    if (before.length() == 0 && after.length() == 0)
+    // The parser keeps the body without its first line's indentation and records that separately.
+    CodeBlock block = method.getMethodBody().getCodeblock();
+    boolean wrapped = before.length() > 0 || after.length() > 0;
+    String body = functionCode(block.getCode(language), block.getFirstLineIndent(language), wrapped ? "        " : indent,
+      block.getAuthoredPosition(language), uClass);
+    if (!wrapped)
     {
-      return emitted(uClass, method, header + docstring + body);
+      return emitted(uClass, method, header + docstring + lock + body);
     }
     String helper = freshMemberName(uClass, name + "_Original");
     // Postconditions name the returned value result; the local gets underscores while a parameter has its name.
@@ -1470,10 +1558,10 @@ class PythonNextGenerator
     {
       result += "_";
     }
-    return emitted(uClass, method, header + docstring + before
-      + "\n        " + result + " = " + DECLARING_CLASS + "." + helper + "(" + methodParameters(method) + ")"
+    return emitted(uClass, method, header + docstring + lock + before
+      + "\n" + indent + result + " = " + DECLARING_CLASS + "." + helper + "(" + methodParameters(method) + ")"
       + after
-      + "\n        return " + result
+      + "\n" + indent + "return " + result
       + "\n" + decorator + "\n    def " + helper + "(" + methodParameters(method) + "):" + body);
   }
 
@@ -1508,27 +1596,68 @@ class PythonNextGenerator
     return scope;
   }
 
-  private String contractCheck(ConstraintTree constraint, UmpleClass uClass, List<MethodParameter> parameters, boolean isStatic)
+  private String contractCheck(ConstraintTree constraint, UmpleClass uClass, List<MethodParameter> parameters, boolean isStatic,
+    String indent)
   {
-    return "\n        if not (" + condition(constraint, uClass, parameters, isStatic, null) + "):"
-      + "\n            raise RuntimeError(" + contractMessage(constraint) + ")";
+    return conditionCheck(constraint, uClass, parameters, isStatic, null, indent)
+      + "\n" + indent + "    raise RuntimeError(" + contractMessage(constraint) + ")";
   }
 
-  // Where the selected body of a method starts in the model, or null when that is not recorded: the
-  // parser records where untagged code starts (the Java body's start overwrites it in the method's
-  // code position), but for a tagged body it records only its tag, which can be lines earlier.
-  private static Position bodyPosition(Method method, String language)
+  public static boolean isSynchronized(Method method)
   {
-    if (!"".equals(language))
+    return method.getModifier().contains("synchronized");
+  }
+
+  // The lock a synchronized method holds: the object's, which its whole class hierarchy shares as it
+  // shares Java's monitor, or for a static method its declaring class's.
+  private String monitor(UmpleClass uClass, boolean isStatic)
+  {
+    return isStatic ? DECLARING_CLASS + "." + classMonitor(uClass) : "self." + objectMonitor(uClass);
+  }
+
+  // Named from the hierarchy's root, so that every class in it gets the same name
+  private String objectMonitor(UmpleClass uClass)
+  {
+    UmpleClass root = uClass;
+    while (root.getExtendsClass() != null)
     {
-      return null;
+      root = root.getExtendsClass();
     }
-    Map<String, Position> positions = method.getMethodBody().getImplementationPositions();
-    if (positions != null && positions.containsKey(""))
+    return fieldName(root, "monitor");
+  }
+
+  // The object monitor uClass's constructor creates, or null: the topmost class with synchronized
+  // methods creates it
+  public String createdMonitor(UmpleClass uClass)
+  {
+    for (UmpleClass c = uClass.getExtendsClass(); c != null; c = c.getExtendsClass())
     {
-      return positions.get("");
+      if (hasSynchronized(c, false))
+      {
+        return null;
+      }
     }
-    return method.getMethodBody().getCodeblock().hasCode("Java") ? null : method.getCodePosition();
+    return hasSynchronized(uClass, false) ? objectMonitor(uClass) : null;
+  }
+
+  // The class attribute holding the lock of uClass's static synchronized methods, or null
+  public String classMonitor(UmpleClass uClass)
+  {
+    return hasSynchronized(uClass, true) ? freshMemberName(uClass, "_classMonitor") : null;
+  }
+
+  private static boolean hasSynchronized(UmpleClass uClass, boolean isStatic)
+  {
+    List<Method> methods = new ArrayList<Method>(uClass.getMethods());
+    methods.addAll(uClass.getStateDependentMethods());
+    for (Method m : methods)
+    {
+      if (isSynchronized(m) && isStatic(m) == isStatic)
+      {
+        return true;
+      }
+    }
+    return false;
   }
 
   // An abstract method: an abstract stub. One in an overload group is a plain stub, because a

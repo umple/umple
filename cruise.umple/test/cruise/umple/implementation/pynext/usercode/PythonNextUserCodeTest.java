@@ -213,7 +213,6 @@ public class PythonNextUserCodeTest
   public void unsupportedUserCodeIsReportedAtItsLocation() throws Exception
   {
     assertUnsupported("class X { X(int a) { pass } }", 9210, 2);
-    assertUnsupported("class X { synchronized void f() { pass } }", 9210, 2);
     assertUnsupported("class X { queued void f() { pass } }", 9210, 2);
     assertUnsupported("class X { int f(int self) { return self } }", 9214, 2);
     assertUnsupported("class X { Integer n;\n around getN { around_proceed: pass } }", 9210, 3);
@@ -813,6 +812,23 @@ public class PythonNextUserCodeTest
     }
   }
 
+  // A constraint reads another model class's constants through that class, which the function
+  // imports; anything else of that class is reported
+  @Test
+  public void constraintsReadConstantsOfOtherClasses() throws Exception
+  {
+    UmpleModel model = generate("namespace shop;\nclass Limit { const Integer MAX = 5; Integer other; }\n"
+      + "namespace app;\nclass A { Integer x; sm { Off { go [x < Limit.MAX] -> On; } On { } }\n"
+      + "  int f(int n) Python {\n  [pre: n < Limit.MAX]\n  return n } }\n"
+      + "class D { int f(int n) Python {\n  [pre: n < Limit.other]\n  return n } }\n");
+    String a = model.getGeneratedCode().get("A");
+    Assert.assertTrue(a, a.contains("        from shop.Limit import Limit\n"));
+    Assert.assertTrue(a, a.contains("if self.getX() < Limit.MAX:"));
+    Assert.assertTrue(a, a.contains("        from shop.Limit import Limit\n        if not (n < Limit.MAX):"));
+    Assert.assertTrue(message(model, 9210).getFormattedMessage(),
+      message(model, 9210).getFormattedMessage().contains("Limit.other, which is not a constant of Limit"));
+  }
+
   //------------------------
   // Extra code
   //------------------------
@@ -864,7 +880,8 @@ public class PythonNextUserCodeTest
     UmpleClass g = model.getUmpleClass("G");
     List<MethodParameter> parameters = Arrays.asList(new MethodParameter("aN", "Integer", null, null, false));
     // The first line opens a block that holds everything else, so it is less indented than the rest.
-    Assert.assertEquals("\n        if aN < 0:\n              aN = 0", gen.injections(g, "before", "setN", parameters, false, INDENT));
+    Assert.assertEquals("\n        # line 4 \"model.ump\"\n        if aN < 0:\n              aN = 0\n        # end line",
+      gen.injections(g, "before", "setN", parameters, false, INDENT));
     Assert.assertTrue(gen.injections(g, "after", "setN", parameters, false, INDENT).startsWith("\n        print(\"set\")"));
     Assert.assertEquals("", gen.injections(g, "before", "getN", parameters, false, INDENT));
   }

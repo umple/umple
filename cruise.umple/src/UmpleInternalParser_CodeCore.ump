@@ -128,11 +128,11 @@ class UmpleInternalParser
 		   else if(tkn.is("code")) {
 			   if(codelangs.isEmpty())
 			   {
-				   languageSpecificCode.setAuthoredCode("", tkn.getValue(), tkn.getFirstLineIndent());
+				   languageSpecificCode.setAuthoredCode("", tkn.getValue(), tkn.getFirstLineIndent(), tkn.getPosition());
 			   } else {
 				   for(String lang: codelangs)
 				   {
-					   languageSpecificCode.setAuthoredCode(lang, tkn.getValue(), tkn.getFirstLineIndent());
+					   languageSpecificCode.setAuthoredCode(lang, tkn.getValue(), tkn.getFirstLineIndent(), tkn.getPosition());
 				   }
 				   codelangs.clear();
 			   }

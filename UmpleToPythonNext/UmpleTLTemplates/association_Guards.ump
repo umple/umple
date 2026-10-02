@@ -15,8 +15,7 @@ class UmpleToPythonNext {
     association_InvariantGuards <<!<</*association_InvariantGuards*/>><<#
   for (ConstraintTree invariant : gen.invariantsOn(uClass, av))
   {
-    #>>
-        if not (<<=gen.condition(invariant, uClass, null)>>):
+    #>><<=gen.conditionCheck(invariant, uClass, null, false, null, "        ")>>
             return False<<#
   }
 #>>!>>
