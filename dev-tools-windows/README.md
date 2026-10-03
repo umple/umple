@@ -14,7 +14,7 @@ This directory contains files that you can run built-in umple commands to speed 
   - <img src=https://github.com/umple/umple/assets/30543699/6f659ce4-de05-45dc-864e-d23c0ff43809 >
 
 
-Java must be installed to run all of these. Some require graphviz, php, ruby, python 3, txl and other dependencies as well
+Java must be installed to run all of these. Some require graphviz, php, ruby, python 3 and other dependencies as well
 
 <h2>For developers:</h2>
 

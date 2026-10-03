@@ -333,14 +333,14 @@ class UmpleConsoleMain
               continue;
             }
           
-             if(CodeCompiler.isPythonTarget(generatorCodeToCompile) && model.isSkippythoncompile()) {
+             if(generatorCodeToCompile.equals("Python") && model.isSkippythoncompile()) {
                  if(!cfg.getBeQuiet()) {
                    System.out.println("Skipping compilation of python due to @@@skippythoncompile in a comment.");
                  }
                  continue;
                }
 
-            if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php") || CodeCompiler.isPythonTarget(generatorCodeToCompile)) {
+            if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php") || generatorCodeToCompile.equals("Python")) {
               compileSuccess = CodeCompiler.compile(model, generatorCodeToCompile,cfg.getUseExec(), cfg.getBeQuiet(), cfg.getCompile().get(), null);
             }
             else if (generatorCodeToCompile.startsWith("Gv")) {
@@ -1200,7 +1200,7 @@ class PlaygroundMain
       for (GenerateTarget gt : model.getGenerates()) 
       {
         String generatorCodeToCompile = gt.getLanguage();
-        if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php") || CodeCompiler.isPythonTarget(generatorCodeToCompile)) 
+        if (generatorCodeToCompile.equals("Java") || generatorCodeToCompile.equals("Php") || generatorCodeToCompile.equals("Python")) 
         {
           // TODO: Remove default options in future when syncing umplesync.jar with umple.jar
           successPreviousStep = CodeCompiler.compile(model, generatorCodeToCompile,false, false, "-", errorFileName);
@@ -1210,10 +1210,10 @@ class PlaygroundMain
     }
 
     // Delete main file if any existing
-    for (String language : new String[] {"Java", "Python", "PythonNext"})
-    {
-      deleteFileIfExists(model.getUmpleFile().getPath() + File.separator + language + "MainClasses.txt");
-    }
+    String javaPath = model.getUmpleFile().getPath() + File.separator + "JavaMainClasses.txt";
+    String PythonPath = model.getUmpleFile().getPath() + File.separator + "PythonMainClasses.txt";
+    deleteFileIfExists(javaPath);
+    deleteFileIfExists(PythonPath);
 
     // If execution required, output the main classes to a file
     if(successPreviousStep && executionRequired) 
@@ -1248,7 +1248,7 @@ class PlaygroundMain
       for (GenerateTarget gt : model.getGenerates()) 
       {
         String lang = gt.getLanguage();
-        if (lang.equals("Ruby") || CodeCompiler.isPythonTarget(lang)) 
+        if (lang.equals("Ruby") || lang.equals("Python")) 
         {
           langCommentDelimiter = "# ";
           break;
@@ -1278,7 +1278,7 @@ class PlaygroundMain
   {
     for (String key : model.getHashMap().keySet()) 
     {
-      if(key.compareTo("Java") == 0 || CodeCompiler.isPythonTarget(key)) 
+      if(key.compareTo("Java") == 0 || key.compareTo("Python") == 0) 
       {
         // Get all main file names and make a single string
         StringBuilder builder = new StringBuilder();

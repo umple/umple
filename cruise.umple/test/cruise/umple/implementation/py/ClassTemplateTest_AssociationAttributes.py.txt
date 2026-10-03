@@ -1,28 +1,14 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-import os
 
-class Token():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Token Attributes
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class Token:
     def __init__(self, aP):
-        self._p = None
         self._p = aP
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setP(self, aP):
-        wasSet = False
         self._p = aP
-        wasSet = True
-        return wasSet
+        return True
 
     def getP(self):
         return self._p
@@ -31,5 +17,6 @@ class Token():
         pass
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "p" + "=" + (((self.getP().__str__().replaceAll("  ", "    ")) if not self.getP() == self else "this") if not (self.getP() is None) else "null")
-
+        return (super().__str__() + "["
+                + "]"
+                + "\n  p=" + ("null" if self.getP() is None else "this" if self.getP() is self else str(self.getP()).replace("  ", "    ")))

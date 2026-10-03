@@ -1,8 +1,0 @@
-class UmpleToPythonNext {
-    // A many end whose objects cannot exist without this one: each is deleted, last first; each
-    // removes itself from the list as it goes.
-    delete_ManyFromOne <<!<</*delete_ManyFromOne*/>>
-        for i in range(len(<<=field>>), 0, -1):
-            <<=parameter>> = <<=field>>[i - 1]
-            <<=parameter>>.delete()!>>
-}

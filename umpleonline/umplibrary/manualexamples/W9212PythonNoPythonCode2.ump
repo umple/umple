@@ -1,5 +1,5 @@
 // With a Python body the method is generated for Python too
-generate PythonNext;
+generate Python;
 class Book {
   title;
   String describe() Java { return "Book " + getTitle(); }

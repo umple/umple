@@ -1,9 +1,0 @@
-#PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
-
-from example.ISomething import ISomething
-from example.IGarbage import IGarbage
-
-
-class ISecondChild(ISomething, IGarbage):
-    pass

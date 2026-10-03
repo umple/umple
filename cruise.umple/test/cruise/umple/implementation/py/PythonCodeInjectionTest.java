@@ -15,27 +15,32 @@ public class PythonCodeInjectionTest extends CodeInjectionTest
     languagePath = "py";
   }
 
-  @Test @Ignore
+  @Test
   public void WildCard(){
-    super.WildCard();
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("CodeInjectionWildCardTest.ump", 9211);
   }
 
-  @Test @Ignore
+  @Test
   public void AttributesAndDelete(){
-    super.AttributesAndDelete();
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("CodeInjectionTest.ump", 9211);
   }
 
-  @Test @Ignore
+  @Test
   public void StateMachines(){
     super.StateMachines();
   }
 
-  @Test @Ignore
+  @Test
   public void Associations(){
-    super.Associations();
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("CodeInjectionAssociationTest.ump", 9211);
   }
 
-  @Test @Ignore
+  @Ignore("the shared model has Java in untagged method bodies or extra code, which Python emits as native code; the corpus gate classifies it as generation-only")
+
+  @Test
   public void ToplevelCodeInjection(){
     super.ToplevelCodeInjection();
   }

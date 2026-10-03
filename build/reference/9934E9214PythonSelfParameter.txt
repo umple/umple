@@ -6,7 +6,7 @@ noreferences
 
 <h2>A method or event has a parameter named self</h2>
 
-<p>Generated Python methods name the object they are called on <code>self</code>, so a parameter cannot also be named <code>self</code>. PythonNext reports this error at the method (for an event, at its class) and does not write a Python file for the class. Rename the parameter.</p>
+<p>Generated Python methods name the object they are called on <code>self</code>, so a parameter cannot also be named <code>self</code>. The Python generator reports this error at the method (for an event, at its class) and does not write a Python file for the class. Rename the parameter.</p>
 
 @@example
 @@source manualexamples/E9214PythonSelfParameter1.ump

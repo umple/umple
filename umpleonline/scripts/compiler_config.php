@@ -316,7 +316,6 @@ function generateMenu($buttonSuffix)
             <option id=\"genjavadoc\" value=\"javadoc:javadoc\">Java API Doc</option>
             <option id=\"genphp\" value=\"php:Php\">PHP Code</option>
             <option id=\"genpython\" value=\"python:Python\">Python Code</option>
-            <option id=\"genpythonnext\" value=\"python:PythonNext\">Python Code (PythonNext)</option>
             <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code (Beta)</option>
             <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
           </optgroup>

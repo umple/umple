@@ -1,8 +1,0 @@
-class UmpleToPythonNext {
-    // alternateConstructor of a mandatory one-to-one pair: the given partner must not have another
-    // object yet.
-    constructor_AssociationAssignOneToOne <<!<</*constructor_AssociationAssignOneToOne*/>>
-        if <<=parameter>> is None or <<=parameter>>.<<=gen.relatedTranslate("getMethod", av)>>() is not None:
-            raise RuntimeError(<<=gen.pythonString("Unable to create " + gen.relatedTranslate("type", av) + " due to " + parameter + ". See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")>>)
-        <<=field>> = <<=parameter>>!>>
-}

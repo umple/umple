@@ -1,72 +1,59 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from enum import Enum, auto
+from enum import Enum
 
-class LightFixture():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #LightFixture Attributes
-    #LightFixture State Machines
+
+class LightFixture:
     class Bulb(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        On = "On"
+        Off = "Off"
+        Amber = "Amber"
+
         def __str__(self):
-            return str(self.value)
-        On = auto()
-        Off = auto()
-        Amber = auto()
+            return self.value
 
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
     def __init__(self):
-        self._bulb = None
-        self._brightness = None
         self._brightness = 0
-        self.setBulb(LightFixture.Bulb.On)
+        self._bulb = None
+        self._deleted = False
+        self.setBulb(__class__.Bulb.On)
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setBrightness(self, aBrightness):
-        wasSet = False
         self._brightness = aBrightness
-        wasSet = True
-        return wasSet
+        return True
 
     def getBrightness(self):
         return self._brightness
 
     def getBulbFullName(self):
-        answer = self._bulb.__str__()
+        answer = str(self._bulb)
         return answer
 
     def getBulb(self):
         return self._bulb
 
     def push(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aBulb = self._bulb
-        if aBulb == LightFixture.Bulb.On :
-            if self.getBrightness() < 1 :
-                self.setBulb(LightFixture.Bulb.Off)
+        if aBulb is __class__.Bulb.On:
+            if self.getBrightness() < 1:
+                self.setBulb(__class__.Bulb.Off)
                 wasEventProcessed = True
-            if self.getBrightness() > 10 :
-                self.setBulb(LightFixture.Bulb.Amber)
+            elif self.getBrightness() > 10:
+                self.setBulb(__class__.Bulb.Amber)
                 wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def setBulb(self, aBulb):
         self._bulb = aBulb
 
     def delete(self):
-        pass
+        self._deleted = True
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "brightness" + ":" + str(self.getBrightness()) + "]"
-
+        return (super().__str__() + "["
+                + "brightness:" + str(self.getBrightness())
+                + "]")

@@ -271,7 +271,7 @@
          <fileset dir="${project.path}/test">
           <include name="**/${junit}.java"/>
           <include name="**/AssociationSortedWithNameSpace.java"/>
-          <include name="**/PythonNextAssociationSortedWithNameSpace.java"/>
+          <include name="**/PythonAssociationSortedWithNameSpace.java"/>
           <exclude name="**/AllTests.java"/>
           <exclude name="**/vml/**"/>
         </fileset>

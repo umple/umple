@@ -1,7 +1,0 @@
-use association_RemoveMany.ump;
-
-class UmpleToPythonNext {
-    // The remove method of an m..* end whose other end is many. Java's template is identical to
-    // association_AddMNToMany: association_RemoveMany with the end's own lower bound checked.
-    association_AddMStarToMany <<!<</*association_AddMStarToMany*/>><<@ UmpleToPythonNext.association_RemoveMany >>!>>
-}

@@ -420,7 +420,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;      
   } // end html content      
 
-  elseif (!in_array($language,array("Php","Java","Ruby","Python","PythonNext","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","InstanceDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","InstanceDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     $dataHandle->writeData($dataname, $input);
@@ -505,7 +505,7 @@ else if (isset($_REQUEST["umpleCode"]))
       if($output->output || $output->errors) {
         echo "<p><strong class='executionHeader'>Execution Output</strong></p>";
         $executionText = $output->output.$output->errors;
-        if ($language == "Python" || $language == "PythonNext") {
+        if ($language == "Python") {
           $executionText = mapPythonTraceback($executionText, $workDir->getPath());
         }
         echo translateToLineNums($executionText);

@@ -6,7 +6,7 @@ noreferences
 
 <h2>A name that Python reserves or that generated code uses</h2>
 
-<p>PythonNext reports this error, and does not generate the class, for three kinds of name:</p>
+<p>The Python generator reports this error, and does not generate the class, for three kinds of name:</p>
 <ul>
     <li>A class or interface named like a Python built-in that generated code calls, such as <code>len</code>, <code>id</code>, <code>set</code> or <code>tuple</code>: it would hide the built-in in its module and in every method that imports it.</li>
     <li>A class, interface, method, event, state, constant, enumeration or enumeration value whose generated name is a Python keyword, such as <code>lambda</code>, <code>async</code>, <code>break</code> or <code>None</code>. Enumeration values are written with a capital first letter, so <code>none</code> becomes <code>None</code>.</li>

@@ -1,94 +1,60 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
-# line 3 "../UnidirectionalNTest.ump"
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-class Mentor():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Mentor Attributes
-    #Mentor Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+
+class Mentor:
     def __init__(self, aName, *allStudents):
-        allStudents = list(allStudents)
-        self._students = None
-        self._name = None
         self._name = aName
         self._students = []
-        didAddStudents = self.setStudents(*allStudents)
-        if not didAddStudents :
-            raise RuntimeError ("Unable to create Mentor, must have 4 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        if not self.setStudents(*allStudents):
+            raise RuntimeError("Unable to create Mentor, must have 4 students. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setName(self, aName):
-        wasSet = False
         self._name = aName
-        wasSet = True
-        return wasSet
+        return True
 
     def getName(self):
         return self._name
 
-    # Code from template association_GetMany 
     def getStudent(self, index):
-        aStudent = self._students[index]
-        return aStudent
+        return self._students[index]
 
     def getStudents(self):
-        newStudents = tuple(self._students)
-        return newStudents
+        return tuple(self._students)
 
     def numberOfStudents(self):
-        number = len(self._students)
-        return number
+        return len(self._students)
 
     def hasStudents(self):
-        has = len(self._students) > 0
-        return has
+        return len(self._students) > 0
 
     def indexOfStudent(self, aStudent):
-        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
-        return index
+        return next((i for i, x in enumerate(self._students) if x is aStudent), -1)
 
-    # Code from template association_RequiredNumberOfMethod 
     @staticmethod
     def requiredNumberOfStudents():
         return 4
 
-    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 4
 
-    # Code from template association_MaximumNumberOfMethod 
     @staticmethod
     def maximumNumberOfStudents():
         return 4
 
-    # Code from template association_SetUnidirectionalN 
     def setStudents(self, *newStudents):
-        newStudents = list(newStudents)
-        wasSet = False
-        verifiedStudents = []
-        for aStudent in newStudents:
-            if (aStudent) in verifiedStudents :
-                continue
-            verifiedStudents.append(aStudent)
-
-        if len(verifiedStudents) != len(newStudents) or len(verifiedStudents) != Mentor.requiredNumberOfStudents() :
-            return wasSet
-        self._students.clear()
-        self._students.extend(verifiedStudents)
-        wasSet = True
-        return wasSet
+        if len({id(aStudent) for aStudent in newStudents}) != len(newStudents):
+            return False
+        if len(newStudents) != __class__.requiredNumberOfStudents():
+            return False
+        self._students = list(newStudents)
+        return True
 
     def delete(self):
         self._students.clear()
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
-
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]")

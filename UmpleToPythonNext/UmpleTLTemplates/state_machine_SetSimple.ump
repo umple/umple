@@ -1,8 +1,0 @@
-class UmpleToPythonNext {
-    // The public setter of a machine without events or actions, which returns True as in Java.
-    state_machine_SetSimple <<!<</*state_machine_SetSimple*/>>
-
-    def <<=gen.translate("setMethod", sm)>>(self, <<=gen.translate("parameterOne", sm)>>):
-        <<=gen.smField(sm)>> = <<=gen.translate("parameterOne", sm)>>
-        return True!>>
-}

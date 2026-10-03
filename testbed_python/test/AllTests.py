@@ -1,35 +1,26 @@
+import inspect
+import threading
 import unittest
 import os
-
-"""
-Formats the output of the tests to be more user-friendly
-Currently outputted as a table in order to increase readability.
-"""
+import sys
 
 
 class UmpleTestTableResult(unittest.TextTestResult):
-    """
-    Opens tag for results table and adds a little css
-    Adds the top row of table
-    """
+    """Reports unittest results as an HTML table while keeping unittest's own failure accounting."""
 
     def __init__(self, stream, descriptions, verbosity):
         super().__init__(stream, descriptions, verbosity)
         self.stream = stream
         self.verbosity = verbosity
-        # Removes a useless line of '-'
+        # Drop unittest's dashed separator line
         self.separator2 = ""
 
-        # Used to calculate % of passing tests
         self.testid = 0
         self.success = 0
         self.failure = 0
 
-        # Container for the table
         self.resultTable = "<div style='display: flex; flex-direction: column;'>"
-        # Separator div to add spacing between tables
         self.resultTable += "<div style='height: 35px; order: 2'></div>"
-        # Creates HTML table
         self.resultTable += "<style> table, th, td {\
                                 border-collapse: collapse;\
                                 padding: 12px 15px;\
@@ -40,21 +31,13 @@ class UmpleTestTableResult(unittest.TextTestResult):
         self.resultTable += "<table style='order: 3;'>"
         self.resultTable += "<tr><td>ID</td><td>Module</td><td>Test</td><td>Status</td><td>Message</td></tr>"
 
-    """
-    Called after a test passes
-    Adds output to results table
-    """
-
     def addSuccess(self, test):
+        super().addSuccess(test)
         self.resultTable += "<td style='background-color:#66CD00'>PASS</td></tr>"
         self.success += 1
 
-    """
-    Called after a test throws an error
-    Adds output to results table
-    """
-
     def addError(self, test, err):
+        super().addError(test, err)
         self.resultTable += (
             "<td style='background-color:#FF0000'>ERROR</td><td>{}</td></tr>".format(
                 err[1]
@@ -62,14 +45,9 @@ class UmpleTestTableResult(unittest.TextTestResult):
         )
         self.failure += 1
 
-    """
-    Called after a test does not satisfy the expected results
-    Adds output to results table
-    """
-
     def addFailure(self, test, err):
-        # Format failure message to be more tester friendly
-        # Original format looks like "2 == 2" or "2 != 2"
+        super().addFailure(test, err)
+        # Split unittest's equality message ("2 != 3") into the report's value columns
         err_msg = str(err[1]).split("\n")[0]
         err_args = err_msg
         assert_type = ""
@@ -93,32 +71,20 @@ class UmpleTestTableResult(unittest.TextTestResult):
 
         self.failure += 1
 
-    """
-    Called after a test is skipped
-    Adds output to results table
-    """
-
     def addSkip(self, test, reason):
+        super().addSkip(test, reason)
         self.resultTable += (
             "<td style='background-color:#00ACFF'>SKIP</td><td>{0!r}</td></tr>".format(
                 reason
             )
         )
 
-    """
-    Called after a test passes unexpectedly
-    Adds output to results table
-    """
-
     def addUnexpectedSuccess(self, test):
+        super().addUnexpectedSuccess(test)
         self.resultTable += "<td style='background-color:#FF0000'>FAIL</td><td>unexpected success</td></tr>"
         self.failure += 1
 
-    """
-    Called after a test passes
-    Adds output to results table
-    """
-
+    # Opens the test's row, which the add method for its outcome completes
     def startTest(self, test):
         unittest.TestResult.startTest(self, test)
         self.testid += 1
@@ -127,35 +93,24 @@ class UmpleTestTableResult(unittest.TextTestResult):
             self.testid, test_info[1][: test_info[1].rfind(".")], test_info[0]
         )
 
-    """
-    Called once all tests are ran to finish of the HTML table
-    Prints results as a percentage
-    """
-
-    def __del__(self):
-        global testResults
+    def finishTable(self):
         self.resultTable += "</table>"
         self.resultTable += "</div>"
         self.resultTable += "Successful: {} / {} ({}%)".format(
             self.success,
             self.success + self.failure,
-            "%.2f" % (self.success / (self.success + max(1, self.failure)) * 100),
+            "%.2f" % (self.success / max(1, self.success + self.failure) * 100),
         )
-        testResults = self.resultTable
+        return self.resultTable
 
 
 """
-Removes any tests that were unsucessfully imported.
-Generates an HTML table of imports that failed and passed and returns it.
-
-Use-case:
-When Python imports files, it might throw an error if any issues arise in the files being imported
-Assuming all tests can be imported successfully, this function serves no purpose.
-However, if someone breaks a test, this allows us to still have an easily readable output.
+Generates an HTML table of the test modules that imported and those that failed to import.
+A module that failed to import still runs as a failing test, so the failure is also counted.
 """
 
 
-def outputErrors(errorList, suites_names, suites_list):
+def outputErrors(errorList, suites_names):
     # Adds CSS
     print(
         "<style> table {\
@@ -187,19 +142,14 @@ def outputErrors(errorList, suites_names, suites_list):
         spliterr[0] = spliterr[0].replace("Failed to import test module:", "")
         spliterr[0] = spliterr[0].strip()
 
-        # Get the index of the error message and remove it for rerun
-        err_index = suites_names.index(spliterr[0])
-        if spliterr[0] in suites_names:
-            del suites_names[err_index]
-            del suites_list[err_index]
-
         print("<tr>")
         print("<td>" + spliterr[0] + "</td>")  # Module name
         print("<td style='background-color:#FF0000'>Import Failed</td>")
         print("<td>" + spliterr[1] + "</td>")  # Import error
         print("</tr>")
 
-    for passing in suites_names:
+    failed = [err.split("Traceback (most recent call last):")[0].replace("Failed to import test module:", "").strip() for err in errorList]
+    for passing in [name for name in suites_names if name not in failed]:
         print("<tr>")
         print("<td>" + passing + "</td>")
         print("<td style='background-color:#66CD00'>Imported</td><td></td>")
@@ -209,29 +159,67 @@ def outputErrors(errorList, suites_names, suites_list):
     return True
 
 
-testResults = None
+TEST_HOOKS = {"setUp", "tearDown", "setUpClass", "tearDownClass"}
+
+# The number of tests in the suite (see the check after the run)
+INVENTORY = 1053
+
+
+def uncollectedMethods(module_name):
+    """
+    Public methods of the module's test classes that unittest will not run. Such a method is
+    almost always a test whose name does not start with "test"; helpers start with "_".
+    """
+    module = sys.modules.get(module_name)
+    methods = []
+    for test_class in vars(module).values() if module else []:
+        if inspect.isclass(test_class) and issubclass(test_class, unittest.TestCase) and test_class.__module__ == module_name:
+            for name, member in vars(test_class).items():
+                if inspect.isfunction(member) and name not in TEST_HOOKS and not name.startswith(("test", "_")):
+                    methods.append(module_name + "." + test_class.__name__ + "." + name)
+    return methods
+
+
 if __name__ == "__main__":
-    path_list = ["associations", "attributes", "patterns", "statemachine"]
+    test_root = os.path.dirname(os.path.abspath(__file__))
     loader = unittest.TestLoader()
 
     suites_list = []
     suites_names = []
 
-    for path in path_list:
-        dir_list = os.listdir(os.path.dirname(os.path.abspath(__file__)) + "/" + path)
+    for directory, _, files in sorted(os.walk(test_root)):
+        for file_name in sorted(files):
+            if file_name.endswith("_test.py"):
+                module_path = os.path.relpath(os.path.join(directory, file_name[:-3]), test_root)
+                module_name = module_path.replace(os.sep, ".")
+                suites_list.append(loader.loadTestsFromName(module_name))
+                suites_names.append(module_name)
 
-        for file_name in dir_list:
-            # optional_one_to_one_test.py is currently broken and will be enabled soon
-            if ("test.py" in file_name and not "optional_one_to_one_test.py" in file_name):
-                file_no_ext = file_name.rsplit(".", 1)[0]
-                suite = loader.loadTestsFromName(path + "." + file_no_ext)
-                suites_list.append(suite)
-                suites_names.append(file_no_ext)
+    outputErrors(loader.errors, suites_names)
 
-    outputErrors(loader.errors, suites_names, suites_list)
+    uncollected = [method for name in suites_names for method in uncollectedMethods(name)]
 
     runner = unittest.TextTestRunner(resultclass=UmpleTestTableResult, verbosity=2)
     big_suite = unittest.TestSuite(suites_list)
-    runner.run(big_suite)
+    result = runner.run(big_suite)
 
-    print(testResults)
+    print(result.finishTable())
+    for method in uncollected:
+        print("Not run because its name does not start with test: " + method, file=sys.stderr)
+
+    # A generated timer or activity left running would keep the process alive forever, so it is a
+    # failure, and the process ends without waiting for it.
+    leaked = [t.name for t in threading.enumerate() if t is not threading.main_thread() and t.is_alive() and not t.daemon]
+    for name in leaked:
+        print("Thread still running after the tests: " + name, file=sys.stderr)
+
+    # A test module deleted or no longer named *_test.py would drop its tests without a failure, so
+    # the run must match the inventory: the number of tests the suite had when last counted (update it
+    # when adding or removing tests).
+    if result.testsRun != INVENTORY:
+        print("%d tests ran, not the inventory of %d: a test module is missing or misnamed, or the"
+              " inventory needs updating" % (result.testsRun, INVENTORY), file=sys.stderr)
+    passed = result.wasSuccessful() and result.testsRun == INVENTORY and not uncollected and not leaked
+    sys.stdout.flush()
+    sys.stderr.flush()
+    os._exit(0 if passed else 1)

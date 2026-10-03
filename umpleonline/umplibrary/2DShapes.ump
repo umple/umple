@@ -53,11 +53,6 @@ class Shape2D {
   }
 
   public static void main(String [] argc) Python{
-    # the first import works with PythonNext packages, the second with the original Python generator
-    try:
-        from Shapes.core.RegularPolygon import RegularPolygon
-    except ImportError:
-        from RegularPolygon import RegularPolygon
     s = RegularPolygon("0,0","0","3","100")
     print(str(s))
   }

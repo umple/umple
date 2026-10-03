@@ -1,20 +1,13 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from abc import ABC, abstractmethod
+from abc import ABC
+
 
 class Foo(ABC):
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
     def __init__(self):
-        pass
+        if type(self) is __class__:
+            raise TypeError("Can't instantiate abstract class Foo")
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def delete(self):
         pass

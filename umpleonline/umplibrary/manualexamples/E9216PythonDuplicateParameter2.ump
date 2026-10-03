@@ -1,5 +1,5 @@
 // Distinct Python names for the parameters
-generate PythonNext;
+generate Python;
 class Copier {
   String copy(String source, String input) Python { return input }
 }

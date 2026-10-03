@@ -15,7 +15,6 @@
   <property name="test.output.path.java" value="${dist.dir}/qa/testbed_java"/>
   <property name="test.output.path.php" value="${dist.dir}/qa/testbed_php"/>
   <property name="test.output.path.python" value="${dist.dir}/qa/testbed_python"/>
-  <property name="test.output.path.pythonnext" value="${dist.dir}/qa/testbed_pythonnext"/>
   <property name="test.output.path.ruby" value="${dist.dir}/qa/testbed_ruby"/>
   <property name="test.output.path.cpp" value="${dist.dir}/qa/testbed_cpp"/>
 
@@ -61,7 +60,6 @@
     <mkdir dir="${test.output.path.java}"/>
     <mkdir dir="${test.output.path.php}"/>
     <mkdir dir="${test.output.path.python}"/>
-    <mkdir dir="${test.output.path.pythonnext}"/>
     <mkdir dir="${test.output.path.ruby}"/>
     <mkdir dir="${test.output.path.cpp}"/>
   </target>
@@ -75,7 +73,6 @@
     <antcall target="compileJava" />
     <antcall target="compilePhp" />
     <antcall target="compilePython" />
-    <antcall target="compilePythonNext" />
     <antcall target="compileRuby" />
     <antcall target="compileRTCpp" />
   </target>
@@ -153,23 +150,15 @@
   <target name="compilePython">
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
 
-    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
-      <arg value="testbed_python/src/TestHarnessPython.ump"/>
-    </java>
-  </target>
-
-  <target name="compilePythonNext">
-    <deps-load-path conf="core" pathid="core.ivy.classpath" />
-
     <!-- The harnesses are UTF-8 and use identifiers beyond ASCII, which the generator compares, so
          they are read as UTF-8 whatever the platform's charset (Windows defaults to Cp1252) -->
     <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <jvmarg value="-Dfile.encoding=UTF-8"/>
-      <arg value="testbed_pythonnext/src/TestHarnessPython.ump"/>
+      <arg value="testbed_python/src/TestHarnessPython.ump"/>
     </java>
     <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
       <jvmarg value="-Dfile.encoding=UTF-8"/>
-      <arg value="testbed_pythonnext/src/TestHarnessPythonTimerLocals.ump"/>
+      <arg value="testbed_python/src/TestHarnessPythonTimerLocals.ump"/>
     </java>
   </target>
 
@@ -198,7 +187,6 @@
     <antcall target="testJava" />
     <antcall target="testPhp" />
     <antcall target="testPython" />
-    <antcall target="testPythonNext" />
     <antcall target="testRuby" />
     <antcall target="testRTCpp" />
     <!--
@@ -267,35 +255,14 @@
 
   <target name="testPython">
     <echo message="Running PYTHON tests from command line"/>
-    <exec executable="python" dir="testbed_python/test/" output="${test.output.path.python}/index.html" outputproperty="test.output.python">
-	    <arg value="AllTests.py"/>
-    </exec>
-
-    <fail message="Python Import Error found">
-      <condition>
-        <contains string="${test.output.python}" substring="Import Failed" casesensitive="true"/>
-      </condition>
-    </fail>
-
-    <fail message="Python Error found">
-      <condition>
-        <contains string="${test.output.python}" substring="FAIL" casesensitive="true"/>
-      </condition>
-    </fail>
-
-    <echo message="PYTHON tests completed!"/>
-  </target>
-
-  <target name="testPythonNext">
-    <echo message="Running PythonNext tests from command line"/>
     <fail unless="python.found" message="No Python 3 interpreter found (tried ${python.candidate}, then python unless UMPLE_PYTHON is set); set UMPLE_PYTHON to one"/>
-    <mkdir dir="${test.output.path.pythonnext}"/>
-    <exec executable="${python.exe}" dir="testbed_pythonnext/test/" output="${test.output.path.pythonnext}/index.html"
-          error="${test.output.path.pythonnext}/errors.txt" failonerror="true" timeout="1800000">
+    <mkdir dir="${test.output.path.python}"/>
+    <exec executable="${python.exe}" dir="testbed_python/test/" output="${test.output.path.python}/index.html"
+          error="${test.output.path.python}/errors.txt" failonerror="true" timeout="1800000">
       <arg value="AllTests.py"/>
     </exec>
 
-    <echo message="PythonNext tests completed!"/>
+    <echo message="PYTHON tests completed!"/>
   </target>
 
   <target name="testRuby">

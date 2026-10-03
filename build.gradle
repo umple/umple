@@ -59,7 +59,6 @@ ext {
     umpleJarRemoteSource = "https://cruise.umple.org/umpleonline/scripts/umple.jar"
     umpleJarRemoteFile = "${rootProject.projectDir.toString()}/libs/umple-latest.jar"
     generatedBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/src-gen"
-    txlTranslaterFile = "${rootProject.projectDir.toString()}/UmpleToPython/txl/umpleJavaToPython.txl"
     testBaseDir = "${rootProject.projectDir.toString()}/dist/gradle/test"
     classfileOutputDir = "${rootProject.projectDir.toString()}/dist/gradle/bin"
     testClassfileOutputDir = "${rootProject.ext.testBaseDir}/bin"
@@ -121,8 +120,7 @@ def buildAliases = [
    'packageUmpleonline' : [
     'packageAllJars',
     'compileUmpleSelf',
-    'deployUmpleonline',
-    'copyTxlUmpleonline'
+    'deployUmpleonline'
    ],
    'genPackages' : [
         'packageDeb',
@@ -216,21 +214,6 @@ task prepareJOptSimpleVendor {
 
 task getVendorLibs {
     dependsOn prepareJOptSimpleVendor
-}
-
-// Compile the TXL code to ctxl code
-task ('compileTXL') {
-    doLast{
-    if (!new File(rootProject.ext.txlTranslaterFile).exists()) {
-        throw new Exception("${rootProject.ext.txlTranslaterFile} does not exist.")
-    }
-    // For the time being it may be good to print the exact command being executed
-    // so that we can check to see if issues are reproducible 
-    def command = "txl -c " + rootProject.ext.txlTranslaterFile
-    println(command)
-    def proc = command.execute();
-    proc.waitForProcessOutput(System.out, System.err);
-}
 }
 
 // Execute Umple jar
@@ -354,7 +337,7 @@ task copyUmpleOnlineTestFiles(type: Copy) {
     }
 }
 
-// PythonNextTracebackMappingTest runs UmpleOnline's Python traceback mapper
+// PythonTracebackMappingTest runs UmpleOnline's Python traceback mapper
 task copyUmpleOnlineTestScripts(type: Copy) {
     from "${rootProject.projectDir.toString()}/umpleonline/scripts"
     into "${rootProject.ext.testBaseDir}/umpleonline/scripts"
@@ -486,22 +469,6 @@ task copyReusableUmpLib(type: Copy) {
     
     }
 }
-task copyTxlFile(type: Copy) {
-    //This has to be done seperatly in order not to alter the existing task too much
-    group = "Custom"
-    description = "Copying TXL files that need to be included in the umple jar"
-    from "UmpleToPython/txl"
-    into rootProject.ext.classfileOutputDir
-    include '**/*.ctxl'
-   
-    doFirst {
-        println("Copying library .ctxl file from UmpleToPython/txl to ${rootProject.ext.classfileOutputDir}")
-        if (inputs.sourceFiles.isEmpty()){
-            throw new StopExecutionException(); 
-        } 
-    
-    }
-}
 
 // Parser .ump files are required at runtime by the Umple compiler.
 // Ant copies them explicitly; Gradle must do the same.
@@ -538,14 +505,13 @@ task copyParserUmpFiles(type: Copy) {
 
 tasks.getByName("compileJava").dependsOn 'copyDocs'
 tasks.getByName("compileJava").dependsOn 'copyReusableUmpLib'
-tasks.getByName("compileJava").dependsOn 'copyTxlFile'
 tasks.getByName("compileJava").dependsOn 'copyParserUmpFiles'
 tasks.getByName("compileJava").dependsOn ':UmpleParser:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToJava:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToPhp:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToRTCpp:copyUmpleOutput'
+tasks.getByName("compileJava").dependsOn ':UmpleToPython:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToRuby:copyUmpleOutput'
-tasks.getByName("compileJava").dependsOn ':UmpleToPythonNext:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToSql:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':UmpleToTest:copyUmpleOutput'
 tasks.getByName("compileJava").dependsOn ':cruise.umple:copyUmpleOutput'
@@ -1058,18 +1024,6 @@ task deployUmpleonline(type: Copy) {
     dependsOn ':packageSync'
 }
 
-task copyTxlUmpleonline(type: Copy) {
-    group = "Custom"
-    description = "Copying the generated JavaToPython ctxl file to the umpleonline scripts folder"
-    from "${rootProject.projectDir.toString()}/UmpleToPython/txl/umpleJavaToPython.ctxl"
-    into "${rootProject.projectDir.toString()}/umpleonline/scripts/txl/"
-    doFirst {
-        println("Copying umpleJavaToPython.ctxl to umpleonline/scripts/txl")
-        if (inputs.sourceFiles.isEmpty()){
-            throw new StopExecutionException(); 
-           } 
-    }
-}
 
 
 task deployUpdatedLib(type: Copy) {
@@ -1114,11 +1068,10 @@ task codeGen {
     dependsOn ":UmpleToJava:compileUmpleSelf"
     dependsOn ":UmpleToRTCpp:compileUmpleSelf"
     dependsOn ":UmpleToPhp:compileUmpleSelf"
+    dependsOn ":UmpleToPython:compileUmpleSelf"
     dependsOn ":UmpleToRuby:compileUmpleSelf"
-    dependsOn ":UmpleToPythonNext:compileUmpleSelf"
     dependsOn ":UmpleToSql:compileUmpleSelf"
     dependsOn ":UmpleToTest:compileUmpleSelf"
-    dependsOn "compileTXL"
 }
 
 // Compiles the parser to Java
@@ -1429,7 +1382,12 @@ task pythonTestbedCompileUmple {
   group = "Custom"
   description = "Compiling python testbed source files"
   doLast{
-    runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_python/src/TestHarnessPython.ump")
+    // The harnesses are UTF-8 with identifiers beyond ASCII, so they are read as UTF-8 on every platform
+    for (harness in ["TestHarnessPython.ump", "TestHarnessPythonTimerLocals.ump"]) {
+        if (runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_python/src/${harness}", "", "-Dfile.encoding=UTF-8") != 0) {
+            throw new GradleException("Generating the Python testbed from ${harness} failed")
+        }
+    }
     }
 }
 
@@ -1444,70 +1402,24 @@ task pythonTestbedTest {
     group = "Custom"
     description = "Running python testbed tests"
     dependsOn pythonTestbedCompile
-    doLast {
-        println("Running PYTHON tests")
-        new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python").mkdir()
-        def command = "python AllTests.py"
-        
-        def proc = command.execute(null, new File("${rootProject.projectDir.toString()}/testbed_python/test"))
-        def out = new File ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.txt")
-        out.write(proc.text)
-        copy {
-          from ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python")
-          into ("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python")
-          include "index.txt"
-          rename ("index.txt", "index.html")
-        }
-        
-        delete "${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.txt"
-
-        println("PYTHON tests completed!\n"+
-        "See results at ${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python/index.html")
-    }
-}
-
-task pythonNextTestbedCompileUmple {
-  group = "Custom"
-  description = "Compiling PythonNext testbed source files"
-  doLast{
-    // The harnesses are UTF-8 with identifiers beyond ASCII, so they are read as UTF-8 on every platform
-    for (harness in ["TestHarnessPython.ump", "TestHarnessPythonTimerLocals.ump"]) {
-        if (runUmpleJar(rootProject.ext.umpleCurrentJar, "${rootProject.projectDir.toString()}/testbed_pythonnext/src/${harness}", "", "-Dfile.encoding=UTF-8") != 0) {
-            throw new GradleException("Generating the PythonNext testbed from ${harness} failed")
-        }
-    }
-    }
-}
-
-task pythonNextTestbedCompile {
-    group = "Custom"
-    description = "Compiling PythonNext testbed generated files"
-    dependsOn pythonNextTestbedCompileUmple
-
-}
-
-task pythonNextTestbedTest {
-    group = "Custom"
-    description = "Running PythonNext testbed tests"
-    dependsOn pythonNextTestbedCompile
     timeout = java.time.Duration.ofMinutes(10)
     doLast {
-        println("Running PythonNext tests")
-        def reportDir = new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_pythonnext")
+        println("Running PYTHON tests")
+        def reportDir = new File("${rootProject.projectDir.toString()}/dist/gradle/reports/tests/testbed_python")
         reportDir.mkdirs()
         def python = pythonInterpreter()
         new File(reportDir, "index.html").withOutputStream { report ->
             new File(reportDir, "errors.txt").withOutputStream { errors ->
                 // A nonzero exit (any failing, erroring or missing test) fails the build
                 execOperations.exec {
-                    workingDir "${rootProject.projectDir.toString()}/testbed_pythonnext/test"
+                    workingDir "${rootProject.projectDir.toString()}/testbed_python/test"
                     commandLine python, 'AllTests.py'
                     standardOutput = report
                     errorOutput = errors
                 }
             }
         }
-        println("PythonNext tests completed!\n"+
+        println("PYTHON tests completed!\n"+
         "See results at ${reportDir}/index.html")
     }
 }
@@ -1651,7 +1563,6 @@ task testbedTests {
     dependsOn javaTestbedTest
     dependsOn phpTestbedTest
     dependsOn pythonTestbedTest
-    dependsOn pythonNextTestbedTest
     dependsOn rubyTestbedTest
     dependsOn rtcppTestbedTest
 }
@@ -1716,7 +1627,7 @@ task javaUserManualAndExampleTests {
                 "E2*.ump",
                 "E3*.ump",
                 "E4*.ump",
-                "E921*.ump", // PythonNext's error examples: their generate PythonNext directive reports the error
+                "E921*.ump", // Python's error examples: their generate Python directive reports the error
                 "WE1xxIdentifierInvalid1.ump",
                 "WE1xxIdentifierInvalid3.ump",
                 "WE1xxIdentifierInvalid5.ump",
@@ -1735,125 +1646,17 @@ task javaUserManualAndExampleTests {
     }
 }
 
-task ('setupPythonUserManualAndExampleTests') {
-  group = "Custom"
-  description = "Setting up python umpleonline and user manual examples"
-  doLast{
-    setupUserManualAndExampleTests("python");
-    }
-}
-
-
 task pythonUserManualAndExampleTests {
     group = "Custom"
-    description = "Testing python umpleonline and Manual Examples"
-    dependsOn setupPythonUserManualAndExampleTests
-    doLast {
-               def excludes = [
-                "E0*.ump",
-                "E1*.ump",
-                "E2*.ump",
-                "E3*.ump",
-                "E4*.ump",
-                "E921*.ump", // PythonNext's error examples: their generate PythonNext directive reports the error
-                "WE1xxIdentifierInvalid1.ump",
-                "WE1xxIdentifierInvalid3.ump",
-                "WE1xxIdentifierInvalid5.ump",
-                "WE1xxIdentifierInvalid6.ump",
-                "WE1xxIdentifierInvalid7.ump",
-                "W142TypeIsAccessSpecifierAmbiguous.ump",
-                "UseStatements1.ump",
-                "NamespaceDirectives4.ump",
-                "HtmlGeneration2.ump", //Temporary
-                "OBDCarSystem.ump", //Temporary
-                "ComplexStateMachine.ump", //Temporary
-                "W010SingletonMultiplicityOver12.ump", //Temporary
-                "AccessControl2.ump",
-                "AroundStatement1.ump",
-                "AroundStatement2.ump",
-                "Auto-Transitions1.ump",
-                "Ball_Game.ump",
-                "BasicTemplates1.ump",
-                "BasicTemplates2.ump",
-                "BasicTemplates3.ump",
-                "BcmsBaseConfiguration.ump",
-                "BcmsMultipleCrisis-Multiple-Coordinator-Configuration.ump",
-                "CanalLockStateMachine.ump",
-                "CodeInjectioninCustomMethods1.ump",
-                "CodeInjectioninEventMethods1.ump",
-                "Dishwasher.ump",
-                "DistributedClassInheritance1.ump",
-                "DistributedOptions2.ump",
-                "ExtendedDistributedExample3.ump",
-                "Elevator_State_Machine.ump",
-                "HtmlGeneration.ump",
-                "LibraryLoanStateMachine.ump",
-                "MicrowaveOven2.ump",
-                "Phone.ump",
-                "PingPong.ump",
-                "PooledStateMachines1.ump",
-                "QueuedStateMachines1.ump",
-                "Runway.ump",
-                "SecurityLight.ump",
-                "StateDependentMethods1.ump",
-                "StateDependentMethods2.ump",
-                "StateMachineActionsandDoActivities1.ump",
-                "TcpIpSimulation.ump",
-                "TimedCommands.ump",
-                "TrafficLightsB.ump",
-                "UnspecifiedEvents2.ump",
-                "W082ConflictingModifiers.ump",
-                "W1006StateMachineNotParsed1.ump",
-                "W1007ElementNotParsed1.ump",
-                "W1010ConstraintSyntaxNotProcessed1.ump",
-                "NullExample.ump",
-                "Tracers1.ump", //Tracers are out of scope for Beta Python Generation
-                "Tracers2.ump",
-                "Tracers3.ump",
-                "Tracers4.ump",
-                "Tracers5.ump",
-                "TracingAssociations1.ump",
-                "TracingAssociations2.ump",
-                "TracingAssociations3.ump",
-                "TracingAttributes1.ump",
-                "TracingAttributes2.ump",
-                "TracingAttributes3.ump",
-                "TracingAttributeswithConditions2.ump",
-                "TracingAttributeswithOccurrences1.ump",
-                "TracingAttributeswithOccurrences2.ump",
-                "TracingAttributeswithtimeline1.ump",
-                "TracingAttributeswithtimeline2.ump",
-                "TracingBasics1.ump",
-                "TracingBasics2.ump",
-                "TracingConstraints1.ump",
-                "TracingConstraints2.ump",
-                "TracingConstraints3.ump",
-                "TracingMethods1.ump",
-                "TracingMethods2.ump",
-                "TracingStateMachines1.ump",
-                "TracingStateMachines2.ump",
-                "TracingStateMachines3.ump",
-                "W301TracingEntityNotFound1.ump",
-                "W301TracingEntityNotFound2.ump",
-                "W302TracerNotRecognized1.ump",
-                "W302TracerNotRecognized2.ump",// <End> Disabled until TXL bugs are fixed
-                "src-gen-umple",
-                "allExamplesList.txt"]
-        runUserManualAndExampleTests("python", "Python", excludes)
-    }
-}
-
-task pythonNextUserManualAndExampleTests {
-    group = "Custom"
-    description = "Checking PythonNext generation on the example corpus and the relevant testbed and compiler fixtures"
+    description = "Checking Python generation on the example corpus and the relevant testbed and compiler fixtures"
     timeout = java.time.Duration.ofMinutes(60)
     doLast {
         def python = pythonInterpreter()
-        // Every case must behave as build/pythonnext_corpus_manifest.json expects; a nonzero exit fails the build
+        // Every case must behave as build/python_corpus_manifest.json expects; a nonzero exit fails the build
         execOperations.exec {
             workingDir "${rootProject.projectDir.toString()}"
-            commandLine python, 'build/pythonnext_corpus_gate.py', '--jar', "${rootProject.ext.umpleCurrentJar}",
-                '--output', "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/pythonnext/gate"
+            commandLine python, 'build/python_corpus_gate.py', '--jar', "${rootProject.ext.umpleCurrentJar}",
+                '--output', "${rootProject.projectDir.toString()}/dist/gradle/test/workingDir/temp/python/gate"
         }
     }
 }
@@ -1877,7 +1680,7 @@ task phpUserManualAndExampleTests {
                 "E2*.ump",
                 "E3*.ump",
                 "E4*.ump",
-                "E921*.ump", // PythonNext's error examples: their generate PythonNext directive reports the error
+                "E921*.ump", // Python's error examples: their generate Python directive reports the error
                 "ExtendedDistributedExample3.ump",
                 "WE1xxIdentifierInvalid1.ump",
                 "WE1xxIdentifierInvalid3.ump",
@@ -1911,7 +1714,7 @@ task rtcppUserManualAndExampleTests {
     dependsOn setupRTCppUserManualAndExampleTests
     doLast {
         def excludes = [
-            "E921*.ump", // PythonNext's error examples: their generate PythonNext directive reports the error
+            "E921*.ump", // Python's error examples: their generate Python directive reports the error
             "ActiveObjects1.ump",
             "AgentsCommunication.ump",
             "Auto-Transitions1.ump",
@@ -2086,7 +1889,6 @@ task allUserManualAndExampleTests {
     dependsOn javaUserManualAndExampleTests
     dependsOn phpUserManualAndExampleTests
     dependsOn pythonUserManualAndExampleTests
-    dependsOn pythonNextUserManualAndExampleTests
     dependsOn rtcppUserManualAndExampleTests
     // Consider doing this for the other languages too
 }

@@ -6,9 +6,9 @@ noreferences
 
 <h2>Python generation does not support a feature the class uses yet</h2>
 
-<p>A few Umple features are generated for Java but not yet by PythonNext. When a class uses one of them, PythonNext reports this error, which names the feature, and does not write a Python file for the class. Other classes are still generated, and generation for other languages is not affected. The <a href="PythonNext.html">PythonNext</a> page lists the features concerned.</p>
+<p>A few Umple features are generated for Java but not yet for Python. When a class uses one of them, the Python generator reports this error, which names the feature, and does not write a Python file for the class. Other classes are still generated, and generation for other languages is not affected. The <a href="Python.html">Python</a> page lists the features concerned.</p>
 
-<p>To generate Python with PythonNext, leave the feature out of the classes you generate as Python, or put it in a <a href="BasicMixsets.html">mixset</a> that is only used for Java.</p>
+<p>To generate Python, leave the feature out of the classes you generate as Python, or put it in a <a href="BasicMixsets.html">mixset</a> that is only used for Java.</p>
 
 @@example
 @@source manualexamples/E9210PythonUnsupported1.ump

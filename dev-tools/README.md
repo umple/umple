@@ -10,7 +10,7 @@ For Unix, Mac and Linux users (or Windows users with Cygwin or similar):
 
 It is suggested that you add this directory to your path.
 
-Java must be installed to run all of these. Some require graphviz, php, ruby, python 3, txl and other dependencies as well
+Java must be installed to run all of these. Some require graphviz, php, ruby, python 3 and other dependencies as well
 
 For normal use of Umple by end users on the command line. 
 

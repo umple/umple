@@ -1,8 +1,0 @@
-class UmpleToPythonNext {
-    // A mandatory one end: cleared first, so the owner's remove lets this object go.
-    delete_OneFromMany <<!<</*delete_OneFromMany*/>>
-        <<=gen.translate("removeParameterOne", av)>> = <<=field>>
-        <<=field>> = None
-        if <<=gen.translate("removeParameterOne", av)>> is not None:
-            <<=gen.translate("removeParameterOne", av)>>.<<=gen.relatedTranslate("removeMethod", av)>>(self)!>>
-}

@@ -1,47 +1,33 @@
 import unittest
+import datetime
 
-# Test classes are imported dynamically
-# Must be generated into ImportModules' namespace then imported
 from ImportModules import importModules
 
-# Temporarily commented: until Date/Time is implemented
-# importModules(["ConstDefault", "ConstDefaultInterfaceObject"], ["associations", "test"])
+importModules(["ConstDefault", "ConstDefaultInterfaceObject"], ["attributes", "test"])
 from ImportModules import *
-import datetime
 
 
 class ConstTest(unittest.TestCase):
-    @unittest.skip("Date/Time needs to be implemented")
+    def _assertDefaults(self, cd):
+        self.assertEqual(0, cd.I1)
+        self.assertEqual(0, cd.I2)
+        self.assertEqual(0.0, cd.D1)
+        self.assertEqual(0.0, cd.D2)
+        self.assertEqual(0.0, cd.F1)
+        self.assertEqual(0.0, cd.F2)
+        self.assertIs(False, cd.B1)
+        self.assertIs(False, cd.B2)
+        self.assertEqual("", cd.STR)
+        self.assertEqual(datetime.time(0, 0, 0), cd.TIME)
+        # Umple fixes a Date constant without a value to the day of generation; the Java test
+        # compares it with today's date, which only holds when generation and test share a day
+        self.assertIsInstance(cd.DATE, datetime.date)
+        self.assertLessEqual(cd.DATE, datetime.date.today())
+
+    # testbed/test/cruise/attributes/test/ConstTest.java: constant
     def test_constant(self):
-        cd = ConstDefault.ConstDefault()
-        currentDate = datetime.datetime.now()
+        self._assertDefaults(ConstDefault.ConstDefault())
 
-        self.assertEqual(0, cd.I1)
-        self.assertEqual(0, cd.I2)
-        self.assertEqual(0.0, cd.D1, 0.0)
-        self.assertEqual(0.0, cd.D2, 0.0)
-        self.assertEqual(0.0, cd.F1, 0.0)
-        self.assertEqual(0.0, cd.F2, 0.0)
-        self.assertEqual(False, cd.B1)
-        self.assertEqual(False, cd.B2)
-        self.assertEqual("", cd.STR)
-        self.assertEqual(datetime.strptime("00:00:00", "%H:%M:%S"), cd.TIME)
-        self.assertEqual(str(currentDate), str(cd.DATE))
-
-    @unittest.skip("Date/Time needs to be implemented")
+    # testbed/test/cruise/attributes/test/ConstTest.java: constantInterface
     def test_constantInterface(self):
-        cd = ConstDefaultInterfaceObject.ConstDefaultInterfaceObject()
-
-        currentDate = datetime.datetime.now()
-
-        self.assertEqual(0, cd.I1)
-        self.assertEqual(0, cd.I2)
-        self.assertEqual(0.0, cd.D1, 0.0)
-        self.assertEqual(0.0, cd.D2, 0.0)
-        self.assertEqual(0.0, cd.F1, 0.0)
-        self.assertEqual(0.0, cd.F2, 0.0)
-        self.assertEqual(False, cd.B1)
-        self.assertEqual(False, cd.B2)
-        self.assertEqual("", cd.STR)
-        self.assertEqual(datetime.strptime("00:00:00", "%H:%M:%S"), cd.TIME)
-        self.assertEqual(str(currentDate), str(cd.DATE))
+        self._assertDefaults(ConstDefaultInterfaceObject.ConstDefaultInterfaceObject())

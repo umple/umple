@@ -1,5 +1,5 @@
 // Python reserves self for the object a method is called on
-generate PythonNext;
+generate Python;
 class Shape {
   Double scale(Double self) Python { return self * 2 }
 }

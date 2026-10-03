@@ -1,7 +1,0 @@
-class UmpleToPythonNext {
-    constructor_StateMachineAssignDefault <<!<</*constructor_StateMachineAssignDefault*/>>
-        self.<<=gen.translate("setMethod", sm)>>(<<=gen.stateReference(state)>>)<<#
-  // Initial entry can delete the object, ending all remaining constructor work.
-  realSb.append(gen.deletedCheck(gen.deletingFlag(uClass), "        ", ""));
-  #>>!>>
-}

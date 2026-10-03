@@ -49,7 +49,7 @@ class CodeCompiler {
           wasSuccessful = wasSuccessful & compilePhp(currentElement, model, beQuiet, extra);
           subsequentCompilation = true;
         }
-        else if (isPythonTarget(generator)) {
+        else if (generator.equals("Python")) {
           pythonElements.add(currentElement);
         }
         else {
@@ -58,23 +58,18 @@ class CodeCompiler {
       }
     }
     if (!pythonElements.isEmpty()) {
-      wasSuccessful = wasSuccessful & compilePython(pythonElements, model, generator, errorFileName);
+      wasSuccessful = wasSuccessful & compilePython(pythonElements, model, errorFileName);
       subsequentCompilation = true;
     }
     return wasSuccessful;
   }
  
-  // Whether a generator writes Python: the original one or PythonNext
-  public static boolean isPythonTarget(String generator) {
-    return "Python".equals(generator) || "PythonNext".equals(generator);
-  }
-
   // Python is only syntax-checked here. Running user code is the job of an explicit
   // execution step (for example the UmpleOnline sandboxed execution service), never of compilation.
-  private static boolean compilePython(List<UmpleElement> elements, UmpleModel model, String generator, String errorFileName) {
+  private static boolean compilePython(List<UmpleElement> elements, UmpleModel model, String errorFileName) {
     String root = null;
     for (GenerateTarget gt : model.getGenerates()) {
-      if (gt.getLanguage().equals(generator)) {
+      if (gt.getLanguage().equals("Python")) {
         root = StringFormatter.addPathOrAbsolute(model.getUmpleFile().getPath(), gt.getPath());
       }
     }
@@ -634,10 +629,10 @@ class CodeCompiler {
     {
       for (Method aMethod : uClass.getMethods())
       {
-        if ("PythonNext".equals(language))
+        if ("Python".equals(language))
         {
-          // PythonNext mains are chosen by the same rule the generator uses to emit them
-          if (PythonNextGenerator.isPythonMain(aMethod) && uClass.getOuterClass() == null)
+          // Python mains are chosen by the same rule the generator uses to emit them
+          if (PythonGenerator.isPythonMain(aMethod) && uClass.getOuterClass() == null)
           {
             mainClasses.add(uClass);
             break;

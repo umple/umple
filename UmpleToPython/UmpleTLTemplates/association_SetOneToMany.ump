@@ -1,0 +1,17 @@
+use association_Guards.ump;
+
+class UmpleToPython {
+    // Setter of a mandatory one end whose other end is many: the object moves from its old owner to
+    // the new one, which links it back through its add method.
+    association_SetOneToMany <<!<</*association_SetOneToMany*/>>
+
+    def <<=gen.translate("setMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("setMethod", av), gen.parameter(parameter, av.getType()))>><<@ UmpleToPython.association_SetGuards >>
+        if <<=parameter>> is None:
+            return False
+        <<=gen.translate("parameterExisting", av)>> = <<=field>>
+        <<=field>> = <<=parameter>>
+        if <<=gen.translate("parameterExisting", av)>> is not None and <<=gen.translate("parameterExisting", av)>> is not <<=parameter>>:
+            <<=gen.translate("parameterExisting", av)>>.<<=gen.relatedTranslate("removeMethod", av)>>(self)
+        <<=field>>.<<=gen.relatedTranslate("addMethod", av)>>(self)<<=gen.injected(uClass, "after", gen.translate("setMethod", av), gen.parameter(parameter, av.getType()))>>
+        return True!>>
+}

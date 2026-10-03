@@ -1,0 +1,10 @@
+class UmpleToPython {
+    // The partner cannot exist without this object, so it is deleted too.
+    delete_OneFromOne <<!<</*delete_OneFromOne*/>><<#
+  String existing = gen.translate("parameterExisting", av);
+  #>>
+        <<=existing>> = <<=field>>
+        <<=field>> = None
+        if <<=existing>> is not None:
+            <<=existing>>.delete()!>>
+}

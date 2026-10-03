@@ -1,0 +1,11 @@
+class UmpleToPython {
+    // This object is the whole of a composition: the part is deleted and released.
+    delete_OptionalOneFromOne_comp <<!<</*delete_OptionalOneFromOne_comp*/>><<#
+  String existing = gen.translate("parameterExisting", av);
+  #>>
+        <<=existing>> = <<=field>>
+        <<=field>> = None
+        if <<=existing>> is not None:
+            <<=existing>>.delete()
+            <<=existing>>.<<=gen.relatedTranslate("setMethod", av)>>(None)!>>
+}

@@ -1,0 +1,5 @@
+class UmpleToPython {
+    constructor_AssociationAssignUndirectionalOne <<!<</*constructor_AssociationAssignUndirectionalOne*/>>
+        if not self.<<=gen.immutableEndSetterName(av, "setMethod")>>(<<=parameter>>):
+            raise RuntimeError(<<=gen.pythonString("Unable to create " + gen.relatedTranslate("type", av) + " due to " + parameter + ". See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")>>)!>>
+}

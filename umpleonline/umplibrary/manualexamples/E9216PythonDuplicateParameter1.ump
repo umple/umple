@@ -1,6 +1,6 @@
 // A parameter named in becomes input in Python (in is a
 // Python keyword), which the second parameter already uses
-generate PythonNext;
+generate Python;
 class Copier {
   String copy(String in, String input) Python { return input }
 }

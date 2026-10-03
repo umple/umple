@@ -1,0 +1,23 @@
+use association_Guards.ump;
+
+class UmpleToPython {
+    // A directed 0..n end: adding stops at the maximum.
+    association_AddUnidirectionalOptionalN <<!<</*association_AddUnidirectionalOptionalN*/>><<#
+  MethodParameter objectParameter = gen.parameter(parameter, av.getType());
+  #>>
+
+    def <<=gen.translate("addMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("addMethod", av), objectParameter)>><<@ UmpleToPython.association_KeyGuard >>
+        if <<=gen.containsIdentity(field, parameter)>>:
+            return False<<@ UmpleToPython.association_InvariantGuards >>
+        if len(<<=field>>) >= __class__.<<=gen.translate("maximumNumberOfMethod", av)>>():
+            return False
+        <<=field>>.append(<<=parameter>>)<<=gen.injected(uClass, "after", gen.translate("addMethod", av), objectParameter)>><<=gen.sortAfterChange(av)>>
+        return True
+
+    def <<=gen.translate("removeMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("removeMethod", av), objectParameter)>><<@ UmpleToPython.association_KeyGuard >>
+        index = <<=gen.identityIndex(field, parameter)>>
+        if index == -1:
+            return False
+        del <<=field>>[index]<<=gen.injected(uClass, "after", gen.translate("removeMethod", av), objectParameter)>>
+        return True!>>
+}

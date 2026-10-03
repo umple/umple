@@ -45,12 +45,9 @@ class DockerExecution {
         }
         const pathArr=path.split('/');
 
-        if(this.language=="PythonNext"){
+        if(this.language=="Python"){
             // The model's folder is the generated root, so the path is the main module's package
             return `-m ${[...pathArr.filter(part => part), this.mainFile].join('.')}`;
-        }
-        if(this.language=="Python"){
-            return path ? `${path}/${this.mainFile}.py` : `${this.mainFile}.py`;
         }
         return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;    
     }

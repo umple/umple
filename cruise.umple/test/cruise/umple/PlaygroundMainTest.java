@@ -66,7 +66,7 @@ public class PlaygroundMainTest
     }
   }
 
-  private static final String[] MAIN_LIST_LANGUAGES = {"Java", "Python", "PythonNext"};
+  private static final String[] MAIN_LIST_LANGUAGES = {"Java", "Python"};
 
   // A main class list left by an earlier run, of any target, would launch the wrong program
   @Test
