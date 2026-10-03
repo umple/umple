@@ -1,0 +1,27 @@
+JavaScript
+Generators
+noreferences
+@@description
+<p>
+The JavaScript generator provides basic support for generating JavaScript from Umple class models. Use <code>generate JavaScript;</code> in your Umple file, or <code>-g JavaScript</code> on the command line. One file is generated for each class.</p>
+
+<p>The following features are supported: classes, attributes of type String, Integer, Double and Boolean (including lazy, defaulted and immutable attributes), constructors, the generated get and set methods, inheritance using isA, and associations whose ends are optional (0..1 or *), including directed associations, compositions and reflexive associations.</p>
+
+<p>The generated code uses CommonJS modules: each class is exported with <code>module.exports</code>, and a subclass uses <code>require</code> to obtain its superclass. The generated files can be run with Node.js without any other library.</p>
+
+<p><b>Command line use:</b> As for <a href="Python.html">Python</a>, <a target="txl" href="https://www.txl.ca">TXL</a> transformation technology is used to convert generated Java to JavaScript, so you need to install <a target="txl" href="https://www.txl.ca">version 10.8b of FreeTXL</a> first.</p>
+
+<p>
+Currently unsupported features:
+<ul>
+    <li>State machines</li>
+    <li>Methods written in Umple classes, and code injection (before and after)</li>
+    <li>Associations with a mandatory end (such as 1 or 1..*) or with a bounded multiplicity (such as 0..3), sorted associations, specialized associations, and immutable associations with a many end</li>
+    <li>Interfaces, singletons, keys, constraints and constants</li>
+    <li>Enumerations and tracing</li>
+    <li>A superclass in another namespace</li>
+    <li>Attributes of other types, such as Date, Time or lists, and fixml attributes</li>
+    <li>The generated toString method</li>
+</ul>
+A class that uses an unsupported feature is not generated: a message is displayed and the file contains only a comment.
+</p>

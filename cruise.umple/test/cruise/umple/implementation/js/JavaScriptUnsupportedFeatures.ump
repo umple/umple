@@ -1,0 +1,47 @@
+class Palette
+{
+  enum Color { Red, Green }
+  name;
+}
+
+class Reading
+{
+  fixml Integer x = 3;
+}
+
+class Sensor
+{
+  Integer x;
+  trace x;
+}
+
+class Shelf
+{
+  0..1 -- * Item;
+}
+
+class Item
+{
+}
+
+class BookShelf
+{
+  isA Shelf;
+  0..1 -- * Novel items;
+}
+
+class Novel
+{
+  isA Item;
+}
+
+class Catalog
+{
+  immutable;
+  0..1 -> * Entry;
+}
+
+class Entry
+{
+  immutable;
+}
