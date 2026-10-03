@@ -976,6 +976,7 @@ Action.changeDiagramType = function(newDiagramType)
   if (newDiagramType.type === "GvFeature"     && Page.useGvFeatureDiagram) return;
   if ((newDiagramType.type === "GvEntity" || newDiagramType.type === "GvEntityRelationshipDiagram") && Page.useGvEntityRelationshipDiagram) return;
   if (newDiagramType.type === "structure"     && Page.useStructureDiagram) return;
+  if (newDiagramType.type === "stateTables"   && Page.useStateTables) return;
 
   Page.unselectAllToggleTools();
   var changedType = false;
