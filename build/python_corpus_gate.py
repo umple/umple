@@ -9,8 +9,8 @@ with the files it includes with `use`, and checked against its expected outcome:
                       every public Java method (toString as __str__, hashCode as __hash__) except
                       a sorted association's comparator accessors and the methods a
                       warning 9212 at that class (or at a trait it uses) names as having code
-                      only for other languages; every module compiles and imports through its package on its
-                      own (the generated root on sys.path, the case's other modules unloaded first); every class
+                      only for other languages; every module compiles and imports through its package (only the
+                      generated root on sys.path, a fresh interpreter per module); every class
                       with a main, and every class with a Python or untagged main in the model,
                       has the launcher, and every launcher exits 0 within the timeout with no
                       standard input (printing the manifest's expected output, where it has one)
@@ -40,7 +40,6 @@ import hashlib
 import inspect
 import json
 import os
-import py_compile
 import re
 import shutil
 import subprocess
@@ -229,40 +228,11 @@ def missing_members(expected, load):
     return missing
 
 
-def unload(root):
-    """Forgets the modules imported from root, so that the next import starts as in a fresh interpreter."""
-    root = os.path.realpath(root) + os.sep
-
-    def inside(module):
-        where = getattr(module, "__file__", None) or next(iter(getattr(module, "__path__", None) or []), None)
-        return where and os.path.realpath(where).startswith(root)
-
-    # all found before any is removed: a namespace package finds its path through its parent's
-    for name in [name for name, module in list(sys.modules.items()) if inside(module)]:
-        del sys.modules[name]
-
-
 def module_problems(data, load):
-    """Run in one interpreter per case: compiles every generated module, imports each on its own, then
-    checks that each class has Java's public methods and, for a case with a baseline, the public API."""
-    root, modules = data["root"], data["modules"]
-    problems = []
-    for module in modules:
-        try:
-            py_compile.compile(os.path.join(root, *module.split("/")) + ".py", doraise=True)
-        except py_compile.PyCompileError as e:
-            problems.append("does not compile: " + tail(str(e), 2))
-    for module in [] if problems else modules:
-        unload(root)
-        try:
-            load(module.replace("/", "."))
-        except Exception as e:
-            problems.append("import %s: %s: %s" % (module.replace("/", "."), type(e).__name__, e))
-    if not problems:
-        unload(root)
-        problems += ["missing Java's public method " + m for m in missing_members(data["expected"], load)]
+    """Run in one interpreter per case once each module has imported on its own: checks that each class has
+    Java's public methods and, for a case with a baseline, the public API."""
+    problems = ["missing Java's public method " + m for m in missing_members(data["expected"], load)]
     if not problems and data["api"]:
-        unload(root)
         problems += ["public API differs: " + p for p in api_differences(data["api"], load)]
     return problems
 
@@ -290,6 +260,17 @@ def run(command, cwd, timeout, env=None):
         return p.returncode, p.stdout
     except subprocess.TimeoutExpired:
         return None, "timed out after %s s" % timeout
+
+
+def import_problems(python, root, modules, cwd):
+    """Imports each generated module in a fresh interpreter, so that each must import on its own."""
+    problems = []
+    for module in modules:
+        status, output = run([python, "-I", "-c", "import importlib, sys; sys.path.insert(0, sys.argv[1]); importlib.import_module(sys.argv[2])",
+                              str(root), module.replace("/", ".")], cwd, timeout=60)
+        if status != 0:
+            problems.append("import %s: %s" % (module.replace("/", "."), tail(output, 1)))
+    return problems
 
 
 def compile_all(python, root, case):
@@ -409,8 +390,9 @@ class Gate:
                 if absent:
                     problems.append("%s lacks %s" % (module, ", ".join(absent[:5])))
             return "; ".join(problems) or None
-        problems += self.check_in_python(case, root, "module_problems", {
-            "root": str(root), "modules": modules, "expected": expected, "api": self.api.get(path, {}).get("modules")})
+        problems += import_problems(self.python, root, modules, case)
+        if not problems:
+            problems += self.check_in_python(case, root, "module_problems", {"expected": expected, "api": self.api.get(path, {}).get("modules")})
         if not problems:
             problems += self.run_mains(case, model, root, modules)
         return "; ".join(problems) or None

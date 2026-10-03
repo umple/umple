@@ -1,4 +1,3 @@
-import importlib
 import os
 import sys
 import tempfile
@@ -7,7 +6,7 @@ from pathlib import Path
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, os.pardir, os.pardir, os.pardir, "build"))
-from python_corpus_gate import batch_results, left_out_method, module_problems, parse_expectation, prepare_output
+from python_corpus_gate import batch_results, import_problems, left_out_method, parse_expectation, prepare_output
 
 
 # The corpus gate excuses a generated class for missing only the methods Umple says it left out.
@@ -42,25 +41,15 @@ class CorpusGateTest(unittest.TestCase):
         # a model the run stopped on has no result, so the gate generates it on its own
         self.assertNotIn("c/C.ump", results)
 
-    # One interpreter checks all of a case's modules, yet each must import without the others
-    def test_eachModuleIsImportedOnItsOwn(self):
+    # B imports only after A has run, so it fails on its own, as does a module that does not compile
+    def test_eachModuleMustImportOnItsOwn(self):
         with tempfile.TemporaryDirectory() as root:
             (Path(root) / "pkg").mkdir()
-            (Path(root) / "pkg" / "B.py").write_text("FLAG = 1\n")
-            (Path(root) / "pkg" / "A.py").write_text("import sys\nsys.modules['pkg.B'].FLAG\n")
+            (Path(root) / "pkg" / "A.py").write_text("import builtins\nbuiltins.GATE_READY = True\n")
+            (Path(root) / "pkg" / "B.py").write_text("import builtins\nassert builtins.GATE_READY\n")
             (Path(root) / "pkg" / "C.py").write_text("def broken(:\n")
-            sys.path.insert(0, root)
-            try:
-                data = {"root": root, "expected": {}, "api": None}
-                problems = module_problems(dict(data, modules=["pkg/B", "pkg/A"]), importlib.import_module)
-                self.assertEqual(1, len(problems))
-                self.assertTrue(problems[0].startswith("import pkg.A: KeyError"), problems)
-                problems = module_problems(dict(data, modules=["pkg/B", "pkg/C"]), importlib.import_module)
-                self.assertTrue(problems and problems[0].startswith("does not compile"), problems)
-            finally:
-                sys.path.remove(root)
-                sys.modules.pop("pkg.B", None)
-                sys.modules.pop("pkg", None)
+            problems = import_problems(sys.executable, root, ["pkg/A", "pkg/B", "pkg/C"], root)
+            self.assertEqual(["import pkg.B", "import pkg.C"], [p.split(":")[0] for p in problems])
 
     def test_onlyAnOutputDirectoryTheGateMadeIsReplaced(self):
         with tempfile.TemporaryDirectory() as scratch:
