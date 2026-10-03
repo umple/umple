@@ -183,7 +183,8 @@ public class PythonGeneratorCoreTest
     }
     Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("class Queue { }\n")));
     // parser and symbol are Python 3.8 and 3.9 modules, compression one of 3.14
-    for (String builtIn : Arrays.asList("_thread", "_abc", "builtins", "calendar", "email", "json", "parser", "symbol", "compression"))
+    // test and _testcapi are on the path of installations that include CPython's tests
+    for (String builtIn : Arrays.asList("_thread", "_abc", "builtins", "calendar", "email", "json", "parser", "symbol", "compression", "test", "_testcapi"))
     {
       Assert.assertEquals(builtIn, Arrays.asList(9213), errorCodes(generate("namespace " + builtIn + ";\nclass A { }\n")));
       Assert.assertEquals(builtIn, new ArrayList<Integer>(), errorCodes(generate("namespace app." + builtIn + ";\nclass A { }\n")));
@@ -194,6 +195,21 @@ public class PythonGeneratorCoreTest
     UmpleModel inNamespace = generate("namespace sys;\nclass Main { }\n");
     Assert.assertTrue(messageOf(inNamespace, 9213), messageOf(inNamespace, 9213).startsWith("The namespace sys of class Main conflicts"));
     Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("namespace app.sys;\nclass Main { }\n")));
+  }
+
+  // Python matches the case of module names even where file names ignore case, as on Windows and macOS
+  @Test
+  public void namespacesOrModulesDifferingOnlyInCaseAreReported() throws Exception
+  {
+    UmpleModel model = generate("namespace P;\nclass Upper { }\nnamespace p;\nclass Lower { }\n");
+    Assert.assertEquals(Arrays.asList(9218), errorCodes(model));
+    Assert.assertTrue(messageOf(model, 9218), messageOf(model, 9218).startsWith("The namespace p of class Lower differs only in case from the namespace P"));
+    Assert.assertEquals(Arrays.asList("Upper"), sortedNames(model));
+    UmpleModel classes = generate("namespace shop;\nclass Item { }\ninterface item { }\n");
+    Assert.assertTrue(messageOf(classes, 9218), messageOf(classes, 9218).startsWith("The module shop.item of interface item differs only in case from the module shop.Item"));
+    // a folder and a file may share a name in any case, and modules of other folders are apart
+    Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("namespace p;\nclass A { }\nnamespace -;\nclass P { }\n")));
+    Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("namespace a;\nclass Foo { }\nnamespace b;\nclass foo { }\n")));
   }
 
   // Each interface is searched once per constant, so a deep diamond of interfaces stays quick
