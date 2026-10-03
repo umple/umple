@@ -27,7 +27,7 @@ The outcomes, detailed at the top of the gate script, are:
 
 Start a new entry as "supported" and check it alone with
   python3 build/python_corpus_gate.py --only <path of the model>
-If Python reports a diagnostic the model deserves, record it with the reason after the colon.
+If the generator reports a diagnostic the model deserves, record it with the reason after the colon.
 
 Public API baselines: build/python_corpus_api.json (for some UmpleOnline examples) and
 testbed_python/test/compat/testbed_api.json (for the testbed) record the public API that the
