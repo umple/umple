@@ -36,6 +36,7 @@ not behave as expected fails the gate. Usage (from the repository root):
 """
 import argparse
 import concurrent.futures
+import glob
 import hashlib
 import inspect
 import json
@@ -482,7 +483,8 @@ def main():
     cases = manifest["cases"]
     failures = {}
     for pattern in manifest["corpus"]:
-        for f in sorted(ROOT.glob(pattern)):
+        # glob.glob keeps the pattern's spelling of folder names, which Path.glob lower-cases on Windows
+        for f in sorted(Path(name) for name in glob.glob(str(ROOT / pattern), recursive=True)):
             if f.relative_to(ROOT).as_posix() not in cases:
                 failures[f.relative_to(ROOT).as_posix()] = ("not classified in the manifest: add it to %s with its expected "
                                                       "outcome (see UmpleToPython/ReadMe.txt)" % Path(options.manifest).name)
