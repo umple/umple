@@ -88,8 +88,9 @@ class PythonGenerator
 
   private Set<UmpleClass> preparedClasses = new HashSet<UmpleClass>();
 
-  // The spelling of each module file and namespace folder written in this run, by its lower-case form
-  private Map<String, String> spellings = new HashMap<String, String>();
+  // The namespace folders and module files written in this run, by the lower-case form of their names
+  private Map<String, String> folders = new HashMap<String, String>();
+  private Map<String, String> modules = new HashMap<String, String>();
 
   // Names the module being generated defines at module level or in a class body; a standard-library
   // import with the same name gets an alias.
@@ -111,7 +112,8 @@ class PythonGenerator
     GeneratorHelper.generator = this; // the templates render through this prepared instance
     firstMessageOfClass = getModel().getLastResult().numberOfErrorMessages();
     prepare();
-    spellings.clear();
+    folders.clear();
+    modules.clear();
     try
     {
       for (UmpleElement element : getModel().getUmpleElements())
@@ -380,7 +382,7 @@ class PythonGenerator
       return; // generated inside its outer class
     }
     firstMessageOfClass = getModel().getLastResult().numberOfErrorMessages();
-    if (!canGenerate(element) || !hasOwnSpelling(element))
+    if (!canGenerate(element))
     {
       return;
     }
@@ -411,7 +413,7 @@ class PythonGenerator
       return;
     }
 
-    if (errorCount() > errorsBefore)
+    if (errorCount() > errorsBefore || !hasOwnPath(element))
     {
       return; // code the generator reported as wrong (for example an untranslatable snippet) is not written
     }
@@ -433,35 +435,55 @@ class PythonGenerator
     getModel().getGeneratedCode().put(element.getName(), code);
   }
 
-  // Python matches the case of module names even where file names ignore case, as on Windows and macOS.
-  // There two namespace folders, or two module files, that differ only in case would share one, and one
-  // of them could not be imported, so the second is reported and not generated.
-  private boolean hasOwnSpelling(UmpleElement element)
+  // Whether a module can be imported beside those already written. Python matches the case of module names
+  // even where file names ignore case, as on Windows and macOS, where two namespace folders or two module
+  // files whose names differ only in case would be one; and a module hides a namespace of exactly its name.
+  // The later element in generation order is reported and not written.
+  private boolean hasOwnPath(UmpleElement element)
   {
     String module = (element.getPackageName().isEmpty() ? "" : element.getPackageName() + ".") + element.getName();
-    List<String> paths = new ArrayList<String>();
+    String owner = (element instanceof UmpleInterface ? " of interface " : " of class ") + element.getName();
+    List<String> namespaces = new ArrayList<String>();
     for (int at = module.indexOf('.'); at >= 0; at = module.indexOf('.', at + 1))
     {
-      paths.add(module.substring(0, at) + "/");
+      namespaces.add(module.substring(0, at));
     }
-    paths.add(module);
-    for (String path : paths)
+    for (String namespace : namespaces)
     {
-      String spelled = spellings.get(path.toLowerCase(Locale.ROOT));
-      if (spelled != null && !spelled.equals(path))
+      if (clashes(element, "The namespace " + namespace + owner, namespace, folders, "the namespace ", modules, "the module "))
       {
-        String kind = element instanceof UmpleInterface ? "interface " : "class ";
-        error(9218, element, path.endsWith("/") ? "The namespace " + path.substring(0, path.length() - 1) + " of " + kind + element.getName()
-          : "The module " + module + " of " + kind + element.getName(),
-          path.endsWith("/") ? "the namespace " + spelled.substring(0, spelled.length() - 1) : "the module " + spelled);
         return false;
       }
     }
-    for (String path : paths)
+    if (clashes(element, "The module " + module + owner, module, modules, "the module ", folders, "the namespace "))
     {
-      spellings.put(path.toLowerCase(Locale.ROOT), path);
+      return false;
     }
+    for (String namespace : namespaces)
+    {
+      folders.put(namespace.toLowerCase(Locale.ROOT), namespace);
+    }
+    modules.put(module.toLowerCase(Locale.ROOT), module);
     return true;
+  }
+
+  // Reports (E9218) a name that differs only in case from one of its kind, or equals one of the other kind.
+  private boolean clashes(UmpleElement element, String described, String name, Map<String, String> sameKind, String sameLabel,
+    Map<String, String> otherKind, String otherLabel)
+  {
+    String key = name.toLowerCase(Locale.ROOT);
+    String spelled = sameKind.get(key);
+    if (spelled != null && !spelled.equals(name))
+    {
+      error(9218, element, described, sameLabel + spelled, "their names differ only in case, which file names on Windows and macOS ignore");
+      return true;
+    }
+    if (name.equals(otherKind.get(key)))
+    {
+      error(9218, element, described, otherLabel + name, "Python imports the module, not the namespace of the same name");
+      return true;
+    }
+    return false;
   }
 
   // Reports model elements Python cannot represent; the element is then not generated.

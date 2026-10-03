@@ -197,19 +197,30 @@ public class PythonGeneratorCoreTest
     Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("namespace app.sys;\nclass Main { }\n")));
   }
 
-  // Python matches the case of module names even where file names ignore case, as on Windows and macOS
+  // Python matches the case of module names even where file names ignore case, as on Windows and macOS,
+  // and imports a module rather than a namespace of the same name
   @Test
-  public void namespacesOrModulesDifferingOnlyInCaseAreReported() throws Exception
+  public void modulesThatCouldNotBeImportedBesideOthersAreReported() throws Exception
   {
     UmpleModel model = generate("namespace P;\nclass Upper { }\nnamespace p;\nclass Lower { }\n");
     Assert.assertEquals(Arrays.asList(9218), errorCodes(model));
-    Assert.assertTrue(messageOf(model, 9218), messageOf(model, 9218).startsWith("The namespace p of class Lower differs only in case from the namespace P"));
+    Assert.assertTrue(messageOf(model, 9218), messageOf(model, 9218).startsWith(
+      "The namespace p of class Lower clashes with the namespace P: their names differ only in case"));
     Assert.assertEquals(Arrays.asList("Upper"), sortedNames(model));
     UmpleModel classes = generate("namespace shop;\nclass Item { }\ninterface item { }\n");
-    Assert.assertTrue(messageOf(classes, 9218), messageOf(classes, 9218).startsWith("The module shop.item of interface item differs only in case from the module shop.Item"));
-    // a folder and a file may share a name in any case, and modules of other folders are apart
+    Assert.assertTrue(messageOf(classes, 9218), messageOf(classes, 9218).startsWith("The module shop.item of interface item clashes with the module shop.Item"));
+    UmpleModel overlap = generate("namespace P;\nclass A { }\nnamespace -;\nclass P { }\n");
+    Assert.assertTrue(messageOf(overlap, 9218), messageOf(overlap, 9218).startsWith(
+      "The module P of class P clashes with the namespace P: Python imports the module"));
+    UmpleModel nested = generate("namespace app;\nclass Shop { }\nnamespace app.Shop;\nclass Item { }\n");
+    Assert.assertTrue(messageOf(nested, 9218), messageOf(nested, 9218).startsWith("The namespace app.Shop of class Item clashes with the module app.Shop"));
+    // a folder and a file whose names differ in case, or names in other folders, are apart
     Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("namespace p;\nclass A { }\nnamespace -;\nclass P { }\n")));
     Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("namespace a;\nclass Foo { }\nnamespace b;\nclass foo { }\n")));
+    // a class that is not written for another reason leaves its names free
+    UmpleModel rejected = generate("namespace P;\nclass Upper { Object o = new Object(); }\nnamespace p;\nclass Lower { }\n");
+    Assert.assertEquals(Arrays.asList(9211), errorCodes(rejected));
+    Assert.assertEquals(Arrays.asList("Lower"), sortedNames(rejected));
   }
 
   // Each interface is searched once per constant, so a deep diamond of interfaces stays quick

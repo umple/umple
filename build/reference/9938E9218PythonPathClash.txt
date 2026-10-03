@@ -1,0 +1,19 @@
+E9218 Python Path Clash
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Two namespaces or classes would share a Python package or module</h2>
+
+<p>Each namespace becomes a Python package folder and each class a module file. Python matches the case of module names even where file names ignore case, as on Windows and macOS. There, namespaces such as <code>Shop</code> and <code>shop</code> would share one folder, and classes such as <code>Item</code> and <code>item</code> in one namespace would share one file, so one of them could not be imported. Python also imports a module rather than a namespace of the same name, so a class <code>Shop</code> and a namespace <code>Shop</code> in the same place cannot both be used. The Python generator reports the class or interface generated later and does not generate it.</p>
+
+<p>Spell each namespace the same way everywhere, or give one of the classes or namespaces another name.</p>
+
+@@example
+@@source manualexamples/E9218PythonPathClash1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E9218PythonPathClash2.ump
+@@endexample
