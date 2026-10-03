@@ -516,6 +516,8 @@
     <copy file="${dist.dir}/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
     <echo message="Copying ${dist.dir}/umple.jar to umpleonline/scripts/umple.jar for new downloadable CLI" />
     <copy file="${dist.dir}/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
+    <echo message="Copying ${dist.dir}/umpleparser.jar to umpleonline/scripts/umpleparser.jar for download" />
+    <copy file="${dist.dir}/umpleparser.jar" tofile="umpleonline/scripts/umpleparser.jar" overwrite="true" />
     <copy file="UmpleToPython/txl/umpleJavaToPython.ctxl" tofile="umpleonline/scripts/txl/umpleJavaToPython.ctxl" overwrite="true" />
     <antcall target="compressAllScripts"/>
   </target>
@@ -629,6 +631,22 @@
     <symlink link="${dist.dir}/umplesync.jar" resource="${dist.dir}/${dist.umple.sync.jar}" overwrite="true" failonerror="false" />
   </target>
 
+  <target name="packageParserJar">
+    <echo message="Package: parser jar for programs that use the RuleBasedParser outside Umple - See UmpleParser/README.md" />
+
+    <!-- The parser needs only its own classes and the error catalogue -->
+    <jar  destfile="${dist.dir}/${dist.umple.parser.jar}"
+          basedir="${bin.path}"
+          includes="cruise/umple/parser/** en.error"
+          excludes="**/*Test.class **/*Test$*.class">
+      <manifest>
+        <attribute name="Built-By" value="Cruise - University of Ottawa"/>
+        <attribute name="Version" value="${umple.version}"/>
+      </manifest>
+    </jar>
+    <symlink link="${dist.dir}/umpleparser.jar" resource="${dist.dir}/${dist.umple.parser.jar}" overwrite="true" failonerror="false" />
+  </target>
+
   <target name="packageDocJar">
     <echo message="Package: Documenter jar used to generate user manual" />
 
@@ -654,6 +672,7 @@
     <antcall target="packageMainJar" />
     <antcall target="packageSyncJar" />
     <antcall target="packageDocJar" />
+    <antcall target="packageParserJar" />
 
     <deps-get-path conf="core" pathid="core.ivy.classpath" />
     <manifestclasspath property="umple.jar.classpath" jarfile="${dist.dir}/${dist.umple.jar}" >
