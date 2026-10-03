@@ -9,8 +9,8 @@ with the files it includes with `use`, and checked against its expected outcome:
                       every public Java method (toString as __str__, hashCode as __hash__) except
                       a sorted association's comparator accessors and the methods a
                       warning 9212 at that class (or at a trait it uses) names as having code
-                      only for other languages; every module compiles and imports through its package (only the
-                      generated root on sys.path, a fresh interpreter per module); every class
+                      only for other languages; every module compiles and imports through its package on its
+                      own (the generated root on sys.path, the case's other modules unloaded first); every class
                       with a main, and every class with a Python or untagged main in the model,
                       has the launcher, and every launcher exits 0 within the timeout with no
                       standard input (printing the manifest's expected output, where it has one)
@@ -40,6 +40,7 @@ import hashlib
 import inspect
 import json
 import os
+import py_compile
 import re
 import shutil
 import subprocess
@@ -228,11 +229,65 @@ def missing_members(expected, load):
     return missing
 
 
+def unload(root):
+    """Forgets the modules imported from root, so that the next import starts as in a fresh interpreter."""
+    root = os.path.realpath(root) + os.sep
+
+    def inside(module):
+        where = getattr(module, "__file__", None) or next(iter(getattr(module, "__path__", None) or []), None)
+        return where and os.path.realpath(where).startswith(root)
+
+    # all found before any is removed: a namespace package finds its path through its parent's
+    for name in [name for name, module in list(sys.modules.items()) if inside(module)]:
+        del sys.modules[name]
+
+
+def module_problems(data, load):
+    """Run in one interpreter per case: compiles every generated module, imports each on its own, then
+    checks that each class has Java's public methods and, for a case with a baseline, the public API."""
+    root, modules = data["root"], data["modules"]
+    problems = []
+    for module in modules:
+        try:
+            py_compile.compile(os.path.join(root, *module.split("/")) + ".py", doraise=True)
+        except py_compile.PyCompileError as e:
+            problems.append("does not compile: " + tail(str(e), 2))
+    for module in [] if problems else modules:
+        unload(root)
+        try:
+            load(module.replace("/", "."))
+        except Exception as e:
+            problems.append("import %s: %s: %s" % (module.replace("/", "."), type(e).__name__, e))
+    if not problems:
+        unload(root)
+        problems += ["missing Java's public method " + m for m in missing_members(data["expected"], load)]
+    if not problems and data["api"]:
+        unload(root)
+        problems += ["public API differs: " + p for p in api_differences(data["api"], load)]
+    return problems
+
+
+def batch_results(output, names):
+    """Each named model's part of the output of one Umple run over several models (-f), with its
+    status: name -> (status, output). A model whose part is missing or cut off is left out."""
+    results, current, text = {}, None, ""
+    for line in output.splitlines(keepends=True):
+        if line.startswith("Processing -> "):
+            current, text = line[len("Processing -> "):].strip(), ""
+        if current in names:
+            text += line
+            if line.strip() in ("Processed %s." % current, "Success! Processed %s." % current):
+                results[current] = (0 if line.startswith("Success!") else 1, text)
+                current = None
+    return results
+
+
 def run(command, cwd, timeout, env=None):
     try:
-        p = subprocess.run(command, cwd=cwd, env=env, stdin=subprocess.DEVNULL, capture_output=True,
-                           text=True, errors="replace", timeout=timeout)
-        return p.returncode, p.stdout + p.stderr
+        # one stream, so that Umple's errors stay next to the model they are about
+        p = subprocess.run(command, cwd=cwd, env=env, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT, text=True, errors="replace", timeout=timeout)
+        return p.returncode, p.stdout
     except subprocess.TimeoutExpired:
         return None, "timed out after %s s" % timeout
 
@@ -256,31 +311,65 @@ class Gate:
         self.api = json.loads(Path(options.api).read_text())["cases"]
         self.outputs = outputs
 
-    def generate(self, case, model, language):
-        target = case / language.lower()
-        status, output = run(["java", "-jar", self.jar, "-g", language, "--override", "--path", str(target), str(model)],
-                             case, timeout=600)
-        (case / (language.lower() + ".log")).write_text(output)
-        suffix = ".py" if language == "Python" else ".java"
-        files = sorted(str(p.relative_to(target))[:-len(suffix)].replace(os.sep, "/") for p in target.rglob("*" + suffix)) \
-            if target.exists() else []
-        errors = [m.group(2) for m in DIAGNOSTIC.finditer(output) if m.group(1) == "Error"]
-        return status, output, errors, files
-
-    def check(self, path, expectation):
-        """None when the case behaves as expected, else a one-line reason."""
-        kind, codes, uncompiled, _ = parse_expectation(expectation)
-        if kind == "fragment":
-            return None
+    def stage(self, path):
+        """Copies a case's model and the files it uses into the case's folder: (case, model)."""
         # A short directory name keeps the copied model's path within Windows' length limit
         case = self.out / ("%s-%s" % (Path(path).stem[:40], hashlib.sha1(path.encode()).hexdigest()[:8]))
         for f in [path] + uses(path):
             (case / "model" / f).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(ROOT / f, case / "model" / f)
-        model = case / "model" / path
+        return case, case / "model" / path
+
+    def generate(self, staged, language):
+        """Generates the models of several cases in one Umple run (-f), so that Java starts once rather than
+        once per case, into each model's own folder: model -> (status, output, errors, files). A model
+        the run gives no result for, as when Umple stops early, is generated on its own."""
+        target = "gate-" + language.lower()
+        command = ["java", "-jar", self.jar, "-g", language, "--override", "--path", target]
+        listed = {model.relative_to(self.out).as_posix(): model for _, model in staged}
+        batch = {}
+        if len(listed) > 1:
+            listing = staged[0][0] / (target + ".txt")
+            listing.write_text("\n".join(listed) + "\n")
+            batch = batch_results(run(command + ["-f", str(listing)], self.out, timeout=600 + 30 * len(listed))[1], listed)
+        results = {}
+        for name, model in listed.items():
+            status, output = batch.get(name) or run(command + [str(model)], self.out, timeout=600)
+            (model.parent / (target + ".log")).write_text(output)
+            suffix = ".py" if language == "Python" else ".java"
+            root = model.parent / target
+            files = sorted(str(p.relative_to(root))[:-len(suffix)].replace(os.sep, "/") for p in root.rglob("*" + suffix)) \
+                if root.exists() else []
+            errors = [m.group(2) for m in DIAGNOSTIC.finditer(output) if m.group(1) == "Error"]
+            results[model] = (status, output, errors, files)
+        return results
+
+    def check_batch(self, batch):
+        """Checks several cases, generating them together: path -> None or the reason it is not as expected."""
+        staged = {path: self.stage(path) for path, expectation in batch if parse_expectation(expectation)[0] != "fragment"}
+        python = self.generate(list(staged.values()), "Python")
+        with_java = [staged[path] for path, expectation in batch if path in staged
+                     and parse_expectation(expectation)[0] in ("supported", "generation-only")
+                     and python[staged[path][1]][0] == 0 and not python[staged[path][1]][2]]
+        java = self.generate(with_java, "Java")
+        results = {}
+        for path, expectation in batch:
+            try:
+                case, model = staged.get(path, (None, None))
+                results[path] = self.check(path, expectation, case, model, python.get(model), java.get(model))
+            except Exception as e:  # a crash in one case is that case's failure
+                results[path] = "gate error: %r" % e
+        return results
+
+    def check(self, path, expectation, case, model, python, java):
+        """None when the case behaves as expected, else a one-line reason. python and java are the
+        generation results of the case's model."""
+        kind, codes, uncompiled, _ = parse_expectation(expectation)
+        if kind == "fragment":
+            return None
         model_files = list((case / "model").rglob("*.ump"))
-        status, output, errors, modules = self.generate(case, model, "Python")
-        root = case / "python"
+        status, output, errors, modules = python
+        root = model.parent / "gate-python"
         if kind in ("unsupported", "invalid"):
             if status == 0:
                 return "generation succeeded, expected error %s" % ",".join(codes)
@@ -298,7 +387,7 @@ class Gate:
             return None
         if status != 0 or errors:
             return "generation failed (%s): %s" % (status, tail(output))
-        java_status, java_output, java_errors, java_modules = self.generate(case, model, "Java")
+        java_status, java_output, java_errors, java_modules = java
         if java_status != 0 or java_errors:
             return "the Java generation of the same model failed (%s): %s" % (java_status, tail(java_output))
         problems = []
@@ -308,7 +397,7 @@ class Gate:
         if extra:
             problems.append("unexpected module " + ", ".join(extra))
         present = [m for m in java_modules if m in modules]
-        expected = self.expected_methods(case, present, output, model_files)
+        expected = self.expected_methods(model.parent / "gate-java", present, output, model_files)
         if kind == "generation-only":
             for module in present:
                 name, methods = expected[module.replace("/", ".")]
@@ -320,12 +409,13 @@ class Gate:
                 if absent:
                     problems.append("%s lacks %s" % (module, ", ".join(absent[:5])))
             return "; ".join(problems) or None
-        problems += self.run_python(case, model, root, modules, expected)
-        if path in self.api and not problems:
-            problems += self.check_in_python(case, root, "api_differences", self.api[path]["modules"], "public API differs")
+        problems += self.check_in_python(case, root, "module_problems", {
+            "root": str(root), "modules": modules, "expected": expected, "api": self.api.get(path, {}).get("modules")})
+        if not problems:
+            problems += self.run_mains(case, model, root, modules)
         return "; ".join(problems) or None
 
-    def expected_methods(self, case, modules, output, model_files):
+    def expected_methods(self, java_root, modules, output, model_files):
         """Module -> [class name, public methods of the Java class that Python must have]."""
         left_out = {}  # class name -> methods its 9212 warnings leave out
         for m in DIAGNOSTIC.finditer(output):
@@ -339,7 +429,7 @@ class Gate:
         expected = {}
         for module in modules:
             name = module.rsplit("/", 1)[-1]
-            java_text = (case / "java" / (module + ".java")).read_text(errors="replace")
+            java_text = (java_root / (module + ".java")).read_text(errors="replace")
             comparators = {prefix + field[0].upper() + field[1:] for field in COMPARATOR_FIELD.findall(java_text)
                            for prefix in ("get", "set")}
             java = set(JAVA_METHOD.findall(java_text)) - left_out.get(name, set()) - comparators
@@ -348,27 +438,6 @@ class Gate:
             java = {n for n in java if not n.endswith("_Original")}
             expected[module.replace("/", ".")] = [name, sorted(PYTHON_NAMES.get(n, n) for n in java)]
         return expected
-
-    def run_python(self, case, model, root, modules, expected):
-        problems = []
-        broken = set()
-        if modules:
-            status, output = compile_all(self.python, root, case)
-            if status != 0:
-                broken = {m for m in modules if str(root / (m + ".py")) in output}
-                problems.append("does not compile: " + tail(output, 2))
-        for module in modules:
-            if module in broken:
-                continue
-            status, output = run([self.python, "-I", "-c",
-                                  "import importlib, sys; sys.path.insert(0, sys.argv[1]); importlib.import_module(sys.argv[2])",
-                                  str(root), module.replace("/", ".")], case, timeout=60)
-            if status != 0:
-                problems.append("import %s: %s" % (module.replace("/", "."), tail(output, 1)))
-        if problems:
-            return problems
-        problems += self.check_in_python(case, root, "missing_members", expected, "missing Java's public method")
-        return problems + self.run_mains(case, model, root, modules)
 
     def run_mains(self, case, model, root, modules):
         problems, launchers = [], []
@@ -404,13 +473,15 @@ class Gate:
             problems.append("the mains did not print %r" % expected_output)
         return problems
 
-    def check_in_python(self, case, root, function, data, label):
+    def check_in_python(self, case, root, function, data):
         (case / (function + ".json")).write_text(json.dumps(data))
         # -B: importing this script from build/ writes no __pycache__ there
         status, output = run([self.python, "-I", "-B", "-c", CHECK, str(root), str(Path(__file__).resolve().parent), function,
                               str(case / (function + ".json"))], case, timeout=300)
         lines = output.strip().splitlines()
-        return [] if status == 0 else ["%s (%d): %s" % (label, len(lines), " | ".join(lines[:3]))]
+        if status == 0:
+            return []
+        return lines[:3] + (["and %d more" % (len(lines) - 3)] if len(lines) > 3 else []) if lines else ["exited %s" % status]
 
 
 def main():
@@ -443,16 +514,18 @@ def main():
 
     gate = Gate(options, manifest.get("main_output", {}))
     prepare_output(gate.out)
+    # Batches of up to 25 cases, at least two per worker, so that Java starts once per batch
+    items = list(selected.items())
+    size = max(1, min(25, -(-len(items) // (2 * options.jobs))))
+    batches = [items[i:i + size] for i in range(0, len(items), size)]
     with concurrent.futures.ThreadPoolExecutor(max_workers=options.jobs) as pool:
-        futures = {pool.submit(gate.check, p, e): p for p, e in selected.items()}
+        futures = {pool.submit(gate.check_batch, batch): batch for batch in batches}
         for future in concurrent.futures.as_completed(futures):
-            path = futures[future]
             try:
-                problem = future.result()
-            except Exception as e:  # a crash in one case is that case's failure
-                problem = "gate error: %r" % e
-            if problem:
-                failures[path] = problem
+                results = future.result()
+            except Exception as e:  # a crash outside one case's checks fails the batch's cases
+                results = {path: "gate error: %r" % e for path, _ in futures[future]}
+            failures.update({path: problem for path, problem in results.items() if problem})
 
     summary = {}
     for path, expectation in selected.items():
