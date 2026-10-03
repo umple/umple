@@ -11,9 +11,11 @@ package cruise.umple.compiler;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.*;
 
@@ -173,12 +175,15 @@ public class PythonGeneratorCoreTest
     Assert.assertEquals(Arrays.asList(9213), errorCodes(model));
     // Python has loaded os before the program runs, so importing a module os would get that one
     Assert.assertEquals(Arrays.asList(9213), errorCodes(generate("class os { }\n")));
-    // modules built into the interpreter are found before any file
-    for (String builtIn : Arrays.asList("builtins", "gc", "itertools", "atexit"))
+    // modules built into the interpreter are found before any file (array and zlib on Windows), and a
+    // module of the program named like another standard module would hide it from the standard library
+    for (String builtIn : Arrays.asList("builtins", "gc", "itertools", "atexit", "array", "zlib", "json", "queue"))
     {
       Assert.assertEquals(builtIn, Arrays.asList(9213), errorCodes(generate("class " + builtIn + " { }\n")));
     }
-    for (String builtIn : Arrays.asList("_thread", "_abc", "builtins", "calendar", "email", "json"))
+    Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("class Queue { }\n")));
+    // parser and symbol are Python 3.8 and 3.9 modules, compression one of 3.14
+    for (String builtIn : Arrays.asList("_thread", "_abc", "builtins", "calendar", "email", "json", "parser", "symbol", "compression"))
     {
       Assert.assertEquals(builtIn, Arrays.asList(9213), errorCodes(generate("namespace " + builtIn + ";\nclass A { }\n")));
       Assert.assertEquals(builtIn, new ArrayList<Integer>(), errorCodes(generate("namespace app." + builtIn + ";\nclass A { }\n")));
@@ -522,7 +527,11 @@ public class PythonGeneratorCoreTest
   private List<File> generatedFiles() throws Exception
   {
     List<File> files = new ArrayList<File>();
-    Files.walk(dir.toPath()).filter(p -> p.toString().endsWith(".py")).forEach(p -> files.add(p.toFile()));
+    // closed at once, so the folders can be deleted on Windows
+    try (Stream<Path> paths = Files.walk(dir.toPath()))
+    {
+      paths.filter(p -> p.toString().endsWith(".py")).forEach(p -> files.add(p.toFile()));
+    }
     return files;
   }
 }
