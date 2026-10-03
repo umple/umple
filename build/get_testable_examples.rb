@@ -29,8 +29,9 @@ def check_for_flags(filenames, language)
   #If this tag is missing, it will always add it to the directory
   filenames.each do |filename|
     should_add = true
-    open(filename, 'r').each do |line|
-      tag = line[/@@@testlanguage=.*/]
+    # Read as UTF-8 whatever the locale, so an example with non-ASCII text cannot stop the listing
+    File.foreach(filename, encoding: 'UTF-8') do |line|
+      tag = line.scrub[/@@@testlanguage=.*/]
       next if tag.nil?
       if tag =~ /.*#{language}.*/
         break

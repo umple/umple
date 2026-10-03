@@ -1,0 +1,17 @@
+use constructor_AssociationAssignOne.ump;
+
+class UmpleToPython {
+    // A bidirectional end given to the constructor, as in Java: a mandatory one end through its
+    // setter, a mandatory many end through its batch setter. An optional many end only needs its
+    // list, which the field block has created.
+    constructor_AssociationAssignDefault <<!<</*constructor_AssociationAssignDefault*/>><<#
+  if (av.isOnlyOne())
+  {
+    #>><<@ UmpleToPython.constructor_AssociationAssignOne >><<#
+  }
+  else if (av.isMandatoryMany())
+  {
+    #>><<@ UmpleToPython.constructor_AssociationAssignMandatoryMany >><<#
+  }
+#>>!>>
+}

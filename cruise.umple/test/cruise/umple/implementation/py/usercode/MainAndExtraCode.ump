@@ -1,0 +1,11 @@
+// A Python main is launched with the full sys.argv, and extra class code is class-level Python.
+class MainAndExtraCode
+{
+  public static void main(String[] args) {
+    print(MainAndExtraCode.GREETING, len(args))
+  }
+
+  GREETING = "hello"
+  def helper(self):
+      return self.GREETING
+}

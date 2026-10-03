@@ -70,9 +70,6 @@ class UmpleToJava {
           StringBuilder smBuilder = new StringBuilder();
           String customBeforeInjectionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("before", method.getName(), method.getMethodParameters()));
           String customAfterInjectionCode  = GeneratorHelper.toCode(uClass.getApplicableCodeInjectionsCustomMethod("after", method.getName(), method.getMethodParameters()));
-          String customPreconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", method.getName()+"Precondition"));        
-          String customPostconditionCode = GeneratorHelper.toCode(uClass.getApplicableCodeInjections("before", method.getName()+"Postcondition"));
-          customPostconditionCode = customPostconditionCode==null?"":customPostconditionCode;
           if (customBeforeInjectionCode != null) {
               addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customBeforeInjectionCode,method.getName());
               append(realSb, "\n{0}\n",GeneratorHelper.doIndent(customBeforeInjectionCode, "    "));

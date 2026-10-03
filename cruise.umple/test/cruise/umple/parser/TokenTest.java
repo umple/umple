@@ -29,7 +29,40 @@ public class TokenTest
     Assert.assertEquals("betterA", t.getName());
     Assert.assertEquals("better1", t.getValue());
   }
+
+  @Test
+  public void copies_keep_first_line_indent()
+  {
+    assumeParserRecordsFirstLineIndent();
+    Token t = new Token("code","x = 1");
+    t.setFirstLineIndent("\t  ");
+    t.addSubToken(new Token("b","2"));
+    Assert.assertEquals("\t  ", t.copy().getFirstLineIndent());
+
+    // A detached token gets another value, which the old indentation does not describe
+    Token oldSelf = t.detach("other","value");
+    Assert.assertEquals("\t  ", oldSelf.getFirstLineIndent());
+    Assert.assertNull(t.getFirstLineIndent());
+  }
   
+  // The parser is compiled from the copies of ParsingRules_Code.ump and ParseUtilities_Code.ump inside
+  // the jar doing the compiling (use lib:). A build made by a jar that predates first-line indentation
+  // therefore has a parser that neither records nor copies it; the next build, made by that build's
+  // jar, has both.
+  public static void assumeParserRecordsFirstLineIndent()
+  {
+    boolean records = true;
+    try
+    {
+      cruise.umple.parser.rules.Terminal.class.getDeclaredMethod("recordFirstLineIndent", Token.class, String.class, int.class);
+    }
+    catch (NoSuchMethodException e)
+    {
+      records = false;
+    }
+    Assume.assumeTrue("the parser was compiled by a jar whose parser does not record first-line indentation yet", records);
+  }
+
   @Test
   public void is_empty()
   {

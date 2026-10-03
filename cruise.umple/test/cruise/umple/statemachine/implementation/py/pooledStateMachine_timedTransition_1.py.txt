@@ -1,0 +1,213 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+import threading
+
+
+class X:
+    class Sm(Enum):
+        s0 = "s0"
+        s1 = "s1"
+        s2 = "s2"
+        s3 = "s3"
+        s4 = "s4"
+
+        def __str__(self):
+            return self.value
+
+    class TimedEventHandler:
+        def __init__(self, controller, timeoutMethodName, howLongInSeconds):
+            self._controller = controller
+            self._timeoutMethodName = timeoutMethodName
+            self._timer = threading.Timer(howLongInSeconds, self.run)
+            self._timer.daemon = False
+
+        def start(self):
+            self._timer.start()
+
+        def stop(self):
+            self._timer.cancel()
+
+        def isCurrent(self, handler, state, armedState):
+            return not self._timer.finished.is_set() and not self._controller._deleted and handler is self and state is armedState
+
+        def run(self):
+            controller = self._controller
+            if self._timeoutMethodName == "timeouts1Tos2":
+                if self.isCurrent(controller._timeouts1Tos2Handler, controller._sm, X.Sm.s1):
+                    if not controller.timeouts1Tos2() and self.isCurrent(controller._timeouts1Tos2Handler, controller._sm, X.Sm.s1):
+                        controller.startTimeouts1Tos2Handler()
+    class MessageQueue:
+        def __init__(self, ready):
+            self._calls = []
+            self._ready = ready
+            self._started = False
+            self._stopped = False
+            self._worker = None
+            self._condition = threading.Condition()
+        def start(self):
+            with self._condition:
+                self._started = True
+                self._wake()
+        def put(self, call, *args):
+            with self._condition:
+                self._calls.append((call, args))
+                self._wake()
+        def stop(self):
+            with self._condition:
+                self._stopped = True
+                self._condition.notify()
+        def _wake(self):
+            if self._started and not self._stopped and self._worker is None:
+                self._worker = threading.Thread(target=self._run, daemon=False)
+                self._worker.start()
+            if self._worker is not None:
+                self._worker.isIdle = False
+            self._condition.notify()
+        def _run(self):
+            while True:
+                with self._condition:
+                    call = None
+                    while not self._stopped and call is None:
+                        call = self._next()
+                        self._worker.isIdle = call is None
+                        if call is None and self._programIdle():
+                            self._worker = None
+                            return
+                        if call is None:
+                            self._condition.wait(0.25)
+                    if call is None:
+                        return
+                call[0](*call[1])
+        def _next(self):
+            for i, call in enumerate(self._calls):
+                if self._ready is None or self._ready(call[0]):
+                    return self._calls.pop(i)
+            return None
+        def _programIdle(self):
+            ended = (threading.main_thread(), threading.current_thread())
+            return not ended[0].is_alive() and all(t in ended or t.daemon or getattr(t, "isIdle", False)
+                for t in threading.enumerate())
+
+    def __canProcess(self, call):
+        name = call.__name__
+        return (self._sm is __class__.Sm.s0 and name in ("_ev0",)
+            or self._sm is __class__.Sm.s1 and name in ("_timeouts1Tos2",)
+            or self._sm is __class__.Sm.s2 and name in ("_ev2",)
+            or self._sm is __class__.Sm.s3 and name in ("_ev3",))
+
+    def __init__(self):
+        self.__eventQueue = __class__.MessageQueue(self.__canProcess)
+        self._sm = None
+        self._smVisit = 0
+        self._timeouts1Tos2Handler = None
+        self._deleted = False
+        self.setSm(__class__.Sm.s0)
+        if self._deleted:
+            return
+        self.__eventQueue.start()
+
+    def getSmFullName(self):
+        answer = str(self._sm)
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def _ev0(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm is __class__.Sm.s0:
+            self.setSm(__class__.Sm.s1)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def ev0(self):
+        self.__eventQueue.put(self._ev0)
+
+    def _timeouts1Tos2(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm is __class__.Sm.s1:
+            self.exitSm()
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.s2)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def timeouts1Tos2(self):
+        self.__eventQueue.put(self._timeouts1Tos2)
+        return True
+
+    def _ev2(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm is __class__.Sm.s2:
+            self.setSm(__class__.Sm.s4)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def ev2(self):
+        self.__eventQueue.put(self._ev2)
+
+    def _ev3(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm = self._sm
+        if aSm is __class__.Sm.s3:
+            self.setSm(__class__.Sm.s4)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def ev3(self):
+        self.__eventQueue.put(self._ev3)
+
+    def exitSm(self):
+        self._smVisit += 1
+        if self._sm is __class__.Sm.s1:
+            self.stopTimeouts1Tos2Handler()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        self._smVisit += 1
+        if self._sm is __class__.Sm.s0:
+            self.a()
+            if self._deleted:
+                return
+        elif self._sm is __class__.Sm.s1:
+            self.startTimeouts1Tos2Handler()
+
+    def startTimeouts1Tos2Handler(self):
+        if self._deleted:
+            return
+        if self._timeouts1Tos2Handler is not None:
+            self._timeouts1Tos2Handler.stop()
+        visit = self._smVisit
+        delay = 2
+        if self._deleted or self._smVisit != visit:
+            return
+        self._timeouts1Tos2Handler = __class__.TimedEventHandler(self, "timeouts1Tos2", delay)
+        self._timeouts1Tos2Handler.start()
+
+    def stopTimeouts1Tos2Handler(self):
+        if self._timeouts1Tos2Handler is not None:
+            self._timeouts1Tos2Handler.stop()
+
+    def delete(self):
+        self._deleted = True
+        self.stopTimeouts1Tos2Handler()
+        self.__eventQueue.stop()
+
+    def a(self):
+        # line 19 "pooledStateMachine_timedTransition_1.ump"
+        System.out.println("a running");
+        # end line

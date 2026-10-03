@@ -1,0 +1,6 @@
+// Another name avoids the clash
+generate Python;
+namespace shapes;
+class Length {
+  Double value;
+}

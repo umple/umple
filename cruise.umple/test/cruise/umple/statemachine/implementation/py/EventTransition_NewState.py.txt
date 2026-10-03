@@ -1,55 +1,44 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from enum import Enum, auto
+from enum import Enum
 
-class Light():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Light State Machines
+
+class Light:
     class Bulb(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
-        def __str__(self):
-            return str(self.value)
-        Off = auto()
-        On = auto()
+        Off = "Off"
+        On = "On"
 
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+        def __str__(self):
+            return self.value
+
     def __init__(self):
         self._bulb = None
-        self.setBulb(Light.Bulb.Off)
+        self._deleted = False
+        self.setBulb(__class__.Bulb.Off)
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def getBulbFullName(self):
-        answer = self._bulb.__str__()
+        answer = str(self._bulb)
         return answer
 
     def getBulb(self):
         return self._bulb
 
     def flip(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aBulb = self._bulb
-        if aBulb == Light.Bulb.Off :
-            self.setBulb(Light.Bulb.On)
+        if aBulb is __class__.Bulb.Off:
+            self.setBulb(__class__.Bulb.On)
             wasEventProcessed = True
-        elif aBulb == Light.Bulb.On :
-            self.setBulb(Light.Bulb.Off)
+        elif aBulb is __class__.Bulb.On:
+            self.setBulb(__class__.Bulb.Off)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def setBulb(self, aBulb):
         self._bulb = aBulb
 
     def delete(self):
-        pass
-
+        self._deleted = True

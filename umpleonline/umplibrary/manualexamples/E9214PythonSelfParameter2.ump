@@ -1,0 +1,5 @@
+// Any other parameter name works
+generate Python;
+class Shape {
+  Double scale(Double factor) Python { return factor * 2 }
+}

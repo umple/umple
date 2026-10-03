@@ -26,6 +26,7 @@ import cruise.umple.util.*;
 import java.io.*;
 
 import cruise.umple.parser.Token;
+import cruise.umple.parser.TokenTest;
 import cruise.umple.parser.Position;
 import cruise.umple.util.SampleFileWriter;
 import cruise.umple.compiler.exceptions.*;
@@ -404,6 +405,290 @@ public void braceMismatch_filenameUsesBasename() {
     Assert.assertEquals(false,cb2.hasCode("Php"));
     Assert.assertEquals(false,cb2.hasCode("Cpp"));
   }
+
+  // Native code stays trimmed; the indentation its first line had in the source is kept apart
+  @Test
+  public void nativeCodeFirstLineIndent()
+  {
+    TokenTest.assumeParserRecordsFirstLineIndent();
+    assertSimpleParse("001_nativeCodeIndent.ump");
+    UmpleClass a = model.getUmpleClass("A");
+
+    CodeBlock spaces = methodNamed(a, "spaces").getMethodBody().getCodeblock();
+    Assert.assertEquals("x = 1\n    if x:\n        return x", spaces.getCode("Python"));
+    Assert.assertEquals("    ", spaces.getFirstLineIndent("Python"));
+
+    CodeBlock tabs = methodNamed(a, "tabs").getMethodBody().getCodeblock();
+    Assert.assertEquals("y = 2\n\t\treturn y", tabs.getCode("Python"));
+    Assert.assertEquals("\t\t", tabs.getFirstLineIndent("Python"));
+
+    // A body starting on the line of its brace, or an empty one, has no indentation of its own
+    Assert.assertNull(methodNamed(a, "sameLine").getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+    Assert.assertNull(methodNamed(a, "empty").getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+
+    // Removing an inline mixset that opened the body leaves no first line to describe
+    Assert.assertEquals("\n    b();", methodNamed(a, "mixsetFirst").getMethodBody().getCodeblock().getCode(""));
+    Assert.assertNull(methodNamed(a, "mixsetFirst").getMethodBody().getCodeblock().getFirstLineIndent(""));
+    Assert.assertEquals("    ", methodNamed(a, "mixsetLater").getMethodBody().getCodeblock().getFirstLineIndent(""));
+
+    // Every language of a multi-language block, and each alternative, has its own record
+    CodeBlock multi = methodNamed(a, "multi").getMethodBody().getCodeblock();
+    Assert.assertEquals("      ", multi.getFirstLineIndent("Java"));
+    Assert.assertEquals("      ", multi.getFirstLineIndent("Php"));
+    Assert.assertEquals("        ", multi.getFirstLineIndent("Python"));
+    Assert.assertNull(multi.getFirstLineIndent(""));
+
+    CodeBlock derived = a.getAttribute("d").getCodeblock();
+    Assert.assertNull(derived.getFirstLineIndent(""));
+    Assert.assertEquals("      ", derived.getFirstLineIndent("Python"));
+
+    CodeBlock injection = a.getCodeInjection(0).getSnippet();
+    Assert.assertEquals("b = 2", injection.getCode("Python"));
+    Assert.assertEquals("      ", injection.getFirstLineIndent("Python"));
+    CodeBlock expanded = a.getCodeInjection(1).getSnippet();
+    Assert.assertEquals("\n      d = 4", expanded.getCode("Python"));
+    Assert.assertNull(expanded.getFirstLineIndent("Python"));
+
+    State s1 = a.getStateMachine(0).getState(0);
+    CodeBlock entry = s1.getAction(0).getCodeblock();
+    Assert.assertEquals("        ", entry.getFirstLineIndent(""));
+    Assert.assertEquals("          ", entry.getFirstLineIndent("Python"));
+    Assert.assertEquals("         ", s1.getActivity(0).getCodeblock().getFirstLineIndent(""));
+
+    // Extra code: a marker per target, then the code as written
+    List<CodeBlock> extra = model.getUmpleClass("B").getExtraCodeBlocks();
+    Assert.assertEquals(2, extra.size());
+    Assert.assertEquals("TOKEN = 7", extra.get(1).getCode(""));
+
+    // Line breaks before the first line do not count, whatever their form
+    assertSimpleParse("001_nativeCodeIndentCrlf.ump");
+    CodeBlock crlf = methodNamed(model.getUmpleClass("C"), "f").getMethodBody().getCodeblock();
+    Assert.assertEquals("      ", crlf.getFirstLineIndent("Python"));
+  }
+
+  // Copies of a method carry its code's provenance
+  @Test
+  public void nativeCodeFirstLineIndentCopied()
+  {
+    TokenTest.assumeParserRecordsFirstLineIndent();
+    assertSimpleParse("001_nativeCodeIndent.ump");
+    Method original = methodNamed(model.getUmpleClass("A"), "spaces");
+    Method copy = new Method(original);
+    Assert.assertEquals("    ", copy.getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+    Assert.assertTrue(copy.getMethodBody().getCodeblock().isAuthored("Python"));
+
+    // Replacing the text keeps its authorship but drops the indentation, which no longer applies
+    CodeBlock cb = new CodeBlock(original.getMethodBody().getCodeblock());
+    cb.setCode("Python", "return 0");
+    Assert.assertTrue(cb.isAuthored("Python"));
+    Assert.assertNull(cb.getFirstLineIndent("Python"));
+    Assert.assertEquals("    ", original.getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+  }
+
+  // Authored bodies: the exact slot versus the untagged fallback every language may use
+  @Test
+  public void authoredMethodBodies()
+  {
+    assertSimpleParse("001_authoredBodies.ump");
+    UmpleClass a = model.getUmpleClass("A");
+
+    Method both = methodNamed(a, "both");
+    Assert.assertTrue(both.getMethodBody().getCodeblock().isAuthored(""));
+    Assert.assertTrue(both.getMethodBody().getCodeblock().isAuthored("Python"));
+    Assert.assertFalse(both.getMethodBody().getCodeblock().isAuthored("Java"));
+    Assert.assertTrue(both.getExistsInLanguage("Java"));
+    Assert.assertTrue(both.getExistsInLanguage("Php"));
+    Assert.assertTrue(both.getExistsInLanguage("Python"));
+    Assert.assertEquals("", both.getBodyLanguageFor("Java"));
+    Assert.assertEquals("Python", both.getBodyLanguageFor("Python"));
+
+    // The untagged placeholder of a method is not an authored body
+    Method onlyPython = methodNamed(a, "onlyPython");
+    Assert.assertTrue(onlyPython.getMethodBody().getCodeblock().hasCode(""));
+    Assert.assertFalse(onlyPython.getMethodBody().getCodeblock().isAuthored(""));
+    Assert.assertFalse(onlyPython.getExistsInLanguage("Java"));
+    Assert.assertFalse(onlyPython.getExistsInLanguage("Ruby"));
+    Assert.assertTrue(onlyPython.getExistsInLanguage("Python"));
+
+    // Empty bodies that were written are authored
+    Assert.assertTrue(methodNamed(a, "emptyDefault").getMethodBody().getCodeblock().isAuthored(""));
+    Assert.assertTrue(methodNamed(a, "emptyDefault").getExistsInLanguage("Python"));
+    Method emptyJava = methodNamed(a, "emptyJava");
+    Assert.assertTrue(emptyJava.getMethodBody().getCodeblock().isAuthored("Java"));
+    Assert.assertTrue(emptyJava.getExistsInLanguage("Java"));
+    Assert.assertFalse(emptyJava.getExistsInLanguage("Php"));
+
+    Method multi = methodNamed(a, "multi");
+    Assert.assertTrue(multi.getExistsInLanguage("Java"));
+    Assert.assertTrue(multi.getExistsInLanguage("Php"));
+    Assert.assertFalse(multi.getExistsInLanguage("Python"));
+
+    // Abstract declarations and methods made by the compiler keep existing in every language
+    Method shape = methodNamed(model.getUmpleClass("C"), "shape");
+    Assert.assertFalse(shape.getMethodBody().getCodeblock().hasAuthoredCode());
+    Assert.assertTrue(shape.getExistsInLanguage("Java"));
+    Assert.assertTrue(shape.getExistsInLanguage("Python"));
+    Method size = methodNamed(model.getUmpleClass("D"), "size");
+    Assert.assertTrue(size.getExistsInLanguage("Php"));
+    Assert.assertTrue(size.getExistsInLanguage("Python"));
+
+    // Main discovery uses the same rule
+    List<UmpleClass> javaMains = CodeCompiler.getMainClasses(model, "Java");
+    Assert.assertEquals(1, javaMains.size());
+    Assert.assertEquals("B", javaMains.get(0).getName());
+    List<UmpleClass> pythonMains = CodeCompiler.getMainClasses(model, "Python");
+    Assert.assertEquals(2, pythonMains.size());
+  }
+
+  // Merging declarations compares exact slots: an untagged fallback is no duplicate
+  @Test
+  public void mergeMethodDeclarationsByExactBody()
+  {
+    assertHasWarningsParse("001_mergeAuthoredBodies.ump", 49);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    UmpleClass x = model.getUmpleClass("X");
+
+    CodeBlock f = methodNamed(x, "f").getMethodBody().getCodeblock();
+    Assert.assertEquals("return;", f.getCode(""));
+    Assert.assertTrue(f.isAuthored("Java"));
+    Assert.assertEquals("", f.getCode("Java"));
+    Assert.assertEquals("return", f.getCode("Python"));
+
+    CodeBlock g = methodNamed(x, "g").getMethodBody().getCodeblock();
+    Assert.assertEquals("int a;", g.getCode("Java"));
+    Assert.assertEquals("int b;", g.getCode(""));
+    Assert.assertTrue(g.isAuthored(""));
+
+    // A duplicate of one language of a multi-language block is disregarded with a warning
+    CodeBlock h = methodNamed(x, "h").getMethodBody().getCodeblock();
+    Assert.assertEquals("int c;", h.getCode("Java"));
+    Assert.assertEquals("int c;", h.getCode("Php"));
+  }
+
+  // Pre and postconditions belong to their method and the body written with them (#2250)
+  @Test
+  public void methodContractsFollowTheirBody()
+  {
+    assertHasWarningsParse("001_methodContracts.ump", 49);
+    UmpleClass c = model.getUmpleClass("Client");
+
+    Method someMethod = methodNamed(c, "someMethod");
+    Assert.assertEquals(1, c.getMethodPostconditions(someMethod, "Java").size());
+    Assert.assertEquals("arg", c.getMethodPostconditions(someMethod, "Java").get(0).getNamedNames());
+    Assert.assertSame(someMethod, c.getMethodPostconditions(someMethod, "Python").get(0).getMethod());
+    Assert.assertNotSame(c.getMethodPostconditions(someMethod, "Java").get(0), c.getMethodPostconditions(someMethod, "Python").get(0));
+    Assert.assertEquals(0, c.getMethodPostconditions(someMethod, "Php").size());
+
+    // Overloads keep their own conditions
+    Method fInt = null;
+    Method fString = null;
+    for (Method m : c.getMethods())
+    {
+      if (!"f".equals(m.getName())) continue;
+      if ("int".equals(m.getMethodParameter(0).getType())) fInt = m; else fString = m;
+    }
+    Assert.assertEquals("x", c.getMethodPreconditions(fInt, "Java").get(0).getNamedNames());
+    Assert.assertEquals(1, c.getMethodPreconditions(fInt, "Java").size());
+    Assert.assertEquals(1, c.getMethodPreconditions(fString, "Python").size());
+    Assert.assertEquals("null and s", c.getMethodPreconditions(fString, "Python").get(0).getNamedNames());
+
+    // The condition of a disregarded duplicate body is dropped with it
+    Method h = methodNamed(c, "h");
+    Assert.assertEquals(1, c.getMethodPreconditions(h, "Java").size());
+    Assert.assertEquals(0, c.getMethodPreconditions(h, "Php").size());
+
+    // A condition in a multi-language block serves each of its languages; the Php duplicate is
+    // disregarded while the Ruby body that came with it is taken, with its condition
+    Method k = methodNamed(c, "k");
+    Precondition javaAndPhp = c.getMethodPreconditions(k, "Java").get(0);
+    Assert.assertSame(javaAndPhp, c.getMethodPreconditions(k, "Php").get(0));
+    Assert.assertEquals(1, c.getMethodPreconditions(k, "Php").size());
+    Assert.assertEquals(1, c.getMethodPreconditions(k, "Python").size());
+    Assert.assertNotSame(javaAndPhp, c.getMethodPreconditions(k, "Python").get(0));
+    Assert.assertEquals(1, c.getMethodPreconditions(k, "Ruby").size());
+    Assert.assertSame(k, c.getMethodPreconditions(k, "Ruby").get(0).getMethod());
+    Assert.assertEquals("return 6", k.getMethodBody().getCodeblock().getCode("Ruby"));
+
+    // A declaration that fills an empty body keeps the conditions of both declarations
+    Method m = methodNamed(c, "m");
+    Assert.assertEquals(2, c.getMethodPreconditions(m, "Java").size());
+
+    // Equal conditions in other alternatives or overloads are separate conditions
+    Method same = methodNamed(c, "same");
+    Assert.assertEquals(1, c.getMethodPreconditions(same, "Java").size());
+    Assert.assertEquals(1, c.getMethodPostconditions(same, "Java").size());
+    Assert.assertEquals(1, c.getMethodPreconditions(same, "Python").size());
+    Assert.assertNotSame(c.getMethodPreconditions(same, "Java").get(0), c.getMethodPreconditions(same, "Python").get(0));
+    for (Method limit : c.getMethods())
+    {
+      if ("limit".equals(limit.getName()))
+      {
+        Assert.assertEquals(1, c.getMethodPreconditions(limit, "Java").size());
+      }
+    }
+
+    // A redeclaration without code adds its conditions (#1488); equal ones are checked once
+    Method refine = methodNamed(c, "refine");
+    Assert.assertEquals(2, c.getMethodPreconditions(refine, "Java").size());
+    Assert.assertEquals("return a;", refine.getMethodBody().getCodeblock().getCode(""));
+
+    // Disregarded conditions are gone from the class: preconditions f 2, h 1, k 3, m 2, same 2,
+    // limit 2, refine 3; postconditions someMethod 2, same 2
+    Assert.assertEquals(15, c.numberOfPreConds());
+    Assert.assertEquals(4, c.numberOfPostConds());
+  }
+
+  // Extra code markers have a Python form, also when extra code comes from a trait
+  @Test
+  public void extraCodeMarkersPerLanguage()
+  {
+    assertSimpleParse("001_extraCodeMarkers.ump");
+    // Other targets' markers end with the platform's line separator; Python's with "\n". The joined
+    // text, whose line breaks come from the platform, is compared with "\n" breaks.
+    String NL = System.getProperty("line.separator");
+    List<CodeBlock> x = model.getUmpleClass("X").getExtraCodeBlocks();
+    Assert.assertEquals("// line 3 001_extraCodeMarkers.ump" + NL + "  ", x.get(0).getCode(""));
+    Assert.assertEquals("# line 3 001_extraCodeMarkers.ump" + NL + "  ", x.get(0).getCode("Ruby"));
+    Assert.assertEquals("# line 3 \"001_extraCodeMarkers.ump\"\n", x.get(0).getCode("Python"));
+    Assert.assertFalse(x.get(0).hasAuthoredCode());
+
+    // The text every other target gets is unchanged
+    Assert.assertEquals("// line 3 001_extraCodeMarkers.ump\n  TOKEN = 7", lf(extraCodeFor(model.getUmpleClass("X"), "Java")));
+
+    // A trait's extra code is copied block by block, so each language keeps its own form
+    UmpleClass y = model.getUmpleClass("Y");
+    Assert.assertEquals("// line 10 001_extraCodeMarkers.ump\n  OTHER = 4\n// line 6 001_extraCodeMarkers.ump\n  LIMIT = 3", lf(extraCodeFor(y, "Java")));
+    Assert.assertEquals("# line 10 001_extraCodeMarkers.ump\n  OTHER = 4\n# line 6 001_extraCodeMarkers.ump\n  LIMIT = 3", lf(extraCodeFor(y, "Ruby")));
+    Assert.assertEquals("# line 10 \"001_extraCodeMarkers.ump\"\nOTHER = 4\n# line 6 \"001_extraCodeMarkers.ump\"\nLIMIT = 3", lf(extraCodeFor(y, "Python")));
+    CodeBlock fromTrait = y.getExtraCodeBlocks().get(y.getExtraCodeBlocks().size() - 1);
+    Assert.assertEquals("LIMIT = 3", fromTrait.getCode(""));
+  }
+
+  private static String lf(String text)
+  {
+    return text.replace(System.getProperty("line.separator"), "\n");
+  }
+
+  // The extra code a generator for lang gets, as ExtraCode.getExtraCode selects it
+  private String extraCodeFor(UmpleClass uClass, String lang)
+  {
+    StringBuilder code = new StringBuilder();
+    for (CodeBlock cb : uClass.getExtraCodeBlocks())
+    {
+      code.append(cb.hasCode(lang) ? cb.getCode(lang) : cb.getCode(""));
+    }
+    return code.toString();
+  }
+
+  private Method methodNamed(UmpleClass uClass, String name)
+  {
+    for (Method m : uClass.getMethods())
+    {
+      if (name.equals(m.getName())) return m;
+    }
+    return null;
+  }
+
 
 
   @Test
@@ -4070,6 +4355,9 @@ public void braceMismatch_filenameUsesBasename() {
   public void multipleConstraintMethodBody() 
   {
     assertNoWarningsParse("1488_multipleConstraintMethodBody.ump");
+    // The conditions of the code-less declarations apply to the method
+    UmpleClass x = model.getUmpleClass("X");
+    Assert.assertEquals(2, x.getMethodPreconditions(methodNamed(x, "m1"), "Java").size());
   }
 
   // Issue 1488

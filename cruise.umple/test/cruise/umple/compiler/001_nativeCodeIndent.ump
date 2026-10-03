@@ -1,0 +1,54 @@
+// Native code keeps its trimmed text; the indentation of its first line is recorded apart
+class A {
+  Integer n = 0;
+  Integer d = { getN() + 1 } Python {
+      self.getN() + 2 }
+  void spaces() Python {
+    x = 1
+    if x:
+        return x
+  }
+	void tabs() Python {
+		y = 2
+		return y
+	}
+  void sameLine() Python { return 3 }
+  void empty() Python {}
+  void mixsetFirst() {
+    mixset Unused { a(); }
+    b();
+  }
+  void mixsetLater() {
+    c();
+    mixset Unused { d(); }
+  }
+  void multi() Java, Php {
+      int z = 1;
+  } Python {
+        z = 1
+  }
+  before getN { a = 1; } Python {
+      b = 2
+  }
+  after getN Python {
+      mixset Unused { c = 3 }
+      d = 4
+  }
+  sm {
+    s1 {
+      entry / {
+        n = 5;
+      } Python {
+          self.n = 7
+      }
+      do {
+         work();
+      }
+      e -> s2;
+    }
+    s2 {}
+  }
+}
+class B {
+    TOKEN = 7
+}

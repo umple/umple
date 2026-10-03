@@ -1,0 +1,21 @@
+use association_Guards.ump;
+
+class UmpleToPython {
+    // Setter of a mandatory one end whose other end has an upper bound: the new owner must have room,
+    // and the old owner must let the object go (it may be at its lower bound).
+    association_SetOneToAtMostN <<!<</*association_SetOneToAtMostN*/>>
+
+    def <<=gen.translate("setMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("setMethod", av), gen.parameter(parameter, av.getType()))>><<@ UmpleToPython.association_SetGuards >>
+        if <<=parameter>> is None:
+            return False
+        if <<=parameter>>.<<=gen.relatedTranslate("numberOfMethod", av)>>() >= <<=parameter>>.<<=gen.relatedTranslate("maximumNumberOfMethod", av)>>():
+            return False
+        <<=gen.translate("parameterExisting", av)>> = <<=field>>
+        <<=field>> = <<=parameter>>
+        if <<=gen.translate("parameterExisting", av)>> is not None and <<=gen.translate("parameterExisting", av)>> is not <<=parameter>>:
+            if not <<=gen.translate("parameterExisting", av)>>.<<=gen.relatedTranslate("removeMethod", av)>>(self):
+                <<=field>> = <<=gen.translate("parameterExisting", av)>>
+                return False
+        <<=field>>.<<=gen.relatedTranslate("addMethod", av)>>(self)<<=gen.injected(uClass, "after", gen.translate("setMethod", av), gen.parameter(parameter, av.getType()))>>
+        return True!>>
+}

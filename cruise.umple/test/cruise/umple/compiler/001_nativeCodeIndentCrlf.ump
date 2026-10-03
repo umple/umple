@@ -1,0 +1,7 @@
+class C {
+  void f() Python {
+
+      x = 1
+      return x
+  }
+}

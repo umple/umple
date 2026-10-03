@@ -3,61 +3,34 @@
 
 from Mentor import Mentor
 
+
 class Example(Mentor):
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
     def __init__(self, aAttr):
         super().__init__(aAttr)
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def getAttr(self):
-
-        #before getAttr
-        # END OF UMPLE BEFORE INJECTION
+        # before getAttr
+        pass
         aAttr = super().getAttr()
-
-        #after getAttr
-        # END OF UMPLE AFTER INJECTION
+        # after getAttr
+        pass
         return aAttr
 
-    # Code from template attribute_GetDerivedSubclass 
     def getDerivedAttr(self):
-
-        #before getDerivedAttr
-        # END OF UMPLE BEFORE INJECTION
+        # before getDerivedAttr
+        pass
         aDerivedAttr = super().getDerivedAttr()
-
-        #after getDerivedAttr
-        # END OF UMPLE AFTER INJECTION
+        # after getDerivedAttr
+        pass
         return aDerivedAttr
 
-    # Code from template attribute_GetManySubclass 
-    def getListAttr(self, index):
-
-        #before getListAttr
-        # END OF UMPLE BEFORE INJECTION
-        aListAttr = super().getListAttr(index)
-
-        #after getListAttr
-        # END OF UMPLE AFTER INJECTION
-        return aListAttr
-
     def getDefaultedAttr(self):
-
-        #before getDefaultedAttr
-        # END OF UMPLE BEFORE INJECTION
+        # before getDefaultedAttr
+        pass
         aDefaultedAttr = super().getDefaultedAttr()
-
-        #after getDefaultedAttr
-        # END OF UMPLE AFTER INJECTION
+        # after getDefaultedAttr
+        pass
         return aDefaultedAttr
 
     def delete(self):
         super().delete()
-

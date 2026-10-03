@@ -1,0 +1,7 @@
+class UmpleToPython {
+    // An optional one end whose owner must have exactly n objects: the owner cannot survive losing
+    // one, so it is deleted.
+    delete_OptionalOneFromN <<!<</*delete_OptionalOneFromN*/>>
+        if <<=field>> is not None:
+            <<=field>>.delete()!>>
+}

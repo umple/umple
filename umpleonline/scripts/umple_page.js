@@ -484,7 +484,7 @@ Page.initPaletteArea = function()
     }
   }
 
-  // Only show execute code button for the Java language
+  // Only show the execute code button for languages the execution service runs
   jQuery("#inputGenerateCode").on('change', function() {
     if(this.value.split(":")[1] === 'Java' || this.value.split(":")[1] === 'Python') {
       jQuery("#buttonExecuteCode").show();

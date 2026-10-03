@@ -1,0 +1,53 @@
+class UmpleToPython {
+    // Java's DoActivityThread with cooperative cancellation. Each state visit gets new workers, each
+    // with its own cancelled token, which the activity receives as its thread parameter; exit and
+    // delete set the tokens without waiting. The completion worker waits for its visit's other workers
+    // and fires only while the visit is current. startAll starts it last, so it never waits for an
+    // unstarted worker, and checks deletion and cancellation before each start. Activity exceptions
+    // are not caught, so threading.excepthook reports them. sleep is Java's Thread.sleep for the
+    // activity: it returns True as soon as the activity is cancelled.
+    state_machine_doActivityThread <<!<</*state_machine_doActivityThread*/>>
+
+    class <<=gen.activityThreadClass(uClass)>>(<<=threading>>.Thread):
+        def __init__(self, controller, doActivityMethodName):
+            super().__init__(daemon=False)
+            self._controller = controller
+            self._doActivityMethodName = doActivityMethodName
+            self._siblings = ()
+            self.cancelled = <<=threading>>.Event()
+
+        def sleep(self, milliseconds):
+            if milliseconds < 0:
+                raise ValueError("timeout value is negative")
+            return self.cancelled.wait(milliseconds / 1000)
+
+        @staticmethod
+        def startAll(*workers):
+            for worker in workers:
+                worker._siblings = tuple(other for other in workers if other is not worker)
+            for worker in workers:
+                if worker._controller.<<=deleted>> or worker.cancelled.is_set():
+                    return
+                worker.start()
+
+        def run(self):
+            controller = self._controller<<#
+  boolean isFirstActivity = true;
+  for (Activity activity : activities)
+  {
+    Event completion = activity.getOnCompletionEvent();
+    #>>
+            <<=isFirstActivity ? "if" : "elif">> self._doActivityMethodName == <<=gen.pythonString(gen.translate("doActivityMethod", activity))>>:
+                controller.<<=gen.translate("doActivityMethod", activity)>>(self)<<#
+    if (completion != null)
+    {
+      #>>
+                for sibling in self._siblings:
+                    sibling.join()
+                if not self.cancelled.is_set() and not controller.<<=deleted>> and controller.<<=gen.activityWorker(uClass, activity)>> is self:
+                    controller.<<=gen.translate("eventMethod", completion)>>()<<#
+    }
+    isFirstActivity = false;
+  }
+  #>>!>>
+}

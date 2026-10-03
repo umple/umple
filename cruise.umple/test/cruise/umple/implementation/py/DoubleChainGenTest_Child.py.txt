@@ -1,29 +1,17 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from Employee import Employee
+from example.Employee import Employee
+
 
 class Admin(Employee):
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Admin Attributes
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
     def __init__(self, aName, aAge, aId, aNumber):
-        self._number = None
+        self._number = aNumber
         super().__init__(aName, aAge, aId)
-        self._number = aNumber
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setNumber(self, aNumber):
-        wasSet = False
         self._number = aNumber
-        wasSet = True
-        return wasSet
+        return True
 
     def getNumber(self):
         return self._number
@@ -32,4 +20,6 @@ class Admin(Employee):
         super().delete()
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
+        return (super().__str__() + "["
+                + "number:" + str(self.getNumber())
+                + "]")

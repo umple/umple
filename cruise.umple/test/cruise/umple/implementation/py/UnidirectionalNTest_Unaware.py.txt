@@ -1,27 +1,14 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
-# line 9 "../UnidirectionalNTest.ump"
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-class Student():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Student Attributes
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+
+class Student:
     def __init__(self, aNumber):
-        self._number = None
         self._number = aNumber
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setNumber(self, aNumber):
-        wasSet = False
         self._number = aNumber
-        wasSet = True
-        return wasSet
+        return True
 
     def getNumber(self):
         return self._number
@@ -30,5 +17,6 @@ class Student():
         pass
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
-
+        return (super().__str__() + "["
+                + "number:" + str(self.getNumber())
+                + "]")

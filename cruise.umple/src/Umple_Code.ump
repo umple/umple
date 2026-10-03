@@ -415,6 +415,25 @@ class UmpleElement
     extraCode.appendExtraCode(cb);
   }
 
+  /*
+   * Appends copies of extra code blocks, keeping each one's per-language code and provenance. Every
+   * target gets the same text as appending the blocks' text for its language would give.
+   */
+  public void appendExtraCodeBlocks(List<CodeBlock> blocks)
+  {
+    appendExtraCode("");
+    for (CodeBlock cb : blocks)
+    {
+      extraCode.appendExtraCode(new CodeBlock(cb));
+    }
+  }
+
+  // The extra code in order: markers giving source lines, then the code as written (see CodeBlock)
+  public List<CodeBlock> getExtraCodeBlocks()
+  {
+    return extraCode.getCodeBlocks();
+  }
+
   public boolean hasExtraCode()
   {
     return extraCode.getHasCode();

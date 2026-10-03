@@ -2,6 +2,7 @@ include 'UmpleParser'
 include 'UmpleToJava'
 include 'UmpleToPhp'
 include 'UmpleToRTCpp'
+include 'UmpleToPython'
 include 'UmpleToRuby'
 include 'UmpleToSql'
 include 'UmpleToTest'
@@ -39,6 +40,9 @@ rootProject.children.each {project ->
             break
         case "UmpleToRTCpp":
             project.buildFileName = "UmpleToRTCppBuild.gradle"
+            break
+        case "UmpleToPython":
+            project.buildFileName = "UmpleToPythonBuild.gradle"
             break
         case "UmpleToRuby":
             project.buildFileName = "UmpleToRubyBuild.gradle"

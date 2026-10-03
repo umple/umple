@@ -1,0 +1,14 @@
+// A guard on an entry or exit action guards the body each language selects, tagged or not
+class Lamp {
+  Integer n = 0;
+  sm {
+    Off {
+      entry [n > 1] / { n = 1; } Java { n = 2; } Php { $this->n = 3; }
+      exit [n < 9] / { n = 4; } Java { n = 5; }
+      flip -> On;
+    }
+    On {
+      flip -> Off;
+    }
+  }
+}

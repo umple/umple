@@ -1,0 +1,68 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class MethodWrappers:
+    """Contracts and injections wrap a method; the body runs in a helper bound to the declaring class."""
+
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass
+
+    def half(self, x):
+        if not (x > 0):
+            raise RuntimeError("Please provide a valid x")
+        result = __class__.half_Original(self, x)
+        if not (result < x):
+            raise RuntimeError("Please provide a valid result and x")
+        return result
+
+    def half_Original(self, x):
+        # line 7 "MethodWrappers.ump"
+        return x // 2
+        # end line
+
+    @staticmethod
+    def bounded(x):
+        if not (x < 100):
+            raise RuntimeError("Please provide a valid x")
+        # line 12 "MethodWrappers.ump"
+        return x
+        # end line
+
+    def logged(self, x):
+        # line 28 "MethodWrappers.ump"
+        print("before", x)
+        # end line
+        result = __class__.logged_Original(self, x)
+        # line 29 "MethodWrappers.ump"
+        print("after")
+        # end line
+        return result
+
+    def logged_Original(self, x):
+        # line 16 "MethodWrappers.ump"
+        return x + 1
+        # end line
+
+    def keep(self, result):
+        if not (result > 0):
+            raise RuntimeError("Please provide a valid result")
+        # line 21 "MethodWrappers.ump"
+        return result * 2
+        # end line
+
+    def m(self):
+        # line 30 "MethodWrappers.ump"
+        print("m")
+        # end line
+        # line 24 "MethodWrappers.ump"
+        return 1
+        # end line
+
+    def m_Original(self):
+        # line 26 "MethodWrappers.ump"
+        return 2
+        # end line

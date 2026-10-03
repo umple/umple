@@ -178,6 +178,7 @@ class UmpleInternalParser
     }
 
     CodeInjection injection = new CodeInjection(type,operationName,"",uClassifier);
+    injection.setIsAround(injectToken.getSubToken("around") != null);
     injection.setOperationSource(operationSource);
     mixset Mixset {
       // check if the aspect needs to be injected before/after a label.

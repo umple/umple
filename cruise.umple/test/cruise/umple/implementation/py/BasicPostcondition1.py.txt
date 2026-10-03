@@ -1,27 +1,14 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
-# line 1 "BasicPostCondition1.ump"
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-class Client():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Client Attributes
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+
+class Client:
     def __init__(self, aMinAge):
-        self._minAge = None
         self._minAge = aMinAge
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setMinAge(self, aMinAge):
-        wasSet = False
         self._minAge = aMinAge
-        wasSet = True
-        return wasSet
+        return True
 
     def getMinAge(self):
         return self._minAge
@@ -29,20 +16,17 @@ class Client():
     def delete(self):
         pass
 
-    # line 7 "BasicPostCondition1.ump"
-    # line 7 "BasicPostCondition1.ump"
     def someMethod(self, arg):
-        result = self.someMethod_Original(arg)
-        if arg <= 5 :
-            raise RuntimeError ("Please provide a valid arg")
-        if arg <= 5 :
-            raise RuntimeError ("Please provide a valid arg")
+        result = __class__.someMethod_Original(self, arg)
+        if not (arg > 5):
+            raise RuntimeError("Please provide a valid arg")
         return result
 
     def someMethod_Original(self, arg):
         # rest of stuff that we don\'t interpret
-       return 0
+        return 0
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "minAge" + ":" + str(self.getMinAge()) + "]"
-
+        return (super().__str__() + "["
+                + "minAge:" + str(self.getMinAge())
+                + "]")

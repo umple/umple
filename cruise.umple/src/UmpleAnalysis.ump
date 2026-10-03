@@ -47,6 +47,8 @@ class PreconditionAnalyzer
   ConstraintTree rawLine = null;
   lazy UmpleClassifier uClassifier;
   lazy Method method;
+  // The precondition the last analyzed token produced
+  lazy Precondition condition;
 
   void prepare(Token token)
   {
@@ -55,9 +57,10 @@ class PreconditionAnalyzer
 
   void analyze(Token token)
   {
+    condition = (Precondition)rawLine;
     if (uClassifier instanceof UmpleClass)
     {
-      ((UmpleClass)(uClassifier)).addPreCond((Precondition)rawLine);
+      ((UmpleClass)(uClassifier)).addMethodContract(condition);
     }
     mixset Trait {
     else if (uClassifier instanceof UmpleTrait)
@@ -80,6 +83,8 @@ class PostconditionAnalyzer
   ConstraintTree rawLine = null;
   lazy UmpleClassifier uClassifier;
   lazy Method method;
+  // The postcondition the last analyzed token produced
+  lazy Postcondition condition;
   
   void prepare(Token token)
   {
@@ -88,10 +93,11 @@ class PostconditionAnalyzer
 
   void analyze(Token token)
   {
-    ((Postcondition)rawLine).setPosition(token.getPosition());
+    condition = (Postcondition)rawLine;
+    condition.setPosition(token.getPosition());
     if (uClassifier instanceof UmpleClass)
     {
-      ((UmpleClass)(uClassifier)).addPostCond((Postcondition)rawLine);
+      ((UmpleClass)(uClassifier)).addMethodContract(condition);
     } 
     mixset Trait {
       else if (uClassifier instanceof UmpleTrait)

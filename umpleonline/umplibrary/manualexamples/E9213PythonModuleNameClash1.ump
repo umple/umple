@@ -1,0 +1,6 @@
+// A class without a namespace named like a Python standard
+// module that generated code imports hides that module: E9213
+generate Python;
+class datetime {
+  Integer day;
+}

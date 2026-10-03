@@ -2,21 +2,10 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Mentor():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Mentor Attributes
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class Mentor:
     def __init__(self, aName):
-        self._name = None
         self._name = aName
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def getName(self):
         return self._name
 
@@ -24,4 +13,6 @@ class Mentor():
         pass
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]")
