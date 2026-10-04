@@ -69,7 +69,6 @@ public class ParserJarTest
   @Test
   public void explainsAMissingFile() throws Exception
   {
-    // The message text comes from en.error, which must be packaged with the classes
     Parse parse = new Parse("missing.txt");
     Assert.assertTrue(parse.errors, parse.errors.contains("Warning 1510"));
   }

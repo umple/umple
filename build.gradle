@@ -486,6 +486,7 @@ task copyParserUmpFiles(type: Copy) {
         include 'ParseUtilities*.ump'
         include 'ParsingRules*.ump'
         include 'TextParser*.ump'
+        include 'UmpleParser.ump'
     }
     from("cruise.umple/src/util") {
         include 'FileUtils.ump'
@@ -496,6 +497,7 @@ task copyParserUmpFiles(type: Copy) {
             [dir: "UmpleParser/src",       pattern: 'ParseUtilities*.ump'],
             [dir: "UmpleParser/src",       pattern: 'ParsingRules*.ump'],
             [dir: "UmpleParser/src",       pattern: 'TextParser*.ump'],
+            [dir: "UmpleParser/src",       pattern: 'UmpleParser.ump'],
             [dir: "cruise.umple/src/util", pattern: 'FileUtils.ump'],
         ].each { spec ->
             if (fileTree(spec.dir).include(spec.pattern).isEmpty()) {

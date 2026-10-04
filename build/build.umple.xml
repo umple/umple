@@ -277,6 +277,7 @@
       <fileset dir="${basedir}/UmpleParser/src"><include name="ParseUtilities*.ump"/></fileset>
       <fileset dir="${basedir}/UmpleParser/src"><include name="ParsingRules*.ump"/></fileset>
       <fileset dir="${basedir}/UmpleParser/src"><include name="TextParser*.ump"/></fileset>
+      <fileset dir="${basedir}/UmpleParser/src"><include name="UmpleParser.ump"/></fileset>
 
       <fileset dir="${basedir}/UmpleToPython/txl"><include name="umpleJavaToPython.ctxl"/></fileset>
     </copy>

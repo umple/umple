@@ -140,7 +140,8 @@ class RuleBasedParser
     parsing++;
     data.setCouples(new HashMap<String,ParsingCouple>());
     BalancedRule.initialize(data.getInput(),data);
-    int parseResult = root.parse(token, 0,data.getInput().length(),data.getInput(),data);
+    // There is no root rule when no grammar file could be read; then none of the input is understood
+    int parseResult = root == null ? 0 : root.parse(token, 0,data.getInput().length(),data.getInput(),data);
     if(parseResult==data.getInput().length())
     {
       cleanEscapeChars(token);
@@ -150,10 +151,26 @@ class RuleBasedParser
     {
       setRootToken(token);
       setFailedPosition(data.getPosition());
+      data.getParseResult().addErrorMessage(new ErrorMessage(1500, data.getPosition(), unparsedText(data.getPosition(), data.getInput())));
     }
     parsing--;
   }
   
+  // What the user sees as not understood: the rest of the line where parsing stopped, or the
+  // whole line when parsing stopped at its end
+  private static String unparsedText(Position stop, String input)
+  {
+    int offset = Math.min(stop.getOffset(), input.length());
+    int lineStart = input.lastIndexOf('\n', offset - 1) + 1;
+    int lineEnd = input.indexOf('\n', offset);
+    if (lineEnd < 0)
+    {
+      lineEnd = input.length();
+    }
+    String rest = input.substring(offset, lineEnd).trim();
+    return rest.isEmpty() ? input.substring(lineStart, lineEnd).trim() : rest;
+  }
+
   /*
    * Adds a parser action to operate on an action token of the specified name
    *
@@ -526,9 +543,11 @@ class RuleBasedParser
     List<Thread> parsers = new ArrayList<Thread>();
     String[] keys = new String[]{"[","]"};
     rootToken = new Token("ROOT","");
+    ParseResult grammarResult = new ParseResult(true);
     for(String filename:getGrammarFiles())
     {
       ParserDataPackage data = new ParserDataPackage(filename,getAnalyzer());
+      data.setParseResult(grammarResult);
       data.getKeys().put("[]",keys);
       data.init(null);
       for(int i=0;i<data.numberOfLines();++i){
@@ -538,6 +557,7 @@ class RuleBasedParser
       }
     }
     analyzer = new GrammarAnalyzer();
+    analyzer.setGrammarResult(grammarResult);
     analyzer.setLinkedFileHandler(getLinkedFileHandler());
     analyzer.setAnalyzerGenerator(getAnalyzerGenerator());
     for( Map.Entry<String,ParserAction> entry : actionedTokens.entrySet() ){
@@ -790,6 +810,11 @@ class GrammarAnalyzer {
   */
   public void execute()
   {
+    // The grammar is read once for all parses, so each parse repeats what reading it reported
+    for (ErrorMessage message : grammarResult.getErrorMessages())
+    {
+      getData().getParseResult().addErrorMessage(message);
+    }
     setRootToken(new Token("ROOT",""));
     RuleBasedParser parser = new RuleBasedParser();
     parser.parse(rules.get("$ROOT$"),getRootToken(), input,getData());

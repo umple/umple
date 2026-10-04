@@ -177,8 +177,9 @@ class ParserDataPackage
   //for passing around errors
   ParseResult parseResult = new ParseResult(true);
 
-  //keeps track of the furthest token position attained during the parse.
-  Position position = new Position(aFilename,0,0,0);
+  //keeps track of the furthest token position attained during the parse. It starts on line 1,
+  //which is where a parse that fails before its first token stops
+  Position position = new Position(aFilename,1,0,0);
   
   //Associated to each key is a couple
   HashMap<String,ParsingCouple> couples = new HashMap<String,ParsingCouple>();
@@ -244,6 +245,7 @@ class GrammarAnalyzer
   depend cruise.umple.parser.Position;
   depend cruise.umple.parser.Token;
   depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.ErrorMessage;
 
   /*
     Inner class which is a wrapper for the objects that will go into the global hashmap
@@ -322,6 +324,9 @@ class GrammarAnalyzer
   //resulting parse result from the parse
   ParseResult parseResult = null;
 
+  //what reading the grammar files reported, such as a grammar file that was not found
+  ParseResult grammarResult = new ParseResult(true);
+
   //List of tokens of the form [token], which are open and need to be delimited
   Terminal[] openTerminal;
   
@@ -346,3 +351,7 @@ use regularMode;
 mixset regularMode {
   use lib:GrammarParsing_Code.ump;
 }
+
+// A namespace stays in effect after the use statement that brings in this file;
+// end it here so that what follows the use statement is not put in it
+namespace -;

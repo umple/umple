@@ -610,13 +610,15 @@ class RootRule
     for(int i=0;i<this.size();++i)
     {
       int parseResult = get(i).parse(getNegate()?token:self,from, max, input, data);
-      if(parseResult>=max)
+      // Rules take the whitespace around what they match, so whitespace is left over only when
+      // nothing matched, as in an input of blank lines; it is not input that failed to parse
+      if(parseResult>=max || (parseResult>=0 && input.substring(parseResult,max).trim().isEmpty()))
       {
         if(!getNegate())
         {
           token.addSubToken(self);
         }
-        return parseResult;
+        return max;
       }
       self = new Token(getName(),"START_TOKEN");
     }
