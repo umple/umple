@@ -982,7 +982,12 @@ class UmpleInternalParser
       Position classPosition = uClass.numberOfPositions() > 0 ? uClass.getPosition(0) : null;
       for (Attribute attribute : uClass.getAttributes())
       {
-        attributePositions.putIfAbsent(attribute.getName(), attribute.getPosition() != null ? attribute.getPosition() : classPosition);
+        // not putIfAbsent: it would replace an inherited name's null, so refining an inherited
+        // attribute would report its clash again
+        if (!attributePositions.containsKey(attribute.getName()))
+        {
+          attributePositions.put(attribute.getName(), attribute.getPosition() != null ? attribute.getPosition() : classPosition);
+        }
       }
       checkNamesDifferOnlyByCase("attributes in class " + uClass.getName(), attributePositions);
     }

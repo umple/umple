@@ -1100,8 +1100,8 @@ public void braceMismatch_filenameUsesBasename() {
     Assert.assertEquals(new Position(file, 11, 2, 69), result.getErrorMessage(1).getPosition());
   }
 
-  // Reported once, in the subclass that introduces the clash, and not again in its own subclass
-  // or in the unrelated class Course
+  // Reported once, in the subclass that introduces the clash, and not again in its own subclass,
+  // which only refines the attribute, or in the unrelated class Course
   @Test
   public void warningInheritedAttributeNamesDifferOnlyByCase107()
   {

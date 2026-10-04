@@ -9,6 +9,7 @@ class Student {
 
 class GraduateStudent {
   isA Student;
+  fullName = "unknown";
 }
 
 class Course {
