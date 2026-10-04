@@ -479,17 +479,24 @@ courseSection=(CourseSection)umpleObjectIDMap.get(newUmpleID_1);
             int pairStart=topLevelMatcher.end()+1;
             while(pairStart<jsonString.length()&&jsonString.charAt(pairStart)=='"'){
               int keyEnd=jsonString.indexOf('"',pairStart+1);
-              int valueEnd=keyEnd<0?-1:fromJsonParserValueEnd(jsonString,keyEnd+2);
+              // without the colon there is no telling which value is the key's, so read no further
+              if(keyEnd<0||!jsonString.startsWith(":",keyEnd+1)){
+                break;
+              }
+              int valueEnd=fromJsonParserValueEnd(jsonString,keyEnd+2);
               if(valueEnd<0){
                 break;
               }
               String key=jsonString.substring(pairStart+1,keyEnd);
               String value=jsonString.substring(keyEnd+2,valueEnd);
+              // The class name and object id come first and win over an attribute named like them.
+              // toJson quotes every attribute and state, so a bare null, boolean or number is left unread, as it always was
               if(value.startsWith("\"")){
-                value=value.substring(1,value.length()-1).replace("\\\\","\\").replace("\\\"","\"");
+                parsedResultMap.putIfAbsent(key,value.substring(1,value.length()-1).replace("\\\\","\\").replace("\\\"","\""));
               }
-              // the class name and object id come first and win over an attribute named like them
-              parsedResultMap.putIfAbsent(key,value);
+              else if(value.startsWith("[")||value.startsWith("{")){
+                parsedResultMap.putIfAbsent(key,value);
+              }
               // skip the comma, and the extra one left by a superclass with nothing to output
               pairStart=valueEnd;
               while(pairStart<jsonString.length()&&jsonString.charAt(pairStart)==','){
@@ -561,13 +568,21 @@ courseSection=(CourseSection)umpleObjectIDMap.get(newUmpleID_1);
   }
    
   /*
-  * Returns the index just after the json "string", [list] or {object} that starts at index start,
+  * Returns the index just after the json value that starts at index start,
   * or -1 if there is none there or it is cut short.
-  * Brackets and escaped quotes inside a string are text, so they do not end the value
+  * A "string", [list] or {object} ends where it closes; brackets and escaped quotes inside a string are text.
+  * A bare null, boolean or number ends at the next comma or closing bracket
   */
   private static int fromJsonParserValueEnd(String jsonString, int start){
-    if(start>=jsonString.length()||"\"[{".indexOf(jsonString.charAt(start))<0){
+    if(start>=jsonString.length()){
       return -1;
+    }
+    if("\"[{".indexOf(jsonString.charAt(start))<0){
+      int end=start;
+      while(end<jsonString.length()&&",}]".indexOf(jsonString.charAt(end))<0){
+        end++;
+      }
+      return end>start&&end<jsonString.length()?end:-1;
     }
     int depth=0;
     boolean inString=false;

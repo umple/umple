@@ -80,6 +80,38 @@ public class JsonPlayerTest
   }
 
   @Test
+  public void bareJsonValuesOfOtherKeysAreSkipped()
+  {
+    JsonPlayer restored = JsonPlayer.fromJson(
+      "{\"JsonPlayer\" : {\"umpleObjectID\" : \"1\", \"a\" : null, \"name\" : \"p1\", \"b\" : true,"
+      + " \"c\" : false, \"status\" : \"On\", \"d\" : -1.2e3, \"statusOn\" : \"Playing\", \"e\" : 42}}");
+
+    Assert.assertEquals("p1", restored.getName());
+    Assert.assertEquals("On.Playing", restored.getStatusFullName());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void unknownStateAfterBareJsonValuesIsRejected()
+  {
+    JsonPlayer.fromJson(
+      "{\"JsonPlayer\" : {\"umpleObjectID\" : \"1\", \"a\" : null, \"name\" : \"p1\", \"b\" : 42, \"status\" : \"Broken\"}}");
+  }
+
+  @Test
+  public void keyWithoutColonEndsTheObjectsFields()
+  {
+    String start = "{\"JsonPlayer\" : {\"umpleObjectID\" : \"1\", \"name\" : \"p1\", \"status\", ";
+
+    JsonPlayer known = JsonPlayer.fromJson(start + "\"On\"}}");
+    JsonPlayer unknown = JsonPlayer.fromJson(start + "\"Broken\"}}");
+
+    Assert.assertEquals("p1", known.getName());
+    Assert.assertEquals(JsonPlayer.Status.Off, known.getStatus());
+    Assert.assertEquals("p1", unknown.getName());
+    Assert.assertEquals(JsonPlayer.Status.Off, unknown.getStatus());
+  }
+
+  @Test
   public void restoredTimedStateTimesOutAgain() throws InterruptedException
   {
     JsonClock restored = JsonClock.fromJson(new JsonClock().toJson());
