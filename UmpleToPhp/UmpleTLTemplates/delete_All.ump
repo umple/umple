@@ -12,6 +12,7 @@ use delete_OptionalOneFromMN_comp.ump;
 use delete_OptionalOneFromMany.ump;
 use delete_OptionalOneFromMany_comp.ump;
 use delete_OptionalOneFromN.ump;
+use delete_OptionalOneFromN_comp.ump;
 use delete_OptionalOneFromOne.ump;
 use delete_OptionalOneFromOne_comp.ump;
 use delete_OptionalOneFromOptionalOne.ump;
@@ -106,14 +107,16 @@ class UmpleToPhp {
 	  
     }
     
-    else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && relatedAssociation.getMultiplicity().getLowerBound() != relatedAssociation.getMultiplicity().getUpperBound())) { 
+    else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && !relatedAssociation.isMandatory())) { 
     	
     	#>><<@ UmpleToPhp.delete_OptionalOneFromMN_comp >><<#
 	  
     }
 
-    else if (av.getIsComposition() && av.isMany() && relatedAssociation.isOptionalOne()) {
-    	    #>><<@ UmpleToPhp.delete_OptionalOneFromMany_comp >><<#
+    else if (av.getIsComposition() && (av.isOptionalOne() && relatedAssociation.getMultiplicity().getLowerBound() > 1  && relatedAssociation.isMandatory())) { 
+    	
+    	#>><<@ UmpleToPhp.delete_OptionalOneFromN_comp >><<#
+	  
     }
     
     else {

@@ -115,7 +115,9 @@ class Student
     {
       if ($this->mentor->numberOfStudents() <= 5)
       {
-        $this->mentor->delete();
+        $placeholderMentor = $this->mentor;
+        $this->mentor = null;
+        $placeholderMentor->delete();
       }
       else
       {
