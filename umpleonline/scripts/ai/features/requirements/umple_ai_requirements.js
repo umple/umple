@@ -8,34 +8,11 @@
 const AiRequirements = {
   activeStream: null,
 
-  // Strip // and /* */ comments so commented-out req blocks are ignored (issue #2541).
-  // Prefer Action.removeComments when available (loaded by click time); keep a local
-  // fallback so parsing still works if Action is not yet defined.
-  stripComments(umpleCode) {
-    const source = String(umpleCode || "");
-    if (typeof Action !== "undefined" && typeof Action.removeComments === "function") {
-      return Action.removeComments(source);
-    }
-    return source
-      .replace(/\/\/.*?\/?\*.+?(?=\n|\r|$)|\/\*[\s\S]*?\/\/[\s\S]*?\*\//g, " ")
-      .replace(/\/\/.+?(?=\n|\r|$)|\/\*[\s\S]+?\*\//g, " ");
-  },
-
+  // Only active reqs are returned; commented-out ones are ignored (issue #2541).
   parseRequirements(umpleCode) {
-    const requirements = [];
-    const codeWithoutComments = this.stripComments(umpleCode);
-    const reqPattern = /req\s+(\w+(?:[-_]\w+)*)\s*\{([^}]*)\}/gs;
-    let match;
-
-    while ((match = reqPattern.exec(codeWithoutComments)) !== null) {
-      const id = match[1].trim();
-      const text = match[2].trim();
-      if (id && text) {
-        requirements.push({ id, text });
-      }
-    }
-
-    return requirements;
+    return AiTextUtils.findRequirementBlocks(umpleCode)
+      .filter(block => block.id && block.text)
+      .map(({ id, text }) => ({ id, text }));
   },
 
   abortActiveStream() {
