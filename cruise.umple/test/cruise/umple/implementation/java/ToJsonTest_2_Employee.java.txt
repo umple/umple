@@ -444,81 +444,34 @@ teaches.add((CourseSection)umpleObjectIDMap.get(newUmpleID_0));
         Pattern topLevelPattern = Pattern.compile(topLevelString);
         Matcher topLevelMatcher = topLevelPattern.matcher(jsonString);
         String quotes="\\\"";
-        String colon="\\:";
-        String colonSquareBracket="\\:\\[";
         
         if(topLevelMatcher.find()){
             //actual string that represent the topLevel className
             String topLevelStringFound=topLevelMatcher.group(0);
             String className=topLevelStringFound.split(quotes)[1];
             parsedResultMap.put("className", className);
-            jsonString=jsonString.split(topLevelString,2)[1];
-            
-            //objIDString is the regex representing umpleObjectID that could be found in jsonString
-            String objIDString = "\"umpleObjectID\"\\:\"[0-9]*\",";
-            Pattern objIDPattern = Pattern.compile(objIDString);
-            Matcher objIDMatcher = objIDPattern.matcher(jsonString);
-            if(objIDMatcher.find()){
-              String objIDFound=objIDMatcher.group(0);
-              parsedResultMap.put("umpleObjectID", objIDFound.split(colon)[1].split(quotes)[1]);
-              jsonString=jsonString.replaceFirst(objIDFound,"");
-            }
-            String timeString="\\\"\\w*\\\"\\:\\\"\\d{2}:\\d{2}\\:\\d{2}\\\"";
-            Pattern timeStringPattern=Pattern.compile(timeString);
-            Matcher timeStringPatternMatcher=timeStringPattern.matcher(jsonString);
-            if(timeStringPatternMatcher.find()){
-              String timeStringFound=timeStringPatternMatcher.group(0);
-              parsedResultMap.put(timeStringFound.split(colon,2)[0].split(quotes)[1], timeStringFound.split(colon,2)[1].split(quotes)[1]);
-          
-            }
-            // pairString is the regex for an object's attribute and attribute value, the string parsed will be in key-value formate
-        String pairString = "(\\\"(?!umpleObjectID)[^\\\"]+)\\\":\\\"((?:\\\\\\\"|[^\\\"])*)";
-        Pattern pairPattern=Pattern.compile(pairString);
-        Matcher pairMatcher=pairPattern.matcher(jsonString);
-        String associationString="(?=\\\"\\w*\\\"\\:\\[\\{)(?:(?=.*?\\[\\{(?!.*?\\1)(.*\\}\\](?!.*\\2).*))(?=.*?\\}\\](?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\[]*(?=\\2$)";
-        Pattern associationPattern=Pattern.compile(associationString);
-        String newObjJsonString="(?=\\,\\\"\\w*\\\"\\:\\{)(?:(?=.*?\\{\\\"(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
-        Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
-        String quoteColonQuote="\\\"\\:\\\"";
-        //Keep on parsing the attribute's key-value pair, 
-        //until a List (multi-associations) pattern or a newObject parttern (single association) is found
-        while(pairMatcher.find()){
-               String pairStringFound=pairMatcher.group(0);
-              if(parsedResultMap.get(pairStringFound.split(colon)[0].split(quotes)[1])==null){
-                String keyPair=pairStringFound.split(colon)[0].split(quotes)[1];
-                String valuePair=pairStringFound.split(quoteColonQuote,2)[1];
-                keyPair=keyPair.replace("\\\\","\\").replace("\\\"","\"");
-                valuePair=valuePair.replace("\\\\","\\").replace("\\\"","\"");
-                parsedResultMap.put(keyPair,valuePair);
-                jsonString=jsonString.replaceFirst(pairString, "");
+            // The object's own "key":value pairs follow, a value being a "string", a [list] or an {object}.
+            // Each value is skipped whole, so the pairs of an associated object are left for that object to read
+            int pairStart=topLevelMatcher.end()+1;
+            while(pairStart<jsonString.length()&&jsonString.charAt(pairStart)=='"'){
+              int keyEnd=jsonString.indexOf('"',pairStart+1);
+              int valueEnd=keyEnd<0?-1:fromJsonParserValueEnd(jsonString,keyEnd+2);
+              if(valueEnd<0){
+                break;
               }
-                int lastIndex = 0;
-                while (lastIndex<jsonString.length()){
-                  String remainingJson=jsonString.substring(lastIndex);
-                  Matcher associationMatcher=associationPattern.matcher(jsonString);
-                  Matcher newObjJsonMatcher=newObjJsonPattern.matcher(jsonString);
-                  
-                  boolean assoFound=associationMatcher.find();
-                  boolean newObjFound=newObjJsonMatcher.find();
-                  
-                  if (assoFound&&(!newObjFound||associationMatcher.start()<newObjJsonMatcher.start())){
-                    String assoStringFound=associationMatcher.group(0);
-                    String associationName=assoStringFound.split(colon,2)[0].split(quotes)[1];;
-                    String associationItems=assoStringFound.split(colonSquareBracket,2)[1];
-                    parsedResultMap.put(associationName, associationItems);
-                    jsonString=jsonString.replaceFirst(associationString, "");
-                  }
-                  else if (newObjFound){
-                    String newObjJsonFound=newObjJsonMatcher.group(0);
-                    String newObjName=newObjJsonFound.split(colon,2)[0].split(quotes)[1];
-                    String newObjItems=newObjJsonFound.split(colon,2)[1];
-                    parsedResultMap.put(newObjName, newObjItems);
-                    jsonString=jsonString.replaceFirst(newObjJsonString, "");
-                  }else{
-                    break;
-                  }
-                }
-        }
+              String key=jsonString.substring(pairStart+1,keyEnd);
+              String value=jsonString.substring(keyEnd+2,valueEnd);
+              if(value.startsWith("\"")){
+                value=value.substring(1,value.length()-1).replace("\\\\","\\").replace("\\\"","\"");
+              }
+              // the class name and object id come first and win over an attribute named like them
+              parsedResultMap.putIfAbsent(key,value);
+              // skip the comma, and the extra one left by a superclass with nothing to output
+              pairStart=valueEnd;
+              while(pairStart<jsonString.length()&&jsonString.charAt(pairStart)==','){
+                pairStart++;
+              }
+            }
         }
         return parsedResultMap;
     }catch(NullPointerException e){
@@ -550,11 +503,15 @@ teaches.add((CourseSection)umpleObjectIDMap.get(newUmpleID_0));
   public static List<String> fromJsonParserList(String objListString){
     List<String> objList=new ArrayList<String>();
     try{
-      String objString="(?:(?=.*?\\{(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
-      Pattern objStringPattern=Pattern.compile(objString);
-      Matcher objStringMatcher=objStringPattern.matcher(objListString);
-      while(objStringMatcher.find()){
-        objList.add(objStringMatcher.group(0));
+      // objListString is a [list] of {objects}, each taken whole with the objects nested in it
+      int objStart=1;
+      while(objStart<objListString.length()&&objListString.charAt(objStart)=='{'){
+        int objEnd=fromJsonParserValueEnd(objListString,objStart);
+        if(objEnd<0){
+          break;
+        }
+        objList.add(objListString.substring(objStart,objEnd));
+        objStart=objEnd+1;
       }
       return objList;
    }catch(NullPointerException e){
@@ -577,6 +534,43 @@ teaches.add((CourseSection)umpleObjectIDMap.get(newUmpleID_0));
    }catch(NullPointerException e){
      return nextName;
    }
+  }
+   
+  /*
+  * Returns the index just after the json "string", [list] or {object} that starts at index start,
+  * or -1 if there is none there or it is cut short.
+  * Brackets and escaped quotes inside a string are text, so they do not end the value
+  */
+  private static int fromJsonParserValueEnd(String jsonString, int start){
+    if(start>=jsonString.length()||"\"[{".indexOf(jsonString.charAt(start))<0){
+      return -1;
+    }
+    int depth=0;
+    boolean inString=false;
+    for(int i=start;i<jsonString.length();i++){
+      char c=jsonString.charAt(i);
+      if(inString){
+        if(c=='\\'){
+          i++;
+        }
+        else if(c=='"'){
+          inString=false;
+        }
+      }
+      else if(c=='"'){
+        inString=true;
+      }
+      else if(c=='{'||c=='['){
+        depth++;
+      }
+      else if(c=='}'||c==']'){
+        depth--;
+      }
+      if(!inString&&depth==0){
+        return i+1;
+      }
+    }
+    return -1;
   }
   
 }

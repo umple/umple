@@ -59,6 +59,32 @@ class JsonAccount
   status { Active { block -> Blocked; } Blocked {} }
 }
 
+// A team's json starts with its members, so the first fields in it are theirs;
+// each object must read only its own fields, at any depth
+class JsonTeam
+{
+  1 -- * JsonMember members;
+}
+
+class JsonMember
+{
+  status { Off { turnOn -> On; } On { Idle { play -> Playing; } Playing {} } }
+  1 -- * JsonTask tasks;
+}
+
+class JsonTask
+{
+  name;
+  status { Open { close -> Closed; } Closed {} }
+}
+
+// A subclass's own fields come after its superclass's association
+class JsonNamedTeam
+{
+  isA JsonTeam;
+  name;
+}
+
 // State machines named like variables of the generated json code
 class JsonNamed
 {
@@ -69,8 +95,6 @@ class JsonNamed
 // Objects loaded as part of a graph start their threads only once the whole graph has loaded
 class JsonWorkerGroup
 {
-  // a plain attribute first: genJson's parser misreads an object whose first field is an association
-  name;
   1 -- * JsonWorker workers;
 }
 

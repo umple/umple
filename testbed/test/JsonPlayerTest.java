@@ -151,6 +151,57 @@ public class JsonPlayerTest
   }
 
   @Test
+  public void membersOfAnAssociationOnlyTeamKeepTheirStates()
+  {
+    JsonTeam team = new JsonTeam();
+    JsonMember playing = new JsonMember(team);
+    playing.turnOn();
+    playing.play();
+    new JsonMember(team);
+
+    JsonTeam restored = JsonTeam.fromJson(team.toJson());
+
+    Assert.assertEquals("On.Playing", restored.getMember(0).getStatusFullName());
+    Assert.assertEquals("Off", restored.getMember(1).getStatusFullName());
+  }
+
+  @Test
+  public void eachLevelOfAGraphKeepsItsOwnFields()
+  {
+    JsonTeam team = new JsonTeam();
+    JsonMember member = new JsonMember(team);
+    member.turnOn();
+    new JsonTask("t1", member).close();
+    new JsonTask("t2", member);
+
+    JsonMember restored = JsonTeam.fromJson(team.toJson()).getMember(0);
+
+    Assert.assertEquals(JsonMember.Status.On, restored.getStatus());
+    Assert.assertEquals("t1", restored.getTask(0).getName());
+    Assert.assertEquals(JsonTask.Status.Closed, restored.getTask(0).getStatus());
+    Assert.assertEquals("t2", restored.getTask(1).getName());
+    Assert.assertEquals(JsonTask.Status.Open, restored.getTask(1).getStatus());
+  }
+
+  @Test
+  public void valuesWithJsonSyntaxRoundTrip()
+  {
+    String teamName = "{\"a\":[{\"b\":\"}]\"}]}\\";
+    String taskName = "\\\"[{x}]";
+    JsonNamedTeam team = new JsonNamedTeam(teamName);
+    JsonTask task = new JsonTask(taskName, new JsonMember(team));
+
+    JsonNamedTeam restoredTeam = JsonNamedTeam.fromJson(team.toJson());
+    // The task's json holds its member, and the member its team, as single associations
+    JsonTask restoredTask = JsonTask.fromJson(task.toJson());
+
+    Assert.assertEquals(teamName, restoredTeam.getName());
+    Assert.assertEquals(taskName, restoredTeam.getMember(0).getTask(0).getName());
+    Assert.assertEquals(taskName, restoredTask.getName());
+    Assert.assertEquals(teamName, ((JsonNamedTeam) restoredTask.getJsonMember().getJsonTeam()).getName());
+  }
+
+  @Test
   public void stateMachinesNamedLikeJsonVariablesRoundTrip()
   {
     JsonNamed named = new JsonNamed();
@@ -166,7 +217,7 @@ public class JsonPlayerTest
   @Test
   public void workersInARestoredGraphTakeEvents() throws InterruptedException
   {
-    JsonWorkerGroup group = new JsonWorkerGroup("g");
+    JsonWorkerGroup group = new JsonWorkerGroup();
     JsonWorker worker = new JsonWorker(group);
 
     JsonWorker restored = JsonWorkerGroup.fromJson(group.toJson()).getWorker(0);
@@ -184,7 +235,7 @@ public class JsonPlayerTest
   @Test
   public void failedLoadStartsNoThreads() throws InterruptedException
   {
-    JsonWorkerGroup group = new JsonWorkerGroup("g");
+    JsonWorkerGroup group = new JsonWorkerGroup();
     JsonWorker waiting = new JsonWorker(group);
     JsonWorker done = new JsonWorker(group);
     done.go();
