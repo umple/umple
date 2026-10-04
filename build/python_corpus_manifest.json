@@ -1092,6 +1092,8 @@
   "umpleonline/umplibrary/manualexamples/W106EnumerationInUnidirectionalAssociation1.ump": "supported",
   "umpleonline/umplibrary/manualexamples/W106EnumerationInUnidirectionalAssociation2.ump": "supported",
   "umpleonline/umplibrary/manualexamples/W106EnumerationInUnidirectionalAssociation3.ump": "supported",
+  "umpleonline/umplibrary/manualexamples/W107NamesDifferOnlyByCase1.ump": "unsupported 9218: classes Customer and CUSTOMER differ only in case",
+  "umpleonline/umplibrary/manualexamples/W107NamesDifferOnlyByCase2.ump": "supported",
   "umpleonline/umplibrary/manualexamples/W141ValueTypeMismatch1.ump": "supported",
   "umpleonline/umplibrary/manualexamples/W141ValueTypeMismatch2.ump": "supported",
   "umpleonline/umplibrary/manualexamples/W141ValueTypeMismatch3.ump": "supported",
