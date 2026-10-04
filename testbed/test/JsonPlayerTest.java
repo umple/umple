@@ -162,29 +162,51 @@ public class JsonPlayerTest
   @Test
   public void restoredQueuedMachineTakesEvents() throws InterruptedException
   {
-    JsonQueued restored = JsonQueued.fromJson(new JsonQueued().toJson());
-
-    restored.go();
-    for (int i = 0; i < 100 && restored.getStatus() != JsonQueued.Status.Done; i++)
+    JsonQueued original = new JsonQueued();
+    JsonQueued restored = null;
+    try
     {
-      Thread.sleep(10);
+      restored = JsonQueued.fromJson(original.toJson());
+      restored.go();
+      for (int i = 0; i < 100 && restored.getStatus() != JsonQueued.Status.Done; i++)
+      {
+        Thread.sleep(10);
+      }
+      Assert.assertEquals(JsonQueued.Status.Done, restored.getStatus());
     }
-    Assert.assertEquals(JsonQueued.Status.Done, restored.getStatus());
-    restored.delete();
+    finally
+    {
+      original.delete();
+      if (restored != null)
+      {
+        restored.delete();
+      }
+    }
   }
 
   @Test
   public void restoredPooledMachineTakesEvents() throws InterruptedException
   {
-    JsonPooled restored = JsonPooled.fromJson(new JsonPooled().toJson());
-
-    restored.go();
-    for (int i = 0; i < 100 && restored.getStatus() != JsonPooled.Status.Done; i++)
+    JsonPooled original = new JsonPooled();
+    JsonPooled restored = null;
+    try
     {
-      Thread.sleep(10);
+      restored = JsonPooled.fromJson(original.toJson());
+      restored.go();
+      for (int i = 0; i < 100 && restored.getStatus() != JsonPooled.Status.Done; i++)
+      {
+        Thread.sleep(10);
+      }
+      Assert.assertEquals(JsonPooled.Status.Done, restored.getStatus());
     }
-    Assert.assertEquals(JsonPooled.Status.Done, restored.getStatus());
-    restored.delete();
+    finally
+    {
+      original.delete();
+      if (restored != null)
+      {
+        restored.delete();
+      }
+    }
   }
 
   @Test
