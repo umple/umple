@@ -193,5 +193,14 @@ class AssociationEqualsTest extends UnitTestCase
     $this->assertFalse($partner1->hasPet());
   }
 
+  public function test_keyWithSelfReference_equalsItself()
+  {
+    $loop = new EqLoop();
+    $loop->setNext($loop);
+
+    $this->assertTrue($loop->equals($loop));
+    $this->assertFalse($loop->equals(new EqLoop()));
+  }
+
 }
 ?>

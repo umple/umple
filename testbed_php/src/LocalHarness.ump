@@ -190,3 +190,9 @@ class EqKeyedPet
 {
   name;
 }
+
+class EqLoop
+{
+  0..1 -> 0..1 EqLoop next;
+  key { next }
+}
