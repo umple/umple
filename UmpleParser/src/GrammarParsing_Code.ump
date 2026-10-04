@@ -143,7 +143,7 @@ class RuleBasedParser
     // Until a rule gets further, parsing stands at the first text, after any blank lines
     if(!data.getInput().isEmpty())
     {
-      data.setPosition(ChoiceRule.findPosition(0,data));
+      data.setPosition(ChoiceRule.positionAt(0,data));
     }
     // There is no root rule when no grammar file could be read; then none of the input is understood
     int parseResult = root == null ? 0 : root.parse(token, 0,data.getInput().length(),data.getInput(),data);

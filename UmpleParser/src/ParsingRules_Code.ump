@@ -118,9 +118,17 @@ class ChoiceRule
   }
   /*
     Given an offset this function constructs the Position object using the ParserDataPackage's linenumbers hashmap.
-    It needs no rule, so the parser can also use it before any rule has run.
+    It stays an instance method for programs compiled against it.
   */
-  public static Position findPosition(int lookfor, ParserDataPackage data)
+  public Position findPosition(int lookfor, ParserDataPackage data)
+  {
+    return positionAt(lookfor, data);
+  }
+
+  /*
+    The work of findPosition, which needs no rule, so the parser can also use it before any rule has run
+  */
+  public static Position positionAt(int lookfor, ParserDataPackage data)
   {
     // Create a position object that has the correct line number for the lookfor character
     // This uses the ParsDataPackage that has a mapping from key (characters) to value (lines)

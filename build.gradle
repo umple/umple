@@ -382,6 +382,9 @@ task ('cleanUpDeployment') {
 test {
     workingDir = "${rootProject.ext.testBaseDir}/workingDir"
     systemProperty 'umpleparser.jar', "${rootProject.ext.distdir}/gradle/libs/umpleparser-${rootProject.ext.umpleCurrentVersion}.jar"
+    // This one-stage build generates the parser from the parser source in its bootstrap umple.jar,
+    // so ParserJarTest may find the previous parser in the jar
+    systemProperty 'umpleparser.oneStageBuild', 'true'
     exclude "**/CPPCodeGenValidatorTest.class" // TODO - Fix eclipse CDT message: Unresolved inclusion: <HEADER_FILE>
 }
 
