@@ -209,8 +209,8 @@ public class Address
   */  
 
   public static Address fromJson(String aJsonString){
-    // process the input jsonString so that it can further processed using regex
-    aJsonString=aJsonString.replace("\n","").replace(" ","");   
+    // the parser below reads json with nothing between its tokens, so remove every whitespace character json allows there
+    aJsonString=aJsonString.replace("\n","").replace("\r","").replace("\t","").replace(" ","");
     // a map to store the umpleObjectID present in jsonString
     Map<String, Object> umpleObjectIDMap=new HashMap<>();
     

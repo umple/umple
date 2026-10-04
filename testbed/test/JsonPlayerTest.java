@@ -122,6 +122,23 @@ public class JsonPlayerTest
   }
 
   @Test
+  public void tabsAndLineBreaksBetweenFieldsAreSkipped()
+  {
+    JsonPlayer restored = JsonPlayer.fromJson(
+      "{\"JsonPlayer\" : {\"umpleObjectID\" : \"1\",\t\"name\" : \"p1\",\r\n\"status\" : \"On\",\r\n\t\"statusOn\" : \"Playing\"}}");
+
+    Assert.assertEquals("p1", restored.getName());
+    Assert.assertEquals("On.Playing", restored.getStatusFullName());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void unknownStateAfterTabsAndLineBreaksIsRejected()
+  {
+    JsonPlayer.fromJson(
+      "{\"JsonPlayer\" : {\"umpleObjectID\" : \"1\",\t\"name\" : \"p1\",\r\n\"status\" : \"Broken\"}}");
+  }
+
+  @Test
   public void restoredTimedStateTimesOutAgain() throws InterruptedException
   {
     JsonClock restored = JsonClock.fromJson(new JsonClock().toJson());
@@ -210,17 +227,28 @@ public class JsonPlayerTest
   @Test
   public void bareJsonValueBetweenAssociatedObjectsIsSkipped()
   {
+    assertBothMembersRestoredWithBetweenThem("null,");
+  }
+
+  @Test
+  public void tabsAndLineBreaksBetweenAssociatedObjectsAreSkipped()
+  {
+    assertBothMembersRestoredWithBetweenThem("\r\n\t");
+  }
+
+  private static void assertBothMembersRestoredWithBetweenThem(String text)
+  {
     JsonTeam team = new JsonTeam();
     JsonMember playing = new JsonMember(team);
     playing.turnOn();
     playing.play();
     new JsonMember(team);
-    // put a bare null between the two members, in json compacted as fromJson reads it
+    // the text goes after the comma that separates the two members, in json compacted as fromJson reads it
     String json = team.toJson().replace("\n", "").replace(" ", "");
-    String withNull = json.replace("}},{\"JsonMember\"", "}},null,{\"JsonMember\"");
-    Assert.assertNotEquals(json, withNull);
+    String edited = json.replace("}},{\"JsonMember\"", "}}," + text + "{\"JsonMember\"");
+    Assert.assertNotEquals(json, edited);
 
-    JsonTeam restored = JsonTeam.fromJson(withNull);
+    JsonTeam restored = JsonTeam.fromJson(edited);
 
     Assert.assertEquals(2, restored.numberOfMembers());
     Assert.assertEquals("On.Playing", restored.getMember(0).getStatusFullName());
