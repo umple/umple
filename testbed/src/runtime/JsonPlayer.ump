@@ -65,3 +65,22 @@ class JsonNamed
   parsedResult { Start { go -> Done; } Done {} }
   indent { Low { raise -> High; } High {} }
 }
+
+// Objects loaded as part of a graph start their threads only once the whole graph has loaded
+class JsonWorkerGroup
+{
+  // a plain attribute first: genJson's parser misreads an object whose first field is an association
+  name;
+  1 -- * JsonWorker workers;
+}
+
+class JsonWorker
+{
+  queued status { Waiting { go -> Done; } Done {} }
+}
+
+// A queued machine without states needs no event thread
+class JsonEmptyQueued
+{
+  queued status {}
+}

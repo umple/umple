@@ -162,4 +162,65 @@ public class JsonPlayerTest
     Assert.assertEquals(JsonNamed.ParsedResult.Done, restored.getParsedResult());
     Assert.assertEquals(JsonNamed.Indent.High, restored.getIndent());
   }
+
+  @Test
+  public void workersInARestoredGraphTakeEvents() throws InterruptedException
+  {
+    JsonWorkerGroup group = new JsonWorkerGroup("g");
+    JsonWorker worker = new JsonWorker(group);
+
+    JsonWorker restored = JsonWorkerGroup.fromJson(group.toJson()).getWorker(0);
+
+    restored.go();
+    for (int i = 0; i < 100 && restored.getStatus() != JsonWorker.Status.Done; i++)
+    {
+      Thread.sleep(10);
+    }
+    Assert.assertEquals(JsonWorker.Status.Done, restored.getStatus());
+    restored.delete();
+    worker.delete();
+  }
+
+  @Test
+  public void failedLoadStartsNoThreads() throws InterruptedException
+  {
+    JsonWorkerGroup group = new JsonWorkerGroup("g");
+    JsonWorker waiting = new JsonWorker(group);
+    JsonWorker done = new JsonWorker(group);
+    done.go();
+    for (int i = 0; i < 100 && done.getStatus() != JsonWorker.Status.Done; i++)
+    {
+      Thread.sleep(10);
+    }
+    String json = group.toJson().replace("\"Done\"", "\"Broken\"");
+    java.util.Set<Thread> before = Thread.getAllStackTraces().keySet();
+
+    try
+    {
+      JsonWorkerGroup.fromJson(json);
+      Assert.fail("an unknown state must fail the load");
+    }
+    catch (IllegalArgumentException e)
+    {
+    }
+
+    java.util.Set<Thread> started = new java.util.HashSet<Thread>(Thread.getAllStackTraces().keySet());
+    started.removeAll(before);
+    Assert.assertTrue(started.toString(), started.isEmpty());
+    waiting.delete();
+    done.delete();
+  }
+
+  @Test
+  public void emptyQueuedMachineStartsNoThread()
+  {
+    String json = new JsonEmptyQueued().toJson();
+    java.util.Set<Thread> before = Thread.getAllStackTraces().keySet();
+
+    JsonEmptyQueued.fromJson(json);
+
+    java.util.Set<Thread> started = new java.util.HashSet<Thread>(Thread.getAllStackTraces().keySet());
+    started.removeAll(before);
+    Assert.assertTrue(started.toString(), started.isEmpty());
+  }
 }

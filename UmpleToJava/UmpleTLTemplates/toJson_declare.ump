@@ -253,6 +253,16 @@ class UmpleToJava {
   * @return newly instantiated Object 
   */  
 
+
+<<#
+  boolean modelResumesAfterJsonLoad = false;
+  for(UmpleClass c: model.getUmpleClasses())
+  {
+    modelResumesAfterJsonLoad = modelResumesAfterJsonLoad || resumesAfterJsonLoad(c);
+  }
+  if(modelResumesAfterJsonLoad){#>>
+  @SuppressWarnings("unchecked")
+<<#}#>>
   public static <<#realSb.append(uClass.getName());#>> fromJson(String aJsonString){
     // process the input jsonString so that it can further processed using regex
     aJsonString=aJsonString.replace("\n","").replace(" ","");   
@@ -262,6 +272,12 @@ class UmpleToJava {
     // instantiate a new object
     <<#appendln(realSb,"");#>>
     <<#realSb.append(uClass.getName());#>> anObject = new <<#realSb.append(uClass.getName());#>>(aJsonString, umpleObjectIDMap);
+    <<#if(modelResumesAfterJsonLoad){#>>
+    // Only now that every object has loaded do their timers and event threads start
+    for(Runnable start: (List<Runnable>)umpleObjectIDMap.getOrDefault("afterLoad", new ArrayList<Runnable>())){
+      start.run();
+    }
+    <<#}#>>
     return anObject;
   }
   !>>
@@ -557,51 +573,33 @@ class UmpleToJava {
 
     //}
     <<#
-    boolean queuedFromJson = false;
-    boolean pooledFromJson = false;
-    for(StateMachine sm: uClass.getStateMachines())
-    {
-      queuedFromJson = queuedFromJson || sm.isQueued();
-      pooledFromJson = pooledFromJson || sm.isPooled();
-    }
-    List<State> timedStatesFromJson = new ArrayList<State>();
-    for(StateMachine region: stateMachinesFromJson)
-    {
-      for(State s: region.getStates())
-      {
-        for(Transition t: s.getTransitions())
-        {
-          if(t.getEvent().getIsTimer() && !timedStatesFromJson.contains(s))
-          {
-            timedStatesFromJson.add(s);
-          }
-        }
-      }
-    }
-    if(!timedStatesFromJson.isEmpty()){#>>
-    // The timers of the restored states run again from the start, as on entering them; entry actions do not
+    List<State> timedStatesFromJson = timedStatesForJson(uClass);
+    if(resumesAfterJsonLoad(uClass)){#>>
+    // Timers and event threads start once the whole json has loaded (see fromJson), so a
+    // failed load leaves none running; entry actions are not run again
+    ((List<Runnable>)umpleObjectIDMap.computeIfAbsent("afterLoad", key -> new ArrayList<Runnable>())).add(() -> {
     <<#}
     for(State s: timedStatesFromJson){#>>
-    if(this.<<=gen.translate("stateMachineOne",s.getStateMachine())>>==<<=gen.translate("type",s.getStateMachine())>>.<<=gen.translate("stateOne",s)>>){
+      if(this.<<=gen.translate("stateMachineOne",s.getStateMachine())>>==<<=gen.translate("type",s.getStateMachine())>>.<<=gen.translate("stateOne",s)>>){
       <<#for(Transition t: s.getTransitions()){
         if(t.getEvent().getIsTimer()){#>>
-      <<=gen.translate("eventStartMethod",t.getEvent())>>();
+        <<=gen.translate("eventStartMethod",t.getEvent())>>();
       <<#}
       }#>>
-    }
+      }
     <<#}
-    if(queuedFromJson || pooledFromJson){#>>
-    // Events wait in a queue taken by its own thread, which the other constructor starts too
+    if(hasQueuedStateMachine(uClass)){#>>
+      queue = new MessageQueue();
+      removal=new Thread(this);
+      removal.start();
     <<#}
-    if(queuedFromJson){#>>
-    queue = new MessageQueue();
-    removal=new Thread(this);
-    removal.start();
+    else if(hasPooledStateMachine(uClass)){#>>
+      pool = new MessagePool();
+      removal=new Thread(this);
+      removal.start();
     <<#}
-    else if(pooledFromJson){#>>
-    pool = new MessagePool();
-    removal=new Thread(this);
-    removal.start();
+    if(resumesAfterJsonLoad(uClass)){#>>
+    });
     <<#}#>>
   }
   }!>>

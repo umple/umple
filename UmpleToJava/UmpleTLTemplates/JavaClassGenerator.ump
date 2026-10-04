@@ -238,6 +238,65 @@ for (StateMachine smq : uClass.getStateMachines())
   {
     #>><<@ UmpleToJava.enumerations_All >><<#
   }
+  // States of uClass's state machines that have timed transitions, whose timers fromJson starts again
+  private List<State> timedStatesForJson(UmpleClass uClass)
+  {
+    List<State> timedStates = new ArrayList<State>();
+    for(StateMachine sm: uClass.getStateMachines())
+    {
+      if(sm.getStartState() == null)
+      {
+        continue;
+      }
+      List<StateMachine> regions = new ArrayList<StateMachine>();
+      regions.add(sm);
+      regions.addAll(sm.getNestedStateMachines());
+      for(StateMachine region: regions)
+      {
+        for(State s: region.getStates())
+        {
+          for(Transition t: s.getTransitions())
+          {
+            if(t.getEvent().getIsTimer() && !timedStates.contains(s))
+            {
+              timedStates.add(s);
+            }
+          }
+        }
+      }
+    }
+    return timedStates;
+  }
+
+  // A queued or pooled state machine with states needs its event thread, as in the other constructor
+  private boolean hasQueuedStateMachine(UmpleClass uClass)
+  {
+    for(StateMachine sm: uClass.getStateMachines())
+    {
+      if(sm.getStartState() != null && sm.isQueued())
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean hasPooledStateMachine(UmpleClass uClass)
+  {
+    for(StateMachine sm: uClass.getStateMachines())
+    {
+      if(sm.getStartState() != null && sm.isPooled())
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean resumesAfterJsonLoad(UmpleClass uClass)
+  {
+    return !timedStatesForJson(uClass).isEmpty() || hasQueuedStateMachine(uClass) || hasPooledStateMachine(uClass);
+  }
   mixset Mixset {
   public void handelMixsetInsideMethod(UmpleModel umodel, MixsetInMethod mixsetInMethod, MethodBody mBody)
   {
