@@ -113,6 +113,7 @@
 # Messages relating to format of identifiers.
 100: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Class name '{0}' must be alphanumeric and start with an alpha character, or _ (underscore) ;
 101: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Class name '{0}' should start with a capital letter ;
+107: 4, "https://manual.umple.org/?W107NamesDifferOnlyByCase.html", Two or more {0} have the same characters but differ only in case: {1}. This can increase the risk of defects. ;
 
 110: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Interface name '{0}' must be alphanumeric and start with an alpha character or _ (underscore) ;
 111: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Interface name '{0}' should start with a capital letter ;

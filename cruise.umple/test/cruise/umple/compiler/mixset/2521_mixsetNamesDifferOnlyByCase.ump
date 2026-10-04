@@ -1,0 +1,9 @@
+use M1, m1;
+
+mixset m1 class X {
+  a;
+}
+
+mixset M1 class X {
+  b;
+}

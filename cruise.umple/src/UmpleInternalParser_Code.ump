@@ -165,6 +165,32 @@ class UmpleInternalParser
     getParseResult().addErrorMessage(new ErrorMessage(errorCode,position,messages));
   }
   
+  // Names differing only in case collide on case-insensitive file systems and in generated
+  // accessors such as setApple/setApPle. namePositions keeps declaration order; the warning
+  // points at the first name that clashes with an earlier one. A name without a position,
+  // such as an inherited attribute, is compared but not pointed at, so a clash among such
+  // names alone is left to where they are declared.
+  private void checkNamesDifferOnlyByCase(String kind, Map<String, Position> namePositions)
+  {
+    Map<String, List<String>> groups = new TreeMap<String, List<String>>(String.CASE_INSENSITIVE_ORDER);
+    for (String name : namePositions.keySet())
+    {
+      groups.computeIfAbsent(name, k -> new ArrayList<String>()).add(name);
+    }
+    for (List<String> group : groups.values())
+    {
+      for (String name : group.subList(1, group.size()))
+      {
+        Position position = namePositions.get(name);
+        if (position != null)
+        {
+          setFailedPosition(position, 107, kind, String.join(", ", group));
+          break;
+        }
+      }
+    }
+  }
+
   // Generate a generic error for debug purposes that just contains the string s
   public void emitDebugError(String s) {
     setFailedPosition(new Position("debug",0,0,0), 8001, s);
@@ -426,6 +452,13 @@ class UmpleInternalParser
         checkCodeInjections();
       } 
      }
+    mixset Class {
+      // after applyTraits, so that attributes coming from traits are compared too
+      if (getParseResult().getWasSuccess())
+      {
+        checkAttributeNamesDifferOnlyByCase();
+      }
+    }
     mixset Layout {
       if (getParseResult().getWasSuccess())
       {
@@ -472,6 +505,7 @@ class UmpleInternalParser
       if (getParseResult().getWasSuccess())
       {
         checkMixsetsNotUsed();
+        checkMixsetNamesDifferOnlyByCase();
       } 
     }
     // We have to look at the error messages again to see if
