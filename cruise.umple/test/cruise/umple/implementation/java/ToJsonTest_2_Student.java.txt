@@ -486,17 +486,17 @@ registrations.add((Registration)umpleObjectIDMap.get(newUmpleID_1));
             // Each value is skipped whole, so the pairs of an associated object are left for that object to read
             int pairStart=topLevelMatcher.end()+1;
             while(pairStart<jsonString.length()&&jsonString.charAt(pairStart)=='"'){
-              int keyEnd=jsonString.indexOf('"',pairStart+1);
+              int keyEnd=fromJsonParserValueEnd(jsonString,pairStart);
               // without the colon there is no telling which value is the key's, so read no further
-              if(keyEnd<0||!jsonString.startsWith(":",keyEnd+1)){
+              if(keyEnd<0||!jsonString.startsWith(":",keyEnd)){
                 break;
               }
-              int valueEnd=fromJsonParserValueEnd(jsonString,keyEnd+2);
+              int valueEnd=fromJsonParserValueEnd(jsonString,keyEnd+1);
               if(valueEnd<0){
                 break;
               }
-              String key=jsonString.substring(pairStart+1,keyEnd);
-              String value=jsonString.substring(keyEnd+2,valueEnd);
+              String key=jsonString.substring(pairStart+1,keyEnd-1);
+              String value=jsonString.substring(keyEnd+1,valueEnd);
               // The class name and object id come first and win over an attribute named like them.
               // toJson quotes every attribute and state, so a bare null, boolean or number is left unread, as it always was
               if(value.startsWith("\"")){
@@ -542,15 +542,18 @@ registrations.add((Registration)umpleObjectIDMap.get(newUmpleID_1));
   public static List<String> fromJsonParserList(String objListString){
     List<String> objList=new ArrayList<String>();
     try{
-      // objListString is a [list] of {objects}, each taken whole with the objects nested in it
-      int objStart=1;
-      while(objStart<objListString.length()&&objListString.charAt(objStart)=='{'){
-        int objEnd=fromJsonParserValueEnd(objListString,objStart);
-        if(objEnd<0){
+      // objListString is a [list]; each {object} in it is taken whole with the objects nested in it,
+      // and any other element, which toJson does not write, is skipped
+      int itemStart=1;
+      while(itemStart<objListString.length()&&objListString.charAt(itemStart)!=']'){
+        int itemEnd=fromJsonParserValueEnd(objListString,itemStart);
+        if(itemEnd<0){
           break;
         }
-        objList.add(objListString.substring(objStart,objEnd));
-        objStart=objEnd+1;
+        if(objListString.charAt(itemStart)=='{'){
+          objList.add(objListString.substring(itemStart,itemEnd));
+        }
+        itemStart=itemEnd+1;
       }
       return objList;
    }catch(NullPointerException e){

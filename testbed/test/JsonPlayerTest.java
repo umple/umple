@@ -98,6 +98,16 @@ public class JsonPlayerTest
   }
 
   @Test
+  public void keyWithEscapedQuoteIsSkipped()
+  {
+    JsonPlayer restored = JsonPlayer.fromJson(
+      "{\"JsonPlayer\" : {\"umpleObjectID\" : \"1\", \"a\\\"b\" : \"x\", \"name\" : \"p1\", \"status\" : \"On\"}}");
+
+    Assert.assertEquals("p1", restored.getName());
+    Assert.assertEquals(JsonPlayer.Status.On, restored.getStatus());
+  }
+
+  @Test
   public void keyWithoutColonEndsTheObjectsFields()
   {
     String start = "{\"JsonPlayer\" : {\"umpleObjectID\" : \"1\", \"name\" : \"p1\", \"status\", ";
@@ -195,6 +205,27 @@ public class JsonPlayerTest
 
     Assert.assertEquals("On.Playing", restored.getMember(0).getStatusFullName());
     Assert.assertEquals("Off", restored.getMember(1).getStatusFullName());
+  }
+
+  @Test
+  public void bareJsonValueBetweenAssociatedObjectsIsSkipped()
+  {
+    JsonTeam team = new JsonTeam();
+    JsonMember playing = new JsonMember(team);
+    playing.turnOn();
+    playing.play();
+    new JsonMember(team);
+    // put a bare null between the two members, in json compacted as fromJson reads it
+    String json = team.toJson().replace("\n", "").replace(" ", "");
+    String withNull = json.replace("}},{\"JsonMember\"", "}},null,{\"JsonMember\"");
+    Assert.assertNotEquals(json, withNull);
+
+    JsonTeam restored = JsonTeam.fromJson(withNull);
+
+    Assert.assertEquals(2, restored.numberOfMembers());
+    Assert.assertEquals("On.Playing", restored.getMember(0).getStatusFullName());
+    Assert.assertEquals("Off", restored.getMember(1).getStatusFullName());
+    Assert.assertSame(restored, restored.getMember(1).getJsonTeam());
   }
 
   @Test
