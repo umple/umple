@@ -867,7 +867,8 @@ GvDiagramEdit.rubberBand = GvDiagramEdit.rubberBand || (function() {
 
 // S-mode tools use the same editor updates, drag threshold and preview as G mode.
 GvDiagramEdit.getStateIdentifier = function(nodeEl) {
-  const anchors = nodeEl.querySelectorAll("a");
+  // State table headings carry the state link themselves
+  const anchors = nodeEl.matches("td[href]") ? [nodeEl] : nodeEl.querySelectorAll("a");
   for (const anchor of anchors) {
     const href = anchor.getAttribute("href") || anchor.getAttribute("xlink:href") || "";
     const match = href.match(/^javascript:Action\.stateClicked\(["']([^"']+)["']\)/);
@@ -1035,12 +1036,14 @@ GvDiagramEdit.insertStateIntoMachine = function(text, identifier, nested) {
 };
 
 GvDiagramEdit.addState = function(event) {
-  if (!Page.useGvStateDiagram || Page.readOnly || !Action.diagramInSync) return;
+  if (!(Page.useGvStateDiagram || Page.useStateTables) || Page.readOnly || !Action.diagramInSync) return;
+  // In state tables, only a click outside the tables adds a state, like a blank canvas click
+  if (Page.useStateTables && event.target.closest("#htmlCanvas table")) return;
   const text = GvDiagramEdit.getFullText();
   const cluster = event.target.closest(".cluster");
   const nestedIdentifier = cluster && GvDiagramEdit.getStateIdentifier(cluster);
   const machines = new Map();
-  for (const node of document.querySelectorAll("#umpleCanvas .node, #umpleCanvas .cluster")) {
+  for (const node of document.querySelectorAll("#umpleCanvas .node, #umpleCanvas .cluster, #htmlCanvas td.state-header[href]")) {
     const id = GvDiagramEdit.getStateIdentifier(node);
     if (id && GvDiagramEdit.findStateRange(text, id, true)) {
       const parts = id.split("^*^");

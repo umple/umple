@@ -1,0 +1,8 @@
+class Academy {
+  registrantspriority;
+  1 -- * Student registrants sorted {id};
+}
+
+class Student {
+  Integer id;
+}

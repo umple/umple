@@ -52,6 +52,7 @@ public class StateTableTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/statetable/concurrentCrossDown.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/concurrentCrossAnd.html");
     SampleFileWriter.destroy(pathToInput + "/statetable/concurrentSelfTransition.html");
+    SampleFileWriter.destroy(pathToInput + "/statetable/transitionWithArgumentsStateTable.html");
   }
 
   @Test
@@ -255,6 +256,16 @@ public class StateTableTemplateTest extends TemplateTest
     (
       "statetable/concurrentSelfTransition.ump",
       "statetable/concurrentSelfTransition.html.txt"
+    );
+  }
+
+  @Test
+  public void transitionWithArgumentsStateTable()
+  {
+    assertUmpleTemplateFor
+    (
+      "statetable/transitionWithArgumentsStateTable.ump",
+      "statetable/transitionWithArgumentsStateTable.html.txt"
     );
   }
 }

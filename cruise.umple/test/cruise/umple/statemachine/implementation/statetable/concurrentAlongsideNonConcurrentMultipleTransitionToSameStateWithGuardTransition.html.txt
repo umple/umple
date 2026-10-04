@@ -15,19 +15,19 @@
   <table class="statetable event-statetable">
     <tr>
       <td class="event-header">&nbsp;</td>
-      <td class="event-header">change1</td>
-      <td class="event-header">changeNonCon</td>
-      <td class="event-header">changeParent</td>
-      <td class="event-header">double1</td>
-      <td class="event-header">double2</td>
-      <td class="event-header">guarded</td>
+      <td class="event-header" data-transition="Student*^*status*^*change1*^*ParentState2.ConcurrentSubState1*^*ParentState2.ConcurrentSubState2*^*">change1</td>
+      <td class="event-header" data-transition="Student*^*status*^*changeNonCon*^*ParentState1.NonConcurrentSubState1*^*ParentState1.NonConcurrentSubState2*^*">changeNonCon</td>
+      <td class="event-header" data-transition="Student*^*status*^*changeParent*^*ParentState1*^*ParentState2*^*">changeParent</td>
+      <td class="event-header" data-transition="Student*^*status*^*double1*^*ParentState2.ConcurrentSubState2*^*ParentState2.ConcurrentSubState1*^*">double1</td>
+      <td class="event-header" data-transition="Student*^*status*^*double2*^*ParentState2.ConcurrentSubState2*^*ParentState2.ConcurrentSubState1*^*">double2</td>
+      <td class="event-header" data-transition="Student*^*status*^*guarded*^*ParentState2.Css1*^*ParentState2.Css2*^* [guard]">guarded</td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="">ParentState1</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span>ParentState2</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*changeParent*^*ParentState1*^*ParentState2*^*">ParentState2</span></td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
@@ -36,8 +36,8 @@
     <tr>
       <td class="state-header" data-parent="0">- NonConcurrentSubState1</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span>NonConcurrentSubState2</span></td>
-      <td class="event-entry"><span class="derived">ParentState2</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*changeNonCon*^*ParentState1.NonConcurrentSubState1*^*ParentState1.NonConcurrentSubState2*^*">NonConcurrentSubState2</span></td>
+      <td class="event-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState1*^*ParentState2*^*">ParentState2</span></td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
@@ -46,8 +46,8 @@
     <tr>
       <td class="state-header" data-parent="0">- NonConcurrentSubState2</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span>NonConcurrentSubState1</span></td>
-      <td class="event-entry"><span class="derived">ParentState2</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*changeNonCon*^*ParentState1.NonConcurrentSubState2*^*ParentState1.NonConcurrentSubState1*^*">NonConcurrentSubState1</span></td>
+      <td class="event-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState1*^*ParentState2*^*">ParentState2</span></td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
@@ -57,7 +57,7 @@
       <td class="state-header" data-parent="">ParentState2</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span>ParentState1</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">ParentState1</span></td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
@@ -65,9 +65,9 @@
 
     <tr>
       <td class="state-header" data-parent="3">- ConcurrentSubState1</td>
-      <td class="event-entry"><span>ConcurrentSubState2</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*change1*^*ParentState2.ConcurrentSubState1*^*ParentState2.ConcurrentSubState2*^*">ConcurrentSubState2</span></td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span class="derived">ParentState1</span></td>
+      <td class="event-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">ParentState1</span></td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
@@ -77,9 +77,9 @@
       <td class="state-header" data-parent="3">- ConcurrentSubState2</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span class="derived">ParentState1</span></td>
-      <td class="event-entry"><span>ConcurrentSubState1</span></td>
-      <td class="event-entry"><span>ConcurrentSubState1</span></td>
+      <td class="event-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">ParentState1</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*double1*^*ParentState2.ConcurrentSubState2*^*ParentState2.ConcurrentSubState1*^*">ConcurrentSubState1</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*double2*^*ParentState2.ConcurrentSubState2*^*ParentState2.ConcurrentSubState1*^*">ConcurrentSubState1</span></td>
       <td class="event-entry">&nbsp;</td>
     </tr>
 
@@ -87,30 +87,30 @@
       <td class="state-header" data-parent="3">- Css1</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span class="derived">ParentState1</span></td>
+      <td class="event-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">ParentState1</span></td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span>[getGuard()] Css2</span><br><span>[!getGuard()] Css3</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*guarded*^*ParentState2.Css1*^*ParentState2.Css2*^* [guard]">[getGuard()] Css2</span><br><span data-transition="Student*^*status*^*guarded*^*ParentState2.Css1*^*ParentState2.Css3*^* [!guard]">[!getGuard()] Css3</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="3">- Css2</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span class="derived">ParentState1</span></td>
+      <td class="event-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">ParentState1</span></td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span>Css1</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*guarded*^*ParentState2.Css2*^*ParentState2.Css1*^*">Css1</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="3">- Css3</td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span class="derived">ParentState1</span></td>
+      <td class="event-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">ParentState1</span></td>
       <td class="event-entry">&nbsp;</td>
       <td class="event-entry">&nbsp;</td>
-      <td class="event-entry"><span>Css1</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*guarded*^*ParentState2.Css3*^*ParentState2.Css1*^*">Css1</span></td>
     </tr>
 
   </table>
@@ -137,7 +137,7 @@
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>changeParent</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*changeParent*^*ParentState1*^*ParentState2*^*">changeParent</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
@@ -149,8 +149,8 @@
       <td class="state-header" data-parent="0">- NonConcurrentSubState1</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>changeNonCon</span></td>
-      <td class="state-entry"><span class="derived">changeParent</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*changeNonCon*^*ParentState1.NonConcurrentSubState1*^*ParentState1.NonConcurrentSubState2*^*">changeNonCon</span></td>
+      <td class="state-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState1*^*ParentState2*^*">changeParent</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
@@ -161,9 +161,9 @@
     <tr>
       <td class="state-header" data-parent="0">- NonConcurrentSubState2</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>changeNonCon</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*changeNonCon*^*ParentState1.NonConcurrentSubState2*^*ParentState1.NonConcurrentSubState1*^*">changeNonCon</span></td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span class="derived">changeParent</span></td>
+      <td class="state-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState1*^*ParentState2*^*">changeParent</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
@@ -173,7 +173,7 @@
 
     <tr>
       <td class="state-header" data-parent="">ParentState2</td>
-      <td class="state-entry"><span>changeParent</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">changeParent</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
@@ -186,12 +186,12 @@
 
     <tr>
       <td class="state-header" data-parent="3">- ConcurrentSubState1</td>
-      <td class="state-entry"><span class="derived">changeParent</span></td>
+      <td class="state-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">changeParent</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>change1</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*change1*^*ParentState2.ConcurrentSubState1*^*ParentState2.ConcurrentSubState2*^*">change1</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
@@ -199,11 +199,11 @@
 
     <tr>
       <td class="state-header" data-parent="3">- ConcurrentSubState2</td>
-      <td class="state-entry"><span class="derived">changeParent</span></td>
+      <td class="state-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">changeParent</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>double1</span><br><span>double2</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*double1*^*ParentState2.ConcurrentSubState2*^*ParentState2.ConcurrentSubState1*^*">double1</span><br><span data-transition="Student*^*status*^*double2*^*ParentState2.ConcurrentSubState2*^*ParentState2.ConcurrentSubState1*^*">double2</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
@@ -212,39 +212,39 @@
 
     <tr>
       <td class="state-header" data-parent="3">- Css1</td>
-      <td class="state-entry"><span class="derived">changeParent</span></td>
+      <td class="state-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">changeParent</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>guarded [getGuard()]</span></td>
-      <td class="state-entry"><span>guarded [!getGuard()]</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*guarded*^*ParentState2.Css1*^*ParentState2.Css2*^* [guard]">guarded [getGuard()]</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*guarded*^*ParentState2.Css1*^*ParentState2.Css3*^* [!guard]">guarded [!getGuard()]</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="3">- Css2</td>
-      <td class="state-entry"><span class="derived">changeParent</span></td>
+      <td class="state-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">changeParent</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>guarded</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*guarded*^*ParentState2.Css2*^*ParentState2.Css1*^*">guarded</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="3">- Css3</td>
-      <td class="state-entry"><span class="derived">changeParent</span></td>
+      <td class="state-entry"><span class="derived" data-transition="Student*^*status*^*changeParent*^*ParentState2*^*ParentState1*^*">changeParent</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>guarded</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*guarded*^*ParentState2.Css3*^*ParentState2.Css1*^*">guarded</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
     </tr>
