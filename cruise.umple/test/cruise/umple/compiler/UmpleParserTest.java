@@ -1056,6 +1056,92 @@ public void braceMismatch_filenameUsesBasename() {
   }
 
   @Test
+  public void warningClassNamesDifferOnlyByCase107()
+  {
+    assertHasWarningsParse("2521_classNamesDifferOnlyByCase.ump", new Position("2521_classNamesDifferOnlyByCase.ump", 3, 0, 25), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more classes or interfaces have the same characters but differ only in case: PinG, Ping. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // A class and an interface generate files that overwrite each other; the warning points at the later one
+  @Test
+  public void warningClassThenInterfaceNamesDifferOnlyByCase107()
+  {
+    String file = "2521_classInterfaceNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 2, 0, 14), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more classes or interfaces have the same characters but differ only in case: Ping, PING. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  @Test
+  public void warningInterfaceThenClassNamesDifferOnlyByCase107()
+  {
+    String file = "2521_interfaceClassNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 2, 0, 18), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more classes or interfaces have the same characters but differ only in case: PING, Ping. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  @Test
+  public void warningAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_attributeNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, 107);
+    ParseResult result = parser.getParseResult();
+    Assert.assertEquals(2, result.numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Ping have the same characters but differ only in case: apple, apPle. This can increase the risk of defects.",
+      result.getErrorMessage(0).getFormattedMessage());
+    Assert.assertEquals(new Position(file, 3, 2, 24), result.getErrorMessage(0).getPosition());
+    // class X is declared twice; its attributes are compared as one class
+    Assert.assertEquals(107, result.getErrorMessage(1).getErrorType().getErrorCode());
+    Assert.assertEquals(new Position(file, 11, 2, 69), result.getErrorMessage(1).getPosition());
+  }
+
+  // Reported once, in the subclass that introduces the clash, and not again in its own subclass,
+  // which only refines the attribute, or in the unrelated class Course
+  @Test
+  public void warningInheritedAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_inheritedAttributeNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 7, 2, 62), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Student have the same characters but differ only in case: fullname, fullName. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // An attribute applied from a trait keeps its position in the trait
+  @Test
+  public void warningTraitAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_traitAttributeNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 2, 2, 16), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Person have the same characters but differ only in case: fullName, fullname. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // The comparator attribute generated for a sorted association is placed at the association
+  @Test
+  public void warningSortedAssociationAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_sortedAssociationNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 3, 2, 41), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Academy have the same characters but differ only in case: registrantspriority, registrantsPriority. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // Same letters in unrelated classes, and a class declared twice, are not a clash
+  @Test
+  public void noWarningNamesDifferOnlyByCase107()
+  {
+    assertNoWarningsParse("2521_namesDifferOnlyByCaseNone.ump");
+  }
+
+  @Test
   public void warningInterfaceNameCapitalLetter()
   { // Test to make sure a warning is generated when an interface name does not start with a capital letter
     assertHasWarningsParse("043_warningInterfaceNameNotCapital.ump", 111);
