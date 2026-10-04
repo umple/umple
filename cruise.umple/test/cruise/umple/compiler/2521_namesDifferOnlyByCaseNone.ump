@@ -1,0 +1,11 @@
+class Ping {
+  apple;
+}
+
+class Pong {
+  apPle;
+}
+
+class Ping {
+  pear;
+}
