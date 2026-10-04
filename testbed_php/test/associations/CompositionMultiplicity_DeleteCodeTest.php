@@ -723,6 +723,33 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
     }
   }
 
+  public function test__0OneTo0One_ReflexiveCycle()
+  {
+    $a = new CompNode("a");
+    $b = new CompNode("b");
+    $a->setChild($b);
+    $b->setChild($a);
+
+    $a->delete();
+
+    $this->assertEqual(null, $a->getChild());
+    $this->assertEqual(null, $b->getChild());
+    $this->assertEqual(null, $a->getParent());
+    $this->assertEqual(null, $b->getParent());
+  }
+
+  public function test__0OneTo0One_ReflexiveChain()
+  {
+    $a = new CompNode("a");
+    $b = new CompNode("b");
+    $a->setChild($b);
+
+    $a->delete();
+
+    $this->assertEqual(null, $a->getChild());
+    $this->assertEqual(null, $b->getParent());
+  }
+
 
 }
 

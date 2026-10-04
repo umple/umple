@@ -196,3 +196,10 @@ class EqLoop
   0..1 -> 0..1 EqLoop next;
   key { next }
 }
+
+// A reflexive composition whose parts can form a cycle
+class CompNode
+{
+  name;
+  0..1 parent <@>- 0..1 CompNode child;
+}
