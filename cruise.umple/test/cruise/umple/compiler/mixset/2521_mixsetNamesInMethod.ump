@@ -1,0 +1,8 @@
+use Action;
+
+class Box {
+  void test() {
+    mixset Action { System.out.println("A"); }
+    mixset action { System.out.println("B"); }
+  }
+}

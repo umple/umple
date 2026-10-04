@@ -11,15 +11,10 @@ const RequirementsSelfCorrection = {
     const insertBeforeIndex = modelEndIndex >= 0 ? modelEndIndex : docText.length;
 
     const modelText = docText.slice(0, insertBeforeIndex);
-    const reqPattern = /req\s+(\w+(?:[-_]\w+)*)\s*\{[^}]*\}/gs;
-    let lastReqEnd = -1;
-    let match;
+    // Commented-out reqs are skipped so code is never inserted inside a comment (issue #2541).
+    const reqBlocks = AiTextUtils.findRequirementBlocks(modelText);
 
-    while ((match = reqPattern.exec(modelText)) !== null) {
-      lastReqEnd = match.index + match[0].length;
-    }
-
-    return lastReqEnd >= 0 ? lastReqEnd : insertBeforeIndex;
+    return reqBlocks.length > 0 ? reqBlocks[reqBlocks.length - 1].end : insertBeforeIndex;
   },
 
   buildMergedCode(docText, blockCode) {

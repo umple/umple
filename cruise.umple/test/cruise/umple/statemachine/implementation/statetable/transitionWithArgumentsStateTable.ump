@@ -1,0 +1,16 @@
+namespace example;
+
+class Garage
+{
+  Integer limit;
+
+  status {
+    Closed
+    {
+      Locked { unlock(Integer code) [code == limit] -> Unlocked; }
+      Unlocked { open(String who) -> Open; }
+      reset -> Closed;
+    }
+    Open { close -> Closed; }
+  }
+}
