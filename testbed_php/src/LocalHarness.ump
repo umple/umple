@@ -25,3 +25,32 @@ class DoorF
 {
   Time d4 = date("12:53:54");
 }
+
+// Value-equal objects that differ only through associations leading back to each other
+class EqCourse
+{
+  code;
+  1 -- 0..1 EqInstructor instructor;
+}
+
+class EqDepartment
+{
+  1 -- * EqCourse courses;
+  1 -- * EqInstructor instructors;
+}
+
+class EqInstructor
+{
+  name;
+}
+
+class EqMentor
+{
+  name;
+  1 -- * EqStudent students;
+}
+
+class EqStudent
+{
+  name;
+}
