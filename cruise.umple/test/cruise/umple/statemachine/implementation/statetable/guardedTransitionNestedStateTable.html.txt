@@ -15,7 +15,7 @@
   <table class="statetable event-statetable">
     <tr>
       <td class="event-header">&nbsp;</td>
-      <td class="event-header">power</td>
+      <td class="event-header" data-transition="Student*^*status*^*power*^*On.OnOn*^*On.Sleep*^* [stayOn]">power</td>
     </tr>
 
     <tr>
@@ -25,17 +25,17 @@
 
     <tr>
       <td class="state-header" data-parent="0">- OnOn</td>
-      <td class="event-entry"><span>[getStayOn()] Sleep</span><br><span>[!getStayOn()] Off</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*power*^*On.OnOn*^*On.Sleep*^* [stayOn]">[getStayOn()] Sleep</span><br><span data-transition="Student*^*status*^*power*^*On.OnOn*^*Off*^* [!stayOn]">[!getStayOn()] Off</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="0">- Sleep</td>
-      <td class="event-entry"><span>OnOn</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*power*^*On.Sleep*^*On.OnOn*^*">OnOn</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="">Off</td>
-      <td class="event-entry"><span>On</span></td>
+      <td class="event-entry"><span data-transition="Student*^*status*^*power*^*Off*^*On*^*">On</span></td>
     </tr>
 
   </table>
@@ -64,21 +64,21 @@
       <td class="state-header" data-parent="0">- OnOn</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>power [getStayOn()]</span></td>
-      <td class="state-entry"><span>power [!getStayOn()]</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*power*^*On.OnOn*^*On.Sleep*^* [stayOn]">power [getStayOn()]</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*power*^*On.OnOn*^*Off*^* [!stayOn]">power [!getStayOn()]</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="0">- Sleep</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>power</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*power*^*On.Sleep*^*On.OnOn*^*">power</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="">Off</td>
-      <td class="state-entry"><span>power</span></td>
+      <td class="state-entry"><span data-transition="Student*^*status*^*power*^*Off*^*On*^*">power</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>

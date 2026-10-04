@@ -9,6 +9,7 @@ Core syntax
 
 Tagging rules
 - Do not generate or repeat `req { ... }` blocks in generated output.
+- Never treat commented-out requirements (`// req ...` or `/* req ... */`) as active; only implement IDs provided for generation.
 - Place `implementsReq` immediately before the element it tags (preferred and unambiguous).
 - Common targets: class, interface, trait, attribute, association, method, and entire state machine block.
 - For state-machine generation, tag the class or machine block, not individual states.
