@@ -177,8 +177,8 @@ class ParserDataPackage
   //for passing around errors
   ParseResult parseResult = new ParseResult(true);
 
-  //keeps track of the furthest token position attained during the parse. It starts on line 1,
-  //which is where a parse that fails before its first token stops
+  //keeps track of the furthest token position attained during the parse. Line 1 is where a parse
+  //of input with no text at all fails
   Position position = new Position(aFilename,1,0,0);
   
   //Associated to each key is a couple

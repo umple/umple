@@ -117,9 +117,10 @@ class ChoiceRule
     self.setEndPosition(findPosition(end,data));    
   }
   /*
-    Given an offset this function constructs the Position object using the ParserDataPackage's linenumbers hashmap
+    Given an offset this function constructs the Position object using the ParserDataPackage's linenumbers hashmap.
+    It needs no rule, so the parser can also use it before any rule has run.
   */
-  public Position findPosition(int lookfor, ParserDataPackage data)
+  public static Position findPosition(int lookfor, ParserDataPackage data)
   {
     // Create a position object that has the correct line number for the lookfor character
     // This uses the ParsDataPackage that has a mapping from key (characters) to value (lines)

@@ -10,6 +10,7 @@
 package cruise.umple.parser;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
@@ -53,7 +54,8 @@ public class ParserJarTest
   @Test
   public void parsesValidText() throws Exception
   {
-    Parse parse = new Parse("greetings.txt");
+    Parse parse = new Parse("greetings.grammar", "greetings.txt");
+    Assert.assertTrue(parse.wasSuccess);
     Assert.assertNull(parse.failedPosition);
     Assert.assertEquals("[ROOT:][greetings][greeting][name:Alice][greeting][name:Bob]", parse.rootToken);
   }
@@ -61,35 +63,80 @@ public class ParserJarTest
   @Test
   public void reportsWhereInvalidTextFails() throws Exception
   {
-    Parse parse = new Parse("badGreetings.txt");
+    Parse parse = new Parse("greetings.grammar", "badGreetings.txt");
     Assert.assertEquals("[2,0]", parse.failedPosition);
     Assert.assertEquals("[ROOT:]", parse.rootToken);
   }
 
   @Test
+  public void reportsInvalidTextInTheResult() throws Exception
+  {
+    assumeParserFromThisSource();
+    Parse parse = new Parse("greetings.grammar", "badGreetings.txt");
+    Assert.assertFalse(parse.wasSuccess);
+    Assert.assertEquals("Error 1500 on line 2 of file 'badGreetings.txt':\nParsing error: 'bye Bob;' not understood\n", parse.errors);
+  }
+
+  @Test
+  public void reportsAMissingGrammarFile() throws Exception
+  {
+    assumeParserFromThisSource();
+    Parse parse = new Parse("missing.grammar", "greetings.txt");
+    Assert.assertFalse(parse.wasSuccess);
+    Assert.assertEquals("Warning 1510 on line 1 of file 'missing.grammar':\nFile 'missing.grammar' referred to in use statement was not found\n"
+      + "Error 1500 on line 1 of file 'greetings.txt':\nParsing error: 'hello Alice;' not understood\n", parse.errors);
+  }
+
+  @Test
   public void explainsAMissingFile() throws Exception
   {
-    Parse parse = new Parse("missing.txt");
+    Parse parse = new Parse("greetings.grammar", "missing.txt");
     Assert.assertTrue(parse.errors, parse.errors.contains("Warning 1510"));
+  }
+
+  // A one-stage build, such as Gradle's, generates the parser from the parser source inside its
+  // bootstrap umple.jar, so the jar it packages lacks the failure reporting, and the unparsedText
+  // method that came with it, until that umple.jar has them; the two-stage Ant build packages the
+  // parser of this source and runs these checks
+  private static void assumeParserFromThisSource() throws Exception
+  {
+    boolean fromThisSource = false;
+    try (URLClassLoader loader = jarLoader())
+    {
+      for (Method method : loader.loadClass("cruise.umple.parser.analysis.RuleBasedParser").getDeclaredMethods())
+      {
+        fromThisSource |= method.getName().equals("unparsedText");
+      }
+    }
+    Assume.assumeTrue("the packaged parser was generated from the older parser source in the bootstrap umple.jar;"
+      + " a second build, with the umple.jar the first one made, packages the current parser", fromThisSource);
+  }
+
+  private static URLClassLoader jarLoader() throws Exception
+  {
+    return new URLClassLoader(new URL[] { jar.toURI().toURL() }, null);
   }
 
   // One parse in its own class loader, with no parent: the parser keeps static state, and
   // everything it needs must come from the jar
   private static class Parse
   {
+    boolean wasSuccess;
     String rootToken;
     String failedPosition;
     String errors;
 
-    Parse(String inputFile) throws Exception
+    Parse(String grammarFile, String inputFile) throws Exception
     {
-      try (URLClassLoader loader = new URLClassLoader(new URL[] { jar.toURI().toURL() }, null))
+      try (URLClassLoader loader = jarLoader())
       {
         Class<?> parserClass = loader.loadClass("cruise.umple.parser.analysis.RuleBasedParser");
         Object parser = parserClass.getConstructor().newInstance();
-        parserClass.getMethod("addGrammarFile", String.class).invoke(parser, pathToInput + "/greetings.grammar");
-        Object result = parserClass.getMethod("parse", File.class).invoke(parser, new File(pathToInput + "/" + inputFile));
-        errors = String.valueOf(result.getClass().getMethod("getErrorMessages").invoke(result));
+        // Platform separators, which the parser expects when it names a file in a message
+        parserClass.getMethod("addGrammarFile", String.class).invoke(parser, new File(pathToInput, grammarFile).getPath());
+        Object result = parserClass.getMethod("parse", File.class).invoke(parser, new File(pathToInput, inputFile));
+        wasSuccess = (Boolean) result.getClass().getMethod("getWasSuccess").invoke(result);
+        errors = result.toString();
         rootToken = String.valueOf(parserClass.getMethod("getRootToken").invoke(parser));
         Object analyzer = parserClass.getMethod("getAnalyzer").invoke(null);
         Object position = analyzer.getClass().getMethod("getFailedPosition").invoke(analyzer);

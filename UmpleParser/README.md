@@ -11,11 +11,10 @@ It reads in grammar files written in a modified/extended [EBNF](https://en.wikip
 Compilation
 -----------
 
-Currently, this can only be compiled as part of the main Umple build. This will be changed in the future to be an entirely independently compilable project with a separate ant build target.
+The Umple source is in `src/`, and the Java generated from it in `src-gen-umple/`. There are two ways to compile the parser:
 
-The umple source is available in `src/`, and -- once compiled -- the java source is available in `src-gen-umple/`
-
-`umple.jar` carries the Umple source of the parser, so that any Umple program can include it (see below). The build also packages the compiled parser on its own as `umpleparser.jar` (`dist/umpleparser.jar` with Ant, `dist/gradle/libs/umpleparser-<version>.jar` with Gradle), which can be downloaded from https://try.umple.org/scripts/umpleparser.jar. It needs nothing else on the classpath.
+* Into your own program. `umple.jar` carries the parser's Umple source, so an Umple program that says `use lib:UmpleParser.ump;` gets the parser compiled along with its own classes, by the same commands, and needs nothing else at run time (see below).
+* As the distributed jar. The main Umple build compiles the parser for Umple itself and also packages it on its own as `umpleparser.jar` (`dist/umpleparser.jar` with Ant, `dist/gradle/libs/umpleparser-<version>.jar` with Gradle), which can be downloaded from https://try.umple.org/scripts/umpleparser.jar and needs nothing else on the classpath. That build generates the parser from `src/Master.ump`, whose files take their method code (`src/*_Code.ump`) from the copy inside the umple.jar doing the build, so a change to that code reaches `umpleparser.jar` in the build after the one that bundled it: the two-stage Ant build (`first-build`, then `build`) has it, a one-stage build has it once its bootstrap umple.jar does.
 
 Using the parser in an Umple program
 ------------------------------------

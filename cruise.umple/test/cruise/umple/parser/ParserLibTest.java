@@ -109,6 +109,15 @@ public class ParserLibTest
   }
 
   @Test
+  public void reportsTextTheGrammarCannotParseAfterBlankLines() throws Exception
+  {
+    File text = new File(programDirectory, "blankThenBad.txt");
+    Files.write(text.toPath(), "\n \n\tbye Bob;\n".getBytes());
+    Assert.assertEquals("Error 1500 on line 3 of file 'blankThenBad.txt':\nParsing error: 'bye Bob;' not understood\n",
+      run(fixture("greetings.grammar"), text.getPath()));
+  }
+
+  @Test
   public void reportsAMissingTextFile() throws Exception
   {
     // As for a use statement in Umple, a missing file is a warning, and the parse goes on without it
