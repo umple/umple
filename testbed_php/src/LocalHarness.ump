@@ -54,3 +54,68 @@ class EqStudent
 {
   name;
 }
+
+// Value-equal objects in each kind of association whose generated code compares linked objects
+class EqOwner
+{
+  name;
+  0..1 owner -- 0..1 EqPet pet;
+}
+
+class EqPet
+{
+  name;
+}
+
+class EqProject
+{
+  name;
+  * projects -- 0..3 EqWorker workers;
+  * projects -- 0..3 EqSkill skills;
+}
+
+class EqWorker
+{
+  name;
+}
+
+class EqSkill
+{
+  name;
+  Integer level;
+  key { name }
+}
+
+class EqBag
+{
+  * -> 0..3 EqSkill skills;
+  key { skills }
+}
+
+class EqGarage
+{
+  1 garage -- * EqCar cars;
+}
+
+class EqPerson
+{
+  name;
+}
+
+class EqCar
+{
+  plate;
+  * cars -- 1 EqPerson owner;
+  key { plate, owner }
+}
+
+class EqShelf
+{
+  0..1 shelf -- * EqBook books;
+  key { books }
+}
+
+class EqBook
+{
+  title;
+}

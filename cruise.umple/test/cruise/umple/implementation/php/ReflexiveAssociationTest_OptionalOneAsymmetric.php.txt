@@ -81,7 +81,7 @@ class Student
     }
     
     $currentPupil = $this->getPupil();
-    if ($currentPupil != null && $currentPupil != $aNewPupil)
+    if ($currentPupil != null && !$currentPupil->equals($aNewPupil))
     {
       $currentPupil->setTa(null);
     }
@@ -89,7 +89,7 @@ class Student
     $this->pupil = $aNewPupil;
     $existingTa = $aNewPupil->getTa();
     
-    if ($this != $existingTa)
+    if (!$this->equals($existingTa))
     {
       $aNewPupil->setTa($this);
     }
@@ -114,7 +114,7 @@ class Student
     }
     
     $currentTa = $this->getTa();
-    if ($currentTa != null && $currentTa != $aNewTa)
+    if ($currentTa != null && !$currentTa->equals($aNewTa))
     {
       $currentTa->setPupil(null);
     }
@@ -122,7 +122,7 @@ class Student
     $this->ta = $aNewTa;
     $existingPupil = $aNewTa->getPupil();
     
-    if ($this != $existingPupil)
+    if (!$this->equals($existingPupil))
     {
       $aNewTa->setPupil($this);
     }

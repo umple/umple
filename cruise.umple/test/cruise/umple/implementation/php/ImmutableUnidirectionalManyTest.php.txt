@@ -97,9 +97,12 @@ class Student
     $verifiedMentors = array();
     foreach ($newMentors as $aMentor)
     {
-      if (array_search($aMentor,$verifiedMentors) !== false)
+      foreach ($verifiedMentors as $verified)
       {
-        continue;
+        if ($aMentor === null ? $verified === null : $aMentor->equals($verified))
+        {
+          continue 2;
+        }
       }
       $verifiedMentors[] = $aMentor;
     }

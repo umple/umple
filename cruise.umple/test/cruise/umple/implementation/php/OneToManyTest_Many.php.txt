@@ -61,7 +61,7 @@ class Student
     
     $existingMentor = $this->mentor;
     $this->mentor = $aMentor;
-    if ($existingMentor != null && $existingMentor != $aMentor)
+    if ($existingMentor != null && !$existingMentor->equals($aMentor))
     {
       $existingMentor->removeStudent($this);
     }

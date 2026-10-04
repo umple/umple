@@ -162,9 +162,12 @@ class Student
     $verifiedMentors = array();
     foreach ($newMentors as $aMentor)
     {
-      if (array_search($aMentor,$verifiedMentors) !== false)
+      foreach ($verifiedMentors as $verified)
       {
-        continue;
+        if ($aMentor === null ? $verified === null : $aMentor->equals($verified))
+        {
+          continue 2;
+        }
       }
       $verifiedMentors[] = $aMentor;
     }
@@ -179,7 +182,15 @@ class Student
     foreach ($verifiedMentors as $aNewMentor)
     {
       $this->mentors[] = $aNewMentor;
-      $removeIndex = array_search($aNewMentor,$oldMentors);
+      $removeIndex = false;
+      foreach ($oldMentors as $index => $anOldMentor)
+      {
+        if ($aNewMentor === null ? $anOldMentor === null : $aNewMentor->equals($anOldMentor))
+        {
+          $removeIndex = $index;
+          break;
+        }
+      }
       if ($removeIndex !== false)
       {
         unset($oldMentors[$removeIndex]);

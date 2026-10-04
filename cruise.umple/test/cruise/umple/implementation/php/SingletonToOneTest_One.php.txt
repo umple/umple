@@ -61,7 +61,7 @@ class Student
     }
     
     $existingStudent = $aNewMentor->getStudent();
-    if ($existingStudent != null && $this != $existingStudent)
+    if ($existingStudent != null && !$this->equals($existingStudent))
     {
       //Unable to setMentor, the current mentor already has a student, which would be orphaned if it were re-assigned
       return $wasSet;

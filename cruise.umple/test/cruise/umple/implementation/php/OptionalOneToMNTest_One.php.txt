@@ -144,27 +144,29 @@ class Mentor
     }
 
     $checkNewStudents = array();
-    $mentorToNewStudents = array();
+    $mentorToNewStudents = new SplObjectStorage();
     foreach ($newStudents as $aStudent)
     {
-      if (array_search($aStudent,$checkNewStudents) !== false)
+      foreach ($checkNewStudents as $checked)
       {
-        return $wasSet;
+        if ($aStudent === null ? $checked === null : $aStudent->equals($checked))
+        {
+          return $wasSet;
+        }
       }
-      else if ($aStudent->getMentor() != null && $this !== $aStudent->getMentor())
+      if ($aStudent->getMentor() != null && $this !== $aStudent->getMentor())
       {
         $existingMentor = $aStudent->getMentor();
-        $existingSerializedMentor = serialize($existingMentor);
-        if (!array_key_exists($existingSerializedMentor, $mentorToNewStudents))
+        if (!isset($mentorToNewStudents[$existingMentor]))
         {
-          $mentorToNewStudents[$existingSerializedMentor] = $existingMentor->numberOfStudents();
+          $mentorToNewStudents[$existingMentor] = $existingMentor->numberOfStudents();
         }
-        $nextCount = $mentorToNewStudents[$existingSerializedMentor] - 1;
+        $nextCount = $mentorToNewStudents[$existingMentor] - 1;
         if ($nextCount < self::minimumnumberOfStudents())
         {
           return $wasSet;
         }
-        $mentorToNewStudents[$existingSerializedMentor] = $nextCount;
+        $mentorToNewStudents[$existingMentor] = $nextCount;
       }
       $checkNewStudents[] = $aStudent;
     }
@@ -174,7 +176,7 @@ class Mentor
       $wasFound = false;
       foreach ($checkNewStudents as $fosterCare)
       {
-        if ($orphan == $fosterCare)
+        if ($orphan->equals($fosterCare))
         {
           $wasFound = true;
           break;

@@ -109,11 +109,14 @@ class Mentor
     $checkNewStudents = array();
     foreach ($newStudents as $aStudent)
     {
-      if (array_search($aStudent,$checkNewStudents) !== false)
+      foreach ($checkNewStudents as $checked)
       {
-        return $wasSet;
+        if ($aStudent === null ? $checked === null : $aStudent->equals($checked))
+        {
+          return $wasSet;
+        }
       }
-      else if ($aStudent->getMentor() != null && $this !== $aStudent->getMentor())
+      if ($aStudent->getMentor() != null && $this !== $aStudent->getMentor())
       {
         return $wasSet;
       }
@@ -130,7 +133,7 @@ class Mentor
       $wasFound = false;
       foreach ($checkNewStudents as $fosterCare)
       {
-        if ($orphan == $fosterCare)
+        if ($orphan->equals($fosterCare))
         {
           $wasFound = true;
           break;

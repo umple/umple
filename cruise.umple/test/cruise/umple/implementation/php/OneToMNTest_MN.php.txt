@@ -68,7 +68,7 @@ class Pupil
     
     $existingMentor = $this->mentor;
     $this->mentor = $aMentor;
-    if ($existingMentor != null && $existingMentor != $aMentor)
+    if ($existingMentor != null && !$existingMentor->equals($aMentor))
     {
       $didRemove = $existingMentor->removePupil($this);
       if (!$didRemove)

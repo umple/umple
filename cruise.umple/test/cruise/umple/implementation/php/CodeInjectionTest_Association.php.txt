@@ -310,7 +310,7 @@ class Student
     
     $existingM2 = $this->m2;
     $this->m2 = $aM2;
-    if ($existingM2 != null && $existingM2 != $aM2)
+    if ($existingM2 != null && !$existingM2->equals($aM2))
     {
       $existingM2->removeTwo($this);
     }
@@ -415,9 +415,12 @@ class Student
     $verifiedM3s = array();
     foreach ($newM3s as $aM3)
     {
-      if (array_search($aM3,$verifiedM3s) !== false)
+      foreach ($verifiedM3s as $verified)
       {
-        continue;
+        if ($aM3 === null ? $verified === null : $aM3->equals($verified))
+        {
+          continue 2;
+        }
       }
       $verifiedM3s[] = $aM3;
     }
@@ -433,7 +436,15 @@ class Student
     foreach ($verifiedM3s as $aNewM3)
     {
       $this->m3s[] = $aNewM3;
-      $removeIndex = array_search($aNewM3,$oldM3s);
+      $removeIndex = false;
+      foreach ($oldM3s as $index => $anOldM3)
+      {
+        if ($aNewM3 === null ? $anOldM3 === null : $aNewM3->equals($anOldM3))
+        {
+          $removeIndex = $index;
+          break;
+        }
+      }
       if ($removeIndex !== false)
       {
         unset($oldM3s[$removeIndex]);
@@ -581,9 +592,12 @@ class Student
     $verifiedM4s = array();
     foreach ($newM4s as $aM4)
     {
-      if (array_search($aM4,$verifiedM4s) !== false)
+      foreach ($verifiedM4s as $verified)
       {
-        continue;
+        if ($aM4 === null ? $verified === null : $aM4->equals($verified))
+        {
+          continue 2;
+        }
       }
       $verifiedM4s[] = $aM4;
     }
@@ -599,7 +613,15 @@ class Student
     foreach ($verifiedM4s as $aNewM4)
     {
       $this->m4s[] = $aNewM4;
-      $removeIndex = array_search($aNewM4,$oldM4s);
+      $removeIndex = false;
+      foreach ($oldM4s as $index => $anOldM4)
+      {
+        if ($aNewM4 === null ? $anOldM4 === null : $aNewM4->equals($anOldM4))
+        {
+          $removeIndex = $index;
+          break;
+        }
+      }
       if ($removeIndex !== false)
       {
         unset($oldM4s[$removeIndex]);
@@ -733,9 +755,12 @@ class Student
     $verifiedM5s = array();
     foreach ($newM5s as $aM5)
     {
-      if (array_search($aM5,$verifiedM5s) !== false)
+      foreach ($verifiedM5s as $verified)
       {
-        continue;
+        if ($aM5 === null ? $verified === null : $aM5->equals($verified))
+        {
+          continue 2;
+        }
       }
       $verifiedM5s[] = $aM5;
     }
@@ -751,7 +776,15 @@ class Student
     foreach ($verifiedM5s as $aNewM5)
     {
       $this->m5s[] = $aNewM5;
-      $removeIndex = array_search($aNewM5,$oldM5s);
+      $removeIndex = false;
+      foreach ($oldM5s as $index => $anOldM5)
+      {
+        if ($aNewM5 === null ? $anOldM5 === null : $aNewM5->equals($anOldM5))
+        {
+          $removeIndex = $index;
+          break;
+        }
+      }
       if ($removeIndex !== false)
       {
         unset($oldM5s[$removeIndex]);

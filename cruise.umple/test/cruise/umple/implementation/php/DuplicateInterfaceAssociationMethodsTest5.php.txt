@@ -155,9 +155,12 @@ class First implements I
     $verifiedSeconds = array();
     foreach ($newSeconds as $aSecond)
     {
-      if (array_search($aSecond,$verifiedSeconds) !== false)
+      foreach ($verifiedSeconds as $verified)
       {
-        continue;
+        if ($aSecond === null ? $verified === null : $aSecond->equals($verified))
+        {
+          continue 2;
+        }
       }
       $verifiedSeconds[] = $aSecond;
     }
@@ -172,7 +175,15 @@ class First implements I
     foreach ($verifiedSeconds as $aNewSecond)
     {
       $this->seconds[] = $aNewSecond;
-      $removeIndex = array_search($aNewSecond,$oldSeconds);
+      $removeIndex = false;
+      foreach ($oldSeconds as $index => $anOldSecond)
+      {
+        if ($aNewSecond === null ? $anOldSecond === null : $aNewSecond->equals($anOldSecond))
+        {
+          $removeIndex = $index;
+          break;
+        }
+      }
       if ($removeIndex !== false)
       {
         unset($oldSeconds[$removeIndex]);

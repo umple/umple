@@ -19,7 +19,7 @@ class UmpleToPhp {
 
     $<<=gen.translate("parameterExisting",av)>> = $this-><<=gen.translate("associationOne",av)>>;
     $this-><<=gen.translate("associationOne",av)>> = $<<=gen.translate("parameterOne",av)>>;
-    if ($<<=gen.translate("parameterExisting",av)>> != null && $<<=gen.translate("parameterExisting",av)>> != $<<=gen.translate("parameterOne",av)>>)
+    if ($<<=gen.translate("parameterExisting",av)>> != null && !$<<=gen.translate("parameterExisting",av)>>->equals($<<=gen.translate("parameterOne",av)>>))
     {
       $didRemove = $<<=gen.translate("parameterExisting",av)>>-><<=gen.relatedTranslate("removeMethod",av)>>($this);
       if (!$didRemove)
