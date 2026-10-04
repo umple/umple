@@ -1176,6 +1176,8 @@ Action.changeDiagramType = function(newDiagramType)
      jQuery("#buttonShowStateTables").prop('checked', 'checked');
      Page.setDiagramTypeIconState('none');
      jQuery(".view_opt_feature").show();
+     // Only adding states applies to state tables; their empty cells add transitions
+     jQuery("#buttonAddState").show();
    }
 
    else if(newDiagramType.type === "eventSequence"){
@@ -1338,7 +1340,7 @@ Action.simulateCodeCallback = function(response)
 //Called by Action.drawStateMenu(), this multiuse function takes any textual input requires for 
 //menu edits on states.
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
-Action.drawInputState = function(inputType,stateCode,stateName){
+Action.drawInputState = function(inputType,stateCode,stateName,eventName){
   // DEBUG
   // console.log("Inside drawInputState: ")
   // console.log("with inputType: ", inputType)
@@ -1480,6 +1482,8 @@ Action.drawInputState = function(inputType,stateCode,stateName){
     }
 
     label.appendChild(document.createTextNode("Condition for new transition?"));
+    // Optional event, e.g. from the column of a state table cell
+    if(eventName && Action.validateAttributeName(eventName)) input.value = eventName;
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
@@ -1495,7 +1499,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 
           var assocState=function (event){
               let targ=event.target;
-              while(targ.parentElement.id!="graph0"){
+              while(targ.parentElement.id!="graph0" && targ.tagName!="TD"){
                 targ=targ.parentNode;
               }
               let elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
@@ -1522,6 +1526,10 @@ Action.drawInputState = function(inputType,stateCode,stateName){
               for(let q=0;q<others.length;q++){
                 others[q].removeEventListener("mousedown",assocState);
               }  
+              others=document.querySelectorAll("#htmlCanvas td.state-header[href]");
+              for(let q=0;q<others.length;q++){
+                others[q].removeEventListener("mousedown",assocState);
+              }
             };
           //add event listener to Graphviz nodes for left click
           var elems=document.getElementsByClassName("node");
@@ -1532,6 +1540,10 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           for(let i=0;i<elems.length;i++){
             elems[i].addEventListener("mousedown", assocState);
           }       
+          elems=document.querySelectorAll("#htmlCanvas td.state-header[href]");
+          for(let i=0;i<elems.length;i++){
+            elems[i].addEventListener("mousedown", assocState);
+          }
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
@@ -1672,7 +1684,7 @@ Action.drawStateMenu = function(){
   Action.removeContextMenu();
   var targ=event.target;
   //iterate up to top of graph elements
-  while (targ && targ.parentElement && targ.parentElement.id != "graph0") {
+  while (targ && targ.parentElement && targ.parentElement.id != "graph0" && targ.tagName != "TD") {
     targ = targ.parentNode;
   }
   //grabs state name
@@ -1768,7 +1780,7 @@ Action.displayTransitionMenu = function(event) {
   Action.removeContextMenu();
   var targ = event.target;
   //iterate up to top of graph elements
-  while (targ.parentElement.id != "graph0") {
+  while (targ.parentElement.id != "graph0" && targ.tagName != "SPAN") {
       targ = targ.parentNode;
   }
   //grabs state name
@@ -1786,6 +1798,7 @@ Action.displayTransitionMenu = function(event) {
 
   let searchTerm = id[2].replaceAll("+", "\\+").replaceAll("-", "\\-").replaceAll("*", "\\*").replaceAll("?", "\\?").replaceAll("|", "\\|"); //preceed any accidental quantifiers with escape character
   searchTerm = searchTerm.replace("after", "after~`~?:Every`~`?"); //subpar solution, could be improved
+  if (!id[2].startsWith("after(")) searchTerm = searchTerm.replace(/\(.*\)$/, "~`~?:$&`~`?"); //the code may omit the parameters of the event
   if (id[5] != "") {
       let guardStr = id[5].trim().replaceAll("+", "\\+").replaceAll("-", "\\-").replaceAll("*", "\\*").replaceAll("?", "\\?").replaceAll("|", "\\|"); //preceed any accidental quantifiers with escape character
       searchTerm = searchTerm + "\\s*[\\s*" + guardStr.trim().slice(1, guardStr.trim().length - 1) + "\\s*]";
@@ -4113,6 +4126,7 @@ Action.transitionClicked = function(identifier)
   }
   let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
   searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
+  if(!id[2].startsWith("after(")) searchTerm=searchTerm.replace(/\(.*\)$/, "~`~?:$&`~`?"); //the code may omit the parameters of the event
   if(id[5]!=""){
 
     let guardStr=id[5].trim().replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
@@ -4535,7 +4549,7 @@ Action.drawGeneralizationLine = function(event, newGeneralization)
 
 Action.umpleCanvasClicked = function(event)
 {
-  if (Page.useGvStateDiagram && Page.selectedItem === "AddState") {
+  if ((Page.useGvStateDiagram || Page.useStateTables) && Page.selectedItem === "AddState") {
     Action.elementClicked = false;
     GvDiagramEdit.addState(event);
     return;
@@ -6471,6 +6485,79 @@ Action.updateUmpleDiagramCallback = function(response)
     });
     jQuery("#htmlCanvas [data-transition]").click(function() {
       Action.transitionClicked(jQuery(this).attr("data-transition"));
+    });
+  }
+
+  if(Page.useStateTables){
+    // Give state table rows the same state identifier and menu as Graphviz state nodes
+    jQuery("#htmlCanvas .statetable").each(function() {
+      // Composite tables list combinations of concurrent states, not individual states
+      if(jQuery(this).parent().prevAll("h3").first().text().indexOf("Composite") == 0) return;
+      var heading = jQuery(this).parent().prevAll("h2").first().text().split(" ");
+      var rows = jQuery(this).find("tr");
+      // In state-state tables the column headings list the same states, in the same order as the rows
+      var isStateStateTable = jQuery(this).hasClass("state-statetable");
+      var columnHeadings = jQuery(rows[0]).find("td");
+      var names = [];
+      for(var i = 1; i < rows.length; i++) {
+        var entry = jQuery(rows[i]).find("td")[0];
+        var parentId = parseInt(jQuery(entry).attr("data-parent"));
+        names.push((isNaN(parentId) ? "" : names[parentId] + ".") + jQuery(entry).text().replace(/^(- )*/, ""));
+        var stateLink = "javascript:Action.stateClicked(\"" + heading[1] + "^*^" + heading[4] + "^*^" + names[i-1] + "\")";
+        var stateEntries = isStateStateTable ? [entry, columnHeadings[i]] : [entry];
+        for(var j = 0; j < stateEntries.length; j++) {
+          stateEntries[j].setAttribute("href", stateLink);
+          stateEntries[j].setAttribute("onclick", stateLink);
+          stateEntries[j].addEventListener("contextmenu", function(event){
+            event.preventDefault();
+            Action.drawStateMenu(event);
+          });
+          stateEntries[j].addEventListener("dblclick", function(event){
+            event.preventDefault();
+            Action.drawStateMenu(event);
+          });
+        }
+      }
+      // Give transitions the same selection and menu as Graphviz state diagram edges
+      jQuery(this).find("[data-transition]").each(function() {
+        this.setAttribute("href", "javascript:Action.transitionClicked(\"" + jQuery(this).attr("data-transition") + "\")");
+        jQuery(this).click(function() {
+          Action.transitionClicked(jQuery(this).attr("data-transition"));
+        });
+        // Event headings only select because they may represent several transitions.
+        if(jQuery(this).hasClass("event-header")) return;
+        this.addEventListener("contextmenu", function(event){
+          event.preventDefault();
+          Action.displayTransitionMenu(event);
+        });
+        this.addEventListener("dblclick", function(event){
+          event.preventDefault();
+          Action.displayTransitionMenu(event);
+        });
+      });
+      // Grey (empty) cells add a transition from the state of their row, as in the state diagram
+      rows.slice(1).each(function(r) {
+        jQuery(this).find("td").slice(1).each(function(c) {
+          if(!jQuery(this).text().match(/^\s$/)) return;
+          var fromState = heading[1] + "^*^" + heading[4] + "^*^" + names[r];
+          var addTransition = function(event){
+            event.preventDefault();
+            if(!Action.diagramInSync) return;
+            if(isStateStateTable) {
+              // The column is the destination state: same as the Add Transition palette tool
+              GvDiagramEdit.commitTransition(fromState, heading[1] + "^*^" + heading[4] + "^*^" + names[c]);
+            } else {
+              // The column is the event: same as Add Transition in the state menu, with the event filled in
+              var range = GvDiagramEdit.findStateRange(GvDiagramEdit.getFullText(), fromState);
+              if(!range) return;
+              Action.drawInputState("transition", GvDiagramEdit.getFullText().substring(range.start, range.end),
+                names[r].split(".").pop(), jQuery(columnHeadings[c+1]).text());
+            }
+          };
+          this.addEventListener("contextmenu", addTransition);
+          this.addEventListener("dblclick", addTransition);
+        });
+      });
     });
   }
 }
