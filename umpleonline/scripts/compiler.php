@@ -36,6 +36,17 @@ if (isset($_REQUEST["save"]))
     if(isset($_REQUEST["filename"]))
     {
       $filename = basename($_REQUEST['filename']);
+      $allowedExtensions = array( 
+    'ump',
+    'svg',
+);
+      $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+      if (!in_array($extension, $allowedExtensions, true)) {
+          http_response_code(400);
+          echo "Invalid file type."; 
+          exit;
+}
+ 
       $modelId = dirname($_REQUEST['filename']);
       $dataHandle = dataStore()->openData($modelId);
       $dataHandle->writeData($filename, $input);
@@ -145,10 +156,102 @@ else if (isset($_REQUEST["umpleCode"]))
   $langparts = explode('.',$fulllanguage);
   $language = $langparts[0];
   $suboptions = "";
+  $filterPats = "";
+  $mixsetsToAdd = "";
+// DEBUG MAYBE DELETE AND DELETE LATER USES of $extradotargs
+  $extradotargs = "";
   for($i=1; $i<count($langparts); $i++){
-    $suboptions = $suboptions . " -s " . $langparts[$i];
+    $potentialSuboption = $langparts[$i];
+    if(substr($potentialSuboption,0,6) == "!@FW!@") {
+      $filterwords = explode('!@',substr($potentialSuboption,6));
+      for($fw=0;$fw<count($filterwords);$fw++){
+        $afilterword=$filterwords[$fw];
+        if ($afilterword =="") {continue;}
+        
+        // if a filter word is numeric then we assume it is for hops
+        if(is_numeric($afilterword)) {
+          $filterPats = $filterPats . " hops { association ".round($afilterword).";} ";
+          continue;
+        }
+        
+        // If a filter word is the separator subopttion, use it
+        if(substr($afilterword,0,12) == "gvseparator=") {
+          // decimal place had been changed to @@@ so replace
+          $suboptions = $suboptions . " -s " . str_replace("@@@",".",$afilterword);
+          continue;
+        }
+                
+        // If a filter word is a standard single word suboption use it
+        $foundsuboption = false;
+        switch ($afilterword) {
+          case 'gvneato': case 'gvspring': case 'gvfdp': case 'gvsfdp': case 'gvcirco':
+          case 'gvtwopi': case 'gvdot':
+          case 'gvortho': case 'gvpolyline': case 'gvdeoverlapscale': case 'gvdeoverlaportho':
+          case 'gvdeoverlapprism':
+            $suboptions = $suboptions . " -s " . $afilterword;
+            $foundsuboption = true;
+            break;
+        }
+        if ($foundsuboption) continue;
+        
+        // A named mixset then we add this as a direct argument (use statement)
+        // warning nearly-dup code below (TODO fix)
+        if(substr($afilterword,0,6) == "mixset") {
+          $mixsetsToAdd = $mixsetsToAdd . " use ".substr($afilterword,6)."; ";
+          continue;
+        }
+
+        // Named filter then we need to add an includefilter code block
+        // warning nearly-dup code below (TODO fix)
+        if(substr($afilterword,0,6) == "filter") {
+          $filterPats= $filterPats . " includeFilter ".substr($afilterword,6).";";
+          continue;
+        }
+
+        // Any pattern starting gv would just be a mis-spelling so we don't want that to have effect
+        if(substr($afilterword,0,2) == "gv") {
+          continue;
+        }
+        
+        // To make else ... if a filter word is not blank then filter in this set of words
+        if ($afilterword !="") {
+          $filterPats = $filterPats . " include ".$afilterword.";";
+        }
+      } // end of processing the words generated from the filter text panel
+
+    }
+    else {
+      // A suboption specified as a checkbox as opposed to the filter line
+
+      // A named mixset then we add this as a direct argument (use statement)
+      // warning nearly-dup code above (TODO fix)
+      if(substr($potentialSuboption,0,6) == "mixset") {
+        $mixsetsToAdd = $mixsetsToAdd . " use ".substr($potentialSuboption,6)."; ";      
+      }
+
+      // Named filter then we need to add an includefilter code block
+      // warning nearly-dup code below (TODO fix)
+      else if(substr($potentialSuboption,0,6) == "filter") {
+        $filterPats = $filterPats . " includeFilter ".substr($potentialSuboption,6).";";
+      }
+      else {
+        $suboptions = $suboptions . " -s " . $potentialSuboption;
+      }
+    }
+  } // end of loop of langparts that had been separated by dots
+
+  // At this point we have collected together all filter patterns and mixsets
+  $umpleDirectToAdd="";
+  if($mixsetsToAdd != "") {
+    $umpleDirectToAdd = $mixsetsToAdd;
   }
-  
+  if($filterPats != "") {
+    $umpleDirectToAdd = $umpleDirectToAdd . "filter {".$filterPats."} ";
+  }
+  if($umpleDirectToAdd != "") {
+    $suboptions = $suboptions . " -u \"" . $umpleDirectToAdd . "\"";
+  }
+
   $languageStyle = isset($_REQUEST["languageStyle"])?
     $_REQUEST["languageStyle"] : false;
   $outputErr = isset($_REQUEST["error"])?$_REQUEST["error"]:false;
@@ -160,6 +263,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $stateDiagram = false;
   $featureDiagram = false;
   $classDiagram = false;
+  $instanceDiagram = false;
   $entityRelationshipDiagram = false;
   $yumlDiagram = false;
   $uigu = false;
@@ -196,6 +300,12 @@ else if (isset($_REQUEST["umpleCode"]))
      $generatorType = "cd";     
      $classDiagram = True;
   }
+    else if ($language == "instanceDiagram")
+  {
+     $language = "InstanceDiagram";
+     $generatorType = "cid";
+     $instanceDiagram = True;
+  }
   else if ($language == "traitDiagram")
   {
      $language = "GvClassTraitDiagram";
@@ -223,7 +333,23 @@ else if (isset($_REQUEST["umpleCode"]))
     $Uigu2 = True;
     $htmlContents = True;
   }
-  
+
+  $graphvizTheme = null;
+
+  // Handle explicit theme for Graphviz generators
+  if (isset($_REQUEST['theme']) && (strpos($language, 'Gv') === 0 || $instanceDiagram))
+  {
+    if ($_REQUEST['theme'] === 'dark')
+    {
+      $suboptions = $suboptions . " -s gvdark";
+      $graphvizTheme = 'dark';
+    }
+    else if ($_REQUEST['theme'] === 'light')
+    {
+      $graphvizTheme = 'light';
+    }
+  }
+
   if ($languageStyle == "html")
   {
      $htmlContents = true;
@@ -267,7 +393,7 @@ else if (isset($_REQUEST["umpleCode"]))
     $filename = $workDir->getPath().'/'.$dataname;
     // note: this does not create the error output in the working directory, and likely never did
     $errorFilename = "{$filename}.erroroutput";
-    $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
+    $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename}{$suboptions} 2> {$errorFilename}");
     $errors = getErrorHtml($errorFilename, 0);
     if($outputErr == "true")
       echo $errors . "<p>URL_SPLIT";
@@ -293,7 +419,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;      
   } // end html content      
 
-  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","InstanceDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     $dataHandle->writeData($dataname, $input);
@@ -311,12 +437,18 @@ else if (isset($_REQUEST["umpleCode"]))
       $archivelink = $workDir->makePermalink($language.'FromUmple.zip');
       echo "<a href=\"$archivelink\" class=\"zipDownloadLink\" title=\"Download the generated code as a zip file. You can then unzip the result, compile it and run it on your own computer.\">Download the following Papyrus project as a zip file</a >";
     }
+    elseif ($language == "Mermaid") {
+      $sourceCode = executeCommand("java -jar umplesync.jar -generate Mermaid {$filename}{$suboptions} 2> {$errorFilename}");
+      if (trim($sourceCode) == "") {
+        $sourceCode = "Error generating Mermaid diagrams.";
+      }
+    }
     else {
       $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
     }
     $errors = getErrorHtml($errorFilename, 0);
     
-    if ($language != "Json" && $language != "JsonMixed")
+    if ($language != "Json" && $language != "JsonMixed" && $language != "FeatureModelJson")
     {
       $sourceCode = htmlspecialchars($sourceCode);
     }
@@ -378,7 +510,7 @@ else if (isset($_REQUEST["umpleCode"]))
     }
     return;
   } // The following is a hack. The arguments to umplesync need fixing
-  else if (!$stateDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {  
+  else if (!$stateDiagram && !$instanceDiagram && !$classDiagram && !$entityRelationshipDiagram && !$yumlDiagram && !$featureDiagram) {
     $command = "java -jar umplesync.jar -source {$filename} 2> {$errorFilename}";
   }
   else {
@@ -389,6 +521,15 @@ else if (isset($_REQUEST["umpleCode"]))
   }
   // Took off 1> {$outputFilename}  in two commands above
   $resultFromCommand = executeCommand($command);
+
+  if ($graphvizTheme === 'dark' && ($stateDiagram || $classDiagram || $featureDiagram || $entityRelationshipDiagram || $instanceDiagram))
+  {
+    applyGraphvizDarkThemeFiles($thedir, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram);
+  }
+  else if ($graphvizTheme === 'light' && ($stateDiagram || $classDiagram || $featureDiagram || $entityRelationshipDiagram || $instanceDiagram))
+  {
+    applyGraphvizLightThemeFiles($thedir, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram);
+  }
 
   $dataHandle->writeData(basename($outputFilename), $resultFromCommand);
   //exec("( ulimit -t 10; " . $command . ")");
@@ -455,15 +596,77 @@ else if (isset($_REQUEST["umpleCode"]))
            if($foundresult != FALSE) $html = $html . "<br/><b>".$foundresult."</b>\n";
          }
        }
-       else {
-         exec("cd $thedir; rm javadocFromUmple.zip; zip -r javadocFromUmple javadoc");
-       
+      else {
+        // Append unified theme stylesheet; optionally add :root override for explicit modes
+        $themeMode = isset($_REQUEST['theme']) ? $_REQUEST['theme'] : null; // 'light' | 'dark' | 'system'
+        $themeCssPath = __DIR__ . "/javadoc-theme.css";
+        $appendCss = '';
+        $rootOverride = '';
+        
+        if (file_exists($themeCssPath)) {
+          $themeCssContent = file_get_contents($themeCssPath);
+          $appendCss = $themeCssContent;
+          
+          // Extract CSS from javadoc-theme.css for :root override (convert html[data-theme] to :root)
+          if ($themeMode === 'dark') {
+            // Extract html[data-theme="dark"] block content
+            if (preg_match('/html\[data-theme="dark"\]\s*\{([^}]+)\}/s', $themeCssContent, $matches)) {
+              $rootOverride = ":root {\n" . trim($matches[1]) . "\n}\n";
+            }
+            // Extract legacy tweaks for dark - get everything until next comment or section
+            $startPos = strpos($themeCssContent, '/* Legacy tweaks for explicit dark */');
+            if ($startPos !== false) {
+              $startPos += strlen('/* Legacy tweaks for explicit dark */');
+              $endPos = strpos($themeCssContent, '/*', $startPos + 1);
+              if ($endPos === false) {
+                $endPos = strpos($themeCssContent, 'html[data-theme="light"]');
+                if ($endPos === false) {
+                  $endPos = strlen($themeCssContent);
+                }
+              }
+              $legacyCss = substr($themeCssContent, $startPos, $endPos - $startPos);
+              $rootOverride .= "\n" . trim($legacyCss);
+            }
+          } else if ($themeMode === 'light') {
+            // Extract html[data-theme="light"] block content
+            if (preg_match('/html\[data-theme="light"\]\s*\{([^}]+)\}/s', $themeCssContent, $matches)) {
+              $rootOverride = ":root {\n" . trim($matches[1]) . "\n}\n";
+            }
+          }
+        }
+        if (is_string($appendCss) && strlen($appendCss) > 0) {
+          $candidateStylesheets = array(
+            $thedir . "/javadoc/stylesheet.css",
+            $thedir . "/javadoc/resources/stylesheet.css",
+            $thedir . "/javadoc/resource-files/stylesheet.css"
+          );
+          foreach ($candidateStylesheets as $generatedStylesheet) {
+            if (file_exists($generatedStylesheet) && is_writable($generatedStylesheet)) {
+              $existing = file_get_contents($generatedStylesheet);
+              if ($existing !== false) {
+                $marker = '/* --- UmpleOnline dark mode overrides --- */';
+                $pos = strpos($existing, $marker);
+                if ($pos !== false) {
+                  // Remove previous appended block starting at marker
+                  $existing = substr($existing, 0, $pos);
+                  file_put_contents($generatedStylesheet, $existing);
+                }
+                // Append the current CSS block(s)
+                $finalCss = $appendCss . (strlen($rootOverride) ? "\n/* --- UmpleOnline: :root override for compatibility --- */\n" . $rootOverride : "");
+                file_put_contents($generatedStylesheet, "\n" . $marker . "\n/* --- UmpleOnline: theme overrides --- */\n" . $finalCss . "\n", FILE_APPEND);
+              }
+            }
+          }
+        }
+        
+        exec("cd $thedir; rm javadocFromUmple.zip; zip -r javadocFromUmple javadoc");
+      
          $javadocdir = $workDir->makePermalink('javadoc/');
          $javadoczip = $workDir->makePermalink('javadocFromUmple.zip');
          $html = "<a href=\"{$javadoczip}\" title=\"Download the Javadoc website as a Zip file if you would like to be able to install it locally\">Download the following as a zip file</a>&nbsp;{$errhtml}
-         <iframe width=100% height=1000 src=\"" . $javadocdir . "\">This browser does not
-         support iframes, so the javadoc cannot be displayed</iframe> 
-         ";
+        <iframe width=100% height=1000 src=\"" . $javadocdir . "\">This browser does not
+        support iframes, so the javadoc cannot be displayed</iframe> 
+        ";
        }
        echo $html;
     }  // end javadoc
@@ -471,6 +674,14 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($stateDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/stateDiagram.svg");
+      // Graphviz versions may emit escaped DOT quotes as raw quotes in SVG hrefs.
+      // Encode the state/transition callback arguments before generating the SVG.
+      $stateGraphPath = $thedir . "/model.gv";
+      $stateGraph = file_get_contents($stateGraphPath);
+      if ($stateGraph !== false)
+      {
+        file_put_contents($stateGraphPath, encodeGraphvizStateLinks($stateGraph));
+      }
       $command = "dot -Tsvg " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg"; 
       exec($command);
             if (!file_exists($thedir . "/stateDiagram.svg") && file_exists("doterr.svg"))
@@ -517,7 +728,7 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($classDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/classDiagram.svg");
-      $command = "dot -Tsvg " . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
+      $command = "dot -Tsvg " . $extradotargs . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/classDiagram.svg";
       exec($command);
             if (!file_exists($thedir . "/classDiagram.svg") && file_exists("doterr.svg"))
             {
@@ -535,10 +746,43 @@ else if (isset($_REQUEST["umpleCode"]))
       echo "</svg>";      
     } // end graphViz class diagram
 
+    else if ($instanceDiagram) {
+      $thedir = dirname($outputFilename);
+      exec("rm -rf " . $thedir . "/instanceDiagram.svg");
+      $command = "dot -Tsvg " . $thedir . "/model" . $generatorType . ".gv -o " . $thedir .  "/instanceDiagram.svg";
+      exec($command);
+            if (!file_exists($thedir . "/instanceDiagram.svg") && file_exists("doterr.svg"))
+            {
+                exec("cp " . "./doterr.svg " . $thedir . "/instanceDiagram.svg");
+            }
+      $svgcode = readTemporaryFile("{$thedir}/instanceDiagram.svg");
+      $gvlink = $workDir->makePermalink('model'.$generatorType.'.gv');
+      $svglink = $workDir->makePermalink('instanceDiagram.svg');
+      // Read the CRUD-style JSON sidecar written by the InstanceDiagram
+      // generator in the same pass that produced the GraphViz file.
+      $jsonSidecarPath = $thedir . "/model" . $generatorType . ".instance.json";
+      $instanceJson = '';
+      if (file_exists($jsonSidecarPath)) {
+        $instanceJson = readTemporaryFile($jsonSidecarPath);
+      }
+
+      $html = "<button type=\"button\" id=\"instance-load-into-crud\" class=\"jQuery-palette-button ui-button ui-corner-all ui-widget\" style=\"margin-right:6px;\">Load data into CRUD</button>&nbsp;" .
+        // Embed the JSON as a hidden script tag so the client can
+        // reuse it when \"Load data into CRUD\" is clicked.
+        "<script id=\"instance-diagram-crud-json\" type=\"application/json\">" . $instanceJson . "</script>" .
+        "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
+      echo $html;
+      $changesToMake = 1;
+      $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
+      echo $shrunksvgcode;
+      echo "</svg>";      
+    } // end graphViz instance diagram
+
     else if ($entityRelationshipDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/entityRelationshipDiagram.svg");
-      $command = "dot -Tsvg " . $thedir . "/modelerd.gv -o " . $thedir .  "/entityRelationshipDiagram.svg";
+      $command = "dot -Tsvg " . $extradotargs . $thedir . "/modelerd.gv -o " . $thedir .  "/entityRelationshipDiagram.svg";
       exec($command);
       if (!file_exists($thedir . "/entityRelationshipDiagram.svg") && file_exists("doterr.svg"))
       {
@@ -651,6 +895,255 @@ else
   echo "Invalid use of compiler";
 }
 
+function encodeGraphvizStateLinks($content)
+{
+  return preg_replace_callback(
+    '/URL="javascript:Action\.(?:stateClicked|transitionClicked)\(.*?\)"/',
+    function($match) {
+      return str_replace('\"', '&quot;', $match[0]);
+    },
+    $content
+  );
+}
+function applyGraphvizLightThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram)
+{
+  $targets = array();
+  if ($stateDiagram)
+  {
+    $targets[] = $directory . "/model.gv";
+  }
+  if ($featureDiagram)
+  {
+    $targets[] = $directory . "/modelGvFeatureDiagram.gv";
+  }
+  if ($classDiagram || $entityRelationshipDiagram || $instanceDiagram)
+  {
+    $suffix = $generatorType;
+    if ($suffix === null)
+    {
+      $suffix = "";
+    }
+    $targets[] = $directory . "/model" . $suffix . ".gv";
+  }
+
+  foreach ($targets as $file)
+  {
+    applyGraphvizLightThemeToFile($file);
+  }
+}
+
+function applyGraphvizDarkThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram)
+{
+  $targets = array();
+  if ($stateDiagram)
+  {
+    $targets[] = $directory . "/model.gv";
+  }
+  if ($featureDiagram)
+  {
+    $targets[] = $directory . "/modelGvFeatureDiagram.gv";
+  }
+  if ($classDiagram || $entityRelationshipDiagram || $instanceDiagram)
+  {
+    $suffix = $generatorType;
+    if ($suffix === null)
+    {
+      $suffix = "";
+    }
+    $targets[] = $directory . "/model" . $suffix . ".gv";
+  }
+
+  foreach ($targets as $file)
+  {
+    applyGraphvizDarkThemeToFile($file);
+  }
+}
+
+function applyGraphvizLightThemeToFile($path)
+{
+  if (!file_exists($path))
+  {
+    return;
+  }
+
+  $content = file_get_contents($path);
+  if ($content === false || trim($content) === "")
+  {
+    return;
+  }
+
+  if (strpos($content, 'bgcolor="#ffffff"') !== false && strpos($content, 'fillcolor="#FFFFFF"') !== false)
+  {
+    return;
+  }
+
+  $themed = transformGraphvizContentToLight($content);
+  if ($themed !== null && $themed !== "")
+  {
+    file_put_contents($path, $themed);
+  }
+}
+
+function applyGraphvizDarkThemeToFile($path)
+{
+  if (!file_exists($path))
+  {
+    return;
+  }
+
+  $content = file_get_contents($path);
+  if ($content === false || trim($content) === "")
+  {
+    return;
+  }
+
+  if (strpos($content, 'bgcolor="#181818"') !== false && strpos($content, 'node [ fontcolor="#e6e6e6"') !== false)
+  {
+    return;
+  }
+
+  $themed = transformGraphvizContentToDark($content);
+  if ($themed !== null && $themed !== "")
+  {
+    file_put_contents($path, $themed);
+  }
+}
+
+function transformGraphvizContentToLight($content)
+{
+  $lines = preg_split("/\r\n|\n|\r/", $content);
+  $result = array();
+  $count = count($lines);
+  $lightThemeAdded = false;
+
+  for ($i = 0; $i < $count; $i++)
+  {
+    $line = $lines[$i];
+    $trimmed = trim($line);
+
+    if (!$lightThemeAdded && preg_match('/^digraph\s+.*\{?\s*$/', $trimmed))
+    {
+      $result[] = $line;
+      $result[] = '  bgcolor="#ffffff";';
+      $result[] = '  node [ fontcolor="#000000", style=filled, color="#000000", fillcolor="#FFFFFF" ];';
+      $result[] = '  edge [ color="#000000", fontcolor="#000000" ];';
+      $lightThemeAdded = true;
+      continue;
+    }
+
+    if (strpos($trimmed, 'subgraph ') === 0 && strpos($line, '{') !== false)
+    {
+      $result[] = $line;
+      if ($i + 1 < $count)
+      {
+        $i++;
+        $result[] = $lines[$i];
+      }
+      $result[] = '    fontcolor="#000000";';
+      $result[] = '    color="#000000";';
+      continue;
+    }
+
+    $processedLine = $line;
+    // State diagrams override the filled node default with style=rounded.
+    // Restore the fill (and reset the black start-state fill) for normal and
+    // nested states so their entire interior is clickable in the SVG.
+    // Explicitly coloured states already use "filled, rounded" and are preserved.
+    if (preg_match('/^(?:node\s*\[|style\s*=)/', $trimmed))
+    {
+      $processedLine = preg_replace('/\bstyle\s*=\s*rounded\b/', 'style="rounded,filled" fillcolor="#FFFFFF"', $processedLine);
+    }
+
+    if (stripos($processedLine, '<table') !== false || stripos($processedLine, '<td') !== false)
+    {
+      $processedLine = preg_replace('/ bgcolor="#[0-9a-fA-F]+"/i', ' bgcolor="#FFFFFF"', $processedLine);
+      $processedLine = preg_replace('/ color="#[0-9a-fA-F]+"/i', ' color="#000000"', $processedLine);
+
+      if (stripos($processedLine, '<font') === false)
+      {
+        $processedLine = preg_replace('/(<td[^>]*>)([^<]+)(<\/td>)/i', '$1<font color="#000000">$2</font>$3', $processedLine);
+      }
+    }
+
+    if (stripos($processedLine, '<font') !== false)
+    {
+      $processedLine = preg_replace('/<font([^>]*)color="[^"]+"([^>]*)>/i', '<font$1color="#000000"$2>', $processedLine);
+      $processedLine = preg_replace('/<font((?![^>]*color=)[^>]*)>/i', '<font$1 color="#000000">', $processedLine);
+    }
+
+    $result[] = $processedLine;
+  }
+
+  return implode(PHP_EOL, $result);
+}
+
+function transformGraphvizContentToDark($content)
+{
+  $lines = preg_split("/\r\n|\n|\r/", $content);
+  $result = array();
+  $count = count($lines);
+  $darkThemeAdded = false;
+
+  for ($i = 0; $i < $count; $i++)
+  {
+    $line = $lines[$i];
+    $trimmed = trim($line);
+
+    // Add dark theme styling right after the digraph opening line, only once
+    if (!$darkThemeAdded && preg_match('/^digraph\s+.*\{?\s*$/', $trimmed))
+    {
+      $result[] = $line;
+      $result[] = '  bgcolor="#181818";';
+      $result[] = '  node [ fontcolor="#e6e6e6", style=filled, color="#e6e6e6", fillcolor="#333333" ];';
+      $result[] = '  edge [ color="#e6e6e6", fontcolor="#e6e6e6" ];';
+      $darkThemeAdded = true;
+      continue;
+    }
+
+    if (strpos($trimmed, 'subgraph ') === 0 && strpos($line, '{') !== false)
+    {
+      $result[] = $line;
+      if ($i + 1 < $count)
+      {
+        $i++;
+        $result[] = $lines[$i];
+      }
+      $result[] = '    fontcolor="#e6e6e6";';
+      $result[] = '    color="#565f77";';
+      continue;
+    }
+
+    $processedLine = $line;
+    // Keep normal and nested states filled after their rounded-style override.
+    // Reset the start-state fill without changing explicit state colours.
+    if (preg_match('/^(?:node\s*\[|style\s*=)/', $trimmed))
+    {
+      $processedLine = preg_replace('/\bstyle\s*=\s*rounded\b/', 'style="rounded,filled" fillcolor="#333333"', $processedLine);
+    }
+
+    if (stripos($processedLine, '<table') !== false || stripos($processedLine, '<td') !== false)
+    {
+      $processedLine = preg_replace('/ bgcolor="#[0-9a-fA-F]+"/i', ' bgcolor="#333333"', $processedLine);
+      $processedLine = preg_replace('/ color="#[0-9a-fA-F]+"/i', ' color="#e6e6e6"', $processedLine);
+
+      if (stripos($processedLine, '<font') === false)
+      {
+        $processedLine = preg_replace('/(<td[^>]*>)([^<]+)(<\/td>)/i', '$1<font color="#e6e6e6">$2</font>$3', $processedLine);
+      }
+    }
+
+    if (stripos($processedLine, '<font') !== false)
+    {
+      $processedLine = preg_replace('/<font([^>]*)color="[^"]+"([^>]*)>/i', '<font$1color="#e6e6e6"$2>', $processedLine);
+      $processedLine = preg_replace('/<font((?![^>]*color=)[^>]*)>/i', '<font$1 color="#e6e6e6">', $processedLine);
+    }
+
+    $result[] = $processedLine;
+  }
+
+  return implode(PHP_EOL, $result);
+}
+
 function translateToLineNums($errortext) {
   $repPattern= '/model.ump:(\d+)/';
 
@@ -705,27 +1198,73 @@ function getErrorHtml($errorFilename, $offset = 1)
         foreach($results as $result)
         {
             $url = $result["url"];
-            $line = intval($result["line"]) - $offset; 
             $errorCode = $result["errorCode"];
             $severityInt = intval($result["severity"]);
             if($severityInt > 2) {
               $severity = "Warning";
-              $textcolor = "<font color=\"black\">";
+              $textcolor = "<span class=\"umple-message-warning\">";
             }
             else
             {
               $severity = "Error";
-              $textcolor = "<font color=\"red\">";
+              $textcolor = "<span class=\"umple-message-error\">";
             }
             $msg = htmlspecialchars($result["message"]);
-                        
-            $errhtml .= $textcolor." {$severity} on <a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a> : {$msg}.</font> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
+            $filename = "";
+            if (array_key_exists("filename", $result) && $result["filename"] != null && $result["filename"] !== "") {
+              $filename = htmlspecialchars($result["filename"], ENT_QUOTES);
+            }
+            $lowerFn = strtolower($filename);
+            $showFilename = ($filename !== "" && $lowerFn !== "model.ump");
+            $line = intval($result["line"]) - ($showFilename ? 0 : 1);
+            $filePrefix = ($showFilename)
+              ? " <span class=\"umple-err-file\" data-filename=\"{$filename}\">in <strong>{$filename}</strong> </span>"
+              : "";
+            
+            $safeFilenameJs = addslashes($filename);
+            if ($showFilename) {
+              $errorAnchor = "<a href=\"javascript:Action.goToCrossFileError('{$safeFilenameJs}',{$line});\">{$filename} on line {$line}</a>";
+            } else {
+              $errorAnchor = "<a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a>";
+            }
+            $errhtml .= $textcolor." {$severity}".($showFilename ? " in " : " on ")." {$errorAnchor} : {$msg}.</span> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
         }
      }
     
      $errhtml .= "</div>";
         
-     $errhtml .= "<script type=\"text/javascript\">jQuery(\"#errorClick\").click(function(a){a.preventDefault();jQuery(\"#errorRow\").toggle();});</script>";
+     $errhtml .= "<script type=\"text/javascript\">
+      jQuery(\"#errorClick\").click(function(a){
+        a.preventDefault();
+        jQuery(\"#errorRow\").toggle();
+      });
+
+      (function(){
+        function norm(name){
+          if(!name) return \"\";
+          name = String(name).trim();
+          name = name.split('/').pop();
+          name = name.replace(/\\.ump\\s*$/i, '');
+          return name;
+        }
+
+        var tabLis = document.querySelectorAll('li[id^=\"tab\"]');
+        var tabCount = tabLis.length;
+
+        var activeEl = document.querySelector('li[id^=\"tab\"].selected a.tabname');
+        var active = activeEl ? norm(activeEl.textContent || '') : \"\";
+        
+        document.querySelectorAll('.umple-err-file').forEach(function(node){
+          var file = norm(node.getAttribute('data-filename') || '');
+
+          if (tabCount <= 1 || (active && file && active === file)) {
+            node.style.display = 'none';
+          } else {
+            node.style.display = '';
+          }
+        });
+      })();
+    </script>";
      return $errhtml;
   }
   return "";

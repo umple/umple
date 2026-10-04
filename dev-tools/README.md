@@ -61,6 +61,7 @@ For developers
  pumple
   - Propagates the umple jars to umpleonline.
   - Ensures changed javascript is minified correctly
+  - Rebuilds JavaScript bundles (CodeMirror6, OpenAI SDK)
   - Builds other aspects needed to run umpleonline such as the Docker images used for execution
   - Must be run after any changes to a local version of UmpleOnline
   - not done as part of a full build so must be done separately
@@ -80,3 +81,8 @@ For developers
   
  startexecdocker
    - Restarts the docker image for umpleonline ... done by pumple so not normally needed to be separately run
+
+ startlspdocker
+   - Starts the LSP Docker container for UmpleOnline development
+   - Provides real-time diagnostics, go-to-definition, rename, etc. in the editor
+   - Restarts the LSP Docker image ... done by pumple so not normally needed to be separately run

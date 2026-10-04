@@ -43,7 +43,7 @@ $classOverview = $modelOverview->getClass($simulator->getModel());
 </head>
 
 <body>
-<div class="pagetitle"><img src="scripts/umpleonline_title.jpg" title="Simulation Tool" /></div>
+<div class="pagetitle"><img src="scripts/umpleonline_title.svg" title="Simulation Tool" /></div>
 <form action="simulate.php?model=<?php echo $GLOBALS['modelId'] ;?>" method="post">
   <?php storeModel($simulator,"inputSimulator"); ?>
 

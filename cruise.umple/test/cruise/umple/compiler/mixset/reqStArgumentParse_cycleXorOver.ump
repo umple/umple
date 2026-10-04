@@ -1,0 +1,17 @@
+// Regression fixture: XOR over a 2-node require-cycle, both ends used.
+// Each require statement is checked on its own: A's and B's are satisfied,
+// but Root's [A xor B] sees both ends used, so the model is NOT satisfied
+// and Root's statement is the only one reported.
+//
+// Note: xor is an infix linking operator in the require-statement grammar
+// (see cruise.umple/src/mixset/umple_mixsets.grammar:27). Existing fixtures
+// (e.g. reqStArgumentParse_validCombinedOpFeatuerModel.ump) use the same
+// "A xor B" form -- there is no "xor [A, B]" prefix syntax.
+mixset Root { require [A xor B]; }
+mixset A { require [B]; }
+mixset B { require [A]; }
+mixset Z { require [Root]; }
+
+use Root;
+use A;
+use B;

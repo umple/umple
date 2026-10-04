@@ -1,0 +1,4 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqUseCaseMultipleSteps.ump
+</p><p><b>UC4: User step 1: select product<br/>System response 1: display price<br/>User step 2: enter quantity<br/>System response 2: update total</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>

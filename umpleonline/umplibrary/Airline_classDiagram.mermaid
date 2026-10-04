@@ -1,0 +1,35 @@
+classDiagram
+  class Airline {
+  }
+  class RegularFlight {
+    Time time
+    Integer flightNumber
+  }
+  class SpecificFlight {
+    Date date
+  }
+  class PassengerRole {
+    String name
+  }
+  PersonRole <|-- PassengerRole
+  class EmployeeRole {
+    String jobFunction
+  }
+  PersonRole <|-- EmployeeRole
+  class Person {
+    String name
+    Integer idNumber
+  }
+  class PersonRole {
+  }
+  class Booking {
+    String seatNumber
+  }
+  Airline "1" -- "*" RegularFlight : regularFlights
+  Airline "1" -- "*" Person : persons
+  RegularFlight "1" -- "*" SpecificFlight : specificFlights
+  PassengerRole "1" -- "*" Booking : bookings
+  EmployeeRole "*" -- "0..1" EmployeeRole : supervisor
+  EmployeeRole "*" -- "*" SpecificFlight : specificFlights
+  Person "1" -- "0..2" PersonRole : personRoles
+  Booking "*" -- "1" SpecificFlight : specificFlight

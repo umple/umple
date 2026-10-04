@@ -1,0 +1,6 @@
+req UC4 useCase {
+  userStep 1 { select product }
+  systemResponse 1 { display price }
+  userStep 2 { enter quantity }
+  systemResponse 2 { update total }
+}

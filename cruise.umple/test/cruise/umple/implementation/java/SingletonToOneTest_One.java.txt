@@ -2,7 +2,7 @@
 /*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
 package example;
-import java.util.*;
+
 
 public class Student
 {
@@ -15,16 +15,20 @@ public class Student
   private String number;
 
   //Student Associations
-  private List<Mentor> mentors;
+  private Mentor mentor;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Student(String aNumber)
+  public Student(String aNumber, Mentor aMentor)
   {
     number = aNumber;
-    mentors = new ArrayList<Mentor>();
+    boolean didAddMentor = setMentor(aMentor);
+    if (!didAddMentor)
+    {
+      throw new RuntimeException("Unable to create student due to mentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
 
   //------------------------
@@ -43,113 +47,47 @@ public class Student
   {
     return number;
   }
-
-  public Mentor getMentor(int index)
+  /* Code from template association_GetOne */
+  public Mentor getMentor()
   {
-    Mentor aMentor = mentors.get(index);
-    return aMentor;
+    return mentor;
   }
-
-  public List<Mentor> getMentors()
+  /* Code from template association_SetOneToOptionalOne */
+  public boolean setMentor(Mentor aNewMentor)
   {
-    List<Mentor> newMentors = Collections.unmodifiableList(mentors);
-    return newMentors;
-  }
-
-  public int numberOfMentors()
-  {
-    int number = mentors.size();
-    return number;
-  }
-
-  public boolean hasMentors()
-  {
-    boolean has = mentors.size() > 0;
-    return has;
-  }
-
-  public int indexOfMentor(Mentor aMentor)
-  {
-    int index = mentors.indexOf(aMentor);
-    return index;
-  }
-
-  public static int minimumNumberOfMentors()
-  {
-    return 0;
-  }
-
-  public boolean addMentor(Mentor aMentor)
-  {
-    boolean wasAdded = false;
-    if (mentors.contains(aMentor)) { return false; }
-    Student existingStudent = aMentor.getStudent();
-    if (existingStudent == null)
+    boolean wasSet = false;
+    if (aNewMentor == null)
     {
-      aMentor.setStudent(this);
+      //Unable to setMentor to null, as student must always be associated to a mentor
+      return wasSet;
     }
-    else if (!this.equals(existingStudent))
+    
+    Student existingStudent = aNewMentor.getStudent();
+    if (existingStudent != null && !equals(existingStudent))
     {
-      existingStudent.removeMentor(aMentor);
-      addMentor(aMentor);
+      //Unable to setMentor, the current mentor already has a student, which would be orphaned if it were re-assigned
+      return wasSet;
     }
-    else
-    {
-      mentors.add(aMentor);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
+    
+    Mentor anOldMentor = mentor;
+    mentor = aNewMentor;
+    mentor.setStudent(this);
 
-  public boolean removeMentor(Mentor aMentor)
-  {
-    boolean wasRemoved = false;
-    if (mentors.contains(aMentor))
+    if (anOldMentor != null)
     {
-      mentors.remove(aMentor);
-      aMentor.setStudent(null);
-      wasRemoved = true;
+      anOldMentor.setStudent(null);
     }
-    return wasRemoved;
-  }
-
-  public boolean addMentorAt(Mentor aMentor, int index)
-  {  
-    boolean wasAdded = false;
-    if(addMentor(aMentor))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfMentors()) { index = numberOfMentors() - 1; }
-      mentors.remove(aMentor);
-      mentors.add(index, aMentor);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveMentorAt(Mentor aMentor, int index)
-  {
-    boolean wasAdded = false;
-    if(mentors.contains(aMentor))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfMentors()) { index = numberOfMentors() - 1; }
-      mentors.remove(aMentor);
-      mentors.add(index, aMentor);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addMentorAt(aMentor, index);
-    }
-    return wasAdded;
+    wasSet = true;
+    return wasSet;
   }
 
   public void delete()
   {
-    for(Mentor aMentor : mentors)
+    Mentor existingMentor = mentor;
+    mentor = null;
+    if (existingMentor != null)
     {
-      aMentor.setStudent(null);
+      existingMentor.setStudent(null);
     }
   }
 
@@ -157,6 +95,7 @@ public class Student
   public String toString()
   {
     return super.toString() + "["+
-            "number" + ":" + getNumber()+ "]";
+            "number" + ":" + getNumber()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "mentor = "+(getMentor()!=null?Integer.toHexString(System.identityHashCode(getMentor())):"null");
   }
 }

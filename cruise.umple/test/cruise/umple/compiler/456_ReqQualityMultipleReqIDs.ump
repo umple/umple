@@ -1,0 +1,17 @@
+req Speed {
+  system response time
+}
+
+req Safety {
+  system safety level
+}
+
+req Speed quality {
+  High {}
+  Low {}
+}
+
+req Safety quality {
+  Critical {}
+  Normal {}
+}

@@ -424,7 +424,51 @@ class UmpleElement
   {
     return extraCode.getExtraCode();
   }
+  
+  // Methods related to co-ordinates. 
+  // These are stored in an instance of Coordinate as x y width height
+  // For GVClass diagram both UmpleClass and UmpleInterface need to specify
+  // pos
+  public boolean hasPosition() {
+    if(getCoordinates() == null) {
+      return(false);
+    }
+    return true;
+  }
+  
+  // Returns the pos string needed by graphviz neato or fdp to position element
+  // Used if suboption 'gvmanual" is present.
+  // y is negated since in Umple coordinates run from top to bottom, but in gv it is bottom to top
+  // value is in inches as required by graphviz
+  // Graphviz positions refer to the centre of the node to be displayed
+  // whereas the Umple positions refer to the left and top
+  // returns empty string if there is no coordinate stored
+  public String getPosition(Double expand) {
+    if(hasPosition()) {
+      Coordinate c = getCoordinates();
+      // round 2 places and save as string. Also convert points to inches
+      
+      // Gets Centre as that is what GV expects
+      String xpos=String.format("%.2f",((c.getX() + c.getWidth()/2.0)/72.0*expand)); 
+      String ypos=String.format("%.2f",-((c.getY() + c.getHeight()/2.0)/72.0*expand));
+//      String xpos=String.format("%.2f",(c.getX()/72.0*expand)); 
+//      String ypos=String.format("%.2f",-(c.getY()/72.0*expand));
+
+      return("pos=\""+xpos+","+ypos+"!\" ");
+    }
+    return("");
+  } 
+
+  // Used for a comments in GV when debugging
+  public String getUmplePosition() {
+    if(hasPosition()) {
+      Coordinate c = getCoordinates();
+      return(" leftX="+c.getX()+" rightY="+c.getY()+" w="+c.getWidth()+" h="+c.getHeight());
+    }
+    return("");
+  } 
 }
+
 
 class UmpleClassifier{
   
@@ -879,14 +923,234 @@ class Comment
 /*
  */
 class Requirement{
+  private boolean hasDisplayText(String content)
+  {
+    return content != null && !content.isEmpty();
+  }
+
+  // Renders a list of use case identifiers as a comma separated list
+  private String joinUseCaseReferences(String[] references)
+  {
+    StringBuilder joined = new StringBuilder();
+    for (String reference : references)
+    {
+      if (joined.length() > 0)
+      {
+        joined.append(", ");
+      }
+      joined.append(reference);
+    }
+    return joined.toString();
+  }
+
+  public boolean hasStructuredUserStoryFields()
+  {
+    return hasDisplayText(getWho())
+      || hasDisplayText(getWhen())
+      || hasDisplayText(getWhat())
+      || hasDisplayText(getWhy());
+  }
+
+  // format logic moved from cruise.umple/src/generators/Generator_CodePlainRequirementsDoc.ump:generator()
+  public String getUserStoryDisplayText(String separator)
+  {
+    String stmt = getStatement();
+    if (stmt == null)
+    {
+      stmt = "";
+    }
+
+    if (!hasStructuredUserStoryFields())
+    {
+      return stmt;
+    }
+
+    StringBuilder userStoryText = new StringBuilder();
+
+    if (hasDisplayText(getWho()))
+    {
+      userStoryText.append("As ").append(getWho());
+    }
+    if (hasDisplayText(getWhen()))
+    {
+      if (userStoryText.length() > 0)
+      {
+        userStoryText.append(separator);
+      }
+      userStoryText.append("When ").append(getWhen());
+    }
+    if (hasDisplayText(getWhat()))
+    {
+      if (userStoryText.length() > 0)
+      {
+        userStoryText.append(separator);
+      }
+      userStoryText.append("I want ").append(getWhat());
+    }
+    if (hasDisplayText(getWhy()))
+    {
+      if (userStoryText.length() > 0)
+      {
+        userStoryText.append(separator);
+      }
+      userStoryText.append("So that ").append(getWhy());
+    }
+
+    return userStoryText.toString();
+  }
+
+  // Returns the requirement body text so renderers can output body and quality separately.
+  public String getBodyDisplayText(String separator)
+  {
+    String statement = getStatement();
+    if (statement == null)
+    {
+      statement = "";
+    }
+
+    String reqLanguage = getLanguage();
+    if (reqLanguage == null)
+    {
+      reqLanguage = "";
+    }
+
+    if ("userStory".equals(reqLanguage))
+    {
+      return getUserStoryDisplayText(separator);
+    }
+    else if ("useCase".equals(reqLanguage))
+    {
+      StringBuilder useCaseText = new StringBuilder();
+
+      if (hasStructuredUserStoryFields())
+      {
+        useCaseText.append(getUserStoryDisplayText(separator));
+      }
+      else if (hasDisplayText(statement))
+      {
+        useCaseText.append(statement);
+      }
+
+      if (hasParentUseCases())
+      {
+        if (useCaseText.length() > 0)
+        {
+          useCaseText.append(separator);
+        }
+        useCaseText.append("Specializes ").append(joinUseCaseReferences(getParentUseCases()));
+      }
+      if (hasIncludedUseCases())
+      {
+        if (useCaseText.length() > 0)
+        {
+          useCaseText.append(separator);
+        }
+        useCaseText.append("Includes ").append(joinUseCaseReferences(getIncludedUseCases()));
+      }
+
+      for (int i = 0; i < numberOfUseCaseSteps(); i++)
+      {
+        UseCaseStep step = getUseCaseStep(i);
+        if (useCaseText.length() > 0)
+        {
+          useCaseText.append(separator);
+        }
+
+        String prefix = step.getStepType() == UseCaseStep.UseCaseStepType.UserStep
+          ? "User step "
+          : "System response ";
+        useCaseText.append(prefix).append(step.getId());
+        if (hasDisplayText(step.getCondition()))
+        {
+          useCaseText.append(" [").append(step.getCondition()).append("]");
+        }
+        useCaseText.append(": ").append(step.getContent());
+      }
+
+      return useCaseText.toString();
+    }
+
+    return statement;
+  }
 
   // deep copy constructor
   public Requirement(Requirement aReq)
   {
     identifier = aReq.getIdentifier();
     statement = aReq.getStatement();
+    who = aReq.getWho();
+    when = aReq.getWhen();
+    what = aReq.getWhat();
+    why = aReq.getWhy();
     language = aReq.getLanguage();
+
+    qualityClasses = new ArrayList<QualityClass>();
+
+    includedUseCases = new ArrayList<String>();
+    for (String includedUseCase : aReq.getIncludedUseCases())
+    {
+      includedUseCases.add(includedUseCase);
+    }
+
+    parentUseCases = new ArrayList<String>();
+    for (String parentUseCase : aReq.getParentUseCases())
+    {
+      parentUseCases.add(parentUseCase);
+    }
+
+    useCaseSteps = new ArrayList<UseCaseStep>();
+    for (int i = 0; i < aReq.numberOfUseCaseSteps(); i++)
+    {
+      UseCaseStep originalStep = aReq.getUseCaseStep(i);
+      UseCaseStep copiedStep = new UseCaseStep(
+        originalStep.getId(),
+        originalStep.getStepType(),
+        originalStep.getContent(),
+        this
+      );
+      copiedStep.setCondition(originalStep.getCondition());
+    }
+
+    // Deep-copy quality classes using helper accessors generated from Umple.ump.
+    for (int i = 0; i < aReq.numberOfQualityClasses(); i++)
+    {
+      QualityClass originalQc = aReq.getQualityClass(i);
+      new QualityClass(originalQc.getName(), originalQc.getContent(), this);
+    }
   }
+
+  public String getQualityClassNamesSummary()
+  {
+    StringBuilder qualityText = new StringBuilder();
+    for (int i = 0; i < numberOfQualityClasses(); i++)
+    {
+      if (i > 0)
+      {
+        qualityText.append(", ");
+      }
+      qualityText.append(getQualityClass(i).getName());
+    }
+    return qualityText.toString();
+  }
+
+  public String getDisplayStatement()
+  {
+    String displayText = getBodyDisplayText("\n");
+
+    if (!hasQualityClasses())
+    {
+      return displayText;
+    }
+
+    String qualityText = "[Quality: " + getQualityClassNamesSummary() + "]";
+
+    if (!hasDisplayText(displayText.trim()))
+    {
+      return qualityText;
+    }
+    return displayText + "\n" + qualityText;
+  }
+
   public static List<Comment> convertToComment(List<ReqImplementation> reqSelected,UmpleModel aModel){
     List<Comment> reqTextOnly = new ArrayList<Comment>();
     String reqText = new String();
@@ -896,7 +1160,7 @@ class Requirement{
       Requirement findRequirement = aModel.getAllRequirements().get(reqImpID);
       if(findRequirement != null)
      {
-      reqText = findRequirement.getStatement().trim();
+      reqText = findRequirement.getDisplayStatement().trim();
 
       reqText = findRequirement.getIdentifier() + ": " + reqText;
 

@@ -2,11 +2,11 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class student():
+class Student():
     #------------------------
     # MEMBER VARIABLES
     #------------------------
-    #student Attributes
+    #Student Attributes
     #------------------------
     # CONSTRUCTOR
     #------------------------

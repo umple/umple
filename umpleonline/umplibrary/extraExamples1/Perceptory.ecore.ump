@@ -1,0 +1,161 @@
+/************
+This file is an Umple translation of a model
+of perceptory version 1.14 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/Perceptory.ecore
+
+date : 2006/07/24
+
+Domain :
+
+Description : This metamodel describes Perceptory. Perceptory is a CASE tool that comprises a UML based conceptual schema building tool for geospatial conceptual models and an object dictionary database.
+
+Title: Perceptory
+
+See : http://delivery.acm.org/10.1145/360000/355280/p39-brodeur.pdf?key1=355280&key2=5650095511&coll=&dl=GUIDE&CFID=15151515&CFTOKEN=6184618
+
+Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+***************/
+
+namespace Perceptory;
+
+class Relationship
+{
+	0..1 -- * Package packages;
+	* -- * Stereotype;
+	* -- * Constraint;
+	1..* -- * Characteristic affectCharacteristic;
+}
+
+class ConstrainedRelationship
+{
+}
+
+class Aggregation
+{
+	isA Association;
+}
+
+class Composition
+{
+	isA Association;
+}
+
+class Association
+{
+	isA Relationship;
+}
+
+class Generalisation
+{
+	isA Relationship;
+}
+
+class Dependency
+{
+	isA Relationship;
+}
+
+class AssociationEnd
+{
+}
+
+class Package
+{
+	* parent -- * Package children;
+	* thePackage -- * Stereotype;
+	* packages -- * Class classes;
+}
+
+class Stereotype
+{
+	* -- * Class theClass;
+	* -- * Operation operations;
+	* -- * DescriptiveAttribute;
+}
+
+class Class
+{
+	0..1 affectFeature -- 1..* Operation operations;
+	1..* theClass -- * Constraint;
+	1..* behaviour -- * Operation myOperations;
+	1..* theClass -- * Characteristic;
+	1..* theClass -- * MetaData details;
+}
+
+class Constraint
+{
+	* -- 1..* Characteristic caracteristic;
+}
+
+class Operation
+{
+	1..* operations -- 1..* Characteristic inCharacteristic;
+	1..* operations -- * MetaData detail;
+}
+
+class Characteristic
+{
+	1..* -- * BusnissRule rule;
+	1..* -- * MetaData details;
+}
+
+class BusnissRule
+{
+}
+
+class MetaData
+{
+	1..* -- * Source;
+}
+
+class Source
+{
+}
+
+class Domain
+{
+	* -- 1..* DescriptiveAttribute;
+}
+
+class DescriptiveAttribute
+{
+	isA Characteristic;
+	1..* descriptiveAttributeg -- * Geometry specialDef;
+	1..* descriptiveAttributet -- * Temporality tempsDef;
+}
+
+class Geometry
+{
+	isA PerceptoryStereotype ;
+	* -- * Temporality tempsDef;
+}
+
+class Temporality
+{
+	isA PerceptoryStereotype ;
+}
+
+class VisualInfo
+{
+	isA PerceptoryStereotype ;
+}
+
+class Value
+{
+	1..* -- 1..* EnumeratedDomain;
+}
+
+class RangeDomain
+{
+	isA Domain;
+}
+
+class EnumeratedDomain
+{
+	isA Domain;
+}
+
+class PerceptoryStereotype
+{
+	isA Stereotype;
+}

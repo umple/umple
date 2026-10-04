@@ -32,9 +32,9 @@ strictnessDisableAuto : disable [**expression]
 
 // The generate clause can be used to generate multiple outputs
 // The --override is used to say that subsequent generate statements will be ignored
-generate : generate [=language:Java|Nothing|Php|RTCpp|SimpleCpp|Ruby|Python|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|StateTables|EventSequence|Umple|UmpleSelf|USE|Test|SimpleMetrics|PlainRequirementsDoc|Uigu2|ExternalGrammar] ( [=suboptionIndicator:-s|--suboption] " [**suboption] " )* ;
+generate : generate [=language:Java|Nothing|Php|RTCpp|SimpleCpp|Ruby|Python|Cpp|Json|FeatureModelJson|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|StateTables|EventSequence|InstanceDiagram|Umple|UmpleSelf|USE|Test|SimpleMetrics|PlainRequirementsDoc|Uigu2|ExternalGrammar|Mermaid] ( [=suboptionIndicator:-s|--suboption] " [**suboption] " )* ;
  
-generate_path : generate [=language:Java|Nothing|Php|RTCpp|SimpleCpp|Ruby|Python|Cpp|Json|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|StateTables|EventSequence|Umple|UmpleSelf|USE|Test|SimpleMetrics|PlainRequirementsDoc|Uigu2|ExternalGrammar] " [**output] " [=override:--override|--override-all]? ( [=suboptionIndicator:-s|--suboption]  " [**suboption] " )* ;
+generate_path : generate [=language:Java|Nothing|Php|RTCpp|SimpleCpp|Ruby|Python|Cpp|Json|FeatureModelJson|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|StateTables|EventSequence|InstanceDiagram|Umple|UmpleSelf|USE|Test|SimpleMetrics|PlainRequirementsDoc|Uigu2|ExternalGrammar|Mermaid] " [**output] " [=override:--override|--override-all]? ( [=suboptionIndicator:-s|--suboption]  " [**suboption] " )* ;
 
 suboption : suboption "[**value] " ;
 
@@ -55,8 +55,26 @@ comment- : [[inlineComment]] | [[multilineComment]] | [[annotationComment]]
 inlineComment- : // [*inlineComment]
 multilineComment- : /* [**multilineComment] */
 
-requirement : req [reqIdentifier] [reqLanguage]? { [**reqContent] }
-reqImplementation : implementsReq [reqIdentifier] (, [reqIdentifier])* ;
+reqIdentifier : [name]
+
+requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[ears]] ) | ( [[quality]] ) | ( [[plainReq]] ) )
+quality- : [=reqLanguage:quality|Quality] { [**reqContent] }
+plainReq- : [reqLanguage]? { [**reqContent] }
+userStory- : [=reqLanguage:userStory|userstory] { ( [[userStoryTags]] | [**reqContent] ) }
+userStoryTags- : ( who { [*whoContent] } )? ( when { [*whenContent] } )? ( what { [*whatContent] } )? ( why { [*whyContent] } )?
+useCase- : [=reqLanguage:useCase|usecase] { ( [[useCaseTags]] | [**reqContent] ) }
+useCaseTags- : ( [[userStoryTags]] | [[useCaseRelationship]] | [[useCaseStep]] )*
+// A use case can incorporate the steps of other use cases, or specialize another use case
+useCaseRelationship- : [=useCaseRelationType:include|isA] [useCaseRef] ( , [useCaseRef] )* ;
+useCaseStep- : ( userStep [useCaseId] [[useCaseStepCondition]]? { [*useCaseStepContent] } ) | ( systemResponse [useCaseId] [[useCaseStepCondition]]? { [*useCaseStepContent] } )
+// A step is taken only when its condition holds; written like a state machine guard
+useCaseStepCondition- : [ [*useCaseCondition] ]
+// An EARS (Easy Approach to Requirements Syntax) requirement. See [*Requirements*]. The body is free text, or
+// any of the clauses where { feature } while { precondition } when { trigger } if { unwanted trigger } system { name }
+// and shall { response }, which are read in the EARS order: Where ..., while ..., when ..., if ..., then the ... shall ...
+ears- : [=reqLanguage:ears] { [**reqContent] }
+reqRef : [reqIdentifier] (OPEN_ROUND_BRACKET [qualityClassName] CLOSE_ROUND_BRACKET)?
+reqImplementation : implementsReq [[reqRef]] (, [[reqRef]])* ;
 
 //Matches all forms of Java annotations including those with parentheses and values in quotes
 annotationComment- : [!annotationComment:@[a-zA-Z_][a-zA-Z0-9_-]*(\((("(\w|\s|-)*")|\w|\s|=|,|\.)*\))?]

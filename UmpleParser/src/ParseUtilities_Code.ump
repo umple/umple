@@ -139,7 +139,13 @@ class Token
       }
       catch (NumberFormatException e)
       {
-        return defaultIfInvalid;
+        try {
+          return Math.round(Float.parseFloat(value));
+        }
+        catch (NumberFormatException e2)
+        {
+          return defaultIfInvalid;
+        }
       }
     }
   }
@@ -405,8 +411,8 @@ class ParseResult
   public String toString()
   {
     String ret = "";
-    for(ErrorMessage em : errorMessages)
-      ret += em.toString() + "\n";
+    for(int i = 0; i < errorMessages.size(); i++)
+     ret += errorMessages.get(i).toString() + "\n";
     return ret;
   }
 
@@ -434,8 +440,10 @@ class ParseResult
   {
     String ret = "{ \"results\" : [ ";
     boolean hasOne = false;
-    for(ErrorMessage em : errorMessages)
+    for(int i = 0; i < errorMessages.size(); i++)
     {
+      ErrorMessage em = errorMessages.get(i);
+
       ErrorType et = em.getErrorType();
 
       String line     = String.valueOf(em.getPosition().getLineNumber());
@@ -450,7 +458,7 @@ class ParseResult
       ret += "\"url\" : \"" + url + "\", ";
       ret += "\"line\" : \"" + line + "\", ";
       ret += "\"filename\" : \"" + file + "\", ";
-      ret += "\"message\" : \"" + message.replace("\"", "\'") + "\"},";
+      ret += "\"message\" : \"" + message + "\"},";
       hasOne = true;
     }
 

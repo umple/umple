@@ -144,9 +144,9 @@
         <table>
           <tr>
             <td class="column-header"><div><span>START</span></div></td>
-            <td class="column-header"><div><span>1. ev1</span></div></td>
-            <td class="column-header"><div><span>2. ev1</span></div></td>
-            <td class="column-header"><div><span>3. ev1</span></div></td>
+            <td class="column-header" data-transition="ReallySimpleNestedStateMachine*^*sm*^*ev1*^*s1.s11*^*s1.s12*^*"><div><span>1. ev1</span></div></td>
+            <td class="column-header" data-transition="ReallySimpleNestedStateMachine*^*sm*^*ev1*^*s1.s12*^*s2*^*"><div><span>2. ev1</span></div></td>
+            <td class="column-header" data-transition="ReallySimpleNestedStateMachine*^*sm*^*ev1*^*s2.s21*^*s2.s22*^*"><div><span>3. ev1</span></div></td>
           </tr>
           <tr>
             <td class="content-cell" data-parent="">&nbsp;</td>
@@ -203,17 +203,17 @@
   </tr>
   <tr>
     <td class="">1</td>
-    <td class="">ev1</td>
+    <td class="" data-transition="ReallySimpleNestedStateMachine*^*sm*^*ev1*^*s1.s11*^*s1.s12*^*">ev1</td>
     <td class="">s1.s12</td>
   </tr>
   <tr>
     <td class="">2</td>
-    <td class="">ev1</td>
+    <td class="" data-transition="ReallySimpleNestedStateMachine*^*sm*^*ev1*^*s1.s12*^*s2*^*">ev1</td>
     <td class="">s2.s21</td>
   </tr>
   <tr>
     <td class="">3</td>
-    <td class="">ev1</td>
+    <td class="" data-transition="ReallySimpleNestedStateMachine*^*sm*^*ev1*^*s2.s21*^*s2.s22*^*">ev1</td>
     <td class="">s2.s22</td>
   </tr>
 </table>

@@ -1,0 +1,18 @@
+req R1 {
+  plain requirement text
+}
+
+req R1 quality {
+  A {}
+  B {}
+  C {}
+  D {}
+  E {}
+  F {}
+  G {}
+  H {}
+  I {}
+  J {}
+  K {}
+  L {}
+}

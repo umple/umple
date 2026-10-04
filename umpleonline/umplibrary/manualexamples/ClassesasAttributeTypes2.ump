@@ -12,7 +12,7 @@
 class Person {
   name;
   
-  * -> 1 Address address;
+  * -> 1 Address;
 }
 
 class Address {

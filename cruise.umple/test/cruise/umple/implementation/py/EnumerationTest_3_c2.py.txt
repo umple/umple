@@ -1,0 +1,66 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+
+import os
+from enum import Enum, auto
+
+class C2():
+    #------------------------
+    # ENUMERATIONS
+    #------------------------
+    class Status(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Married = auto()
+        Single = auto()
+        Divorced = auto()
+
+    class Gender(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        Male = auto()
+        Female = auto()
+
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #C2 Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self, aStatus, aGender):
+        self._gender = None
+        self._status = None
+        self._status = aStatus
+        self._gender = aGender
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setStatus(self, aStatus):
+        wasSet = False
+        self._status = aStatus
+        wasSet = True
+        return wasSet
+
+    def setGender(self, aGender):
+        wasSet = False
+        self._gender = aGender
+        wasSet = True
+        return wasSet
+
+    def getStatus(self):
+        return self._status
+
+    def getGender(self):
+        return self._gender
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "status" + "=" + str((((self.getStatus().__str__().replaceAll("  ", "    ")) if not self.getStatus() == self else "this") if not (self.getStatus() is None) else "null")) + str(os.linesep) + "  " + "gender" + "=" + (((self.getGender().__str__().replaceAll("  ", "    ")) if not self.getGender() == self else "this") if not (self.getGender() is None) else "null")

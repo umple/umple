@@ -45,14 +45,33 @@ rule replaceConcreteMethod
         _ [getPythonParams params possibleStatic]
     construct possibleStaticDecorator [repeat decorator]
         _ [createStaticDecorator possibleStatic]
+    construct localVars [repeat id] %this is a list of local variables. needed for issue 2249
+        _ [findLocalVars each statements]
     by
-        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  statements 
-            [manageSpecialTypes params] 
-            [replaceStatements] 
+        possibleStaticDecorator 'def methodName [replaceSpecificMethodNames] [changeOverloadedMethodName params] '( newParams '):  statements
+            [manageSpecialTypes params]
+            [replaceStatements localVars]
             [changeKeyArgumentNameInNestedIdentifier] 
             [addFunctionImports]
             [addStrIfNeeded methodName]
 end rule
+
+% goes through the method body and makes a list of local variables
+% added for issue 2249
+function findLocalVars singleStament [statement]
+    replace [repeat id]
+        sequenceSoFar [repeat id]
+    deconstruct singleStament
+        discard [nested_identifier] assignment [value]';
+    deconstruct assignment
+        head [base_value] tail [opt value_continuation]
+    deconstruct head
+        name [nested_identifier]
+    deconstruct name
+        idName [id] rest [repeat attribute_access]
+    by
+        sequenceSoFar [. idName]
+end function
 
 %Creates a static decorator if needed. Otherwise returns empty
 function createStaticDecorator possibleStatic [opt static]
@@ -165,6 +184,7 @@ rule replaceConstructor memberVariables [repeat id]
         'self
     construct modifiedParams [list method_parameter]
         _ [translateParam each params]
+    construct emptyRepeatId [repeat id] %this is a list of local variables. not needed here so empty. Issue 2249
     construct newParams [list method_parameter]
         selfParam [, modifiedParams] [changeKeyArgumentNames]
     by
@@ -172,7 +192,7 @@ rule replaceConstructor memberVariables [repeat id]
             statements 
                 [addNoneAssignments each memberVariables] 
                 [manageSpecialTypes params] 
-                [replaceStatements] 
+                [replaceStatements emptyRepeatId] 
                 [changeKeyArgumentNameInNestedIdentifier]
                 [addFunctionImports]
 end rule
@@ -295,13 +315,45 @@ function addFunctionImports
         stmts [repeat statement] 
     import possibleFunctionImports [repeat id]
     by
-        stmts [addFunctionImport each possibleFunctionImports][addTimerImport each possibleFunctionImports]
+        stmts [addFunctionImport each possibleFunctionImports][addTimerImport each possibleFunctionImports][addNamespaceFunctionImport each possibleFunctionImports]
+end function
+
+%Creates specific function import if needed
+function addNamespaceFunctionImport seeking [id]
+    replace [repeat statement]
+        stmts [repeat statement]
+    import Package [repeat package_statement]
+    construct pacakgeLen [number]
+        _ [length Package]
+    deconstruct Package
+        'package packageName [imported] ';
+    where
+        stmts [containsId seeking]
+    where not
+        pacakgeLen [= 0]
+    construct seekingPackage [method_import]
+        packageName '. seeking
+    construct imp [import_statement]
+        'from seekingPackage 'import seeking
+    where not 
+        seeking [= 'Timer]
+    where not 
+        seeking [= 'TimedEventHandler]
+    construct funcImport [repeat statement]
+        imp
+    by
+        funcImport [. stmts]
 end function
 
 %Creates specific function import if needed
 function addFunctionImport seeking [id]
     replace [repeat statement]
         stmts [repeat statement]
+    import Package [repeat package_statement]
+    construct pacakgeLen [number]
+        _ [length Package]
+    where
+        pacakgeLen [= 0]
     where 
         stmts [containsId seeking]
     construct imp [import_statement]
@@ -749,9 +801,10 @@ end define
 
 %Overload data arg describes the type of an parameter. All together a repeat of these is used to describe the types of all the parameters of a method
 %The types used are pythonic types (so bool instead of boolean). 
-%The optional second id is to specify if the arg is a list. (ex: "list bool" is a list of booleans)
+%The optional first id is to specify if the arg is a list. (ex: "list bool" is a list of booleans)
+% Issue 2233: Switched [id] to [nested_identifier] to allow nested types
 define overload_data_arg
-    [id] [opt id]
+    [opt id] [nested_identifier]
 end define
 
 %Given a java param, adds the appropriate python type to the list of method param types
@@ -768,10 +821,18 @@ function addOverloadArg javaParam [method_parameter]
             [translateArrayType type]
             [translateListType type]
             [translateBaseTypesOverload type]
+            [translateNestedType type]
     deconstruct optAdding  
         adding [overload_data_arg]
     by
         res [. adding]
+end function
+
+% Fallback function to match nested identifiers
+function translateNestedType javaType [nested_identifier]
+    replace [opt overload_data_arg]
+    by
+        javaType
 end function
 
 %Translates a java base type to a python overloading arg
@@ -788,7 +849,7 @@ function translateBaseTypes
     replace [id]
         baseType [id]
     by
-        baseType [translateStringType]  [translateBooleanType] [translateDoubleType]
+        baseType [translateStringType] [translateBooleanType] [translateDoubleType]
 end function
 
 function translateStringType
@@ -1006,7 +1067,7 @@ end function
 function createNormalTypeCheck arg [overload_data_arg] counter [number]
     replace [opt value]
     deconstruct arg
-        type [id]
+        type [nested_identifier]
     construct castedType [value]
         type
     by
@@ -1016,7 +1077,7 @@ end function
 function createListTypeCheck arg [overload_data_arg] counter [number]
     replace [opt value]
     deconstruct arg
-        'list type [id]
+        'list type [nested_identifier]
     construct castedType [value]
         type
     by

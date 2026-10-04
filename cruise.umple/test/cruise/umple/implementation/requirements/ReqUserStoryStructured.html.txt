@@ -1,0 +1,4 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqUserStoryStructured.ump
+</p><p><b>US2: As customer<br/>When password is forgotten<br/>I want reset my password<br/>So that regain access to my account</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>

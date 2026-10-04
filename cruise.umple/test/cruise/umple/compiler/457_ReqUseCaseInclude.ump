@@ -1,0 +1,5 @@
+req UC7 useCase {
+  who { customer }
+  include UC1, UC2;
+  userStep 1 { start checkout }
+}

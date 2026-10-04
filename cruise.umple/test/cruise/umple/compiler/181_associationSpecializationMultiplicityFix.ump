@@ -1,0 +1,5 @@
+class A {}
+class B {isA A;}
+class Z {}
+association { 0..1 A vehicleA -- 0..2 Z temp;}
+association { 0..1 B vehicleA -- 0..1 Z temp;}

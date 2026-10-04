@@ -2098,6 +2098,7 @@ public class ParserTest
   	  Assert.assertEquals("Error 1003 on line 0 of file \'filename\':\nThis is a test error zero, one",em.toString());
 
   }
+
   @Test 
   public void jsonMessage()
   {
@@ -2112,7 +2113,37 @@ public class ParserTest
 	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file1",0,0,0), " \\' "));
 	  pr.addErrorMessage(new ErrorMessage(1002, new Position("file2",0,0,0), " \" "));
 	  
-	  Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file1\", \"message\" : \"Test \\\' \\\\' \\\'\"},{ \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file2\", \"message\" : \"Test \\\' \\\' \\\'\"}]}",pr.toJSON());
+    Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file1\", \"message\" : \"Test \\\" \\\\' \\\"\"},{ \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"file2\", \"message\" : \"Test \\\" \\\" \\\"\"}]}",pr.toJSON());
+  }
+
+  @Test
+  public void jsonMessageQuotedFilenameInParam()
+  {
+    ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
+    ets.clear();
+
+    ets.addErrorType(new ErrorType(1510, 5, "Unable to open {0}", "url"));
+
+    ParseResult pr = new ParseResult(true);
+    
+    pr.addErrorMessage(new ErrorMessage(1510, new Position("source.ump",0,0,0), "\"DOG\""));
+
+    Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1510\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"source.ump\", \"message\" : \"Unable to open \\\"DOG\\\"\"}]}",pr.toJSON());
+  }
+
+  @Test
+  public void jsonMessageBackslashEscape()
+  {
+    ErrorTypeSingleton ets = ErrorTypeSingleton.getInstance();
+    ets.clear();
+    
+    ets.addErrorType(new ErrorType(1002, 5, "Path {0}", "url"));
+
+    ParseResult pr = new ParseResult(true);
+    
+    pr.addErrorMessage(new ErrorMessage(1002, new Position("f",0,0,0), "C:\\Users"));
+
+    Assert.assertEquals("{ \"results\" : [ { \"errorCode\" : \"1002\", \"severity\" : \"5\", \"url\" : \"url\", \"line\" : \"0\", \"filename\" : \"f\", \"message\" : \"Path C:\\\\Users\"}]}",pr.toJSON());
   }
   
   @Test

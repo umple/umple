@@ -1,0 +1,3 @@
+req UC1 useCase {
+  Customer checks out items and the system calculates the total.
+}

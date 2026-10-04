@@ -1,8 +1,0 @@
-generate Php;
-namespace example;
-
-interface IMentor 
-{
-constant String aName = "aValue";
-String getCode(String aParam);
-}

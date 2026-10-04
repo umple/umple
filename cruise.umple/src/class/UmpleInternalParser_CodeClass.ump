@@ -156,6 +156,18 @@ class UmpleInternalParser
     }
     else if (t.is("requirement")){
       analyzeRequirement(t);
+      //attach lastRequirementsImpl to this requirement (req-as-implementsReq-target)
+      if (lastRequirementsImpl.size() > 0) {
+        Token reqIdToken = t.getSubToken("reqIdentifier");
+        if (reqIdToken != null) {
+          Requirement req = model.getAllRequirements().get(reqIdToken.getValue());
+          if (req != null) {
+            for (ReqImplementation ri : lastRequirementsImpl) {
+              req.addReqImplementation(ri);
+            }
+          }
+        }
+      }
     }
     else if (t.is("reqImplementation")){
       analyzeImplementReq(t);   
@@ -183,7 +195,35 @@ class UmpleInternalParser
     }
     else if (t.is("associationDefinition"))
     {
+      // Snapshot unlinkedAssociations count to find associations created by this block
+      int assocCountBefore = unlinkedAssociations.size();
       analyzeAllAssociations(t);
+      // Attach top-level lastRequirementsImpl to all associations created in this block
+      for (int i = assocCountBefore; i < unlinkedAssociations.size(); i++) {
+        for (ReqImplementation ri : lastRequirementsImpl) {
+          unlinkedAssociations.get(i).addReqImplementation(ri);
+        }
+      }
+    }
+    else if (t.is("traitDefinition"))
+    {
+      // reqImplementation must be consumed by analyzeTraitToken (which runs after this),
+      // so prevent analyzeClassToken from clearing lastRequirementsImpl prematurely.
+      shouldConsumeRequirementImpl = false;
+    }
+    else if (t.is("stateMachineDefinition"))
+    {
+      // attach top-level lastRequirementsImpl to the state machine definition.
+      // The StateMachine object was already created by analyzeStateMachineToken at step 1.
+      mixset StateMachine {
+        String smName = t.getValue("name");
+        StateMachine sm = model.getStateMachineDefinition(smName);
+        if (sm != null) {
+          for (ReqImplementation ri : lastRequirementsImpl) {
+            sm.addReqImplementation(ri);
+          }
+        }
+      }
     }
     else if (t.is("toplevelException"))
     {
@@ -207,58 +247,281 @@ class UmpleInternalParser
 
 
   private void analyzeRequirement(Token t) {
-    // extract new requirement identifier 
-    String reqID = t.getSubToken("reqIdentifier").getValue(); 
-    String newContent = t.getSubToken("reqContent").getValue();// extract content 
-    // Initialize language
+    String reqID = t.getSubToken("reqIdentifier").getValue();
+    final String INVALID_LANG = "INVALID";
+    final String QUALITY_LANG = "quality";
+
+    String newContent = "";
+    if (!(t.getSubToken("reqContent") == null || t.getSubToken("reqContent").getValue() == null)) {
+      newContent = t.getSubToken("reqContent").getValue();
+    }
+
     String newLanguage = "";
     if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
-        // get the language of the sub token
-        newLanguage = t.getSubToken("reqLanguage").getValue();
+      newLanguage = t.getSubToken("reqLanguage").getValue();
     }
-     // Retrieves any existing requirement with the same identifier from the model
-     Requirement existingRequirement = model.getAllRequirements().get(reqID); 
-    // Checks if a requirement with the same identifier already exists in the model.
-    if (existingRequirement != null) { 
-        // get the language of the existing requirement
-        String existingLanguage = existingRequirement.getLanguage();
-	// return if different languages are encountered
-        if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
-            setFailedPosition(t.getPosition(), 402, reqID,existingLanguage,newLanguage);
-            return;
+    if ("userstory".equals(newLanguage)) {
+      newLanguage = "userStory";
+    }
+    if ("Quality".equals(newLanguage)) {
+      newLanguage = QUALITY_LANG;
+    }
+    if ("usecase".equals(newLanguage)) {
+      newLanguage = "useCase";
+    }
+
+    newLanguage=newLanguage.trim();
+    newContent=newContent.trim();
+
+    String whoContent = null;
+    String whenContent = null;
+    String whatContent = null;
+    String whyContent = null;
+    List<String[]> parsedUseCaseSteps = new ArrayList<String[]>();
+    List<String> parsedIncludedUseCases = new ArrayList<String>();
+    List<String> parsedParentUseCases = new ArrayList<String>();
+
+    if (("userStory".equals(newLanguage) || "useCase".equals(newLanguage)) && !newContent.equals("")) {
+      String[] lines = newContent.split("\\r?\\n");
+      StringBuilder remainingContent = new StringBuilder();
+
+      for (String line : lines) {
+        String trimmed = line.trim();
+
+        if (trimmed.startsWith("who {") && trimmed.endsWith("}")) {
+          whoContent = trimmed.substring(5, trimmed.length() - 1).trim();
         }
-        // retrieve the content of the existing requirement
-        String existingContent = existingRequirement.getStatement();
+        else if (trimmed.startsWith("when {") && trimmed.endsWith("}")) {
+          whenContent = trimmed.substring(6, trimmed.length() - 1).trim();
+        }
+        else if (trimmed.startsWith("what {") && trimmed.endsWith("}")) {
+          whatContent = trimmed.substring(6, trimmed.length() - 1).trim();
+        }
+        else if (trimmed.startsWith("why {") && trimmed.endsWith("}")) {
+          whyContent = trimmed.substring(5, trimmed.length() - 1).trim();
+        }
+        else if ("useCase".equals(newLanguage) && isUseCaseRelationship(trimmed, "include")) {
+          addUseCaseReferences(trimmed, "include", parsedIncludedUseCases);
+        }
+        else if ("useCase".equals(newLanguage) && isUseCaseRelationship(trimmed, "isA")) {
+          addUseCaseReferences(trimmed, "isA", parsedParentUseCases);
+        }
+        else if ("useCase".equals(newLanguage) && isUseCaseStep(trimmed, "userStep")) {
+          parsedUseCaseSteps.add(parseUseCaseStep(trimmed, "userStep"));
+        }
+        else if ("useCase".equals(newLanguage) && isUseCaseStep(trimmed, "systemResponse")) {
+          parsedUseCaseSteps.add(parseUseCaseStep(trimmed, "systemResponse"));
+        }
+        else {
+          if (remainingContent.length() > 0) {
+            remainingContent.append("\n");
+          }
+          remainingContent.append(line.trim());
+        }
+      }
 
+      if (!(whoContent == null && whenContent == null && whatContent == null && whyContent == null
+            && parsedUseCaseSteps.isEmpty() && parsedIncludedUseCases.isEmpty() && parsedParentUseCases.isEmpty())) {
+        newContent = remainingContent.toString().trim();
+      }
+    }
 
-        // Requirement with the same identifier already exists, combine them
-        // Concatenate the content of the existing requirement with the new content
+    // Validate quality section content and extract quality class data
+    List<String[]> qualityClassData = new ArrayList<String[]>();
+    if (QUALITY_LANG.equals(newLanguage)) {
+      if (newContent.equals("")) {
+        setFailedPosition(t.getPosition(), 405, reqID);
+      } else {
+        Pattern p = Pattern.compile("([A-Za-z_][A-Za-z0-9_]*)\\s*\\{([^}]*)\\}");
+        Matcher m = p.matcher(newContent);
+        while (m.find()) {
+          String className = m.group(1).trim();
+          String classContent = m.group(2).trim();
+          if (!classContent.isEmpty()) {
+            setFailedPosition(t.getPosition(), 403, className, reqID);
+          }
+          qualityClassData.add(new String[]{className, classContent});
+        }
+        // Check for unmatched leftover content after extracting all valid matches
+        String leftover = p.matcher(newContent).replaceAll("").trim();
+        if (!leftover.isEmpty()) {
+          if (leftover.contains("{")) {
+            setFailedPosition(t.getPosition(), 1504, reqID);
+          } else if (leftover.matches("[A-Za-z0-9_\\s]+")) {
+            setFailedPosition(t.getPosition(), 407, reqID, leftover);
+          } else {
+            setFailedPosition(t.getPosition(), 1500, leftover);
+          }
+        }
+        newContent = "";
+      }
+    }
+
+    Requirement existingRequirement = model.getAllRequirements().get(reqID);
+
+    if (existingRequirement != null) {
+      String existingLanguage = existingRequirement.getLanguage();
+
+      if (existingLanguage.equals(INVALID_LANG) && !newLanguage.equals(QUALITY_LANG)) {
+        // Reset to the first concrete requirement language encountered
+        existingLanguage = newLanguage;
+        existingRequirement.setLanguage(newLanguage);
+      }
+
+      if (!(existingLanguage.equals(INVALID_LANG) || newLanguage.equals(QUALITY_LANG) || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
+        setFailedPosition(t.getPosition(), 402, reqID, existingLanguage, newLanguage);
+        return;
+      }
+
+      String existingContent = existingRequirement.getStatement();
+      if (existingContent == null) {
+        existingContent = "";
+      }
+
+      if (newLanguage.equals("")) {
+        newLanguage = existingLanguage;
+      }
+
+      if (existingContent.equals("")) {
+        // keep newContent as is
+      }
+      else if (newContent.equals("")) {
+        newContent = existingContent;
+      }
+      else {
         newContent = existingContent + " " + newContent;
-        if (newLanguage.equals("")) {
-            newLanguage = existingLanguage;
-        }
-        existingRequirement.addReqToken(t);// new addition
-        existingRequirement.setStatement(newContent);
+      }
+
+      existingRequirement.addReqToken(t);
+      existingRequirement.setStatement(newContent);
+
+      if (whoContent != null && !whoContent.equals("")) {
+        existingRequirement.setWho(whoContent);
+      }
+      if (whenContent != null && !whenContent.equals("")) {
+        existingRequirement.setWhen(whenContent);
+      }
+      if (whatContent != null && !whatContent.equals("")) {
+        existingRequirement.setWhat(whatContent);
+      }
+      if (whyContent != null && !whyContent.equals("")) {
+        existingRequirement.setWhy(whyContent);
+      }
+      for (String[] qcData : qualityClassData) {
+        // QualityClass constructor auto-appends to the requirement
+        new QualityClass(qcData[0], qcData[1], existingRequirement);
+      }
+
+      addUseCaseElements(existingRequirement, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
     }
-    else
-    {
-    // If existing requirement is null
-    // create new requirement
-      Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
-    // Add the new requirement
-      req.addReqToken(t);// new addition
+    else {
+      if (QUALITY_LANG.equals(newLanguage)) {
+        // Quality section appears before any requirement type definition;
+        // use an invalid language placeholder so it can be resolved later
+        setFailedPosition(t.getPosition(), 406, reqID);
+        newLanguage = INVALID_LANG;
+      }
+      Requirement req = new Requirement(reqID, newContent, whoContent, whenContent, whatContent, whyContent, newLanguage);
+      req.addReqToken(t);
+      for (String[] qcData : qualityClassData) {
+        // QualityClass constructor auto-appends to the requirement
+        new QualityClass(qcData[0], qcData[1], req);
+      }
       model.getAllRequirements().put(reqID, req);
+
+      addUseCaseElements(req, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
+    }
+  }
+
+  // Matches a use case relationship line such as "include UC1, UC2;" or "isA UC3;"
+  private static boolean isUseCaseRelationship(String line, String keyword) {
+    return line.startsWith(keyword + " ") && line.endsWith(";");
+  }
+
+  // Collects the comma separated use case identifiers named by a relationship line
+  private static void addUseCaseReferences(String line, String keyword, List<String> references) {
+    String body = line.substring(keyword.length(), line.length() - 1);
+    for (String reference : body.split(",")) {
+      String trimmedReference = reference.trim();
+      if (!trimmedReference.equals("")) {
+        references.add(trimmedReference);
+      }
+    }
+  }
+
+  // Matches a use case step line, with or without a condition,
+  // such as "userStep 1 { pay }" or "userStep 1 [card accepted] { pay }"
+  private static boolean isUseCaseStep(String line, String keyword) {
+    return line.startsWith(keyword + " ") && line.contains("{") && line.endsWith("}");
+  }
+
+  // Splits a use case step line into { id, keyword, content, condition }.
+  // The condition is null when the step carries no [...] guard.
+  private static String[] parseUseCaseStep(String line, String keyword) {
+    int braceStart = line.indexOf("{");
+    String content = line.substring(braceStart + 1, line.length() - 1).trim();
+    String prefix = line.substring(keyword.length(), braceStart).trim();
+
+    String condition = null;
+    int conditionStart = prefix.indexOf("[");
+    if (conditionStart >= 0 && prefix.endsWith("]")) {
+      condition = prefix.substring(conditionStart + 1, prefix.length() - 1).trim();
+      prefix = prefix.substring(0, conditionStart).trim();
+      if (condition.equals("")) {
+        condition = null;
+      }
     }
 
+    return new String[] { prefix, keyword, content, condition };
+  }
+
+  // Attaches the structured use case elements found in a requirement body to the requirement,
+  // keeping the steps in the order they were written
+  private static void addUseCaseElements(Requirement req, List<String[]> steps, List<String> includedUseCases, List<String> parentUseCases) {
+    for (String reference : parentUseCases) {
+      if (req.indexOfParentUseCase(reference) == -1) {
+        req.addParentUseCase(reference);
+      }
+    }
+    for (String reference : includedUseCases) {
+      if (req.indexOfIncludedUseCase(reference) == -1) {
+        req.addIncludedUseCase(reference);
+      }
+    }
+    for (String[] stepData : steps) {
+      UseCaseStep.UseCaseStepType stepType =
+        "userStep".equals(stepData[1])
+          ? UseCaseStep.UseCaseStepType.UserStep
+          : UseCaseStep.UseCaseStepType.SystemResponse;
+
+      // The UseCaseStep constructor appends the step to the requirement
+      UseCaseStep step = new UseCaseStep(stepData[0], stepType, stepData[2], req);
+      step.setCondition(stepData[3]);
+    }
+  }
+
+  // Shared utility to parse reqRef tokens from a reqImplementation token.
+  // Returns a list of ReqImplementation objects, one per reqRef sub-token.
+  private static List<ReqImplementation> parseReqRefTokens(Token t) {
+    List<ReqImplementation> result = new ArrayList<>();
+    for (Token reqRefToken : t.getSubTokens()) {
+      if (!reqRefToken.is("reqRef")) continue;
+      String reqImpID = reqRefToken.getSubToken("reqIdentifier").getValue();
+      Token qualityToken = reqRefToken.getSubToken("qualityClassName");
+      ReqImplementation reqImpl = new ReqImplementation(reqImpID, t);
+      if (qualityToken != null) {
+        reqImpl.setQualityClassName(qualityToken.getValue());
+      }
+      result.add(reqImpl);
+    }
+    return result;
   }
 
   private void analyzeImplementReq(Token t) {
-     // Identifier that has been identified 
-     String reqImpID = t.getSubToken("reqIdentifier").getValue();
-     // Instantiate the requirement implementation
-     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
-     model.addReqImplementation(reqImplementation);
-     lastRequirementsImpl.add(reqImplementation); 
+     for (ReqImplementation reqImpl : parseReqRefTokens(t)) {
+       model.addReqImplementation(reqImpl);
+       lastRequirementsImpl.add(reqImpl);
+     }
   }
   
   private void analyzeImplementReq(Token t, UmpleClass aClass) {
@@ -267,22 +530,13 @@ class UmpleInternalParser
   
   private List<ReqImplementation> analyzeEnumImplReq(Token t)
   {
-     List<ReqImplementation> ReqImp= new ArrayList<ReqImplementation>();
-     String reqImpID = t.getSubToken("reqIdentifier").getValue();
-     // Instantiate the requirement implementation
-     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
-     ReqImp.add(reqImplementation); 
-     return ReqImp;
+     return parseReqRefTokens(t);
   }
   
   mixset StateMachine {
     private List<ReqImplementation> analyzeStateReqImpl(Token t)
     {
-      List<ReqImplementation> ReqImp= new ArrayList<ReqImplementation>();
-      String reqImpID = t.getSubToken("reqIdentifier").getValue();
-      ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
-      ReqImp.add(reqImplementation);
-      return ReqImp;
+      return parseReqRefTokens(t);
     }
   }
   
@@ -669,6 +923,9 @@ class UmpleInternalParser
       checkDuplicateAssociationNamesClassHierarchy();
       checkIgnoredAssociations();
       checkSubclassSameAssociationDifferentRoleNames();
+
+      //Issue 1662
+      checkRolenameMatchingClassname();
 
       checkExtendsForCycles();
       checkSortedAssociations();
@@ -1316,15 +1573,27 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
   private void analyzeAllAssociations(Token associationToken)
   {
     String name = associationToken.getValue("name");
+    //track reqImplementation tokens appearing inside the association block
+    // so they can be attached to the immediately following association.
+    List<ReqImplementation> innerReqImpls = new ArrayList<ReqImplementation>();
 
     // Go through every token that is a child of the current token (all associations part of this association).
     for(Token token : associationToken.getSubTokens()){
       boolean isAssociationToken = token.is("association");
+      //capture implementsReq inside the association block
+      if (token.is("reqImplementation")) {
+        innerReqImpls.clear();
+        for (ReqImplementation reqImpl : parseReqRefTokens(token)) {
+          model.addReqImplementation(reqImpl);
+          innerReqImpls.add(reqImpl);
+        }
+        continue;
+      }
       mixset Mixset {
         if (token.is("mixsetDefinition"))
         {
           analyzeMixsetBodyToken(token);
-        } 
+        }
       }
       //Issue 213/131: [association] elements inside associationClasses generate 2 associations instead of one
       if (isAssociationToken && associationToken.is("associationClassDefinition")) {
@@ -1337,6 +1606,13 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         Association association = analyzeAssociation(token, "");
         if(isAssociationToken && association != null){
           association.setName(name);
+        }
+        //attach inner reqImplementation to this association
+        if (association != null) {
+          for (ReqImplementation ri : innerReqImpls) {
+            association.addReqImplementation(ri);
+          }
+          innerReqImpls.clear();
         }
       }
       if (!getParseResult().getWasSuccess()) { return; }
@@ -2768,6 +3044,25 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         secondLowerBoundOK = (b2LB <= a2LB);
         secondUpperBoundOK = (b2UB >= a2UB);
 
+        // Special case for * multiplicity; any upper bound is more specific than 0..*
+        if ( b1UB == -1 ) 
+        { 
+          firstUpperBoundOK = true;
+        }
+        if ( b2UB == -1 ) 
+        { 
+          secondUpperBoundOK = true;
+        }
+        // Issue 2220: 0..* is LESS specific than 0..X;
+        if ( a1UB == -1 && b1UB != -1) 
+        { 
+          firstUpperBoundOK = false;
+        }
+        if ( a2UB == -1 && b2UB != -1) 
+        { 
+          secondUpperBoundOK = false;
+        }
+
         Boolean firstMulChToOne = false;
         Boolean secondMulChToOne = false;
         Boolean firstMulChToN = false;
@@ -2794,24 +3089,11 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         // changed to MN (or M*)
         if (a2UB >= a2LB && a2LB != 0 && a2UB > 1 && ((b2LB == 0 && b2UB > 1) || b2UB == -1))
           secondMulChToN = true;    
-           
-        // special case for * multiplicity
-        if ( b1UB == -1 ) 
-        { 
-          firstUpperBoundOK = true;
-        }
-        
-        if ( b2UB == -1 ) 
-        { 
-          secondUpperBoundOK = true;
-
-        }
         
         if ( b1UB == -1 || (b1LB == 0 && b1UB != 1))
         { 
           secondNeedsSetCode = true;
         } 
-        
         if ( b2UB == -1 || (b2LB == 0 && b2UB != 1))
         {
           firstNeedsSetCode = true;
@@ -2823,8 +3105,17 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           boundsOK = true;
         }
         
-        if ( subclassOK && namesOK && boundsOK )
+        if ( subclassOK && namesOK )
         {
+          if (!boundsOK) {
+            // The user has either: entered an invalid bound, or reused a rolename unintentionally
+            if (!firstLowerBoundOK || !firstUpperBoundOK) {
+              getParseResult().addErrorMessage(new ErrorMessage(181, A.getTokenPosition(), currentLeftClass.getName(), currentRightClass.getName(), b1LB+"", b1UB+""));
+            } else if (!secondLowerBoundOK || !secondUpperBoundOK) {
+              getParseResult().addErrorMessage(new ErrorMessage(181, A.getTokenPosition(), currentLeftClass.getName(), currentRightClass.getName(), b2LB+"", b2UB+""));
+            }
+          }
+
           // then it's a redefinition
           // so B is a parent
           aFirstEnd.setSuperClassName(bFirstEnd.getClassName());
@@ -2979,6 +3270,23 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     
   }
 
+  private void checkRolenameMatchingClassname()
+  {
+    for (Association assoc : model.getAssociations()) {
+      AssociationEnd firstEnd = assoc.getEnd(0);
+      AssociationEnd secondEnd = assoc.getEnd(1); 
+
+      if (firstEnd.getRoleName().toLowerCase().equals(firstEnd.getClassName().toLowerCase()) && !firstEnd.getIsDefaultRoleName()) 
+      {
+        getParseResult().addErrorMessage(new ErrorMessage(89,assoc.getTokenPosition(),firstEnd.getRoleName(), firstEnd.getClassName()));
+      } 
+      if (secondEnd.getRoleName().toLowerCase().equals(secondEnd.getClassName().toLowerCase()) && !secondEnd.getIsDefaultRoleName()) 
+      {
+        getParseResult().addErrorMessage(new ErrorMessage(89,assoc.getTokenPosition(),secondEnd.getRoleName(), secondEnd.getClassName()));
+      }
+    }
+  }
+
   private void checkDuplicateAssociationNames()
   {
     for(UmpleClass C : model.getUmpleClasses())
@@ -3008,7 +3316,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         AssociationEnd firstEnd = assoc.getEnd(0);
         AssociationEnd secondEnd = assoc.getEnd(1); 
 
-      if ( assoc.getIsSpecialization() )
+        if ( assoc.getIsSpecialization() )
         {
         //getParseResult().addErrorMessage(new ErrorMessage(400,assoc.getTokenPosition(),C.getName(),firstEnd.getRoleName()));
           continue;
@@ -3020,7 +3328,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         Boolean checkSecondEnd = !secondEnd.getClassName().equals(C.getName());
         Boolean associationIsReflexive = !checkFirstEnd && !checkSecondEnd;
         
-        //issue 288: firstEnd of association does not indicate current (this) class being analyzed.
+        //issue 188: firstEnd of association does not indicate current (this) class being analyzed.
         //If association is NOT reflexive, must check the differing class.  Check if role name
         //matches class name, but only if it is a user entered role name.  Current class must
         //also have multiple associations to the same class to cause java compile errors.  
@@ -3058,10 +3366,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
         }
 
+        //Issue 2210: existingNames now uses the lowercase of role names
+
         // check names on other-class end of associations to other classes
         if (!isSymmetricReflexive && (checkFirstEnd || associationIsReflexive) && assoc.getIsLeftNavigable())
         { 
-          if (existingNames.contains(firstEnd.getRoleName()) || hasMultipleAssocToSameClass)
+          if (existingNames.contains(firstEnd.getRoleName().toLowerCase()) || hasMultipleAssocToSameClass)
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),firstEnd.getClassName(), C.getName()));
             return;
@@ -3073,12 +3383,12 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
           else
           {
-            existingNames.add(firstEnd.getRoleName());
+            existingNames.add(firstEnd.getRoleName().toLowerCase());
           }
         }
         if (!isSymmetricReflexive && (checkSecondEnd || associationIsReflexive) && assoc.getIsRightNavigable())
         {
-          if (existingNames.contains(secondEnd.getRoleName()) || hasMultipleAssocToSameClass)
+          if (existingNames.contains(secondEnd.getRoleName().toLowerCase()) || hasMultipleAssocToSameClass)
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(), secondEnd.getClassName(), C.getName()));
             return;
@@ -3090,7 +3400,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
           else
           {
-            existingNames.add(secondEnd.getRoleName());
+            existingNames.add(secondEnd.getRoleName().toLowerCase());
           }
         }
         
@@ -3105,7 +3415,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
             roleNameToCheck = secondEnd.getRoleName();
           }
 
-          if(existingNames.contains(roleNameToCheck))
+          if(existingNames.contains(roleNameToCheck.toLowerCase()))
           {
             getParseResult().addErrorMessage(new ErrorMessage(19,assoc.getTokenPosition(),C.getName(),roleNameToCheck));
             return;
@@ -3117,7 +3427,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
           }
           else
           {
-            existingNames.add(roleNameToCheck);
+            existingNames.add(roleNameToCheck.toLowerCase());
           }
         }
 
@@ -4499,8 +4809,20 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }
     AssociationEnd firstEnd = createPreliminaryAssociationEnd(myEndToken, defaultMyType);
     AssociationEnd secondEnd = createPreliminaryAssociationEnd(yourEndToken, defaultMyType);
+    // If createPreliminaryAssociationEnd() fails validation (e.g., an invalid role name),
+    // it reports the error and returns null for that association end.
+    //
+    // Without the guard below, analyzeAssociation() would also report error 8
+    // ("Association class is missing an end") whenever one end is null.
+    // This would create a misleading cascading error, since the real issue
+    // (such as error 120 for an invalid identifier) has already been reported.
+    //
+    // Error 8 should only apply to AssociationClasses that actually lack an end,
+    // so we restrict it to those cases using the isAssociationClass check.
     if(firstEnd == null || secondEnd == null){
-        setFailedPosition(associationToken.getPosition(), 8, name);
+        if(isAssociationClass){
+          setFailedPosition(associationToken.getPosition(), 8, name);
+        }
         return null;
     }
     
@@ -4614,6 +4936,15 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         String invalidBound = bound == null ? lowerBound + ".." + upperBound : bound;
         setFailedPosition(associationEndToken.getPosition(), 4, invalidBound);
         return null;
+      }
+      if(roleName != null && !"".equals(roleName) && !Token.isValidIdentifier(roleName)){
+        setFailedPosition(associationEndToken.getPosition("roleName"), 120, roleName);
+        return null;
+      }
+      if(roleName != null && roleName.length() > 0 && Character.isUpperCase(roleName.charAt(0))){
+          getParseResult().addErrorMessage(
+              new ErrorMessage(121, associationEndToken.getPosition("roleName"), roleName)
+          );
       }
       if(type == null){
           type = defaultType;
@@ -5956,6 +6287,8 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     Token top = token;
     Position position = token.getPosition();
     token = token.getSubToken("toplevelExceptionMain");
+    // Known top-level construct keywords for 1502/1503 classification
+    // Derived from directive- and entity- rules in the grammar files
     String[] identifiers = new String[]{
       "unknown",
       "class",
@@ -5964,13 +6297,23 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       "association",
       "associationClass",
       "statemachine",
+      "enum",
+      "trait",
+      "template",
+      "mixset",
+      "before",
+      "after",
+      "around",
+      "filter",
       "glossary",
       "strictness",
       "generate",
       "use",
       "req",
+      "require",
       "implementsReq",
-      "namespace"};
+      "namespace",
+      "top"};
     String identifier = token.getValue("identifier");
     boolean isNotProperIdentifier = true;
     for(String id:identifiers)
@@ -5981,7 +6324,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
         break;
       }
     }
-    
+
     if(isNotProperIdentifier)
     {
       int bestScore = -100;
@@ -6017,10 +6360,295 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
       }
       setFailedPosition(position,1503,identifier,bestMatch);
     }
-    else 
+    else
     {
-      setFailedPosition(position,1502,identifier);
+      // Issue #2167: Before emitting 1502, try to identify the specific
+      // mismatched brace and report 1504/1505 with the correct position.
+      int[] braceResult = analyzeBraceMismatchForConstruct(top, position);
+      if (braceResult != null)
+      {
+        // braceResult: [errorCode, line, col, offset]
+        String errorFilename = position.getFilename();
+        if (errorFilename != null && !errorFilename.isEmpty())
+        {
+          errorFilename = Paths.get(errorFilename).getFileName().toString();
+        }
+
+        Position bracePos = new Position(
+          errorFilename, braceResult[1], braceResult[2], braceResult[3]);
+        setFailedPosition(bracePos, braceResult[0], identifier);
+      }
+      else
+      {
+        setFailedPosition(position,1502,identifier);
+      }
     }
+  }
+
+  // Issue #2167: Analyze brace mismatch for a malformed top-level construct.
+  // Returns [errorCode, line, col, offset] if a specific mismatched brace is found,
+  // or null to fall back to error 1502.
+  private int[] analyzeBraceMismatchForConstruct(Token top, Position constructPos)
+  {
+    Token parent = top.getParentToken();
+    if (parent == null || constructPos.getFilename() == null) return null;
+
+    // Find the index of this token among its siblings
+    int myIndex = parent.indexOfSubToken(top);
+    if (myIndex < 0) return null;
+
+    // Step 1: Find boundary — next toplevelException sibling with no extraStuff,
+    // no trailing semicolon, and whose immediately next sibling is any
+    // checkForUnintendedBracket. The semicolon check distinguishes body members
+    // like "t;" (statement with ;) from construct keywords like "mixset M" (no ;
+    // before their opening brace).
+    int boundaryOffset = -1;
+    int numSiblings = parent.numberOfSubTokens();
+    for (int i = myIndex + 1; i < numSiblings; i++)
+    {
+      Token sibling = parent.getSubToken(i);
+      if ("toplevelException".equals(sibling.getName()))
+      {
+        Token extraStuff = sibling.getSubToken("extraStuff");
+        if (extraStuff == null && i + 1 < numSiblings)
+        {
+          // Check if this toplevelException has a trailing semicolon.
+          // If it does, it's a statement (body member), not a construct keyword.
+          boolean hasSemicolon = false;
+          for (Token sub : sibling.getSubTokens())
+          {
+            if (";".equals(sub.getName()) && sub.isStatic())
+            {
+              hasSemicolon = true;
+              break;
+            }
+          }
+          if (!hasSemicolon)
+          {
+            Token nextSibling = parent.getSubToken(i + 1);
+            if ("checkForUnintendedBracket".equals(nextSibling.getName()))
+            {
+              boundaryOffset = sibling.getPosition().getOffset();
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    // Step 2: Read source file — resolve filename relative to model path
+    String source;
+    try {
+      File sourceFile = new File(constructPos.getFilename());
+      if (!sourceFile.exists() && model.getUmpleFile() != null)
+      {
+        sourceFile = new File(model.getUmpleFile().getPath(), constructPos.getFilename());
+      }
+      source = SampleFileWriter.readContent(sourceFile);
+    } catch (Exception e) {
+      return null;
+    }
+    if (source == null || source.isEmpty()) return null;
+
+    int scanStart = constructPos.getOffset();
+    int scanEnd = (boundaryOffset > scanStart) ? boundaryOffset : source.length();
+
+    // Step 3: Compute mask spans — all siblings between target and boundary
+    // that are NOT checkForUnintendedBracket and NOT the target itself
+    List<int[]> maskSpans = new ArrayList<int[]>();
+    for (int i = myIndex + 1; i < numSiblings; i++)
+    {
+      Token sibling = parent.getSubToken(i);
+      if (sibling.getPosition() != null && sibling.getPosition().getOffset() >= scanEnd) break;
+      if (!"checkForUnintendedBracket".equals(sibling.getName()))
+      {
+        int sibStart = sibling.getPosition().getOffset();
+        int sibLen = sibling.getLength();
+        if (sibLen > 0)
+        {
+          maskSpans.add(new int[]{sibStart, sibStart + sibLen});
+        }
+      }
+    }
+
+    // Step 4: Scan source for real braces, skipping quotes/comments
+    // Then filter out braces that fall within masked spans
+    List<int[]> braces = findRealBraces(source, scanStart, scanEnd);
+
+    // Filter: remove braces inside masked spans
+    List<int[]> filtered = new ArrayList<int[]>();
+    for (int[] brace : braces)
+    {
+      int braceOffset = brace[3];
+      boolean masked = false;
+      for (int[] span : maskSpans)
+      {
+        if (braceOffset >= span[0] && braceOffset < span[1])
+        {
+          masked = true;
+          break;
+        }
+      }
+      if (!masked) filtered.add(brace);
+    }
+
+    if (filtered.isEmpty()) return null;
+
+    // Step 5: Separate opens and closes
+    List<int[]> opens = new ArrayList<int[]>();
+    List<int[]> closes = new ArrayList<int[]>();
+    for (int[] b : filtered)
+    {
+      if (b[0] == 0) opens.add(b);
+      else closes.add(b);
+    }
+
+    // Step 6: Strip first { (construct opener) and last } (intended closer)
+    if (opens.isEmpty() && closes.isEmpty()) return null;
+
+    if (opens.isEmpty())
+    {
+      // No opener at all — unmatched }
+      return new int[]{1505, closes.get(0)[1], closes.get(0)[2], closes.get(0)[3]};
+    }
+
+    // Strip first { (construct opener)
+    opens.remove(0);
+
+    if (!closes.isEmpty())
+    {
+      // Strip last } (intended closer)
+      closes.remove(closes.size() - 1);
+    }
+    else
+    {
+      // Opener exists but no closer at all — fall back to 1502
+      // (can't point to a better location than the construct start)
+      return null;
+    }
+
+    // Step 7: Rebuild remaining braces in source order and stack-analyze
+    List<int[]> remaining = new ArrayList<int[]>();
+    remaining.addAll(opens);
+    remaining.addAll(closes);
+    remaining.sort((a, b) -> Integer.compare(a[3], b[3]));
+
+    if (remaining.isEmpty()) return null;
+
+    // Stack-based analysis
+    List<int[]> stack = new ArrayList<int[]>();
+    for (int[] b : remaining)
+    {
+      if (b[0] == 0)
+      {
+        // Opening brace
+        stack.add(b);
+      }
+      else
+      {
+        // Closing brace
+        if (stack.isEmpty())
+        {
+          // Unmatched }
+          return new int[]{1505, b[1], b[2], b[3]};
+        }
+        stack.remove(stack.size() - 1);
+      }
+    }
+
+    if (!stack.isEmpty())
+    {
+      // Unmatched { — report the first one on the stack
+      int[] extra = stack.get(0);
+      return new int[]{1504, extra[1], extra[2], extra[3]};
+    }
+
+    // Balanced after strip — fall back to 1502
+    return null;
+  }
+
+  // Scan source text for real curly braces, skipping comments and string/char literals.
+  // Returns list of [type, line, col, offset] where type: 0 = {, 1 = }
+  private List<int[]> findRealBraces(String source, int startOffset, int endOffset)
+  {
+    List<int[]> braces = new ArrayList<int[]>();
+    // Compute initial line and column from start of file to startOffset
+    int line = 1;
+    int col = 0;
+    for (int k = 0; k < startOffset && k < source.length(); k++)
+    {
+      if (source.charAt(k) == '\n') { line++; col = 0; }
+      else { col++; }
+    }
+
+    int i = startOffset;
+    while (i < endOffset && i < source.length())
+    {
+      char c = source.charAt(i);
+
+      // Skip single-line comments
+      if (c == '/' && i + 1 < endOffset && source.charAt(i + 1) == '/')
+      {
+        while (i < endOffset && i < source.length() && source.charAt(i) != '\n') { i++; col++; }
+        continue;
+      }
+
+      // Skip multi-line comments
+      if (c == '/' && i + 1 < endOffset && source.charAt(i + 1) == '*')
+      {
+        i += 2; col += 2;
+        while (i + 1 < endOffset && i + 1 < source.length()
+               && !(source.charAt(i) == '*' && source.charAt(i + 1) == '/'))
+        {
+          if (source.charAt(i) == '\n') { line++; col = 0; } else { col++; }
+          i++;
+        }
+        if (i + 1 < source.length()) { i += 2; col += 2; } // skip */
+        continue;
+      }
+
+      // Skip string literals
+      if (c == '"')
+      {
+        i++; col++;
+        while (i < endOffset && i < source.length() && source.charAt(i) != '"')
+        {
+          if (source.charAt(i) == '\\') { i++; col++; } // skip escaped char
+          if (i < source.length() && source.charAt(i) == '\n') { line++; col = 0; } else { col++; }
+          i++;
+        }
+        if (i < source.length()) { i++; col++; } // skip closing "
+        continue;
+      }
+
+      // Skip char literals
+      if (c == '\'')
+      {
+        i++; col++;
+        while (i < endOffset && i < source.length() && source.charAt(i) != '\'')
+        {
+          if (source.charAt(i) == '\\') { i++; col++; } // skip escaped char
+          if (i < source.length() && source.charAt(i) == '\n') { line++; col = 0; } else { col++; }
+          i++;
+        }
+        if (i < source.length()) { i++; col++; } // skip closing '
+        continue;
+      }
+
+      // Track braces
+      if (c == '{')
+      {
+        braces.add(new int[]{0, line, col, i});
+      }
+      else if (c == '}')
+      {
+        braces.add(new int[]{1, line, col, i});
+      }
+
+      if (c == '\n') { line++; col = 0; } else { col++; }
+      i++;
+    }
+    return braces;
   }
 
   private void checkUnusedNamespaces()

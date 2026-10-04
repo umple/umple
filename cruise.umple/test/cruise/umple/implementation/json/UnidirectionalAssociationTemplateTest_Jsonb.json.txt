@@ -6,6 +6,7 @@
  "height": 42},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "Student",
  "name": "Student",
  "isAbstract": "false",
@@ -18,6 +19,7 @@
  "height": 42},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "Mentor",
  "name": "Mentor",
  "isAbstract": "false",
@@ -47,4 +49,5 @@
  "isLeftComposition":"false",
  "isRightComposition":"false",
  "isSymmetricReflexive":"false",
- "isTraced":"black"}] }
+ "isTraced":"black"}],
+ "globalEnums":[] }

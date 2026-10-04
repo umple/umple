@@ -1,11 +1,18 @@
 class Client {
   Integer minAge;
   
- int someMethod(Integer arg) 
+ int someMethod(Integer arg) Java
  {
    [post: arg > 5]
    // rest of stuff that we don't interpret
    return 0;
+ }
+
+ int someMethod(Integer arg) Python
+ {
+   [post: arg > 5]
+   # rest of stuff that we don\'t interpret
+   return 0
  }
 
 }

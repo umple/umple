@@ -1,3 +1,6 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 from abc import ABC, abstractmethod
 from ISomething import ISomething
 
@@ -5,4 +8,3 @@ class IFirstChild(ABC, ISomething):
     @abstractmethod
     def __init__(self):
         pass
-

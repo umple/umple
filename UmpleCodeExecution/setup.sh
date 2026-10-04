@@ -6,6 +6,16 @@ cd $BASEDIR
 
 . config.cfg
 
+# Resolve umplePath to absolute if relative
+if [[ "$umplePath" != /* ]]; then
+  umplePath="$(cd "$BASEDIR/.."; pwd)/$umplePath"
+fi
+
+if [ ! -d "$umplePath" ]; then
+  echo "WARNING: umplePath=$umplePath does not exist. Creating it."
+  mkdir -p "$umplePath"
+fi
+
 echo "This process will kill and remove any existing my"mainContainerName "container (ignore any error if not already running)"
 echo "Then it will (re)build docker images for executing code from UmpleOnline"
 echo "Then it will start the container on port" $portToUse

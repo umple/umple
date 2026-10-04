@@ -1,0 +1,10 @@
+req R1 {
+  A mixset requirement.
+}
+
+implementsReq R1;
+mixset Feature {
+  class A {
+    Integer x;
+  }
+}

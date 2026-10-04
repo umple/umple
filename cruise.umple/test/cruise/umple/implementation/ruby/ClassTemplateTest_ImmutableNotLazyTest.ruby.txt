@@ -1,0 +1,57 @@
+# PLEASE DO NOT EDIT THIS CODE
+# This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# NOTE: Ruby generator is experimental and is missing some features available in
+# in other Umple generated languages like Java or PHP
+
+
+
+class Student
+
+
+  #------------------------
+  # MEMBER VARIABLES
+  #------------------------
+
+  #Student Attributes - for documentation purposes
+  #attr_reader :number, :number2
+
+  #------------------------
+  # CONSTRUCTOR
+  #------------------------
+
+  def initialize(a_number)
+    @initialized = false
+    @deleted = false
+    @number = a_number
+    @can_set_number = false
+    @number2 = nil
+    @can_set_number2 = true
+    @initialized = true
+  end
+
+  #------------------------
+  # INTERFACE
+  #------------------------
+
+  def set_number2(a_number2)
+    was_set = false
+    return false unless @can_set_number2
+    @can_set_number2 = false
+    @number2 = a_number2
+    was_set = true
+    was_set
+  end
+
+  def get_number
+    @number
+  end
+
+  def get_number2
+    @number2
+  end
+
+  def delete
+    @deleted = true
+  end
+
+end

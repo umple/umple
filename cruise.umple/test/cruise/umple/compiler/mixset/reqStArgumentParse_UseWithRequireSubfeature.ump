@@ -1,0 +1,4 @@
+require subfeature [1..1 of {DesignA, DesignB}];
+mixset DesignA {}
+mixset DesignB {}
+use DesignA;

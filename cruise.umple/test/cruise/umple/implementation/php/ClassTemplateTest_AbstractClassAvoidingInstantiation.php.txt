@@ -1,0 +1,156 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Teacher
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Teacher Associations
+  private $myStudents;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->myStudents = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getMyStudent_index($index)
+  {
+    $aMyStudent = $this->myStudents[$index];
+    return $aMyStudent;
+  }
+
+  public function getMyStudents()
+  {
+    $newMyStudents = $this->myStudents;
+    return $newMyStudents;
+  }
+
+  public function numberOfMyStudents()
+  {
+    $number = count($this->myStudents);
+    return $number;
+  }
+
+  public function hasMyStudents()
+  {
+    $has = $this->numberOfMyStudents() > 0;
+    return $has;
+  }
+
+  public function indexOfMyStudent($aMyStudent)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->myStudents as $myStudent)
+    {
+      if ($myStudent->equals($aMyStudent))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfMyStudents()
+  {
+    return 0;
+  }
+
+  public function addMyStudentVia()
+  {
+    return new Person($this);
+  }
+
+  public function addMyStudent($aMyStudent)
+  {
+    $wasAdded = false;
+    if ($this->indexOfMyStudent($aMyStudent) !== -1) { return false; }
+    $existingTeacher = $aMyStudent->getTeacher();
+    $isNewTeacher = $existingTeacher != null && $this !== $existingTeacher;
+    if ($isNewTeacher)
+    {
+      $aMyStudent->setTeacher($this);
+    }
+    else
+    {
+      $this->myStudents[] = $aMyStudent;
+    }
+    $wasAdded = true;
+    return $wasAdded;
+  }
+
+  public function removeMyStudent($aMyStudent)
+  {
+    $wasRemoved = false;
+    //Unable to remove aMyStudent, as it must always have a teacher
+    if ($this !== $aMyStudent->getTeacher())
+    {
+      unset($this->myStudents[$this->indexOfMyStudent($aMyStudent)]);
+      $this->myStudents = array_values($this->myStudents);
+      $wasRemoved = true;
+    }
+    return $wasRemoved;
+  }
+
+  public function addMyStudentAt($aMyStudent, $index)
+  {  
+    $wasAdded = false;
+    if($this->addMyStudent($aMyStudent))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfMyStudents()) { $index = $this->numberOfMyStudents() - 1; }
+      array_splice($this->myStudents, $this->indexOfMyStudent($aMyStudent), 1);
+      array_splice($this->myStudents, $index, 0, array($aMyStudent));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveMyStudentAt($aMyStudent, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfMyStudent($aMyStudent) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfMyStudents()) { $index = $this->numberOfMyStudents() - 1; }
+      array_splice($this->myStudents, $this->indexOfMyStudent($aMyStudent), 1);
+      array_splice($this->myStudents, $index, 0, array($aMyStudent));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addMyStudentAt($aMyStudent, $index);
+    }
+    return $wasAdded;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    foreach ($this->myStudents as $aMyStudent)
+    {
+      $aMyStudent->delete();
+    }
+  }
+
+}
+?>

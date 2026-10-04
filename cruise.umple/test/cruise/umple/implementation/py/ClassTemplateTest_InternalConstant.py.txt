@@ -1,7 +1,23 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+# line 1 "ClassTemplateTest_InternalConstant.ump"
+
 class Student():
+    Name = "XYZ"
+    #------------------------
+    # STATIC VARIABLES
+    #------------------------
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         pass
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def delete(self):
         pass
-

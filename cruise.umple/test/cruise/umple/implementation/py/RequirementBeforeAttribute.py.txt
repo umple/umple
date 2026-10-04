@@ -1,8 +1,24 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
 class Example():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Example Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aA, aB):
+        self._b = None
+        self._a = None
         self._a = aA
         self._b = aB
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setA(self, aA):
         wasSet = False
         self._a = aA
@@ -15,9 +31,19 @@ class Example():
         wasSet = True
         return wasSet
 
+    #*
+    
+    #   * R01: this is a requirement for an attribute
+    
+    #   
     def getA(self):
         return self._a
 
+    #*
+    
+    #   * R01: this is a requirement for an attribute
+    
+    #   
     def getB(self):
         return self._b
 
@@ -25,5 +51,4 @@ class Example():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "a" + ":" + self.getA() + "," + "b" + ":" + self.getB() + "]"
-
+        return str(super().__str__()) + "[" + "a" + ":" + str(self.getA()) + "," + "b" + ":" + str(self.getB()) + "]"

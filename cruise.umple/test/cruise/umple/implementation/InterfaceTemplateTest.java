@@ -14,7 +14,7 @@ import org.junit.*;
 public class InterfaceTemplateTest extends TemplateTest
 {
   
-  @Test @Ignore
+  @Test
   public void Interface()
   {
     assertUmpleTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest."+ languagePath +".txt","ISomething");
@@ -25,5 +25,29 @@ public class InterfaceTemplateTest extends TemplateTest
   {
 	  assertUmpleTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest_Implements."+ languagePath +".txt","Something");
   }
+
+  @Test
+	public void MethodsInterface()
+	{
+		assertUmpleTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest_Methods."+ languagePath +".txt","ICodeTranslator");
+	}
+
+  @Test
+	public void isASingleInterface()
+	{
+		assertUmpleTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest_singleImplements."+ languagePath +".txt","IFirstChild");
+	}
+	
+	@Test
+	public void isAMultipleInterface()
+	{
+		assertUmpleTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest_multipleImplements."+ languagePath +".txt","ISecondChild");
+	}
+	
+  @Test
+	public void implementsMultipleInterface()
+	{
+		assertUmpleTemplateFor("InterfaceTemplateTest.ump",languagePath + "/InterfaceTemplateTest_implementsMultipleInterface."+ languagePath +".txt","A");
+	}
 
 }

@@ -16,17 +16,19 @@ class Student
   #attr_reader :number
 
   #Student Associations - for documentation purposes
-  #attr_reader :mentors
+  #attr_reader :mentor
 
   #------------------------
   # CONSTRUCTOR
   #------------------------
 
-  def initialize(a_number)
+  def initialize(a_number, a_mentor)
     @initialized = false
     @deleted = false
     @number = a_number
-    @mentors = []
+    @mentor = nil
+    did_add_mentor = set_mentor(a_mentor)
+    raise "Unable to create student due to @mentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html" unless did_add_mentor
     @initialized = true
   end
 
@@ -45,66 +47,40 @@ class Student
     @number
   end
 
-  def get_mentor(index)
-    a_mentor = @mentors[index]
-    a_mentor
+  def get_mentor
+    @mentor
   end
 
-  def get_mentors
-    new_mentors = @mentors.dup
-    new_mentors
-  end
-
-  def number_of_mentors
-    number = @mentors.size
-    number
-  end
-
-  def has_mentors
-    has = @mentors.size > 0
-    has
-  end
-
-  def index_of_mentor(a_mentor)
-    index = @mentors.index(a_mentor)
-    index = -1 if index.nil?
-    index
-  end
-
-  def self.minimum_number_of_mentors
-    0
-  end
-
-  def add_mentor(a_mentor)
-    was_added = false
-    return false if index_of_mentor(a_mentor) != -1
-    existing_student = a_mentor.get_student
-    if existing_student.nil?
-      a_mentor.set_student(self)
-    elsif !existing_student.eql?(self)
-      existing_student.remove_mentor(a_mentor)
-      add_mentor(a_mentor)
-    else
-      @mentors << a_mentor
+  def set_mentor(a_new_mentor)
+    was_set = false
+    if a_new_mentor.nil?
+      #Unable to set_mentor to nil, as student must always be associated to a @mentor
+      return was_set
     end
-    was_added = true
-    was_added
-  end
-
-  def remove_mentor(a_mentor)
-    was_removed = false
-    if @mentors.include?(a_mentor)
-      @mentors.delete(a_mentor)
-      a_mentor.set_student(nil)
-      was_removed = true
+    
+    existing_student = a_new_mentor.get_student
+    if !existing_student.nil? and !self.eql?(existing_student)
+      #Unable to set_mentor, the current @mentor already has a student, which would be orphaned if it were re-assigned
+      return was_set
     end
-    was_removed
+    
+    an_old_mentor = @mentor
+    @mentor = a_new_mentor
+    @mentor.set_student(self)
+
+    unless an_old_mentor.nil?
+      an_old_mentor.set_student(nil)
+    end
+    was_set = true
+    was_set
   end
 
   def delete
     @deleted = true
-    @mentors.each do |a_mentor|
-      a_mentor.set_student(nil)
+    existing_mentor = @mentor
+    @mentor = nil
+    unless existing_mentor.nil?
+      existing_mentor.set_student(nil)
     end
   end
 

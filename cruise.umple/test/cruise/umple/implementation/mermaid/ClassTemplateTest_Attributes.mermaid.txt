@@ -1,0 +1,26 @@
+classDiagram
+  class Mentor {
+    Integer MAX
+    Integer MIN
+    String HELLO
+    String str
+    String str2
+    String someName
+    Double lDoub
+    Boolean lBool
+    String name
+    Date d
+    Time t
+    Integer i
+    Integer derivedTwiceI
+    Integer x
+    String id
+    String p
+    String q
+    String r
+    String s
+    Date tt
+    Time u
+    Date v
+    Time w
+  }

@@ -1,8 +1,7 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.21.0.4666 modeling language!*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
 
 
-import java.util.regex.Pattern;
 import java.util.*;
 
 /**
@@ -20,8 +19,8 @@ public class HtmlRegularNode extends HtmlNode
   public static final String Xmltagend = ">";
   public static final String NL = System.getProperty("line.separator");
   public static final String TEXT_0 = " ";
-  public static final String TEXT_1 = NL + "  ";
-  public static final String TEXT_2 = NL + "  ";
+  public static final String TEXT_1 = "";
+  public static final String TEXT_2 = "";
   public static final String TEXT_3 = "/";
 
   //------------------------
@@ -31,7 +30,6 @@ public class HtmlRegularNode extends HtmlNode
   //HtmlRegularNode Attributes
   private String tag;
   private String arguments;
-  private int _lineNumber;
 
   //HtmlRegularNode Associations
   private List<HtmlNode> subnodes;
@@ -45,7 +43,6 @@ public class HtmlRegularNode extends HtmlNode
     super();
     tag = aTag;
     arguments = aArguments;
-    _lineNumber = 1;
     subnodes = new ArrayList<HtmlNode>();
   }
 
@@ -69,14 +66,6 @@ public class HtmlRegularNode extends HtmlNode
     return wasSet;
   }
 
-  public boolean set_lineNumber(int a_lineNumber)
-  {
-    boolean wasSet = false;
-    _lineNumber = a_lineNumber;
-    wasSet = true;
-    return wasSet;
-  }
-
   /**
    * Arguments for the constructor
    * e.g. p, h1, a
@@ -93,12 +82,7 @@ public class HtmlRegularNode extends HtmlNode
   {
     return arguments;
   }
-
-  public int get_lineNumber()
-  {
-    return _lineNumber;
-  }
-
+  /* Code from template association_GetMany */
   public HtmlNode getSubnode(int index)
   {
     HtmlNode aSubnode = subnodes.get(index);
@@ -131,18 +115,15 @@ public class HtmlRegularNode extends HtmlNode
     int index = subnodes.indexOf(aSubnode);
     return index;
   }
-
+  /* Code from template association_MinimumNumberOfMethod */
   public static int minimumNumberOfSubnodes()
   {
     return 0;
   }
-
+  /* Code from template association_AddUnidirectionalMany */
   public boolean addSubnode(HtmlNode aSubnode)
   {
     boolean wasAdded = false;
-    if (subnodes.contains(aSubnode)) { return false; }
-    if (subnodes.contains(aSubnode)) { return false; }
-    if (subnodes.contains(aSubnode)) { return false; }
     if (subnodes.contains(aSubnode)) { return false; }
     subnodes.add(aSubnode);
     wasAdded = true;
@@ -159,7 +140,7 @@ public class HtmlRegularNode extends HtmlNode
     }
     return wasRemoved;
   }
-
+  /* Code from template association_AddIndexControlFunctions */
   public boolean addSubnodeAt(HtmlNode aSubnode, int index)
   {  
     boolean wasAdded = false;
@@ -222,12 +203,12 @@ public class HtmlRegularNode extends HtmlNode
   }
 
   private String _createSpacesString(int numSpaces){
-      StringBuilder spaces =  new StringBuilder();
+    
+  StringBuilder spaces =  new StringBuilder();
       for(int i=0; i <numSpaces; i++) {
           spaces.append(" ");
       }
       return spaces.toString();
-    
   }
 
   public StringBuilder _getContent(Integer numSpaces, StringBuilder sb){
@@ -271,11 +252,8 @@ public class HtmlRegularNode extends HtmlNode
 
   public String toString()
   {
-	  String outputString = "";
     return super.toString() + "["+
             "tag" + ":" + getTag()+ "," +
-            "arguments" + ":" + getArguments()+ "," +
-            "_lineNumber" + ":" + get_lineNumber()+ "]"
-     + outputString;
+            "arguments" + ":" + getArguments()+ "]";
   }
 }

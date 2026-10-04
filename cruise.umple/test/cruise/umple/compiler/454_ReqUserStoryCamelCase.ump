@@ -1,0 +1,4 @@
+req US6 userStory {
+  who { customer }
+  what { reset password }
+}

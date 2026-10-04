@@ -1,0 +1,49 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Umple
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - name: 'Umple Team, CRuiSE Group, University of Ottawa'
+    address: 800 King Edward Ave
+    city: Ottawa
+    country: CA
+    post-code: K1N 6N5
+    region: Ontario
+    website: 'https://www.umple.org'
+repository-code: 'https://github.com/umple/umple'
+url: 'https://www.umple.org'
+repository: 'https://github.com/umple/umpleonline'
+abstract: >-
+  Umple allows creation of abstract software models (data
+  models, state models, feature models), embedding of code
+  in these models (Java, Python, C++, etc.), generation of
+  complete systems from the models, as well as editing of
+  the models textually and by diagram. It is a form of
+  low-code platform. It incorporates AI to help generate and
+  improve models and therefore create more reliable systems.
+keywords:
+  - State machine
+  - Class diagram
+  - Code generation
+  - Low code
+  - AI modeling tool
+  - UML
+  - Feature model
+  - Vibe modeling
+license: MIT
+commit: 3a8c87689
+version: 1.37.0
+date-released: '2026-04-18'
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Lethbridge"
+      given-names: "Timothy"
+    - family-names: "Et al"
+  title: "Umple: Model-Driven Development for Open Source and Education"
+  doi: "10.1016/j.scico.2021.102665"

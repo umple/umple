@@ -47,7 +47,7 @@ class PersonRole{}
 
 class Booking{
   String seatNumber;
-  * Booking -- 1 SpecificFlight;
+  * -- 1 SpecificFlight;
 }
 
 //$?[End_of_model]$?

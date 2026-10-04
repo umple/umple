@@ -26,6 +26,7 @@ function replaceAllSpecialTypes lists [repeat id] hashMaps [repeat id]
             [replaceToArray lists]
             [replacePut hashMaps]
             [replaceContainsKey hashMaps]
+            [replaceRemove hashMaps]
 end function 
 
 
@@ -173,4 +174,13 @@ rule replaceContainsKey dicts [repeat id]
         dicts [containsId id]
     by
         '( key ') 'in id
+end rule
+
+rule replaceRemove dicts [repeat id]
+    replace [value]
+        id [id] '.remove( key [value] ')
+    where
+        dicts [containsId id]
+    by
+        id '.pop( key ', 'None ')
 end rule

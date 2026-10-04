@@ -1,0 +1,23 @@
+W089 Association Rolename Matching Classname
+Errors and Warnings 51-99
+noreferences
+
+@@description
+
+<h2>Umple semantic warning issued when assigning a role to an association that matches the class name</h2>
+
+<p> The role name of an association is used to explain how a class participates in a relationship. 
+A role name that matches the class name may be unnecessary, since it provides little clarification as to the relationship between the classes.
+<br/>
+This warning can be avoided by removing or changing the role name.
+<br/><br/>
+Note that in certain cases this could raise syntactic errors such as <a href="E019DuplicateAssociation.html">E019</a>.
+</p>
+
+@@example
+@@source manualexamples/W089AssociationRolenameMatchingClassname1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/W089AssociationRolenameMatchingClassname2.ump
+@@endexample

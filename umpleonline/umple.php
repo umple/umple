@@ -25,6 +25,7 @@ if (isset($_REQUEST["model"])) {
 
 
 $diagramtype = "";
+$displayoptions = "";
 $isCachedExample = false;
 $imageoutput="";
 $messageURL="";
@@ -75,7 +76,7 @@ if (isset($_REQUEST["model"]) && substr(explode("-", $_REQUEST["model"])[0], 0, 
 }
 // Core options after ? and between &. One of the first four is allowed
 
-// example=xxx means load the .ump file named xxx
+// example=xxx means load the builtin example file from the umplib directory or subdirectories
 
 // filename=xxx means load the URL named xxx (but without the leading http:// or https://
 
@@ -90,7 +91,7 @@ if (isset($_REQUEST["nochrome"])) {$showChrome=false;} else {$showChrome=true;}
 if (isset($_REQUEST["nodiagram"])) {$showDiagram=false;} else {$showDiagram=true;}
 
 // diagramtype means choose some diagram other than the default which is class
-$diagramType = "class";
+$diagramType = "GvClass";
 if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
   if ($diagramType=="state") $diagramType = "GvState";
@@ -98,6 +99,10 @@ if (isset($_REQUEST["diagramtype"])) {
   else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature" && $diagramType !="GvClassTrait" ) $diagramType = "class";
 }
 if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
+
+if (isset($_REQUEST["displayoptions"])) {
+  $displayoptions=$_REQUEST["displayoptions"];
+}
 
 // notext means suppress creation of the text pane - passed to JavaScript
 // ignored if nodiagram is also set
@@ -124,15 +129,39 @@ if (isset($_REQUEST["model"]) && explode("-", $_REQUEST["model"])[0] == "task")
 }
 
 //
-$generateDefault="#genclass";
-if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] != "") {
-  $generateDefault="#gen".$_REQUEST['generateDefault'];
+$generateDefault = "#genclass";
+// The following correspond to the options in $generatemenu of compiler_config.php
+$allowedGenerateDefaults = array(
+    "java",
+    "javadoc",
+    "php",
+    "python",
+    "cpp",
+    "ruby",
+    "sql",
+    "metrics",
+    "alloy",
+    "nusmv",
+    "statetables",
+    "eventsequence",
+    "plainrequirementsdoc",
+    "plainrequirementsdocqc",
+    "UmpleAnnotaiveToComposition",
+    "uigu2"
+);
+
+if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] !== "") {
+    $requested = trim($_REQUEST["generateDefault"]);
+
+    if (in_array($requested, $allowedGenerateDefaults, true)) {
+        $generateDefault = "#gen" . $requested;
+    }
 }
 
 $output = $dataHandle->readData('model.ump');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="scripts/_load.js" type="text/javascript"></script>
@@ -173,7 +202,7 @@ $output = $dataHandle->readData('model.ump');
     background: #B06C5B;
   }
 
-::selection {
+  .cm-editor ::selection {
   color: #DD0033;
 }
 
@@ -315,6 +344,7 @@ $output = $dataHandle->readData('model.ump');
 
 
 </style>
+<link id="theme-dark-css" rel="stylesheet" href="scripts/dark-mode.css" media="(prefers-color-scheme: dark)">
 <link rel="stylesheet" href="scripts/styleSurvey.css"> 
 <link rel="apple-touch-icon" sizes="57x57" href="https://cruise.umple.org/apple-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="https://cruise.umple.org/apple-icon-60x60.png">
@@ -335,7 +365,9 @@ $output = $dataHandle->readData('model.ump');
 <meta name="theme-color" content="#8f001a">
 </head>
 <body>
-<!-- 
+
+<!-- you can use this to show a modal if you need this in future
+
 <div id="modal-container" class="modal-container">
   <div class="modal">
 
@@ -365,9 +397,9 @@ $output = $dataHandle->readData('model.ump');
     <div id="header" class="row">
         <span style="float: right">
           <a href="https://www.uottawa.ca" target="uottawatab"><img height="33px" src="scripts/uottawa_ver_black.png" alt="University of Ottawa logo / Université d'Ottawa" /></a>        
-        </span>       
+        </span>
       <div class="inRow logo">
-        <a href="https://cruise.umple.org/umple"><img src="scripts/umpleonline_title.jpg" alt="UmpleOnline logo" /></a>     
+        <a href="https://cruise.umple.org/umple"><img src="scripts/umpleonline_title.svg" alt="UmpleOnline logo" /></a>     
       </div>
 
       <div class="inRow" style = "width: 77%">
@@ -429,9 +461,9 @@ $output = $dataHandle->readData('model.ump');
             }
           ?>
         </span>
-        <span id="gdprtext" class="pretext">        
-          This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="https://umple.org/privacy" target="privacy">Click to learn about privacy.</a>
-        <br/></span>
+        <span id="gdprtext" class="pretext">
+          This tool stores your data in cookies and on a server. For the AI feature, your API key is never sent to our server backend. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="https://umple.org/privacy" target="privacy">Click to learn about privacy.</a>
+        <br/></span>  
 
         
         
@@ -440,8 +472,6 @@ $output = $dataHandle->readData('model.ump');
           <a class="button2" style="padding-top:auto; padding-bottom: auto;" href="https://umple.org/donate" target="donatepage" title="Go to a University of Ottawa page that will enable you to donate to support Umple; even a few dollars will be much appreciated">Donate</a>&nbsp;
           
           </span>&nbsp;
-    <!-- </span>&nbsp; &nbsp; -->
-
              
     <span> &nbsp; For help: </span>
     <?php if(strpos($_SERVER['REQUEST_URI'], 'umple.php') !== false && strpos($_SERVER['REQUEST_URI'], 'umpleonline/umple.php') === false ) {$manpage="/manual/GettingStarted.html";} else {$manpage="https://manual.umple.org";} ?>                
@@ -556,31 +586,59 @@ $output = $dataHandle->readData('model.ump');
 
 
   <div id="topLine" class="bookmarkableUrl">
-    <span id="linetext">Line=<input size=2 id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
-  
+   <span id="linetext">Line=<input size=2 style="font-size: 12px;" id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
+
     <span style="font-size: 30%">
-    <a id="ECD_button" class="button2 active" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
-    <a id="GCD_button" class="button2" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
+    <a id="ECD_button" class="button2" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
+    <a id="GCD_button" class="button2 active" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
     <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()">S</a>&nbsp;
     </span>
- 
-    &nbsp; 
+    <span style="font-size: 12px; margin-left: 10px; font-weight: bold;">
+  Live View:
+  <select id="liveViewSelector"
+          onchange="Action.setLiveView(this.value)"
+          style="font-size: 11px; border-radius: 4px; padding: 2px;">
+  <optgroup label="Class Views">
+    <option value="gcd" id="menu-set-gcd" >Gv Class Diagram</option>
+    <option value="ecd" id="menu-set-ecd">E Class Diagram</option>
+    <option value="erd" id="buttonShowGvEntityRelationshipDiagram">ERD</option>
+    <option value="crudUI" id="buttonShowCRUDUI">CRUD UI</option>
+  </optgroup>
+
+  <optgroup label="State Views">
+    <option value="sd" id="menu-set-sd">State Diagram</option>
+    <option value="stateTables" id="buttonShowStateTables">State Tables</option>
+  </optgroup>   
+
+  <optgroup label="Special Views">
+    <option value="std" id="menu-set-std">Structure Diagram</option>  
+    <option value="gfd" id="menu-set-gfd">Feature Diagram</option>
+  </optgroup> 
+
+  <optgroup label="Instance Views">
+    <option value="instanceDiagram" id="buttonShowInstanceDiagram">Instance Diagram</option>
+    <option value="eventSequence" id="buttonShowEventSequence">Event Sequence</option>
+  </optgroup> 
+
+  </select>
+</span>
+     &nbsp; 
     <span style="font-size: 30%">
     <a id="SHT_button" class="button2 active" href="javascript:Page.clickShowHideText()">T</a>&nbsp;
     <a id="SHD_button" class="button2 active" href="javascript:Page.clickShowHideCanvas()">D</a>&nbsp;
     </span>
-    
+
     &nbsp; 
     <span style="font-size: 30%">
     <a id="SHA_button" class="button2 active" href="javascript:Page.clickToggleAttributes()">A</a>&nbsp;
     <a id="SHM_button" class="button2" href="javascript:Page.clickToggleMethods()">M</a>&nbsp;
     </span>
 
-
     &nbsp; 
     <span style="font-size: 30%; white-space:nowrap;">
     <a id="GenJavaButton" class="button2" href="javascript:Action.generateCode('java','Java');">Generate Java</a>&nbsp;
     </span>    
+
 
     <!-- disabling the save as URL feature and activating collaboration feature-->
     <!--
@@ -606,15 +664,8 @@ $output = $dataHandle->readData('model.ump');
     
                <a class="button2" id="collabDisconnect" style="display:none" href="javascript:Collab.disconnectFromServer('Disconnected from the server, the collaboration session has ended at the user\'s request.');"> Disconnect </a>
                &nbsp;
-               <!-- &nbsp; -->
-               
-              <!-- <a class="button2" id="collabReconnect" style="display:none" href="javascript:reconnect()"> Reconnect </a> -->
-              <!-- <a class="button2" id="buttonCollabFork" style="display:none" href="javascript:Page.createBookmarkFork();"> Fork </a> -->
-
-
              <?php } else if (!isset($_REQUEST["task"])) { ?>
                <a class="button2" id="ttSaveNCollab" href="javascript:Page.createBookmark()">Save & Collaborate 
-                 <!-- <span id="led" class="led"> </span> -->
                </a>
                &nbsp;
              <?php } ?>
@@ -622,15 +673,19 @@ $output = $dataHandle->readData('model.ump');
              </span>
              
               <!-- collaboration LED -->
-         
-             <!-- <span id="led" class="led"> </span> -->
-
-
-
 
     <span style="font-size: 30%; white-space:nowrap; display:none;">  
     <a id="toggleTabsButton" class="button2" href="javascript:Page.toggleTabs()" title="Hide tabs to add a little extra vertical space if you are not going to edit multiple files; click again to show the tabs.">Hide Tabs</a>
     </span>
+
+        <span class="theme-mode-toggle" style="float: right; margin-right: 8px;">
+          <label for="themeModeSelect">Theme:</label>
+          <select id="themeModeSelect" class="theme-mode-select" aria-label="Select theme">
+            <option value="system">System</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </span>  
 
     <span id="restorecode" > &nbsp; <a href="#"> Restore Saved State</a></span>
 
@@ -647,11 +702,6 @@ $output = $dataHandle->readData('model.ump');
 
   <div id="mainApplication" class="row"> 
     <div id="textEditorColumn"  tabIndex="2"  class="inRow"> 
-      
-      <!-- codemirror 5 editor -->
-      <!-- <div id="topTextEditor" style="float:left; width:100%">
-        <textarea id="umpleModelEditorText" class="umpleModelEditor" wrap="off"></textarea>
-      </div> -->
 
       <!-- codemirror 6 editor -->
       <div id="newEditor" style="width:100%">
@@ -670,11 +720,6 @@ $output = $dataHandle->readData('model.ump');
           <ul class="first" id="saveLoad">
             <li class="subtitle">SAVE</li>
             <?php if (isBookmark($dataHandle) && !isset($_REQUEST["task"])) { ?>
-            <!--li id="ttSaveBookmark">
-              <div id="menuBookmarkable" class="bookmarkableUrl">
-                <a href="umple.php?model=<?php echo $dataHandle->getName() ?>">Resave URL</a>
-              </div>
-            </li-->
             <?php } else if (!isset($_REQUEST["task"])) { ?>
             <li id="ttSaveModel"> 
               <div id="menuBookmarkable" class="bookmarkableUrl">
@@ -693,8 +738,8 @@ $output = $dataHandle->readData('model.ump');
             </li>     
 
             <li id="buttonCopy" class="copy">
-              <img src="scripts/copy.png" alt="Source to Copy icon"/> 
-               Source to Copy
+              <img src="scripts/copy.png" alt="Popup current icon"/> 
+               Popup Current
             </li>
             <li id="buttonCopyEncodedURL" class="copyEncoded">
               <img src="scripts/copy.png" alt="Copy Encoded URL icon"/> 
@@ -708,11 +753,6 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png" alt="Store in Local Browser icon"/> 
               Store in Browser
             </li>
-            
-            <!--li id="buttonLoadLocalBrowser" class="loadLocalBrowser">
-              <img src="scripts/copy.png"/> 
-              Load from Browser
-            </li-->
 
             <li id="buttonDownloadFiles" class="downloadFiles">
               <img src="scripts/copy.png"/> 
@@ -753,6 +793,12 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExampleType" id = "smModels" value="smModels">State Machines</option>
                 <option name = "optionExampleType" id = "structureModels" value="structureModels">Composite Structure</option>
                 <option name = "optionExampleType" id = "featureModels" value="featureModels">Feature Diagram</option>
+                <option name = "optionExampleType" id = "extra1ModelsAD" value="extra1ModelsAD">Extra Class Diagrams </option>
+                <!-- The following removed due to too many examples being poor -->
+                <!--option name = "optionExampleType" id = "extra1ModelsEL" value="extra1ModelsEL">Extra Class Diagrams E-L</option-->
+                <!--option name = "optionExampleType" id = "extra1ModelsMP" value="extra1ModelsMP">Extra Class Diagrams M-P</option-->
+                <!--option name = "optionExampleType" id = "extra1ModelsQZ" value="extra1ModelsQZ">Extra Class Diagrams Q-Z</option-->
+
               </select>
             </li>
             <li id="itemLoadExamples">
@@ -779,7 +825,6 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="Compositions.ump">Compositions</option>
                 <option name = "optionExample" value="CoOpSystem.ump">Co-Op System</option>
                 <option name = "optionExample" value="DMMOverview.ump">DMM Overview</option>
-                <option name = "optionExample" value="GeometricSystem.ump">Geometric system</option>
                 <!-- <option name = "optionExample" value="DMMModelElementHierarchy.ump">DMM Model Element Hierarchy</option> -->
                 <option name = "optionExample" value="DMMSourceObjectHierarchy.ump">DMM Source Object Hierarchy</option>
                 <option name = "optionExample" value="DMMRelationshipHierarchy.ump">DMM Relationship Hierarchy</option>
@@ -791,6 +836,7 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="GenealogyB.ump">Genealogy B</option>
                 <option name = "optionExample" value="GenealogyC.ump">Genealogy C</option>
                 <option name = "optionExample" value="GeographicalInformationSystem.ump">Geographical Information System</option>
+                <option name = "optionExample" value="GeometricSystem.ump">Geometric system</option>
                 <option name = "optionExample" value="Hospital.ump">Hospital</option>
                 <option name = "optionExample" value="Hotel.ump">Hotel</option>
                 <option name = "optionExample" value="Insurance.ump">Insurance</option>
@@ -804,6 +850,9 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="realestate.ump">Real Estate</option>
                 <option name = "optionExample" value="RoutesAndLocations.ump">Routes And Locations</option>
                 <option name = "optionExample" value="School.ump">School</option>
+                
+                <option name = "optionExample" value="https://raw.githubusercontent.com/Smart-Contract-Modelling-uOttawa/Symboleo-JS-Core/refs/heads/main/ontology/ontology.ump">Symboleo Smart Contracts</option>
+                
                 <option name = "optionExample" value="TelephoneSystem.ump">Telephone System</option>
                 <option name = "optionExample" value="UniversitySystem.ump">University System</option>
                 <option name = "optionExample" value="VendingMachineClassDiagram.ump">Vending Machine</option>
@@ -861,8 +910,8 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="PingPong.ump">Ping Pong</option>
               </select>
             </li>
-		  
-  	    <li id="itemLoadExamples4">
+
+            <li id="itemLoadExamples4">
               <select id="inputExample4" name="inputExample4" class="button" size="1" data-diagram-type="feature">
                 <option name = "optionExample4" id = "defaultExampleOption4" value="">Select Example</option>
                 <option name = "optionExample" value="BerkeleyDB_SPL.ump"> BerkeleyDB SPL </option>
@@ -871,9 +920,82 @@ $output = $dataHandle->readData('model.ump');
 
               </select>
             </li>
+  
+            <li id="itemLoadExamples5">
+              <select id="inputExample5" name="inputExample5" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample5" id = "defaultExampleOption5" value="">Select Example</option>
+                <?php
+
+                // generate file if it does not exist or is older than 24h
+                $genFileName = "generatedExtraExample1OptionsAD.html";
+                if((!file_exists($genFileName)) || (time()-filemtime($genFileName) > 60 * 60 * 24)) {
+                  include("scripts/genExtraExamples.php");
+                }
+
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsAD.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="invalid.ump">Could not find AD 5 set of extra files </option> <?php
+                }
+                ?>
+              </select>
+            </li>
+
+<!-- The following removed as too many examples were poor
+            <li id="itemLoadExamples6">
+              <select id="inputExample6" name="inputExample6" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample6" id = "defaultExampleOption5" value="">Select Example</option>
+                <?php
+
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsEL.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="invalid.ump">Could not find EL 6 set of extra files </option> <?php
+                }
+                ?>
+              </select>
+            </li>
+
+            <li id="itemLoadExamples7">
+              <select id="inputExample7" name="inputExample7" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample7" id = "defaultExampleOption7" value="">Select Example</option>
+                <?php
+
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsMP.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="invalid.ump">Could not find MP 7 set of extra files </option> <?php
+                }
+                ?>
+              </select>
+            </li>
+
+            <li id="itemLoadExamples8">
+              <select id="inputExample8" name="inputExample6" class="button" size="1" data-diagram-type="class">
+                <option name = "optionExample8" id = "defaultExampleOption8" value="">Select Example</option>
+                <?php
+
+                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsQZ.html");
+                if($exampleHtmlOptionLines) {
+                  echo $exampleHtmlOptionLines;
+                }
+                else {
+                   ?><option name = "optionExample" value="invalid.ump">Could not find QZ 8 set of extra files </option> <?php
+                }
+                ?>
+              </select>
+            </li>
+-->
           
             <!-- <li class="dropbox-add-chooser"></li> --> 
           </ul>
+
           <?php } ?>
       
           <ul id="mainDrawMenu" class="second toggle">
@@ -886,14 +1008,14 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/assoc.png" alt="Icon to click on to create an association in editable mode"/> 
               Association
             </li>
-            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition." tabindex="0">
+            <li id="buttonAddState" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on the canvas to add a state, or inside a composite state to add a substate." tabindex="0">
+              <img src="scripts/class.png" alt="Add a state"/>
+              State
+            </li>
+            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select a source and target state, or drag between states, to draw a transition." tabindex="0">
                <img src="scripts/assoc.png" alt="Icon to click on to create a new transition in certain state modes"/>
                Transition
              </li>            
-            <!-- <li id="buttonBendAssociation" class="toggleToolItem" name="paletteItem">
-              <img src="scripts/assocbend.jpg"/> 
-              Bend Assoc.
-            </li> -->
             <li id="buttonAddGeneralization" class="toggleToolItem view_opt_class_palette layoutListItem" name="paletteItem" title="Select and click on the child class to draw a generalization line to the parent class." tabindex="0">
               <img src="scripts/generalization.png" alt="Icon to click on to create a generalization (subclass relationship) in editable mode"/> 
               Generalization
@@ -920,57 +1042,18 @@ $output = $dataHandle->readData('model.ump');
             </li>
         </ul>
         <?php generateMenu("") ?>
-      </div>
-      
-      <!-- GROUP 3 OF OPTIONS -->
-      <h3><a href="#options">OPTIONS</a></h3>
-      
-      <div class="section">
-        <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
-         <!-- DIAGRAM TYPE OPTIONS -->
-          <ul class="first toggle">
-            <li class="subtitle">  Diagram Type </li>
-              
-            <li id="ttShowEditableClassDiagram"> 
-              <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
-              <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
-            </li>
-            <li id="ttShowJointJSClassDiagram"> 
-              <input id="buttonShowJointJSClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeJointJSClassDiagram"/> 
-              <a id="labelShowJointJSClassDiagram" class="buttonExtend">JointJS Class</a> 
-            </li>
-            <li id="ttShowGvClassDiagram"> 
-              <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> 
-              <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a> 
-            </li>
-            <li id="ttShowGvStateDiagram"> 
-              <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
-              <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
-            </li>
-	    <li id="ttShowGvFeatureDiagram"> 
-              <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
-              <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
-            </li>
-            <li id="ttShowStructureDiagram"> 
-              <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
-              <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
-            </li>
-          </ul>
-          <!-- SHOW VIEW OPTIONS -->
-          <ul class="second">
-          <li id="ShowViewTitle" class="subtitle"> Show View </li>
-          <li id="ttShowHideCanvas"> 
-              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
-              <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
-            </li>
-            <li id="ttShowHideTextEditor"> 
-              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
-              <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
-            </li>
-            <li id="ttShowHideLayoutEditor" class="layoutListItem view_opt_class"> 
-              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
-              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
-            </li>          
+                  
+          <!-- SHOW And Hide OPTIONS -->
+          <ul id="ShowHideOptionsList" class="second">
+            <li id="ShowMF" class="subtitle"> Show and Hide </li>
+
+            <span id="filtertext"><input size=22
+           style="font-size: 12px;" id="filtervalues" value="*" onChange="Action.setFilter(value);"></input>&nbsp; </span>   
+
+            <!-- Location to inject mixsets and filters found ... used by Action.updateUmpleDiagramCallback -->
+            <span id="ShowMFDynamicArea">
+            </span>
+
             <li id="ttToggleAttributes" class="layoutListItem view_opt_class"> 
               <input id="buttonToggleAttributes" class="checkbox" type="checkbox"/> 
               <a id="labelToggleAttributes" class="buttonExtend">Attributes</a>
@@ -994,16 +1077,86 @@ $output = $dataHandle->readData('model.ump');
             <li id="ttToggleGuards" class="layoutListItem view_opt_state"> 
               <input id="buttonToggleGuards" class="checkbox" type="checkbox"/> 
               <a id="labelToggleGuards" class="buttonExtend">Guards</a> 
-            </li>            
-            <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state"> 
-              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
+            </li>
+            <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state">
+              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/>
+              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a>
+            </li>
+            <li id="ttToggleNaturalLanguage" class="layoutListItem view_opt_state">
+              <input id="buttonToggleNaturalLanguage" class="checkbox" type="checkbox"/>
+              <a id="labelToggleNaturalLanguage" class="buttonExtend">Natural Language</a>
             </li>
             <li id="ttToggleFeatureDependencyLabels" class="layoutListItem view_opt_feature"> 
               <input id="buttonToggleFeatureDependency" class="checkbox" type="checkbox"/> 
               <a id="labelToggleFeatureDependencyLabels" class="buttonExtend">Feature Dependency</a> 
+            <li id="ttZoomInOut" class="copyMix" >
+            &nbsp;Zoom <button onclick="Page.zoomIn()">In</button>
+<button onclick="Page.zoomOut()">Out</button>
             </li>
+            <li id="ttAllowPinch">
+              <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
+              <a id="labelAllowPinch" class="buttonExtend">Pinch to Zoom</a>
+            </li> 
+            <li id="buttonCopyMix" class="copyMix" >
+              <img src="scripts/copy.png" alt="Copy Mixset with Above"/> 
+               Make Mixset
+            </li>              
+          </ul>
+          <ul id="paletteFeatureSelectReqSection" class="second center-children" style="display:none;">
+            <li id="ttSelectReq" title="Select which features/requirements are active in the model.">
+              <div id="buttonSelectReq"
+                   class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+                   tabindex="0" role="button">Select Features</div>
+            </li>
+          </ul>
+      </div>
+      
+      <!-- GROUP 3 OF OPTIONS -->
+      <h3><a href="#options">OTHER OPTIONS</a></h3>
+      
+      <div class="section">
+        <div id="buttonViewComplete" title="View Complete">Selected view has opened in a new window.</div>
+         <!-- DIAGRAM TYPE OPTIONS -->
+          <ul class="first toggle">
+            <li class="subtitle">  Diagram Type </li>
+              
+            <li id="ttShowEditableClassDiagram"> 
+              <input id="buttonShowEditableClassDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeEditableClassDiagram"/> 
+              <a id="labelShowEditableClassDiagram" class="buttonExtend">Editable Class</a> 
+            </li>
+            <li id="ttShowGvClassDiagram"> 
+              <input id="buttonShowGvClassDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGvClassDiagram"/> 
+              <a id="labelShowGvClassDiagram" class="buttonExtend">GraphViz Class</a> 
+            </li>
+            <li id="ttShowGvStateDiagram"> 
+              <input id="buttonShowGvStateDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVStateDiagram"/> 
+              <a id="labelShowGvStateDiagram" class="buttonExtend">GraphViz State</a> 
+            </li>
+	    <li id="ttShowGvFeatureDiagram"> 
+              <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
+              <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
+            </li>
+            <li id="ttShowStructureDiagram"> 
+              <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
+              <a id="labelShowStructureDiagram" class="buttonExtend">Composite Structure</a> 
+            </li>
+          </ul>
 
+          <!-- SHOW VIEW OPTIONS -->
+          <ul class="second">
+          <li id="ShowViewTitle" class="subtitle"> Show View </li>
+          <li id="ttShowHideCanvas"> 
+              <input id="buttonShowHideCanvas" class="checkbox" type="checkbox" name="buttonShowHideCanvas" value="buttonShowHideCanvas"/> 
+              <a id="labelShowHideCanvas" class="buttonExtend">Diagram (Canvas)</a>
+            </li>
+            <li id="ttShowHideTextEditor"> 
+              <input id="buttonShowHideTextEditor" class="checkbox" type="checkbox" name="buttonShowHideTextEditor" value="buttonShowHideTextEditor"/> 
+              <a id="labelShowHideTextEditor" class="buttonExtend">Text Editor</a>
+            </li>
+            <li id="ttShowHideLayoutEditor" class="layoutListItem view_opt_class"> 
+              <input id="buttonShowHideLayoutEditor" class="checkbox" type="checkbox" name="buttonShowHideLayoutEditor" value="buttonShowHideLayoutEditor"/> 
+              <a id="labelShowHideLayoutEditor" class="buttonExtend">Layout Editor</a> 
+            </li>          
             
           </ul>
           <!-- PREFERENCES OPTIONS -->
@@ -1017,10 +1170,6 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonManualSync" class="checkbox" type="checkbox" name="manualSync" value="manualSync"/> 
               <a id="labelManualSync" class="buttonExtend">Manual Sync</a>              
             </li>
-            <li id="ttAllowPinch">
-              <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
-              <a id="labelAllowPinch" class="buttonExtend">Pinch to Zoom</a>               
-            </li> 
           </ul>
          </div>
 
@@ -1063,6 +1212,34 @@ $output = $dataHandle->readData('model.ump');
 
       </div>
 
+      <!-- AI SECTION -->
+      <h3><a href="#ai">AI</a></h3>
+      
+      <div class="section">
+        <ul class="first center-children">
+          <li id="ttAiStatus">
+            <div class="ai-status-row" id="buttonAiSettings" role="button" tabindex="0" title="Configure AI Settings">
+              <svg class="ai-settings-icon" xmlns="https://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <span id="aiStatusText" class="ai-status-text">Not configured</span>
+              <span id="aiStatusIndicator" class="ai-status-indicator not-ready" title="AI not configured">●</span>
+            </div>
+          </li>
+        </ul>
+        
+        <ul class="second center-children">
+          <li class="subtitle">Generate</li>
+          <li id="ttGenerateFromReq">
+            <div id="buttonGenerateFromReq" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button" onclick="AiRequirements.showDialog()">By Requirements</div>
+          </li>
+          <li id="ttExplain">
+            <div id="buttonExplain" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button" onclick="AiExplain.showDialog()">Explain</div>
+          </li>
+        </ul>
+      </div>
+
       </div> 
     </div>
    
@@ -1097,6 +1274,40 @@ $output = $dataHandle->readData('model.ump');
 
   <script src="scripts/pinch.js" type="text/javascript"></script>
 
+  <script src="scripts/theme-toggle.js"></script>
+
+  <?php
+  // LSP configuration — reads from umpleonline/config/lsp.ini
+  // Precedence: 1. env var  2. canonical config  3. disabled
+  $lspWsUrl = getenv('UMPLE_LSP_WS_URL');
+  if (!$lspWsUrl) {
+    $lspIniPath = rootDir() . '/config/lsp.ini';
+    $lspCfg = file_exists($lspIniPath) ? parse_ini_file($lspIniPath) : false;
+    if ($lspCfg && !empty($lspCfg['standaloneHostPort']) && !empty($lspCfg['localBrowserHost'])) {
+      $lspWsUrl = 'ws://' . $lspCfg['localBrowserHost'] . ':' . $lspCfg['standaloneHostPort'];
+    } else {
+      $lspWsUrl = '';
+      error_log('LSP disabled: config/lsp.ini not found or missing required values');
+    }
+  }
+  $lspAuthSecret = getenv('LSP_AUTH_SECRET') ?: '';
+  $lspToken = '';
+  $lspModelId = $dataHandle->getName();
+  if ($lspWsUrl && !$readOnly && $lspModelId) {
+    $mode = 'editable';
+    $expiry = (string)(time() * 1000 + 300000); // 5 min from now in ms
+    $payload = $lspModelId . ':' . $mode . ':' . $expiry;
+    $sig = hash_hmac('sha256', $payload, $lspAuthSecret);
+    $lspToken = rtrim(strtr(base64_encode($payload . ':' . $sig), '+/', '-_'), '=');
+  }
+  ?>
+
+  <script>
+  window.UMPLE_LSP_WS_URL = "<?php echo htmlspecialchars($lspWsUrl, ENT_QUOTES) ?>";
+  window.UMPLE_LSP_TOKEN = "<?php echo htmlspecialchars($lspToken, ENT_QUOTES) ?>";
+  window.UMPLE_UMP_BASE = "<?php echo htmlspecialchars(rootDir() . '/ump', ENT_QUOTES) ?>";
+  </script>
+
   <script>
     Page.init(
       <?php if($showDiagram) { ?> true  <?php } else { ?> false <?php } ?>,
@@ -1108,48 +1319,20 @@ $output = $dataHandle->readData('model.ump');
       "<?php echo $generateDefault ?>",
       <?php if($doLoadTaskInstruction) { ?> true  <?php } else { ?> false <?php } ?>,
       <?php if(isset($_REQUEST["task"])) { ?> true <?php } else { ?> false <?php } ?>,
-      <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>
+      <?php if($canCreateTask) { ?> true <?php } else { ?> false <?php } ?>,
+      "<?php echo $displayoptions ?>"
       ); 
       <?php if (isset($_REQUEST['example']) && $actualExample != ""){?> 
       Page.setExamples("<?php echo $actualExample ?>")
-      <?php } ?> 
+      <?php } ?>
       //
   </script>
 
   <script>
-    Collab.connectCollabServer();
-  </script>
-
-  <script>
-    // if (document.getElementById('collabReconnect')) {
-    // const open = document.getElementById('collabReconnect');
-    // const modalContainer = document.getElementById('modal-container');
-    // const close = document.getElementById('closeModal');
-
-    // open.addEventListener('click', () => {
-    //   modalContainer.classList.add('show');
-    // });
-
-    // close.addEventListener('click', () => {
-    //   modalContainer.classList.remove('show');
-    // });
-
-    // }
-
-
-
     function reconnect() {
       var currentaddress = document.location.href;
       window.location.href = currentaddress;
     }
-
-
-    // function reconnectToSpecificlocation() {
-    //   var collabURL = document.getElementById('collabSessionURL').value;
-    //   window.open(collabURL,'_blank');
-    //     }
-
-
   </script>
 
 <script>
@@ -1168,6 +1351,101 @@ $output = $dataHandle->readData('model.ump');
     </div>
   <?php } ?>
 
+  <!-- AI Settings Modal (hidden by default) -->
+  <div id="aiSettingsModal" class="ai-settings-modal is-hidden">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3>AI Settings</h3>
+      <div class="ai-settings-form">
+        <div class="setting-row">
+          <label for="selectAiProvider">Provider:</label>
+          <div class="ai-settings-field ai-provider-field">
+            <select id="selectAiProvider" class="button">
+              <option value="openrouter" selected>OpenRouter</option>
+              <option value="openai">OpenAI</option>
+              <option value="google">Google</option>
+            </select>
+            <a id="aiProviderLink" class="ai-provider-link is-hidden" href="" target="_blank" rel="noopener noreferrer"></a>
+          </div>
+        </div>
+        <div class="setting-row">
+          <label for="inputAiApiKey">API Key:</label>
+          <div class="ai-settings-field">
+            <!-- Hidden dummy field to prevent browser password autofill -->
+            <input type="password" style="position: absolute; left: -9999px; opacity: 0;" tabindex="-1" autocomplete="new-password"/>
+            <div class="api-key-input-wrapper">
+              <input id="inputAiApiKey" type="password" placeholder="Enter API key" autocomplete="new-password" data-form-type="other" class="button api-key-input"/>
+              <button type="button" id="toggleApiKeyVisibility" class="api-key-toggle" tabindex="0" aria-label="Toggle API key visibility">
+                <span class="eye-icon" aria-hidden="true">
+                <svg class="ai-eye-icon" xmlns="https://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                </span>
+              </button>
+            </div>
+            <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget ai-verify-button" tabindex="0" role="button">Verify</div>
+          </div>
+          <div id="apiKeyStatus" class="ai-key-status-message is-hidden"></div>
+        </div>
+        <div id="ttAiModel" class="setting-row is-hidden">
+          <label for="selectAiModel">Model:</label>
+          <div class="ai-model-dropdown">
+            <div id="aiModelDropdownTrigger" class="ai-model-dropdown-trigger button" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+              <span id="aiModelDropdownSelected">Select model...</span>
+              <svg class="ai-model-dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="https://www.w3.org/2000/svg">
+                <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div id="aiModelDropdownMenu" class="ai-model-dropdown-menu is-hidden" role="listbox">
+              <div class="ai-model-dropdown-search">
+                <input type="text" id="aiModelSearchInput" placeholder="Search models..." autocomplete="off">
+                <svg class="ai-model-search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="https://www.w3.org/2000/svg">
+                  <circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div id="aiModelDropdownOptions" class="ai-model-dropdown-options">
+              </div>
+            </div>
+            <select id="selectAiModel" class="is-hidden">
+              <option value="">Select model...</option>
+            </select>
+          </div>
+        </div>
+        <div class="setting-row ai-usage-section">
+          <label>Usage:</label>
+          <div id="aiUsageSummary" class="ai-usage-summary">
+          </div>
+        </div>
+      </div>
+      <div class="dialog-buttons">
+        <div id="buttonResetAiUsage" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Reset Usage</div>
+        <div id="btnCloseAiSettings" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Close</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Tree Modal. Reuses .ai-settings-modal and override some style to reuse the code -->
+  <div id="featureTreeModal" class="ai-settings-modal feature-tree-modal is-hidden">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3>Select Features</h3>
+      <div id="featureTreeModalBody">
+        <div id="featureModelTreeContainer" class="feature-tree-mount"></div>
+        <div id="featureTreeModalLoading" class="is-hidden feature-tree-info">Loading feature model&hellip;</div>
+        <div id="featureTreeModalEmpty" class="is-hidden feature-tree-info">
+          <span id="featureTreeModalEmptyText">EMPTY_TEXT</span>
+          <a href="#" id="featureTreeRetryLink" class="feature-tree-retry-link">Retry</a>
+        </div>
+      </div>
+      <div class="dialog-buttons">
+        <div id="btnCloseFeatureTree"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Done</div>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

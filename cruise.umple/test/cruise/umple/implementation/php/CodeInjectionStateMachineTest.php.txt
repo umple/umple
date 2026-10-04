@@ -60,9 +60,7 @@ class Example
 
   private function setLight($aLight)
   {
-    System.out.println("About to flip");
     $this->light = $aLight;
-    System.out.println("Just flipped");
   }
 
   public function equals($compareTo)

@@ -1,10 +1,28 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
 class Example():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
         pass
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def delete(self):
         pass
 
-    def methodName(self):
-        pass
+    #*
+    
+    #   * R01: this is a requirement for a method
+    
+    #   
 
+    def methodName(self):
+        

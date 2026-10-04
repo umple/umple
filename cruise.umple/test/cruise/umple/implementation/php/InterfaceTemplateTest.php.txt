@@ -6,7 +6,7 @@ interface ISomething
 {
   // CONSTANT MEMBERS  
 
- const aVariable = aValue;
+ const MyConst = "aValue";
  const MAX = 3;
 
   // ABSTRACT METHODS 

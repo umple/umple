@@ -1,0 +1,14 @@
+// Regression fixture: diamond DAG (no cycle). Root requires (A or C), both A
+// and C require X, and X requires unused Y. Only X's require statement fails,
+// so it is the only one reported. Expected: NOT satisfied (false).
+mixset Root { require [A or C]; }
+mixset A { require [X]; }
+mixset C { require [X]; }
+mixset X { require [Y]; }
+mixset Y {}
+mixset Z { require [Root]; }
+
+use Root;
+use A;
+use C;
+use X;

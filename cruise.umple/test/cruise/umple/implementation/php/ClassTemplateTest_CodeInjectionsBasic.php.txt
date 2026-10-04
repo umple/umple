@@ -28,25 +28,5 @@ class Student
   public function delete()
   {}
 
-  public function foo(int $a)
-  {
-
-    System.out.println("Starting foo with argument: " + a);
-    if(a < 0) {      
-      System.out.println("Returning from foo!");
-      return 0;
-    }
-
-    for(int i = 0; i < a; i++) {
-      if(i == a/4) {        
-        System.out.println("Returning from foo!");
-        return a;
-      }
-    }    
-    System.out.println("Returning from foo!");
-    return 4;
-
-  }
-
 }
 ?>

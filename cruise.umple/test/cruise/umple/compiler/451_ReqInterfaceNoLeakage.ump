@@ -1,0 +1,11 @@
+// implementsReq at top level before interface
+// Req should attach to IX only, not to IY
+// Should not produce a 401 warning
+implementsReq A;
+interface IX {
+  void doSomething();
+}
+interface IY {}
+req A text {
+  First interface requirement.
+}

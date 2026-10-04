@@ -1,0 +1,3 @@
+req UC1A usecase {
+  Customer checks out items and the system calculates the total.
+}

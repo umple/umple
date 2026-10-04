@@ -1,0 +1,7 @@
+Neovim
+IDEs and Text Editors
+noreferences
+@@tooltip Support for the Neovim Text Editor
+@@markdownURL https://raw.githubusercontent.com/umple/umple.nvim/refs/heads/master/README.md
+@@description
+<!-- No description as the description will be loaded from markdown conversion -->

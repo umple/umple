@@ -1,0 +1,9 @@
+// implementsReq at top level before trait definition
+// Should not produce a 401 warning
+implementsReq A;
+trait T {
+  name;
+}
+req A text {
+  All entities must have a name attribute.
+}

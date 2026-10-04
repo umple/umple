@@ -1,0 +1,6 @@
+generate Mermaid -s "class";
+
+class NewClass
+{
+  String name;
+}

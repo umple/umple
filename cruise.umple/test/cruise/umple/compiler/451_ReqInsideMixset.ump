@@ -1,0 +1,13 @@
+// implementsReq inside a mixset before a class definition
+// When the mixset is used, the req should attach to class X
+// Should not produce a 401 warning
+mixset M {
+  implementsReq A;
+  class X {
+    name;
+  }
+}
+req A text {
+  Class must have a name attribute.
+}
+use M;

@@ -1,0 +1,13 @@
+// implementsReq inside a mixset before a trait definition
+// When the mixset is used, the req should attach to trait T
+// Should not produce a 401 warning
+mixset M {
+  implementsReq A;
+  trait T {
+    name;
+  }
+}
+req A text {
+  Trait must have a name attribute.
+}
+use M;

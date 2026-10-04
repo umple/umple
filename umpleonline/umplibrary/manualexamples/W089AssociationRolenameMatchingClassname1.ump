@@ -1,0 +1,13 @@
+//This example generates the warning message
+class Person {
+  name;
+}
+
+class Intern {
+  isA Person;
+  * -- 0..2 Employee employee;
+}
+
+class Employee {
+  isA Person;
+}

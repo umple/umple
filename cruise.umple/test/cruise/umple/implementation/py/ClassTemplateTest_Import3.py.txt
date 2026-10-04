@@ -1,9 +1,23 @@
-from Student import Student
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 
 class Course():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Course Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
+        self._students = None
         self._students = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetMany 
     def getStudent(self, index):
         aStudent = self._students[index]
         return aStudent
@@ -21,77 +35,68 @@ class Course():
         return has
 
     def indexOfStudent(self, aStudent):
-        index = self._students.index(aStudent)
+        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
         return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 0
 
+    # Code from template association_AddManyToManyMethod 
     def addStudent(self, aStudent):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             return False
-
         self._students.append(aStudent)
         if aStudent.indexOfCourse(self) != -1 :
             wasAdded = True
-
         else :
             wasAdded = aStudent.addCourse(self)
             if not wasAdded :
                 self._students.remove(aStudent)
-
         return wasAdded
 
+    # Code from template association_RemoveMany 
     def removeStudent(self, aStudent):
         wasRemoved = False
-        if not self._students.contains(aStudent) :
+        if not (aStudent) in self._students :
             return wasRemoved
-
-        oldIndex = self._students.index(aStudent)
+        oldIndex = (-1 if not aStudent in self._students else self._students.index(aStudent))
         self._students.remove(oldIndex)
         if aStudent.indexOfCourse(self) == -1 :
             wasRemoved = True
-
         else :
             wasRemoved = aStudent.removeCourse(self)
             if not wasRemoved :
                 self._students.insert(oldIndex, aStudent)
-
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addStudentAt(self, aStudent, index):
         wasAdded = False
         if self.addStudent(aStudent) :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfStudents() :
                 index = self.numberOfStudents() - 1
-
             self._students.remove(aStudent)
             self._students.insert(index, aStudent)
             wasAdded = True
-
         return wasAdded
 
     def addOrMoveStudentAt(self, aStudent, index):
         wasAdded = False
-        if aStudent in self._students :
+        if (aStudent) in self._students :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfStudents() :
                 index = self.numberOfStudents() - 1
-
             self._students.remove(aStudent)
             self._students.insert(index, aStudent)
             wasAdded = True
-
         else :
             wasAdded = self.addStudentAt(aStudent, index)
-
         return wasAdded
 
     def delete(self):
@@ -99,4 +104,3 @@ class Course():
         self._students.clear()
         for aStudent in copyOfStudents:
             aStudent.removeCourse(self)
-

@@ -1,0 +1,8 @@
+interface IReadable {
+  void read();
+}
+
+interface IStreamReadable {
+  isA IReadable;
+  void stream();
+}

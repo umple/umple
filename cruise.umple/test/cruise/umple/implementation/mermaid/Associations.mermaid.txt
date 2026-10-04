@@ -1,0 +1,7 @@
+classDiagram
+  class Course {
+  }
+  class Student {
+  }
+  Student "1..*" -- "*" Course : courses
+  Student "0..1" --> "*" Student : mentees

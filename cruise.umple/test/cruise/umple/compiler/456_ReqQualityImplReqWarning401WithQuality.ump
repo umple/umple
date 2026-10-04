@@ -1,0 +1,3 @@
+// Test: implementsReq NonExistent(High) -> only warning 401, no 408/409
+implementsReq NonExistent(High);
+class Item {}

@@ -1,0 +1,112 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Driver():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Driver Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self):
+        self._driverSchedules = None
+        self._driverSchedules = []
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetMany 
+    def getDriverSchedule(self, index):
+        aDriverSchedule = self._driverSchedules[index]
+        return aDriverSchedule
+
+    def getDriverSchedules(self):
+        newDriverSchedules = tuple(self._driverSchedules)
+        return newDriverSchedules
+
+    def numberOfDriverSchedules(self):
+        number = len(self._driverSchedules)
+        return number
+
+    def hasDriverSchedules(self):
+        has = len(self._driverSchedules) > 0
+        return has
+
+    def indexOfDriverSchedule(self, aDriverSchedule):
+        index = (-1 if not aDriverSchedule in self._driverSchedules else self._driverSchedules.index(aDriverSchedule))
+        return index
+
+    # Code from template association_MinimumNumberOfMethod 
+    @staticmethod
+    def minimumNumberOfDriverSchedules():
+        return 0
+
+    # Code from template association_AddManyToOne 
+    def addDriverSchedule1(self, aShift, aStatus):
+        from enumerations.DriverSchedule import DriverSchedule
+        return DriverSchedule(aShift, aStatus, self)
+
+    def addDriverSchedule2(self, aDriverSchedule):
+        wasAdded = False
+        if (aDriverSchedule) in self._driverSchedules :
+            return False
+        existingDriver = aDriverSchedule.getDriver()
+        isNewDriver = not (existingDriver is None) and not self == existingDriver
+        if isNewDriver :
+            aDriverSchedule.setDriver(self)
+        else :
+            self._driverSchedules.append(aDriverSchedule)
+        wasAdded = True
+        return wasAdded
+
+    def removeDriverSchedule(self, aDriverSchedule):
+        wasRemoved = False
+        #Unable to remove aDriverSchedule, as it must always have a driver
+        if not self == aDriverSchedule.getDriver() :
+            self._driverSchedules.remove(aDriverSchedule)
+            wasRemoved = True
+        return wasRemoved
+
+    # Code from template association_AddIndexControlFunctions 
+    def addDriverScheduleAt(self, aDriverSchedule, index):
+        wasAdded = False
+        if self.addDriverSchedule(aDriverSchedule) :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfDriverSchedules() :
+                index = self.numberOfDriverSchedules() - 1
+            self._driverSchedules.remove(aDriverSchedule)
+            self._driverSchedules.insert(index, aDriverSchedule)
+            wasAdded = True
+        return wasAdded
+
+    def addOrMoveDriverScheduleAt(self, aDriverSchedule, index):
+        wasAdded = False
+        if (aDriverSchedule) in self._driverSchedules :
+            if index < 0 :
+                index = 0
+            if index > self.numberOfDriverSchedules() :
+                index = self.numberOfDriverSchedules() - 1
+            self._driverSchedules.remove(aDriverSchedule)
+            self._driverSchedules.insert(index, aDriverSchedule)
+            wasAdded = True
+        else :
+            wasAdded = self.addDriverScheduleAt(aDriverSchedule, index)
+        return wasAdded
+
+    def delete(self):
+        i = len(self._driverSchedules)
+        while i > 0 :
+            aDriverSchedule = self._driverSchedules[i - 1]
+            aDriverSchedule.delete()
+            i -= 1
+
+    def addDriverSchedule(self, *argv):
+        from enumerations.DriverSchedule import DriverSchedule
+        if len(argv) == 2 and isinstance(argv[0], DriverSchedule.Shift) and isinstance(argv[1], DriverSchedule.Status) :
+            return self.addDriverSchedule1(argv[0], argv[1])
+        if len(argv) == 1 and isinstance(argv[0], DriverSchedule) :
+            return self.addDriverSchedule2(argv[0])
+        raise TypeError("No method matches provided parameters")

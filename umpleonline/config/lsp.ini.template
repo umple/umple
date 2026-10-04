@@ -1,0 +1,26 @@
+; LSP configuration for UmpleOnline
+; This is the single source of truth for repo-owned LSP settings.
+; Deployment overrides (UMPLE_LSP_WS_URL, LSP_AUTH_SECRET) are set via env vars.
+
+; Path to session files (where PHP stores .ump files).
+; Relative paths are resolved from the repo root by setup.sh.
+standaloneUmpBaseDir=umpleonline/ump
+
+; Host port for the standalone LSP container.
+; Each clone on the same machine needs a unique port.
+standaloneHostPort=9999
+
+; Docker container and image name for standalone mode.
+; Each clone on the same machine needs a unique name.
+standaloneContainerName=umple_lsp
+
+; Maximum concurrent LSP server processes per proxy instance.
+maxProcesses=200
+
+; Browser-facing loopback address for local dev (php -S).
+; Only used when UMPLE_LSP_WS_URL env var is not set.
+localBrowserHost=127.0.0.1
+
+; Set true to build with a locally npm-linked umple-lsp-server.
+; Requires: npm link in the umple-lsp-server repo first.
+useLinkedLsp=false

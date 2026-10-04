@@ -1,0 +1,56 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+////---- Tests for  ClassTemplateTest_ImmutableNotLazyAttributeConstructor ----/////
+
+test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_ImmutableNotLazyAttributeConstructor.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :number
+
+      test attribute_immutable_number {
+    
+          
+
+    
+        Student aStudent("RandomString1");
+    //assertMethod(setNumber());
+    assertTrue( aStudent.getNumber() == null);
+
+
+        	}
+
+ //tests for :number2
+
+      test attribute_lazy_immutable_number2 {
+    
+          
+
+    
+        Student aStudent("RandomString1");
+    //assertMethod(setNumber2());
+    assertTrue( aStudent.getNumber2() == null);
+
+
+        	}
+
+
+  
+ 
+   
+
+}

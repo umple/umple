@@ -1,0 +1,9 @@
+generate Json;
+namespace example;
+
+class KeyAttributeClass
+{
+  Integer id;
+  String name;
+  key {id}
+}

@@ -122,7 +122,7 @@ public class UmpleCPPGenerationUtil {
 	public static List<String> getRequirementStrings(List<Requirement> reqs){
 		List<String> reqStrings= new ArrayList<String>(reqs.size());
 		for(Requirement r: reqs){
-			reqStrings.add(r.getStatement());
+			reqStrings.add(r.getDisplayStatement());
 		}
 		return reqStrings;
 	}

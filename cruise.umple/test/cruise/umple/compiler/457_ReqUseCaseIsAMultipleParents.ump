@@ -1,0 +1,4 @@
+req UC11 useCase {
+  isA UC1, UC2;
+  userStep 1 { confirm the order }
+}

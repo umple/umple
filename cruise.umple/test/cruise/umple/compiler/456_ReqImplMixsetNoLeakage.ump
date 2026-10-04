@@ -1,0 +1,21 @@
+// Regression: implementsReq before one mixset must not leak into the next mixset.
+implementsReq R1;
+
+mixset DesignA {
+  class FeatureA {
+    name;
+  }
+}
+
+mixset DesignB {
+  class FeatureB {
+    priority;
+  }
+}
+
+req R1 text {
+  Only the first mixset should implement this requirement.
+}
+
+use DesignA;
+use DesignB;

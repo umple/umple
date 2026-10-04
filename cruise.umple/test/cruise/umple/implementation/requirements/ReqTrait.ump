@@ -1,0 +1,17 @@
+req R1 {
+  A trait requirement.
+}
+req R2 {
+  A method in trait requirement.
+}
+
+class A {
+  isA MyTrait;
+}
+
+trait MyTrait {
+  implementsReq R1;
+  
+  implementsReq R2;
+  Integer compute() { return 0; }
+}

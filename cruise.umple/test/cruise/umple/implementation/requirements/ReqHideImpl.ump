@@ -1,0 +1,12 @@
+// Test that reqHideImpl suboption hides implemented requirements (shows only unimplemented)
+suboption "reqHideImpl";
+req A01 {
+  unimplemented requirement.
+}
+req B01 {
+  implemented requirement.
+}
+implementsReq B01;
+class Example {
+  var1;
+}

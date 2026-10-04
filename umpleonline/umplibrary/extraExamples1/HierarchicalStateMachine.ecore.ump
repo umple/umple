@@ -1,0 +1,118 @@
+/************
+This file is an Umple translation of a model
+of Hierarchical State Machine version 1.0 found at the following URL
+https://github.com/atlanmod/atlantic-zoo/blob/main/AtlantEcore/HierarchicalStateMachine.ecore
+
+date : 2006/07/14
+
+Domain :
+
+Description : This metamodel describes hierarchical state machine concepts.
+
+Title: Hierarchical State Machine
+
+See : http://repository.escherinstitute.org/Plone/tools/suites/mic/great/
+
+Authors : Youssef Srour (Srour.youssef_NOSPAM <AT> gmail.com)
+*************/
+namespace HSM;
+
+class MgaObject
+{
+	String name;
+	String position;
+}
+
+class StateBase
+{
+	isA MgaObject;
+	String defaultTransition;
+	Boolean marked;
+	0..1 dstTransition -- 1..* AssociationStateState associationStateStatedst;
+	* -- * DataVar data;
+	1..* srcTransition -- 1..* AssociationStateState associationStateStatesrc;
+	1..* -- 1..* AssociationDataStateBase;
+}
+
+class DataVar
+{
+	isA MgaObject;
+	* -- 1..* OrState;
+	1..* -- 1..* AssociationDataStateBase;
+}
+
+class Transition
+{
+	isA MgaObject;
+	String guard;
+	String trigger;
+	String action;
+	Boolean isSync;
+	* -- 1..* OrState;
+	1..* -- 1..* AssociationStateState;
+}
+
+class StateDateRelation
+{
+	isA MgaObject;
+	String value;
+	String color;
+}
+
+class RootFolder
+{
+	String name;
+	0..1 -> * RootFolder rootFolders;
+	1..* -- * OrState;
+}
+
+class OrState
+{
+	isA CompoundState;
+	1..* -- * CompoundState;
+	1..* -- 1..* Init;
+	1..* -- * State;
+	1..* -- * StateDataRelation;
+}
+
+class AndState
+{
+	isA CompoundState;
+	1..* -- * CompoundState;
+}
+
+class CompoundState
+{
+	isA StateBase;
+}
+
+class PrimitiveState
+{
+	isA StateBase;
+}
+
+class Init
+{
+	isA PrimitiveState;
+}
+
+class State
+{
+	isA PrimitiveState;
+}
+
+class StateDataRelation
+{
+	isA PrimitiveState;
+	String value;
+	String color;
+	1..* -- 1..* AssociationDataStateBase associationDataStateBase1;
+}
+
+class AssociationStateState
+{
+}
+
+class AssociationDataStateBase
+{
+}

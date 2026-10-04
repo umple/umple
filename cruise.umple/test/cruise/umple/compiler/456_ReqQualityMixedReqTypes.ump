@@ -1,0 +1,22 @@
+req R1 {
+  Simple plain requirement.
+}
+
+req R2 userStory {
+  who { tester }
+  what { validate }
+}
+
+req R2 quality {
+  Accuracy {}
+  Coverage {}
+}
+
+req R3 useCase {
+  1. userStep { open app }
+  1. systemResponse { display home }
+}
+
+req R3 quality {
+  Usability {}
+}

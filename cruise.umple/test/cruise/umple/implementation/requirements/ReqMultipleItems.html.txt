@@ -11,6 +11,7 @@
 </p><p>&nbsp; IMPLEMENTED BY: 
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;A&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;32 ; 
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;state machine:&nbsp;sm&nbsp;in class&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;56 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;mixset:&nbsp;specialVersion&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;111 ; 
 </p><p><b>R4: The Fourth req</b>
 </p><p>&nbsp; IMPLEMENTED BY: 
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;B&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;46 ; 
@@ -31,4 +32,5 @@
 &nbsp;in class&nbsp;Ac&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;97 ; 
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;interface:&nbsp;Itest&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;89 ; 
 </p><p>&nbsp;&nbsp;&nbsp;&nbsp;enum:&nbsp;Status&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;108 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;mixset:&nbsp;specialVersion&nbsp;ReqMultipleItems.ump&nbsp;line&nbsp;111 ; 
 </p></html>

@@ -1,0 +1,169 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class X implements J
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //X Associations
+  private $ies;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->ies = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getY_index($index)
+  {
+    $aY = $this->ies[$index];
+    return $aY;
+  }
+
+  public function getIes()
+  {
+    $newIes = $this->ies;
+    return $newIes;
+  }
+
+  public function numberOfIes()
+  {
+    $number = count($this->ies);
+    return $number;
+  }
+
+  public function hasIes()
+  {
+    $has = $this->numberOfIes() > 0;
+    return $has;
+  }
+
+  public function indexOfY($aY)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->ies as $y)
+    {
+      if ($y->equals($aY))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfIes()
+  {
+    return 0;
+  }
+
+  public function addY($aY)
+  {
+    $wasAdded = false;
+    if ($this->indexOfY($aY) !== -1) { return false; }
+    $this->ies[] = $aY;
+    if ($aY->indexOfX($this) != -1)
+    {
+      $wasAdded = true;
+    }
+    else
+    {
+      $wasAdded = $aY->addX($this);
+      if (!$wasAdded)
+      {
+        array_pop($this->ies);
+      }
+    }
+    return $wasAdded;
+  }
+
+  public function removeY($aY)
+  {
+    $wasRemoved = false;
+    if ($this->indexOfY($aY) == -1)
+    {
+      return $wasRemoved;
+    }
+
+    $oldIndex = $this->indexOfY($aY);
+    unset($this->ies[$oldIndex]);
+    if ($aY->indexOfX($this) == -1)
+    {
+      $wasRemoved = true;
+    }
+    else
+    {
+      $wasRemoved = $aY->removeX($this);
+      if (!$wasRemoved)
+      {
+        $this->ies[$oldIndex] = $aY;
+        ksort($this->ies);
+      }
+    }
+    $this->ies = array_values($this->ies);
+    return $wasRemoved;
+  }
+
+  public function addYAt($aY, $index)
+  {  
+    $wasAdded = false;
+    if($this->addY($aY))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfIes()) { $index = $this->numberOfIes() - 1; }
+      array_splice($this->ies, $this->indexOfY($aY), 1);
+      array_splice($this->ies, $index, 0, array($aY));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveYAt($aY, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfY($aY) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfIes()) { $index = $this->numberOfIes() - 1; }
+      array_splice($this->ies, $this->indexOfY($aY), 1);
+      array_splice($this->ies, $index, 0, array($aY));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addYAt($aY, $index);
+    }
+    return $wasAdded;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $copyOfIes = $this->ies;
+    $this->ies = array();
+    foreach ($copyOfIes as $aY)
+    {
+      $aY->removeX($this);
+    }
+  }
+
+}
+?>

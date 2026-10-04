@@ -6,12 +6,20 @@ class Example
     Off { flip -> On; }
   }  
 
-  after setLight {
+  after setLight Java {
     System.out.println("Just flipped");
   }
 
-  before setLight {
+  before setLight Java {
     System.out.println("About to flip");
+  }
+
+  after setLight Python {
+    print("Just flipped")
+  }
+
+  before setLight Python {
+    print("About to flip")
   }
 
 }

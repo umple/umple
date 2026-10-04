@@ -26,7 +26,7 @@ class Student():
         return self
 
     def __init__(self, aName, aNumber, aNameForMentor):
-        from Mentor import Mentor
+        from example.Mentor import Mentor
         self._mentor = None
         self._number = None
         self._name = None

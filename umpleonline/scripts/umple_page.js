@@ -43,8 +43,19 @@ Page.useGvFeatureDiagram = false;
 Page.showFeatureDependency = false;
 Page.useStructureDiagram = false;
 Page.useFeatureDiagram = false;
+Page.useGvEntityRelationshipDiagram = false;
+Page.useInstanceDiagram = false;
+Page.useCRUDUI = false;
+Page.useStateTables = false;
+Page.useEventSequence = false;
 Page.showAttributes = true;
 Page.showMethods = false;
+Page.filterWordsOutput = "";
+Page.mixsetsActive = new Array();
+Page.filtersActive = new Array();
+Page.copyableMixset="";
+Page.specialSuboptionsActive = new Array();
+Page.hasFeatureModelTree = false;
 Page.showActions = true;
 Page.showText = true;
 Page.showCanvas = true;
@@ -52,18 +63,28 @@ Page.showTraits = false;
 Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
 Page.showGuards = true;
+Page.showNaturalLanguage = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
 
+Page.initialMouseDownX=0;
+Page.initialMouseDownY=0;
+Page.selectedGvClass="";
 
   Page.blahblah = function (theString) {
     console.log("In blah blah "+theString);
   }
 
+// Gvmanual determines behaviour of editing so this function
+// provides a shortcut to check for it
+// Returns boolean
+Page.isGvManual = function () {
+  return Page.specialSuboptionsActive.includes("gvmanual");
+}
 
 
 // The following is set called from umple.php
-Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask)
+Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLayout, diagramType,generateDefault, doLoadTask, doEditTask, doCreateTask, displayoptions)
 { 
   if(performance.navigation.type == 2)
   {
@@ -81,36 +102,57 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   jQuery(".layoutListItem").hide();
 
   // Set diagram type - anything else means use the default editable class diagram
-  if(diagramType == "GvState")   
+  if(diagramType.toLowerCase() == "gvstate" || diagramType.toLowerCase() == "state")   
   { 
     Page.useGvStateDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     Page.useEditableClassDiagram = false; 
     Page.setDiagramTypeIconState('GvState');
     Page.useGvFeatureDiagram = false;
     jQuery(".view_opt_state").show();
 
   }
-  else if(diagramType == "GvClass")   
+  else if(diagramType.toLowerCase() == "gvclass")
   {
     Page.useGvClassDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     Page.useEditableClassDiagram = false;
     Page.setDiagramTypeIconState('GvClass');
     Page.useGvFeatureDiagram = false;
     jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
 
   }
-  else if(diagramType == "GvClassTrait")   
+  else if(diagramType.toLowerCase() == "gvclasstrait")
   {
     Page.useGvClassDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     Page.useEditableClassDiagram = false;
     Page.setDiagramTypeIconState('GvClass');
     Page.useGvFeatureDiagram = false;
     Page.showTraits=true;
     jQuery(".view_opt_class").show();
   } 
-  else if(diagramType == "GvFeature")   
+  else if(diagramType.toLowerCase() == "gvfeature")
   {
     Page.useGvFeatureDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     Page.useEditableClassDiagram = false;
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
@@ -118,17 +160,106 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     jQuery(".view_opt_feature").show();
 
   }
-  else if(diagramType == "structureDiagram")
+  else if(diagramType.toLowerCase() == "structurediagram")
   {
     Page.useStructureDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('structureDiagram');
+    Page.useGvFeatureDiagram = false;
+  }
+  else if(diagramType.toLowerCase() == "gventityrelationshipdiagram")
+  {
+    Page.useGvEntityRelationshipDiagram = true;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
+    Page.useGvFeatureDiagram = false;
+  }
+  else if(diagramType.toLowerCase() == "instancediagram")
+  {
+    Page.useInstanceDiagram = true;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
+    Page.useGvFeatureDiagram = false;
+  }
+  else if(diagramType.toLowerCase() == "crudui" || diagramType.toLowerCase() == "crudjson")
+  {
+    Page.useCRUDUI = true;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    Page.useInstanceDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
+    Page.useGvFeatureDiagram = false;
+  }
+  else if(diagramType.toLowerCase() == "eventsequence")
+  {
+    Page.useEventSequence = true;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useInstanceDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
+    Page.useGvFeatureDiagram = false;
+  }
+  else if(diagramType.toLowerCase() == "statetables")
+  {
+    Page.useStateTables = true;
+    Page.useEventSequence = false;
+    Page.useCRUDUI = false;
+    Page.useInstanceDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
     Page.useGvFeatureDiagram = false;
   }
   else
   {
     jQuery(".view_opt_class").show();
     jQuery(".view_opt_class_palette").show();
+  }
+
+  // Set the default displayoptions if there are any
+  if(displayoptions != "") {
+    if (displayoptions.includes("gvmanual")) {
+      Page.specialSuboptionsActive.push("gvmanual");
+      displayoptions=displayoptions.replace("gvmanual","");
+    }
+
+    if (displayoptions.includes("gvdot")) {
+      Page.specialSuboptionsActive.push("gvdot");
+      displayoptions=displayoptions.replace("gvdot","");
+    }
+    else if (displayoptions.includes("gvsfdp")) {
+      Page.specialSuboptionsActive.push("gvsfdp");
+      displayoptions=displayoptions.replace("gvsfdp","");
+    }
+    else if (displayoptions.includes("gvortho")) {
+      Page.specialSuboptionsActive.push("gvortho");
+      displayoptions=displayoptions.replace("gvortho","");
+    }
+
+    jQuery("#filtervalues").val(displayoptions);
+    Action.setFilterFull(displayoptions,false);
   }
 
   jQuery.noConflict();
@@ -141,8 +272,21 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Page.initSourceCodeArea();
   Page.initCodeExecutionArea();
   jQuery(document).ready(function() {
-    DropboxInitializer.initializeDropbox();
+    // DropboxInitializer.initializeDropbox();
     ToolTips.initTooltips();
+    // Initialize AI controller after DOM is ready so modal elements exist
+    if (window.AiSettings && window.AiSettings.init) {
+      window.AiSettings.init();
+    }
+    // Initialize feature tree modal after DOM is ready so its dialog elements (declared after the inline Page.init script in umple.php) are present.
+    Page.initHighlighter("btnCloseFeatureTree");
+    FeatureTreeModal.init();
+    if (Page.useGvFeatureDiagram) {
+      FeatureTreeModal.showPaletteSection();
+    } else {
+      FeatureTreeModal.hidePaletteSection();
+    }
+
   });
 
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
@@ -172,6 +316,7 @@ Page.initPaletteArea = function()
   Page.initJQueryButton("buttonLoadBlankModel");
   
   Page.initHighlighter("buttonAddClass");
+  Page.initHighlighter("buttonAddState");
   Page.initHighlighter("buttonAddAssociation");
   Page.initHighlighter("buttonAddTransition");
   Page.initHighlighter("buttonAddGeneralization");
@@ -181,6 +326,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonSimulateCode");
   Page.initHighlighter("buttonUigu");
   Page.initHighlighter("buttonCopyClip");
+  Page.initHighlighter("buttonCopyMix");  
   Page.initHighlighter("buttonCollabFork");
   Page.initHighlighter("buttonCopy");
   Page.initHighlighter("buttonCopyEncodedURL");
@@ -211,12 +357,15 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleTransitionLabels");
   Page.initHighlighter("buttonToggleGuards");
   Page.initHighlighter("buttonToggleGuardLabels");
+  Page.initHighlighter("buttonToggleNaturalLanguage");
   Page.initHighlighter("buttonToggleTraits");
   Page.initHighlighter("buttonToggleFeatureDependency");
-  Page.initHighlighter("buttonallowPinch");
+  Page.initHighlighter("buttonAllowPinch");
   Page.initHighlighter("buttonReindent");
-  
+  Page.initHighlighter("buttonSelectReq");
+
   Page.initToggleTool("buttonAddClass");
+  Page.initToggleTool("buttonAddState");
   Page.initToggleTool("buttonAddAssociation");
   Page.initToggleTool("buttonAddTransition");
   Page.initToggleTool("buttonAddGeneralization");
@@ -245,9 +394,15 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowGvStateDiagram");
   Page.initAction("buttonShowGvFeatureDiagram");//buttonShowGvFeatureDiagram
   Page.initAction("buttonShowStructureDiagram");
+  Page.initAction("buttonShowGvEntityRelationshipDiagram");
+  Page.initAction("buttonShowInstanceDiagram");
+  Page.initAction("buttonShowCRUDUI");
+  Page.initAction("buttonShowStateTables");
+  Page.initAction("buttonShowEventSequence");
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopyClip");
+  Page.initAction("buttonCopyMix");
   Page.initAction("buttonCollabFork");
   Page.initAction("buttonCopy");
   Page.initAction("buttonCopyEncodedURL");
@@ -290,6 +445,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuards");
   Page.initAction("buttonToggleGuardLabels");
+  Page.initAction("buttonToggleNaturalLanguage");
   Page.initAction("buttonAllowPinch");
     
   Page.initLabels();
@@ -297,7 +453,7 @@ Page.initPaletteArea = function()
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
   Page.enablePaletteItem("buttonSyncDiagram", false);
-  Page.enablePaletteItem("buttonAddTransition", false);
+  Page.enablePaletteItem("buttonAddTransition", Page.useGvStateDiagram);
 
   jQuery("#genstatus").hide();
   jQuery("#buttonViewComplete").hide();
@@ -351,6 +507,7 @@ Page.initOptions = function()
   jQuery("#buttonToggleTransitionLabels").prop('checked',false);
   jQuery("#buttonToggleGuards").prop('checked',true);  
   jQuery("#buttonToggleGuardLabels").prop('checked',false);
+  jQuery("#buttonToggleNaturalLanguage").prop('checked',true);
   jQuery("#buttonToggleTraits").prop('checked',Page.showTraits);
   jQuery("#buttonToggleFeatureDependency").prop('checked',false);
   jQuery("#buttonAllowPinch").prop('checked',false);
@@ -366,6 +523,22 @@ Page.initOptions = function()
 
   if(Page.useGvStateDiagram)
     jQuery("#buttonShowGvStateDiagram").prop('checked', true);
+
+  if(Page.useGvEntityRelationshipDiagram)
+    jQuery("#buttonShowGvEntityRelationshipDiagram").prop('checked', true);
+  
+  if(Page.useInstanceDiagram)
+    jQuery("#buttonShowInstanceDiagram").prop('checked', true);
+
+  if(Page.useCRUDUI)
+    jQuery("#buttonShowCRUDUI").prop('checked', true);
+ 
+  if(Page.useStateTables)
+    jQuery("#buttonShowStateTables").prop('checked', true);
+
+  if(Page.useEventSequence)
+    jQuery("#buttonShowEventSequence").prop('checked', true);
+
   if(Page.useStructureDiagram)
     jQuery("#buttonShowStructureDiagram").prop('checked', true);
 
@@ -422,13 +595,12 @@ Page.enablePaletteItem = function(id, doEnable)
   
   if (doEnable)
   {
-    item.removeClass();
+    item.removeClass("disabled");
     item.prop('disabled', true);
     Page.initHighlighter(id);
   }
   else
   {
-    item.removeClass();
     item.addClass("disabled");
     item.prop('disabled', false);
     Page.removeHighlighter(id);
@@ -473,19 +645,24 @@ Page.initLabels = function()
   
   for(var i = 0, len = labels.length; i < len; i++)
   {
-    var labelId = "#" + jQuery(labels[i]).prop("id");
-    jQuery(labelId).click(function(x) {
-      return function() {
-        jQuery("#" + jQuery(x).prop("id").replace("label", "button")).trigger('click');
-      }
-    }(labelId));
+    Page.initLabel(jQuery(labels[i]).prop("id") );
   }
+}
+
+Page.initLabel = function(id)
+{
+  var labelId = "#" + id;
+  jQuery(labelId).click(function(x) {
+    return function() {
+      jQuery("#" + jQuery(x).prop("id").replace("label", "button")).trigger('click');
+    }
+  }(labelId));  
 }
 
 // BOOKMARK: adding basic event handlers to model and layout editors:: calls to Action...
 Page.initUmpleTextArea = function()
 {
-  var modelEditor = jQuery("#umpleModelEditorText");
+  var modelEditor = jQuery("#newEditor");
   var layoutEditor = jQuery("#umpleLayoutEditorText");
   
   modelEditor.keyup(function(eventObject){
@@ -498,9 +675,9 @@ Page.initUmpleTextArea = function()
     Action.setjustUpdateNowtoSaveLater(false);
     Action.umpleCodeMirrorTypingActivity("layoutEditor");
   }); // Fixes Issue#1571 Editing on the layout editor will not update the Umple diagram
-  modelEditor.focus(function(){Action.focusOn("umpleModelEditorText", true);});
+  modelEditor.focusin(function(){Action.focusOn("umpleModelEditorText", true);});
   layoutEditor.focus(function(){Action.focusOn("umpleLayoutEditorText", true);});
-  modelEditor.blur(function(){Action.focusOn("umpleModelEditorText", false);});
+  modelEditor.focusout(function(){Action.focusOn("umpleModelEditorText", false);});
   layoutEditor.blur(function(){Action.focusOn("umpleLayoutEditorText", false);});
   
   Page.initCodeMirrorEditor();
@@ -509,54 +686,25 @@ Page.initUmpleTextArea = function()
   if (!Layout.isLayoutVisible) {Layout.showHideLayoutEditor(false);}
 }
 
-/* CodeMirror 5 */
+/* codemirror 6 */
 Page.initCodeMirrorEditor = function() {
-  // Page.codeMirrorEditor = CodeMirror.fromTextArea(
-  //   document.getElementById('umpleModelEditorText'),{
-  //       lineNumbers: true,
-  //       matchBrackets: true,
-  //       readOnly: Page.readOnly,
-  //       mode: "text/x-umple",
-  //       lineWrapping: true,
-                   
-  //       extraKeys: { // Change consistently in umple_action.js for Mousetrap
-  //         "Ctrl-E": function(cm) {Page.clickShowEditableClassDiagram()},
-  //         "Ctrl-J": function(cm) {Page.clickShowJointJSClassDiagram()},
-  //         "Ctrl-G": function(cm) {Page.clickShowGvClassDiagram()},
-  //         "Ctrl-S": function(cm) {Page.clickShowGvStateDiagram()},
-  //         "Ctrl-L": function(cm) {Page.clickShowStructureDiagram()},
-  //         "Ctrl-T": function(cm) {Page.clickShowHideText()},
-  //         "Shift-Ctrl-Alt-T": function(cm) {Page.clickShowHideText()},
-  //         "Ctrl-D": function(cm) {Page.clickShowHideCanvas()},
-  //         "Ctrl-N": function(cm) {Page.clickShowHideMenu()},
-  //         "Ctrl-Alt-N": function(cm) {Page.clickShowHideMenu()},
-  //         "Ctrl-Shift-=": function(cm) {Page.clickButtonlarger()},
-  //         "Ctrl-Shift--": function(cm) {Page.clickButtonSmaller()},
-  //         "Shift-Ctrl-A": function(cm) {Page.clickToggleAttributes()},
-  //         "Ctrl-M": function(cm) {Page.clickToggleMethods()},
-  //         "Ctrl-R": function(cm) {Page.clickToggleTraits()},
-  //         "Ctrl-I": function(cm) {Page.clickToggleTransitionLabels()},
-  //         "Ctrl-K": function(cm) {Page.clickToggleGuardLabels()},
-  //         "Ctrl-O": function(cm) {Action.copyCommandLineCode()},
-  //         "Ctrl-B": function(cm) {Action.promptAndExecuteTest()},
-  //         "Esc": function(cm) {cm.getInputField().blur()}
-  //         }
-  //       }
-  //     );
-    
-  /* codemirror 6 */
   const extraKeys = [
     { key: "Ctrl-E", run: function() { Page.clickShowEditableClassDiagram() } },
     { key: "Ctrl-J", run: function() { Page.clickShowJointJSClassDiagram() } },
     { key: "Ctrl-G", run: function() { Page.clickShowGvClassDiagram() } },
+    { key: "Ctrl-Shift-V", run: function() { Page.clickShowGvEntityRelationshipDiagram() } },
+    { key: "Ctrl-Shift-C", run: function() { Page.clickShowInstanceDiagram() } },
+    // { key: "Ctrl-Shift-f", run: function() { Page.clickShowCRUDUI() } },
+    { key: "Ctrl-Shift-t", run: function() { Page.clickShowStateTables() } },
+    { key: "Ctrl-Shift-r", run: function() { Page.clickShowEventSequence() } },
     { key: "Ctrl-S", run: function() { Page.clickShowGvStateDiagram() } },
     { key: "Ctrl-L", run: function() { Page.clickShowStructureDiagram() } },
     { key: "Ctrl-T", run: function() { Page.clickShowHideText() } },
     { key: "Shift-Ctrl-Alt-T", run: function() { Page.clickShowHideText() } },
     { key: "Ctrl-D", run: function() { Page.clickShowHideCanvas() } },
     { key: "Ctrl-N", run: function() { Page.clickShowHideMenu() } },
-    { key: "trl-Alt-N", run: function() { Page.clickShowHideMenu() } },
-    { key: "Ctrl-Shift-=", run: function() { Page.clickButtonlarger() } },
+    { key: "Ctrl-Alt-N", run: function() { Page.clickShowHideMenu() } },
+    { key: "Ctrl-Shift-=", run: function() { Page.clickButtonLarger() } },
     { key: "Ctrl-Shift--", run: function() { Page.clickButtonSmaller() } },
     { key: "Shift-Ctrl-A", run: function() { Page.clickToggleAttributes() } },
     { key: "Ctrl-M", run: function() { Page.clickToggleMethods() } },
@@ -571,7 +719,6 @@ Page.initCodeMirrorEditor = function() {
   // codemirror 6 
   // comment the following when trying to mount react app
   const initialState = cm6.createEditorState(
-   // document.getElementById("umpleModelEditorText").value, 
     document.getElementById("newEditor").value, 
      {
        extensions: []
@@ -589,99 +736,70 @@ Page.initCodeMirrorEditor = function() {
   });
 
   if (Page.readOnly) {
-    // Page.codeMirrorEditor6.dispatch({
-    //   effects: cm6.StateEffect.appendConfig.of(cm6.EditorView.editable.of(false))
-    //     });
             Page.codeMirrorEditor6.dispatch({
           effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
       });
   }
-  
-  // monitor codemirror6 state to listen to any changes in editor contents and update diagram accordingly
-  // Page.codeMirrorEditor6.dom.addEventListener("input", () => {
-  //   console.log("Input event triggered...")
-  //   const newText = Page.codeMirrorEditor6.state.doc.toString();
-  //   setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
-  // });
 
-  // ==================== this should be change for code mirror 6 ====================
+  // LSP initialization — called from TabControl.loadAllTabsCallback after tabs are settled
+  Page.initLspAsync = function() {
+    if (!window.UMPLE_LSP_WS_URL || Page.readOnly) return;
 
-  // no longer need on cm6
-  // Event triggering changes for CodeMirror 5
-  // Page.codeMirrorEditor.on('focus', function (id, gained) {
-  //   Action.focusOn('CodeMirror', true);
-  // });
-  // Page.codeMirrorEditor.on('blur', function (id, gained) {
-  //   Action.focusOn('CodeMirror', false);
-  // });
-  // Page.codeMirrorEditor.on('gutterClick', function (id, theLine) {
-  //   Page.codeMirrorEditor.foldCode(theLine);
-  // });
-  // ==================== this should be change up to this point ====================
+    var modelId = Page.getModel();
+    var activeTabName = (TabControl.activeTab && TabControl.activeTab.name) || "model";
+    var umpBasePath = window.UMPLE_UMP_BASE || "/var/www/ump";
 
-  
-  /* codemirror 5: detect changes. See below for inverse */
-  /* This is triggered indirectly by keyUP, which causes save to element 
-    umpleModelEditorText */
-  // Removing CM5
-  // Page.codeMirrorEditor.on('change', function (ed, changes) {
-  //   /* start timer to process changes 3s after after the editing is done */
-  //   console.log("onChange Triggered")
-  //   Action.umpleCodeMirrorTypingActivity("codeMirrorEditor");
-  //   /* update codemirror 6 panel with the same changes  .. NO LONGER DONE HERE  */
-  //   // Page.setCodeMirror6Text(document.getElementById("umpleModelEditorText").value);
-  //  });
-      
-  // Sets the codemirror 6 text without any change trigger (hopefully)
-  Page.setCodeMirror6Text = function (textToSet) {
-    // DEBUG
-    // console.log("Inside Page.setCodeMirror6Text() ...")
-    Page.codeMirrorEditor6.dispatch({ 
+    cm6.initLsp(Page.codeMirrorEditor6, {
+      wsUrl: window.UMPLE_LSP_WS_URL,
+      token: window.UMPLE_LSP_TOKEN || "",
+      modelId: modelId,
+      umpBasePath: umpBasePath,
+      activeTabName: activeTabName
+    }).then(function(success) {
+      if (!success) return;
+      // Seed all inactive tabs as passive files for cross-file rename/refs
+      for (var tabId in TabControl.tabs) {
+        var tab = TabControl.tabs[tabId];
+        if (tab !== TabControl.activeTab) {
+          var filename = TabControl.getTabFilename(tab.name);
+          var content = localStorage[filename] || "";
+          cm6.lspAddPassiveFile(tab.name, content);
+        }
+      }
+    }).catch(function(err) {
+      console.warn("[lsp] Init failed:", err);
+    });
+  };
+
+  // Reconnect hook — called by editor.mjs on WebSocket drop
+  window.umpleLspReconnect = function() {
+    if (!window.UMPLE_LSP_WS_URL || Page.readOnly) return;
+    cm6.disconnectLsp();
+    Page.initLspAsync();
+  };
+
+  // Sets CodeMirror 6 text; optionally skip debounced typing processing.
+  Page.setCodeMirror6Text = function (textToSet, skipDebouncedTyping) {
+    var dispatchPayload = { 
       changes: { 
         from: 0, 
         to: Page.codeMirrorEditor6.state.doc.length, 
         insert: textToSet
         }
-    } )
+    };
+    if (skipDebouncedTyping
+      && cm6.skipDebouncedTypingAnnotation
+      && typeof cm6.skipDebouncedTypingAnnotation.of === "function") {
+      dispatchPayload.annotations = cm6.skipDebouncedTypingAnnotation.of(true);
+    }
+    Page.codeMirrorEditor6.dispatch(dispatchPayload);
   }
-   
-  // codemirror 6: respond to each keyup to start the process of marking a change
-  // Page.codeMirrorEditor6.dom.addEventListener('keyup', function (ed, changes) {
-  //   console.log("keyup Event Triggered ...")
-  //   // start timer to process changes 3s after the editing is done
-  //   // Action.umpleCodeMirrorTypingActivity("newEditor");
-  //   setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
-  //  // console.log("keyup event triggered in CodeMirror 6 and hopefully saved text !!"+cm6.getCodeMirror6UmpleText());
-  // });
-
-  // Removing CM5
-  // CM5 cursorActivity event
-  // Page.codeMirrorEditor.on('cursorActivity', function () {
-  //   Page.codeMirrorEditor.addLineClass(Page.hLine, null);
-  //   Page.hLine = Page.codeMirrorEditor.addLineClass(
-  //   Page.codeMirrorEditor.getCursor().line,'activeline');
-  //   Action.umpleCodeMirrorCursorActivity();
-  // });
 
    Page.codeMirrorEditor6.dom.addEventListener('mousedown', function () {
-   // console.log("mousedown Event Triggered by CM6 editor ...")
     Action.umpleCodeMirrorCursorActivity();
    });
 
-  // Event triggering events end here
-  // Page.hLine = Page.codeMirrorEditor.addLineClass(0, "activeline");
-
-
-
-  Page.codeMirrorOn = true;  
-  
-  // DOES NOT WORK - DEBUG ... testing to see if we can trigger change made in CodeMirror 6
-/*  document.getElementById('umpleModelEditorText')
-     .addEventListener('DOMSubtreeModified',function () {
-    console.log("       CM6 changes to umpleModelEditorText: "+Page.codeMirrorEditor6.state.doc.toString());
-    // start timer to process changes 3s after after the editing is done
-    Action.umpleCodeMirrorTypingActivity("notUsed");    
-  } ); */
+  Page.codeMirrorOn = true;
 }
 
 // Function to make the E G S icons in UmpleOnline context senstive (#1400)
@@ -747,6 +865,21 @@ Page.clickShowJointJSClassDiagram = function() {
 Page.clickShowGvClassDiagram = function() {
   jQuery('#buttonShowGvClassDiagram').trigger('click');
 }
+Page.clickShowGvEntityRelationshipDiagram = function() {
+  jQuery('#buttonShowGvEntityRelationshipDiagram').trigger('click');
+}
+Page.clickShowInstanceDiagram = function() {
+  jQuery('#buttonShowInstanceDiagram').trigger('click');
+}
+Page.clickShowCRUDUI = function() {
+  jQuery('#buttonShowCRUDUI').trigger('click');
+}
+Page.clickShowStateTables = function() {
+  jQuery('#buttonShowStateTables').trigger('click');
+}
+Page.clickShowEventSequence = function() {
+  jQuery('#buttonShowEventSequence').trigger('click');
+}
 Page.clickShowGvStateDiagram = function() {
   jQuery('#buttonShowGvStateDiagram').trigger('click');
 }
@@ -787,7 +920,7 @@ Page.clickToggleFeatureDependency= function() {
 Page.clickToggleTransitionLabels = function() {
   jQuery('#buttonToggleTransitionLabels').trigger('click');
 }
-Page.clickToggleGuardLabels = function() {
+Page.clickToggleGuards = function() {
   jQuery('#buttonToggleGuards').trigger('click');
 }
 Page.clickToggleGuardLabels = function() {
@@ -798,6 +931,30 @@ Page.clickAllowPinch = function() {
   jQuery('#buttonAllowPinch').trigger('click');
 }
 
+Page.currentZoom = 0.4; // default start zoom see also pinchtozoom
+
+Page.zoomToCurrentZoom = function() {
+  zoomDiv=document.getElementById('svgCanvas');
+  theBBox=zoomDiv.getBBox();
+  newWidth=theBBox.width*(1+Page.currentZoom);
+  newHeight=theBBox.height*(1+Page.currentZoom);
+  zoomDiv.setAttribute('viewBox', `0 0 ${newWidth} ${newHeight}`);
+}
+
+Page.zoomIn = function() {
+  // If further zooming was allowed, then cropping would occur
+  // If the default start zoom and this was to be changed, then the
+  // generators would need to be adjusted
+  if(Page.currentZoom > 0.01) {
+    Page.currentZoom -= 0.1;
+    Page.zoomToCurrentZoom();
+  }
+}
+
+Page.zoomOut = function() {
+  Page.currentZoom += 0.1;
+  Page.zoomToCurrentZoom();
+}
 
 Page.isPhotoReady = function()
 {
@@ -906,6 +1063,18 @@ Page.setExamples = function(ex)
     }
    }
   )
+
+  // TODO the following does not yet properly work to open the files from the command line
+  // DEBUG
+  jQuery("#inputExample5").change(Action.loadExample);
+  jQuery("#inputExample5 option").each(function(){
+    if (this.value==exValue || 
+      (this.value.startsWith("http") && this.value.endsWith(exValue))){
+      jQuery("#inputExample5 option[value = \"extraExamples1/"+exValue  +"\"]").attr("selected", true);
+      return ;
+    }
+   }
+  )
 }
 Page.initExamples = function()
 {
@@ -924,31 +1093,129 @@ Page.initExamples = function()
   jQuery("#inputExample4").change(Action.loadExample);
   jQuery("#defaultExampleOption4").attr("selected",true);
 
+  jQuery("#inputExample5").change(Action.loadExample);
+  jQuery("#defaultExampleOption5").attr("selected",true);
+
+  jQuery("#inputExample6").change(Action.loadExample);
+  jQuery("#defaultExampleOption6").attr("selected",true);
+
+  jQuery("#inputExample7").change(Action.loadExample);
+  jQuery("#defaultExampleOption7").attr("selected",true);
+
+  jQuery("#inputExample8").change(Action.loadExample);
+  jQuery("#defaultExampleOption8").attr("selected",true);
+
+
   if (Page.useStructureDiagram) {
     jQuery("#structureModels").prop("selected",true);
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples4").hide();      
+    jQuery("#itemLoadExamples5").hide();   
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();  
+
   }
   else if (Page.useGvStateDiagram) {
     jQuery("#smModels").prop("selected",true);
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples3").hide();
-    jQuery("#itemLoadExamples4").hide();  
+    jQuery("#itemLoadExamples4").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();
+
   }
  else if (Page.useGvFeatureDiagram) {
     jQuery("#featureModels").prop("selected",true);
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples2").hide();
-    jQuery("#itemLoadExamples3").hide();    
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();
+  }
+
+  else if (Page.useGvEntityRelationshipDiagram) {
+    jQuery("#cdModels").prop("selected",true);
+    jQuery("#itemLoadExamples").show();
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();
+
+  }
+
+  else if (Page.useInstanceDiagram) {
+    jQuery("#cdModels").prop("selected",true);
+    jQuery("#itemLoadExamples").show();
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();
+
+  }
+
+  // else if (Page.useCRUDUI) {
+  //   jQuery("#cdModels").prop("selected",true);
+  //   jQuery("#itemLoadExamples").show();
+  //   jQuery("#itemLoadExamples2").hide();
+  //   jQuery("#itemLoadExamples3").hide();
+  //   jQuery("#itemLoadExamples5").hide();
+  //   jQuery("#itemLoadExamples6").hide();   
+  //   jQuery("#itemLoadExamples7").hide();   
+  //   jQuery("#itemLoadExamples8").hide();
+
+  // }
+
+  else if (Page.useStateTables) {
+    jQuery("#cdModels").prop("selected",true);
+    jQuery("#itemLoadExamples").show();
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();
+
+  }
+
+  else if (Page.useEventSequence) {
+    jQuery("#cdModels").prop("selected",true);
+    jQuery("#itemLoadExamples").show();
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();
+
   }
   else {
+    // TODO any examples loaded on initialization without a 
+    // URL argument will choose class diagrams
+    // Therefore for new example sets 5-8, we will need to change this logic
+    // to determine which set to hide
     jQuery("#cdModels").prop("selected",true); 
+    jQuery("#itemLoadExamples").show();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide(); 
-    jQuery("#itemLoadExamples4").hide();       
+    jQuery("#itemLoadExamples4").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();   
+
   }  
 }
+
 
 Page.highlightItem = function(id)
 {
@@ -966,6 +1233,8 @@ Page.enableDiagram = function(doEnable)
 {
   Page.enableEditDragAndResize(doEnable);
   Page.enablePaletteItem("buttonAddClass", doEnable);
+  Page.enablePaletteItem("buttonAddState", doEnable);
+  Page.enablePaletteItem("buttonAddTransition", doEnable);
   Page.enablePaletteItem("buttonAddAssociation", doEnable);
   Page.enablePaletteItem("buttonAddGeneralization", doEnable);
   Page.enablePaletteItem("buttonDeleteEntity", doEnable);
@@ -1015,6 +1284,7 @@ Page.toggleToolItem = function(id, doubleClicked)
 
 Page.unselectAllToggleTools = function()
 {
+  if (typeof GvDiagramEdit !== "undefined") GvDiagramEdit.clearPendingPaletteState();
   var unselected = false;
   var temp = false;
 
@@ -1034,11 +1304,14 @@ Page.unselectAllToggleTools = function()
   Page.selectedItem = null;
   Page.repeatToolItem = false;
 
+  Page.updateCanvasCursor();
+
   return unselected;
 }
 
 Page.selectToggleTool = function(toolSelected)
 {
+  if (typeof GvDiagramEdit !== "undefined") GvDiagramEdit.clearPendingPaletteState();
   if (Page.selectedItem != null)
   {
     DiagramEdit.removeNewClass();
@@ -1055,7 +1328,59 @@ Page.selectToggleTool = function(toolSelected)
   var newSelectedItem = "#button" + toolSelected;
   jQuery(allSelectedItems).removeClass("selected highlight");
   jQuery(newSelectedItem).addClass("selected");
+
+  Page.updateCanvasCursor();
 }
+
+Page.updateCanvasCursor = function()
+{
+  var canvas = document.getElementById("umpleCanvas");
+  if (!canvas) return;
+
+  var isDark =
+    document.body.dataset.theme === "dark" ||
+    (!document.body.dataset.theme &&
+     window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  var cursorValue = "default";
+
+  switch (Page.selectedItem)
+  {
+    case "AddAssociation":
+      cursorValue = isDark
+        ? "url('scripts/assoc_white.png') 8 8, auto"
+        : "url('scripts/assoc.png') 8 8, auto";
+      break;
+
+    case "AddGeneralization":
+      cursorValue = isDark
+        ? "url('scripts/generalization_white.png') 8 8, auto"
+        : "url('scripts/generalization.png') 8 8, auto";
+      break;
+
+    case "AddState":
+    case "AddClass":
+      cursorValue = "url('scripts/class.png') 8 8, auto";
+      break;
+
+    case "DeleteEntity":
+      cursorValue = "url('scripts/delete.png') 8 8, auto";
+      break;
+
+    case "AddTransition":
+      cursorValue = isDark
+        ? "url('scripts/assoc_white.png') 8 8, auto"
+        : "url('scripts/assoc.png') 8 8, auto";
+      break;
+
+    default:
+      cursorValue = "default";
+      break;
+  }
+
+  canvas.style.cursor = cursorValue;
+  canvas.classList.toggle("draw-tool-active", cursorValue !== "default");
+};
 
 Page.canShowHovers = function()
 {
@@ -1064,17 +1389,12 @@ Page.canShowHovers = function()
 
 Page.getRawUmpleCode = function()
 {
-  // DEBUG
-  // console.log("Inside Page.getRawUmpleCode ...")
-  // console.log("Reading Model Code from 'umpleModelEditorText' html element ...")
   return document.getElementById('umpleModelEditorText').value;
 }
 
 // CM6 function corresponding to CM5 Page.getRawUmpleCode()
 Page.getRawUmpleCodeCM6 = function()
 {
-  // DEBUG
-  // console.log("Reading Model Code from CM6 editor ...")
   return Page.codeMirrorEditor6.state.doc.toString();
 }
 
@@ -1082,15 +1402,13 @@ Page.getUmpleCode = function()
 {
   // DEBUG
   // console.log("Inside Page.getUmpleCode ...")
-  // var modelCleaned = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var modelCleaned = Page.getRawUmpleCodeCM6().replace(Page.modelDelimiter, "");
-  // console.log("Reading Positioning Code from 'umpleLayoutEditorText' html element ...")
   var positioning = jQuery("#umpleLayoutEditorText").val().replace(Page.modelDelimiter, "");
   if(positioning !== "" && !positioning.includes("namespace -;")){
    // prepend namespace cancellation to prevent namespace redefinition errors
     positioning = "\n\nnamespace -;\n"+positioning;
   }
-  var umpleCode = modelCleaned + Page.modelDelimiter + positioning;
+  var umpleCode = modelCleaned + "\n" + Page.modelDelimiter + positioning;
   return umpleCode;
 }
 
@@ -1098,7 +1416,7 @@ Page.getEncodedURL = function()
 {
   var server=window.location.href.split("?")[0];
   if(server.substr(0,37)=="https://cruise.umple.org/umpleonline/") {
-    server = "http://try.umple.org/";
+    server = "https://try.umple.org/";
   }
   return server+"?text=" + encodeURIComponent(Page.getUmpleCode());
 }
@@ -1107,6 +1425,7 @@ Page.splitUmpleCode = function(umpleCode)
 {
   // DEBUG
   // console.log("Inside Page.splitUmpleCode ...")
+
   var splitIndex = umpleCode.indexOf(Page.modelDelimiter);
   if (splitIndex == -1)
   {
@@ -1128,7 +1447,7 @@ Page.splitUmpleCode = function(umpleCode)
 // Called by fuunctions such as loadExampeCallback and loadFileCallback
 // Also called by updateUmpleTextCallback which is triggered by diagram edit by directUpdateCommandCallback  
 // Updates all text editors, and then can call a function called reason
-Page.setUmpleCode = function(umpleCode, reason)
+Page.setUmpleCode = function(umpleCode, reason, skipDebouncedTyping)
 {
   // DEBUG
   // console.log("Inside Page.setUmpleCode() ...")
@@ -1142,17 +1461,13 @@ Page.setUmpleCode = function(umpleCode, reason)
     // issue#1409  Do not Set the umple code if codeChange is false(i.e. reason is false)
     if (!((typeof reason === 'boolean') && reason == false))
     {
-      // Update the codemirror 5 editor itself
-      // console.log("Setting modelCode to codeMirror editor ...")
-      // Page.codeMirrorEditor.setValue(modelAndPositioning[0]);
-      Page.setCodeMirror6Text(modelAndPositioning[0]);
+      Page.setCodeMirror6Text(modelAndPositioning[0], skipDebouncedTyping);
     }
   }
   // Refactoring definitive text location
   // Update Codemirror 6 and the backup variable
   // console.log("Setting modelCode to codeMirror 6 ...")
-  Action.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0]);
-  //OLD jQuery("#umpleModelEditorText").val(modelAndPositioning[0]);
+  Action.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0], skipDebouncedTyping);
 
   if (typeof reason === 'function'){
     reason();
@@ -1219,7 +1534,6 @@ Page.createTaskCallback = function(response)
   }
   else 
   {
-    //window.alert("Successfully created a Task! Now you will be navaigate to task modfication page");
     window.location.href = "umple.php?task=1&model=" + response.responseText;
   }
 }
@@ -1343,7 +1657,6 @@ Page.hideLoading = function()
 Page.showModelLoading = function()
 {
   // change to code mirror 6
-  // var modelEditor = jQuery("#topTextEditor");
   var modelEditor = jQuery("#newEditor");
 
   if(Page.modelLoadingCount == 0)
@@ -1376,8 +1689,7 @@ Page.showLayoutLoading = function()
 
 Page.showCanvasLoading = function()
 {
-  if (debuggerFlag)   
-  console.log("Inside Page.showCanvasLoading() ...")
+  // console.log("Inside Page.showCanvasLoading() ...")
 
   var canvas = jQuery("#umpleCanvas");
   if(Page.canvasLoadingCount == 0)
@@ -1402,13 +1714,47 @@ Page.getSelectedExample = function()
 {
   var inputExample = "";
   var theExampleType = Page.getExampleType();
+
+  // store the menu id of the example set as there will be more than one for class diagrams
+  var exampleSet = theExampleType;
+
+  // The default model type comes from the first 4 menu items created in umple.php
+  // But as we add additional special sets of examples, we need to define the exampleType
+  if(theExampleType.substring(0,5) == "extra") {
+    theExampleType = "cdModels";
+  }
+
   if(theExampleType == "cdModels") {
-    var requiresGvClass = false; // Some class diagrams  are too complex to edit
-    inputExample = jQuery("#inputExample option:selected").val();
-    if (inputExample == "GeometricSystem.ump") {
-      requiresGvClass = true;
+    // Jan 2025 change to ensure class diagrams by default use GvClass.
+    var requiresGvClass = true; // Some class diagrams  are too complex to edit
+
+    var exampleSetIDToLoad = "inputExample";
+    if (exampleSet == "extra1ModelsAD") {
+      exampleSetIDToLoad = "inputExample5";
+      requiresGvClass = true; // All these examples are too complex for E mode
     }
-    
+    else if (exampleSet == "extra1ModelsEL") {
+      exampleSetIDToLoad = "inputExample6";
+      requiresGvClass = true; // All these examples are too complex for E mode
+    }
+    else if (exampleSet == "extra1ModelsMP") {
+      exampleSetIDToLoad = "inputExample7";
+      requiresGvClass = true; // All these examples are too complex for E mode
+    }
+    else if (exampleSet == "extra1ModelsQZ") {
+      exampleSetIDToLoad = "inputExample8";
+      requiresGvClass = true; // All these examples are too complex for E mode
+    }
+
+    inputExample = jQuery("#"+exampleSetIDToLoad+" option:selected").val();
+
+    // Override special case to use G mode where E mode is too complex
+    // Commented out when making G mode default
+    // TODO: Consider tagging the examples by mode in umple.php rather than here
+    // if (inputExample == "GeometricSystem.ump") {
+    //  requiresGvClass = true;
+    // }
+
     if(requiresGvClass) {
       // if diagram type not a editable class diagram, set it 
       if(!Page.useGvClassDiagram) {
@@ -1435,6 +1781,61 @@ Page.getSelectedExample = function()
       }
     
     }
+
+    else if (theExampleType == "entityModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useGvEntityRelationshipDiagram) {
+         jQuery("#buttonShowGvEntityRelationshipDiagram").prop('checked', true); 
+         Action.changeDiagramType({type: "GvEntityRelationshipDiagram"});
+         
+      }
+    
+    } 
+
+    else if (theExampleType == "instanceModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useInstanceDiagram) {
+         jQuery("#buttonShowInstanceDiagram").prop('checked', true); 
+         Action.changeDiagramType({type: "InstanceDiagram"});
+         
+      }
+    
+    } 
+
+    else if (theExampleType == "crudModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useCRUDUI) {
+         jQuery("#buttonShowCRUDUI").prop('checked', true); 
+         Action.changeDiagramType({type: "crudUI"});
+         
+      }
+    
+    } 
+
+    else if (theExampleType == "stateModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useStateTables) {
+         jQuery("#buttonShowStateTables").prop('checked', true); 
+         Action.changeDiagramType({type: "StateTables"});
+         
+      }
+    
+    } 
+
+    else if (theExampleType == "eventModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useEventSequence) {
+         jQuery("#buttonShowEventSequence").prop('checked', true); 
+         Action.changeDiagramType({type: "eventSequence"});
+         
+      }
+    
+    } 
   else {
 
     if(theExampleType == "smModels") {
@@ -1459,8 +1860,8 @@ Page.getSelectedExample = function()
 
 Page.getExampleType = function()
 {
-  var exampleType = jQuery("#exampleType option:selected").val();
-  return exampleType;
+  var inputExampleType = jQuery("#inputExampleType option:selected").val();
+  return inputExampleType;
 }
 
 Page.showCodeDone = function()
@@ -1501,9 +1902,24 @@ Page.showGeneratedCode = function(code,language,tabnumber)
     jQuery("#messageArea").html(errorMarkup);
   }
 
+  // Add AI fix actions to compiler errors.
+  if (language == "diagramUpdate")
+  {
+    const container = (tabnumber == "") ? jQuery("#downloadArea") : jQuery("#messageArea");
+    if (typeof AiFix !== "undefined" && AiFix.decorateErrorOutput)
+    {
+      // Only add AI fix buttons if the API key is verified
+      const isVerified = (typeof AiApi !== "undefined" && AiApi.isVerified) ? AiApi.isVerified() : false;
+      if (isVerified)
+      {
+        AiFix.decorateErrorOutput(container.get(0), errorMarkup);
+      }
+    }
+  }
+
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
-    || language == "ruby" || language == "python" || language == "xml" || language == "sql" || language == "alloy" || language == "nusmv")
+    || language == "ruby" || language == "python" || language == "xml" || language == "sql" || language == "alloy" || language == "nusmv" || language == "mermaid")
   {
 		jQuery("#innerGeneratedCodeRow" + tabnumber).html(
 			formatOnce('<pre class="brush: {1};">{0}</pre>',generatedMarkup,language)
@@ -1535,6 +1951,10 @@ Page.showGeneratedCode = function(code,language,tabnumber)
 		}
     Page.toggleStructureDiagramLink(false);
   }
+  else if (language === "crudJson")
+  {
+    Page.showCrudFromJson(generatedMarkup, tabnumber);
+  }
   else
   {
     jQuery("#innerGeneratedCodeRow" + tabnumber).html(generatedMarkup);
@@ -1555,7 +1975,7 @@ Page.applyGeneratedCodeAreaStyles = function(language)
     generatedArea.removeClass('generatedDiagram');
   }
   //One of the svg diagram types
-  else if(language == "stateDiagram" || language == "classDiagram" || language == "structureDiagram")
+  else if(language == "stateDiagram" || language == "classDiagram" || language == "structureDiagram" || language == "entityRelationshipDiagram" || language =="instanceDiagram" || /*language == "crudJson" ||*/ language == "eventSequence" || language == "stateTables")
   {
     generatedArea.removeClass('generatedCode');
     generatedArea.addClass('generatedDiagram');
@@ -1579,7 +1999,7 @@ Page.getErrorMarkup = function(code, language)
 {
   var output = "";
   
-  if(language == "classDiagram" || language == "stateDiagram")
+  if(language == "classDiagram" || language == "stateDiagram" || language == "GvEntityRelationshipDiagram" || language == "instanceDiagram")
   { // Covers Graphviz class and state diagrams
     output = code.split("<svg xmlns=")[0];
     output = output.replace(/&nbsp;\s*$/, "");
@@ -1591,6 +2011,14 @@ Page.getErrorMarkup = function(code, language)
   else if(language == "diagramUpdate")
   { // Covers simple right-hand side canvas updates
     output = code.replace(/<p>[\s\S]*/, "");
+  }
+  else if(language == "eventSequence" || language == "stateTables")
+  {
+    // These use URL_SPLIT output, not SVG parsing
+    var split = code.split("URL_SPLIT");
+    if (split.length > 1) {
+      output = split[0];
+    }
   }
   else
   {
@@ -1610,8 +2038,8 @@ Page.getGeneratedMarkup = function(code, language)
 {
   var output = "";
   
-  if(language == "classDiagram" || language == "stateDiagram")
-  { // Covers Graphviz class and state diagrams
+  if(language == "classDiagram" || language == "stateDiagram" || language == "instanceDiagram")
+  { // Covers Graphviz class, state, and instance diagrams
     output = code.split("<svg width=")[1];
     output = "<svg width=" + output;
     output = output.replace(/<\/svg>$/, "");
@@ -1626,11 +2054,20 @@ Page.getGeneratedMarkup = function(code, language)
     // No generated code to extract
   }
   else if(language == "structureDiagram") 
-  {// Covers the structure diagram code
+  {
+    // Covers the structure diagram code
     output = code.split("<p>URL_SPLIT")[1];
     output = output.replace(/##CANVAS_ID##/g, "generatedSVGCanvas");
     // Converts html encoded special characters to plaintext
     output = jQuery("<div/>").html(output).text();
+  }
+  else if(language == "eventSequence" || language == "stateTables")
+  {
+  var split = code.split("URL_SPLIT");
+  output = (split.length > 1) ? split[1] : code;
+
+  // Decode escaped HTML so it renders in the right pane
+  output = jQuery("<div/>").html(output).text();
   }
   else
   {
@@ -1702,6 +2139,65 @@ Page.getModel = function()
 {
   return jQuery("#model").val();
 }
+
+// Load instance diagram data back into the CRUD UI.
+//
+// This relies on the backend InstanceDiagram generator to produce
+// CRUD-compatible JSON for the current model/diagram, and then uses
+// the existing CRUD JSON import logic to materialize instances.
+Page.loadCrudFromInstanceDiagram = function() {
+  if (typeof Page.getUmpleCode !== "function") {
+    console.warn("Umple code accessor is unavailable; cannot load CRUD from instance diagram.");
+    return;
+  }
+
+  var code = Page.getUmpleCode() || "";
+  if (!code) {
+    Page.setFeedbackMessage && Page.setFeedbackMessage("No Umple code available to load into CRUD.");
+    return;
+  }
+
+  // Preferred path: if the current instance diagram response already
+  // embedded CRUD-style JSON (via a hidden script tag), reuse that so
+  // we don't need to re-run the generator.
+  var $embedded = jQuery("#instance-diagram-crud-json");
+  if ($embedded.length) {
+    var jsonText = $embedded.text() || "";
+    jsonText = ("" + jsonText).trim();
+    if (jsonText) {
+      Page._pendingCrudInstanceJson = jsonText;
+
+      if (typeof Action !== "undefined" && typeof Action.generateCode === "function") {
+        Action.generateCode("crudJson", "Json");
+      } else {
+        console.warn("Action.generateCode is unavailable; attempting direct CRUD import using embedded JSON.");
+        if (Page.crudData && Page.crudData.classes && typeof Page.crudJsonImportFromText === "function") {
+          try {
+            Page.crudJsonImportFromText(jsonText);
+          } catch (e) {
+            console.error("Failed to import embedded CRUD JSON from instance diagram:", e);
+            Page.setFeedbackMessage && Page.setFeedbackMessage("Unable to load instance diagram data into CRUD.");
+          }
+        }
+      }
+      return;
+    }
+  }
+
+  // If we reach here, no embedded instance JSON is available. Older
+  // diagrams that were generated before JSON embedding was added
+  // cannot be loaded into CRUD.
+  Page.setFeedbackMessage && Page.setFeedbackMessage("This instance diagram does not contain embedded instance data for CRUD.");
+};
+
+// Delegate clicks on the Instance Diagram toolbar button so it works
+// even though the button is injected dynamically by the backend.
+jQuery(document).on("click", "#instance-load-into-crud", function(evt) {
+  evt.preventDefault();
+  if (typeof Page.loadCrudFromInstanceDiagram === "function") {
+    Page.loadCrudFromInstanceDiagram();
+  }
+});
 
 jQuery.fn.selectRange = function(start, end) {
   return this.each(function() 

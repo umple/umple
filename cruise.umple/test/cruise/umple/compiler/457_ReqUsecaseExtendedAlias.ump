@@ -1,0 +1,5 @@
+req UC11 usecase {
+  isA UC1;
+  include UC2;
+  userStep 1 [express lane open] { skip the queue }
+}

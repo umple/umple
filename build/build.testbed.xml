@@ -282,7 +282,11 @@
   </target>
   
   <target name="testRTCpp">
-    <echo message="Compiling RTCpp tests using gcc"/>
+    <echo message="Compiling RTCpp tests using gcc (if the following says clang it may not work, in which case install a real gcc and symlink it"/>
+    <exec executable="gcc">
+        <arg value="--version"/>    
+    </exec>    
+    
     <exec executable="gcc" dir="testbed_cpp/test" failonerror="true">
         <arg value="-o"/>
         <arg value="runAllTests"/>

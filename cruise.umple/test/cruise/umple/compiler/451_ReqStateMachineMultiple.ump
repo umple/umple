@@ -1,0 +1,16 @@
+req R1 text { State requirement }
+req R2 text { Transition requirement }
+
+class X {
+  status {
+    implementsReq R1;
+    state1 {
+      implementsReq R2;
+      e -> state2;
+    }
+
+    state2 {
+      e -> state1;
+    }
+  }
+}

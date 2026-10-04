@@ -1,0 +1,5 @@
+class X {}
+
+class Y {
+  1 -- * X Role;
+}

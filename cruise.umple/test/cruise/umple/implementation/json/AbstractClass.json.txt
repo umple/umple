@@ -15,6 +15,7 @@
  "parameters" : "",
  "visibility" : "",
  "isAbstract" : "true"}],
+ "enums": [],
  "id": "AAA",
  "name": "AAA",
  "isAbstract": "true",
@@ -32,6 +33,7 @@
  "parameters" : "",
  "visibility" : "",
  "isAbstract" : "false"}],
+ "enums": [],
  "id": "BBB",
  "name": "BBB",
  "isAbstract": "false",
@@ -45,6 +47,7 @@
  "height": 45},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "CCC",
  "name": "CCC",
  "isAbstract": "true",
@@ -67,4 +70,5 @@
  "isAbstract": "false",
  "displayColor": "" ,
  "isInterface": "true"}],
- "umpleAssociations":[] }
+ "umpleAssociations":[],
+ "globalEnums":[] }

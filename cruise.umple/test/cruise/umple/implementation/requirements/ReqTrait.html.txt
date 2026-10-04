@@ -1,0 +1,12 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqTrait.ump
+</p><p><b>R1: A trait requirement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;A&nbsp;ReqTrait.ump&nbsp;line&nbsp;8 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;compute&nbsp;class&nbsp;A&nbsp;ReqTrait.ump&nbsp;line&nbsp;16 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;trait:&nbsp;MyTrait&nbsp;ReqTrait.ump&nbsp;line&nbsp;12 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;compute&nbsp;trait&nbsp;MyTrait&nbsp;ReqTrait.ump&nbsp;line&nbsp;12 ; 
+</p><p><b>R2: A method in trait requirement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;compute&nbsp;class&nbsp;A&nbsp;ReqTrait.ump&nbsp;line&nbsp;16 ; 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;method:&nbsp;compute&nbsp;trait&nbsp;MyTrait&nbsp;ReqTrait.ump&nbsp;line&nbsp;12 ; 
+</p></html>

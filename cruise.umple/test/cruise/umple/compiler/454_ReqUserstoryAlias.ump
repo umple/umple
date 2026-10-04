@@ -1,0 +1,4 @@
+req US5 userstory {
+  who { customer }
+  what { reset password }
+}

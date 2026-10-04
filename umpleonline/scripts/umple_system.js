@@ -780,22 +780,53 @@ UmpleSystem.nextId = function(desiredName)
 {
   var template = "umpleElement_";
   var nextElementId = template + "0";
+
   if (typeof(desiredName) != "undefined")
   {
     template = desiredName;
     nextElementId = desiredName;
   }
 
+  var fullText = "";
+  if (
+    typeof Page !== "undefined" &&
+    Page.codeMirrorEditor6 &&
+    Page.codeMirrorEditor6.state &&
+    Page.codeMirrorEditor6.state.doc
+  )
+  {
+    fullText = Page.codeMirrorEditor6.state.doc.toString();
+  }
+
+  function escapeRegExp(text)
+  {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  function idExistsInEditorText(id)
+  {
+    var escapedId = escapeRegExp(id);
+    var classRe = new RegExp("\\bclass\\s+" + escapedId + "\\b");
+    return classRe.test(fullText);
+  }
+
   var found = false;
   var nextIndex = 0;
+
   while (nextIndex < 100 && !found)
   {
     if (nextIndex > 0)
     {
-    nextElementId = template + nextIndex;
+      nextElementId = template + nextIndex;
     }
+    else
+    {
+      nextElementId = template;
+    }
+
     found = true;
-    for (var i=0; i<this.umpleClasses.length; i++)
+
+    for (var i = 0; i < this.umpleClasses.length; i++)
     {
       if (this.umpleClasses[i].id == nextElementId)
       {
@@ -804,11 +835,19 @@ UmpleSystem.nextId = function(desiredName)
         break;
       }
     }
+
+    if (found && idExistsInEditorText(nextElementId))
+    {
+      found = false;
+      nextIndex += 1;
+    }
+
     if (found)
     {
       return nextElementId;
     }
   }
+
   return "";
 }
 

@@ -1,0 +1,65 @@
+digraph "NLNestedStateComments" {
+  compound = true;
+
+  // Class: X
+
+    // Top Level StateMachine: sm1
+    
+    // Start states are shown as a black circle
+    node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
+    start_X_sm1 [ tooltip = "Class X, SM sm1, State start" ];
+    
+        
+    // Format for normal states
+    node [ratio="auto" shape = rectangle, width=1,style=rounded];
+    
+      // State: s1
+
+     subgraph clusterX_sm1_s1 {
+      label = "s1";
+      style = rounded;
+      tooltip = "Class X, SM sm1, State s1&#13;Comment on outer state s1&#13;&#13;This is the default initial state and is entered when the object is created.&#13;This state is entered when event e4 occurs while in state s2.";
+      URL="javascript:Action.stateClicked(\"X^*^sm1^*^s1\")";
+
+      // Bottom Level StateMachine: s1
+      
+      // Start states are shown as a black circle
+      node [ratio="auto" shape = point, fillcolor="black", width=0.2 ];
+      start_X_sm1S1 [ tooltip = "Class X, SM sm1, State s1.start" ];
+      
+            
+      // Format for normal states
+      node [ratio="auto" shape = rectangle, width=1,style=rounded];
+      
+        // State: s1a
+
+        X_sm1S1_s1a [label = s1a, tooltip = "Class X, SM sm1, State s1.s1a&#13;Comment on nested state s1a&#13;&#13;This is the default initial state when entering state s1 and is entered when the object is created.&#13;This state is entered when event e2 occurs while in state s1.s1b.&#13;This state is entered when event e4 occurs while in state s2.&#13;On e1, transitions to s1.s1b.", URL="javascript:Action.stateClicked(\"X^*^sm1^*^s1.s1a\")"];
+        // End State: s1a
+
+        // State: s1b
+
+        X_sm1S1_s1b [label = s1b, tooltip = "Class X, SM sm1, State s1.s1b&#13;Comment on nested state s1b&#13;&#13;This state is entered when event e1 occurs while in state s1.s1a.&#13;On e2, transitions to s1.s1a.&#13;On e3, transitions to s2.", URL="javascript:Action.stateClicked(\"X^*^sm1^*^s1.s1b\")"];
+        // End State: s1b
+      // End Bottom Level StateMachine: s1
+     }
+      // End State: s1
+
+      // State: s2
+
+      X_sm1_s2 [label = s2, tooltip = "Class X, SM sm1, State s2&#13;Comment on outer state s2&#13;&#13;This state is entered when event e3 occurs while in state s1.s1b.&#13;On e4, transitions to s1.", URL="javascript:Action.stateClicked(\"X^*^sm1^*^s2\")"];
+      // End State: s2
+    // End Top Level StateMachine: sm1
+
+  // All transitions
+    start_X_sm1 -> X_sm1S1_s1a [  lhead=clusterX_sm1_s1,  tooltip = "start to s1", URL="javascript:Action.transitionClicked(\"null\")" ] ;
+    X_sm1_s2 -> X_sm1S1_s1a [  lhead=clusterX_sm1_s1,  label = "e4", tooltip = "From s2 to s1 on e4&#13;&#13;When e4 occurs in state s2, transitions to s1.", URL="javascript:Action.transitionClicked(\"X*^*sm1*^*e4*^*s2*^*s1*^*\")" ] ;
+  
+  start_X_sm1S1 -> X_sm1S1_s1a [  tooltip = "start to s1.s1a", URL="javascript:Action.transitionClicked(\"null\")" ] ;
+    X_sm1S1_s1b -> X_sm1S1_s1a [  label = "e2", tooltip = "From s1.s1b to s1.s1a on e2&#13;&#13;When e2 occurs in state s1.s1b, transitions to s1.s1a.", URL="javascript:Action.transitionClicked(\"X*^*sm1*^*e2*^*s1.s1b*^*s1.s1a*^*\")" ] ;
+  
+  X_sm1S1_s1a -> X_sm1S1_s1b [  label = "e1", tooltip = "From s1.s1a to s1.s1b on e1&#13;Comment on nested transition e1&#13;&#13;When e1 occurs in state s1.s1a, transitions to s1.s1b.", URL="javascript:Action.transitionClicked(\"X*^*sm1*^*e1*^*s1.s1a*^*s1.s1b*^*\")" ] ;
+  
+  X_sm1S1_s1b -> X_sm1_s2 [  label = "e3", tooltip = "From s1.s1b to s2 on e3&#13;&#13;When e3 occurs in state s1.s1b, transitions to s2.", URL="javascript:Action.transitionClicked(\"X*^*sm1*^*e3*^*s1.s1b*^*s2*^*\")" ] ;
+  
+
+}

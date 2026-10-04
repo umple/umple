@@ -1,0 +1,24 @@
+More Options
+Distribution
+noreferences
+
+@@description
+
+<p> All classes can be set to be distributable by using the following directive: <br><br> </p>
+
+<pre> distributable forced; <br><br> </pre>
+ 
+<p>  Alternatively, all classes can be forbidden to be distributable by using the following directive: <br><br> </p> 
+
+<pre>  distributable off; <br><br> </pre> 
+
+<p>  One can use Web services instead of RMI by adding ws after distributable keyword in the class: <br><br> </p> 
+
+<pre> distributable WS; </pre>
+
+<p>Note: Web services is not currently working due to an issue with outdated dependencies.</p>
+
+
+@@example
+@@source manualexamples/DistributedOptions2.ump
+@@endexample

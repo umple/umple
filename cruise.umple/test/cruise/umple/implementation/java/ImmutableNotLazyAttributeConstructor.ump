@@ -1,9 +1,0 @@
-namespace example;
-class Student
-{
-  immutable number;
-  lazy immutable number2;
-}
-
-
-  

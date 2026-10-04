@@ -131,7 +131,11 @@
     <echo>Installing Vendors...</echo>
     <delete dir="${vendors.path}" failonerror="false" />
     <mkdir dir="${vendors.path}"/>
-    <get src="https://codeload.github.com/pholser/jopt-simple/zip/jopt-simple-${jopt-simple.install.version}" verbose="true" dest="${vendors.path}/jopt-simple-${jopt-simple.install.version}.zip"/>
+    <!-- The following used to download from 
+"https://codeload.github.com/pholser/jopt-simple/zip/jopt-simple-${jopt-simple.install.version}" verbose="true" dest="${vendors.path}/jopt-simple-${jopt-simple.install.version}.zip"
+        but was giving CI failures periodically, so using our cached version
+    -->
+    <get src="https://umple.org/joptsimpledl/jopt-simple-4.4.zip" verbose="true" dest="${vendors.path}/jopt-simple-${jopt-simple.install.version}.zip"/>
     <unzip src="${vendors.path}/jopt-simple-${jopt-simple.install.version}.zip" dest="${vendors.path}/"/>
     <delete dir="${vendors.path}/jopt-simple-jopt-simple-${jopt-simple.install.version}/src/test" failonerror="false" />
     <move file="${vendors.path}/jopt-simple-jopt-simple-${jopt-simple.install.version}" tofile="${vendors.path}/jopt-simple"/>

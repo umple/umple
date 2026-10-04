@@ -1,0 +1,6 @@
+classDiagram
+  class Teacher {
+  }
+  class Person {
+  }
+  Teacher "1" -- "*" Person : myStudents

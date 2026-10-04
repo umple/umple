@@ -1,0 +1,6 @@
+classDiagram
+  class Teacher {
+  }
+  class Foo {
+  }
+  Teacher "1" -- "0..2" Foo : myFooss

@@ -25,7 +25,7 @@ The specific entities you can create include the following</p>
   <ul>
     <li><a href="ClassDefinition.html">Classes</a></li>  
     <li><a href="interfaceDefinition.html">Interfaces</a></li>
-    <li><a href="Traits.html">Traits: Re-usable building blocks of classes</a></li>
+    <li><a href="Traits.html">Traits: Reusable building blocks of classes</a></li>
     <li><a href="InterfacingtoExternalCode.html">External definitions of classes</a></li>
     <li><a href="IndependentlyDefinedAssociations.html">Standalone associations</a></li>
     <li><a href="AssociationClassDefinition.html">Association classes</a></li>

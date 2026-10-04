@@ -1,0 +1,7 @@
+req R1 quality {
+  High {}
+}
+
+req R1 {
+  Some plain text requirement.
+}

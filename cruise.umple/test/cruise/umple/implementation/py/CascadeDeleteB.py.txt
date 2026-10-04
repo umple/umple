@@ -1,14 +1,28 @@
-from C import C
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 
 class B():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #B Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self):
+        self._myC = None
         self._myC = []
 
-    def getMyC(self, index):
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetMany 
+    def getMyC1(self, index):
         aMyC = self._myC[index]
         return aMyC
 
-    def getMyC(self):
+    def getMyC2(self):
         newMyC = tuple(self._myC)
         return newMyC
 
@@ -21,76 +35,85 @@ class B():
         return has
 
     def indexOfMyC(self, aMyC):
-        index = self._myC.index(aMyC)
+        index = (-1 if not aMyC in self._myC else self._myC.index(aMyC))
         return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMyC():
         return 0
 
-    def addMyC(self, aMyD):
+    # Code from template association_AddManyToOne 
+    def addMyC1(self, aMyD):
+        from example.C import C
         return C(aMyD, self)
 
-    def addMyC(self, aMyC):
+    def addMyC2(self, aMyC):
         wasAdded = False
-        if aMyC in self._myC :
+        if (aMyC) in self._myC :
             return False
-
         existingB = aMyC.getB()
-        isNewB = existingB != None and not self.equals(existingB)
+        isNewB = not (existingB is None) and not self == existingB
         if isNewB :
             aMyC.setB(self)
-
         else :
             self._myC.append(aMyC)
-
         wasAdded = True
         return wasAdded
 
     def removeMyC(self, aMyC):
         wasRemoved = False
-        if not self.equals(aMyC.getB()) :
+        #Unable to remove aMyC, as it must always have a b
+        if not self == aMyC.getB() :
             self._myC.remove(aMyC)
             wasRemoved = True
-
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addMyCAt(self, aMyC, index):
         wasAdded = False
         if self.addMyC(aMyC) :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfMyC() :
                 index = self.numberOfMyC() - 1
-
             self._myC.remove(aMyC)
             self._myC.insert(index, aMyC)
             wasAdded = True
-
         return wasAdded
 
     def addOrMoveMyCAt(self, aMyC, index):
         wasAdded = False
-        if aMyC in self._myC :
+        if (aMyC) in self._myC :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfMyC() :
                 index = self.numberOfMyC() - 1
-
             self._myC.remove(aMyC)
             self._myC.insert(index, aMyC)
             wasAdded = True
-
         else :
             wasAdded = self.addMyCAt(aMyC, index)
-
         return wasAdded
 
     def delete(self):
+
         while len(self._myC) > 0 :
             aMyC = self._myC[len(self._myC) - 1]
             aMyC.delete()
             self._myC.remove(aMyC)
 
+    def getMyC(self, *argv):
+        if len(argv) == 1 and isinstance(argv[0], int) :
+            return self.getMyC1(argv[0])
+        if len(argv) == 0 :
+            return self.getMyC2()
+        raise TypeError("No method matches provided parameters")
+
+    def addMyC(self, *argv):
+        from example.C import C
+        if len(argv) == 1 and isinstance(argv[0], D) :
+            return self.addMyC1(argv[0])
+        if len(argv) == 1 and isinstance(argv[0], C) :
+            return self.addMyC2(argv[0])
+        raise TypeError("No method matches provided parameters")

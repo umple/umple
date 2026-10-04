@@ -1,0 +1,12 @@
+// Test that reqHideStatements suboption shows only the req ID without statement text
+suboption "reqHideStatements";
+req A01 {
+  this statement should be hidden.
+}
+req B01 {
+  this statement also hidden.
+}
+implementsReq A01;
+class Example {
+  var1;
+}

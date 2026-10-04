@@ -65,6 +65,9 @@ class Content
   // URL of Youtube Video (if any)
   videoURL = null;
   
+  // URL of Markdown file to import (if any)
+  markdownURL = null;
+  
   // Tooltip to display when hovering (if any)
   tooltip = null;
 }
@@ -111,7 +114,8 @@ class Template
   const HtmlTemplate = htmlTemplate();
   const ExampleTemplate = exampleTemplate();
   const SyntaxTemplate = syntaxTemplate();
-  const VideoURLTemplate = videoURLTemplate();  
+  const VideoURLTemplate = videoURLTemplate();
+  const MarkdownURLTemplate = markdownURLTemplate();
   const NavigationHeaderTemplate = navigationHeaderTemplate();
   const NavigationItemTemplate = navigationItemTemplate();
   const NavigationItemTemplateNoAnchor = navigationItemTemplateNoAnchor();

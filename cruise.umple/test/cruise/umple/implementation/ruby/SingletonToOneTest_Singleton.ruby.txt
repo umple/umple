@@ -38,15 +38,28 @@ class Mentor
     @student
   end
 
-  def set_student(a_student)
+  def has_student
+    has = !@student.nil?
+    has
+  end
+
+  def set_student(a_new_student)
     was_set = false
-    existing_student = @student
-    @student = a_student
-    if !existing_student.nil? and !existing_student.eql?(a_student)
-      existing_student.remove_mentor(self)
+    if !@student.nil? and !@student.eql?(a_new_student) and self.eql?(@student.get_mentor)
+      #Unable to set_student, as existing @student would become an orphan
+      return was_set
     end
-    unless a_student.nil?
-      a_student.add_mentor(self)
+
+    @student = a_new_student
+    an_old_mentor = !a_new_student.nil? ? a_new_student.get_mentor : nil
+
+    unless self.eql?(an_old_mentor)
+      unless an_old_mentor.nil?
+        an_old_mentor.instance_variable_set("@student",nil)
+      end
+      unless @student.nil?
+        @student.set_mentor(self)
+      end
     end
     was_set = true
     was_set
@@ -54,8 +67,10 @@ class Mentor
 
   def delete
     @deleted = true
-    unless @student.nil?
-      @student.remove_mentor(self)
+    existing_student = @student
+    @student = nil
+    unless existing_student.nil?
+      existing_student.delete
     end
   end
 

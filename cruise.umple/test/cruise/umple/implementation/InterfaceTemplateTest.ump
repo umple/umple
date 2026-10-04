@@ -2,8 +2,8 @@ namespace example;
 
 interface ISomething
 {
-  constant String aVariable = aValue;
-  constant Integer MAX = 3;
+  const String MyConst = "aValue";
+  const Integer MAX = 3;
   
   String getCode (String[] aParam, Integer anotherParam);
   String isValid();

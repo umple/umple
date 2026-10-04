@@ -1,0 +1,169 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Y
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Y Associations
+  private $xs;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->xs = array();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getX_index($index)
+  {
+    $aX = $this->xs[$index];
+    return $aX;
+  }
+
+  public function getXs()
+  {
+    $newXs = $this->xs;
+    return $newXs;
+  }
+
+  public function numberOfXs()
+  {
+    $number = count($this->xs);
+    return $number;
+  }
+
+  public function hasXs()
+  {
+    $has = $this->numberOfXs() > 0;
+    return $has;
+  }
+
+  public function indexOfX($aX)
+  {
+    $wasFound = false;
+    $index = 0;
+    foreach($this->xs as $x)
+    {
+      if ($x->equals($aX))
+      {
+        $wasFound = true;
+        break;
+      }
+      $index += 1;
+    }
+    $index = $wasFound ? $index : -1;
+    return $index;
+  }
+
+  public static function minimumNumberOfXs()
+  {
+    return 0;
+  }
+
+  public function addX($aX)
+  {
+    $wasAdded = false;
+    if ($this->indexOfX($aX) !== -1) { return false; }
+    $this->xs[] = $aX;
+    if ($aX->indexOfY($this) != -1)
+    {
+      $wasAdded = true;
+    }
+    else
+    {
+      $wasAdded = $aX->addY($this);
+      if (!$wasAdded)
+      {
+        array_pop($this->xs);
+      }
+    }
+    return $wasAdded;
+  }
+
+  public function removeX($aX)
+  {
+    $wasRemoved = false;
+    if ($this->indexOfX($aX) == -1)
+    {
+      return $wasRemoved;
+    }
+
+    $oldIndex = $this->indexOfX($aX);
+    unset($this->xs[$oldIndex]);
+    if ($aX->indexOfY($this) == -1)
+    {
+      $wasRemoved = true;
+    }
+    else
+    {
+      $wasRemoved = $aX->removeY($this);
+      if (!$wasRemoved)
+      {
+        $this->xs[$oldIndex] = $aX;
+        ksort($this->xs);
+      }
+    }
+    $this->xs = array_values($this->xs);
+    return $wasRemoved;
+  }
+
+  public function addXAt($aX, $index)
+  {  
+    $wasAdded = false;
+    if($this->addX($aX))
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfXs()) { $index = $this->numberOfXs() - 1; }
+      array_splice($this->xs, $this->indexOfX($aX), 1);
+      array_splice($this->xs, $index, 0, array($aX));
+      $wasAdded = true;
+    }
+    return $wasAdded;
+  }
+
+  public function addOrMoveXAt($aX, $index)
+  {
+    $wasAdded = false;
+    if($this->indexOfX($aX) !== -1)
+    {
+      if($index < 0 ) { $index = 0; }
+      if($index > $this->numberOfXs()) { $index = $this->numberOfXs() - 1; }
+      array_splice($this->xs, $this->indexOfX($aX), 1);
+      array_splice($this->xs, $index, 0, array($aX));
+      $wasAdded = true;
+    } 
+    else 
+    {
+      $wasAdded = $this->addXAt($aX, $index);
+    }
+    return $wasAdded;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {
+    $copyOfXs = $this->xs;
+    $this->xs = array();
+    foreach ($copyOfXs as $aX)
+    {
+      $aX->removeY($this);
+    }
+  }
+
+}
+?>

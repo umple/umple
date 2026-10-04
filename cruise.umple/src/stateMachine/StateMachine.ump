@@ -77,6 +77,7 @@ class State
   before getIsDeepHistoryState { if ("HStar".equals(name)) { isDeepHistoryState = true; } }
   before isFinalState { if ("Final".equals(name)) { finalState = true; } }
   1 -> * ReqImplementation;
+  1 -> * Comment;
 }
 
 /* 
@@ -124,6 +125,7 @@ class Activity
   	  activityCode = lang+code;
   	codeblock.setCode(lang,code);
   }
+  1 -> * ReqImplementation;
 
 }
 /* 
@@ -147,8 +149,11 @@ class Transition
   key { fromState, event, nextState, guard, action } 
   
   //Issue 519
+  //Issue 2098
   Position position = null;
-  
+  1 -> * ReqImplementation;
+  1 -> * Comment;
+
 }
 
 /*
@@ -191,6 +196,7 @@ class Action
   }
   
   key { actionType, actionCode, position } 
+  1 -> * ReqImplementation;
 
 }
 

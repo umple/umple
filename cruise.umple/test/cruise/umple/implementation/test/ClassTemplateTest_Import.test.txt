@@ -1,0 +1,45 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+////---- Tests for  ClassTemplateTest_Import ----/////
+
+test Mentor {
+
+ generate JUnit ;
+ 
+ depend  Mentor,Student,Course ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_Import.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :name
+
+      test attribute_name {
+    
+      
+        Mentor aMentor("RandomString1");
+        
+        
+    assertTrue( aMentor.setName("RandomString1"));
+    assertTrue( aMentor.getName() =="RandomString1");
+    assertTrue( aMentor.setName("RandomString2"));
+    assertTrue( aMentor.getName()=="RandomString2");
+    assertFalse( aMentor.getName() =="RandomString1");
+             
+          
+        	}
+
+
+  
+ 
+   
+
+}

@@ -1,0 +1,6 @@
+req UC6 useCase {
+  userStep 1 { select a payment method }
+  systemResponse 1 [card accepted] { confirm the order }
+  systemResponse 1 [card declined] { ask for another card }
+  userStep 2 { collect the receipt }
+}

@@ -1,0 +1,51 @@
+Umple AI Skills
+AI
+noreferences
+@@tooltip Technology to allow AI Agents to work with Umple via the Umple command line interface..
+@@description
+
+<p>This page describes AI agent skills for working with Umple and the Umple CLI (Command line interface). This is in beta and will be enhanced.</p>
+
+<p><a target="skills" href="https://skills.sh">A 'skill' is a technology released by Vercel that is gaining acceptance in 2026.</a>  The <a target="npmskills" href="https://www.npmjs.com/package/skills">npm skills package is here.</a></p>
+
+<br />
+
+<p><b>Repository overview</b></p>
+
+<p>The umple-skills repository (<a target="umpleskillsrepo" href="https://github.com/umple/umple-skills">https://github.com/umple/umple-skills</a> or <a target="umpleskillsrepo" href="https://github.com/ElwinLiu/umple-skills">initially here</a> ) provides reusable AI agent skills, scripts, and guidance for working with Umple models and diagrams. This page gives a high-level overview and links to separate sections for each skill.</p>
+
+<ul>
+  <li><b>Install the skills pack.</b> Use <code>npx skills add umple/umple-skills</code> to add the skills to your agent environment.</li>
+  <li><b>Skill definition (SKILL.md).</b>
+    <ul>
+      <li><b>name</b> declares the skill identifier used for routing and invocation.</li>
+      <li><b>description</b> summarizes when the skill should be selected.</li>
+      <li><b>allowed-tools</b> lists the executable commands the agent may run.</li>
+      <li><b>Prompt body</b> (the markdown content) gives step-by-step guidance and output expectations.</li>
+    </ul>
+  </li>
+  <li><b>Scripts and references.</b>
+    <ul>
+      <li><b>scripts/</b> holds runnable helpers (for example, <code>scripts/main.ts</code>) invoked by the skill.</li>
+      <li><b>references/</b> contains focused guidance (for example, diagram rules) that the prompt cites.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Skills follow a lazy-loading strategy: only the selected skill folder is loaded at runtime. Semantic routing uses the <code>name</code> and <code>description</code> fields to pick the best skill for a user request.</p>
+
+<p><b>umple-diagram-generator</b></p>
+
+<ul>
+  <li>Generates class diagrams and state machines from natural-language requirements by producing Umple models and rendering them to SVG. It uses guidance from the <code>references/</code> folder and relies on the Umple CLI, Graphviz, and Bun.</li>
+  <li><b>Output location.</b> The skill invokes the Umple CLI through <code>scripts/main.ts</code>.
+    <ul>
+      <li><b>Scenario A: output path not specified.</b> The script creates a folder named after the diagram plus a timestamp, and stores all generated files inside it.
+        <pre><code>&lt;output-dir&gt;/<br/>└── &lt;diagram-name&gt;_&lt;timestamp&gt;/<br/>    ├── model.ump<br/>    ├── model.gv<br/>    └── model.svg</code></pre>
+      </li>
+      <li><b>Scenario B: output path specified.</b> If you provide a full <code>.svg</code> path, the script writes only the SVG file to that exact location.
+        <pre><code>&lt;output-dir&gt;/<br/>└── &lt;diagram&gt;.svg</code></pre>
+      </li>
+    </ul>
+  </li>
+</ul>

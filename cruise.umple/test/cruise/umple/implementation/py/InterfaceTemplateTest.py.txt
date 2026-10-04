@@ -1,0 +1,21 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from abc import ABC, abstractmethod
+
+class ISomething(ABC):
+    @abstractmethod
+    def __init__(self):
+        pass
+
+    MyConst = "aValue"
+    MAX = 3
+    # CONSTANT MEMBERS  
+    # ABSTRACT METHODS 
+    @abstractmethod
+    def getCode(self, aParam, anotherParam):
+        pass
+
+    @abstractmethod
+    def isValid(self):
+        pass

@@ -121,8 +121,7 @@ History.save = function(instance, umpleCode, reason)
   // console.log("History.save() :  Saving a new version of code ...")
   if (instance.getVersion(instance.currentIndex) == umpleCode) return;
 
-  if (debuggerFlag)
-    console.log("========== saved");
+  // console.log("========== saved");
   
   if (!instance.firstSave) 
   {

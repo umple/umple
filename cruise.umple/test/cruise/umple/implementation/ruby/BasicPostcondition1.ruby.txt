@@ -50,12 +50,14 @@ class Client
     if arg<=5 then
         raise RuntimeError, 'Please provide a valid arg'
     end
+    if arg<=5 then
+        raise RuntimeError, 'Please provide a valid arg'
+    end
     return result
   end
 
   def someMethod_original(arg)
-    // rest of stuff that we don't interpret
-   return 0;
+    
   end
 
 

@@ -1,0 +1,47 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+
+import os
+from enum import Enum, auto
+
+class X1():
+    #------------------------
+    # ENUMERATIONS
+    #------------------------
+    class Month(Enum):
+        def _generate_next_value_(name, start, count, last_values):
+            return name
+        def __str__(self):
+            return str(self.value)
+        January = auto()
+        February = auto()
+        March = auto()
+
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X1 Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    def __init__(self, aMonth):
+        self._month = None
+        self._month = aMonth
+
+    #------------------------
+    # INTERFACE
+    #------------------------
+    def setMonth(self, aMonth):
+        wasSet = False
+        self._month = aMonth
+        wasSet = True
+        return wasSet
+
+    def getMonth(self):
+        return self._month
+
+    def delete(self):
+        pass
+
+    def __str__(self):
+        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "month" + "=" + (((self.getMonth().__str__().replaceAll("  ", "    ")) if not self.getMonth() == self else "this") if not (self.getMonth() is None) else "null")

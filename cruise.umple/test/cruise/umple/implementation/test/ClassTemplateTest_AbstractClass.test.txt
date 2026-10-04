@@ -1,32 +1,29 @@
-<?php
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.25.0-9e8af9e modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-abstract class Student
-{
 
-  //------------------------
-  // MEMBER VARIABLES
-  //------------------------
 
-  //------------------------
-  // CONSTRUCTOR
-  //------------------------
+////---- Tests for  ClassTemplateTest_AbstractClass ----/////
 
-  public function __construct()
-  {}
+abstract test Foo {
 
-  //------------------------
-  // INTERFACE
-  //------------------------
+ generate JUnit ;
+ 
+ depend  Foo,Bar ; 
 
-  public function equals($compareTo)
-  {
-    return $this == $compareTo;
-  }
 
-  public function delete()
-  {}
+
+ 
+ GIVEN:
+ ClassTemplateTest_AbstractClass.ump;
+ 
+ 
+ 
+ THEN:
+ 
+
+  
+ 
+   
 
 }
-?>

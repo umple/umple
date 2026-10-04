@@ -1,0 +1,10 @@
+classDiagram
+  class IReadable {
+    <<interface>>
+    void read()
+  }
+  class IStreamReadable {
+    <<interface>>
+    void stream()
+  }
+  IReadable <|-- IStreamReadable

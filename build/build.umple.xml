@@ -356,6 +356,7 @@
     <property name="scriptPath" value="${basedir}/umpleonline/scripts"/>
     <property name="tmpScript" value="${scriptPath}/tmpAllUmple.js"/>
     <concat destfile="${tmpScript}" fixlastline="yes">
+      <fileset file="${scriptPath}/collab-server-config.js"/>
       <fileset file="${scriptPath}/prototype.js"/>
       <fileset file="${scriptPath}/dom.js"/>
       <fileset file="${scriptPath}/ajax.js"/>
@@ -365,17 +366,69 @@
       <fileset file="${scriptPath}/shCore.js"/>
       <fileset dir="${scriptPath}" includes="shBrush*.js"/>
       <fileset file="${scriptPath}/inlineeditor.js"/>
-      <fileset dir="${scriptPath}/dropbox" includes="*.js"/>
-      <fileset dir="${scriptPath}" includes="umple_*.js"/>
+      <!--fileset dir="${scriptPath}/dropbox" includes="*.js"/-->
+      <fileset file="${scriptPath}/umple_page.js"/>
+      <fileset file="${scriptPath}/umple_layout.js"/>
+      <fileset file="${scriptPath}/umple_action.js"/>
+      <fileset file="${scriptPath}/umple_position.js"/>
+      <fileset file="${scriptPath}/umple_line.js"/>
+      <fileset file="${scriptPath}/umple_system.js"/>
+      <fileset file="${scriptPath}/umple_class.js"/>
+      <fileset file="${scriptPath}/umple_association.js"/>
+      <fileset file="${scriptPath}/umple_generalization.js"/>
+      <fileset file="${scriptPath}/umple_transition.js"/>
+      <fileset file="${scriptPath}/umple_attribute.js"/>
+      <fileset file="${scriptPath}/umple_method.js"/>
+      <fileset file="${scriptPath}/umple_history.js"/>
+      <fileset file="${scriptPath}/umple_restore.js"/>
+      <fileset file="${scriptPath}/umple_action_diagram.js"/>
+      <fileset file="${scriptPath}/umple_action_gvdiagram.js"/>
+      <fileset file="${scriptPath}/umple_tooltips.js"/>
+      <fileset file="${scriptPath}/umple_feature_tree.js"/>
+      <fileset file="${scriptPath}/umple_tab_control.js"/>
+      <!-- CRUD UI -->
+      <fileset file="${scriptPath}/crud/umple_crudui.js"/>
+      <fileset file="${scriptPath}/crud/umple_crud_json_persistence.js"/>        
+      <!-- Core AI modules - must be in dependency order -->
+      <fileset dir="${scriptPath}/ai/utils" includes="**/*.js"/>
+      <fileset file="${scriptPath}/ai/config/umple_ai_config.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_errors.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_storage.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_chat_context.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_providers.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_controller.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_config_validation.js"/>
+      <fileset file="${scriptPath}/ai/core/umple_ai_compiler_service.js"/>
+      <fileset file="${scriptPath}/ai/prompts/umple_ai_base_prompt.js"/>
+      <!-- Features - include settings view and controller explicitly, then other features -->
+      <fileset file="${scriptPath}/ai/features/settings/umple_ai_settings_view.js"/>
+      <fileset file="${scriptPath}/ai/features/settings/umple_ai_settings.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements-prompt_builder.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements_dialog.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements_self_correction.js"/>
+      <fileset file="${scriptPath}/ai/features/requirements/umple_ai_requirements.js"/>
+      <fileset dir="${scriptPath}/ai/features" includes="**/*.js" excludes="settings/*.js,requirements/*.js"/>
       <fileset file="${scriptPath}/structureDiagram.js"/>
       <fileset file="${scriptPath}/statetable/state_table_colourer.js"/>
     </concat>
-    <java jar="${dist.dir}/libs/build/yuicompressor.jar"
+    
+    <!-- esbuild must be installed to run this. Download here -->
+    <!-- https://esbuild.github.io/getting-started/#download-a-build -->
+    <echo message="Using esbuild to minify javascript files to create allumple-min.js" />
+    <exec executable="esbuild" dir="umpleonline" failonerror="true">
+      <arg value="${tmpScript}"/>
+      <arg value="--outfile=${scriptPath}/allumple-min.js" />
+      <arg value="--minify" />
+    </exec>
+    
+    <!--former approach using yuicompressor-->
+    <!--java jar="${dist.dir}/libs/build/yuicompressor.jar"
           fork="true"
           failonerror="true">
       <arg value="${tmpScript}"/>
       <redirector output ="${scriptPath}/allumple-min.js"/>
-    </java>
+    </java-->
+    
     <delete>
       <fileset file="${tmpScript}"/>
     </delete>
@@ -459,8 +512,11 @@
   </target>
 
   <target name="packageUmpleonline" if="${shouldPackageUmpleOnline}">
-    <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
-    <copy file="${dist.dir}/${dist.umple.jar}" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
+    <echo message="Copying ${dist.dir}/umplesync.jar to umpleonline/scripts/umplesync.jar for new server" />
+    <copy file="${dist.dir}/umplesync.jar" tofile="umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <echo message="Copying ${dist.dir}/umple.jar to umpleonline/scripts/umple.jar for new downloadable CLI" />
+    <copy file="${dist.dir}/umple.jar" tofile="umpleonline/scripts/umple.jar" overwrite="true" />
+    <copy file="UmpleToPython/txl/umpleJavaToPython.ctxl" tofile="umpleonline/scripts/txl/umpleJavaToPython.ctxl" overwrite="true" />
     <antcall target="compressAllScripts"/>
   </target>
 
@@ -569,6 +625,8 @@
         <attribute name="Class-Path" value="${umple.jar.classpath} ${umple.test.jar.classpath}"/>
       </manifest>
     </jar>
+    <echo message="Making symbolic link so it can be run as umplesync.jar" />    
+    <symlink link="${dist.dir}/umplesync.jar" resource="${dist.dir}/${dist.umple.sync.jar}" overwrite="true" failonerror="false" />
   </target>
 
   <target name="packageDocJar">
@@ -657,25 +715,24 @@
   ``````````````````````````` -->
 
   <target name="deploy" if="${shouldDeploy}">
-    <echo message="Deploying Version: ${umple.version}" />
-    <antcall target="deployUmpleonlineJars" />
-    <antcall target="deployUpdatedLib" />
+    <echo message="READY TO DEPLOY Version: ${umple.version} NOW RUN pumple then dumple" />
+    <!-- restore so git does not have changed version and so next git pull and build are clean -->
   </target>
 
   <target name="deployUmpleonlineJars" >
-    <copy file="${dist.dir}/${dist.umple.sync.jar}"   tofile="/h/ralph/sites/www/html/umpleonline/scripts/umplesync.jar" overwrite="true" />
-    <copy file="${dist.dir}/${dist.umple.jar}"        tofile="/h/ralph/sites/www/html/umpleonline/scripts/umple.jar"     overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="${basedir}/umpleonline/scripts/umplesync.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.jar}" tofile="${basedir}/umpleonline/scripts/umple.jar"     overwrite="true" />
   </target>
 
   <target name="deployUpdatedLib">
-    <copy file="${dist.dir}/${dist.umple.sync.jar}"   tofile="lib/umplesync.jar"  overwrite="true" />
-    <copy file="${dist.dir}/${dist.umple.jar}"        tofile="lib/umple.jar"      overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.sync.jar}" tofile="lib/umplesync.jar" overwrite="true" />
+    <copy file="${dist.dir}/${dist.umple.jar}" tofile="lib/umple.jar" overwrite="true" />
   </target>
 
   <target name="deployUmpleonline" >
     <antcall target="deployUmpleonlineJars" />
     <antcall target="deployUmpleDocs" />
-    <copy todir="/h/ralph/sites/www/html/umpleonline">
+    <copy todir="${basedir}/umpleonline">
       <fileset dir="umpleonline">
         <exclude name=".git"/>
         <exclude name="ump"/>
@@ -685,7 +742,7 @@
 
   <target name="deployUmpleDocs" >
     <antcall target="packageDocs" />
-    <copy todir="/h/ralph/sites/www/html/umple">
+    <copy todir="${basedir}/umple">
       <fileset dir="${dist.dir}/cruise.umple/reference">
         <exclude name=".git"/>
       </fileset>

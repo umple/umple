@@ -1,0 +1,7 @@
+Zed
+IDEs and Text Editors
+noreferences
+@@tooltip Support for the Zed Text Editor
+@@markdownURL https://raw.githubusercontent.com/umple/umple.zed/refs/heads/master/README.md
+@@description
+<!-- No description as the description will be loaded from markdown conversion -->

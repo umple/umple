@@ -1,0 +1,14 @@
+// implementsReq at top level before associationClass
+// Req should attach to Enrollment only, not to Post
+// Should not produce a 401 warning
+class Student {}
+class Course {}
+implementsReq A;
+associationClass Enrollment {
+  * Student -- * Course;
+  grade;
+}
+class Post {}
+req A text {
+  Students can enroll in courses.
+}

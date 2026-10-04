@@ -1,0 +1,7 @@
+Sublime
+IDEs and Text Editors
+noreferences
+@@tooltip Support for the Sublime Text Editor
+@@markdownURL https://raw.githubusercontent.com/umple/umple-lsp/refs/heads/master/editors/sublime/README.md
+@@description
+<!-- No description as the description will be loaded from markdown conversion -->

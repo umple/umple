@@ -38,7 +38,7 @@ class Student():
 
     # Code from template association_SetOneToMandatoryMany 
     def setMentor(self, aMentor):
-        from Mentor import Mentor
+        from example.Mentor import Mentor
         wasSet = False
         #Must provide mentor to student
         if aMentor is None :

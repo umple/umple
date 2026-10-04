@@ -1,20 +1,24 @@
 digraph "IncreaseERSep" {
   rankdir="BT"
   node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
-nodesep =2.0;ranksep =2.0;
+  nodesep =2.0;
+  ranksep =2.0;
+  sep =1.0;
+   edge [minlen=1 headclip="true"];
+
   // Class: X
   "X" [shape=rectangle, label="   X   ",
    tooltip="class X
 "];
 
   // Attributes for X
-  "aX" [shape=ellipse, label="   a\ :\ String   ", tooltip="String a&#13;"];
+  "aX" [shape=ellipse, label="   a\ :\ String   ", tooltip="String a&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;a&quot;);"];
   "X" -> "aX" [arrowhead="none"];
 
-  "dateX" [shape=ellipse, label="   date\ :\ Date   ", tooltip="Date date&#13;"];
+  "dateX" [shape=ellipse, label="   date\ :\ Date   ", tooltip="Date date&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;date&quot;);"];
   "X" -> "dateX" [arrowhead="none"];
 
-  "timeX" [shape=ellipse, label="   time\ :\ Time   ", tooltip="Time time&#13;"];
+  "timeX" [shape=ellipse, label="   time\ :\ Time   ", tooltip="Time time&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;time&quot;);"];
   "X" -> "timeX" [arrowhead="none"];
 
   // All associations

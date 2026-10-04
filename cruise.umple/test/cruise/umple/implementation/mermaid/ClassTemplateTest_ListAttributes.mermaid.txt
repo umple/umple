@@ -1,0 +1,6 @@
+classDiagram
+  class Token {
+    Position positions
+  }
+  class Position {
+  }

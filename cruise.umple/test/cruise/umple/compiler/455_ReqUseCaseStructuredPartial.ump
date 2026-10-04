@@ -1,0 +1,5 @@
+req UC3 useCase {
+  who { salesPerson }
+  userStep 1 { select product }
+  systemResponse 1 { display price }
+}

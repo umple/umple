@@ -1,0 +1,4 @@
+req UC1 useCase {
+  A registered customer places an order: they review the cart, confirm the
+  delivery address and choose a payment method, and the system emails a receipt.
+}

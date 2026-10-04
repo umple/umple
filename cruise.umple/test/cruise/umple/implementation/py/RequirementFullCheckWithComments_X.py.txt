@@ -1,11 +1,32 @@
-from Y import Y
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+#*
+
+#   * R1: There should be a class called X
+
+#   
+
 
 class X():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #X Attributes
+    #X Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aA, aB):
+        self._ies = None
+        self._b = None
+        self._a = None
         self._a = aA
         self._b = aB
         self._ies = []
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setA(self, aA):
         wasSet = False
         self._a = aA
@@ -18,12 +39,27 @@ class X():
         wasSet = True
         return wasSet
 
+    #*
+    
+    #   * R1a: The reason it should be called X is because it is secret
+    
+    #   * R2: Class X should have several attribites
+    
+    #   
     def getA(self):
         return self._a
 
+    #*
+    
+    #   * This is another attribute
+    
+    #   * R2: Class X should have several attribites
+    
+    #   
     def getB(self):
         return self._b
 
+    # Code from template association_GetMany 
     def getY(self, index):
         aY = self._ies[index]
         return aY
@@ -41,71 +77,65 @@ class X():
         return has
 
     def indexOfY(self, aY):
-        index = self._ies.index(aY)
+        index = (-1 if not aY in self._ies else self._ies.index(aY))
         return index
 
+    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfIes():
         return 0
 
-    def addY(self, aC):
+    # Code from template association_AddManyToOne 
+    def addY1(self, aC):
+        from Y import Y
         return Y(aC, self)
 
-    def addY(self, aY):
+    def addY2(self, aY):
         wasAdded = False
-        if aY in self._ies :
+        if (aY) in self._ies :
             return False
-
         existingX = aY.getX()
-        isNewX = existingX != None and not self.equals(existingX)
+        isNewX = not (existingX is None) and not self == existingX
         if isNewX :
             aY.setX(self)
-
         else :
             self._ies.append(aY)
-
         wasAdded = True
         return wasAdded
 
     def removeY(self, aY):
         wasRemoved = False
-        if not self.equals(aY.getX()) :
+        #Unable to remove aY, as it must always have a x
+        if not self == aY.getX() :
             self._ies.remove(aY)
             wasRemoved = True
-
         return wasRemoved
 
+    # Code from template association_AddIndexControlFunctions 
     def addYAt(self, aY, index):
         wasAdded = False
         if self.addY(aY) :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfIes() :
                 index = self.numberOfIes() - 1
-
             self._ies.remove(aY)
             self._ies.insert(index, aY)
             wasAdded = True
-
         return wasAdded
 
     def addOrMoveYAt(self, aY, index):
         wasAdded = False
-        if aY in self._ies :
+        if (aY) in self._ies :
             if index < 0 :
                 index = 0
-
             if index > self.numberOfIes() :
                 index = self.numberOfIes() - 1
-
             self._ies.remove(aY)
             self._ies.insert(index, aY)
             wasAdded = True
-
         else :
             wasAdded = self.addYAt(aY, index)
-
         return wasAdded
 
     def delete(self):
@@ -113,8 +143,15 @@ class X():
         while i > 0 :
             aY = self._ies[i - 1]
             aY.delete()
-            i = i - 1
+            i -= 1
 
     def __str__(self):
-        return str(super()) + "[" + "a" + ":" + self.getA() + "," + "b" + ":" + self.getB() + "]"
+        return str(super().__str__()) + "[" + "a" + ":" + str(self.getA()) + "," + "b" + ":" + str(self.getB()) + "]"
 
+    def addY(self, *argv):
+        from Y import Y
+        if len(argv) == 1 and isinstance(argv[0], str) :
+            return self.addY1(argv[0])
+        if len(argv) == 1 and isinstance(argv[0], Y) :
+            return self.addY2(argv[0])
+        raise TypeError("No method matches provided parameters")

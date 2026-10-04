@@ -1,0 +1,7 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqHideStatements.ump
+</p><p><b>A01</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;class:&nbsp;Example&nbsp;ReqHideStatements.ump&nbsp;line&nbsp;10 ; 
+</p><p><b>B01</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>

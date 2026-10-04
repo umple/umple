@@ -126,7 +126,9 @@ class JsonParser
 
 class Json
 {
-  
+  depend java.util.Map;
+  depend java.util.List;
+
   public boolean isComposite()
   {
     return value == null;
@@ -201,6 +203,124 @@ class Json
     catch (NumberFormatException e)
     {
       return -1;
+    }
+  }
+
+  //
+  // Usage:
+  //   String json = Json.serialize(value);
+  //
+  // Supported types and their JSON output:
+  //   null              → null
+  //   String            → "escaped string"
+  //   Number            → 123  /  3.14
+  //   Boolean           → true / false
+  //   List<?>           → [elem, elem, ...]     (recursive)
+  //   Map<?, ?>         → {"key": value, ...}   (recursive)
+  //   Other             → "toString()"          (fallback)
+  //
+  // Keys in Map are converted via toString() and escaped.
+  // Nesting depth is limited only by the JVM stack.
+  //
+  // Helper:
+  //   String safe = Json.escapeJsonString(raw);
+  //   — escapes  \ " \n \r \t  for safe embedding in a JSON string.
+  //
+  // Copy/Refactored based on the existing private code from the InstanceDiagramGenerator
+
+  public static String serialize(Object value)
+  {
+    StringBuilder sb = new StringBuilder();
+    appendValue(sb, value);
+    return sb.toString();
+  }
+
+  public static String escapeJsonString(String input)
+  {
+    if (input == null)
+    {
+      return "";
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < input.length(); i++)
+    {
+      char c = input.charAt(i);
+      if (c == '\\' || c == '\"')
+      {
+        sb.append('\\').append(c);
+      }
+      else if (c == '\n')
+      {
+        sb.append("\\n");
+      }
+      else if (c == '\r')
+      {
+        sb.append("\\r");
+      }
+      else if (c == '\t')
+      {
+        sb.append("\\t");
+      }
+      else
+      {
+        sb.append(c);
+      }
+    }
+    return sb.toString();
+  }
+
+  private static void appendValue(StringBuilder sb, Object value)
+  {
+    if (value == null)
+    {
+      sb.append("null");
+    }
+    else if (value instanceof String)
+    {
+      sb.append("\"").append(escapeJsonString((String)value)).append("\"");
+    }
+    else if (value instanceof Number || value instanceof Boolean)
+    {
+      sb.append(value.toString());
+    }
+    else if (value instanceof List)
+    {
+      List list = (List)value;
+      sb.append("[");
+      boolean first = true;
+      for (Object elem : list)
+      {
+        if (!first)
+        {
+          sb.append(",");
+        }
+        first = false;
+        appendValue(sb, elem);
+      }
+      sb.append("]");
+    }
+    else if (value instanceof Map)
+    {
+      Map map = (Map)value;
+      sb.append("{");
+      boolean first = true;
+      for (Object raw : map.entrySet())
+      {
+        Map.Entry entry = (Map.Entry)raw;
+        if (!first)
+        {
+          sb.append(",");
+        }
+        first = false;
+        String key = entry.getKey().toString();
+        sb.append("\"").append(escapeJsonString(key)).append("\":");
+        appendValue(sb, entry.getValue());
+      }
+      sb.append("}");
+    }
+    else
+    {
+      sb.append("\"").append(escapeJsonString(value.toString())).append("\"");
     }
   }
 }

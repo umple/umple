@@ -1,0 +1,9 @@
+req Speed quality {
+  High {}
+  Low {}
+}
+
+req Speed useCase {
+  userStep 1 { select product }
+  systemResponse 1 { display price }
+}

@@ -1,0 +1,19 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+  digraph InstanceDiagram {
+    node [shape=rectangle]
+    edge [arrowhead=none]
+
+  // Instance: Person1
+  "Person1" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    Person1: Person    </td></tr></table>>,
+   tooltip="instance Person1
+", href="javascript:Action.selectClass(&quot;Person&quot;);"];
+
+  // Instance: Course1
+  "Course1" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    Course1: Course    </td></tr></table>>,
+   tooltip="instance Course1
+", href="javascript:Action.selectClass(&quot;Course&quot;);"];
+
+  // All associations
+}

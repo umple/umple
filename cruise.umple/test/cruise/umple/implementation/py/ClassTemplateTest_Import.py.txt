@@ -1,10 +1,25 @@
-from Student import Student
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 import os
 
 class Mentor():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Mentor Attributes
+    #Mentor Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName):
+        self._student = None
+        self._name = None
         self._name = aName
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
         wasSet = False
         self._name = aName
@@ -14,51 +29,53 @@ class Mentor():
     def getName(self):
         return self._name
 
+    # Code from template association_GetOne 
     def getStudent(self):
         return self._student
 
     def hasStudent(self):
-        has = not(self._student is None)
+        has = not (self._student is None)
         return has
 
+    # Code from template association_SetOptionalOneToMandatoryMany 
     def setStudent(self, aStudent):
+        #
+        # This source of this source generation is association_SetOptionalOneToMandatoryMany.jet
+        # This set file assumes the generation of a maximumNumberOfXXX method does not exist because 
+        # it's not required (No upper bound)
+        #   
         wasSet = False
         existingStudent = self._student
         if existingStudent is None :
-            if not(aStudent is None) :
+            if not (aStudent is None) :
                 if aStudent.addMentor(self) :
                     existingStudent = aStudent
                     wasSet = True
-
-        elif not(existingStudent is None) :
+        elif not (existingStudent is None) :
             if aStudent is None :
                 if existingStudent.minimumNumberOfMentors() < existingStudent.numberOfMentors() :
                     existingStudent.removeMentor(self)
                     existingStudent = aStudent
+                    # aStudent == null
                     wasSet = True
-
             else :
                 if existingStudent.minimumNumberOfMentors() < existingStudent.numberOfMentors() :
                     existingStudent.removeMentor(self)
                     aStudent.addMentor(self)
                     existingStudent = aStudent
                     wasSet = True
-
         if wasSet :
             self._student = existingStudent
-
         return wasSet
 
     def delete(self):
-        if not(self._student is None) :
-            if self._student.numberOfMentors() < = 1 :
+        if not (self._student is None) :
+            if self._student.numberOfMentors() <= 1 :
                 self._student.delete()
-
             else :
                 placeholderStudent = self._student
                 self._student = None
                 placeholderStudent.removeMentor(self)
 
     def __str__(self):
-        return str(super()) + "[" + "name" + ":" + self.getName() + "]" + os.linesep + "  " + "student = " + (self.getStudent() != (format(id(self.getStudent()), "x")) if None else "null")
-
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "student = " + ((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null")

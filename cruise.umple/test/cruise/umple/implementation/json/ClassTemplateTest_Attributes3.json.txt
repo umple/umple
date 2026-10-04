@@ -14,9 +14,11 @@
  "modifier" : "",
  "traceColor" : "black" }],
 "methods": [],
+ "enums": [],
  "id": "NewClass",
  "name": "NewClass",
  "isAbstract": "false",
  "displayColor": "" ,
  "isInterface": "false"}],
- "umpleAssociations":[] }
+ "umpleAssociations":[],
+ "globalEnums":[] }

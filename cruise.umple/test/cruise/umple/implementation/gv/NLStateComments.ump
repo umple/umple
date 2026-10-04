@@ -1,0 +1,20 @@
+generate GvStateDiagram;
+namespace example;
+
+class X {
+  sm1 {
+    // This is the comment for state s1
+    // It has two lines
+    s1 {
+      // This is the comment for the e1 transition to s2
+      e1 -> s2;
+
+      // This is the comment for the e2 transition
+      e2 -> / {doSomething();} s2;
+    }
+    // This is the comment for state s2
+    s2 {
+      e3 -> s1;
+    }
+  }
+}

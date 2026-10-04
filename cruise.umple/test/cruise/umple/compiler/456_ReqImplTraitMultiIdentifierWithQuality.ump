@@ -1,0 +1,23 @@
+// Multiple identifiers with quality class arguments inside a trait should bind correctly.
+req Logging userStory {
+  who { developer }
+  what { log events }
+}
+
+req Logging quality {
+  Reliability {}
+}
+
+req Audit userStory {
+  who { operator }
+  what { inspect changes }
+}
+
+req Audit quality {
+  Security {}
+}
+
+implementsReq Logging(Reliability), Audit(Security);
+trait Loggable {
+  logLevel;
+}

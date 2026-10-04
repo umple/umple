@@ -1,21 +1,38 @@
-from C import C
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
 
 class D():
-    def __init__(self, aC):
-        if aC is None or aC.getMyD() != None :
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #D Associations
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
+    @classmethod
+    def alternateConstructor(cls, aC):
+        self = cls.__new__(cls)
+        self._c = None
+        if aC is None or not (aC.getMyD() is None) :
             raise RuntimeError ("Unable to create D due to aC. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
-
         self._c = aC
+        return self
 
     def __init__(self, aBForC):
-        self._c = C(self, aBForC)
+        from example.C import C
+        self._c = None
+        self._c = C.alternateConstructor(self, aBForC)
 
+    #------------------------
+    # INTERFACE
+    #------------------------
+    # Code from template association_GetOne 
     def getC(self):
         return self._c
 
     def delete(self):
         existingC = self._c
         self._c = None
-        if not(existingC is None) :
+        if not (existingC is None) :
             existingC.delete()
-

@@ -1,0 +1,6 @@
+classDiagram
+  class Student {
+    Integer id
+    String name
+    void study()
+  }

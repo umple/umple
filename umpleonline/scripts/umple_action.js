@@ -19,8 +19,9 @@ Action.gentime = new Date().getTime();
 Action.savedCanonical = "";
 Action.gdprHidden = false;
 Action.update = "";
+Action.neighbors=[];
 
-const debuggerFlag = true;
+const clientDebuggerFlag = false;
 
 
 // Regulators of whether a save occurs on not
@@ -95,6 +96,10 @@ Action.clicked = function(event)
   {
     Action.generateCode("classDiagram","classDiagram");
   }
+  else if (action == "instanceDiagram")
+  {
+    Action.generateCode("instanceDiagram","instanceDiagram");
+  }
   else if (action == "entityRelationshipDiagram")
   {
     Action.generateCode("entityRelationshipDiagram","entityRelationshipDiagram");
@@ -144,6 +149,10 @@ Action.clicked = function(event)
   else if (action == "CopyClip")
   {
     Action.copyClipboardCode();
+  }  
+  else if (action == "CopyMix")
+  {
+    Action.copyClipboardMixset();
   }  
   else if (action == "Copy")
   {
@@ -257,17 +266,14 @@ Action.clicked = function(event)
   }
   else if (action == "Reindent") 
   { 
-    // var lines = Page.getRawUmpleCode().split("\n");
     var lines = Page.getRawUmpleCodeCM6().split("\n");
-
-    // var cursorPos = Page.codeMirrorEditor.getCursor(true);
     var cursorPos = Page.codeMirrorEditor6.state.selection.main.head;
     var cursorPosLine = Page.codeMirrorEditor6.state.doc.lineAt(cursorPos).number;
 
-    if (debuggerFlag)
-    console.log(cursorPosLine);
+    if (clientDebuggerFlag){
+      console.log(cursorPosLine);
+    }
 
-    // var whiteSpace = lines[cursorPos.line].match(/^\s*/)[0].length;
     var whiteSpace = lines[cursorPosLine].match(/^\s*/)[0].length;
     var lengthToFirstCh = cursorPos.ch - whiteSpace;
     cursorPos.ch = lengthToFirstCh;
@@ -278,16 +284,21 @@ Action.clicked = function(event)
     Layout.showHideTextEditor();
     Page.showText = !Page.showText;
     Page.setShowHideIconState('SHT_button');
+    // After toggling Text (T) - doesn't change visibility rule, but keeps things consistent
+    if (typeof Action.updateLiveViewVisibility === 'function') { Action.updateLiveViewVisibility(); }
   }
   else if (action == "ShowHideCanvas")
   {
     Layout.showHideCanvas();
     Page.showCanvas = !Page.showCanvas;
     Page.setShowHideIconState('SHD_button');
+    // After toggling Diagram (D)
+    if (typeof Action.updateLiveViewVisibility === 'function') { Action.updateLiveViewVisibility(); }
   }
   else if (action == "ShowEditableClassDiagram")
   {
     Action.changeDiagramType({type:"editableClass"});
+    Action.syncLiveViewSelector("ecd");
   }
   else if (action == "ShowJointJSClassDiagram")
   {
@@ -296,18 +307,47 @@ Action.clicked = function(event)
   else if (action == "ShowGvClassDiagram")
   {
     Action.changeDiagramType({type:"GvClass"});
+    Action.syncLiveViewSelector("gcd");
   }
   else if (action == "ShowGvFeatureDiagram")
   {
     Action.changeDiagramType({type:"GvFeature"});//buttonShowGvFeatureDiagram
+    Action.syncLiveViewSelector("gfd");
   }
   else if (action == "ShowGvStateDiagram")
   {
     Action.changeDiagramType({type:"GvState"});
+    Action.syncLiveViewSelector("sd");
   }
   else if (action == "ShowStructureDiagram")
   {
     Action.changeDiagramType({type:"structure"});
+    Action.syncLiveViewSelector("std");
+  }
+  else if (action === "ShowGvEntityRelationshipDiagram" || action == "ShowEntityRelationshipDiagram")
+  {
+    Action.changeDiagramType({type:"GvEntityRelationshipDiagram"});
+    Action.syncLiveViewSelector("erd");
+  }
+  else if (action == "ShowInstanceDiagram")
+  {
+    Action.changeDiagramType({type:"instanceDiagram"});
+    Action.syncLiveViewSelector("instanceDiagram");
+  }
+  else if (action == "ShowCRUDUI")
+  {
+    Action.changeDiagramType({type:"crudUI"});
+    Action.syncLiveViewSelector("crudUI");
+  }
+  else if (action == "ShowStateTables")
+  {
+    Action.changeDiagramType({type:"stateTables"});
+    Action.syncLiveViewSelector("stateTables");
+  }
+  else if (action == "ShowEventSequence")
+  {
+    Action.changeDiagramType({type:"eventSequence"});
+    Action.syncLiveViewSelector("eventSequence");
   }
   else if (action == "ShowHideLayoutEditor")
   {
@@ -320,8 +360,7 @@ Action.clicked = function(event)
   else if (action == "SyncDiagram")
   {
     Action.processTyping("codeMirrorEditor", true);
-   //  Page.codeMirrorEditor.focus();
-   Page.codeMirrorEditor6.focus();
+    Page.codeMirrorEditor6.focus();
   }
   else if (action == "PhotoReady")
   {
@@ -357,6 +396,10 @@ Action.clicked = function(event)
   {
     Action.toggleGuardLabels();
   }
+  else if (action == "ToggleNaturalLanguage")
+  {
+    Action.toggleNaturalLanguage();
+  }
   else if (action == "AllowPinch")
   {
     Action.allowPinch();
@@ -373,6 +416,71 @@ Action.clicked = function(event)
   {
     Action.toggleTabs();
   }
+  else if(action.substr(0,6) == "mixset")
+  {
+    Action.toggleMixsetUseStatement(action.substr(6));
+  }
+  else if(action.substr(0,6) == "filter")
+  {
+    Action.toggleFilterUseStatement(action.substr(6));
+  }
+  else if(action.substr(0,2) == "gv")
+  {
+    Action.toggleSpecialSuboption(action);
+  }  
+}
+
+Action.toggleSpecialSuboption = function(suboption) {
+  // If suboption  is not in active ones then add it
+  var index = Page.specialSuboptionsActive.indexOf(suboption);  
+  if(index !== -1) {
+    // Turn off suboption if not already on by deleting it
+    // This sets some options to the default
+    // Suboptions specified in the code always override this though
+    Page.specialSuboptionsActive.splice(index,1);
+  }
+  else {
+    // Turn on suboption if off by adding it
+    // May have no effect if the code requires a conflicting one
+    Page.specialSuboptionsActive.push(suboption);
+
+    // If gvmanual is active, then the options affecting layout
+    // will be applied to the manual layout too
+    // this is done in Action.updateUmpleDiagramCallback
+
+    // Only one of the layout algorithms can be active at a time
+    // so turn off others that are mutually exclusive. These are
+    // gvdot, gvsfdp, gvcirco
+    Action.deactivateSpecialLayoutAlgorithmsExcept(suboption);
+  }
+  Action.redrawDiagram();
+}
+
+
+Action.toggleMixsetUseStatement = function(mixset) {
+  // If use statement is not in active ones then add it
+  var index = Page.mixsetsActive.indexOf(mixset);
+  if(index !== -1) {
+    Page.mixsetsActive.splice(index,1);
+  }
+  else {
+    Page.mixsetsActive.push(mixset);
+  }
+
+  Action.redrawDiagram();
+}
+
+Action.toggleFilterUseStatement = function(filter) {
+  // If use statement is not in active ones then add it
+  var index = Page.filtersActive.indexOf(filter);
+  if(index !== -1) {
+    Page.filtersActive.splice(index,1);
+  }
+  else {
+    Page.filtersActive.push(filter);
+  }
+
+  Action.redrawDiagram();
 }
 
 Action.focusOn = function(id, gained)
@@ -412,9 +520,6 @@ Action.startOver = function()
   Page.setUmpleCode("");
   UmpleSystem.merge(null);
   window.location = "umple.php";
-  // Action.saveNewFile();
-  // location.
-  // location.reload();
 }
 
 Action.showRefreshUmpleOnlineCompletely = function()
@@ -472,10 +577,26 @@ Action.dropHandler = function(ev) {
 }
 
 Action.dragOverHandler = function(ev) {
-  //console.log('File(s) in drop zone');
-
   // Prevent default behavior (Prevent file from being opened)
   ev.preventDefault();
+}
+
+Action.getThemePreference = function()
+{
+  try {
+    var sel = document.getElementById("themeModeSelect");
+    var stored = localStorage.getItem("umple-theme");
+    var theme = (sel && /^(light|dark|system)$/.test(sel.value)) ? sel.value :
+                (/(light|dark|system)$/.test(stored)) ? stored : "system";
+
+    // Resolve "system" to actual theme
+    if (theme === "system") {
+      return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+    }
+    return theme;
+  } catch (e) {
+    return "light";
+  }
 }
 
 Action.redoOrUndo = function(isUndo)
@@ -504,7 +625,6 @@ Action.redoOrUndo = function(isUndo)
     rawReplacement = afterHistoryChange.substring(0,delimiterLoc);
   }
 
-  // var rawOriginal = Page.getRawUmpleCode().replace(Page.modelDelimiter, "");
   var rawOriginal = Page.getRawUmpleCodeCM6().replace(Page.modelDelimiter, "");
   
   var theDiff=Action.findDiff(rawOriginal, rawReplacement);
@@ -516,7 +636,6 @@ Action.redoOrUndo = function(isUndo)
   Action.setjustUpdatetoSaveLater(true);
   
   setTimeout(function () { // Delay so it doesn't get erased
-    // Page.setFeedbackMessage("Changed line "+theDiff[3]+" "+theDiff[1]);
     if(theDiff[1] == theDiff[2])
     {
       // change was in diagram so leave caret where it is
@@ -561,16 +680,27 @@ Action.loadFile = function()
     Action.setjustUpdatetoSaveLater(true);
     if (Page.getModel().substring(0, 8) == "taskroot")
     {
-      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename));
+      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename),{onFinally: Action.initialLoadFinished});
     } 
     else 
     {
-      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&filename={0}",filename));
+      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&filename={0}",filename),{onFinally: Action.initialLoadFinished});
     }
   }
   else
   {
     Action.saveNewFile();
+  }
+}
+
+// Collaboration needs the loaded text, which is complete once the model file and the tab list are both in
+Action.initialLoadsPending = 2;
+Action.initialLoadFinished = function()
+{
+  Action.initialLoadsPending -= 1;
+  if (Action.initialLoadsPending == 0)
+  {
+    Collab.connectCollabServer();
   }
 }
 
@@ -595,6 +725,11 @@ Action.loadFileCallback = function(response)
     Action.updateUmpleDiagram();
     Action.freshLoad = false;
   }
+
+  // LSP: bootstrap after real content is loaded into editor
+  if (typeof Page !== "undefined" && Page.initLspAsync) {
+    Page.initLspAsync();
+  }
 }
 
 Action.loadTask = function(taskName, isBookmark)
@@ -603,7 +738,6 @@ Action.loadTask = function(taskName, isBookmark)
   if (!isBookmark)
   {
     Ajax.sendRequest("bookmark.php", Action.loadTaskBookmark,format("taskname={0}&model={0}",taskName));
-    //Ajax.sendRequest("scripts/compiler.php",Action.loadTaskCallback,format("loadTask=1&filename={0}",taskName));
   } else {
     if (Page.getModel().split("-")[0] == "task") // it is in task bookmark page. instruction can not be edited.
     {
@@ -638,8 +772,6 @@ Action.loadTaskCallback = function(response)
   TabControl.getCurrentHistory().save(response.responseText,"loadTaskCallback");
   var responseArray = response.responseText.split("task delimiter");
   Page.setUmpleCode(responseArray[0]);
-  //jQuery("#textareaShowInstrcutions").val(responseArray[1]);
-  //jQuery("#labelShowInstructions").text("Task Instructions: " + responseArray[2]);
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
     var extractedName = TabControl.extractNameFromCode(responseArray[0]);
@@ -658,7 +790,6 @@ Action.loadTaskExceptCodeCallback = function(response)
 {
   Action.freshLoad = true;
   // TODO: this resolves the loading issue but in a very hacky way. See PR#1402.
-  //if (Object.keys(TabControl.tabs).length > 1) return;
 
   if (!justUpdatetoSaveLater){
     TabControl.getCurrentHistory().save(response.responseText,"loadTaskExceptCodeCallback");
@@ -691,15 +822,7 @@ Action.loadTaskExceptCodeCallback = function(response)
       this.style.height = 'auto';
       this.style.height = (this.scrollHeight) + 'px';
     });
-
-    //jQuery("#completionURL").css("width", responseArray[5].length + "ch");
   }
-  // jQuery('#instructions').each(function () {
-  //   this.setAttribute('style', 'height:' + (this.scrollHeight) + 'px;overflow-y:hidden;');
-  // }).on('input', function () {
-  //   this.style.height = 'auto';
-  //   this.style.height = (this.scrollHeight) + 'px';
-  // });
 
   if (TabControl.tabs[TabControl.getActiveTabId()].nameIsEphemeral)
   {
@@ -795,10 +918,6 @@ Action.copyToClp = function(txt){
 Action.openInstructionInNewTab = function()
 {
   jQuery("#buttonReshowInstructions").css("display", "inline");
-  // var winPrint = window.open('', '', 'left=0,top=0,width=800,height=600,toolbar=0,scrollbars=0,status=0');
-  // winPrint.document.write("<!DOCTYPE html><html><head><title>Instructions</title></head><body>" + jQuery("#instructionsHTML").html() + "</body></html>");
-  // winPrint.document.close();
-  // winPrint.focus();
   var tab = window.open('about:blank', '_blank');
   tab.document.write(jQuery("#instructionsHTML").html()); // where 'html' is a variable containing your HTML
   tab.document.close();
@@ -830,10 +949,15 @@ Action.saveNewFile = function()
 {
   var umpleCode = Page.getUmpleCode();
   var filename = Page.getFilename();
-  
+
   if (filename == "")
   {
-    Ajax.sendRequest("scripts/compiler.php",Action.saveNewFileCallback,format("save=1&&umpleCode={0}",umpleCode));
+    Ajax.sendRequest("scripts/compiler.php",Action.saveNewFileCallback,format("save=1&&umpleCode={0}",umpleCode),{onFinally: Action.initialLoadFinished});
+  }
+
+  // LSP: bootstrap for new blank sessions (loadFileCallback doesn't fire)
+  if (typeof Page !== "undefined" && Page.initLspAsync) {
+    Page.initLspAsync();
   }
 }
 
@@ -844,10 +968,22 @@ Action.saveNewFileCallback = function(response)
 
 Action.changeDiagramType = function(newDiagramType)
 {
+  // If we’re already in the requested mode, return
+  if (newDiagramType.type === "editableClass" && Page.useEditableClassDiagram) return;
+  if (newDiagramType.type === "JointJSClass"  && Page.useJointJSClassDiagram) return;
+  if (newDiagramType.type === "GvClass"       && Page.useGvClassDiagram) return;
+  if (newDiagramType.type === "GvState"       && Page.useGvStateDiagram) return;
+  if (newDiagramType.type === "GvFeature"     && Page.useGvFeatureDiagram) return;
+  if ((newDiagramType.type === "GvEntity" || newDiagramType.type === "GvEntityRelationshipDiagram") && Page.useGvEntityRelationshipDiagram) return;
+  if (newDiagramType.type === "structure"     && Page.useStructureDiagram) return;
+
+  Page.unselectAllToggleTools();
   var changedType = false;
   jQuery(".layoutListItem").hide();
+  // reset show state
+  FeatureTreeModal.hidePaletteSection();
 
-  if(newDiagramType.type == "editableClass") { 
+  if(newDiagramType.type === "editableClass") {
     if(Page.useEditableClassDiagram) return;
     Page.useEditableClassDiagram = true;
     Page.useJointJSClassDiagram = false;
@@ -855,6 +991,11 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('editableClass');
@@ -862,7 +1003,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery(".view_opt_class_palette").show();
 
   }
-  else if(newDiagramType.type == "JointJSClass") { 
+  else if(newDiagramType.type === "JointJSClass") {
     if(Page.useJointJSClassDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = true;
@@ -870,13 +1011,18 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('JointJSClass');
     jQuery(".view_opt_class").show();
     jQuery(".view_opt_class_palette").show();
   }  
-  else if(newDiagramType.type == "GvClass") { 
+  else if(newDiagramType.type === "GvClass") {
     if(Page.useGvClassDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -884,13 +1030,40 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowGvClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvClass');
     jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
+  }
+
+  else if(newDiagramType.type === "GvEntity" || newDiagramType.type === "GvEntityRelationshipDiagram") {
+    if(Page.useGvEntityRelationshipDiagram) return;
+    Page.useGvClassDiagram = false;
+    Page.useEditableClassDiagram = false;
+    Page.useJointJSClassDiagram = false;
+    Page.useGvStateDiagram = false;
+    Page.useGvFeatureDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = true;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    changedType = true;
+    jQuery("#buttonShowGvEntityRelationshipDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('none');
+    jQuery(".view_opt_class").show();
+    Page.initExamples();
 
   }
-  else if(newDiagramType.type == "GvState") {
+
+  else if(newDiagramType.type === "GvState") {
     if(Page.useGvStateDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -898,13 +1071,18 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = true;
     Page.useStructureDiagram = false;
     Page.useGvFeatureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowGvStateDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvState');
     jQuery(".view_opt_state").show();
 
   }
-  else if(newDiagramType.type == "GvFeature") {
+  else if(newDiagramType.type === "GvFeature") {
    if(Page.useGvFeatureDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -912,14 +1090,18 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
     Page.useGvFeatureDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowGvFeatureDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvFeature');
     jQuery(".view_opt_feature").show();
-
-
+    FeatureTreeModal.showPaletteSection();
   }
-  else if(newDiagramType.type == "structure") { // Structure Diagram
+  else if(newDiagramType.type === "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -927,10 +1109,93 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = true;
     Page.useGvFeatureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowStructureDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('structure');
   }
+
+  else if(newDiagramType.type === "instanceDiagram") {
+    if(Page.useInstanceDiagram) return;
+     Page.useEditableClassDiagram = false;
+     Page.useJointJSClassDiagram = false;
+     Page.useGvClassDiagram = false;
+     Page.useGvStateDiagram = false;
+     Page.useStructureDiagram = false;
+     Page.useGvFeatureDiagram = false;
+     Page.useGvEntityRelationshipDiagram = false;
+     Page.useInstanceDiagram = true;
+     Page.useCRUDUI = false;
+     Page.useStateTables = false;
+     Page.useEventSequence = false;
+     changedType = true;
+     jQuery("#buttonShowInstanceDiagram").prop('checked', 'checked');
+     Page.setDiagramTypeIconState('none');
+     jQuery(".view_opt_feature").show();
+ 
+ 
+   }
+
+  else if(newDiagramType.type === "crudUI"){
+   if(Page.useCRUDUI) return;
+    Page.useEditableClassDiagram = false;
+    Page.useJointJSClassDiagram = false;
+    Page.useGvClassDiagram = false;
+    Page.useGvStateDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useGvFeatureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = true;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    changedType = true;
+    jQuery("#buttonShowCRUDUI").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('none');
+    jQuery(".view_opt_feature").show();
+}
+
+   else if(newDiagramType.type === "stateTables"){
+    if(Page.useStateTables) return;
+     Page.useEditableClassDiagram = false;
+     Page.useJointJSClassDiagram = false;
+     Page.useGvClassDiagram = false;
+     Page.useGvStateDiagram = false;
+     Page.useStructureDiagram = false;
+     Page.useGvFeatureDiagram = false;
+     Page.useGvEntityRelationshipDiagram = false;
+     Page.useInstanceDiagram = false;
+     Page.useCRUDUI = false;
+     Page.useStateTables = true;
+     Page.useEventSequence = false;
+     changedType = true;
+     jQuery("#buttonShowStateTables").prop('checked', 'checked');
+     Page.setDiagramTypeIconState('none');
+     jQuery(".view_opt_feature").show();
+   }
+
+   else if(newDiagramType.type === "eventSequence"){
+    if(Page.useEventSequence) return;
+     Page.useEditableClassDiagram = false;
+     Page.useJointJSClassDiagram = false;
+     Page.useGvClassDiagram = false;
+     Page.useGvStateDiagram = false;
+     Page.useStructureDiagram = false;
+     Page.useGvFeatureDiagram = false;
+     Page.useGvEntityRelationshipDiagram = false;
+     Page.useInstanceDiagram = false;
+     Page.useCRUDUI = false;
+     Page.useStateTables = false;
+     Page.useEventSequence = true;
+     changedType = true;
+     jQuery("#buttonShowEventSequence").prop('checked', 'checked');
+     Page.setDiagramTypeIconState('none');
+     jQuery(".view_opt_feature").show();
+   }
   if (changedType) {
     Action.redrawDiagram();
   }
@@ -981,6 +1246,12 @@ Action.copyClipboardCode = function()
   Page.setFeedbackMessage("Code has been copied to the clipboard");  
 }
 
+Action.copyClipboardMixset = function()
+{
+  Action.copyToClp(Page.copyableMixset);
+  Page.setFeedbackMessage("Mixset with selected diagram filters and options is in clipboard");  
+}
+
 Action.copyCommandLineCode = function()
 {
   var pretext="sh\n";
@@ -998,19 +1269,56 @@ Action.copyCommandLineCode = function()
 
 Action.showCodeInSeparateWindow = function()
 {
-  codeWindow = window.open("","UmpleCode"+Math.random()*10000,"height=700, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
-  codeWindow.document.write('<code><pre id="umpleCode">' + Page.getUmpleCode() + '</pre></code>');
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  const stamp =
+    d.getFullYear() +
+    pad(d.getMonth() + 1) +
+    pad(d.getDate()) + " " +
+    pad(d.getHours()) + ":" +
+    pad(d.getMinutes()) + ":" +
+    pad(d.getSeconds());
+
+  const header = `// UmpleOnline code as of ${stamp}\n\n`;
+  const content = header + Page.getUmpleCode();
+  
+  codeWindow = window.open("","UmpleCode","height=700, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
+  codeWindow.document.write('<code><pre id="umpleCode">' + content + '</pre></code>');
   codeWindow.document.title="Umple raw code";
   codeWindow.document.close();
 }
 
 Action.showEncodedURLCodeInSeparateWindow = function()
 {
-  codeWindow = window.open("","UmpleEncodedURL"+Math.random()*10000,"height=500, width=400, left=100, top=100, location=no, status=no, scrollbars=yes");
-  codeWindow.document.write('<code><pre id="umpleCode">' + Page.getEncodedURL() + '</pre></code>');
-  codeWindow.document.title="Umple encoded URL";
+  const MAX_ENCODED_URL_LEN = 2000; // conservative safe limit
+  const url = Page.getEncodedURL();
+  const len = url.length;
+
+  let header = "";
+  if (len > MAX_ENCODED_URL_LEN) {
+    header =
+      "// WARNING: Encoded URL length (" + len + " characters)\n" +
+      "// exceeds recommended limit (" + MAX_ENCODED_URL_LEN + ").\n" +
+      "// Use Save & Collaborate for larger models.\n\n";
+
+    Page.setFeedbackMessage(
+      "Encoded URL too long (" + len + " chars). Use Save & Collaborate instead."
+    );
+  } else {
+    Page.setFeedbackMessage(
+      "Encoded URL generated (" + len + " chars). Ideal for PowerPoint embedding."
+    );
+  }
+
+  const content = header + url;
+
+  codeWindow = window.open("","UmpleEncodedURL","height=500, width=520, left=100, top=100, location=no, status=no, scrollbars=yes");
+
+  codeWindow.document.write('<code><pre id="umpleCode">' + content + '</pre></code>');
+  codeWindow.document.title = "Umple encoded URL";
   codeWindow.document.close();
 }
+
 
 Action.simulateCode = function()
 {
@@ -1077,8 +1385,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   document.addEventListener("mousedown", hider);
   if(inputType=="rename"){
 
-    if (debuggerFlag)
-    console.log("Renaming State ...")
+    if (clientDebuggerFlag){
+      console.log("Renaming State ...");
+    }
 
     label.appendChild(document.createTextNode("New name for \'"+stateName+"\'?"));
     input.value = stateName;
@@ -1087,12 +1396,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
         //only accounts for case where states all have unique names
         if(Action.validateAttributeName(input.value)){
 
-          if (debuggerFlag)
-          console.log("Getting code from codemirror editor ...")
-
-          // Removing CM5
-          // let orig=Page.codeMirrorEditor.getValue();
-
+          if (clientDebuggerFlag){
+            console.log("Getting code from codemirror editor ...");
+          }
           // get contents of codemirror 6 editor
           let orig = Page.codeMirrorEditor6.state.doc.toString();
 
@@ -1102,27 +1408,23 @@ Action.drawInputState = function(inputType,stateCode,stateName){
             orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
           }
 
-          if (debuggerFlag)
-          console.log("Setting updated code to codemirror editor ...")
-
-          // Removing CM5
-          // Page.codeMirrorEditor.setValue(orig);
+          if (clientDebuggerFlag){
+            console.log("Setting updated code to codemirror editor ...");
+          }
 
           // update content of codemirror 6 editor with updated code/text
           Page.setCodeMirror6Text(orig);
 
-          // Action.processTyping("codeMirrorEditor")
           setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
           document.removeEventListener("mousedown", hider);
 
-          if (debuggerFlag)
-          console.log("Removing mousedown event ...")
+          if (clientDebuggerFlag){
+            console.log("Removing mousedown event ...");
+          }
           
           prompt.remove();
           Action.removeContextMenu();
-          // Removing CM5
-          // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
           TabControl.getCurrentHistory().save(orig, "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
@@ -1131,8 +1433,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
     });  
   } else if(inputType=="substate") {
 
-    if (debuggerFlag)
-    console.log("Substating state ...")
+    if (clientDebuggerFlag){
+      console.log("Substating state ...");
+    }
 
     label.appendChild(document.createTextNode("Name of new substate?"));
     input.addEventListener('keydown', function(e) {
@@ -1140,30 +1443,28 @@ Action.drawInputState = function(inputType,stateCode,stateName){
         if(Action.validateAttributeName(input.value)){
           let subtext=unsanitizedState.substr(0,unsanitizedState.length-1)+"  "+input.value+"{}}";
 
-          if (debuggerFlag)
-          console.log("Getting original code and adding substate ...")
-          // Removing CM5
-          // subtext=Page.codeMirrorEditor.getValue().replace(unsanitizedState,subtext);
+          if (clientDebuggerFlag){
+            console.log("Getting original code and adding substate ...");
+          }
+
           subtext=Page.codeMirrorEditor6.state.doc.toString().replace(unsanitizedState,subtext);
 
-          if (debuggerFlag)
-          console.log("Setting updated code with substate into codemirror editor ...")
+          if (clientDebuggerFlag){
+            console.log("Setting updated code with substate into codemirror editor ...");
+          }
 
-          // Removing CM5
-          // Page.codeMirrorEditor.setValue(subtext);
           Page.setCodeMirror6Text(subtext);
 
           setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
           document.removeEventListener("mousedown", hider);
 
-          if (debuggerFlag)
-          console.log("Removing mousedown event ...")
+          if (clientDebuggerFlag){
+            console.log("Removing mousedown event ...");
+          }
 
           prompt.remove();
           Action.removeContextMenu();
-          // Removing CM5
-          // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
           TabControl.getCurrentHistory().save(subtext, "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
@@ -1174,8 +1475,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   } else if(inputType=="transition"){
     //should have an indicator after user enters label so they know to press another state
     
-    if (debuggerFlag)
-    console.log("Adding Transition ...")
+    if (clientDebuggerFlag){
+      console.log("Adding Transition ...");
+    }
 
     label.appendChild(document.createTextNode("Condition for new transition?"));
     input.addEventListener('keydown', function(e) {
@@ -1187,8 +1489,9 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           prompt.remove();
           Action.removeContextMenu();
 
-          if (debuggerFlag)
-          console.log("Waiting to select target state for transition ...")
+          if (clientDebuggerFlag){
+            console.log("Waiting to select target state for transition ...");
+          }
 
           var assocState=function (event){
               let targ=event.target;
@@ -1200,22 +1503,16 @@ Action.drawInputState = function(inputType,stateCode,stateName){
               let subtext="  "+input.value+" -> "+elemText[2]+";\n}";
               let newState=orig.substr(0,orig.length-1)+subtext;
 
-              if (debuggerFlag)
-              console.log("New state created ...")
-
-              // Removing CM5
-              // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newState));
-
-              if (debuggerFlag)
-              console.log("Replacing original state with new state in the code ...")
+              if (clientDebuggerFlag){
+                console.log("New state created ...");
+                console.log("Replacing original state with new state in the code ...");
+              }
 
               Page.setCodeMirror6Text(Page.codeMirrorEditor6.state.doc.toString().replace(orig,newState));
 
               setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
               //TODO - Saving/edit history doesn't seem to be working here.
-              // Removing CM5
-              // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
               TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
               let others=document.getElementsByClassName("node");
               for(let q=0;q<others.length;q++){
@@ -1240,6 +1537,46 @@ Action.drawInputState = function(inputType,stateCode,stateName){
         }
       }
     });
+  } else if(inputType=="colorState") {
+
+    if (clientDebuggerFlag){
+      console.log("Changing State Color ...");
+    }
+
+    // Change the input to a color picker
+    input.type = "color";
+    input.style.width = "30px";
+
+    label.appendChild(document.createTextNode("Color - "));
+
+    // Add a clickable arrow like the class color UI
+    var arrow = document.createElement("span");
+    arrow.innerHTML = "&#8594;";
+    arrow.style.cursor = "pointer";
+    arrow.style.paddingLeft = "5px";
+
+    var applyColor = function(){
+      Action.setColorState(unsanitizedState, stateName, input.value);
+
+      document.removeEventListener("mousedown", hider);
+      prompt.remove();
+      Action.removeContextMenu();
+
+      // Save history (consistent with other menu actions)
+      TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
+    };
+
+    input.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        applyColor();
+      }
+    });
+
+    arrow.addEventListener("click", function(){
+      applyColor();
+    });
+
+    prompt.appendChild(arrow);
   }
   // Add the prompt to the page
   prompt.appendChild(label);
@@ -1247,21 +1584,60 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   document.body.appendChild(prompt);
   input.focus();
 }
+
+Action.setColorState = function(stateCode, stateName, colorValue) {
+  var orig = Page.codeMirrorEditor6.state.doc.toString();
+  var startIndex = orig.indexOf(stateCode);
+
+  if (startIndex === -1) {
+    console.log("State not found in editor.");
+    return;
+  }
+
+  var endIndex = startIndex + stateCode.length;
+  var updatedState = stateCode;
+
+  // Replace existing displayColor if present
+  if (updatedState.includes("displayColor")) {
+    updatedState = updatedState.replace(
+      /displayColor\s+#[0-9a-fA-F]{6}\s*;/,
+      "displayColor " + colorValue + ";"
+    );
+  } 
+  // Otherwise insert a new displayColor line inside the state block
+  else {
+    var braceIndex = updatedState.indexOf("{");
+    if (braceIndex >= 0) {
+      updatedState =
+        updatedState.slice(0, braceIndex + 1) +
+        "\n  displayColor " + colorValue + ";\n" +
+        updatedState.slice(braceIndex + 1);
+    }
+  }
+
+  Page.codeMirrorEditor6.dispatch({
+    changes: { from: startIndex, to: endIndex, insert: updatedState }
+  });
+
+  setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+};
+
 //Deletes a target state within the specific SM and Class, as well any transitions to/from target state
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.deleteState = function(stateCode,className,smName,stateName){
+  // Debug
   // console.log("Inside Action.deleteState ...")
   let subStates=stateName.split(",");
 
-  if (debuggerFlag)
-  console.log("Getting code from codemirror editor ...")
+  if (clientDebuggerFlag){
+    console.log("Getting code from codemirror editor ...");
+  }
 
-  // Removing CM5
-  // let orig=Page.codeMirrorEditor.getValue();
   let orig=Page.codeMirrorEditor6.state.doc.toString();
 
-  if (debuggerFlag)
-  console.log("Deleting State: ", stateName);
+  if (clientDebuggerFlag){
+    console.log("Deleting State: ", stateName);
+  }
 
   let unsanitizedState = stateCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   orig=orig.replace(unsanitizedState,"");
@@ -1272,17 +1648,14 @@ Action.deleteState = function(stateCode,className,smName,stateName){
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
   }
 
-  if (debuggerFlag)
-  console.log("Setting updated code to codemirror editor ...");
+  if (clientDebuggerFlag){
+    console.log("Setting updated code to codemirror editor ...");
+  }
 
-  // Removing CM5
-  // Page.codeMirrorEditor.setValue(orig);
   Page.setCodeMirror6Text(orig);
 
   setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
 
-  // Removing CM5
-  // TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
   TabControl.getCurrentHistory().save(orig, "menuUpdate");
   Action.removeContextMenu();
 }
@@ -1290,6 +1663,7 @@ Action.deleteState = function(stateCode,className,smName,stateName){
 //Draws a div containing the editing options for state GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.drawStateMenu = function(){
+  // Debug
   // console.log("Inside drawStateMenu: ")
   if(!Action.diagramInSync){
     return;
@@ -1298,35 +1672,42 @@ Action.drawStateMenu = function(){
   Action.removeContextMenu();
   var targ=event.target;
   //iterate up to top of graph elements
-  while(targ.parentElement.id!="graph0"){
-    targ=targ.parentNode;
+  while (targ && targ.parentElement && targ.parentElement.id != "graph0") {
+    targ = targ.parentNode;
   }
   //grabs state name
-  var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
-  elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
+  var match = targ.outerHTML.match(/stateClicked\((?:&quot;|"|')([^"']+)(?:&quot;|"|')\)/);
+  
+  if (!match) {
+    return;
+  }
+  
+  var elemText = match[1].split("^*^");
+  if (!elemText[2]) {
+    return;
+  }
   elemText[2]=elemText[2].split(".");
-  // Removing CM5
-  // var orig=Page.codeMirrorEditor.getValue();
   var orig = Page.codeMirrorEditor6.state.doc.toString();
-  // Removing CM5
-  // var chosenStateIndices=Action.selectStateInClass(elemText[0],elemText[1],elemText[2][0]);
   var chosenStateIndices=Action.selectStateInClassCM6(elemText[0],elemText[1],elemText[2][0]);
   for(let i=1;i<elemText[2].length;i++){
-    // Removing CM5
-    // chosenStateIndices=Action.selectStateInState(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
     chosenStateIndices=Action.selectStateInStateCM6(chosenStateIndices.startIndex,chosenStateIndices.endIndex,elemText[2][i]);
   }
   var chosenState=orig.substr(chosenStateIndices.startIndex,chosenStateIndices.endIndex-chosenStateIndices.startIndex);
-  // console.log("chosenState: ", chosenState)
   if(typeof chosenState != 'string'){
     return;
   }
   //this section generates the context menu, grabbing option names and associated functions from the vars below 
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Rename State","Delete State","Add Substate","Add Transition"];
+  var rowContent = ["Rename State","Delete State","Add Substate","Add Transition","Change Color"];
   //need to sanitize any linebreaks or quotes that could break the generated HTML
   var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
-  var rowFuncs = ["Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")","Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.drawInputState(\"transition\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"];
+  var rowFuncs = [
+    "Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")",
+    "Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")",
+    "Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")",
+    "Action.drawInputState(\"transition\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")",
+    "Action.drawInputState(\"colorState\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"
+  ]; 
   menu.style.zIndex = "1000";
   menu.style.border = "1px solid #ccc";
   menu.style.backgroundColor = "#f8f8f8";
@@ -1363,6 +1744,7 @@ Action.drawStateMenu = function(){
   } else {
     menu.style.top = event.clientY+"px";
   }
+
   //Add an event listener to hide the menu when the user clicks outside of it
   document.addEventListener('mousedown', function hideMenu(e) {
     var prompt=document.getElementById("promptBox");
@@ -1396,11 +1778,9 @@ Action.displayTransitionMenu = function(event) {
   let identifierState = id[3].split(".");
   dest = id[4].split(".");
 
-  // var selection = Action.selectStateInClass(id[0], id[1], identifierState[0]);
   var selection = Action.selectStateInClassCM6(id[0], id[1], identifierState[0]);
 
   for (var i = 1; i < identifierState.length; i++) {
-      //selection = Action.selectStateInState(selection.startIndex, selection.endIndex, identifierState[i]);
       selection = Action.selectStateInStateCM6(selection.startIndex, selection.endIndex, identifierState[i]);
   }
 
@@ -1415,20 +1795,16 @@ Action.displayTransitionMenu = function(event) {
   searchTerm = searchTerm.replaceAll("&&", "&{1,2}");
   let pattern = new RegExp(searchTerm + ".*->", "s");
 
-  // let startIndex = Page.codeMirrorEditor.getValue().substr(selection.startIndex, selection.endIndex - selection.startIndex).search(pattern) + selection.startIndex;
      let startIndex = Page.codeMirrorEditor6.state.doc.toString().substr(selection.startIndex, selection.endIndex - selection.startIndex).search(pattern) + selection.startIndex;
   
-     // let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
      let cText = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex);
 
   let line = Action.findEOL(cText);
   if (!(line.split("->").length - 1 === 1) ) {
-      //alert("Please edit this complex transition in the textual code.");
       Page.setFeedbackMessage(" Please edit this complex transition in the textual code.");
       return;
   }
   let endIndex = startIndex + line.length;
-  // let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
    let code = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
 
@@ -1604,18 +1980,15 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
         // Create the modified transition string with the new destination
         let modifiedTransition = parts[0] + " -> " + parts[1].replace(dest,input.value.trim()) + ";";
         
-        // cm5
-        // let orig = Page.codeMirrorEditor.getValue();
         let orig = Page.codeMirrorEditor6.state.doc.toString();
         let before = orig.substring(0, startIndex);
     
-      // Get the part of the string after the substring you want to replace
-      let after = orig.substring(endIndex);
-      let updatedContent = before + modifiedTransition +after;
+        // Get the part of the string after the substring you want to replace
+        let after = orig.substring(endIndex);
+        let updatedContent = before + modifiedTransition +after;
         //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
 
         // Update the editor with the new content
-        //Page.codeMirrorEditor.setValue(updatedContent);
         Page.setCodeMirror6Text(updatedContent);
 
 
@@ -1636,42 +2009,22 @@ Action.changeTransition = function(dest,startIndex,endIndex) {
 
 
 Action.deleteTransition = function(startIndex, endIndex) {
-  //let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
- let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
+  let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
 
- // let orig = Page.codeMirrorEditor.getValue();
- let orig = Page.codeMirrorEditor6.state.doc.toString();
+  let orig = Page.codeMirrorEditor6.state.doc.toString();
 
   orig = orig.replace(classCode, "");
-  // Update the editor with the new code
 
-  // Page.codeMirrorEditor.setValue(orig);
-     Page.setCodeMirror6Text(orig);
+  // Update the editor with the new code
+  Page.setCodeMirror6Text(orig);
 
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 };
 
-// cm5
-// Action.deleteTransition = function(startIndex, endIndex) {
-//   let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-
-//   let orig = Page.codeMirrorEditor.getValue();
-
-//   orig = orig.replace(classCode, "");
-//   // Update the editor with the new code
-
-//   Page.codeMirrorEditor.setValue(orig);
-
-//   Action.removeContextMenu();
-//   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-// };
-
-
 Action.modifyTransitionGuard = function(startIndex,endIndex) {
 
   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
-  // let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
   let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
   
   const match =classCode.trim().match(pattern2);
@@ -1784,17 +2137,14 @@ Action.modifyTransitionGuard = function(startIndex,endIndex) {
 
 
     // Assuming classyCode is meant to represent the original content where the transition is to be found
-    //let orig = Page.codeMirrorEditor.getValue();
     let orig = Page.codeMirrorEditor6.state.doc.toString();
     let before = orig.substring(0, startIndex);
     
-      // Get the part of the string after the substring you want to replace
-      let after = orig.substring(endIndex);
-      let updatedContent = before + modifiedTransition +after;
-    //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
+    // Get the part of the string after the substring you want to replace
+    let after = orig.substring(endIndex);
+    let updatedContent = before + modifiedTransition +after;
 
     // Update the editor with the new content
-    //Page.codeMirrorEditor.setValue(updatedContent);
     Page.setCodeMirror6Text(updatedContent);
 
     Action.removeContextMenu();
@@ -1816,7 +2166,6 @@ input.addEventListener("keydown", function(e) {
 
 Action.modifyTransitionAction = function(startIndex,endIndex) {
   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
-  // let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
   let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
 
   const match =classCode.trim().match(pattern2);
@@ -1915,17 +2264,14 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
 
 
       // Assuming classyCode is meant to represent the original content where the transition is to be found
-      //let orig = Page.codeMirrorEditor.getValue();
       let orig = Page.codeMirrorEditor6.state.doc.toString();
       let before = orig.substring(0, startIndex);
     
       // Get the part of the string after the substring you want to replace
       let after = orig.substring(endIndex);
       let updatedContent = before + modifiedTransition +after;
-      //let updatedContent = orig.replace(classCode.trim(), modifiedTransition);
 
       // Update the editor with the new content
-      // Page.codeMirrorEditor.setValue(updatedContent);
          Page.setCodeMirror6Text(updatedContent);
 
       Action.removeContextMenu();
@@ -1948,7 +2294,6 @@ Action.modifyTransitionAction = function(startIndex,endIndex) {
 
 
 Action.modifyTransitionEventName = function(startIndex, endIndex) {
-  //let classCode = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
   let classCode = Page.codeMirrorEditor6.state.doc.toString().substring(startIndex, endIndex);
   let pattern2 = new RegExp("^(.*?)\\s*(\\[(.*?)\\])?\\s*(\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\w+);?$", "s");
 
@@ -2016,7 +2361,6 @@ Action.modifyTransitionEventName = function(startIndex, endIndex) {
       let modifiedTransition = classCode.replace(eventName, input.value.trim());
 
       // Assuming classyCode is meant to represent the original content where the transition is to be found
-      //let orig = Page.codeMirrorEditor.getValue();
       let orig = Page.codeMirrorEditor6.state.doc.toString();
       let before = orig.substring(0, startIndex);
     
@@ -2025,7 +2369,6 @@ Action.modifyTransitionEventName = function(startIndex, endIndex) {
       let updatedContent = before + modifiedTransition +after;
 
       // Update the editor with the new content
-      //Page.codeMirrorEditor.setValue(updatedContent);
       Page.setCodeMirror6Text(updatedContent);
 
       Action.removeContextMenu();
@@ -2053,65 +2396,217 @@ Action.removeContextMenu = function(){
   }
 }
 
-//codemirror5
-// //Called from Action.drawInput(), searches for existing displayColor definitions in the class code, replaces it if it exists,
-// //prepends a new displayColor statement to the start of the class if one doesn't exist.
-// //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
-// Action.setColor=function(classCode,className,color){
-//   let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
-//   if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
-//     let subtext="{  displayColor "+color+";\n"; 
-//     subtext=classyCode.substr(0,classyCode.indexOf("{"))+subtext+classyCode.substr(classyCode.indexOf("{")+1,classyCode.length-classyCode.indexOf("{")-1);
-//     Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
-//   } else { //otherwise, use regex to replace existing displayColor statement
-//     let subtext="displayColor "+color+";"; 
-//     let regex=new RegExp("displayColor\\s+.*;");
-//     subtext=classyCode.replace(regex,subtext);
-//     Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
-//     setTimeout(function(){
-//         TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-//     }, 100);
-
-//   }
-// }
 
 //Called from Action.drawInput(), searches for existing displayColor definitions in the class code, replaces it if it exists,
 //prepends a new displayColor statement to the start of the class if one doesn't exist.
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.setColor=function(classCode,className,color){
-  // console.log("classCode: " + classCode);
-  // console.log("className: " + className);
-  //  console.log("color: " + color);
   let classyCode=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   if(!classyCode.includes("displayColor")){ //if color is not already set, we can prepend it to the start of the class
     let subtext="{  displayColor "+color+";\n"; 
     subtext=classyCode.substr(0,classyCode.indexOf("{"))+subtext+classyCode.substr(classyCode.indexOf("{")+1,classyCode.length-classyCode.indexOf("{")-1);
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(classyCode,subtext) } });
 
-  //  Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
   } else { //otherwise, use regex to replace existing displayColor statement
     let subtext="displayColor "+color+";"; 
     let regex=new RegExp("displayColor\\s+.*;");
     subtext=classyCode.replace(regex,subtext);
 
-    //Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(classyCode,subtext));
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(classyCode,subtext) } });
 
     setTimeout(function(){
-        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+        TabControl.getCurrentHistory().save(Page.getUmpleCode(), "setColor");
     }, 100);
-
-    // setTimeout(function(){
-    //     TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
-    // }, 100);
 
   }
 }
 
+// Focuses the diagram on a specific class and its immediate neighbors (1 hop).
+Action.filterOnOneClass = function(className) {
+  var focusValue = className + " 1";
+  
+  // Set the filter, clearing previous class filters as per Issue #2277
+  Action.setFilterFull(focusValue, true); 
+  
+  // Update the UI filter text field
+  jQuery("#filtervalues").val(focusValue);
+  
+  Action.removeContextMenu();
+}
+
+Action.clearFilterOnOneClass=function(className){
+
+  Page.filterWordsOutput=Page.filterWordsOutput.replace(`${className}!@`, "");
+  Action.setFilterFull(Page.filterWordsOutput.trim(), true);
+  let textInputValues = jQuery('#filtervalues').val();
+  if(textInputValues.length-className.length<2){
+    jQuery("#filtervalues").val('*');
+  }else{
+    let removedClassTextInputValues=textInputValues.replace(className, "");
+    jQuery("#filtervalues").val(removedClassTextInputValues);
+  }
+  Action.removeContextMenu();
+
+}
+
+Action.hideClass=function(className){
+
+  if(Page.filterWordsOutput.includes("*")){
+    Action.setFilterFull(`~${className}`, true); 
+  }else{
+    Action.setFilterFull(Page.filterWordsOutput+"~"+className, true); 
+  }
+
+  var textInputValues = jQuery('#filtervalues').val();
+  if(textInputValues.includes('*')){
+    let inputReplace="~"+className;
+    jQuery("#filtervalues").val(inputReplace);
+  }else{
+    jQuery("#filtervalues").val(textInputValues+" ~"+className);
+  }
+  Action.removeContextMenu();
+
+}
+
+Action.unHideClasses=function(){
+  let unhideWordOutputs=Action.removeHiddenClasses(Page.filterWordsOutput);
+  let textInputValues = Action.removeHiddenClasses(jQuery('#filtervalues').val());
+  Action.setFilterFull(unhideWordOutputs, true); 
+  jQuery("#filtervalues").val(textInputValues);
+  Action.removeContextMenu();
+}
+
+Action.removeHiddenClasses=function(textInput){
+  const unHideRegex = /~\w+!?@?/g;
+  return textInput.replace(unHideRegex, "").replace(/\s+/g, "").trim();
+}
+
+// Get the positioning information for a given class as stored in the
+// Umple model. 
+Action.getGvPosition =function(positioningCode, className) {
+  // Returns an structure with 
+  //  all  matchedClassPos ... the overall match
+  //  assoc1 any initial code describing assoc positions
+  //  x  the X position (left)
+  //  y  the y position (right)
+  //  width the width (we will not edit)
+  //  height the height (we will not edit)
+  //  assoc2   any more code describing association locations
+  
+  // Find the positioning code for the class
+  var regexForPositions = new RegExp(
+    "class[\\s]*" +className +"[\\s]{"
+    +"([\\sa-zA-Z\\:\\.\\,\\;\\-\\_0-9]*)"
+    +"\\s*position ([\\d.]*) ([\\d.]*) ([\\d.]*) ([\\d.]*);"
+    +"([\\sa-zA-Z\\:\\.\\,\\;\\-\\_0-9]*)}","s");
+  var theMatch=positioningCode.match(regexForPositions);
+  if(theMatch == null) {
+    // This should be an error
+    return null;
+  }
+
+  var positionStruct = {
+    all: theMatch[0],
+    assoc1: theMatch[1],
+    x: theMatch[2],
+    y: theMatch[3],
+    width: theMatch[4],
+    height: theMatch[5],
+    assoc2: theMatch[6]
+  };
+  
+  return positionStruct;
+}
+
+// Called when a class is being moved by direct manipulation
+// To ways this could have been done:
+// 1. Front end in CodeMirror6: Edit the text as above in setColor as per G mode
+//   .. won't work as the diagram code is not necessarily in the visible text
+// 2. Backend function as used by E mode as in DiagramEdit.classMoved and
+//    DiagramEdit.updateUmpleText with editClass
+//   .. won't work as we would have to have full details of the class parsed as Json
+// Solution: Edit code in the layout editor, then trigger CodeMirror6 to send change
+Action.updateGvPosition=function(className,deltaX,deltaY) {
+  // Get the positioning code that we will update
+  var positioningCode = jQuery("#umpleLayoutEditorText").val();
+
+  // get astructure containing the umple positioning info in the current model
+  var theMatch = Action.getGvPosition(positioningCode, className);
+
+  if(theMatch == null) {
+    // Could not find position for this class
+//DEBUG
+//Page.catFeedbackMessage("NOPOS:"+className+" ");
+
+    return null;
+  }
+
+  // Update the position for this class
+  var matchedClassPos=theMatch.all; // full positioning text
+  var xPos=theMatch.x; // left
+  
+  var yPos=theMatch.y; // top
+  var associationPos1=theMatch.assoc1; // only used by E mode
+  var associationPos2=theMatch.assoc2; // only used by E mode
+
+  return Action.updateGVPositionBasic(className,deltaX,deltaY,positioningCode,
+    matchedClassPos,xPos,yPos,associationPos1,associationPos2,true);
+}
+
+// Completion for the above, called both by the above on direct manip
+// and also in updateUmpleDiagramCallback when gv is updated and
+// gvmanual is set
+Action.updateGVPositionBasic=function(className,deltaX,deltaY,positioningCode,
+    matchedClassPos,xPos,yPos,associationPos1,associationPos2, doRedraw) {
+
+  // Prevent positions from being set to values off or too close to diagram edge
+  var newXpos = Math.round(Math.max(Number(xPos)+deltaX,5)); // just before left border
+  var newYpos = Math.round(Math.max(Number(yPos)+deltaY,5)); // just below top border
+//DEBUG
+//if(isNaN(xPos)) Page.catFeedbackMessage("OXNAN");
+//if(isNaN(yPos)) Page.catFeedbackMessage("OYNAN");
+//if(isNaN(deltaX)) Page.catFeedbackMessage("DXNAN");
+//if(isNaN(deltaY)) Page.catFeedbackMessage("DYNAN");
+//if(isNaN(newXpos)) Page.catFeedbackMessage("NXNAN");
+//if(isNaN(newYpos)) Page.catFeedbackMessage("NYNAN");
+
+  var newClassPos=matchedClassPos.replace(
+    "position "+xPos+" "+yPos,
+    "position "+newXpos+" "+newYpos);
+
+  // Remove any association positioning that has been left
+  if(associationPos1 != null) {
+    newClassPos=newClassPos.replace(""+associationPos1+"","\n");
+  }
+  if(associationPos2 != null) {
+    newClassPos=newClassPos.replace(""+associationPos2+"","\n");
+  }
+//DEBUG next 6 lines
+//if (matchedClassPos == newClassPos) {
+//  Page.catFeedbackMessage(" @@@"+deltaX+"&"+xPos+"&"+newXpos+" ");
+//}
+//else {
+//  Page.catFeedbackMessage("###"+deltaX);
+//}
+  
+  //Update the text
+  Page.setUmplePositioningCode(
+    positioningCode.replace(matchedClassPos,newClassPos));
+
+  if(doRedraw) {
+    // Update the backend, triggering redraw
+    setTimeout(function(){
+      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "moveClass");
+    }, 100);
+      Action.redrawDiagram();
+  }
+}
+
+
 //Multiuse function called whenever a user wants to use a menu edit function that requires user input
 //allows users to input their text/color selection, listens for "enter", then performs the relevant edit
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
-Action.drawInput = function(inputType,classCode,className){
+Action.drawInput = function(inputType,classCode,className,neighbor){
   // creating input div
   var prompt = document.createElement('div');
   prompt.style.zIndex = "1000";
@@ -2128,7 +2623,7 @@ Action.drawInput = function(inputType,classCode,className){
     prompt.style.left = event.clientX+"px";
   }
   if(event.clientY+promptRect.height>window.innerHeight){
-    prompt.style.bottom=(window.innerHieght-event.clientY)+"px";
+    prompt.style.bottom=(window.innerHeight-event.clientY)+"px";
   } else {
     prompt.style.top = event.clientY+"px";
   }
@@ -2203,7 +2698,6 @@ Action.drawInput = function(inputType,classCode,className){
           } else { //if users use dropdown and type attribute name in text box
             newClass=orig.substr(0,orig.length-1)+"  "+select.value+" "+input.value+";\n}";
           }
-          // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
           const textlength = Page.codeMirrorEditor6.state.doc.length
           const insertval = Page.codeMirrorEditor6.state.doc.toString().replace(orig,newClass)
 
@@ -2219,7 +2713,6 @@ Action.drawInput = function(inputType,classCode,className){
           prompt.remove();
           Action.removeContextMenu();
           TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-          // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
@@ -2235,15 +2728,17 @@ Action.drawInput = function(inputType,classCode,className){
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
-          // let orig=Page.codeMirrorEditor.getValue();
+        
+          // Update core text
           let orig = Page.codeMirrorEditor6.state.doc.toString();
-          let regex=new RegExp("(\\W+)("+className+")(\\W+)");
-          let res;
-          while((res=orig.match(regex))!=null){
-            orig=orig.substr(0,res.index+res[1].length)+input.value.trim()+orig.substr(res.index+res[1].length+res[2].length,orig.length-(res.index+res[1].length+res[2].length));
-          }
-          // Page.codeMirrorEditor.setValue(orig);
+          orig = Action.renameClassAssistant(orig, className, input.value.trim());
           Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
+          
+          // Update diagram text
+          var positioningCode = jQuery("#umpleLayoutEditorText").val();
+          positioningCode =  Action.renameClassAssistant(positioningCode, className, input.value.trim());
+          Page.setUmplePositioningCode(positioningCode);
+          
           document.removeEventListener("mousedown", hider);
           prompt.remove();
           Action.removeContextMenu();
@@ -2260,7 +2755,6 @@ Action.drawInput = function(inputType,classCode,className){
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
           let subtext="\nclass "+input.value+"\n{\n  isA "+className+";\n}\n";
-         // Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue()+subtext);
           Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString() + subtext}});
           document.removeEventListener("mousedown", hider);
           TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
@@ -2308,11 +2802,53 @@ Action.drawInput = function(inputType,classCode,className){
     prompt.appendChild(label);
     prompt.appendChild(input);
     prompt.appendChild(arrow);
+  }else if(inputType=="assoc"){
+    neighbor.forEach(element => {
+      var item=document.createElement("p");
+      item.textContent=element;
+      item.style.width="100px";
+      item.style.padding="5px";
+      item.style.borderRadius="3px";
+      item.style.margin="0px";
+      item.style.cursor = "pointer";
+      item.onclick = () => {
+        Action.filterOnOneClass(element);
+        prompt.remove();
+      };
+      // Highlight item on hover
+      item.addEventListener("mouseover", function() {
+        this.style.backgroundColor = "#ddd";
+      });
+      item.addEventListener("mouseout", function() {
+        this.style.backgroundColor = "transparent";
+      });
+      prompt.appendChild(item);
+    });
   }
   // Add the prompt to the page
   document.body.appendChild(prompt);
   input.focus();
 
+}
+
+//Replaces a word anywhere in the text repeatedly
+//Used to rename classes ... both their definition() 
+//including diagram layout
+//and use as a type.
+Action.renameClassAssistant = function(text, oldClassName, newClassName) {
+  let newText= text;
+  let regex=new RegExp("(\\W+)("+oldClassName+")(\\W+)");
+  let res;
+  while((res=newText.match(regex))!=null){
+    newText=
+      newText.substr(0,res.index+res[1].length)
+      +newClassName
+      +newText.substr(
+        res.index+res[1].length+res[2].length,
+        newText.length-(res.index+res[1].length+res[2].length)
+      );
+  }
+  return newText;
 }
 
 //Searches for existing associations, children, and associationClasses related to the target class
@@ -2321,7 +2857,6 @@ Action.drawInput = function(inputType,classCode,className){
 //associationClasses are: deleted
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.deleteClass = function(classCode, className){
-  // let orig=Page.codeMirrorEditor.getValue();
   let orig=Page.codeMirrorEditor6.state.doc.toString();
 
   orig=orig.replace(classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\""),"");
@@ -2358,7 +2893,6 @@ Action.deleteClass = function(classCode, className){
     orig=orig.substr(0,res.index)+orig.substr(res.index+res[0].length,orig.length-(res.index+res[0].length));
   }
   //set editor code, save new state, and remove the context menu
-  //Page.codeMirrorEditor.setValue(orig);
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
 
@@ -2388,7 +2922,6 @@ Action.addAssociationGv = function(classCode, className){
 
       Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(orig,newClass) } });
 
-      //Page.codeMirrorEditor.setValue(Page.codeMirrorEditor.getValue().replace(orig,newClass));
       TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
       let others=document.getElementsByClassName("node");
       for(let q=0;q<others.length;q++){
@@ -2397,7 +2930,23 @@ Action.addAssociationGv = function(classCode, className){
     });
   }
 }
- 
+
+// Get the class name from a SVGGelement
+Action.getGvClassName = function(event) {
+  return Action.getGvClassNameFromNode(event.target);
+}
+
+// Get the class name from a selection event
+Action.getGvClassNameFromNode = function(elemText) {
+  //iterate up to top of class table
+  while(elemText.parentElement.id!="graph0"){
+    elemText=elemText.parentNode;
+  }
+  //unstable - grabs class name
+  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
+  return(elemText);
+}
+
 //Action.displayMenu() is triggered by contextmenu event on Graphviz Class "node" elements
 //Draws a div containing the editing options for class GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
@@ -2407,14 +2956,8 @@ Action.displayMenu = function(event) {
   }
   // Remove old menu, if any
   Action.removeContextMenu();
-  var elemText=event.target;
-  //iterate up to top of class table
-  while(elemText.parentElement.id!="graph0"){
-    elemText=elemText.parentNode;
-  }
-  //unstable - grabs class name
-  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
- // var orig=Page.codeMirrorEditor.getValue();
+  var elemText=Action.getGvClassName(event);
+
  var orig=Page.codeMirrorEditor6.state.doc.toString();
 
  var chosenClass=Action.splitStates(orig);
@@ -2427,9 +2970,68 @@ Action.displayMenu = function(event) {
     return;
   }
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color"];
+  var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color", "Focus on this class", "Do not show this class"];
   var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
-  var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")"];
+  var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")", "Action.filterOnOneClass(\""+elemText+"\")", "Action.hideClass(\""+elemText+"\")"];
+
+
+  var positioningCode = jQuery("#umpleLayoutEditorText").val();
+
+  var currentClasses=[];
+  var showNeighbors=[];
+  var elems=document.getElementsByClassName("node");
+  for(let i=0;i<elems.length;i++){
+    var currentClassForPos = Action.getGvClassNameFromNode(elems[i]);
+    currentClasses.push(currentClassForPos);
+  }
+  // console.log('chosen', Action.neighbors[elemText]);
+  // console.log('all', Action.neighbors)
+  // console.log('current', currentClasses);
+  var selectedClassNeighbors= Action.neighbors[elemText];
+  showNeighbors=selectedClassNeighbors.filter(cls=>!currentClasses.includes(cls));
+  // console.log(showNeighbors);
+  if(showNeighbors.length>0){
+    rowContent.push("Show Associations to:");
+    rowFuncs.push("Action.drawInput(\"assoc\",null,null,"+JSON.stringify(showNeighbors)+")");
+  }
+
+ 
+  // If filter is applied then need to remove Filter option from menu to prevent repeatetive calls - gazi.
+  if(Page.filterWordsOutput.length>0){
+    Page.filterWordsOutput.split("!@").forEach(function(aFilterWord){
+      if(aFilterWord.toLowerCase()==elemText.toLowerCase()){
+        //remove the filter option from the menu
+        //using array.includes("subString") instead of splice() - because menu index can alter in future.
+        rowContent=rowContent.filter(menuItem=>!menuItem.includes("Focus on this class"));
+        
+        //add the Remove Filter option in the menu
+        rowContent.push("Remove Focus");
+        //remove the function of the Filter option
+        rowFuncs=rowFuncs.filter(funcItem=>!funcItem.includes("Action.filterOnOneClass"));
+
+        //add function for Remove Filter.
+        rowFuncs.push("Action.clearFilterOnOneClass(\""+elemText+"\")");
+
+
+      rowContent=rowContent.filter(menuItem=>!menuItem.includes("Do not show this class"));
+      rowFuncs=rowFuncs.filter(funcItem=>!funcItem.includes("Action.hideClass"));
+      }
+
+      // console.log();
+
+      if(aFilterWord.includes('~')){
+        // Add context menu to show the hidden classes
+        if(!rowContent.includes("Unhide Class(es)")){
+          rowContent.push("Unhide Class(es)");
+          rowFuncs.push("Action.unHideClasses()");
+        }
+      }
+    })
+
+  }
+
+
+
 
   menu.style.zIndex = "1000";
   menu.style.border = "1px solid #ccc";
@@ -2490,206 +3092,24 @@ Action.displayMenu = function(event) {
   document.body.appendChild(menu);
 }
 
-// Action.displayAssociMenu = function(event, associationLink) {
-//   const regex = /Action\.selectAssociation\('([^']+)'\)/;
 
-//   // Use the regex to extract the content
-//   const associationDetails = associationLink.match(regex);
+Action.isWithinRadarZone=function(positioningCode,target, other, Threshold=100){
 
-
-//   // associationDetails array contains the extracted information
-//   let indices = Action.selectAssociation(associationDetails[1]);
-//  // console.log("indices: " + indices);
-
-//   var detailsArray = associationDetails[1].split(',');
-//  // console.log("detailsArray: " + detailsArray);
-
-//   if (detailsArray.length == 4) {
-//       var destination = detailsArray[1].trim();
-//       var className = detailsArray[0].trim();
-//       var endInfo = detailsArray[2].split(' ');
-//       var startInfo = detailsArray[3].split(' ');
-
-//   } else {
-//       var destination = detailsArray[1].trim();
-//       var endInfo = detailsArray[2].split(' ');
-//       var startInfo = detailsArray[2].split(' ');
-//       var className = detailsArray[0].trim();
-
-//   }
   
-//   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
-//   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
-//   if (Page.codeMirrorOn) {
-//       scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-
-//       if (!scursor.findNext()) {
-//           return; // false
-//       }
-
-//       // Have found declaration of class. Now have to search for the next class or end
-//       var theStart = scursor.from();
-
-//       var theEnd = new Object();
-
-//       // theEnd.line = Page.codeMirrorEditor.lineCount();
-//       theEnd.line = Page.codeMirrorEditor6.state.doc.lines;
-//       // console.warn("theEnd.line: " + theEnd.line);
-//       theEnd.ch = 9999;
-
-//       scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
-
-//       while (scursor.findNext()) {
-//           var endObject = scursor.from();
-
-//           //This is checking if the class declaration found was in a single line comment.
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound && innerCursor.from().line == endObject.line) {
-//               //The class declaration found was actually in a single line comment, keep searching
-//               continue;
-//           }
-
-//           //Check if the found class declaration is in a multiline comment
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-//           //Search backwards for a /* or */
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound) {
-//               if (commentFound[0] === "/*") {
-//                   //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-
-//                   //Look for the exit marker
-//                   innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-//                   var commentFound = innerCursor.findNext();
-
-//                   if (commentFound) {
-//                       var commentEnd = innerCursor.from();
-//                       if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-//                           //The class declaration found is in a multiline comment, keep looking
-//                           continue;
-//                       }
-//                   }
-//               }
-//           }
-
-//           theEnd.line = endObject.line - 1;
-//           theEnd.ch = 999;
-//           break;
-//       }
-
-//       Page.codeMirrorEditor.setSelection(theStart, theEnd);
-//       var classCode = Page.codeMirrorEditor.getSelection(); //get the class code for where the association belong
-//       // console.warn("classCode: " + classCode);
-//       // var classcode2 = page.codeMirrorEditor6.sliceDoc(theStart, theEnd);
-//       //console.log("classcode2: " + classcode2);
-//       // console.log("classCode: " + classCode);
-
-//   }
-//   var jsInput = classCode.replaceAll("\n", "&#10").replaceAll("\"", "&#$quot");;
-//   let isEnd = 1; //0 as start 1 as end
-//   let startIndex = indices.startIndex;
-//   let endIndex = indices.endIndex;
-//   // Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
-//   Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor6.state.doc.toString() ), Action.indexToPos(endIndex, Page.codeMirrorEditor6.state.doc.toString()))
+  var targetClassPos = Action.getGvPosition(positioningCode, target);
   
-//   var selectedText = Page.codeMirrorEditor.getSelection();
-//   console.warn("selectedText: " + selectedText);  
 
-//   if (selectedText.includes(endInfo[0].trim()) == false) {
-//       isEnd = 3;//association class
-//   }
-//   var menu = document.createElement('customContextMenu');
-//   //special menu for association class
-//   var rowContent = isEnd === 3 ?
-//   ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" role name"] :
-//   ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" multiplicity" , "Alter "+destination+" role name", "Delete the association"];
-//   //var rowContent = ["Alter " + className + " multiplicity", "Alter " + className + " role name", "Alter "+destination+" multiplicity" , "Alter "+destination+" role name", "Delete the association."];
-//   var rowFuncs = isEnd === 3 ?
-//         [
-//             "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
-//             "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
-//             "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 1 + "\")"
-//         ] :[
+  var otherClassName = Action.getGvClassNameFromNode(other);
+  var otherClassPos = Action.getGvPosition(positioningCode, otherClassName);
 
-        
-//       "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
-//       "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + startInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 0 + "\")",
-//       "Action.modifyMultiplicity(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[0] + "\",\"" + isEnd + "\")",
-//       "Action.modifyRoleName(\"" + jsInput + "\",\"" + selectedText + "\",\"" + endInfo[1] + "\",\"" + startInfo[0] + "\",\"" + 1 + "\")",
-//       "Action.deleteAssociation(\"" + jsInput + "\",\"" + selectedText + "\")"
-
-//   ];
-
-//   menu.style.zIndex = "1000";
-//   menu.style.border = "1px solid #ccc";
-//   menu.style.backgroundColor = "#f8f8f8";
-//   menu.style.padding = "5px";
-//   menu.style.position = "fixed";
-//   //add rows
-//   for (var i = 0; i < rowContent.length; i++) {
-//       var row = document.createElement("div");
-//       row.style.padding = "5px";
-//       row.style.borderRadius = "3px";
-//       row.style.cursor = "pointer";
-//       row.style.transition = "background-color 0.3s";
-//       row.textContent = rowContent[i];
-//       row.setAttribute('onclick', "javascript:" + rowFuncs[i]);
-//       // Highlight row on hover
-//       row.addEventListener("mouseover", function() {
-//           this.style.backgroundColor = "#ddd";
-//       });
-//       row.addEventListener("mouseout", function() {
-//           this.style.backgroundColor = "transparent";
-//       });
-
-//       //add row to context menu
-//       menu.appendChild(row);
-
-//   }
-
-//   //set menu location at mouse, while ensuring it is on screen
-//   var menuRect = menu.getBoundingClientRect();
-//   if (event.clientX + menuRect.width > window.innerWidth) {
-//       menu.style.right = (window.innerWidth - event.clientX) + "px";
-//   } else {
-//       menu.style.left = event.clientX + "px";
-//   }
-//   if (event.clientY + menuRect.height > window.innerHeight) {
-//       menu.style.bottom = (window.innerHieght - event.clientY) + "px";
-//   } else {
-//       menu.style.top = event.clientY + "px";
-//   }
-//   // Add a listener to hide the menu when the user clicks outside of it
-//   document.addEventListener('keydown', function hideMenu(e) {
-//     var prompt = document.getElementById("promptBox");
-//       if (e.target != menu && !menu.contains(e.target)&&e.key === "Escape") {
-//           if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
-
-//               document.removeEventListener('keydown', hideMenu);
-//               Action.removeContextMenu();
-
-//           } else {
-//               document.removeEventListener('keydown', hideMenu);
-//               Action.removeContextMenu();
-//           }
-//       }
-//   });
-//   document.addEventListener('mousedown', function hideMenu(e) {
-//       var prompt = document.getElementById("promptBox");
-//       if (e.target != menu && !menu.contains(e.target)) {
-//           if (prompt != null && e.target != prompt && !prompt.contains(e.target)) {
-
-//               document.removeEventListener('mousedown', hideMenu);
-//               Action.removeContextMenu();
-
-//           } else {
-//               document.removeEventListener('mousedown', hideMenu);
-//               Action.removeContextMenu();
-//           }
-//       }
-//   });
-//   document.body.appendChild(menu);
-// };
+  const withinX = Math.abs(otherClassPos.x - targetClassPos.x) <= Threshold;
+  const withinY = Math.abs(otherClassPos.y - targetClassPos.y) <= Threshold;
+  // console.log("target", targetClassPos.x, targetClassPos.y);
+  // console.log("other:",otherClassName, otherClassPos.x, otherClassPos.y);
+  // console.log("result",Math.abs(otherClassPos.x - targetClassPos.x),Math.abs(otherClassPos.y - targetClassPos.y) )
+  return withinX && withinY;
+  
+}
 
 
 Action.displayAssociMenu = function(event, associationLink) {
@@ -2701,10 +3121,8 @@ Action.displayAssociMenu = function(event, associationLink) {
 
   // associationDetails array contains the extracted information
   let indices = Action.selectAssociation(associationDetails[1]);
- // console.log("indices: " + indices);
 
   var detailsArray = associationDetails[1].split(',');
- // console.log("detailsArray: " + detailsArray);
 
   if (detailsArray.length == 4) {
       var destination = detailsArray[1].trim();
@@ -2717,80 +3135,19 @@ Action.displayAssociMenu = function(event, associationLink) {
       var endInfo = detailsArray[2].split(' ');
       var startInfo = detailsArray[2].split(' ');
       var className = detailsArray[0].trim();
-
   }
   
   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
   if (Page.codeMirrorOn) {
-      // scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-
-      // if (!scursor.findNext()) {
-      //     return; // false
-      // }
-
-      // // Have found declaration of class. Now have to search for the next class or end
-      // var theStart = scursor.from();
-
-      // var theEnd = new Object();
-
-      // // theEnd.line = Page.codeMirrorEditor.lineCount();
-      // theEnd.line = Page.codeMirrorEditor6.state.doc.lines;
-      // // console.warn("theEnd.line: " + theEnd.line);
-      // theEnd.ch = 9999;
-
-      // scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
-
-      // while (scursor.findNext()) {
-      //     var endObject = scursor.from();
-
-      //     //This is checking if the class declaration found was in a single line comment.
-      //     innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-      //     var commentFound = innerCursor.findPrevious();
-      //     if (commentFound && innerCursor.from().line == endObject.line) {
-      //         //The class declaration found was actually in a single line comment, keep searching
-      //         continue;
-      //     }
-
-      //     //Check if the found class declaration is in a multiline comment
-      //     innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-      //     //Search backwards for a /* or */
-      //     var commentFound = innerCursor.findPrevious();
-      //     if (commentFound) {
-      //         if (commentFound[0] === "/*") {
-      //             //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-
-      //             //Look for the exit marker
-      //             innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-      //             var commentFound = innerCursor.findNext();
-
-      //             if (commentFound) {
-      //                 var commentEnd = innerCursor.from();
-      //                 if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-      //                     //The class declaration found is in a multiline comment, keep looking
-      //                     continue;
-      //                 }
-      //             }
-      //         }
-      //     }
-
-      //     theEnd.line = endObject.line - 1;
-      //     theEnd.ch = 999;
-      //     break;
-      // }
-
-      // Page.codeMirrorEditor.setSelection(theStart, theEnd);
-      // var classCode = Page.codeMirrorEditor.getSelection(); //get the class code for where the association belong
+      //get the class code for where the association belong
       var selectionIndiciesCM6 = Action.selectItemCM6(searchCursor);
       var classCode = Page.codeMirrorEditor6.state.sliceDoc(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex) ;
-  //get the class code f
+      //get the class code f
       
-      if (debuggerFlag)
-      console.warn("classCode: " + classCode);
- 
-      // var classcode2 = page.codeMirrorEditor6.sliceDoc(theStart, theEnd);
-      //console.log("classcode2: " + classcode2);
-      // console.log("classCode: " + classCode);
+      if (clientDebuggerFlag){
+        console.warn("classCode: " + classCode);
+      }
 
   }
 
@@ -2799,16 +3156,11 @@ Action.displayAssociMenu = function(event, associationLink) {
   let isEnd = 1; //0 as start 1 as end
   let startIndex = indices.startIndex;
   let endIndex = indices.endIndex;
-  // Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor.getValue()), Action.indexToPos(endIndex, Page.codeMirrorEditor.getValue()))
-  // Page.codeMirrorEditor.setSelection(Action.indexToPos(startIndex, Page.codeMirrorEditor6.state.doc.toString() ), Action.indexToPos(endIndex, Page.codeMirrorEditor6.state.doc.toString()))
-  
-  // var selectedText = Page.codeMirrorEditor.getSelection();
-
-  // var selectedText = "miomio" ;
   var selectedText = Page.codeMirrorEditor6.state.sliceDoc(startIndex,endIndex) ;
 
-  if (debuggerFlag)
+  if (clientDebuggerFlag){
     console.warn("selectedText: " + selectedText);  
+  }
 
 
   if (selectedText.includes(endInfo[0].trim()) == false) {
@@ -3026,8 +3378,7 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
         // If it's the start multiplicity, simply replace the first occurrence
         updatedAssociationString = selectedText.replace(new RegExp(escapedOldMult), input.value.trim());
     }
-    // CM5 remove
-    //let orig=Page.codeMirrorEditor.getValue();
+
     let orig=Page.codeMirrorEditor6.state.doc.toString();;
     if((classyCode.includes(selectedText))==false){
       orig=orig.replace(selectedText,updatedAssociationString);
@@ -3038,21 +3389,18 @@ Action.modifyMultiplicity = function(classCode,selectedText, mult, isStart){
      orig=orig.replace(classyCode,modifiedClassCode);
     }
     
-    //Page.codeMirrorEditor.setValue(orig);
     Page.setCodeMirror6Text(orig);
 
     // Apply updatedAssociationString to the Umple code as needed
     
      Action.removeContextMenu();
      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-     // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
      
      prompt.remove(); // Remove the prompt after processing
      Action.selectMatchingText(updatedAssociationString);
   }
   else {
     // If the format is invalid, display a message
-    //alert("Invalid multiplicity format. Please enter a valid format (e.g., '*', '1', '0..1', '1..*', or '2..5').");
     input.focus(); // Re-focus on the input to allow the user to correct it
     prompt.appendChild(inputErrorMsg);
       }
@@ -3173,11 +3521,9 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
           updatedAssociationString = updatedStartPart+" "+parts[1].trim()+" "+parts[2].trim()+";";
         }
         else{
-          //Page.setFeedbackMessage("To add a role name at this end there must be a role name at the other end first");
           input.focus();
           prompt.appendChild(inputErrorMsg);
           return;
-          //updatedAssociationString = updatedStartPart+" "+parts[1].trim()+";";
         }
       } else {
         endParts = selectedText.split(";");
@@ -3189,7 +3535,6 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
       updatedAssociationString = selectedText.replace(roleName, newRoleName);
     }
     
-    //let orig=Page.codeMirrorEditor.getValue();
     let orig=Page.codeMirrorEditor6.state.doc.toString();
 
     if((classyCode.includes(selectedText))==false){
@@ -3201,16 +3546,13 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
      orig=orig.replace(classyCode,modifiedClassCode);
     }
     
-    //Page.codeMirrorEditor.setValue(orig);
-    //Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
     Page.setCodeMirror6Text(orig);
 
     // Apply updatedAssociationString to the Umple code as needed
     Action.removeContextMenu();
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-    // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate"); 
-     prompt.remove(); // Remove the prompt after processing
-     Action.selectMatchingText(updatedAssociationString);
+    prompt.remove(); // Remove the prompt after processing
+    Action.selectMatchingText(updatedAssociationString);
   });
   input.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
@@ -3223,7 +3565,6 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
 
    
  Action.deleteAssociation = function(classCode, selectedText) {
-  // let orig = Page.codeMirrorEditor.getValue();
   let orig = Page.codeMirrorEditor6.state.doc.toString();
 
   let classyCode = classCode.replaceAll("&#10", "\n").replaceAll("&#$quot", "\"");
@@ -3236,12 +3577,9 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
       orig = orig.replace(classyCode, modifiedClassCode);
   }
 
-  // Page.codeMirrorEditor.setValue(orig);
-  //Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
   Page.setCodeMirror6Text(orig);
   Action.removeContextMenu();
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-  // TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
 }
 
 Action.displayAttributeMenu = function(event, attributeName, attributeType) {
@@ -3259,7 +3597,6 @@ Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   //unstable - grabs class name
   elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
   
-  // var orig=Page.codeMirrorEditor.getValue();
   var orig=Page.codeMirrorEditor6.state.doc.toString();
   var chosenClass=Action.splitStates(orig);
   for(let i=0;i<chosenClass.length;i++){
@@ -3408,16 +3745,13 @@ document.addEventListener("mousedown", hider);
     let globalAttrRegex = new RegExp("\\b" + attributeName + "\\b", "g");
     modifiedClassCode = modifiedClassCode.replace(globalAttrRegex, input.value.trim());
 
-    //let orig=Page.codeMirrorEditor.getValue();
     let orig = Page.codeMirrorEditor6.state.doc.toString();
 
     orig=orig.replace(classyCode,modifiedClassCode);
-    //Page.codeMirrorEditor.setValue(orig);
     Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
     Action.removeContextMenu();
     TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-    //TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString() , "menuUpdate");
     document.removeEventListener("mousedown", hider);
     prompt.remove(); // Remove the prompt after processing
     }
@@ -3483,12 +3817,10 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
           modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType,  selectedType+" "+attributeName);
         }
         
-        //let orig=Page.codeMirrorEditor.getValue();
         let orig=Page.codeMirrorEditor6.state.doc.toString();
         orig=orig.replace(classyCode,modifiedClassCode);
         // Update the editor with the new code
 
-        //Page.codeMirrorEditor.setValue(orig);
         Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
         Action.removeContextMenu();
@@ -3515,13 +3847,11 @@ Action.deleteAttribute = function(classCode, className, attributeName, attribute
   modifiedClassCode = modifiedClassCode.replace(attrRegexWithType, "");
   modifiedClassCode = modifiedClassCode.replace(attrRegexWithoutType, "");
   
-  //let orig=Page.codeMirrorEditor.getValue();
   let orig = Page.codeMirrorEditor6.state.doc.toString();
   
   orig = orig.replace(classyCode,modifiedClassCode);
   
   // Update the editor with the new code
-  // Page.codeMirrorEditor.setValue(orig);
   Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: orig } });
 
   Action.removeContextMenu();
@@ -3533,7 +3863,6 @@ Action.deleteAttribute = function(classCode, className, attributeName, attribute
 
 Action.classSelected = function(obj)
 {
-  // console.log("Inside classSelected")
   var previouslySelected = Page.selectedClass;
   var newClassSelected = obj;
   
@@ -3608,9 +3937,8 @@ Action.unselectAll = function()
 
 Action.classClicked = function(event)
 {
+
   // DEBUG F
-  // console.log("Debug F1: Inside classClicked")
-  // console.log("Event: ", event)
   if (!Action.diagramInSync) return;
   Action.focusOn("umpleCanvas", true);
   Action.focusOn("umpleModelEditorText", false);
@@ -3677,9 +4005,8 @@ Action.classClicked = function(event)
 */
 Action.stateClicked = function(identifier)
 {
-    // console.log("Debug G1: Inside stateClicked")
-    // console.log("Identifier: ", identifier)
     if (!Action.diagramInSync) return;
+    GvDiagramEdit.selectedState = identifier;
     Action.focusOn("umpleCanvas", true);
     Action.focusOn("umpleModelEditorText", false);
     var idSplit=identifier.split("^*^");
@@ -3687,53 +4014,45 @@ Action.stateClicked = function(identifier)
     var identifierSM=idSplit[1]
     var identifierState=idSplit[2].replace("Entry:","").replace("Exit:","");
     identifierState=identifierState.replace("Exit:","");
-    // console.log("identifierState: ", identifierState)
     Action.unselectAll();
     Action.elementClicked = true;
     var selectionIndicies=null;
     var selectionIndiciesCM6=null;
     if(identifierState.includes('.')){ //nested case
 
-      if (debuggerFlag)
-      console.log("stateClicked - nested state case")
+      if (clientDebuggerFlag){
+        console.log("stateClicked - nested state case");
+      }
       
       identifierState=identifierState.split('.');
-      // Removing CM5
-      // selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState[0]);
       selectionIndiciesCM6=Action.selectStateInClassCM6(identifierClass,identifierSM,identifierState[0]);
-      // console.log("selectionIndicies: ", selectionIndicies)
-      // console.log("identifierState.length: ", identifierState.length)
       for(let i=1;i<identifierState.length;i++){
 
-        if (debuggerFlag)
-        console.log("Iterating states within Identified state ...")
+        if (clientDebuggerFlag){
+          console.log("Iterating states within Identified state ...");
+        }
 
-        // console.log("selectionIndiciesCM6.startIndex: ", selectionIndiciesCM6.startIndex)
-        // Removing CM5
-        // selectionIndicies=Action.selectStateInState(selectionIndicies.startIndex,selectionIndicies.endIndex,identifierState[i]);
         selectionIndiciesCM6=Action.selectStateInStateCM6(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex,identifierState[i]);
       }
     } else { //base case
 
-      if (debuggerFlag)
-      console.log("stateClicked - else - base case")
+      if (clientDebuggerFlag){
+        console.log("stateClicked - else - base case");
+      }
 
-      // Removing CM5
-      // selectionIndicies=Action.selectStateInClass(identifierClass,identifierSM,identifierState);
-      // console.log("selectionIndicies: ", selectionIndicies)
       selectionIndiciesCM6 = Action.selectStateInClassCM6(identifierClass,identifierSM,identifierState);
 
-      if (debuggerFlag)
-      console.log("selectionIndiciesCM6: ", selectionIndiciesCM6)
+      if (clientDebuggerFlag){
+        console.log("selectionIndiciesCM6: ", selectionIndiciesCM6);
+      }
 
     }
-    // Removing CM5
-    // Action.highlightByIndex(selectionIndicies.startIndex,selectionIndicies.endIndex);
+
     Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 
 
 
-   if (Page.selectedItem == "AddTransition")
+   if (Page.selectedItem == "AddTransition" && !Page.useGvStateDiagram)
     {
         if (DiagramEdit.newTransition == null)
         {
@@ -3778,8 +4097,6 @@ Action.associationClicked = function(event)
 */
 Action.transitionClicked = function(identifier)
 {
-  // console.log("Inside transitionClicked: ")
-  // console.log("identifier: ", identifier)
   if(!Action.diagramInSync) return;
   if(typeof identifier === "string" && identifier === null) return;
   Action.elementClicked = true;
@@ -3788,15 +4105,10 @@ Action.transitionClicked = function(identifier)
   let identifierState=id[3].split(".");
   
   dest=id[4];
-  //dest=id[4].split(".");
-  // Removing CM5
-  // var selection = Action.selectStateInClass(id[0],id[1],identifierState[0]);
   var selection = Action.selectStateInClassCM6(id[0],id[1],identifierState[0]);
   dest=id[4].split(".");
 
   for (var i=1;i<identifierState.length;i++){
-    // Removing CM5
-    // selection=Action.selectStateInState(selection.startIndex,selection.endIndex,identifierState[i]);
     selection=Action.selectStateInStateCM6(selection.startIndex,selection.endIndex,identifierState[i]);
   }
   let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
@@ -3811,37 +4123,18 @@ Action.transitionClicked = function(identifier)
   searchTerm=searchTerm.replaceAll("&&","&{1,2}");
   let pattern= new RegExp(searchTerm+".*->","s");
 
-  // Removing CM5
-  // let startIndex=Page.codeMirrorEditor.getValue().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
-  // let cText = Page.codeMirrorEditor.getValue().substr(startIndex);
   let startIndex=Page.codeMirrorEditor6.state.doc.toString().substr(selection.startIndex,selection.endIndex-selection.startIndex).search(pattern)+selection.startIndex;
   let cText = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex);
   let line = Action.findEOL(cText);
   let endIndex=startIndex+line.length;
-  // Removing CM5
-  // Action.highlightByIndex(startIndex,endIndex);
   Action.highlightByIndexCM6(startIndex,endIndex);
 
 // DEBUG THE FOLLOWING MAY NEED CHANGING FOR CM6  
   if(!(line.split("->").length - 1 === 1) ){
-    //alert("Please edit this complex transition in the textual code.");
     Page.setFeedbackMessage("Please edit this complex transition in the textual code.");
   }
   
- // Action.highlightByIndex(startIndex,endIndex);
   Action.highlightByIndexCM6(startIndex,endIndex);
-// DEBUG the following block commented out for unknown reason
-  /*
-  let code = Page.codeMirrorEditor.getValue().substring(startIndex, endIndex);
-   let pattern2 = new RegExp("^(.*?)(\\s*\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*->\\s*(\\[(.*?)\\])?(\\s*\\/\\s*\\{(.*?)\\})?\\s*(\\w+);?$", "s");
-   const match =code.trim().match(pattern2);
- 
-   // Extracting captured groups based on the updated pattern
-   let eventName = match[1].trim();
-   let guard = match[3] ? match[3].trim() : (match[7] ? match[7].trim() : null);
-   let action = match[5] ? match[5].trim() : (match[9] ? match[9].trim() : null);
-   let destinationState = match[10].trim();
-*/
 }
 Action.generalizationClicked = function(event)
 {
@@ -3946,7 +4239,6 @@ Action.associationSelected = function(obj)
 
 Action.transitionSelected = function(obj)
 {
-    // Page.setFeedbackMessage("transition selected");
     var isSelected = (obj == null) ? false : true;
     var updateObj = null;
 
@@ -4021,11 +4313,11 @@ Action.executeCode = function(languageStyle, languageName)
 {
   var executeCodeSelector = "#buttonExecuteCode";
   var actualLanguage = languageName;
-  
+
   jQuery(executeCodeSelector).showLoading();
   Action.ajax(
-    function(response) { 
-      Action.executeCodeCallback(response); 
+    function(response) {
+      Action.executeCodeCallback(response);
     },
     format("execute=true&language={0}&languageStyle={1}&model={2}", actualLanguage, languageStyle, Page.getModel()),
     "true"
@@ -4057,11 +4349,24 @@ Action.generateCode = function(languageStyle, languageName)
   {
     actualLanguage = languageName+"."+$("inputGenerateCode").value.split(":")[1];
   }
+  else if (languageName === "Mermaid")
+  {
+    // Keep Mermaid output aligned with the active diagram context in UmpleOnline.
+    if (Page.useGvStateDiagram)
+    {
+      actualLanguage = languageName + ".state";
+    }
+    else if (Page.useEditableClassDiagram || Page.useJointJSClassDiagram || Page.useGvClassDiagram)
+    {
+      actualLanguage = languageName + ".class";
+    }
+  }
   
   jQuery(generateCodeSelector).showLoading();
+
   Action.ajax(
-    function(response) { 
-      Action.generateCodeCallback(response, languageStyle, additionalCallback); 
+    function(response) {
+      Action.generateCodeCallback(response, languageStyle, additionalCallback);
     },
     format("language={0}&languageStyle={1}", actualLanguage, languageStyle),
     "true"
@@ -4230,6 +4535,11 @@ Action.drawGeneralizationLine = function(event, newGeneralization)
 
 Action.umpleCanvasClicked = function(event)
 {
+  if (Page.useGvStateDiagram && Page.selectedItem === "AddState") {
+    Action.elementClicked = false;
+    GvDiagramEdit.addState(event);
+    return;
+  }
   if (Action.elementClicked)
   {
     Action.elementClicked = false;
@@ -4281,6 +4591,7 @@ Action.directUpdateCommandCallback = function(response)
 // such as adding/deleting/moving/renaming class/assoc/generalization
 Action.updateUmpleTextCallback = function(response)
 {
+  // DEBUG
   // console.log("Inside updateUmpleTextCallback: ")
   if (!justUpdatetoSaveLater && !justUpdatetoSaveLaterForTextCallback){
     TabControl.getCurrentHistory().save(response.responseText, "TextCallback");
@@ -4289,10 +4600,6 @@ Action.updateUmpleTextCallback = function(response)
   Action.freshLoad = true;
   
   Page.setUmpleCode(response.responseText, Action.update.codeChange);
-  // DEBUG
-  // Page.setFeedbackMessage("update text callback -");
-  // Page.catFeedbackMessage(response.responseText);
-  // Page.catFeedbackMessage("-");
   
   Page.hideLoading();
 
@@ -4310,7 +4617,6 @@ Action.updateUmpleTextCallback = function(response)
   }
   
   //Uncomment for testing purposes only - to update the image after updating the text
-  //Action.updateUmpleDiagram();
 }
 
 Action.setExampleType = function setExampleType()
@@ -4320,6 +4626,11 @@ Action.setExampleType = function setExampleType()
   jQuery("#itemLoadExamples2").hide();
   jQuery("#itemLoadExamples3").hide();
   jQuery("#itemLoadExamples4").hide();
+  jQuery("#itemLoadExamples5").hide();
+  jQuery("#itemLoadExamples6").hide();
+  jQuery("#itemLoadExamples7").hide();
+  jQuery("#itemLoadExamples8").hide();
+
      
   if(Page.getExampleType() == "cdModels") {
      jQuery("#itemLoadExamples").show();
@@ -4333,6 +4644,22 @@ Action.setExampleType = function setExampleType()
      jQuery("#itemLoadExamples4").show();
      jQuery("#defaultExampleOption4").prop("selected",true);
    }
+   else if(Page.getExampleType() == "extra1ModelsAD") {
+     jQuery("#itemLoadExamples5").show();
+     jQuery("#defaultExampleOption5").prop("selected",true);
+   }
+   else if(Page.getExampleType() == "extra1ModelsEL") {
+     jQuery("#itemLoadExamples6").show();
+     jQuery("#defaultExampleOption6").prop("selected",true);
+   }
+   else if(Page.getExampleType() == "extra1ModelsMP") {
+     jQuery("#itemLoadExamples7").show();
+     jQuery("#defaultExampleOption7").prop("selected",true);
+   }
+   else if(Page.getExampleType() == "extra1ModelsQZ") {
+     jQuery("#itemLoadExamples8").show();
+     jQuery("#defaultExampleOption8").prop("selected",true);
+   }
    else {
      jQuery("#itemLoadExamples3").show();
      jQuery("#defaultExampleOption3").prop("selected",true);
@@ -4341,7 +4668,7 @@ Action.setExampleType = function setExampleType()
 
 Action.loadExample = function loadExample()
 {
-  var diagramType = this.dataset['diagramType'];
+  var requestDiagramType = this.dataset['diagramType'];
   var $option = jQuery(' option:selected', this);
   if ($option.hasClass('openUmprOption')) {
     // user wants to open the umpr repository
@@ -4358,18 +4685,44 @@ Action.loadExample = function loadExample()
   var diagramType="";
   if(Page.useGvStateDiagram) {
     diagramType="&diagramtype=state";
-    //jQuery("#genjava").prop("selected",true);
+    Action.setLiveView("sd");
   }
  else if(Page.useGvFeatureDiagram) {
     diagramType="&diagramtype=GvFeature";
-    //jQuery("#genjava").prop("selected",true);
+    Action.setLiveView("gfd");
+  }
+
+  else if(Page.useGvEntityRelationshipDiagram) {
+    diagramType="&diagramtype=entityRelationshipDiagram";
+    Action.setLiveView("erd");
+  }
+
+  else if(Page.useInstanceDiagram) {
+    diagramType="&diagramtype=instanceDiagram";
+    Action.setLiveView("instanceDiagram");
+  }
+
+
+  else if(Page.useStateTables) {
+    diagramType="&diagramtype=StateTables";
+    Action.setLiveView("stateTables");
+  }
+
+  else if(Page.useEventSequence) {
+    diagramType="&diagramtype=eventSequence";
+    Action.setLiveView("eventSequence");
   }
   else if(Page.useStructureDiagram) {
     diagramType="&diagramtype=structure&generateDefault=cpp";
-    //jQuery("#gencpp").prop("selected",true);
+    Action.setLiveView("std");
   }
   else {
+    diagramType="&diagramtype=GvClass";
+    if (typeof Action.setLiveView === "function") {
+    // This calls the logic we already have at the bottom of umple_action.js
+    Action.setLiveView("gcd");
     //jQuery("#genjava").prop("selected",true);
+    }
   }
   
   var largerSelector = "#buttonLarger";
@@ -4378,24 +4731,26 @@ Action.loadExample = function loadExample()
   
   umpleCanvasWidth = jQuery(canvasSelector).width();
   umpleCanvasHeight = jQuery(canvasSelector).height();
-  
-  var sel = Page.getSelectedExample();
-  
+
+  var shortExampleName, newURL;
   if (exampleName.startsWith("https")) {
-    var shortExampleName=exampleName.split("/").pop();
-    var newURL="?filename="+exampleName.substr(8)+".ump"+diagramType;
+    shortExampleName=exampleName.split("/").pop();
+    newURL="?filename="+exampleName.substr(8)+".ump"+diagramType;
   }
   else
   {
-    var shortExampleName=exampleName;
-    var newURL="?example="+shortExampleName+diagramType;
+    shortExampleName=exampleName;
+    newURL="?example="+shortExampleName+diagramType;
   }
-  
-  Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+shortExampleName+" example</a>");
+    // COMMENTED OUT SUBJECT TO INVESTIGATION
+    // Page.setSelectExample(shortExampleName + ".ump");
+    // window.history.pushState({}, "", newURL);
 
- // TODO - fix so history works nicely
- //   if(history.pushState) {history.pushState("", document.title, newURL);}
-           
+    setTimeout(function () { // Delay so it doesn't get erased
+    Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+shortExampleName+" example</a>");
+  }, 3000);
+  
+  // TODO - fix so history works nicely           
   jQuery("#inputExample").blur();
 }
 
@@ -4403,14 +4758,17 @@ Action.loadExampleCallback = function(response)
 {
   Action.freshLoad = true;
   Action.setjustUpdatetoSaveLater(true);
+  
+  //Update the code editor
   Page.setUmpleCode(response.responseText, function(){
     Page.hideLoading();
-    Action.updateUmpleDiagram()}
-  );
+    Action.updateUmpleDiagram();
+  }, true);
+ 
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
   TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
-}
+};
 
 Action.customSizeTyped = function()
 {
@@ -4491,29 +4849,6 @@ Action.keyboardShortcut = function(event)
   }
 }
 
-// codemirror 5
-// Action.getCaretPosition = function() // TIM Returns the line number
-// {
-  // // var ctrl = document.getElementById('umpleModelEditorText');
-  // var ctrl = document.getElementById('newEditor');
-  
-  // var CaretPos = Action.getInputSelectionStart(ctrl);
-  
-  // var nlcount=1;
-  // // var theCode=Page.getRawUmpleCode();
-  // var theCode=Page.getRawUmpleCodeCM6();
-
-  // for(var ch=0; ch<(CaretPos); ch++)
-  // {
-  //    if(theCode.charAt(ch)=="\n") nlcount++;
-     
-  //    // The following for debugging
-  //    if (Page.getAdvancedMode() == 2 && ch < 15) { // debug
-  //      Page.catFeedbackMessage("<"+ch+" "+theCode.charAt(ch)+"="+theCode.charCodeAt(ch)+"> ");
-  //    }
-  // }
-  // return nlcount;
-// }
 
 Action.getCaretPosition = function() // TIM Returns the line number
 {
@@ -4708,19 +5043,13 @@ Action.setCaretPosition = function(line)
   }
   if(Page.codeMirrorOn) 
   {
-   //  Page.codeMirrorEditor.setSelection({line: line-1,ch: 0},{line: line-1,ch: 999999});
-  //  Page.codeMirrorEditor6.dispatch({  
-  //   selection: { anchor: 0, head: 0 }, 
-  // })  
-   //  Page.codeMirrorEditor.focus();
    Page.codeMirrorEditor6.focus();
     
     // DEBUG
-    // console.log("Inside Action.setCaretPosition() ... Line number: ", line)
     /* codemirror 6 line highlight by number*/
     if(line >= 1) {
+      line = Math.min(line, Page.codeMirrorEditor6.state.doc.lines);
       const docPosition = Page.codeMirrorEditor6.state.doc.line(line).from;
-      // Page.codeMirrorEditor6.dispatch({effects: cm6.addLineHighlight.of(docPosition)})
       Page.codeMirrorEditor6.dispatch({
         selection: { anchor: docPosition },
         scrollIntoView: true
@@ -4739,7 +5068,6 @@ Action.setCaretPosition = function(line)
   }
   else
   {
-    // var theCode=Page.getRawUmpleCode();
     var theCode=Page.getRawUmpleCodeCM6();
 
     for(var ch=0; ch<theCode.length; ch++)
@@ -4809,6 +5137,39 @@ Action.promptAndExecuteTest = function() {
   return;
 }
 
+// Processes the filter
+// If an integer treated as hops
+// Then could be suboptions
+// Second could be mixsets to turn on
+// Otherwise treated as class filter patterns
+Action.setFilterFull = function(newFilter, doRedraw)
+{
+  // Reset first
+  Page.filterWordsOutput = "";
+  
+  var filterWordsInput=newFilter.split(" ").filter(word => word.trim() !== '');
+
+  filterWordsInput.forEach(function(foundFilterWord) {
+    var actualFilterWord = foundFilterWord;
+    if(foundFilterWord.startsWith("gvseparator=")) {
+      // transform any dot decimal so it does not get split in transfer
+      actualFilterWord=foundFilterWord.replace(".","@@@");
+    }
+    
+    Page.filterWordsOutput+=(actualFilterWord+"!@");
+
+  });
+  if(doRedraw) {
+    Action.redrawDiagram();
+  }
+}
+
+// version of the above that redraws by default
+Action.setFilter = function(newFilter)
+{
+  return Action.setFilterFull(newFilter, true);
+}
+
 // Adds a class with the given name. The class may already be there. Just edits the text.
 // This could be modified to 
 Action.directAddClass = function(className) {
@@ -4819,9 +5180,6 @@ Action.directAddClass = function(className) {
   Action.setjustUpdatetoSaveLater(false);
   Action.ajax(Action.directUpdateCommandCallback,format("action=addClass&actionCode={0}",umpleJson));
 
-  // After a pause to let the ajax return, then redraw the diagram.
-  // This could be put in a new callback
-  // setTimeout(function() {Action.redrawDiagram();},1000);
   return;
 }
 
@@ -4838,23 +5196,6 @@ Action.directAddAttribute = function(classname, attribute) {
   return;
 }
 
-
-// // Searches for the matching text in the code mirror editor
-// // Does not span lines
-// Action.selectMatchingText = function(text) 
-// {
-//   // Does nothing if CodeMirror is off
-//   if(Page.codeMirrorOn) {
-//     var scursor = Page.codeMirrorEditor.getSearchCursor(text);
-//     if(!scursor.findNext()) {
-//       return false;
-//     }
-//     Page.codeMirrorEditor.setSelection(scursor.from(),scursor.to());
-//     Page.codeMirrorEditor.focus();
-//     return true;
-//   }
-//   return false;
-// }
 
 Action.selectMatchingText = function(text) 
 {
@@ -4874,100 +5215,6 @@ Action.selectMatchingText = function(text)
   return false;
 }
 
-
-// // // Searches for the matching text in the code mirror 6
-// // // Does not span lines
-// // Action.selectMatchingText = function(text) 
-// // {
-// //   // Does nothing if CodeMirror is off
-// //   if(Page.codeMirrorOn) {
-// //     // var scursor = Page.codeMirrorEditor.getSearchCursor(text);
-// //      var scursor = Page.codeMirrorEditor6.getSearchCursor(text);
-// // if(scursor!=null) {
-// //   console.warn("scursor: ", scursor.startIndex, scursor.endIndex);
-// //   Action.highlightByIndexCM6(scursor.startIndex,scursor.endIndex);
-// //   Page.codeMirrorEditor6.focus();
-// //   return true;    }
-
-// //   }
-// //   return false;
-// // }
-
-// Removing CM5
-// Code behind highlighting of text
-// Action.selectItem = function(searchCursor, nextCursor)
-// {
-//   console.log("Debug F3: Inside selectItem")
-// 	if(Page.codeMirrorOn) {
-//     var scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-//     // console.log("scursor: ", scursor)
-//     // console.log("nextCursor: ", nextCursor)
-    
-//     if(!scursor.findNext()) {
-//       console.log("scursor.findNext() is NULL or EMPTY !")
-//       return; // false
-//     }
-
-//     // Have found declaration of class. Now have to search for the next class or end
-//     var start = scursor.from();
-
-//     var theEnd=new Object();
-
-//     theEnd.line = Page.codeMirrorEditor.lineCount();
-//     theEnd.ch = 9999;
-    
-//     scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor,scursor.to());
-    
-//     while(scursor.findNext())
-//     {
-//       var endObject = scursor.from();
-      
-//       //This is checking if the class declaration found was in a single line comment.
-//       innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-//       var commentFound = innerCursor.findPrevious();
-//       if(commentFound && innerCursor.from().line == endObject.line) 
-//       {
-//         //The class declaration found was actually in a single line comment, keep searching
-//         continue;
-//       }
-
-//       //Check if the found class declaration is in a multiline comment
-//       innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-//       //Search backwards for a /* or */
-//       var commentFound = innerCursor.findPrevious();
-//       if (commentFound) 
-//       {
-//         if(commentFound[0] === "/*") 
-//         {
-//           //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-          
-//           //Look for the exit marker
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-//           var commentFound = innerCursor.findNext();
-          
-//           if(commentFound) 
-//           {
-//             var commentEnd = innerCursor.from();
-//             if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch))
-//             {
-//               //The class declaration found is in a multiline comment, keep looking
-//               continue;
-//             }
-//           }
-//         }
-//       }
-      
-//       theEnd.line = endObject.line -1;
-//       theEnd.ch = 999;
-//       break;
-//     }
-//     // console.log("start of selection: ", start)
-//     // console.log("end of selection: ", theEnd)
-//     Page.codeMirrorEditor.setSelection(start,theEnd);
-//     return;    //true 
-//   }
-//   return;  // false - important do not return a value or it won't work in Firefox/Opera
-// }
 
 /*
   Called by Action.selectClass() or Action.selectMethod() or Action.selectState()
@@ -4990,7 +5237,6 @@ Action.selectItemCM6 = function(searchCursor){
     }
     let startIndex = 0;
     let endIndex = 0;
-    // console.log("currClass: ", currClass)
     try{
       startIndex=text.indexOf(currClass);
       endIndex=startIndex+currClass.length;
@@ -5000,12 +5246,6 @@ Action.selectItemCM6 = function(searchCursor){
 
     }
 
-
-
-    // let endIndex=startIndex+currClass.length +1;
-
-    // console.log("startIndex:", startIndex)
-    // console.log("endIndex:", endIndex)
     var outputObj={startIndex: startIndex,endIndex: endIndex};
     return outputObj;
   }
@@ -5015,370 +5255,12 @@ Action.selectItemCM6 = function(searchCursor){
 // Highlights the text of the method that is currently selected.
 Action.selectMethod = function(methodName, type, accessMod)
 {
-  // console.log("Inside selectMethod: ")
 	var scursor = new RegExp(accessMod+" "+type+" "+methodName+"(\\\s|[(])");
 	var ncursor = new RegExp("(public|protected|private|class) [A-Za-z]");
-
-  // Removing CM5
-  // Action.selectItem(scursor, ncursor);
 
   var selectionIndiciesCM6 = Action.selectItemCM6(scursor);
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex) ;
 }
-
-// CM5 Associated removed
-
-// Action.selectAssociation = function(associationDetails) {
-//   var detailsArray = associationDetails.split(',');
-//   var className = detailsArray[0];
-//   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
-//   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
-//   if (Page.codeMirrorOn) {
-//       scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-
-//       if (!scursor.findNext()) {
-//           return; // false
-//       }
-
-//       // Have found declaration of class. Now have to search for the next class or end
-//       var theStart = scursor.from();
-
-//       var theEnd = new Object();
-
-//       theEnd.line = Page.codeMirrorEditor.lineCount();
-//       theEnd.ch = 9999;
-
-//       scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
-
-//       while (scursor.findNext()) {
-//           var endObject = scursor.from();
-
-//           //This is checking if the class declaration found was in a single line comment.
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound && innerCursor.from().line == endObject.line) {
-//               //The class declaration found was actually in a single line comment, keep searching
-//               continue;
-//           }
-
-//           //Check if the found class declaration is in a multiline comment
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-//           //Search backwards for a /* or */
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound) {
-//               if (commentFound[0] === "/*") {
-//                   //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-
-//                   //Look for the exit marker
-//                   innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-//                   var commentFound = innerCursor.findNext();
-
-//                   if (commentFound) {
-//                       var commentEnd = innerCursor.from();
-//                       if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-//                           //The class declaration found is in a multiline comment, keep looking
-//                           continue;
-//                       }
-//                   }
-//               }
-//           }
-
-//           theEnd.line = endObject.line - 1;
-//           theEnd.ch = 999;
-//           break;
-//       }
-
-//       Page.codeMirrorEditor.setSelection(theStart, theEnd);
-//       //debug console.log("theStart: ", theStart);
-//       // console.log("theEnd: ", theEnd);
-//       var selectedText = Page.codeMirrorEditor.getSelection();//get the class code for where the association belong
-//   }
-//   var start, end;
-//   //for labelAssociation
-//   if (detailsArray.length > 3) {
-//       if (detailsArray[2].trim().includes(' ')) {
-//           // When there's a space, indicating the presence of a role name or additional details
-//           var array = detailsArray[2].split(' ');
-//           start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&"); // Assuming the start multiplicity is always in the 4th segment
-//           if (array.length == 2) {
-//               // When there's more than just the multiplicity and class name, indicating a role name is present
-//               end = array[0].trim() + ' ' + detailsArray[1].trim() + ' ' + array[1].trim();
-//           } else {
-//               end = array[0].trim() + ' ' + detailsArray[1].trim();
-//           }
-//       } else {
-//           // When there's no space, meaning no role name is present
-//           start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&");
-//           end = detailsArray[2].trim() + ' ' + detailsArray[1].trim();
-//       }
-
-
-//       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var patternString = startEscaped + "(?:\\s+sorted\\s+{.*?})?" + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped + "(?:\\s+sorted\\s+{.*?})?" + "\\s*;";
-
-//       var pattern = new RegExp(patternString, "g");
-//       var code = Page.codeMirrorEditor.getValue();
-//       //Finding matches using the constructed pattern
-//       var matches = selectedText.match(pattern);
-//       if (matches) {
-          
-//           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//           endIndex = startIndex + matches[0].length;
-//           Action.highlightByIndex(startIndex, endIndex);
-
-//           //debug : console.log("startIndex: ", startIndex);
-//           //debug : console.log("endIndex: ", endIndex);
-
-//           return { startIndex: startIndex, endIndex: endIndex };
-//       } else {
-//           if (endEscaped.startsWith("1")) { // this for simple writing association
-//               end = endEscaped.substring(2).trim();
-//               endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//               patternString = startEscaped + "\\s+" + endEscaped+ "\\s*;";
-//               pattern = new RegExp(patternString, "g");
-//               matches = selectedText.match(pattern);
-//               if (matches == null) {
-//                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
-//                   pattern = new RegExp(patternString, "g");
-//                   matches = selectedText.match(pattern);
-//               }
-              
-//               startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//               endIndex = startIndex + matches[0].length;
-//               Action.highlightByIndex(startIndex, endIndex);
-//               return { startIndex: startIndex, endIndex: endIndex };
-//           } else {
-//               if (startEscaped.trim().includes(' ')) {
-//                   var newstart = startEscaped.split(' ');
-//                   startEscaped = newstart[0].trim() + " " + className + " " + newstart[1].trim();
-//               } else {
-//                   startEscaped += " " + className;
-//               }
-              
-//               patternString = startEscaped + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped+ "\\s*;";
-//               pattern = new RegExp(patternString, "g");
-//               matches = code.match(pattern);
-//               if (matches == null) {
-//                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
-//                   pattern = new RegExp(patternString, "g");
-//                   matches = code.match(pattern);
-//               }
-              
-//               startIndex = code.indexOf(matches[0]);
-//               endIndex = startIndex + matches[0].length;
-//               Action.highlightByIndex(startIndex, endIndex);
-//               console.log("startIndex: ", startIndex);
-//               console.log("endIndex: ", endIndex);  
-//               return { startIndex: startIndex, endIndex: endIndex };
-
-//           }
-//       }
-
-//   } else { //for two label association
-
-//       var array = detailsArray[2].split(' ');
-//       start = array[0].trim();
-//       end = array[1].trim();
-
-//       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var patternString = startEscaped + ".*?" + endEscaped+ "\\s*;";
-//       var pattern = new RegExp(patternString, "g");
-//       var code = Page.codeMirrorEditor.getValue();
-//       //Finding matches using the constructed pattern
-//       var matches = selectedText.match(pattern);
-//       if (matches) {
-//           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//           endIndex = startIndex + matches[0].length;
-//           Action.highlightByIndex(startIndex, endIndex);
-//           return { startIndex: startIndex, endIndex: endIndex };
-//       }
-
-//   }
-// }
-
-
-// Action.selectAssociation = function(associationDetails) {
-//   var detailsArray = associationDetails.split(',');
-//   var className = detailsArray[0];
-//   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
-//   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
-//   if (Page.codeMirrorOn) {
-//       scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-
-//       if (!scursor.findNext()) {
-//           return; // false
-//       }
-
-//       // Have found declaration of class. Now have to search for the next class or end
-//       var theStart = scursor.from();
-
-//       var theEnd = new Object();
-
-//       theEnd.line = Page.codeMirrorEditor.lineCount();
-//       theEnd.ch = 9999;
-
-//       scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
-
-//       while (scursor.findNext()) {
-//           var endObject = scursor.from();
-
-//           //This is checking if the class declaration found was in a single line comment.
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound && innerCursor.from().line == endObject.line) {
-//               //The class declaration found was actually in a single line comment, keep searching
-//               continue;
-//           }
-
-//           //Check if the found class declaration is in a multiline comment
-//           innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-//           //Search backwards for a /* or */
-//           var commentFound = innerCursor.findPrevious();
-//           if (commentFound) {
-//               if (commentFound[0] === "/*") {
-//                   //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-
-//                   //Look for the exit marker
-//                   innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-//                   var commentFound = innerCursor.findNext();
-
-//                   if (commentFound) {
-//                       var commentEnd = innerCursor.from();
-//                       if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-//                           //The class declaration found is in a multiline comment, keep looking
-//                           continue;
-//                       }
-//                   }
-//               }
-//           }
-
-//           theEnd.line = endObject.line - 1;
-//           theEnd.ch = 999;
-//           break;
-//       }
-
-//       Page.codeMirrorEditor.setSelection(theStart, theEnd);
-//       //debug console.log("theStart: ", theStart);
-//       // console.log("theEnd: ", theEnd);
-//       var selectedText = Page.codeMirrorEditor.getSelection();
-//       //get the class code for where the association belong
-//   }
-//   var start, end;
-//   //for labelAssociation
-//   if (detailsArray.length > 3) {
-//       if (detailsArray[2].trim().includes(' ')) {
-//           // When there's a space, indicating the presence of a role name or additional details
-//           var array = detailsArray[2].split(' ');
-//           start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&"); // Assuming the start multiplicity is always in the 4th segment
-//           if (array.length == 2) {
-//               // When there's more than just the multiplicity and class name, indicating a role name is present
-//               end = array[0].trim() + ' ' + detailsArray[1].trim() + ' ' + array[1].trim();
-//           } else {
-//               end = array[0].trim() + ' ' + detailsArray[1].trim();
-//           }
-//       } else {
-//           // When there's no space, meaning no role name is present
-//           start = detailsArray[3].trim(); //.replace(/[\*+?.()|[\]\\{}^$]/g, "\\$&");
-//           end = detailsArray[2].trim() + ' ' + detailsArray[1].trim();
-//       }
-
-
-//       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var patternString = startEscaped + "(?:\\s+sorted\\s+{.*?})?" + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped + "(?:\\s+sorted\\s+{.*?})?" + "\\s*;";
-
-//       var pattern = new RegExp(patternString, "g");
-//       // var code = Page.codeMirrorEditor.getValue();
-//       var code = Page.codeMirrorEditor6.state.doc.toString();
-//       //Finding matches using the constructed pattern
-//       var matches = selectedText.match(pattern);
-//       if (matches) {
-          
-//           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//           endIndex = startIndex + matches[0].length;
-          
-//           Action.highlightByIndexCM6(startIndex, endIndex);
-
-//           //debug : console.log("startIndex: ", startIndex);
-//           //debug : console.log("endIndex: ", endIndex);
-
-//           return { startIndex: startIndex, endIndex: endIndex };
-//       } else {
-//           if (endEscaped.startsWith("1")) { // this for simple writing association
-//               end = endEscaped.substring(2).trim();
-//               endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//               patternString = startEscaped + "\\s+" + endEscaped+ "\\s*;";
-//               pattern = new RegExp(patternString, "g");
-//               matches = selectedText.match(pattern);
-//               if (matches == null) {
-//                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
-//                   pattern = new RegExp(patternString, "g");
-//                   matches = selectedText.match(pattern);
-//               }
-              
-//               startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//               endIndex = startIndex + matches[0].length;
-//               Action.highlightByIndexCM6(startIndex, endIndex);
-//               return { startIndex: startIndex, endIndex: endIndex };
-//           } else {
-//               if (startEscaped.trim().includes(' ')) {
-//                   var newstart = startEscaped.split(' ');
-//                   startEscaped = newstart[0].trim() + " " + className + " " + newstart[1].trim();
-//               } else {
-//                   startEscaped += " " + className;
-//               }
-              
-//               patternString = startEscaped + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped+ "\\s*;";
-//               console.log("patternString: ", patternString);
-
-//               pattern = new RegExp(patternString, "g");
-//               matches = code.match(pattern);
-//               console.warn("matches: ", matches);
-//               if (matches == null) {
-//                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
-//                   pattern = new RegExp(patternString, "g");
-//                   matches = code.match(pattern);
-//               }
-              
-//               startIndex = code.indexOf(matches[0]);
-//               endIndex = startIndex + matches[0].length;
-//               Action.highlightByIndexCM6(startIndex, endIndex);
-//               //console.log("startIndex: ", startIndex);
-//               //console.log("endIndex: ", endIndex);  
-//               return { startIndex: startIndex, endIndex: endIndex };
-
-//           }
-//       }
-
-//   } else { //for two label association
-
-//       var array = detailsArray[2].split(' ');
-//       start = array[0].trim();
-//       end = array[1].trim();
-
-//       var startEscaped = start.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-//       var patternString = startEscaped + ".*?" + endEscaped+ "\\s*;";
-//       var pattern = new RegExp(patternString, "g");
-//       // var code = Page.codeMirrorEditor.getValue();
-//       var code = Page.codeMirrorEditor6.state.doc.toString();
-//       //Finding matches using the constructed pattern
-//       var matches = selectedText.match(pattern);
-//       if (matches) {
-//           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
-//           endIndex = startIndex + matches[0].length;
-//           Action.highlightByIndexCM6(startIndex, endIndex);
-//           return { startIndex: startIndex, endIndex: endIndex };
-//       }
-
-//   }
-// }
-
-
-
-
 
 
 Action.selectAssociation = function(associationDetails) {
@@ -5387,90 +5269,9 @@ Action.selectAssociation = function(associationDetails) {
   var searchCursor = new RegExp("(associationClass|class|interface|trait) " + className + "($|\\\s|[{])");
   var nextCursor = new RegExp("(class|interface|trait) [A-Za-z]");
   if (Page.codeMirrorOn) {
-  //     scursor = Page.codeMirrorEditor.getSearchCursor(searchCursor);
-  //     console.log("scursor: ", scursor)
-  //     scursor2 = new cm6.RegExpCursor(Page.codeMirrorEditor6.state.doc, searchCursor);
-  //     console.log("scursor2: ", scursor2);
-
-  //     if (!scursor.findNext()) {
-  //         return; // false
-  //     }
-
-  //     // Have found declaration of class. Now have to search for the next class or end
-  //     var theStart = scursor.from();
-  //     console.log("theStart: ", theStart);
-  //     var theStart2 = scursor.from();
-  //     console.log("theStart2: ", theStart2);
-
-
-  //     var theEnd = new Object();
-
-  //     //theEnd.line = Page.codeMirrorEditor.lineCount();
-  //     theEnd.line = Page.codeMirrorEditor6.state.doc.lines;
-  //     theEnd.ch = 9999;
-
-  //     // console.log("theEnd: ", scursor.to());
-  //     scursor = Page.codeMirrorEditor.getSearchCursor(nextCursor, scursor.to());
-  //     // console.log("scursor: ", scursor)
-  //     scursor2 = new cm6.RegExpCursor(Page.codeMirrorEditor6.state.doc, nextCursor,{ from: scursor.to() });
-  //     console.log("scursor2: ", scursor2);  
-
-  //     while (scursor2.next()) {
-
-  //         var endObject2 = scursor2.value.from;
-  //         console.warn("endObject2: ", endObject2);
-
-  //         //This is checking if the class declaration found was in a single line comment.
-  //         // innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("//"), endObject);
-  //         innerCursor2 = new cm6.RegExpCursor(Page.codeMirrorEditor6.state.doc, new RegExp("//"),{ from: endObject2 });
-  //         console.log("innerCursor2: ", innerCursor2);
-
-  //         // //var commentFound = innerCursor.findPrevious();
-  //         //  var commentFound2 = innerCursor2.findPrevious();
-  //         // console.log("commentFound2: ", commentFound2);
-
-  //         // if (commentFound && innerCursor.from().line == endObject.line) {
-  //         //     //The class declaration found was actually in a single line comment, keep searching
-  //         //     continue;
-  //         // }
-
-  //         // //Check if the found class declaration is in a multiline comment
-  //         // innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("/\\*|\\*/"), endObject);
-  //         // //Search backwards for a /* or */
-  //         // var commentFound = innerCursor.findPrevious();
-  //         // if (commentFound) {
-  //         //     if (commentFound[0] === "/*") {
-  //         //         //Note, if an exit multiline comment is found first, then the class declaration cannot be in a comment
-
-  //         //         //Look for the exit marker
-  //         //         innerCursor = Page.codeMirrorEditor.getSearchCursor(new RegExp("\\*/"), endObject);
-  //         //         var commentFound = innerCursor.findNext();
-
-  //         //         if (commentFound) {
-  //         //             var commentEnd = innerCursor.from();
-  //         //             if (commentEnd.line > endObject.line || (commentEnd.line == endObject.line && commentEnd.ch >= endObject.ch)) {
-  //         //                 //The class declaration found is in a multiline comment, keep looking
-  //         //                 continue;
-  //         //             }
-  //         //         }
-  //         //     }
-  //         // }
-
-  //         theEnd.line = endObject2.line - 1;
-  //         theEnd.ch = 999;
-  //         break;
-  //     }
-
-  //     // Page.codeMirrorEditor.setSelection(theStart, theEnd);
-  //     Action.highlightByIndexCM6(theStart2, theEnd) ;
-
-  //     // setSelection(theStart2, theEnd);
-  //     //debug console.log("theStart: ", theStart);
-  //     // console.log("theEnd: ", theEnd);
 
    var selectionIndiciesCM6 = Action.selectItemCM6(searchCursor);
-  var selectedText = Page.codeMirrorEditor6.state.sliceDoc(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex) ;//get the class code for where the association belong
-  //     //get the class code for where the association belong
+   var selectedText = Page.codeMirrorEditor6.state.sliceDoc(selectionIndiciesCM6.startIndex,selectionIndiciesCM6.endIndex) ;//get the class code for where the association belong
   }
   
   var start, end;
@@ -5498,7 +5299,6 @@ Action.selectAssociation = function(associationDetails) {
       var patternString = startEscaped + "(?:\\s+sorted\\s+{.*?})?" + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped + "(?:\\s+sorted\\s+{.*?})?" + "\\s*;";
 
       var pattern = new RegExp(patternString, "g");
-      // var code = Page.codeMirrorEditor.getValue();
       var code = Page.codeMirrorEditor6.state.doc.toString();
       //Finding matches using the constructed pattern
       var matches = selectedText.match(pattern);
@@ -5507,11 +5307,7 @@ Action.selectAssociation = function(associationDetails) {
           startIndex = code.indexOf(selectedText) + selectedText.indexOf(matches[0]);
           endIndex = startIndex + matches[0].length;
           
-          // Action.highlightByIndexCM6(1,5);
           Action.highlightByIndexCM6(startIndex, endIndex);
-
-          //debug : console.log("startIndex: ", startIndex);
-          //debug : console.log("endIndex: ", endIndex);
 
           return { startIndex: startIndex, endIndex: endIndex };
       } else {
@@ -5536,8 +5332,6 @@ Action.selectAssociation = function(associationDetails) {
               }
 
               Action.highlightByIndexCM6(startIndex, endIndex);
-              // Action.highlightByIndexCM6(840, 850);
-              //  console.warn(startIndex, endIndex);
               return { startIndex: startIndex, endIndex: endIndex };
           } else {
               if (startEscaped.trim().includes(' ')) {
@@ -5548,11 +5342,9 @@ Action.selectAssociation = function(associationDetails) {
               }
               
               patternString = startEscaped + "(\\s*<-\\s*|\\s*><\\s*|\\s*--\\s*|\\s*->\\s*|\\s*<@>\\-\\s*|\\s*-\\<@>\\s*)" + endEscaped+ "\\s*;";
-              // console.log("patternString: ", patternString);
 
               pattern = new RegExp(patternString, "g");
               matches = code.match(pattern);
-              // console.warn("matches: ", matches);
               if (matches == null) {
                   patternString = startEscaped + "\\s+.*?" + endEscaped+ "\\s*;";
                   pattern = new RegExp(patternString, "g");
@@ -5567,12 +5359,7 @@ Action.selectAssociation = function(associationDetails) {
               } catch (error) {
                 console.log("Please wait a little more for diagram updates, and try again.") ;
               }
-              Action.highlightByIndexCM6(startIndex, endIndex);
-              // Action.highlightByIndexCM6(1, 7);
-
-              //console.log("startIndex: ", startIndex);
-              //console.log("endIndex: ", endIndex);  
-
+              Action.highlightByIndexCM6(startIndex, endIndex); 
               return { startIndex: startIndex, endIndex: endIndex };
 
           }
@@ -5588,7 +5375,6 @@ Action.selectAssociation = function(associationDetails) {
       var endEscaped = end.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       var patternString = startEscaped + ".*?" + endEscaped+ "\\s*;";
       var pattern = new RegExp(patternString, "g");
-      // var code = Page.codeMirrorEditor.getValue();
       var code = Page.codeMirrorEditor6.state.doc.toString();
       //Finding matches using the constructed pattern
       var matches = selectedText.match(pattern);
@@ -5605,26 +5391,41 @@ Action.selectAssociation = function(associationDetails) {
 // Highlights the text of the class that is currently selected.
 Action.selectClass = function(className) 
 {
-  // console.log("Inside selectClass: ")
 	var scursor = new RegExp("(associationClass|class|interface|trait) "+className+"($|\\\s|[{])");
 	var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
-
-  // Removing CM5
-  // Action.selectItem(scursor, ncursor);
 
   var selectionIndiciesCM6 = Action.selectItemCM6(scursor);
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 }
 
+// Highlights the text of the attribute that is currently selected.
+Action.selectAttribute = function(className, attributeName)
+{
+  var searchCursor = new RegExp("(associationClass|class|interface|trait) "+className+"($|\\\s|[{])");
+  var pattern = new RegExp("(^|[;{}])[^\\S\\n]*([\\w<>\\[\\],.]+[^\\S\\n]+)*"+attributeName+"\\s*[=;]", "m");
+
+  if(Page.codeMirrorOn) {
+    var text = Page.codeMirrorEditor6.state.doc.toString();
+    let splitBuffer=Action.splitStates(text);
+    for(let i=0;i<splitBuffer.length;i++){
+      if(splitBuffer[i].search(searchCursor)==0){
+        let matches=splitBuffer[i].match(pattern);
+        if(matches){
+          let startIndex=text.indexOf(splitBuffer[i])+matches.index;
+          Action.highlightByIndexCM6(startIndex, startIndex+matches[0].length);
+          return;
+        }
+      }
+    }
+    Action.selectClass(className);
+  }
+}
+
 // Highlights the text of the state that is currently selected.
 Action.selectState = function(stateName)
 {
-  // console.log("Inside selectState: ")
     var scursor = new RegExp("(class|interface|trait) "+stateName+"($|\\\s|[{])");
     var ncursor = new RegExp("(class|interface|trait) [A-Za-z]");
-
-  // Removing CM5
-  // Action.selectItem(scursor, ncursor);
 
   var selectionIndiciesCM6 = Action.selectItemCM6(scursor);
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
@@ -5690,58 +5491,6 @@ Action.indexToPos = function(index,inputText){
   return  output;
 }
 
-// Removing CM5
-// Action.selectStateInClass = function(className, smName, stateName)
-// {
-//   console.log("Debug: Inside selectStateInClass")
-//   if(Page.codeMirrorOn) {
-//     let text = Page.codeMirrorEditor.getValue();
-//     let splitBuffer=Action.splitStates(text);
-//     let currClass=null;
-//     let pattern = new RegExp("(?:class|queued)\\s+"+className,"");
-//     for(let i=0;i<splitBuffer.length;i++){
-//       if(splitBuffer[i].search(pattern)==0){
-//         currClass=splitBuffer[i]; //set currClass to class code
-//         break;
-//       }
-//     }
-//     splitBuffer=Action.splitStates(currClass.substr(currClass.indexOf("{")+1)); //split class into un-nested SMs
-//     let currSM=null;
-//     for(let i=0;i<splitBuffer.length;i++){
-//       let query=new RegExp("(?:queued\\s*)?"+smName);
-//       if(splitBuffer[i].search(query)==0){
-//         currSM=splitBuffer[i]; //set currSM to un-nested SM code
-//         break;
-//       }
-//     }
-//     splitBuffer=Action.splitStates(currSM.substr(currSM.indexOf("{")+1));
-//     if (splitBuffer!=null) {
-//       let states = splitBuffer;
-//       let finState=null;
-//       for(let i=0;i<states.length;i++){
-//         if(states[i].search(stateName)==0){
-//           finState=states[i];
-//           break;
-//         }
-//       }
-//       let startIndex=text.indexOf(currClass);//index of class start
-//       let endIndex=startIndex+currClass.length;
-//       startIndex=text.substr(startIndex,endIndex).indexOf(currSM)+startIndex;//match[1] contains the SM definition+name
-//       endIndex=startIndex+currSM.length;
-//       startIndex=text.substr(startIndex,endIndex).indexOf(finState)+startIndex;//finds target state definition within target class and state machine
-//       endIndex=startIndex+finState.length;
-//       var outputObj={startIndex:startIndex,endIndex:startIndex+finState.length};
-//       return outputObj;
-      
-//     } else {
-//       console.log("No matching state found with regex:"+pattern);
-//     }
-//   } else {
-//     console.log("No matching class and state machine found for class: "+className+" and sm "+smName);
-//   }
-//   return null;
-// }
-
 /*
   Returns the start and ending position of state inside a state machine in a specific class
   Parameters: stateName - state that has to be searched
@@ -5750,7 +5499,6 @@ Action.indexToPos = function(index,inputText){
 */
 Action.selectStateInClassCM6 = function(className, smName, stateName) 
 {
-  // console.log("Debug: Inside selectStateInClass CM6");
   if(Page.codeMirrorOn) {
     var text = Page.codeMirrorEditor6.state.doc.toString();
     let splitBuffer=Action.splitStates(text);
@@ -5762,7 +5510,6 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
         break;
       }
     }
-    // console.log("currClass: ", currClass)
     splitBuffer=Action.splitStates(currClass.substr(currClass.indexOf("{")+1)); //split class into un-nested SMs
     let currSM=null;
     for(let i=0;i<splitBuffer.length;i++){
@@ -5772,7 +5519,6 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
         break;
       }
     }
-    // console.log("currSM: ", currSM)
     splitBuffer=Action.splitStates(currSM.substr(currSM.indexOf("{")+1));
     if (splitBuffer!=null) {
       let states = splitBuffer;
@@ -5785,14 +5531,10 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
       }
       let startIndex=text.indexOf(currClass);//index of class start
       let endIndex=startIndex+currClass.length;
-      // console.log("initial startIndex: ", startIndex)
-      // console.log("initial endIndex: ", endIndex)
       startIndex=text.substr(startIndex,endIndex).indexOf(currSM)+startIndex;//match[1] contains the SM definition+name
       endIndex=startIndex+currSM.length;
       startIndex=text.substr(startIndex,endIndex).indexOf(finState)+startIndex;//finds target state definition within target class and state machine
       endIndex=startIndex+finState.length;
-      // console.log("startIndex: ", startIndex)
-      // console.log("endIndex: ", endIndex)
       var outputObj={startIndex:startIndex,endIndex:startIndex+finState.length};
       return outputObj;
       
@@ -5805,39 +5547,12 @@ Action.selectStateInClassCM6 = function(className, smName, stateName)
   return null; 
 }
 
-// Removing CM5
-// Action.selectStateInState = function(startIndex,endIndex,target){
-//   console.log("Debug: Inside selectStateInState")
-//   // console.log("Parameters: ", startIndex, endIndex, target)
-//   let temp=Page.codeMirrorEditor.getValue().substr(startIndex,endIndex-startIndex);
-//   // console.log("code for NestedState: ", temp)
-//   let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
-//   // console.log("states: ", states)
-//   var stateFin=null;
-//   for(let i=0;i<states.length;i++){
-//     if(states[i].startsWith(target)){
-//       stateFin=states[i];
-//       break;
-//     }
-//   }
-//   // console.log("stateFin: ", stateFin)
-//   // console.log("startIndex: ", startIndex)
-//   let outputStart=temp.indexOf(stateFin)+startIndex;
-//   let outputEnd=outputStart+stateFin.length;
-//   let outputObj={startIndex:outputStart,endIndex:outputEnd};
-//   // console.log("outputObj: ", outputObj)
-//   return outputObj;
-// }
-
 /*
   Returns the start and ending position of target state within given indices range
 */
 Action.selectStateInStateCM6 = function(startIndex,endIndex,target){
-  // console.log("Debug: Inside selectStateInState CM6")
   var temp = Page.codeMirrorEditor6.state.doc.toString().substr(startIndex,endIndex-startIndex);
-  // console.log("code for NestedState: ", temp)
   let states=Action.splitStates(temp.substr(temp.indexOf("{")+1));
-  // console.log("states: ", states)
   var stateFin=null;
   for(let i=0;i<states.length;i++){
     if(states[i].startsWith(target)){
@@ -5845,7 +5560,6 @@ Action.selectStateInStateCM6 = function(startIndex,endIndex,target){
       break;
     }
   }
-  // console.log("stateFin: ", stateFin)
   let outputStart=temp.indexOf(stateFin)+startIndex;
   let outputEnd=outputStart+stateFin.length;
   let outputObj={startIndex:outputStart,endIndex:outputEnd};
@@ -5863,29 +5577,17 @@ Action.highlightByIndex = function(startIndex,endIndex){
               Exact position of start and end characters of code block to be highlighted in code-editor
 */
 Action.highlightByIndexCM6 = function(startIndex,endIndex){
-  // console.log("Inside highlightByIndexCM6: Highlighting code ...")
   let startSelection = Action.indexToPos(startIndex,Page.codeMirrorEditor6.state.doc.toString());
   let startDocPosition = Page.codeMirrorEditor6.state.doc.line(startSelection.line +1).from;
-  // console.log("selection start: ", startSelection)
-  // console.log("selection start Document Position: ", startDocPosition)
   let endSelection = Action.indexToPos(endIndex,Page.codeMirrorEditor6.state.doc.toString());
-  let endDocPosition = Page.codeMirrorEditor6.state.doc.line(endSelection.line +2).from;
-  // console.log("selection end: ", endSelection)
-  // console.log("selection end Document Position: ", endDocPosition)
-
-  // following code selects first line of intended block
-  // Page.codeMirrorEditor6.dispatch({ 
-  //   selection: { anchor: startDocPosition }, 
-  //   scrollIntoView: true 
-  // })
+  let endLine = Math.min(endSelection.line +2, Page.codeMirrorEditor6.state.doc.lines);
+  let endDocPosition = Page.codeMirrorEditor6.state.doc.line(endLine).from;
 
   // following is for multiple selection ranges
   Page.codeMirrorEditor6.dispatch({
     selection: cm6.EditorSelection.create([
       // Reversing selection to keep the active line on the top;
       cm6.EditorSelection.range(endDocPosition,startDocPosition),
-      // cm6.EditorSelection.range(endDocPosition, endDocPosition+1),
-      // cm6.EditorSelection.cursor(endDocPosition+1)
     ]),
     scrollIntoView: true
   })
@@ -5922,17 +5624,38 @@ Action.delayedFocus = function(ms)
 
 Action.updateLineNumberDisplay = function()
 {
-  // console.log("Inside Action.updateLineNumberDisplay()...")
   jQuery("#linenum").val(Action.getCaretPosition());
-    // jQuery("#linenum").val(Page.codeMirrorEditor6.state.doc.lineAt(Page.codeMirrorEditor6.state.selection.main.head).number);
-
 }
+
+Action.goToCrossFileError = function(filename, line)
+{
+  var base = filename.split('/').pop().replace(/\.ump\s*$/i, '');
+  var tabId = null;
+
+  Object.keys(TabControl.tabs).forEach(function(id) {
+    if (TabControl.tabs[id].name === base) {
+      tabId = id;
+    }
+  });
+
+  if (tabId !== null && String(tabId) !== String(TabControl.activeTab)) {
+    TabControl.selectTab(tabId);
+  }
+
+  setTimeout(function() {
+    Action.setCaretPosition(parseInt(line, 10));
+    Action.updateLineNumberDisplay();
+  }, 100);
+
+  return false;
+};
 
 Action.umpleTyped = function(eventObject)
 {
   // DEBUG
-  if (debuggerFlag)
-  console.log("Inside Action.umpleTyped()...")
+  if (clientDebuggerFlag){
+    console.log("Inside Action.umpleTyped()...");
+  }
 
   // This function is not called by CodeMirror
   // See umpleCodeMirrorTypingActivity if CodeMirror is on (as it normally is)
@@ -5952,20 +5675,18 @@ Action.umpleTyped = function(eventObject)
 }
 
 Action.umpleCodeMirrorCursorActivity = function() {
-  // console.log("Inside Action.umpleCodeMirrorCursorActivity()...")
-  // Removing CM5
-  // var line = Page.codeMirrorEditor.getCursor(true).line+1;
   var docPosition = Page.codeMirrorEditor6.state.selection.main.head;
   var line = Page.codeMirrorEditor6.state.doc.lineAt(docPosition);
   jQuery("#linenum").val(line.number);
 }
 
-// Called whenever any text is changed in codemirror 5 or codemirror 6
+// Called whenever any text is changed in codemirror 6
 Action.umpleCodeMirrorTypingActivity = function(editorThatChanged) {
   
   // DEBUG
-  if (debuggerFlag)
-  console.log("Inside Action.umpleCodeMirrorTypingActivity...")
+  if (clientDebuggerFlag){
+    console.log("Inside Action.umpleCodeMirrorTypingActivity...");
+  }
 
   if(Action.freshLoad == false) {
     // Start/restart timer to eventually process this by triggerink disk save and diagram update
@@ -6042,8 +5763,9 @@ Action.removeComments = function(str)
 // ends up being called after a 3s gap in calls to this.
 Action.umpleTypingActivity = function(target) {
 
-  if (debuggerFlag)
-  console.log("Inside Action.umpleTypingActivity()...")
+  if (clientDebuggerFlag){
+    console.log("Inside Action.umpleTypingActivity()...");
+  }
 
   if (Action.manualSync && Action.diagramInSync)
   {
@@ -6055,44 +5777,16 @@ Action.umpleTypingActivity = function(target) {
   {
     clearTimeout(Action.oldTimeout);
   }
-  if(target == "diagramEdit") Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', 500);
-  else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
-}
 
-var checkComplexityCooldown = 300000;
-var checkComplexityLastUsage = 0;
-var checkComplexityFeedbackMessage = 'Suggestion: Since there are so many classes, <a href="javascript:Page.clickShowGvClassDiagram()">switch to automated layout</a> (G).';
-var checkComplexityDisplayTime = 120000;
-Action.checkComplexity = function()
-{
-	if((Date.now() - checkComplexityCooldown) < checkComplexityLastUsage)
-	{
-		return;
-	}
-	var editorText = jQuery("#newEditor").val();
-	// var editorText = jQuery("#umpleModelEditorText").val();
-	var matches = editorText.match(/class( |\n)((.|\n)*?){/g);
-	if(matches == null)
-	{
-		return;
-	}
-	var numMatches = matches.length;
-	if(numMatches > 10)
-	{
-		Page.setFeedbackMessage(checkComplexityFeedbackMessage);
-		checkComplexityLastUsage = Date.now();
-		setTimeout(Action.removeCheckComplexityWarning, checkComplexityDisplayTime);
-	}
-}
+  const delay = (target === "diagramEdit") ? 500 : Action.waiting_time;
 
-//since there is a cooldown on when checkComplexity is called
-//removeCheckComplexityWarning will only be called after the 5 minute cooldown has passed.
-Action.removeCheckComplexityWarning = function()
-{
-	if(Page.getFeedbackMessage() == checkComplexityFeedbackMessage)
-	{
-		Page.setFeedbackMessage("");
-	}
+  const thisTimer = setTimeout(() => {
+    if (Action.oldTimeout !== thisTimer) return;
+    Action.oldTimeout = null;
+    Action.processTyping(target, false);
+  }, delay);
+
+  Action.oldTimeout = thisTimer;
 }
 
 // Called after a 3s delay as controlled by umpleTypingActivity when
@@ -6100,32 +5794,21 @@ Action.removeCheckComplexityWarning = function()
 // Target can be diagramEdit (when diagram changed), newEditor for CM6, codeMirrorEditor (will be obsolete)
 Action.processTyping = function(target, manuallySynchronized, currentCursorPosition)
 {
-  // DEBUG
-  // if(this.lastPositionofCursor != null){
-  // this.lastPositionofCursor = currentCursorPosition;
-  // }
 
-  if (debuggerFlag)
-  console.log("Inside Action.processTyping ...", target)
+  if (clientDebuggerFlag){
+    console.log("Inside Action.processTyping ...", target);
+  }
 
-  // document.getElementById("umpleModelEditorText").value = Page.codeMirrorEditor6.state.doc.toString();
+  if (
+    (target == "umpleModelEditorText" || target == "codeMirrorEditor" || target == "newEditor") &&
+    typeof GvDiagramEdit !== "undefined" &&
+    GvDiagramEdit.clearPendingPaletteState
+  ) {
+    GvDiagramEdit.clearPendingPaletteState();
+  }
+
   document.getElementById("newEditor").value = Page.codeMirrorEditor6.state.doc.toString();
- // we no longer need this part for codemirror 6
-  // if(currentCursorPosition != null){
 
-  //   console.log("current cursor: ", currentCursorPosition );
-
-  //    Page.codeMirrorEditor6.dispatch({ 
-  //      selection: { anchor: currentCursorPosition , head: currentCursorPosition }
-  //         });    
-  // }
-
-  // else if (this.lastPositionofCursor != null){
-  //   console.log("last cursor: ", lastPositionofCursor );
-  //   Page.codeMirrorEditor6.dispatch({ 
-  //     selection: { anchor: this.lastPositionofCursor , head: this.lastPositionofCursor }
-  //        });
-  // }
 
   // Save in history after a pause in typing
   if (target != "diagramEdit") 
@@ -6151,7 +5834,7 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
     }
     else if(target == "diagramEdit")
     {
-      Action.ajax(Action.updateFromDiagramCallback,Action.getLanguage());
+      Action.ajax(Action.updateFromDiagramCallback, Action.getLanguage());
     }
     //Page.enableDiagram(true);
   }
@@ -6166,14 +5849,11 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
     Page.setExampleMessage("");
     
   }
-
-
-	setTimeout(Action.checkComplexity,10000);
 }
 
 // Refactoring definitive text location
 // This function stores just the core umple code, NOT the layout
-Action.updateCurrentUmpleTextBeingEdited = function(codeToSave){
+Action.updateCurrentUmpleTextBeingEdited = function(codeToSave, skipDebouncedTyping){
   // console.log("Inside Action.updateCurrentUmpleTextBeingEdited() ...")
   // Back up the data in the main editor
   Page.currentUmpleTextBeingEdited = codeToSave;
@@ -6182,13 +5862,11 @@ Action.updateCurrentUmpleTextBeingEdited = function(codeToSave){
   jQuery("#umpleModelEditorText").val(codeToSave);
   
   // Update the content in CM6 CodeMirror 6
-  // Page.blahblah("stuff");
-  Page.setCodeMirror6Text(codeToSave);
+  Page.setCodeMirror6Text(codeToSave, skipDebouncedTyping);
 };
 
 Action.updateLayoutEditorAndDiagram = function(target)
 {
-  // console.log(target + ": Inside updateLayoutEditorAndDiagram")
   Action.ajax(Action.updateUmpleLayoutEditor,"language=Json",target);
 }
 
@@ -6219,9 +5897,7 @@ Action.updateUmpleLayoutEditorCallback = function(response)
   // DEBUG
   // console.log("Inside updateUmpleLayoutEditorCallback")
   var umpleCode = response.responseText;
-  // console.log("Extracting Positioning from Response")
   var positioning = Page.splitUmpleCode(umpleCode)[1];
-  // console.log("Positioning: " + positioning)
   Page.setUmplePositioningCode(positioning);
   Page.hideLoading();
   Action.updateUmpleDiagramForce(true);
@@ -6231,13 +5907,98 @@ Action.updateUmpleDiagram = function() {
  return Action.updateUmpleDiagramForce(true)
 }
 
+// To fetch the feature model json from the backend complier
+Action.fetchFeatureModelTreeThen = function(next)
+{
+  let proceed = function() {
+    if (typeof next === "function") next();
+  };
+  // proceedAsync is only used by the early-return branches below — they need the continuation deferred via setTimeout so fetchFeatureModelTreeThen returns before next() fires. The main Ajax onFinally path calls the sync proceed() directly.
+  let proceedAsync = function() {
+    setTimeout(proceed, 0);
+  };
+
+
+  let mount = document.getElementById("featureModelTreeContainer");
+
+  // Additional check to ensure this fetch only happens when in the feature diagram mode
+  if (!Page.useGvFeatureDiagram) {
+    FeatureTree.reset();
+    Page.hasFeatureModelTree = false;
+    FeatureTreeModal._fetchId++;
+    FeatureTreeModal._fetchInFlight = false;
+    FeatureTreeModal._lastFetchFailed = false;
+    FeatureTreeModal._lastFetchStatus = -1;
+    FeatureTreeModal.close();
+    if (mount) {
+      while (mount.firstChild) mount.removeChild(mount.firstChild);
+      mount.style.display = "none";
+    }
+    proceedAsync();
+    return;
+  }
+
+  if (!mount) {
+    Page.hasFeatureModelTree = false;
+    FeatureTreeModal._lastFetchFailed = false;
+    FeatureTreeModal._lastFetchStatus = -1;
+    proceedAsync();
+    return;
+  }
+
+  // async lock to prevent ajax mutex
+  var thisFetchId = ++FeatureTreeModal._fetchId;
+  FeatureTreeModal._fetchInFlight = true;
+  FeatureTreeModal._lastFetchFailed = false;
+  FeatureTreeModal._lastFetchStatus = -1;
+  FeatureTreeModal.refreshBody();
+
+  Ajax.sendRequest(
+    "scripts/compiler.php",
+    function(response) {
+      // Stale callback guard: a newer fetch or a mode switch has made.
+      if (thisFetchId !== FeatureTreeModal._fetchId) return;
+      var featureModelJson = FeatureTree.getModelFromResponse(response.responseText);
+      if (featureModelJson && featureModelJson.featureModel) {
+        FeatureTree.parseModel(featureModelJson.featureModel);
+        Page.hasFeatureModelTree = true;
+      } else {
+        FeatureTree.reset();
+        Page.hasFeatureModelTree = false;
+      }
+    },
+    "language=FeatureModelJson&theme=light&error=true&umpleCode="
+      + encodeURIComponent(Page.getUmpleCode()),
+    {
+      onError: function(http) {
+        // Error-unique: reset feature state and record failure for UI.
+        // Stale callbacks do not mutate state; onFinally drives proceed().
+        if (thisFetchId !== FeatureTreeModal._fetchId) return;
+        FeatureTree.reset();
+        Page.hasFeatureModelTree = false;
+        FeatureTreeModal._lastFetchFailed = true;
+        FeatureTreeModal._lastFetchStatus = http.status;
+      },
+      onFinally: function(http) {
+        if (thisFetchId !== FeatureTreeModal._fetchId) {
+          proceed();
+          return;
+        }
+        FeatureTreeModal._fetchInFlight = false;
+        FeatureTreeModal.refreshBody();
+        proceed();
+      }
+    }
+  );
+};
+
 Action.updateUmpleDiagramForce = function(forceUpdate)
 {
   // DEBUG
   // console.log("Inside updateUmpleDiagramForce")
   var canonical = Action.trimMultipleNonPrintingAndComments(Page.getUmpleCode());
   if(!forceUpdate) {
-    if(canonical == Action.savedCanonical)   
+    if(canonical == Action.savedCanonical)
     {
       // The umple code is as we last sent to the diagram, except for comment
       // changes, spaces, tabs and newlines, so we return without doing anything
@@ -6246,23 +6007,22 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   }
   Action.savedCanonical=canonical;
   Page.showCanvasLoading();
-  
-  Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+
+  Action.fetchFeatureModelTreeThen(function(){
+    Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+  });
 
 }
 
-//Action.displayAttributeMenu = function(event, attributeName, attributeType) {
-  // For testing: Display an alert or log to the console
-  //alert("Attribute clicked:\nName: " + attributeName + "\nType: " + attributeType);
-  // Or use console.log if you prefer not to use an alert
-  // console.log("Attribute clicked: Name - " + attributeName + ", Type - " + attributeType);
-  
-  // Prevent the default click behavior just in case
-  //event.preventDefault();
-//};
-
+// Updates all formats of Umple diagram given the response from the
+// backend. This can be svg or else node for Emode.
 Action.updateUmpleDiagramCallback = function(response)
 {
+  // Get the canvas position information, used in several places
+  var theCanvas = jQuery("#umpleCanvas");
+  var canvasX=Math.round(theCanvas.offset().left);
+  var canvasY=Math.round(theCanvas.offset().top);
+
   // console.log("Debug E6.1: Inside updateUmpleDiagramCallback")
   var diagramCode = "";
   var errorMessage = "";
@@ -6271,7 +6031,6 @@ Action.updateUmpleDiagramCallback = function(response)
   errorMessage = Action.getErrorCode(response.responseText);
   Page.hideExecutionArea();
 
-  // console.log("diagramCode: ", diagramCode)
   if(diagramCode == null || diagramCode == "" || diagramCode == "null") 
   {
     Page.enableDiagram(false);
@@ -6289,14 +6048,100 @@ Action.updateUmpleDiagramCallback = function(response)
 
     Page.setFeedbackMessage("");
     Page.hideGeneratedCode();
+
+    // Enable dynamic checkboxes of mixsets and named filters
+    // Find any phrases describing
+    // named mixsets of filters not commented out
+    var dynamicCheckboxItems = new Array();
+    var umpleCodeForScan = Page.getUmpleCode();
+    var mixsetMatches = umpleCodeForScan
+      .match(/(?<!(\/\/.*))mixset\s+[a-zA-Z1-9-_]+/g);
+    var filterMatches = umpleCodeForScan
+      .match(/(?<!(\/\/.*))filter\s+[a-zA-Z1-9-_]+/g);
+    if (mixsetMatches != null&&!Page.hasFeatureModelTree) dynamicCheckboxItems = dynamicCheckboxItems.concat(mixsetMatches);
+    if (filterMatches != null) dynamicCheckboxItems = dynamicCheckboxItems.concat(filterMatches);
+    // Add special suboptions
+    dynamicCheckboxItems.push("gvmanual","gvdot","gvsfdp","gvcirco","gvortho");
     
+    // Clear out previous
+    // TODO. May need to keep some so as to preserve selections
+    var spanToInjectItem = 
+      document.getElementById("ShowMFDynamicArea");
+    spanToInjectItem.innerHTML = "";
+
+    if(! (dynamicCheckboxItems == null || dynamicCheckboxItems.length == 0)) {
+      var boxesToActivate = new Array();
+      // Iterate through all the named filters of mixsets
+      dynamicCheckboxItems.forEach(
+       function(aDynamicCheckboxItem) {
+        // remove spaces from the item so it can also serve
+        //  as part of the ID,
+        // so idPart would be something like filterF1
+        var idPart = aDynamicCheckboxItem.replace(/\s/g, '');
+
+        var htmlToAdd = "<li id=\"tt"+idPart
+          +"\" class=\"layoutListItem view_opt_class\">\
+                <input id=\"button"+idPart+"\" class=\"checkbox\" type=\"checkbox\"/>\
+                <a id=\"label"+idPart+"\" class=\"buttonExtend\">"+aDynamicCheckboxItem+"</a>\
+              </li>";
+        spanToInjectItem.innerHTML += htmlToAdd;
+        // Make sure it is clickable ... have to do this after completion
+        // Since activation is cancelled as new items are added
+        boxesToActivate.push(idPart);
+      });
+
+      /*
+       * Reconcile Page.mixsetsActive against the mixsets that still exist in
+       * source. boxesToActivate was built from the regex scan above, so any
+       * entry absent from it means that mixset was deleted or commented out
+       * and should be dropped from the active set.
+       *
+       * Skip this reconciliation when the feature tree owns mixset state
+       * to prevent the selection being cleared by this code
+       */
+      if (!Page.hasFeatureModelTree) {
+        Page.mixsetsActive = Page.mixsetsActive.filter(function(aMixset){
+          return boxesToActivate.includes("mixset"+aMixset);
+        });
+      }
+      Page.filtersActive = Page.filtersActive.filter(function(aFilter){
+        return boxesToActivate.includes("filter"+aFilter);
+      });
+      Page.specialSuboptionsActive = Page.specialSuboptionsActive.filter(function(aSuboption){
+        return boxesToActivate.includes(aSuboption);
+      });
+
+      // Now activate the new ones found
+      boxesToActivate.forEach(
+       function(aBoxToActivate) {
+        Page.initHighlighter("button"+aBoxToActivate);
+        // Select it if it was already selected
+        var buttonSetting = false;
+        if(aBoxToActivate.substr(0,6)=="mixset"
+          && Page.mixsetsActive.includes(aBoxToActivate.substr(6))) {
+          buttonSetting = true;
+        }
+        else if(aBoxToActivate.substr(0,6)=="filter"
+          && Page.filtersActive.includes(aBoxToActivate.substr(6))) {
+          buttonSetting = true;
+        }
+        else if(aBoxToActivate.substr(0,2)=="gv"
+          && Page.specialSuboptionsActive.includes(aBoxToActivate)) {
+          buttonSetting = true;
+        }        
+        jQuery("#button"+aBoxToActivate).prop('checked',buttonSetting);       
+        Page.initAction("button"+aBoxToActivate);
+        Page.initLabel("label"+aBoxToActivate);
+        ToolTips.setATooltipBasic(ToolTips.dynamicTooltips,"tt"+aBoxToActivate,"right");
+        jQuery("#tt"+aBoxToActivate).show();
+      });
+    }
+
     // Display editable class diagram
     if(Page.useEditableClassDiagram) {
       var newSystem = Json.toObject(diagramCode);
       UmpleSystem.merge(newSystem);
       UmpleSystem.update(); 
-      // UmpleSystem.update(); 
-      
       //Apply readonly styles
       if (Page.readOnly) 
       {
@@ -6304,6 +6149,7 @@ Action.updateUmpleDiagramCallback = function(response)
       }
     }
     else if(Page.useJointJSClassDiagram) {
+      // This code is deprecated as Joint.js functionality is no longer supported
 
       var model = JSON.parse(diagramCode.replace( new RegExp('} { "name": "', "gi"), '}, { "name": "' ));
 
@@ -6325,9 +6171,6 @@ Action.updateUmpleDiagramCallback = function(response)
           if( JJSdiagram.paper ) 
           JJSdiagram.paper.setDimensions(jQuery("#umpleCanvas")[0].clientWidth, jQuery("#umpleCanvas")[0].clientHeight);
 
-          //scale the content
-          //commented it out because the customized object does not scale
-          //paper.scaleContentToFit({padding: 15});
         }
       };
       // using the umpleCanvas as the mouse wheel event target, as it is a stable entity
@@ -6347,11 +6190,204 @@ Action.updateUmpleDiagramCallback = function(response)
 
     }
     // Display static svg diagram
-    else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram )
+    else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram || Page.useInstanceDiagram)
     {
-      jQuery("#umpleCanvas").html(format('{0}', diagramCode));
-      jQuery("#umpleCanvas").children().first().attr("id", "svgCanvas");
+      theCanvas.html(format('{0}', diagramCode));
+      theCanvas.children().first().attr("id", "svgCanvas");
+      Page.zoomToCurrentZoom();
+
+      // If gv class mode is gvmanual then we need to update all the umple 
+      // positioning information given the diagram locations
+      if(Page.useGvClassDiagram && Page.isGvManual()) {
+
+        // First, in case we have used a special algorithm to reformulate we first turn them all off
+        // This will not have effect if the algorithm is specified in the code.
+        var algoWasRemoved = Action.deactivateSpecialLayoutAlgorithmsExcept(null);
+
+// DEBUG
+// Page.catFeedbackMessage("updating class diagram layout due to gvmanual "+canvasX+" "+canvasY+" | ");
+
+        // For each of the nodes loop through it
+        var positioningCode = jQuery("#umpleLayoutEditorText").val();
+        var elems=document.getElementsByClassName("node");
+        var posMap = new Array();
+        var minUmpleLeft = 9999999;
+        var minUmpleTop = 9999999;
+        var minRectLeft = 9999999;
+        var minRectTop = 9999999;
+
+        for(let i=0;i<elems.length;i++){
+          var currentClassForPos = Action.getGvClassNameFromNode(elems[i]);
+          var umplePosOfCurrentClass = Action.getGvPosition(positioningCode, currentClassForPos);
+
+          if (umplePosOfCurrentClass == null) {
+            // Position not found ... this is actually a bug caused
+            // when updating the name of a class in the text ... needs fixing
+            continue;
+          }
+          var theRect=Action.getRectFromSvgNode(elems[i], canvasX, canvasY);
+          var rectLeft = theRect.left;
+          var rectTop = theRect.top;
+          // Get the centre of the rectangle as
+          // the gv positions are also centre-focused
+          var rectCentreX = theRect.centreX;
+          var rectCentreY = theRect.centreY;
+          var uLeft = umplePosOfCurrentClass.x;
+          var uTop = umplePosOfCurrentClass.y;
+
+// DEBUG
+//Page.setFeedbackMessage(".."+currentClassForPos
+//  +" "+umplePosOfCurrentClass.x+"/"+rectCentreX
+//  +" "+umplePosOfCurrentClass.y+"/"+rectCentreY);
+
+          posMap.push({className: currentClassForPos,
+            fullUmplePosOfCurrentClass: umplePosOfCurrentClass.all,
+            left: uLeft,
+            umpleX: Number(umplePosOfCurrentClass.x)
+              + Number(umplePosOfCurrentClass.width) / 2,
+            rectCentreX: rectCentreX,
+            top: uTop,
+            umpleY: Number(umplePosOfCurrentClass.y)
+              + Number(umplePosOfCurrentClass.height) / 2,
+            rectCentreY: rectCentreY,
+            associationPos1: umplePosOfCurrentClass.assoc1,
+            associationPos2: umplePosOfCurrentClass.assoc2
+          });
+          minUmpleLeft=Math.min(minUmpleLeft,uLeft);
+          minUmpleTop=Math.min(minUmpleTop,uTop);
+          minRectLeft=Math.min(minRectLeft,rectLeft);
+          minRectTop=Math.min(minRectTop,rectTop);
+        }
+    
+        let diffX=minUmpleLeft-minRectLeft;
+        let diffY=minUmpleTop-minRectTop;
+// DEBUG
+// Page.catFeedbackMessage("In process of updating nodes from gv diffx="+diffX+" diffy="+diffY+" ");
+        // Now loop through the Map updating the Umple code if needed
+        var nodesMoved = 0;
+        posMap.forEach(function(thePos) {
+          const changeThreshold = 10;
+          var deltaX= Math.round((thePos.rectCentreX+diffX)-thePos.umpleX);
+          var deltaY= Math.round((thePos.rectCentreY+diffY)-thePos.umpleY);
+          if(Math.abs(deltaX) > changeThreshold || Math.abs(deltaY) > changeThreshold) {
+             // Update Umple text, 
+             nodesMoved++;
+             Action.updateGVPositionBasic(thePos.className,deltaX,deltaY,
+               positioningCode,
+               thePos.fullUmplePosOfCurrentClass,
+               thePos.left,
+               thePos.top,
+               thePos.associationPos1,
+               thePos.associationPos2,
+               false);
+// DEBUG
+// Page.catFeedbackMessage(" redrawn: "+thePos.className+" //x"+thePos.umpleX+"->"+deltaX+"/"+(thePos.rectCentreX+diffX)
+//  +" y"+thePos.umpleY+"->"+deltaY+"/"+(thePos.rectCentreY+diffY));
+
+          }
+        });
+//DEBUG
+//Page.catFeedbackMessage(" Moved "+nodesMoved+" nodes");
+        if(algoWasRemoved) {
+          // We are coming back from an algo update so we need to push to history
+          TabControl.getCurrentHistory().save(Page.getUmpleCode(), "moveClass");
+        }
+      }
+
+      // generate association/relation mapping - to show neighbor classes from context menu
+
+
+
+      const umpleCode=Page.getUmpleCode();
+      const lines = umpleCode.split('\n');
+      const result = {};
+      let currentClass = null;
+    
+      const classRegex = /^class\s+(\w+)/;
+      const assocRegex = /\s*(--\*|--|\*--\*|->|<-)\s*/;
+      const isARegex = /^isA\s+([A-Za-z0-9_,\s]+);?/;
+    
+      for (let i = 0; i < lines.length; i++) {
+          const line = lines[i].trim();
+    
+          // Stop processing at the end marker
+          if (line.includes('//$?[End_of_model]$?')) {
+            break;
+         }
+    
+          // Detect class definition
+          const classMatch = line.match(classRegex);
+          if (classMatch) {
+            currentClass = classMatch[1];
+            if (!result[currentClass]) result[currentClass] = [];
+            continue;
+          }
+    
+          // If no class is currently tracked, skip
+          if (!currentClass) continue;
+    
+            // Handle isA line
+            const isAMatch = line.match(isARegex);
+            if (isAMatch) {
+              const isAClasses = isAMatch[1].split(',').map(cls => cls.trim().replace(/[^a-zA-Z0-9_]/g, ''));
+              result[currentClass].push(...isAClasses);
+              continue;
+            }
+    
+          // Detect association
+          const assocSplit = line.split(assocRegex);
+          if (assocSplit.length >= 3) {
+            const rightPart = assocSplit[2].trim();
+            const parts = rightPart.split(/\s+/);
+    
+            // Usually formatted like: [multiplicity, ClassName, fieldName]
+            const classCandidate = parts.length > 1 ? parts[1] : parts[0];
+            // Clean up any trailing semicolons or symbols
+            const cleanClass = classCandidate.replace(/[^a-zA-Z0-9_]/g, '');
+            if (cleanClass) {
+              result[currentClass].push(cleanClass);
+            }
+          }
+    
+        }
+
+        // Add reverse links (cross-referencing)
+        for (const [cls, dependencies] of Object.entries(result)) {
+          for (const dep of dependencies) {
+            if (!result[dep]){
+              result[dep] = [];
+            } 
+            if(!result[dep].includes(cls)){
+              result[dep].push(cls);
+            }
+          }
+        }
+
+        Action.neighbors=result;
+
+
       Action.setupPinch();
+    }
+    // Display generated HTML output in the right-hand canvas area
+    else if(Page.useEventSequence || Page.useStateTables)
+{
+  theCanvas.html("<div id='htmlCanvas' class='generatedDiagram'></div>");
+  jQuery("#htmlCanvas").html(diagramCode);
+
+  // Apply the same coloring used by the Generate It path
+  if (Page.useStateTables && typeof StateTree !== "undefined" && StateTree.colourStateTables) {
+    StateTree.colourStateTables();
+  }
+
+  if (Page.useEventSequence && typeof StateTree !== "undefined" && StateTree.colourEventSequences) {
+    StateTree.colourEventSequences();
+  }
+}
+
+    else if(Page.useCRUDUI)
+    {
+      theCanvas.html("<div id='htmlCanvas' class='generatedDiagram'></div>");
+      Page.showCrudFromJson(diagramCode, "", "#htmlCanvas");
     }
     //Display structure diagram
     else if(Page.useStructureDiagram)
@@ -6368,54 +6404,13 @@ Action.updateUmpleDiagramCallback = function(response)
   }
   
   Page.hideLoading();
-  if(Page.useGvClassDiagram){
-    var elems=document.getElementsByClassName("node");
-    // Add event listener to Graphviz Class nodes for right click
-    for(let i=0;i<elems.length;i++){
-      elems[i].addEventListener("contextmenu", function(event){
-        event.preventDefault();
-        Action.displayMenu(event);
-      });
-      // Add event listener for double click, calling the same function as right-click
-      elems[i].addEventListener("dblclick", function(event){
-        event.preventDefault(); // Prevent the default double-click behavior
-        Action.displayMenu(event); // Call the same function to display the menu
-      });
-      var attributeAnchors = elems[i].getElementsByTagName("a");
-      // Start from 1 to skip the first <a> element which is for the class name
-      for (let j = 1; j < attributeAnchors.length; j++) {
-        let titleText = attributeAnchors[j].getAttribute("xlink:title");
-        let [attributeType, attributeName] = titleText.split(' ');
-        attributeAnchors[j].addEventListener("dblclick", function (event) {
-          event.preventDefault();
-          Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
-        });
-        attributeAnchors[j].addEventListener("contextmenu", function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
-        });
-      }
-    }
-      var associationElems = document.getElementsByClassName("edge");
-    for (let i = 0; i < associationElems.length; i++) {
-      var associationAnchors = associationElems[i].getElementsByTagName("a");
-      for (let j = 0; j < associationAnchors.length; j++) {
-        let associationLink = associationAnchors[j].getAttribute("xlink:href");
-        associationAnchors[j].addEventListener("dblclick", function(event) {
-            event.preventDefault(); // Prevent the default click behavior
-            Action.displayAssociMenu(event,associationLink);
-        });
-        associationAnchors[j].addEventListener("contextmenu", function(event) {
-          event.preventDefault(); // Prevent the default click behavior
-          Action.displayAssociMenu(event,associationLink);
-      });
-    }
+
+  if (Page.useGvClassDiagram) {
+    GvDiagramEdit.bindClassDiagram(canvasX, canvasY);
   }
-}
-  
 
   if(Page.useGvStateDiagram){
+    GvDiagramEdit.bindStateDiagram();
     //add double click to display menu, issue#2081
     var elems=document.getElementsByClassName("node");
     // Add event listener to Graphviz state nodes for right click
@@ -6456,6 +6451,69 @@ Action.updateUmpleDiagramCallback = function(response)
     });
     }
   }  
+
+  if(Page.useEventSequence){
+    // Give event sequence states and transitions the same code selection as Graphviz state diagram elements
+    jQuery("#htmlCanvas .event-sequence-grid").each(function() {
+      var heading = jQuery(this).prevAll("h2").first().text().split(" ");
+      var rows = jQuery(this).find(".floating-col td");
+      var names = [];
+      for(var i = 1; i < rows.length; i++) {
+        var parentId = parseInt(jQuery(rows[i]).attr("data-parent"));
+        names.push((isNaN(parentId) ? "" : names[parentId] + ".") + jQuery(rows[i]).text().replace(/^(- )*/, ""));
+        rows[i].setAttribute("onclick", "javascript:Action.stateClicked(\"" + heading[1] + "^*^" + heading[4] + "^*^" + names[i-1] + "\")");
+      }
+      rows = jQuery(this).next(".event-sequence-list").find("tr");
+      for(var i = 1; i < rows.length; i++) {
+        var entry = jQuery(rows[i]).find("td")[2];
+        entry.setAttribute("onclick", "javascript:Action.stateClicked(\"" + heading[1] + "^*^" + heading[4] + "^*^" + jQuery(entry).text() + "\")");
+      }
+    });
+    jQuery("#htmlCanvas [data-transition]").click(function() {
+      Action.transitionClicked(jQuery(this).attr("data-transition"));
+    });
+  }
+}
+
+
+// Called when a layout algorithm is clicked, in order to unselect the others
+// Can also be used to unselect all of them when gvmanual is active and
+// we are in the update callback
+Action.deactivateSpecialLayoutAlgorithmsExcept = function(onlyAlgoToKeep) {
+  var specialAlgos = new Array();
+  var didRemove = false;
+  specialAlgos.push("gvdot","gvsfdp","gvcirco");
+
+  // If the one to keep is not a special algo such as gvortho then do nothing
+  if(onlyAlgoToKeep != null && (! specialAlgos.includes(onlyAlgoToKeep)) ) {
+    return false;
+  }
+ 
+  // Search for any of the specialAlgos and turn off except the one to keep
+  specialAlgos.forEach(function(anAlgo) {
+    if(onlyAlgoToKeep == null || anAlgo != onlyAlgoToKeep) {
+      jQuery("#button"+anAlgo).prop('checked',false);
+      var index = Page.specialSuboptionsActive.indexOf(anAlgo);
+      if(index !== -1) {
+        // remove an algo that was selected
+        Page.specialSuboptionsActive.splice(index,1);
+        didRemove = true;
+      }
+    }
+  });
+  return didRemove;
+}
+
+Action.getRectFromSvgNode = function(node,canvasX, canvasY) {
+  var svgRect = node.getBoundingClientRect();
+  return {
+    left: Math.round(svgRect.left-canvasX),
+    top: Math.round(svgRect.top-canvasY),
+    // Get the centre of the rectangle as it actually appears
+    // as the gv positions are also centre-focused
+    centreX: Math.round(svgRect.left-canvasX + (Math.abs(svgRect.width/2))),
+    centreY: Math.round(svgRect.top-canvasY  + (Math.abs(svgRect.height/2)))
+  };
 }
 
 Action.updateFromDiagramCallback = function(response)
@@ -6481,8 +6539,13 @@ Action.updateFromDiagramCallback = function(response)
   //Show the error message
   if(errorMessage != "")
   {
+    Action.lastCompilerErrorHtml = errorMessage;
     Page.showGeneratedCode(errorMessage, "diagramUpdate");
   }  
+  else
+  {
+    Action.lastCompilerErrorHtml = "";
+  }
 }
 
 // Gets the code to display from the AJAX response
@@ -6498,7 +6561,7 @@ Action.getDiagramCode = function(responseText)
     if(output == "null") output = "";
     
   }
-  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram)
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram || Page.useInstanceDiagram)
   {
     // The graphviz diagrams are taken from the inner svg tag only. 
     // This allows the website to have a dynamic canvas size around the diagram
@@ -6510,6 +6573,14 @@ Action.getDiagramCode = function(responseText)
       //remove the redundant svg closing tag
       output = output.replace(/<\/svg>$/, "");
     }
+  }
+  else if(Page.useCRUDUI || Page.useEventSequence || Page.useStateTables)
+  {
+    var language = Page.useCRUDUI ? "crudJson" :
+                   Page.useEventSequence ? "eventSequence" :
+                   "stateTables";
+
+    output = Page.getGeneratedMarkup(responseText, language);
   }
   else if(Page.useStructureDiagram)
   {
@@ -6532,7 +6603,7 @@ Action.getErrorCode = function(responseText)
     
     if(output == "<p>") output = "";
   }
-  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram)
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram || Page.useInstanceDiagram)
   {
     var miscStuffAndErrorMessages = responseText.split('<svg width=')[0];
     var prelimparts = miscStuffAndErrorMessages.split('errorRow');
@@ -6540,7 +6611,13 @@ Action.getErrorCode = function(responseText)
       output = miscStuffAndErrorMessages.split("</script>&nbsp;")[0];
     }
   }
-
+  else if(Page.useCRUDUI || Page.useEventSequence || Page.useStateTables)
+  {
+    var language = Page.useCRUDUI ? "crudJson" :
+                   Page.useEventSequence ? "eventSequence" :
+                   "stateTables";
+    output = Page.getErrorMarkup(responseText, language);
+  }
   return output;
 }
 
@@ -6648,9 +6725,18 @@ Action.toggleGuardLabels = function()
   Page.showGuardLabels = !Page.showGuardLabels;
   Action.redrawDiagram();
 }
+Action.toggleNaturalLanguage = function()
+{
+  Page.showNaturalLanguage = !Page.showNaturalLanguage;
+  Action.redrawDiagram();
+}
 Action.allowPinch = function()
 {
   Page.allowPinch = !Page.allowPinch;
+  if (Page.allowPinch == false) {
+     // has been turned off
+     Action.removePinch();
+  }
   Action.redrawDiagram();
 }
 Action.toggleFeatureDependency = function()
@@ -6667,6 +6753,7 @@ Action.toggleTraits = function()
 
 Action.redrawDiagram = function()
 {
+    if (typeof GvDiagramEdit !== "undefined") GvDiagramEdit.clearPendingPaletteState();
     UmpleSystem.merge(null);    // Clear the diagram
     var canvas = jQuery("#umpleCanvas");
     canvas.html("");
@@ -6683,12 +6770,14 @@ Action.redrawDiagram = function()
       Page.enableCheckBoxItem("buttonManualSync", "ttManualSync", true);
 
       Page.enablePaletteItem('buttonAddClass', true);
+      Page.enablePaletteItem('buttonAddState', true);
       Page.enablePaletteItem('buttonAddAssociation', true);
       Page.enablePaletteItem('buttonAddTransition', true);
       Page.enablePaletteItem('buttonAddGeneralization', true);
       Page.enablePaletteItem('buttonDeleteEntity', true);
     
       Page.initToggleTool('buttonAddClass');
+      Page.initToggleTool('buttonAddState');
       Page.initToggleTool('buttonAddAssociation');
       Page.initToggleTool('buttonAddTransition');
       Page.initToggleTool('buttonAddGeneralization');
@@ -6770,27 +6859,13 @@ Action.generateStructureDiagramFileCallback = function(response)
 
 Action.ajax = function(callback,post,target,errors,tabIndependent)
 {
-  // console.log("Debug E2 : Action.ajax() with target: ", target)
-  // console.log("callback : ", callback)
-  // CM5 -  Page.getUmpleCode()
-  // CM6 - cm6.getCodeMirror6UmpleText()
   var modelAndPositioning = null;
   modelAndPositioning = Page.getUmpleCode();
-  // if-else or conditional based on target will not work here,
-  // because after first AJAX call, the `target` variable is undefined
-  // if(target == "newEditor"){
-  //   modelAndPositioning = cm6.getCodeMirror6UmpleText();
-  // }
-  // else {
-  //   modelAndPositioning = Page.getUmpleCode();
-  // }
-  // console.log("Debug E3: ", target)
-  // console.log(": \nmodelAndPositioning", modelAndPositioning)
   var umpleCode = encodeURIComponent(modelAndPositioning);
   var filename = Page.getFilename();
-  // var errors = typeof(errors) != 'undefined' ? errors : "false";
   var errors = "true";
   TabControl.useActiveTabTo(TabControl.saveTab)(umpleCode);
+  post = post + "&theme=" + Action.getThemePreference();
 
   var tabContextOld = TabControl.getActiveTabId();
   var wrappedCallback = !tabIndependent? function(response){
@@ -6929,6 +7004,31 @@ Mousetrap.bind(['ctrl+g'], function(e){
   return false; //equivalent to e.preventDefault();
 });
 
+Mousetrap.bind(['ctrl+shift+v'], function(e){
+  Page.clickShowGvEntityRelationshipDiagram();
+  return false; //equivalent to e.preventDefault();
+});
+
+Mousetrap.bind(['ctrl+shift+c'], function(e){
+  Page.clickShowInstanceDiagram();
+  return false; //equivalent to e.preventDefault();
+});
+
+// Mousetrap.bind(['ctrl+shift+f'], function(e){
+//   Page.clickShowCRUDUI();
+//   return false; //equivalent to e.preventDefault();
+// });
+
+Mousetrap.bind(['ctrl+shift+t'], function(e){
+  Page.clickShowStateTables();
+  return false; //equivalent to e.preventDefault();
+});
+
+Mousetrap.bind(['ctrl+shift+r'], function(e){
+  Page.clickShowEventSequence();
+  return false; //equivalent to e.preventDefault();
+});
+
 Mousetrap.bind(['ctrl+s'], function(e){
   Page.clickShowGvStateDiagram();
   return false; //equivalent to e.preventDefault();
@@ -7009,7 +7109,7 @@ Mousetrap.bind(['a'], function(e){
   {
     if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
     {
-      jQuery('#buttonAddAssociation').click();
+      jQuery(Page.useGvStateDiagram ? '#buttonAddTransition' : '#buttonAddAssociation').click();
     }
   }
 });
@@ -7020,7 +7120,7 @@ Mousetrap.bind(['c'], function(e){
   {
     if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
     {        
-      jQuery('#buttonAddClass').click();
+      jQuery(Page.useGvStateDiagram ? '#buttonAddState' : '#buttonAddClass').click();
     }        
   }
 });
@@ -7136,7 +7236,13 @@ Action.getLanguage = function()
     }
   }
   else if(Page.useGvStateDiagram) {language="language=stateDiagram"}
+  else if(Page.useGvEntityRelationshipDiagram) {language="language=entityRelationshipDiagram"}
   else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
+  else if(Page.useInstanceDiagram) {language="language=instanceDiagram"}
+  else if(Page.useCRUDUI) {language="language=Json&languageStyle=crudJson"}
+  else if(Page.useStateTables) {language="language=StateTables"}
+  else if(Page.useEventSequence) {language="language=eventSequence"}
+ 
  
 
   // append any suboptions needed for GvStateDiagram
@@ -7145,6 +7251,7 @@ Action.getLanguage = function()
     if(Page.showTransitionLabels) language=language+".showtransitionlabels";
     if(!Page.showGuards) language=language+".hideguards";    
     if(Page.showGuardLabels) language=language+".showguardlabels";
+    if(!Page.showNaturalLanguage) language=language+".hidenaturallanguage";
     language=language+"."+$("inputGenerateCode").value.split(":")[1];
   }
   // append any suboptions needed for GvClassDiagram
@@ -7157,6 +7264,67 @@ Action.getLanguage = function()
     language="language=featureDiagram";
     if(Page.showFeatureDependency) language=language+".showFeatureDependency";
   }
+  // append the list of words specified in the filterwords
+  // Also gather together copyable code to create a mixset from these
+  copyableMixset ="";
+  if(Page.filterWordsOutput != "") {
+    language=language+".!@FW!@"+Page.filterWordsOutput;
+
+    // Grab the words people have typed in manually for use in mixset
+    var copyableIncludeStatements = "";
+    Page.filterWordsOutput.split("!@").forEach(function(aFilterWord){
+      if(aFilterWord != "") {
+        // If it is a number then add a hops clause
+        if(!isNaN(aFilterWord)) {
+          copyableIncludeStatements+="  hops { association "+aFilterWord+";} ";
+        }
+        // If it starts with gv it is a filter word and if separator needs cleaning
+        else if(aFilterWord.substr(0,2) == "gv") {
+          if(aFilterWord.substr(0,11) == "gvseparator") {
+            copyableMixset+="  suboption \""+aFilterWord.replace("@@@","")+"\";\n";
+          }
+          else {
+            copyableMixset+="  suboption \""+aFilterWord+"\";\n";
+          }
+        }
+        // If it starts with mixset or filter then process as named
+        else if(aFilterWord.substr(0,6) == "filter") {
+          copyableMixset+="  filter {includeFilter "+aFilterWord.substr(6)+";}\n";
+        }
+        else if(aFilterWord.substr(0,6) == "mixset") {
+          copyableMixset+="  use "+aFilterWord.substr(6)+";\n";        
+        }
+        // Otherwise process as a filter pattern
+        else {
+          copyableIncludeStatements+=" include "+aFilterWord+";";
+        }
+      }
+    });
+    if(copyableIncludeStatements != "") {
+      copyableMixset += "  filter {"+copyableIncludeStatements+"}\n";
+    }
+  }   
+  // append any of the mixsets of filters
+  // words in checkboxes that start with filter, followed by a named filter name
+  Page.filtersActive.forEach(function(aNamedFilter){
+    language=language+".filter"+aNamedFilter;
+    copyableMixset+="  filter {includeFilter "+aNamedFilter+";}\n";
+  });
+  // words in checkboxes that start with mixset, followed by a mixset name
+  Page.mixsetsActive.forEach(function(aMixset){
+    language=language+".mixset"+aMixset;
+    copyableMixset+="  use "+aMixset+";\n";
+  });
+  // words in checkboxes starting gv  
+  Page.specialSuboptionsActive.forEach(function(aSpecialSuboption){
+    language=language+"."+aSpecialSuboption;
+    copyableMixset+="  suboption \""+aSpecialSuboption+"\";\n";
+  });
+  // Generate the actual copyable mixset, calling M followed by 3 digits
+  var randomMixsetNumber = Math.floor(Math.random() * 899.0 + 100.0);
+  Page.copyableMixset="\/\/ The following was generated from the show and hide options\n"
+    +"\/\/ Rename the mixset and paste into the code so you can invoke it at any time\n"
+    +"mixset M"+randomMixsetNumber+" {\n"+copyableMixset+"}";
   return language;
 }
 
@@ -7180,8 +7348,6 @@ Action.hidegdpr = function()
   jQuery('#gdprtext').hide();
   Action.gdprHidden = true;
 }
-
-
 
 Action.reindent = function(lines, cursorPos)
 {
@@ -7388,7 +7554,6 @@ Action.reindent = function(lines, cursorPos)
   
   if(Page.codeMirrorOn) 
   {
-    // Page.codeMirrorEditor.setValue(codeAfterIndent);
     Page.codeMirrorEditor6.dispatch({
       changes: {from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: codeAfterIndent}
     })
@@ -7398,29 +7563,97 @@ Action.reindent = function(lines, cursorPos)
   // Refactoring definitive text location
   Action.updateCurrentUmpleTextBeingEdited(codeAfterIndent);
 
-  // var cursorLine = Page.getRawUmpleCode().split("\n")[cursorPos.line];
   var cursorLine = Page.getRawUmpleCodeCM6().split("\n")[Page.codeMirrorEditor6.state.doc.lineAt(Page.codeMirrorEditor6.state.selection.main.head).number];
   var whiteSpace = cursorLine.match(/^\s*/)[0].length;
-  // console.log("cursorPos.ch: ", cursorPos.ch);
 
   if (cursorPos.ch >= cursorLine.trim().length) 
   {
-   // Page.codeMirrorEditor.setCursor(cursorPos.line, cursorLine.trim().length + whiteSpace);
     Page.codeMirrorEditor6.dispatch({selection: {anchor: (cursorPos.line), head: (cursorLine.trim().length + whiteSpace)}});
   }
   else if (cursorPos.ch >= 0)
   {
-    // Page.codeMirrorEditor.setCursor(cursorPos.line, cursorPos.ch+whiteSpace);
     Page.codeMirrorEditor6.dispatch({selection: {anchor: (cursorPos.line), head: (cursorPos.ch+whiteSpace)}});  
   }
   else
   {
-   // Page.codeMirrorEditor.setCursor(cursorPos.line, 0);
-   //  Page.codeMirrorEditor6.dispatch({selection: {anchor: , head: 0}});
    const position = Page.codeMirrorEditor6.state.selection.main.head;
    Page.codeMirrorEditor6.dispatch({selection: {anchor: position, head: position}});
   }
 
- // Page.codeMirrorEditor.focus();
   Page.codeMirrorEditor6.focus();
 }
+
+Action.setLiveView = function(viewNameToSet)
+{
+  Page.catFeedbackMessage("DEBUG:"+viewNameToSet);
+  if (viewNameToSet=="ecd") { Page.clickShowEditableClassDiagram(); }
+  else if (viewNameToSet=="gcd") { Page.clickShowGvClassDiagram(); }
+  else if (viewNameToSet=="sd") { Page.clickShowGvStateDiagram(); }
+  else if (viewNameToSet=="std") { Page.clickShowStructureDiagram();}
+  else if (viewNameToSet=="erd") { Page.clickShowGvEntityRelationshipDiagram();}
+  else if (viewNameToSet=="gfd") { Page.clickShowGvFeatureDiagram();}
+  else if (viewNameToSet=="instanceDiagram") {Page.clickShowInstanceDiagram();}
+  else if (viewNameToSet == "crudUI") { Page.clickShowCRUDUI();}
+  else if (viewNameToSet == "stateTables") { Page.clickShowStateTables();}
+  else if (viewNameToSet == "eventSequence") { Page.clickShowEventSequence();}
+  else Page.catFeedbackMessage("DEBUG bad selection!!!");
+}
+
+
+
+Action.syncLiveViewSelector = function(viewCode) {
+  var selector = document.getElementById("liveViewSelector");
+  if (selector) {
+    selector.value = viewCode;
+  }
+};
+
+// --- Live View visibility helpers ---
+// Requirement: if Diagram (D) is off, Live View control disappears;
+// it reappears when D is on again.
+Action.setLiveViewMenuVisible = function(isVisible) {
+  try {
+    var $selector = jQuery("#liveViewSelector");
+    if ($selector.length === 0) return;
+
+    //Prefer an explicit wrapper if present.
+    var $wrapper = jQuery("#liveViewWrapper, #liveViewContainer, .liveViewContainer").filter(function() {
+      return jQuery(this).find("#liveViewSelector").length > 0;
+    }).first();
+
+    //Otherwise, use the smallest nearby container that looks like the Live View control.
+    if ($wrapper.length === 0) {
+      $wrapper = $selector.parents("span,div").filter(function() {
+        var txt = (jQuery(this).text() || "").toLowerCase();
+        return txt.indexOf("live view") !== -1 && jQuery(this).find("#liveViewSelector").length > 0;
+      }).first();
+    }
+
+    // If we found a safe wrapper, hide/show it (label + select together).
+    if ($wrapper.length > 0) {
+      $wrapper.toggle(!!isVisible);
+      return;
+    }
+
+    // Fallback: hide/show the selector + any associated label.
+    $selector.toggle(!!isVisible);
+    var $label = jQuery("label[for='liveViewSelector'], #liveViewLabel");
+    if ($label.length) $label.toggle(!!isVisible);
+  } catch (e) {
+    // Fail silently; do not break the UI if DOM differs.
+  }
+};
+
+Action.updateLiveViewVisibility = function() {
+  // Diagram visibility is tracked by Page.showCanvas in UmpleOnline.
+  // When D is toggled, Page.showCanvas flips true/false.
+  var diagramVisible = !!Page.showCanvas;
+  Action.setLiveViewMenuVisible(diagramVisible);
+};
+
+// Ensure Live View visibility is correct on initial page load.
+jQuery(function() {
+  if (typeof Action.updateLiveViewVisibility === "function") {
+    Action.updateLiveViewVisibility();
+  }
+});

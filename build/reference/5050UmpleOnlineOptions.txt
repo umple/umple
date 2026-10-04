@@ -25,5 +25,11 @@ in a list which would be preceded by a question mark.</p>
 
 <li>?filename=xxxxx: Load the model xxxxx. xxxxx is a URL with the leading https:// left off.<p>
 
+<li>?showlayout: Show a pane with information about where each class should appear in a class diagram. This is normally hidden (it cam be manually displayed from the Other Options menu). This can be used to finely tune the layout; after adjusting the layout the user should then make a small change to the main text (e.g. just add and delete a space) to force the diagram to update).<p>
+
+<li>?displayoptions=xxxxx: Pre-filter the diagram or request a specific layout algorithm, a specific filters or a mixset activation. The options specified in the xxxxx here are the same that can be specified in the "Show and Hide" text field. Some options only work with specific diagram types such as gvClass. Examples include gvmanual to enable manual layout, or a class name to filter on this class. You can separate multiple items with spaces, but the code %20 would be safer in the URL format than using a space. If you are including an integer as part of the displayoptions, to include connected classes in a filter, then place this first.<p>
+
+<li>?generateDefault=xxx: Set the generate menu to by default show a particular choice. The default is Java. Other options in include python, cpp, ruby, php, alloy<p>
+
 </ul>
 

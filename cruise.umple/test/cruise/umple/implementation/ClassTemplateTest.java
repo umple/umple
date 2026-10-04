@@ -158,14 +158,9 @@ public class ClassTemplateTest extends TemplateTest
   }
 
   @Test
-
   public void Singleton()
-
   {
-    // TODO: Sultan please fix  
-
-    // assertUmpleTemplateFor("ClassTemplateTest_Singleton.ump",languagePath + "/ClassTemplateTest_Singleton."+ languagePath +".txt","Application");
-
+    assertUmpleTemplateFor("ClassTemplateTest_Singleton.ump",languagePath + "/ClassTemplateTest_Singleton."+ languagePath +".txt","Application");
   }   
 
   
@@ -186,17 +181,15 @@ public class ClassTemplateTest extends TemplateTest
 
   
 
-  @Test @Ignore
-
+  @Test
   public void AssociationClass()
-
   {
 	  //Test two variants of the AssociationClassTest syntax that should generate the same code.
-
-	  assertUmpleTemplateFor("ClassTemplateTest_AssociationClassTest_1.ump",languagePath + "/ClassTemplateTest_AssociationClassTest."+ languagePath +".txt","Registration");
-	  //Test for issue 131
-	  assertUmpleTemplateFor("ClassTemplateTest_AssociationClassTest_2.ump",languagePath + "/ClassTemplateTest_AssociationClassTest."+ languagePath +".txt","Registration");
-
+    if (!languagePath.equals("test")) {
+	    assertUmpleTemplateFor("ClassTemplateTest_AssociationClassTest_1.ump",languagePath + "/ClassTemplateTest_AssociationClassTest."+ languagePath +".txt","Registration");
+	    //Test for issue 131
+	    assertUmpleTemplateFor("ClassTemplateTest_AssociationClassTest_2.ump",languagePath + "/ClassTemplateTest_AssociationClassTest."+ languagePath +".txt","Registration");
+    }
   }
 
   
@@ -297,6 +290,12 @@ public class ClassTemplateTest extends TemplateTest
   {
 	  assertUmpleTemplateFor("MultipleAttributeComments.ump",languagePath + "/ClassTemplateTest_MultipleAttributeComments."+languagePath+".txt","Foo");
   }
+
+  @Test
+  public void InternalAndConstantAndDerivedAttributeComments()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_AttributeComments.ump",languagePath+"/ClassTemplateTest_AttributeComments." + languagePath + ".txt","Student");
+  }
   
   @Test
   public void AssociationInlineComment()
@@ -362,39 +361,25 @@ public class ClassTemplateTest extends TemplateTest
   @Test
   public void AbstractClass()
   {
-	  // Just test Java for now.
-	  if (languagePath.equals("java"))
-	  {
-		  assertUmpleTemplateFor("ClassTemplateTest_AbstractClass.ump",languagePath + "/ClassTemplateTest_AbstractClass."+languagePath+".txt","Foo");
-	  }
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClass.ump",languagePath + "/ClassTemplateTest_AbstractClass."+languagePath+".txt","Foo");
   }
   
   @Test
   public void AbstractClassInheritance()
   {
-	  // Just test Java for now.
-	  if (languagePath.equals("java"))
-	  {
-		  assertUmpleTemplateFor("ClassTemplateTest_AbstractClassInheritance.ump",languagePath + "/ClassTemplateTest_AbstractClassInheritance."+languagePath+".txt","Teacher");
-	  }
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClassInheritance.ump",languagePath + "/ClassTemplateTest_AbstractClassInheritance."+languagePath+".txt","Teacher");
   }
 
-@Test
+  @Test
   public void AbstractClassAvoidingInstantiation()
   {
-	  if (languagePath.equals("java"))
-	  {
-		  assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation."+languagePath+".txt","Teacher");
-	  }
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation."+languagePath+".txt","Teacher");
   }
 
-@Test
+  @Test
   public void AbstractClassAvoidingInstantiationMN()
   {
-	  if (languagePath.equals("java"))
-	  {
-		  assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation2.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation2."+languagePath+".txt","Teacher");
-	  }
+		assertUmpleTemplateFor("ClassTemplateTest_AbstractClassAvoidingInstantiation2.ump",languagePath + "/ClassTemplateTest_AbstractClassAvoidingInstantiation2."+languagePath+".txt","Teacher");
   }
   
 @Test
@@ -420,6 +405,20 @@ public class ClassTemplateTest extends TemplateTest
   {
 	  assertUmpleTemplateFor("ClassTemplateTest_LazyAttributeOnImmutableClass.ump",languagePath + "/ClassTemplateTest_LazyAttributeOnImmutableClass."+languagePath+".txt","Student");
   }
+
+@Test
+  public void ImmutableNotLazyAttributeConstructor()
+  {
+	  assertUmpleTemplateFor("ClassTemplateTest_ImmutableNotLazyAttributeConstructor.ump",languagePath + "/ClassTemplateTest_ImmutableNotLazyTest."+languagePath+".txt","Student");
+  }
+
+  @Test
+  public void ImportAssociations()
+  {
+    assertUmpleTemplateFor("ClassTemplateTest_Import.ump", languagePath + "/ClassTemplateTest_Import."+languagePath+".txt","Mentor");
+    assertUmpleTemplateFor("ClassTemplateTest_Import.ump", languagePath + "/ClassTemplateTest_Import2."+languagePath+".txt","Student");
+    assertUmpleTemplateFor("ClassTemplateTest_Import.ump", languagePath + "/ClassTemplateTest_Import3."+languagePath+".txt","Course");
+  }  
 
 }
 

@@ -1,0 +1,52 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+class Student
+{
+
+  //------------------------
+  // STATIC VARIABLES
+  //------------------------
+
+  public static $a = "";
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Student Attributes
+
+  /**
+   * Comment for an internal attribute
+   */
+  private $b;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct($aB)
+  {
+    $this->b = $aB;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function getC()
+  {
+    return 1+1;
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

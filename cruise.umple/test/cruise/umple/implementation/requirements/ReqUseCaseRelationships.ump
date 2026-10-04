@@ -1,0 +1,8 @@
+req UC5 useCase {
+  who { returning customer }
+  what { check out quickly }
+  isA UC1;
+  include UC2, UC3;
+  userStep 1 { confirm the saved address }
+  systemResponse 1 { show the order summary }
+}

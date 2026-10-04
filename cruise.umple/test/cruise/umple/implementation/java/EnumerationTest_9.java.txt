@@ -1,0 +1,142 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
+
+
+import java.util.*;
+
+
+public class Bar
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Bar Associations
+  private List<Foo> foos;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Bar()
+  {
+    foos = new ArrayList<Foo>();
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  public Foo getFoo(int index)
+  {
+    Foo aFoo = foos.get(index);
+    return aFoo;
+  }
+
+  public List<Foo> getFoos()
+  {
+    List<Foo> newFoos = Collections.unmodifiableList(foos);
+    return newFoos;
+  }
+
+  public int numberOfFoos()
+  {
+    int number = foos.size();
+    return number;
+  }
+
+  public boolean hasFoos()
+  {
+    boolean has = foos.size() > 0;
+    return has;
+  }
+
+  public int indexOfFoo(Foo aFoo)
+  {
+    int index = foos.indexOf(aFoo);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  public static int minimumNumberOfFoos()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOne */
+  public Foo addFoo(Foo.Baz aMyBaz, String aMyStr)
+  {
+    return new Foo(aMyBaz, aMyStr, this);
+  }
+
+  public boolean addFoo(Foo aFoo)
+  {
+    boolean wasAdded = false;
+    if (foos.contains(aFoo)) { return false; }
+    Bar existingBar = aFoo.getBar();
+    boolean isNewBar = existingBar != null && !this.equals(existingBar);
+    if (isNewBar)
+    {
+      aFoo.setBar(this);
+    }
+    else
+    {
+      foos.add(aFoo);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+
+  public boolean removeFoo(Foo aFoo)
+  {
+    boolean wasRemoved = false;
+    //Unable to remove aFoo, as it must always have a bar
+    if (!this.equals(aFoo.getBar()))
+    {
+      foos.remove(aFoo);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  public boolean addFooAt(Foo aFoo, int index)
+  {  
+    boolean wasAdded = false;
+    if(addFoo(aFoo))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfFoos()) { index = numberOfFoos() - 1; }
+      foos.remove(aFoo);
+      foos.add(index, aFoo);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+
+  public boolean addOrMoveFooAt(Foo aFoo, int index)
+  {
+    boolean wasAdded = false;
+    if(foos.contains(aFoo))
+    {
+      if(index < 0 ) { index = 0; }
+      if(index > numberOfFoos()) { index = numberOfFoos() - 1; }
+      foos.remove(aFoo);
+      foos.add(index, aFoo);
+      wasAdded = true;
+    } 
+    else 
+    {
+      wasAdded = addFooAt(aFoo, index);
+    }
+    return wasAdded;
+  }
+
+  public void delete()
+  {
+    for(int i=foos.size(); i > 0; i--)
+    {
+      Foo aFoo = foos.get(i - 1);
+      aFoo.delete();
+    }
+  }
+
+}

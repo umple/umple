@@ -1,0 +1,23 @@
+req UC4 useCase {
+  what { place an order }
+  userStep 1 { review the cart }
+  systemResponse 1 { show the order total }
+}
+
+req UC5 useCase {
+  what { authenticate the customer }
+  userStep 1 { enter email and password }
+  systemResponse 1 { open a session }
+}
+
+req UC6 useCase {
+  who { returning customer }
+  what { place an order using a saved address }
+  isA UC4;
+  include UC5;
+
+  userStep 1 { confirm the saved address }
+  systemResponse 1 [address still valid] { show the order summary }
+  systemResponse 1 [address no longer valid] { ask for a new address }
+  userStep 2 { pay }
+}

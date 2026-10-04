@@ -1,0 +1,14 @@
+// implementsReq at top level before a top-level state machine definition
+// Req should attach to LightSM only, not to class Bulb
+// Should not produce a 401 warning
+implementsReq A;
+statemachine LightSM {
+  On { -> Off; }
+  Off {}
+}
+class Bulb {
+  brightness;
+}
+req A text {
+  The light must toggle between on and off.
+}

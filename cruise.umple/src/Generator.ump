@@ -99,11 +99,11 @@ use SuperCodeGeneratorGenerator;
 use CodeGenerator, UmpleGenerator, RubyGenerator , JavaGenerator , RTCppGenerator, PhpGenerator, PythonGenerator; 
 use Uigu2Generator , SqlGenerator , UmpleSelfGenerator , USEGenerator , EcoreGenerator ,TestGenerator ; 
 use PapyrusGenerator, XmiGenerator, TextUmlGenerator, ScxmlGenerator, CodeGvClassTraitDiagramGenerator
-use EventSequenceGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  SimulateGenerator,  YumlGenerator;
+use EventSequenceGenerator,  FeatureModelJsonGenerator,  FeatureDiagramCo,  EntityRelationshipCon,  SimulateGenerator,  YumlGenerator;
 use XtextGenerator,  JsonGenerator,  JsonMixedGenerator,  StructureDiagramGenerator , GvStateDiagramGenerator;
 use StateTableGenerator, SuperGvGeneratorGenerator, HtmlGenerator, UmpleModelWalkerGenerator,  CodeAnalysisGenerator;
 use AlloyGenerator,  NuSMVGenerators, NuSMVGenerator,   NuSMVOptimizerGenerator,  SimpleMetricsGenerator, PlainRequirementsDocGenerator, CodeGvClassDiagramGenerator, ExternalGrammarGenerator;
-use UmpleAnnotaiveToCompositionGenerator;
+use UmpleAnnotaiveToCompositionGenerator, InstanceDiagramGenerator, WordBank, MermaidGenerator;
 //End 
 
 // Base case generator, allows compilation without generation for testing command line, since Java is default
@@ -133,11 +133,14 @@ mixset ScxmlGenerator{ use generators/Generator_CodeScxml.ump; }
 mixset GvStateDiagramGenerator {  use generators/statemachineDiagramGenerator/stateMachineDiagramConfig.ump;}
 mixset StateTableGenerator{ use generators/Generator_CodeStateTables.ump; }
 mixset EventSequenceGenerator{ use generators/Generator_CodeEventSequence.ump; }
+mixset InstanceDiagramGenerator{ use generators/instanceDiagramGenerator/Generator_CodeInstanceDiagram.ump; }
+mixset WordBank { use generators/instanceDiagramGenerator/WordBank.ump; }
 mixset SimpleMetricsGenerator{ use generators/Generator_CodeSimpleMetrics.ump; }
 mixset ExternalGrammarGenerator{ use generators/Generator_CodeExternalGrammar.ump; }
 mixset CodeGvClassDiagramGenerator{ use generators/Generator_CodeGvClassDiagram.ump;}
 mixset CodeGvClassTraitDiagramGenerator{ use generators/Generator_CodeGvClassTraitDiagram.ump; }
 mixset FeatureDiagramCo{ use generators/featureDiagramGenerator/FeatureDiagramConfig.ump; }
+mixset FeatureModelJsonGenerator{ use generators/Generator_CodeFeatureModelJson.ump; }
 mixset EntityRelationshipCon{ use generators/entityRelationshipDiagramGenerator/entityRelationshipConfig.ump}
 mixset AlloyGenerator{ use generators/alloy/Generator_CodeAlloy.ump; }
 mixset NuSMVGenerators{ use generators/NuSMV/nusmvGeneratorConfig.ump; }
@@ -154,5 +157,5 @@ mixset UmpleModelWalkerGenerator{ use generators/Generator_UmpleModelWalker.ump;
 mixset CodeAnalysisGenerator{ use generators/Generator_CodeAnalysis.ump;}
 mixset PlainRequirementsDocGenerator{ use generators/Generator_CodePlainRequirementsDoc.ump; }
 mixset UmpleAnnotaiveToCompositionGenerator { use generators/Generator_CodeAnnotaiveToComposition.ump; }
+mixset MermaidGenerator{ use generators/Generator_CodeMermaid.ump; }
 //End
-

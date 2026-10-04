@@ -3,14 +3,14 @@
 /*This code was generated using the UMPLE 1.16.0.2388 modeling language!*/
 
 // constant on the left side of the constraint
-class student
+class Student
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //student Attributes
+  //Student Attributes
   private $age;
 
   //------------------------

@@ -34,7 +34,7 @@ class GvClassDiagramGenerator
   protected void parentClassAssoc(StringBuilder code, String className, String parentName)
   {
     code.append("  \""+className+"\" -> \""+parentName+"\""
-        +" [arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
+        +" [arrowhead=\"empty\"; samehead=\"\";];\n\n");
   }
 
   // Create each class - called VisitClass in SuperGvGenerator
@@ -44,30 +44,58 @@ class GvClassDiagramGenerator
 
     String className = uClass.getName();
     String classColor = uClass.getDisplayColor();
+
+    // counting all the isA (extends, subclass, and associations) - gazi
+    Integer associationCount=uClass.getAssociations().length + uClass.getExtendsTraits().size() + uClass.getSubclasses().size();
+    // default value for cellpadding
+    Integer cellPadding=10;
+    Integer multiplier=5;
+    // based on the number of arrows linked, adjust the cellpadding - gazi
+    if(associationCount>1 && associationCount<=20){
+      cellPadding=multiplier*associationCount;
+    }
+    else if(associationCount>20){
+      cellPadding=100;
+    }
+
+    // Arrange for manual layout of class if requested (see also code for interface)
+    String classPosition = "";
+    if(hasSuboption("gvmanual") && ! hasSpecialLayoutAlgorithmSuboption() ) {
+      double sepValForPosition = getSuboptionValue("gvseparator", 1.0);
+      classPosition = uClass.getPosition(sepValForPosition);
+    }
+
     if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
+    // DEBUG
+    //    code.append("\n  // Class: "+className+" "+uClass.getUmplePosition()+"\n");
     code.append("\n  // Class: "+className+"\n");
-    
+
     if (manyClass) {
-      code.append("  \""+className+"\" ["+classColor+"shape=record, label=\"{"+className);
+      code.append("  \""+className+"\" ["+classPosition+classColor+"shape=record, label=\"{"+className);
 
       if(uClass.getIsAbstract()) {  // add abstract tag
         code.append("\n&laquo;abstract&raquo;");
       }
     } 
     else {
-      code.append("  \""+className+"\" ["+classColor+"shape=plaintext margin=0 label=");
+      code.append("  \""+className+"\" ["+classPosition+classColor+"shape=plaintext margin=0 label=");
 	    
       // Different cellpadding for if the class has nothing but the
       // name because of a glitch in graphviz's graphics
       if ((uClass.getAttributes().size() == 0 || hasSuboption("hideattributes")) && 
           (uClass.getMethods().size() == 0 || !hasSuboption("showmethods")) 
           && !uClass.getIsAbstract()) {
-	    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
-		   			+"<tr><td>    "+className+"    </td></tr>");
-      }
+              code.append("<<table border=\"1\" cellspacing=\"2\" cellborder=\"0\" cellpadding=\""+cellPadding+"\">"
+                    +"<tr><td>    "+className+" </td></tr>");
+        }
       else {
+        // Different cellpadding based on attribute count. - gazi
+        if(uClass.getAttributes().size()>5 && associationCount<=3){
+          cellPadding=10;
+        }
+
         code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"2\">"
-                    +"<tr><td cellpadding=\"4\">    "+className+"    </td></tr>");
+                    +"<tr><td cellpadding=\""+cellPadding+"\">    "+className+" </td></tr>");
 		  }
       if(uClass.getIsAbstract()) {  // add abstract tag
         code.append("<tr><td cellpadding=\"4\">&laquo;abstract&raquo;"+"</td></tr>");
@@ -209,7 +237,7 @@ class GvClassDiagramGenerator
       } 
       code.append("  \""+uClass.getName()+
         "\" -> \""+(uInterface.getName().replace("<","&lt;").replace(">","&gt;")));
-      code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"; style=dashed];\n\n");
+      code.append("\" [  arrowhead=\"empty\"; samehead=\"\"; style=dashed];\n\n");
     }
   }
 
@@ -222,7 +250,7 @@ class GvClassDiagramGenerator
     String modifierOne = leftEnd.getModifier();
     String modifierTwo = rightEnd.getModifier();
     String visualLeftEnd, visualRightEnd, toolTip, label;
-
+    
     String leftClass= leftEnd.getClassName();
     // Only output them when visiting one class
     if(leftClass.equals(className)) {
@@ -448,16 +476,23 @@ class GvClassDiagramGenerator
 	    String interfaceName = inInterface.getName();
 	    String interfaceColor = inInterface.getDisplayColor();
 	    if (!interfaceColor.equals("")) interfaceColor=" style=filled, fillcolor="+interfaceColor+" ";
-	    
+
+      // Arrange for manual layout of interface if requested (see also code for class)
+      String interfacePosition = "";
+      if(hasSuboption("gvmanual") && ! hasSpecialLayoutAlgorithmSuboption() ) {
+        double sepValForPosition = getSuboptionValue("gvseparator", 1.0);
+        interfacePosition = inInterface.getPosition(sepValForPosition);
+      }
+
 	    if (manyInterface) {
-	      code.append("  \""+manyInterface+"\" ["+interfaceColor+"shape=record, label=\"{"+"&laquo;interface&raquo;<BR/>"+interfaceName);
+	      code.append("  \""+manyInterface+"\" ["+interfacePosition+interfaceColor+"shape=record, label=\"{"+"&laquo;interface&raquo;<BR/>"+interfaceName);
 	    } 
 	    else {
-	      code.append("  \""+interfaceName+"\" ["+interfaceColor+"shape=plaintext margin=0 label=");
+	      code.append("  \""+interfaceName+"\" ["+interfacePosition+interfaceColor+"shape=plaintext margin=0 label=");
 		    
 	      // Different cellpadding for if the class has nothing but the
 	      // name because of a glitch in graphviz's graphics
-		    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
+		    code.append("<<table border=\"1\" cellspacing=\"30\" cellborder=\"0\" cellpadding=\"10\">"
 			   			+"<tr><td>"+"&laquo;interface&raquo;<BR/>"+interfaceName+"</td></tr>");
 	    }
 	    if ((inInterface.getMethods().size()<=0) || (!hasSuboption("showmethods"))){
@@ -490,7 +525,7 @@ class GvClassDiagramGenerator
 	            +"\" [style=filled, fillcolor="+intColor+"];\n\n ");
 	        } 
 	        code.append("  \""+inInterface.getName()+"\" -> \""+uInt.getName());
-	        code.append("\" [  arrowhead=\"empty\"; samehead=\"gen\"];\n\n");
+	        code.append("\" [  arrowhead=\"empty\"; samehead=\"\"];\n\n");
 	      }
    }  
 }

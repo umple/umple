@@ -1,0 +1,13 @@
+// implementsReq at top level before a req statement
+// HighLevel should only attach to Detailed, not to Other
+// Should not produce a 401 warning
+implementsReq HighLevel;
+req Detailed text {
+  Detailed requirement.
+}
+req Other text {
+  Other requirement.
+}
+req HighLevel text {
+  High level requirement.
+}

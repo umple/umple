@@ -1,0 +1,10 @@
+// implementsReq at top level before a req statement
+// req Detailed "implements" req HighLevel (requirement decomposition)
+// Should not produce a 401 warning
+implementsReq HighLevel;
+req Detailed text {
+  The system shall do X when condition Y is met.
+}
+req HighLevel text {
+  The system shall do X.
+}

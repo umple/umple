@@ -1,0 +1,33 @@
+namespace cruise.umple.compiler;
+
+// used for random name generation for the instance diagram generator
+class WordBank
+{
+
+    static String[] nouns = {
+            "hobby", "front", "shoe", "home", "plot", "stick", "truck", "amusement", "cable", "wash", "existence", "arithmetic", "use", "stone", "knot", "lace", "cheese", "test", "tin", "laugh", "railway", "transport", "shake", "afterthought", "reading", "quill", "distribution", "bone", "wealth", "straw", "achiever", "flower", "aftermath", "deer", "shock", "riddle", "drain", "jam", "way", "beginner", "plate", "branch", "route", "coat", "mass", "mice", "window", "doll", "truck", "maple" , "rocket" , "window" , "lantern" , "river" , "forest" , "planet" , "mirror" , "button" , "garden" , "castle" , "silver" , "basket" , "tunnel" , "cloud" , "pencil" , "carpet" , "bridge" , "island" , "guitar" , "shadow" , "bottle" , "engine" , "harbor" , "meadow" , "signal" , "rocket" , "flower" , "valley" , "pocket"
+    };
+
+    static String[] adjectives = {
+            "slow" , "feigned", "angry", "automatic", "concerned", "mountainous", "chief", "standing", "quizzical", "royal", "capable", "unwritten", "uninterested", "frantic", "ragged", "special", "exciting", "endurable", "wandering", "brief", "shut", "null", "past", "melted", "thinkable", "noiseless", "resolute", "plausible", "sedate", "bustling", "abiding", "observant", "big" , "red" , "tall" , "dark" , "bright" , "silent" , "ancient" , "modern" , "silver" , "golden" , "wooden" , "little" , "giant" , "rapid" , "calm" , "fresh" , "sweet" , "sharp" , "rough" , "smooth" , "warm" , "cold" , "brave" , "proud" , "green" , "blue" , "white" , "black" , "round" , "clear"
+    };
+
+    public static int getSizeNoun(){
+
+        return nouns.length;
+    }
+
+    public static int getSizeAdjective(){
+
+        return adjectives.length;
+    }
+
+    public static String getNoun(int i){
+        return nouns[i];
+    }
+
+    public static String getAdjective(int i){
+        return adjectives[i];
+    }
+
+}

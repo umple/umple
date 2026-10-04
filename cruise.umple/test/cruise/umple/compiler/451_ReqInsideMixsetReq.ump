@@ -1,0 +1,12 @@
+// implementsReq inside a mixset before a req statement (requirement decomposition)
+// Should not produce a 401 warning
+mixset M {
+  implementsReq HighLevel;
+  req Detailed text {
+    Detailed requirement inside mixset.
+  }
+}
+req HighLevel text {
+  High level requirement.
+}
+use M;

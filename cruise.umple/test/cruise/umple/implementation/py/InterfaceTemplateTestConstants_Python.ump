@@ -1,7 +1,0 @@
-generate Python;
-namespace example;
-
-interface IMentor 
-{
- constant String aName = "aValue";
-}

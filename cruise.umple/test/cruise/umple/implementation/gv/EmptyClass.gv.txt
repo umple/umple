@@ -1,9 +1,10 @@
 digraph "EmptyClass" {
-  rankdir="BT"
-  node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+    rankdir="BT"
+    node [ratio="auto" shape=record margin=0; href="javascript:Action.selectClass(&quot;\N&quot;);"];
+     edge [minlen=1 headclip="true"];
 
   // Class: Empty
-  "Empty" [shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="10"><tr><td>    Empty    </td></tr></table>>,
+  "Empty" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    Empty </td></tr></table>>,
    tooltip="class Empty
 "];
 

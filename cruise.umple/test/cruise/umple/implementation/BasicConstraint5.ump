@@ -1,4 +1,4 @@
-class student
+class Student
 {
   Integer age;
   Integer weight;

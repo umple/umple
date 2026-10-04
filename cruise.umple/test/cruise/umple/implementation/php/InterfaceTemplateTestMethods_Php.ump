@@ -1,7 +1,0 @@
-generate Php;
-namespace example;
-
-interface IMentor 
-{
-String getCode(String aParam);
-}

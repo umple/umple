@@ -1,0 +1,8 @@
+req Speed quality {
+  High {}
+  Medium {}
+}
+
+req Speed quality {
+  Low {}
+}

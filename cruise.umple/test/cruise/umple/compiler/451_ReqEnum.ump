@@ -1,0 +1,7 @@
+// implementsReq at top level before enum definition
+// Should not produce a 401 warning
+implementsReq A;
+enum Color { RED, GREEN, BLUE }
+req A text {
+  System must support color values.
+}

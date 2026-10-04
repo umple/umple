@@ -6,21 +6,21 @@
 /**
  * constant on the left side of the constraint
  */
-public class student
+public class Student
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //student Attributes
+  //Student Attributes
   private int age;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public student(int aAge)
+  public Student(int aAge)
   {
     age = aAge;
     if (18<=aAge)

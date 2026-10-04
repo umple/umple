@@ -1,5 +1,5 @@
 class Student {
-  String foo(int a) {
+  String foo(int a) Java {
     if(a < 0)
       /*
         {
@@ -21,11 +21,11 @@ class Student {
     return 4;
   }
 
-  before custom foo {
+  before custom foo Java {
     System.out.println("Starting foo with argument: " + a);
   }
 
-  after all foo {
+  after all foo Java {
     System.out.println("Returning from foo!");
   }
 }

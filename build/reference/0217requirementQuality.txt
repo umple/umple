@@ -1,0 +1,38 @@
+Requirement Quality Classes
+Comments and Requirements
+noreferences
+@@tooltip A req with the quality language tag introduces named quality classes (e.g. High, Medium, Low) that describe discrete levels of a non-functional requirement and can be bound to alternative designs via implementsReq.
+
+@@description
+<p>A requirement can be tagged with the <code>quality</code> language, which marks it as a non-functional requirement characterised by a set of named <em>quality classes</em>. Each class represents a discrete level or option for the property being described (for example <i>High</i> / <i>Medium</i> / <i>Low</i> for speed, or <i>Perfect</i> / <i>SlightlyRisky</i> / <i>Weak</i> for security).</p>
+
+<p>Syntax:</p>
+
+<pre>
+req &lt;ReqIdentifier&gt; quality {
+  &lt;QualityClassName&gt; {}
+  &lt;QualityClassName&gt; {}
+  ...
+}
+</pre>
+
+<p>Quality classes are declared with empty bodies. Non-empty bodies are currently accepted by the parser but produce warning 403 and have no effect on generated output.</p>
+
+<p>An <code>implementsReq</code> statement can reference a specific quality class using parenthesised arguments, and several bindings can be combined in a single statement:</p>
+
+<pre>
+implementsReq Speed(High);
+implementsReq Speed(High), Security(Perfect);
+</pre>
+
+<p>When alternative designs (typically different mixsets) are each tagged with quality classes referring to the same set of quality requirements, the designs can be compared on a common set of criteria. See <a href="RequirementQualityComparisonTable.html">Requirement Quality Comparison Table</a> for the generated output, and <a href="Requirements.html">Requirements</a> for the general requirement-statement syntax.</p>
+
+<br />
+
+@@example @@caption Basic quality requirement declaration @@endcaption
+@@source manualexamples/ReqQuality.ump
+@@endexample
+
+@@example @@caption Binding quality classes to alternative mixsets @@endcaption
+@@source manualexamples/ReqImplementsQuality.ump
+@@endexample

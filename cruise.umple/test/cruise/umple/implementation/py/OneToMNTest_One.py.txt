@@ -67,7 +67,7 @@ class Mentor():
 
     # Code from template association_AddMNToOnlyOne 
     def addPupil1(self, aNumber):
-        from Pupil import Pupil
+        from example.Pupil import Pupil
         if self.numberOfPupils() >= Mentor.maximumNumberOfPupils() :
             return None
         else :
@@ -140,7 +140,7 @@ class Mentor():
         return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]"
 
     def addPupil(self, *argv):
-        from Pupil import Pupil
+        from example.Pupil import Pupil
         if len(argv) == 1 and isinstance(argv[0], str) :
             return self.addPupil1(argv[0])
         if len(argv) == 1 and isinstance(argv[0], Pupil) :

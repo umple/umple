@@ -1,0 +1,8 @@
+req R01 {
+  This is a plain requirement.
+}
+
+class Example {
+  implementsReq R01;
+  name;
+}

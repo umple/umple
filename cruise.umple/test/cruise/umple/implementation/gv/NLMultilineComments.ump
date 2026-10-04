@@ -1,0 +1,16 @@
+generate GvStateDiagram;
+namespace example;
+
+class X {
+  sm1 {
+    /* This is a multiline comment
+     * for state s1 */
+    s1 {
+      /* Multiline comment for e1 transition */
+      e1 -> s2;
+    }
+    s2 {
+      e2 -> s1;
+    }
+  }
+}

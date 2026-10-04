@@ -7,8 +7,8 @@ class Flight {}
 
 associationClass Booking {
   Integer number;
-  * Passenger passenger;
-  * Flight flight;
+  * Passenger;
+  * Flight;
   key {number, flight}
 }
 //$?[End_of_model]$?

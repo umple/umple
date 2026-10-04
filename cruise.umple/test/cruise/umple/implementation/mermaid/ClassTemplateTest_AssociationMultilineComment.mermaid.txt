@@ -1,0 +1,6 @@
+classDiagram
+  class Foo {
+  }
+  class Bar {
+  }
+  Foo "1" -- "*" Bar : bars

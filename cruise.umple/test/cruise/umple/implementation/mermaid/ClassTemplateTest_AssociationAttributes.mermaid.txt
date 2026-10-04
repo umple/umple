@@ -1,0 +1,7 @@
+classDiagram
+  class Token {
+    Position p
+  }
+  class Position {
+    Integer lineNumber
+  }

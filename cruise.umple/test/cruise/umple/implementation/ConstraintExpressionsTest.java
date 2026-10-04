@@ -13,7 +13,7 @@ public class ConstraintExpressionsTest extends TemplateTest{
 	@Test
 	public void BasicConstraint1() //[(age<18)]
 	{
-		assertUmpleTemplateFor("BasicConstraint1.ump", languagePath + "/BasicConstraint1."+ languagePath +".txt", "student");
+		assertUmpleTemplateFor("BasicConstraint1.ump", languagePath + "/BasicConstraint1."+ languagePath +".txt", "Student");
 	}
 
 	@Test
@@ -23,27 +23,27 @@ public class ConstraintExpressionsTest extends TemplateTest{
 	
 	@Test @Ignore
 	public void BasicConstraint4(){ // [(18>age)]
-		assertUmpleTemplateFor("BasicConstraint4.ump", languagePath + "/BasicConstraint4."+ languagePath +".txt", "student");
+		assertUmpleTemplateFor("BasicConstraint4.ump", languagePath + "/BasicConstraint4."+ languagePath +".txt", "Student");
 	}
 	
 	@Test
 	public void BasicConstraint5(){ // [18 > age && 3 < weight]
-		assertUmpleTemplateFor("BasicConstraint5.ump", languagePath + "/BasicConstraint5."+ languagePath +".txt", "student");
+		assertUmpleTemplateFor("BasicConstraint5.ump", languagePath + "/BasicConstraint5."+ languagePath +".txt", "Student");
 	}
 	
 	@Test
 	public void BasicConstraint6(){ // [18 > age || 3 < weight]
-		assertUmpleTemplateFor("BasicConstraint6.ump", languagePath + "/BasicConstraint6."+ languagePath +".txt", "student");
+		assertUmpleTemplateFor("BasicConstraint6.ump", languagePath + "/BasicConstraint6."+ languagePath +".txt", "Student");
 	}
 	
 	@Test
 	public void BasicConstraint7(){ // [! (18 > age)]
-		assertUmpleTemplateFor("BasicConstraint7.ump", languagePath + "/BasicConstraint7."+ languagePath +".txt", "student");
+		assertUmpleTemplateFor("BasicConstraint7.ump", languagePath + "/BasicConstraint7."+ languagePath +".txt", "Student");
 	}
 	
 	@Test
 	public void BasicConstraint8(){ // [! (18 > age)]
-		assertUmpleTemplateFor("BasicConstraint8.ump", languagePath + "/BasicConstraint8."+ languagePath +".txt", "student");
+		assertUmpleTemplateFor("BasicConstraint8.ump", languagePath + "/BasicConstraint8."+ languagePath +".txt", "Student");
 	}
 	
 	@Test

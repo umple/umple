@@ -4,7 +4,7 @@
 
 OS         | Linux Jenkins | Windows Appveyor |  
 :--------- | ------------- | ---------------- |
-**Status** | [![Jenkins Linux Build status](https://jenkins.umple.org/job/Umple/lastSuccessfulBuild/badge/icon?subject=Jenkins%2FLinux&build=lastCompleted:${params.BRANCH=master})](https://jenkins.umple.org/job/Umple/lastSuccessfulBuild?subject=Jenkins%2FLinux&build=lastCompleted:${params.BRANCH=master}) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/1yetvadynui7r8y6?svg=true)](https://ci.appveyor.com/project/vahdat-ab/umple/branch/master) 
+**Status** | [![Jenkins Linux Build status](https://jenkins.umple.org/job/Umple/job/master/badge/icon?subject=Jenkins%2FLinux)](https://jenkins.umple.org/job/Umple/job/master/) | [![Windows Build status](https://ci.appveyor.com/api/projects/status/1yetvadynui7r8y6?svg=true)](https://ci.appveyor.com/project/vahdat-ab/umple/branch/master) 
 
 
 ## Description
@@ -21,6 +21,8 @@ Cite the overall project as: Timothy C. Lethbridge, Andrew Forward, Omar Badredd
 "Umple: Model-Driven Development for Open Source and Education", _Science of Computer Programming_, 2021, https://doi.org/10.1016/j.scico.2021.102665.
 
 Cite latest software release as: University of Ottawa, Umple, https://umple.org/releases  https://doi.org/10.5281/zenodo.4677562   [![DOI](https://zenodo.org/badge/41397174.svg)](https://zenodo.org/badge/latestdoi/41397174)
+
+Releases are created 1-4 times a year, but UmpleOnline always has the latest version.
 
 ## Development Process
 Umple is developed in itself, guaranteeing robustness; the most recent version of the compiler must be used to compile itself. See the wiki for development setup: https://umple.org/devsetup

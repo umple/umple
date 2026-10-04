@@ -121,9 +121,10 @@ class RuleBasedParser
       if(token.is("value") && token.getValue().contains("\\u003B"))
         token.setValue(token.getValue().replace("\\u003B",";")); 
     } 
-    for(Token subToken : token.getSubTokens())
+    List<Token> subTokens = token.getSubTokens();
+    for(int i = 0; i < subTokens.size(); i++)
     {
-      cleanEscapeChars(subToken);
+      cleanEscapeChars(subTokens.get(i));
     }
 
 }
@@ -142,7 +143,7 @@ class RuleBasedParser
     int parseResult = root.parse(token, 0,data.getInput().length(),data.getInput(),data);
     if(parseResult==data.getInput().length())
     {
-      cleanEscapeChars(token);cleanEscapeChars(token);
+      cleanEscapeChars(token);
       setRootToken(token);
     }
     else

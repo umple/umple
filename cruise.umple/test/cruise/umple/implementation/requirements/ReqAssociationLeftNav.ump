@@ -1,0 +1,12 @@
+// Test that a left-navigable association implementing a requirement shows the <- arrow direction
+req R1 {
+  A left-navigable association requirement.
+}
+
+class A {
+  implementsReq R1;
+  1 <- * B;
+}
+
+class B {
+}

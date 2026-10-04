@@ -1,0 +1,57 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+////---- Tests for  ClassTemplateTest_AttributeComments ----/////
+
+test Student {
+
+ generate JUnit ;
+ 
+ depend  Student ; 
+
+
+
+ 
+ GIVEN:
+ ClassTemplateTest_AttributeComments.ump;
+ 
+ 
+ 
+ THEN:
+  //tests for :a
+
+      test attribute_a {
+    	}
+
+ //tests for :b
+
+      test attribute_b {
+    
+      
+        Student aStudent();
+        
+        
+    assertTrue( aStudent.setB("RandomString1"));
+    assertTrue( aStudent.getB() =="RandomString1");
+    assertTrue( aStudent.setB("RandomString2"));
+    assertTrue( aStudent.getB()=="RandomString2");
+    assertFalse( aStudent.getB() =="RandomString1");
+             
+          
+        	}
+
+ //tests for :c
+
+      test attribute_c {
+    
+          
+        	}
+
+
+  
+ 
+   
+
+}

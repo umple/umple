@@ -18,7 +18,8 @@ const MAX_REQUESTS = 20;
 let mainFileName;
 let numberOfRequests = 0;
 
-app.all('*', (req, res, next) =>
+// Express 5 no longer accepts '*' as a route path; plain middleware runs for every request anyway.
+app.use((req, res, next) =>
 {
     res.header('Access-Control-Allow-Origin', '*'); // TODO CHANGE ORIGIN
     res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');

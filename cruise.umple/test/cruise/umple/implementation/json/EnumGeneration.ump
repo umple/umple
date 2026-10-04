@@ -1,0 +1,42 @@
+
+enum Status {
+  Active,
+  Inactive,
+  Archived
+}
+
+class Task {
+
+  enum Priority {
+    Low,
+    Medium,
+    High
+  }
+
+  enum Type {
+    Bug,
+    Feature,
+    Documentation
+  }
+
+  Difficulty {
+    Easy,
+    Medium,
+    Hard
+  }
+
+  Difficulty difficulty;
+  Priority priority;
+  Type type;
+  Status status;
+}
+
+class Order {
+  enum Type {
+    Online,
+    In-store,
+    Pickup
+  }
+
+  OrderType order;
+}

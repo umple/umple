@@ -3,10 +3,11 @@ if ! $?UMPLEROOT then
   setenv UMPLEROOT ~/umple
 endif
 cd $UMPLEROOT/build
-if ($OSTYPE == 'cygwin' || $OSTYPE == 'msys' | $OSTYPE == 'win32') then
-  set buildenv="wlocal"
-else
-  set buildenv="local"
+set buildenv="local"
+if ( $?OSTYPE ) then
+  if ($OSTYPE == 'cygwin' || $OSTYPE == 'msys' | $OSTYPE == 'win32') then
+    set buildenv="wlocal"
+  endif
 endif
 echo Doing FIRST build of Umple at $UMPLEROOT using ant -Dmyenv=$buildenv
 echo This resets dependencies and is needed only after installing a fresh repo or

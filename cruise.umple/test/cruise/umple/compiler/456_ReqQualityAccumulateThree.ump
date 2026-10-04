@@ -1,0 +1,15 @@
+req R1 {
+  plain requirement text
+}
+
+req R1 quality {
+  Alpha {}
+}
+
+req R1 quality {
+  Beta {}
+}
+
+req R1 quality {
+  Gamma {}
+}

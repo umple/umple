@@ -1,0 +1,5 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqMixset.ump
+</p><p><b>R1: A mixset requirement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;mixset:&nbsp;Feature&nbsp;ReqMixset.ump&nbsp;line&nbsp;6 ; 
+</p></html>

@@ -1,0 +1,2624 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+This file generates a randomized instance diagram and the resulting objects
+for every class in the model. The results of these instances is output
+to a GV Diagram.
+
+Command line action for this is
+  -g InstanceDiagram
+
+ */
+namespace cruise.umple.compiler;
+
+class InstanceDiagramGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend java.sql.Time;
+  depend java.sql.Date;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  protected String generatorType()
+  {
+    return "cid";
+  }
+
+  // Template for what will appear at the start of each graphviz file
+  graphStart(umpleVersion) <<!/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+  
+  digraph InstanceDiagram {
+    node [shape=rectangle]
+    edge [arrowhead=none]
+  !>>
+
+  emit graphStart()(graphStart(UmpleModel.VERSION_NUMBER));
+
+  protected void terminateCode(StringBuilder code, StringBuilder associations) {
+
+    code.append("\n  // All associations\n");
+    code.append(associations);
+
+    code.append("}\n");
+
+    model.setCode(code.toString());
+    writeModel();
+  }
+
+  // Output the graphviz file to a file with the .gv suffix
+  protected void writeModel()
+  {
+    try
+    {
+      String outputDir = getModel().getUmpleFile().getPath();
+      String path = StringFormatter.addPathOrAbsolute(outputDir, "");
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName()
+          + generatorType() + ".gv";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating GraphViz Diagram code." + e, e);
+    }
+  } 
+
+  // Contains various aspects from an Umple file (.ump), such as classes, attributes, associations and methods.  Generated output is based
+  // off of what's contained in here.
+  UmpleModel model = null;
+  String outputCode = "";
+  Random attributeRandomGen = new Random();
+  Map<String, String> instanceIdtoInstanceName = new HashMap<String, String>();
+  // When running in CRUD-driven mode, this map holds concrete
+  // attribute values for specific instances so that the instance
+  // diagram can reflect exactly what the user entered in the CRUD UI.
+  // Key: class name -> (instance index -> (attribute name -> value))
+  Map<String, Map<Integer, Map<String, String>>> crudAttributeValues = null;
+  // And this list holds explicit association links between concrete
+  // instances captured from the CRUD UI.
+  java.util.List<CrudAssociationLink> crudAssociationLinks = null;
+  
+  // Meta variables - These should only be updated by suboptions
+  int suboptionLinkingFlag = 2; // 2 is Random
+  int suboptionInitialClassCountFlag = -1; // -1 is Random
+  int suboptionMaxIterations = 100;
+  int suboptionMaxClassCount = 200;
+
+  public void useSuboptions() {
+    // Set the linking mode
+    if (hasSuboption("minInstLinks")) {this.suboptionLinkingFlag = 0;}
+    if (hasSuboption("maxInstLinks")) {this.suboptionLinkingFlag = 1;}
+    if (hasSuboption("randomInstLinks")) {this.suboptionLinkingFlag = 2;}
+    // Set the initial instance count mode
+    this.suboptionInitialClassCountFlag = (int)getSuboptionValue("initialInstCount", -1.0);
+    if (hasSuboption("randomInitialInstCount")) {this.suboptionInitialClassCountFlag = -1;}
+    // Set the max iterations
+    this.suboptionMaxIterations = (int)getSuboptionValue("maxInstIterations", 100.0);
+    // Set the max instance counts
+    this.suboptionMaxClassCount = (int)getSuboptionValue("maxInstClassCount", 200.0);
+  }
+
+  public void generate()
+  {
+    // Update meta variables based on suboptions
+    useSuboptions();
+    
+    InstanceDiagramResult instanceData;
+
+    // Special mode: when invoked from the CRUD UI with suboption
+    // "crudUseJson", build the instance data directly from the CRUD
+    // instance counts embedded in the Umple source as a comment. This
+    // bypasses the random instance generation and simply reflects the
+    // counts currently present in the CRUD UI.
+    if (hasSuboption("crudUseJson")) {
+      instanceData = buildInstanceDiagramFromCrudInstanceCounts();
+    }
+    else {
+      instanceData = ClassInstanceCountSet.computeInstanceDiagram(
+        model,
+        suboptionLinkingFlag,
+        suboptionInitialClassCountFlag,
+        suboptionMaxIterations,
+        suboptionMaxClassCount
+      );
+    }
+
+    // When asked for CRUD-style JSON, emit a compact JSON payload
+    // instead of GraphViz. This is used both by the random-data
+    // generator endpoint (crudRandomJson alone) and by flows that
+    // reuse CRUD-sourced instance data (crudUseJson + crudRandomJson).
+    if (hasSuboption("crudRandomJson")) {
+      String json = buildCrudRandomDataJson(instanceData);
+      model.setCode(json);
+      return;
+    }
+
+    // For normal instance-diagram generation, first build the JSON
+    // sidecar. In the purely random case (no CRUD-driven data), this
+    // call also captures the concrete random attribute values into
+    // crudAttributeValues so that the subsequent GraphViz rendering
+    // can display exactly the same values as those exported to JSON.
+    writeCrudJsonSidecar(instanceData);
+
+    // Default behaviour: render the GraphViz instance diagram using
+    // any captured CRUD or random attribute values.
+    renderInstanceDiagram(instanceData);
+  }
+
+  // Write a JSON sidecar file for the given instance data next to the
+  // generated GraphViz file. This uses the same JSON structure as
+  // crudRandomJson but writes to disk instead of stdout.
+  private void writeCrudJsonSidecar(InstanceDiagramResult data) {
+    try {
+      String outputDir = getModel().getUmpleFile().getPath();
+      String path = StringFormatter.addPathOrAbsolute(outputDir, "");
+      File dir = new File(path);
+      dir.mkdirs();
+      String baseName = getModel().getUmpleFile().getSimpleFileName() + generatorType();
+      String jsonFilename = path + File.separator + baseName + ".instance.json";
+
+      String json = buildCrudRandomDataJson(data);
+
+      BufferedWriter bw = new BufferedWriter(new FileWriter(jsonFilename));
+      bw.write(json);
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e) {
+      // Sidecar JSON is an optional convenience; if it fails, fall
+      // back silently so that GraphViz generation is not impacted.
+    }
+  }
+
+  // Build JSON representation of the generated instance data in the
+  // same general shape as CRUD's JSON export:
+  private String buildCrudRandomDataJson(InstanceDiagramResult data) {
+    if (data.statusCode != 0 || data.diagramIsEmpty) {
+      StringBuilder err = new StringBuilder();
+      err.append("{");
+      err.append("\"statusCode\":").append(data.statusCode).append(",");
+      err.append("\"diagramIsEmpty\":").append(data.diagramIsEmpty ? "true" : "false");
+      err.append(",\"error\":{");
+      err.append("\"message\":\"");
+      if (data.statusCode == 1) {
+        err.append("Reached maximum iterations. Ensure that the system is instantiable and non-infinite");
+      } else if (data.statusCode == 2) {
+        err.append("Reached maximum class count. Ensure that the system is instantiable and non-infinite");
+      } else if (data.statusCode == 3) {
+        err.append("Inheritance unresolvable. Ensure that abstract/interface classes with associations have concrete implementations that can be instantiated without creating an infinite loop");
+      } else if (data.statusCode == 4) {
+        err.append("Infinite loop detected. Instantiating some classes will lead to an infinite number of instances.");
+      } else if (data.diagramIsEmpty) {
+        err.append("Generated InstanceDiagram is empty. For random diagrams, consider trying again or setting the initial class counts to a constant");
+      }
+      err.append("\"");
+
+      // Include any classes with no possible inheritance
+      err.append(",\"noPossibleInheritance\":[");
+      if (data.noPossibleInheritance != null) {
+        boolean first = true;
+        for (String cname : data.noPossibleInheritance) {
+          if (!first) { err.append(","); }
+          first = false;
+          err.append("\"").append(escapeJson(cname)).append("\"");
+        }
+      }
+      err.append("]");
+
+      // Include loop scores for diagnostics
+      err.append(",\"loopScores\":{");
+      if (data.loopScores != null) {
+        boolean firstLoop = true;
+        for (Map.Entry<String, Integer> entry : data.loopScores.entrySet()) {
+          if (!firstLoop) { err.append(","); }
+          firstLoop = false;
+          err.append("\"").append(escapeJson(entry.getKey())).append("\":").append(entry.getValue());
+        }
+      }
+      err.append("}");
+
+      err.append("}}");
+      return err.toString();
+    }
+
+    // Successful, non-empty diagram: build per-instance objects with
+    // attributes and association references, then emit a top-level array
+    // of { "FQN": { ... } } wrappers.
+
+    // Determine namespace for fully-qualified names
+    String ns = model.getDefaultNamespace();
+
+    // Per-class list of instance data maps (attribute + association data)
+    Map<String, java.util.List<Map<String, Object>>> instancesByClass = new LinkedHashMap<String, java.util.List<Map<String, Object>>>();
+    // Map from className#iteration to instance data map
+    Map<String, Map<String, Object>> instanceByKey = new HashMap<String, Map<String, Object>>();
+    // Map from className#iteration to umpleObjectID (as string)
+    Map<String, String> umpleIdByKey = new HashMap<String, String>();
+
+    // When running in purely random mode (no CRUD-sourced attribute
+    // values present), we want the GraphViz instance diagram to show
+    // exactly the same randomly generated attribute values as the
+    // JSON sidecar that is produced in the same run. We achieve this
+    // by capturing the generated attributes here and, once complete,
+    // storing them into crudAttributeValues so that renderInstanceDiagram
+    // can reuse them instead of regenerating new random values.
+    boolean captureRandomAttributes = (crudAttributeValues == null);
+    Map<String, Map<Integer, Map<String, String>>> capturedAttrs = null;
+
+    int nextId = 1;
+
+    // First pass: create instances for each concrete class with random
+    // attribute values, but no associations yet.
+    if (data.instanceCounts != null) {
+      for (UmpleClass uClass : model.getUmpleClasses()) {
+        if (uClass.getIsAbstract()) {
+          continue;
+        }
+        String className = uClass.getName();
+        Integer countObj = data.instanceCounts.get(className);
+        int count = (countObj != null) ? countObj.intValue() : 0;
+        if (count <= 0) {
+          continue;
+        }
+
+        java.util.List<Map<String, Object>> list = instancesByClass.get(className);
+        if (list == null) {
+          list = new ArrayList<Map<String, Object>>();
+          instancesByClass.put(className, list);
+        }
+
+        for (int iter = 1; iter <= count; iter++) {
+          Map<String, Object> instData = new LinkedHashMap<String, Object>();
+
+          // Assign a unique umpleObjectID (as string)
+          String objId = Integer.toString(nextId++);
+          instData.put("umpleObjectID", objId);
+
+          // Generate random attribute values consistent with instance
+          // diagram attribute generation.
+          // Prefer CRUD-sourced attribute values when available for
+          // this specific instance; otherwise, fall back to random
+          // attribute generation consistent with the instance diagram.
+          Map<String, String> attrs = generateAttributesForInstance(uClass, iter);
+          for (Map.Entry<String, String> e : attrs.entrySet()) {
+            instData.put(e.getKey(), e.getValue());
+          }
+
+          // In the non-CRUD case, remember these generated values so
+          // that the GraphViz generator can render the same ones.
+          if (captureRandomAttributes && !attrs.isEmpty()) {
+            if (capturedAttrs == null) {
+              capturedAttrs = new LinkedHashMap<String, Map<Integer, Map<String, String>>>();
+            }
+            Map<Integer, Map<String, String>> byIndex = capturedAttrs.get(className);
+            if (byIndex == null) {
+              byIndex = new LinkedHashMap<Integer, Map<String, String>>();
+              capturedAttrs.put(className, byIndex);
+            }
+            // Store a shallow copy so later mutations to attrs don't
+            // accidentally affect the captured snapshot.
+            Map<String, String> copy = new LinkedHashMap<String, String>();
+            for (Map.Entry<String, String> ae : attrs.entrySet()) {
+              copy.put(ae.getKey(), ae.getValue());
+            }
+            byIndex.put(Integer.valueOf(iter), copy);
+          }
+
+          list.add(instData);
+          String key = className + "#" + iter;
+          instanceByKey.put(key, instData);
+          umpleIdByKey.put(key, objId);
+        }
+      }
+    }
+
+    // Second pass: map association links to per-instance association
+    // properties using umpleObjectID references.
+    Map<String, ClassInstanceCount> classInstanceCountMap = data.rawClassInstanceCounts;
+    if (data.associationLinks != null && classInstanceCountMap != null) {
+      for (AssociationLinkSet linkSet : data.associationLinks) {
+        Association assoc = linkSet.getAssociation();
+        AssociationEnd leftEnd = assoc.getEnd(0);
+        AssociationEnd rightEnd = assoc.getEnd(1);
+        String leftClass = leftEnd.getClassName();
+        String rightClass = rightEnd.getClassName();
+
+        ArrayList<String> leftInstanceList = new ArrayList<String>();
+        ArrayList<String> rightInstanceList = new ArrayList<String>();
+        PopulateInstanceList(leftClass, classInstanceCountMap, leftInstanceList);
+        PopulateInstanceList(rightClass, classInstanceCountMap, rightInstanceList);
+
+        String propFromLeft = getCrudAssocPropertyName(rightEnd);
+        String propFromRight = getCrudAssocPropertyName(leftEnd);
+        boolean leftMultiple = isCrudAssocMultiple(rightEnd);
+        boolean rightMultiple = isCrudAssocMultiple(leftEnd);
+
+        if (linkSet.links == null) {
+          continue;
+        }
+
+        for (int i = 0; i < linkSet.links.length; i++) {
+          for (int j = 0; j < linkSet.links[i].length; j++) {
+            if (!linkSet.links[i][j]) {
+              continue;
+            }
+
+            // Map matrix indices to concrete instances using the
+            // same naming convention as PopulateInstanceList.
+            if (i >= leftInstanceList.size() || j >= rightInstanceList.size()) {
+              continue;
+            }
+
+            String leftInstName = leftInstanceList.get(i);
+            String rightInstName = rightInstanceList.get(j);
+
+            String leftSimpleClass = getClassNameFromInstanceId(leftInstName);
+            int leftIter = getIndexFromInstanceId(leftInstName);
+            String rightSimpleClass = getClassNameFromInstanceId(rightInstName);
+            int rightIter = getIndexFromInstanceId(rightInstName);
+
+            if (leftIter <= 0 || rightIter <= 0) {
+              continue;
+            }
+
+            String leftKey = leftSimpleClass + "#" + leftIter;
+            String rightKey = rightSimpleClass + "#" + rightIter;
+
+            Map<String, Object> leftData = instanceByKey.get(leftKey);
+            Map<String, Object> rightData = instanceByKey.get(rightKey);
+            String rightId = umpleIdByKey.get(rightKey);
+            String leftId = umpleIdByKey.get(leftKey);
+
+            if (leftData != null && rightId != null && propFromLeft != null && propFromLeft.length() > 0) {
+              // Create wrapper { "FQN": { "umpleObjectID": "..." } }
+              Map<String, Object> inner = new LinkedHashMap<String, Object>();
+              inner.put("umpleObjectID", rightId);
+              Map<String, Object> wrapper = new LinkedHashMap<String, Object>();
+              wrapper.put(getFqn(rightSimpleClass, ns), inner);
+
+              Object existing = leftData.get(propFromLeft);
+              if (leftMultiple) {
+                java.util.List<Object> listVal;
+                if (existing instanceof java.util.List) {
+                  listVal = (java.util.List<Object>) existing;
+                } else {
+                  listVal = new ArrayList<Object>();
+                  leftData.put(propFromLeft, listVal);
+                }
+                listVal.add(wrapper);
+              } else {
+                leftData.put(propFromLeft, wrapper);
+              }
+            }
+
+            if (rightData != null && leftId != null && propFromRight != null && propFromRight.length() > 0) {
+              Map<String, Object> innerR = new LinkedHashMap<String, Object>();
+              innerR.put("umpleObjectID", leftId);
+              Map<String, Object> wrapperR = new LinkedHashMap<String, Object>();
+              wrapperR.put(getFqn(leftSimpleClass, ns), innerR);
+
+              Object existingR = rightData.get(propFromRight);
+              if (rightMultiple) {
+                java.util.List<Object> listValR;
+                if (existingR instanceof java.util.List) {
+                  listValR = (java.util.List<Object>) existingR;
+                } else {
+                  listValR = new ArrayList<Object>();
+                  rightData.put(propFromRight, listValR);
+                }
+                listValR.add(wrapperR);
+              } else {
+                rightData.put(propFromRight, wrapperR);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // If we captured random attributes for this run (i.e., there were
+    // no CRUD-sourced attribute values), expose them via
+    // crudAttributeValues so that renderInstanceDiagram can reuse the
+    // exact same values when printing node attributes.
+    if (captureRandomAttributes && capturedAttrs != null && !capturedAttrs.isEmpty()) {
+      crudAttributeValues = capturedAttrs;
+    }
+
+    // Final pass: emit JSON array of instance wrappers
+    StringBuilder sb = new StringBuilder();
+    sb.append("[");
+
+    boolean firstTop = true;
+    // Use model class order so that output is predictable
+    for (UmpleClass uClass : model.getUmpleClasses()) {
+      String className = uClass.getName();
+      java.util.List<Map<String, Object>> list = instancesByClass.get(className);
+      if (list == null || list.isEmpty()) {
+        continue;
+      }
+
+      String fqn = getFqn(className, ns);
+      for (Map<String, Object> instData : list) {
+        if (!firstTop) {
+          sb.append(",");
+        }
+        firstTop = false;
+        sb.append("{");
+        sb.append("\"").append(escapeJson(fqn)).append("\":");
+        appendInstanceObjectJson(sb, instData);
+        sb.append("}");
+      }
+    }
+
+    sb.append("]");
+    return sb.toString();
+  }
+
+  // Minimal JSON string escaper for keys and values we emit.
+  private String escapeJson(String input) {
+    if (input == null) {
+      return "";
+    }
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < input.length(); i++) {
+      char c = input.charAt(i);
+      if (c == '\\' || c == '\"') {
+        sb.append('\\').append(c);
+      } else if (c == '\n') {
+        sb.append("\\n");
+      } else if (c == '\r') {
+        sb.append("\\r");
+      } else if (c == '\t') {
+        sb.append("\\t");
+      } else {
+        sb.append(c);
+      }
+    }
+    return sb.toString();
+  }
+
+  // Helper to generate random attribute values for a class instance,
+  // following the same conventions as the GraphViz instance generator
+  // (special handling for id/name as the first attribute).
+  private Map<String, String> generateRandomAttributesForInstance(UmpleClass uClass, int iteration) {
+    Map<String, String> result = new LinkedHashMap<String, String>();
+
+    java.util.List<Attribute> attrs = uClass.getAllAttributes();
+    if (attrs == null || attrs.size() == 0) {
+      return result;
+    }
+
+    Attribute firstAttribute = attrs.get(0);
+    String firstAttributeName = firstAttribute.getName();
+    boolean firstAttributeIsId = false;
+    String firstAttributeInstanceName = "";
+
+    if (firstAttributeName != null) {
+      String lower = firstAttributeName.toLowerCase();
+      String type = firstAttribute.getType();
+      boolean typeOk = "String".equals(type) || "Integer".equals(type);
+      if (typeOk && (lower.equals("id") || (firstAttributeName.length() > 1 &&
+          (firstAttributeName.substring(firstAttributeName.length() - 2).equals("Id") ||
+           firstAttributeName.substring(firstAttributeName.length() - 2).equals("ID"))))) {
+        firstAttributeIsId = true;
+      } else if (lower.equals("name") && "String".equals(type)) {
+        firstAttributeInstanceName = createRandomAttributeValue(firstAttribute);
+      }
+    }
+
+    boolean isFirst = true;
+    for (Attribute uAttribute : attrs) {
+      if (uAttribute.isConstant()) {
+        // Constants are ignored in the instance diagram; skip them here too.
+        continue;
+      }
+      String value;
+      if (isFirst && firstAttributeIsId) {
+        value = Integer.toString(iteration);
+      } else if (isFirst && firstAttributeInstanceName.length() != 0) {
+        value = firstAttributeInstanceName;
+      } else {
+        value = createRandomAttributeValue(uAttribute);
+      }
+      result.put(uAttribute.getName(), value);
+      isFirst = false;
+    }
+
+    return result;
+  }
+
+  // Helper to generate attribute values for a class instance, preferring
+  // CRUD-sourced values (when available) and falling back to the standard
+  // random attribute generation used by instance diagrams.
+  private Map<String, String> generateAttributesForInstance(UmpleClass uClass, int iteration) {
+    // Start with the default/random attribute values so ID/name
+    // heuristics remain consistent with the instance diagram.
+    Map<String, String> base = generateRandomAttributesForInstance(uClass, iteration);
+
+    if (crudAttributeValues == null) {
+      return base;
+    }
+
+    Map<Integer, Map<String, String>> byIndex = crudAttributeValues.get(uClass.getName());
+    if (byIndex == null) {
+      return base;
+    }
+
+    Map<String, String> perInstance = byIndex.get(Integer.valueOf(iteration));
+    if (perInstance == null || perInstance.isEmpty()) {
+      return base;
+    }
+
+    // Overlay CRUD-sourced values on top of the base map so that any
+    // attributes explicitly set in the CRUD UI win, while still
+    // preserving reasonable defaults for others.
+    for (Map.Entry<String, String> entry : perInstance.entrySet()) {
+      String attrName = entry.getKey();
+      String val = entry.getValue();
+      if (attrName == null || attrName.length() == 0) {
+        continue;
+      }
+      base.put(attrName, val == null ? "" : val);
+    }
+
+    return base;
+  }
+
+  // Derive a CRUD-style property name for an association end, matching
+  // the client-side getAssocPropertyName helper.
+  private String getCrudAssocPropertyName(AssociationEnd end) {
+    if (end == null) {
+      return "";
+    }
+    String roleName = end.getDisplayRoleName();
+    if (roleName != null && !roleName.equals("")) {
+      return roleName;
+    }
+    String base = end.getClassName();
+    if (base == null || base.equals("")) {
+      return "";
+    }
+    // decapitalize first letter
+    if (base.length() > 0) {
+      base = base.substring(0, 1).toLowerCase() + base.substring(1);
+    }
+    boolean multiple = isCrudAssocMultiple(end);
+    if (multiple && !base.endsWith("s")) {
+      base = base + "s";
+    }
+    return base;
+  }
+
+  private boolean isCrudAssocMultiple(AssociationEnd end) {
+    if (end == null || end.getMultiplicity() == null) {
+      return true;
+    }
+    int upper = end.getMultiplicity().getUpperBound();
+    // 0..1 or 1 (or any <=1 finite) is single-valued; * (-1) is treated as multiple
+    if (upper != -1 && upper <= 1) {
+      return false;
+    }
+    return true;
+  }
+
+  // Build a fully-qualified name using the model's default namespace
+  // (if any) and a simple class name.
+  private String getFqn(String className, String namespace) {
+    if (className == null) {
+      return "";
+    }
+    if (namespace != null && namespace.length() > 0) {
+      return namespace + "." + className;
+    }
+    return className;
+  }
+
+  // Given an instance identifier like "Employee3" or "OrderItem12",
+  // return the simple class name portion.
+  private String getClassNameFromInstanceId(String instanceId) {
+    if (instanceId == null || instanceId.length() == 0) {
+      return "";
+    }
+    int idx = instanceId.length() - 1;
+    while (idx >= 0 && Character.isDigit(instanceId.charAt(idx))) {
+      idx--;
+    }
+    if (idx < 0) {
+      return instanceId;
+    }
+    return instanceId.substring(0, idx + 1);
+  }
+
+  // Given an instance identifier like "Employee3", return the
+  // 1-based index portion (e.g., 3). Returns -1 if none.
+  private int getIndexFromInstanceId(String instanceId) {
+    if (instanceId == null || instanceId.length() == 0) {
+      return -1;
+    }
+    int idx = instanceId.length() - 1;
+    while (idx >= 0 && Character.isDigit(instanceId.charAt(idx))) {
+      idx--;
+    }
+    if (idx == instanceId.length() - 1) {
+      return -1;
+    }
+    String num = instanceId.substring(idx + 1);
+    try {
+      return Integer.parseInt(num);
+    } catch (Exception e) {
+      return -1;
+    }
+  }
+
+  // Append a JSON object representing one instance's data.
+  private void appendInstanceObjectJson(StringBuilder sb, Map<String, Object> data) {
+    sb.append("{");
+    boolean first = true;
+    for (Map.Entry<String, Object> entry : data.entrySet()) {
+      if (!first) {
+        sb.append(",");
+      }
+      first = false;
+      sb.append("\"").append(escapeJson(entry.getKey())).append("\":");
+      appendJsonValue(sb, entry.getValue());
+    }
+    sb.append("}");
+  }
+
+  // Append a JSON value that may be a primitive, string, object or array.
+  private void appendJsonValue(StringBuilder sb, Object value) {
+    if (value == null) {
+      sb.append("null");
+    } else if (value instanceof String) {
+      sb.append("\"").append(escapeJson((String)value)).append("\"");
+    } else if (value instanceof Number || value instanceof Boolean) {
+      sb.append(value.toString());
+    } else if (value instanceof java.util.List) {
+      java.util.List list = (java.util.List)value;
+      sb.append("[");
+      boolean first = true;
+      for (Object elem : list) {
+        if (!first) {
+          sb.append(",");
+        }
+        first = false;
+        appendJsonValue(sb, elem);
+      }
+      sb.append("]");
+    } else if (value instanceof Map) {
+      Map map = (Map)value;
+      sb.append("{");
+      boolean first = true;
+      java.util.Iterator it = map.entrySet().iterator();
+      while (it.hasNext()) {
+        Map.Entry entry = (Map.Entry)it.next();
+        if (!first) {
+          sb.append(",");
+        }
+        first = false;
+        String key = entry.getKey().toString();
+        sb.append("\"").append(escapeJson(key)).append("\":");
+        appendJsonValue(sb, entry.getValue());
+      }
+      sb.append("}");
+    } else {
+      // Fallback: quote string representation
+      sb.append("\"").append(escapeJson(value.toString())).append("\"");
+    }
+  }
+
+  // Render a GraphViz instance diagram from pre-computed instance data
+  private void renderInstanceDiagram(InstanceDiagramResult instanceData) {
+    StringBuilder code = new StringBuilder();           // part of the gv file with the node/classes
+    StringBuilder associations = new StringBuilder();   // part of the gv file with all the associations
+
+    // Output basic gv file header
+    _graphStart(0,code);
+
+    if (instanceData.statusCode != 0 || instanceData.diagramIsEmpty) {
+      // Error code outputs
+
+      outputCode += "message [label =\"";
+      if (instanceData.statusCode == 1) {
+        outputCode += "Reached maximum iterations. Ensure that the system is instantiable and non-infinite";
+
+      } else if (instanceData.statusCode == 2) {
+        outputCode += "Reached maximum class count. Ensure that the system is instantiable and non-infinite";
+
+      } else if (instanceData.statusCode == 3) {
+        outputCode += "Inheritance unresolvable. ";
+        outputCode += "Ensure that abstract/interface classes with associations have concrete implementations that can be instantiated without creating an infinite loop";
+        outputCode += "\n The following classes have no valid inheritors and could be the source of this error:";
+        for (String classname : instanceData.noPossibleInheritance) {
+          outputCode += "\n" + classname;
+        }
+        
+      } else if (instanceData.statusCode == 4) {
+        outputCode += "Infinite loop detected. Instantiating the following classes will lead to an infinite number of instances: ";
+        for (String classname : instanceData.loopScores.keySet()) {
+          outputCode += "\n" + classname;
+        }
+
+      } else if (instanceData.diagramIsEmpty) {
+        outputCode += "Generated InstanceDiagram is empty. For random diagrams, consider trying again or setting the initial class counts to a constant";
+      } else if (instanceData.statusCode == 5) {
+        outputCode += "Unable to build instance diagram from CRUD data. Ensure the @crudInstanceCounts marker JSON is present and well-formed.";
+      }
+      outputCode += "\"];";
+
+      code.append(outputCode);
+      terminateCode(code, associations);
+      return;
+    }
+
+
+    // Get class count result
+    Map<String, Integer> minInstance = instanceData.instanceCounts;
+    // Get associations from the class count
+    ArrayList<AssociationLinkSet> actualLinks = instanceData.associationLinks;
+
+
+    //gets the desired separator value. Graphviz default is 0.5 but for Umple we use 1.0 for 'normal'
+    double sepVal = getSuboptionValue("gvseparator", 1.0); 
+    //checks if the separator value is not 1.0 (Umple default which will be 0.5 in Graphviz).
+    // If it isn't it applies the desired separator value to nodesep and ranksep
+    if (sepVal != 1.0){
+      Double graphVizSepVal = sepVal/2.0;
+      code.append("nodesep =" + graphVizSepVal +";"); //injects sepVal(desired separator value) into nodesep
+      code.append("ranksep =" + graphVizSepVal +";"); //injects sepVal(desired separator value) into ranksep
+    }
+
+    for (UmpleClass umpClass : model.getUmpleClasses()) { // looping through the model. need to extract the attribute information.
+      if (umpClass.getIsAbstract()){                      // we do not consider abstract classes in instance diagrams
+          continue;
+      }
+      String currentInstanceName = umpClass.getName();
+      Integer numberOfInstaces = null;
+      if (minInstance != null) {
+        numberOfInstaces = minInstance.get(currentInstanceName);    // minInstance may change at a later date
+      }
+      // If there is no entry or the count is non-positive, just skip.
+      if (numberOfInstaces == null || numberOfInstaces.intValue() <= 0) {
+        continue;
+      }
+      int instanceCount = numberOfInstaces.intValue();
+      for (int i = 0; i < instanceCount; i++) {
+        createInstance(umpClass, code, i + 1);
+      }
+    }
+
+    Map<String, ClassInstanceCount> classInstanceCountMap = instanceData.rawClassInstanceCounts;
+
+    if (actualLinks == null) {
+      // No association information available; finalize the diagram with
+      // just the instances.
+      terminateCode(code, associations);
+      return;
+    }
+
+    for (int k = 0; k < actualLinks.size(); k++) {
+      AssociationLinkSet assocLinkSet = actualLinks.get(k);
+
+      Association uAssoc = assocLinkSet.getAssociation();
+      AssociationEnd leftEnd = uAssoc.getEnd(0);
+      AssociationEnd rightEnd = uAssoc.getEnd(1);
+      String leftClass = leftEnd.getClassName();
+      String rightClass = rightEnd.getClassName();
+
+      String leftRoleName = leftEnd.getDisplayRoleName();
+      String rightRoleName = rightEnd.getDisplayRoleName();
+
+      ArrayList<String> leftInstanceList = new ArrayList<String>();
+      ArrayList<String> rightInstanceList = new ArrayList<String>();
+
+      // Prefer using the full ClassInstanceCount map when available so
+      // inheritance and subclassing are respected. For simplified
+      // inputs (such as CRUD-driven instance counts) where the raw
+      // map may not contain entries for all classes, fall back to
+      // generating instance identifiers directly from the per-class
+      // instanceCounts map used above for node creation.
+      if (classInstanceCountMap != null &&
+          classInstanceCountMap.containsKey(leftClass) &&
+          classInstanceCountMap.containsKey(rightClass)) {
+
+        PopulateInstanceList(leftClass , classInstanceCountMap , leftInstanceList);
+        PopulateInstanceList(rightClass, classInstanceCountMap , rightInstanceList);
+
+      } else if (minInstance != null) {
+        Integer leftCountObj = minInstance.get(leftClass);
+        Integer rightCountObj = minInstance.get(rightClass);
+        int leftCount = (leftCountObj != null) ? leftCountObj.intValue() : 0;
+        int rightCount = (rightCountObj != null) ? rightCountObj.intValue() : 0;
+
+        if (leftCount <= 0 || rightCount <= 0) {
+          continue;
+        }
+
+        for (int i = 1; i <= leftCount; i++) {
+          leftInstanceList.add(leftClass + i);
+        }
+        for (int j = 1; j <= rightCount; j++) {
+          rightInstanceList.add(rightClass + j);
+        }
+      } else {
+        // No way to derive instance identifiers; skip this association.
+        continue;
+      }
+
+      for (int i = 0; i < assocLinkSet.links.length; i++) {
+        for (int j = 0; j < assocLinkSet.links[0].length; j++) {
+          if (assocLinkSet.links[i][j]){
+
+            AssociationCreate(uAssoc, associations, leftInstanceList.get(i), rightInstanceList.get(j), leftRoleName, rightRoleName);  // creates the association
+          }
+        }
+      }
+    }
+
+    terminateCode(code, associations);
+
+
+    // TODO: Remove printing the output to a text file
+    /*
+    for (Map.Entry<String, Integer> entry : minInstance.entrySet()) {
+      outputCode += entry.getKey() + " - " + entry.getValue() + "\n";
+    }
+    for (AssociationLinkSet link : actualLinks) {
+      outputCode += "\n" + link.toString();
+    }
+    model.setCode(outputCode);
+    writeModelToFile();
+    */
+  }
+
+  public void PopulateInstanceList(String currentClassName ,Map<String, ClassInstanceCount> classInstanceCountMap, ArrayList<String> instanceList){
+
+    ClassInstanceCount currentClassInstanceCount = classInstanceCountMap.get(currentClassName);
+    
+    for (int i = 1; i < currentClassInstanceCount.trueInstances + 1; i++) {
+      instanceList.add(currentClassName + i);
+    }
+
+    Iterator value = currentClassInstanceCount.directSubclasses.iterator();
+    
+    while (value.hasNext()) {
+      PopulateInstanceList(value.next().toString(), classInstanceCountMap, instanceList);
+    }
+  }
+
+  public void createInstance(UmpleClass umpClass, StringBuilder code, int iteration){
+
+    boolean manyClass = getModel().getUmpleClasses().size() >= 200 ? true : false;
+    boolean firstAttributeIsId = false;
+    String firstAttributeInstanceName = "";   // if the first attribute is "name" use as instance name. Do not use className
+    String className = umpClass.getName();
+    String instanceName = "";
+
+    java.util.List<Attribute> allAttrs = umpClass.getAllAttributes();
+    if (allAttrs.size() != 0){
+      Attribute firstAttribute = allAttrs.get(0);
+      String firstAttributeName = firstAttribute.getName();
+      int attributeNameLength = firstAttributeName.length();
+
+
+
+      // If the first attribute is literally "id" case insensitive OR the last 2 characters are literally "Id" or "ID"
+      // and the type is String or Integer
+      if ( 
+        (firstAttributeName.toLowerCase().equals("id")  || 
+        (firstAttributeName.length() > 1 && 
+        (firstAttributeName.substring(firstAttributeName.length() - 2).equals("Id") ||
+        firstAttributeName.substring(firstAttributeName.length() - 2).equals("ID")))) &&
+        (firstAttribute.getType().equals("String") || firstAttribute.getType().equals("Integer"))
+        ) {
+        firstAttributeIsId = true;
+        instanceName = className + iteration + ": " + className;
+
+        } else{
+        instanceName = className + iteration + ": " + className;
+      }
+    
+    } else{
+      instanceName = className + iteration + ": " + className;
+    }
+
+
+    
+    String classColor = umpClass.getDisplayColor();
+    if (!classColor.equals("")) classColor=" style=filled, fillcolor="+classColor+" ";
+    code.append("\n  // Instance: "+className + iteration+"\n");
+    
+    if (manyClass) {
+      code.append("  \""+className + iteration+"\" ["+classColor+"shape=record, label=\"{"+instanceName);
+    } 
+    else {
+      code.append("  \""+className + iteration+"\" ["+classColor+"shape=plaintext margin=0 label=");
+	    
+      // Different cellpadding for if the class has nothing but the
+      // name because of a glitch in graphviz's graphics
+      if (umpClass.getAttributes().size() == 0 || hasSuboption("hideattributes")) {
+	    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"10\">"
+		   			+"<tr><td>    "+instanceName+"    </td></tr>");
+      }
+      else {
+        code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"2\">"
+                    +"<tr><td cellpadding=\"4\">    "+instanceName+"    </td></tr>");
+		  }
+    }
+
+    attributeCreation(umpClass, code, manyClass, firstAttributeIsId, firstAttributeInstanceName, iteration);  // creates the attributes for the particular instance
+
+    // Terminate outputting the class attributes
+    if(manyClass) code.append("}\"");
+   	else code.append("</table>>"); 
+    
+    
+    // Output the tooltip : Class name followed by any comment
+    code.append(",\n   tooltip=\"instance "+className + iteration+"\n");
+    code.append(SuperGvGenerator.appendTooltipComment(umpClass.getComments(), false));
+    code.append("\"");
+
+    // Clicking on the instance selects its class
+    code.append(", href=\"javascript:Action.selectClass(&quot;"+className+"&quot;);\"");
+
+    // Terminate the class as a whole
+    code.append("];\n");
+  }
+
+  private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass, boolean hasId, String instanceName, int idValue){
+    // Iterate through attributes of the class
+    boolean isFirst = true;
+
+    if (!hasSuboption("hideattributes")) { 
+      for (Attribute uAttribute : uClass.getAllAttributes()) {
+        if (!uAttribute.isConstant()) 
+        { 
+          String instanceAttribute;
+
+          // If CRUD-sourced attribute values are available for this
+          // specific instance, prefer them over generated random
+          // values so that the diagram reflects exactly what the user
+          // entered in the CRUD UI.
+          Map<String, String> crudAttrsForInstance = null;
+          if (crudAttributeValues != null) {
+            Map<Integer, Map<String, String>> byIndex = crudAttributeValues.get(uClass.getName());
+            if (byIndex != null) {
+              crudAttrsForInstance = byIndex.get(Integer.valueOf(idValue));
+            }
+          }
+
+          if (crudAttrsForInstance != null && crudAttrsForInstance.containsKey(uAttribute.getName())) {
+            Object rawVal = crudAttrsForInstance.get(uAttribute.getName());
+            instanceAttribute = (rawVal == null) ? "" : rawVal.toString();
+          } else if (isFirst && (hasId)){
+            instanceAttribute = Integer.toString(idValue);
+          } else if (isFirst && instanceName.length() != 0){
+            instanceAttribute = instanceName;
+          } else {
+            instanceAttribute = createRandomAttributeValue(uAttribute);  // this will take into account if the attribute is a list or not
+          }
+          
+          
+          if (manyClass) {
+            if (isFirst) code.append("|"); // attribute block starter
+            else code.append("\\\n"); // separator between attributes
+          }
+          else {
+            if (isFirst) code.append("<hr/>"); // attribute block starter
+          }
+
+          String isList = uAttribute.getIsList() ? "[]" : "";
+          String type = uAttribute.getType().replace("<","&lt;").replace(">","&gt;");
+          
+          if (manyClass) {
+            code.append(""+uAttribute.getName()+"\\:\\ "+instanceAttribute+"\\l");
+          }
+          else {
+            StringBuilder attrTooltip = new StringBuilder();
+            attrTooltip.append(type+isList+" "+uAttribute.getName()+"&#13;");
+            attrTooltip.append(SuperGvGenerator.appendTooltipComment(uAttribute.getComments(), true));        
+            code.append("<tr><td align=\"left\" href=\"\" title=\""+attrTooltip+"\">"
+                +"  "+uAttribute.getName()+": "
+                +instanceAttribute+"  </td></tr>");
+          }
+        } else { //attribute is constant
+          // Not sure if this is needed. in the Class diagram constant variables are ignored.
+          // could just leave this empty
+        }
+          isFirst = false;
+      }
+    }
+  }
+
+  private String createRandomAttributeValue(Attribute uAttribute){ //TODO Make this function better
+    String type = uAttribute.getType().replace("<","&lt;").replace(">","&gt;");
+
+    if (uAttribute.getIsList()){
+      String listString = "[";
+      listString = listString + randomAttributeTypeGen(type);
+      listString = listString + ", " + randomAttributeTypeGen(type);
+      listString = listString + ", ... ]";
+      return listString;
+    }
+    
+    return randomAttributeTypeGen(type);
+
+  }
+
+  public String randomAttributeTypeGen(String type){
+      
+    if (type.equals("Boolean")){
+
+      int trueFalseInt = attributeRandomGen.nextInt(2);
+      if (trueFalseInt == 1){
+        return "true";
+      } else{
+        return "false";
+      }
+
+    } else if (type.equals("Integer")){
+
+      int randomInt = attributeRandomGen.nextInt(1000);
+      return Integer.toString(randomInt);
+
+    } else if (type.equals("Double") || type.equals("Float")){
+
+      Float randomFloat = attributeRandomGen.nextFloat()* 1000;
+      String randomFloatString = randomFloat.toString();
+      return randomFloatString.substring(0, 6);
+
+    } else if (type.equals("String")){
+
+      return randomStringGen();
+
+    } else if (type.equals("Date")){
+
+      long randomLong = attributeRandomGen.nextLong()  % 1760000000000l;
+      Date date = new Date(randomLong);
+      return date.toString();
+
+    } else if (type.equals("Time")){
+
+      long randomLong = attributeRandomGen.nextLong()  % (60 * 60 * 24 * 1000);
+      Time time = new Time(randomLong);
+      return time.toString();
+
+    } else{
+      return randomStringGen();
+      // copy the string code here
+    }
+  }
+
+public String randomStringGen(){
+
+    int randomNounInt = attributeRandomGen.nextInt(WordBank.getSizeNoun());
+    int randomAdjectiveInt = attributeRandomGen.nextInt(WordBank.getSizeAdjective()); // if 0 is the int ERROR
+
+    String noun = WordBank.getNoun(randomNounInt);
+    String adjective = WordBank.getAdjective(randomAdjectiveInt);
+
+    noun = noun.substring(0, 1).toUpperCase() + noun.substring(1);
+    adjective = adjective.substring(0, 1).toUpperCase() + adjective.substring(1);
+
+    return adjective + noun;
+  }
+
+  public void AssociationCreate(Association uAssoc, StringBuilder associations, String left, String right, String leftRoleName, String rightRoleName){
+    
+    String leftName = left;
+    String rightName = right;
+
+    if (instanceIdtoInstanceName.containsKey(left)){
+      leftName = instanceIdtoInstanceName.get(left);
+    }
+    if (instanceIdtoInstanceName.containsKey(right)){
+      rightName = instanceIdtoInstanceName.get(right);
+    }
+
+    String[] arrows = SuperGvGenerator.retArrows(uAssoc);
+    String toolTip = leftName + " " + leftRoleName + " " + arrows[1] + " " + rightRoleName + " " + rightName;
+    associations.append(SuperGvGenerator.twoLabelAssociation(left, right, arrows[0], rightRoleName, leftRoleName, toolTip));
+  }
+
+  // Output the instance diagram to a text file
+  private void writeModelToFile()
+  {
+    try
+    {
+      String path = model.getUmpleFile().getPath();
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + 
+        model.getUmpleFile().getSimpleFileName() + ".txt";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(model.getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException(
+        "There was a problem generating the Instance Diagram." + e, e);
+    }
+  }
+  
+  // Build an InstanceDiagramResult based on instance data supplied by
+  // the CRUD UI. The UI embeds two markers into the Umple source:
+  //   // @crudInstanceCounts {"ClassA":2,"ClassB":3}
+  //   // @crudInstanceData {"instances":[{"class":"ClassA","index":1,"attrs":{...}},...]}
+  // The counts marker controls how many instances of each class are
+  // drawn, while the data marker (if present and valid) provides
+  // concrete attribute values per instance so the diagram reflects the
+  // exact CRUD state instead of regenerating random attributes.
+  private InstanceDiagramResult buildInstanceDiagramFromCrudInstanceCounts() {
+    InstanceDiagramResult result = new InstanceDiagramResult();
+    result.statusCode = 0;
+    result.diagramIsEmpty = true;
+    result.instanceCounts = new LinkedHashMap<String, Integer>();
+    result.loopScores = new LinkedHashMap<String, Integer>();
+    result.noPossibleInheritance = new LinkedHashSet<String>();
+    result.associationLinks = new ArrayList<AssociationLinkSet>();
+    result.rawClassInstanceCounts = new LinkedHashMap<String, ClassInstanceCount>();
+
+    try {
+      if (model == null || model.getUmpleFile() == null) {
+        // Nothing to work with; mark as an error so the user sees a
+        // meaningful message in the diagram.
+        result.statusCode = 5;
+        result.diagramIsEmpty = false;
+        return result;
+      }
+
+      // Prefer the working copy of the model in the output directory,
+      // since that is what the compiler actually compiled (it includes
+      // any changes the user just made in the UmpleOnline editor).
+      String basePath = model.getUmpleFile().getPath();
+      String simpleName = model.getUmpleFile().getSimpleFileName();
+      File sourceFile = new File(basePath + File.separator + simpleName + ".ump");
+      if (!sourceFile.exists() || !sourceFile.isFile()) {
+        // Fall back to the raw filename if the constructed path is not
+        // available in this environment.
+        sourceFile = new File(model.getUmpleFile().getFileName());
+      }
+      if (!sourceFile.exists() || !sourceFile.isFile()) {
+        result.statusCode = 5;
+        result.diagramIsEmpty = false;
+        return result;
+      }
+
+      String markerCounts = "// @crudInstanceCounts ";
+      String markerData = "// @crudInstanceData ";
+      String encodedCounts = null;
+      String encodedData = null;
+
+      BufferedReader br = new BufferedReader(new FileReader(sourceFile));
+      try {
+        String line;
+        while ((line = br.readLine()) != null) {
+          String trimmed = line.trim();
+          if (encodedCounts == null && trimmed.startsWith(markerCounts)) {
+            encodedCounts = trimmed.substring(markerCounts.length()).trim();
+          } else if (encodedData == null && trimmed.startsWith(markerData)) {
+            encodedData = trimmed.substring(markerData.length()).trim();
+          }
+        }
+      } finally {
+        br.close();
+      }
+
+      if (encodedCounts == null || encodedCounts.length() == 0) {
+        // No CRUD counts were found; treat this as an error specific to
+        // CRUD-driven instance diagrams.
+        result.statusCode = 5;
+        result.diagramIsEmpty = false;
+        return result;
+      }
+
+      // Parse the JSON text into a simple map of className -> count.
+      // We intentionally support only a very small subset of JSON
+      // (a single flat object with string keys and numeric values),
+      // which is exactly what the CRUD UI emits.
+      String body = encodedCounts.trim();
+      if (body.startsWith("{")) {
+        body = body.substring(1);
+      }
+      if (body.endsWith("}")) {
+        body = body.substring(0, body.length() - 1);
+      }
+
+      boolean anyInstances = false;
+
+      String[] entries = body.split(",");
+      for (String entry : entries) {
+        String part = entry.trim();
+        if (part.length() == 0) {
+          continue;
+        }
+        int colon = part.indexOf(":");
+        if (colon <= 0) {
+          continue;
+        }
+        String rawKey = part.substring(0, colon).trim();
+        String rawVal = part.substring(colon + 1).trim();
+
+        // Strip surrounding quotes from the key if present.
+        if (rawKey.startsWith("\"") && rawKey.endsWith("\"") && rawKey.length() >= 2) {
+          rawKey = rawKey.substring(1, rawKey.length() - 1);
+        }
+
+        String className = rawKey;
+        if (className == null || className.length() == 0) {
+          continue;
+        }
+
+        // Interpret non-numeric or negative values as zero and skip.
+        int count = 0;
+        try {
+          // Remove any trailing comma or quote artifacts.
+          if (rawVal.startsWith("\"") && rawVal.endsWith("\"") && rawVal.length() >= 2) {
+            rawVal = rawVal.substring(1, rawVal.length() - 1);
+          }
+          count = Integer.parseInt(rawVal);
+        } catch (Exception e) {
+          count = 0;
+        }
+        if (count <= 0) {
+          continue;
+        }
+
+        anyInstances = true;
+        result.instanceCounts.put(className, Integer.valueOf(count));
+
+        ClassInstanceCount cic = new ClassInstanceCount();
+        cic.requiredInstances = Integer.valueOf(count);
+        cic.trueInstances = Integer.valueOf(count);
+        cic.directSubclasses = new LinkedHashSet<String>();
+        cic.directSuperclasses = new LinkedHashSet<String>();
+        cic.maximumInstanceCount = Integer.valueOf(-1);
+        result.rawClassInstanceCounts.put(className, cic);
+      }
+
+      result.diagramIsEmpty = !anyInstances;
+
+      // If a full CRUD instance-data marker is present, attempt to parse
+      // it and capture attribute values for each instance. Failure to
+      // parse this marker does not abort diagram generation; we simply
+      // fall back to randomized attribute values.
+      crudAttributeValues = null;
+      crudAssociationLinks = null;
+      if (encodedData != null && encodedData.length() > 0) {
+        try {
+          // The custom JsonParser used here can be sensitive to certain
+          // characters inside string values. User-entered values commonly
+          // contain &, <, >, apostrophes, and embedded quotes. Those are
+          // never part of the JSON syntax itself inside a string literal,
+          // so we can safely normalize them to placeholder tokens before
+          // parsing and then restore them when extracting attribute values.
+          String encodedDataForParse = encodedData
+            .replace("&", "__UMPLE_AMP__")
+            .replace("<", "__UMPLE_LT__")
+            .replace(">", "__UMPLE_GT__")
+            .replace("'", "__UMPLE_APOS__")
+            // Only replace escaped double-quotes inside string values
+            // (\\" in the JSON text), leaving structural quotes intact.
+            .replace("\\\"", "__UMPLE_DQUOTE__");
+
+          cruise.umple.util.JsonParser jsonParser = new cruise.umple.util.JsonParser("json");
+          cruise.umple.parser.ParseResult pr = jsonParser.parse("json", encodedDataForParse);
+          if (pr != null && pr.getWasSuccess()) {
+            cruise.umple.util.Json root = jsonParser.analyze();
+            cruise.umple.util.Json[] instArray = root.getArray("instances");
+            if (instArray != null) {
+              Map<String, Map<Integer, Map<String, String>>> attrMap = new LinkedHashMap<String, Map<Integer, Map<String, String>>>();
+              for (cruise.umple.util.Json j : instArray) {
+                if (j == null) {
+                  continue;
+                }
+                String className = j.getValue("class");
+                int index = j.getIntValue("index");
+                if (className == null || className.length() == 0 || index <= 0) {
+                  continue;
+                }
+                cruise.umple.util.Json attrsHolder = j.getAttribute("attrs");
+                if (attrsHolder == null) {
+                  continue;
+                }
+                cruise.umple.util.Json[] comps = attrsHolder.getComposites();
+                if (comps == null) {
+                  continue;
+                }
+                Map<String, String> perInstance = new LinkedHashMap<String, String>();
+                for (cruise.umple.util.Json comp : comps) {
+                  if (comp == null) {
+                    continue;
+                  }
+                  String attrName = comp.getName();
+                  if (attrName == null || attrName.length() == 0) {
+                    continue;
+                  }
+
+                  // Prefer resolving the attribute value from the parent
+                  // holder so we are resilient to any quirks in how the
+                  // Json parser represents nested objects. In particular,
+                  // this avoids cases where the value for one attribute
+                  // accidentally includes the remainder of the JSON for
+                  // subsequent attributes.
+                  String val = attrsHolder.getValue(attrName);
+                  if (val == null) {
+                    val = comp.getValue();
+                  }
+
+                  if (val != null) {
+                    // Strip a single layer of surrounding quotes if present.
+                    if (val.length() >= 2 && val.startsWith("\"") && val.endsWith("\"")) {
+                      val = val.substring(1, val.length() - 1);
+                    }
+
+                    // If the value was parsed together with the rest of the
+                    // JSON (e.g., "test's acc","date":"1920-11-25",...),
+                    // keep only the first logical string segment before the
+                    // next attribute key.
+                    int sep = val.indexOf("\",\"");
+                    if (sep >= 0) {
+                      val = val.substring(0, sep);
+                    }
+
+                    // Restore any characters that were normalized before
+                    // JSON parsing so the diagram reflects the exact CRUD
+                    // text the user entered.
+                    if (val.indexOf("__UMPLE_AMP__") >= 0) {
+                      val = val.replace("__UMPLE_AMP__", "&");
+                    }
+                    if (val.indexOf("__UMPLE_LT__") >= 0) {
+                      val = val.replace("__UMPLE_LT__", "<");
+                    }
+                    if (val.indexOf("__UMPLE_GT__") >= 0) {
+                      val = val.replace("__UMPLE_GT__", ">");
+                    }
+                    if (val.indexOf("__UMPLE_APOS__") >= 0) {
+                      val = val.replace("__UMPLE_APOS__", "'");
+                    }
+                    if (val.indexOf("__UMPLE_DQUOTE__") >= 0) {
+                      val = val.replace("__UMPLE_DQUOTE__", "\"");
+                    }
+                  }
+
+                  perInstance.put(attrName, val == null ? "" : val);
+                }
+                if (!perInstance.isEmpty()) {
+                  Map<Integer, Map<String, String>> byIndex = attrMap.get(className);
+                  if (byIndex == null) {
+                    byIndex = new LinkedHashMap<Integer, Map<String, String>>();
+                    attrMap.put(className, byIndex);
+                  }
+                  byIndex.put(Integer.valueOf(index), perInstance);
+                }
+              }
+              if (!attrMap.isEmpty()) {
+                crudAttributeValues = attrMap;
+              }
+            }
+
+            // Parse explicit association links if provided
+            cruise.umple.util.Json[] assocArray = root.getArray("associations");
+            if (assocArray != null) {
+              java.util.List<CrudAssociationLink> links = new ArrayList<CrudAssociationLink>();
+              for (cruise.umple.util.Json jLink : assocArray) {
+                if (jLink == null) {
+                  continue;
+                }
+                String fromClass = jLink.getValue("fromClass");
+                String toClass = jLink.getValue("toClass");
+                int fromIndex = jLink.getIntValue("fromIndex");
+                int toIndex = jLink.getIntValue("toIndex");
+                if (fromClass == null || fromClass.length() == 0 ||
+                    toClass == null || toClass.length() == 0 ||
+                    fromIndex <= 0 || toIndex <= 0) {
+                  continue;
+                }
+                CrudAssociationLink link = new CrudAssociationLink();
+                link.fromClass = fromClass;
+                link.toClass = toClass;
+                link.fromIndex = Integer.valueOf(fromIndex);
+                link.toIndex = Integer.valueOf(toIndex);
+                links.add(link);
+              }
+              if (!links.isEmpty()) {
+                crudAssociationLinks = links;
+              }
+            }
+          }
+        } catch (Exception e) {
+          // Ignore JSON parsing errors for the data marker; we still have
+          // valid instance counts and can proceed with randomized
+          // attributes.
+          crudAttributeValues = null;
+          crudAssociationLinks = null;
+        }
+      }
+
+      // If we have at least some instances, synthesize association link
+      // matrices so that the instance diagram includes links. We do not
+      // attempt to mirror any specific CRUD linkage pattern here (the
+      // marker only stores counts), but we generate links that respect
+      // multiplicity constraints using the same AssociationLinkSet logic
+      // as the random instance generator.
+      if (anyInstances) {
+        ArrayList<AssociationLinkSet> links = new ArrayList<AssociationLinkSet>();
+        for (Association assoc : model.getAssociations()) {
+          AssociationEnd leftEnd = assoc.getEnd(0);
+          AssociationEnd rightEnd = assoc.getEnd(1);
+          String leftClass = leftEnd.getClassName();
+          String rightClass = rightEnd.getClassName();
+
+          Integer leftCountObj = result.instanceCounts.get(leftClass);
+          Integer rightCountObj = result.instanceCounts.get(rightClass);
+          int leftCount = (leftCountObj != null) ? leftCountObj.intValue() : 0;
+          int rightCount = (rightCountObj != null) ? rightCountObj.intValue() : 0;
+
+          if (leftCount <= 0 || rightCount <= 0) {
+            continue;
+          }
+
+          AssociationLinkSet linkSet = new AssociationLinkSet(assoc, leftCount, rightCount);
+
+          // If explicit CRUD association links are available, use them
+          // to populate the link matrix so the instance diagram matches
+          // the CRUD UI exactly. Otherwise, synthesize links based on
+          // multiplicities.
+          if (crudAssociationLinks != null && !crudAssociationLinks.isEmpty()) {
+            boolean[][] matrix = new boolean[leftCount][rightCount];
+            boolean anyLink = false;
+            for (CrudAssociationLink rec : crudAssociationLinks) {
+              if (rec == null) {
+                continue;
+              }
+              int i = -1;
+              int j = -1;
+              if (leftClass.equals(rec.fromClass) && rightClass.equals(rec.toClass)) {
+                i = rec.fromIndex.intValue() - 1;
+                j = rec.toIndex.intValue() - 1;
+              } else if (leftClass.equals(rec.toClass) && rightClass.equals(rec.fromClass)) {
+                // Reverse orientation
+                i = rec.toIndex.intValue() - 1;
+                j = rec.fromIndex.intValue() - 1;
+              } else {
+                continue;
+              }
+              if (i < 0 || i >= leftCount || j < 0 || j >= rightCount) {
+                continue;
+              }
+              matrix[i][j] = true;
+              anyLink = true;
+            }
+            if (!anyLink) {
+              // No explicit links for this association; skip it.
+              continue;
+            }
+            linkSet.links = matrix;
+          } else {
+            linkSet.getLinksFromAssociation(suboptionLinkingFlag);
+          }
+
+          links.add(linkSet);
+        }
+        result.associationLinks = links;
+      }
+
+      return result;
+    }
+    catch (Exception e) {
+      // On any unexpected error (I/O, parsing, etc.), fall back to a
+      // generic CRUD-specific error so the generator never throws.
+      result.statusCode = 5;
+      result.diagramIsEmpty = false;
+      return result;
+    }
+  }
+
+}
+
+/*
+ Data class to hold the computed instance diagram information so it can be reused
+ without generating GraphViz output.
+*/
+class InstanceDiagramResult {
+  depend java.util.*;
+
+  // Status of the computation (mirrors ClassInstanceCountSet.statusCode)
+  public int statusCode;
+  // True if there are no concrete instances in the diagram
+  public boolean diagramIsEmpty;
+  // Map from class name to number of concrete instances
+  public Map<String, Integer> instanceCounts;
+  // Loop scores for each class (used for diagnostics and infinite-loop reporting)
+  public Map<String, Integer> loopScores;
+  // Classes with no possible concrete inheritors (used for inheritance error reporting)
+  public Set<String> noPossibleInheritance;
+  // Association links between instances for each association
+  public ArrayList<AssociationLinkSet> associationLinks;
+  // Full underlying instance data (required/true counts, inheritance trees, etc.)
+  public Map<String, ClassInstanceCount> rawClassInstanceCounts;
+}
+
+/*
+ Helper data class capturing a single association link between two
+ concrete instances as recorded by the CRUD UI. This is used only
+ when building instance diagrams from CRUD data.
+*/
+class CrudAssociationLink {
+  public String fromClass;
+  public Integer fromIndex; // 1-based index of source instance
+  public String toClass;
+  public Integer toIndex;   // 1-based index of target instance
+}
+
+/*
+ Data class to hold the number of class instances
+*/
+class ClassInstanceCount {
+  depend java.util.*;
+
+  // Number of instances required for this class (including polymorphed subclasses)
+  public Integer requiredInstances;
+  // Number of concrete instances of this class required (does not include polymorphed subclasses)
+  public Integer trueInstances;
+  // Set of subclasses (unordered and unique)
+  public Set<String> directSubclasses;
+  // Set of superclasses (unordered and unique)
+  public Set<String> directSuperclasses;
+  // -1 means no limit, 0 (for abstract and interface), 1 (for singleton)
+  public Integer maximumInstanceCount;
+}
+
+/*
+  Class to hold the number of class instances for a given umple model
+
+  Provides methods/algorithms to calculate the number of class instances
+*/
+class ClassInstanceCountSet {
+  depend java.util.*;
+
+  /* 
+    Status of the ClassInstanceCountSet object 
+    -1 is invalid
+    0 is valid, 
+    1 is maxIter reached
+    2 is maxInstances reached
+    3 is inheritance impossible
+    4 is infinite loop detected
+  */
+  public int statusCode = -1;
+
+  internal UmpleModel umpleModel;
+
+  // Map with each class and it's instance counts (not an arraylist since classes are unordered and unique)
+  public Map<String, ClassInstanceCount> instances;
+
+  // Set of the classnames for traits. We need to ignore any associations to/from these
+  //  (their associations are copied to their subclasses, but the original remains in the model)
+  private Set<String> traitSet;
+
+  // Map of any potential infinite loops in the model
+  public Map<String, Integer> loopScores;
+
+
+  public static InstanceDiagramResult computeInstanceDiagram(
+    UmpleModel model,
+    int linkingFlag,
+    int initialClassCountFlag,
+    int maxIterations,
+    int maxClassCount
+  ) {
+    // Create class instance object
+    ClassInstanceCountSet classInstanceResult = new ClassInstanceCountSet(model);
+
+    // Initialize class counts (random or constant)
+    if (initialClassCountFlag == -1) {
+      Map<Integer, Double> minimumInstanceProbabilities = new HashMap<Integer, Double>();
+      minimumInstanceProbabilities.put(0, 0.25);
+      minimumInstanceProbabilities.put(1, 0.50);
+      minimumInstanceProbabilities.put(2, 0.25);
+      classInstanceResult.initializeClassCountsRandom(minimumInstanceProbabilities);
+    } else {
+      classInstanceResult.initializeClassCountsConstant(initialClassCountFlag);
+    }
+
+    // Run the instance count algorithm
+    classInstanceResult.getInstanceCounts(maxIterations, maxClassCount);
+
+    // Build result object
+    InstanceDiagramResult result = new InstanceDiagramResult();
+    result.statusCode = classInstanceResult.statusCode;
+    // Only probe diagram emptiness when the computation succeeded.
+    // For error states, some trueInstances values may be null, so
+    // calling diagramIsEmpty() would throw a NullPointerException.
+    if (result.statusCode == 0) {
+      result.diagramIsEmpty = classInstanceResult.diagramIsEmpty();
+    } else {
+      result.diagramIsEmpty = false;
+    }
+
+    // Always compute loop scores and inheritance diagnostics for error reporting
+    if (classInstanceResult.loopScores == null) {
+      classInstanceResult.loopScores = classInstanceResult.getClassLoopScores();
+    }
+    result.loopScores = classInstanceResult.loopScores;
+    result.noPossibleInheritance = classInstanceResult.getNoPossibleInheritance();
+
+    // Only compute instance counts and association links when the system is valid
+    if (result.statusCode == 0 && !result.diagramIsEmpty) {
+      result.instanceCounts = classInstanceResult.getInstanceCountMap();
+      result.associationLinks = classInstanceResult.distributeAssociations(linkingFlag);
+    } else {
+      result.instanceCounts = new HashMap<String, Integer>();
+      result.associationLinks = new ArrayList<AssociationLinkSet>();
+    }
+
+    // Expose the raw instance objects for callers that need full detail
+    result.rawClassInstanceCounts = classInstanceResult.instances;
+
+    return result;
+  }
+
+  // Get the number of instances for each class, interface, etc...
+  public Map<String, Integer> getInstanceCountMap() {
+    Map<String, Integer> result = new HashMap<>();
+    for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
+      result.put(entry.getKey(), entry.getValue().trueInstances);
+    }
+    return result;
+  }
+
+  // Returns true if the diagram has no class instances
+  public boolean diagramIsEmpty() {
+    for (ClassInstanceCount count : instances.values()) {
+      if (count.trueInstances != 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /* 
+    Recursive function to get the set of subclasses of a class in an inheritance tree
+    Will add the classes to the "subclassSet" parameter
+
+    Note: Will include itself
+  */
+  private void getAllSubclassesTree(String className, Set<String> subclassSet, boolean excludeSingleton, boolean excludeAbstract) {
+    ClassInstanceCount topLevelInstance = this.instances.get(className);
+    
+    // If this instance is concrete, add it to the subclassSet
+    if (topLevelInstance.maximumInstanceCount == -1) {
+      subclassSet.add(className);
+    } else if (topLevelInstance.maximumInstanceCount == 1 && !excludeSingleton) {
+      subclassSet.add(className);
+    } else if (topLevelInstance.maximumInstanceCount == 0 && !excludeAbstract) {
+      subclassSet.add(className);
+    }
+    
+    // Check this class' subclasses
+    for (String subclassName : topLevelInstance.directSubclasses) {
+      getAllSubclassesTree(subclassName, subclassSet, excludeSingleton, excludeAbstract);
+    }
+  }
+
+  /* 
+    Recursive function to get the total number of concrete instances of a class and it's subclasses
+  */
+  private Integer getNumberOfConcreteInstances(String className) {
+    ClassInstanceCount topLevelInstance = this.instances.get(className);
+    
+    Integer result = 0;
+
+    // Get number of concrete subclasses (recursive)
+    for (String subclassName : topLevelInstance.directSubclasses) {
+      result += getNumberOfConcreteInstances(subclassName);
+    }
+
+    // Now add the number for this class (base case)
+    if (topLevelInstance.maximumInstanceCount == 0) {
+      // For abstract/interface/etc... classes; add nothing
+    } else if (topLevelInstance.maximumInstanceCount == 1) {
+      // For singleton classes; add 1
+      result += 1;
+    } else if (topLevelInstance.maximumInstanceCount == -1) {
+      // For regular classes, add the difference between required instances and the calculated subclasses
+      int difference = topLevelInstance.requiredInstances - result;
+      if (difference > 0) {
+        result += difference;
+      }
+    }
+    
+    return result;
+  }
+
+  /*
+    Wrapper for getAllSuperclassesRecursive
+    Will return a Set instead of modifying one
+    Will remove the current class from the superclass tree
+  */
+  public Set<String> getAllSuperclasses(String classname) {
+    Set<String> superclasses = new HashSet<>();
+    getAllSuperclassesRecursive(classname, superclasses);
+
+    // Remove the current class
+    superclasses.remove(classname);
+
+    return superclasses;
+  }
+
+  // Recursive function to get all superclasses for a given identifier including itself
+  private void getAllSuperclassesRecursive(String className, Set<String> superclassSet) {
+    ClassInstanceCount topLevelInstance = this.instances.get(className);
+    
+    superclassSet.add(className);
+    
+    // Check this class' superclasses
+    for (String superclassName : topLevelInstance.directSuperclasses) {
+      getAllSuperclassesRecursive(superclassName, superclassSet);
+    }
+  }
+
+  /* 
+    Calculate which classes are potentially infinite looping classes.
+    
+    Returns a map of class names and their looping score
+    See traverseClassAssociations() for the logic...
+  */
+  public Map<String, Integer> getClassLoopScores() {
+    Map<String, Integer> result = new HashMap<String, Integer>();
+    for (Map.Entry<String, ClassInstanceCount> classname : this.instances.entrySet()) {
+      // Run looping class search for concrete classes
+      if (classname.getValue().maximumInstanceCount == -1) {
+        result.put(classname.getKey(), traverseClassAssociations(getAllSuperclasses(classname.getKey()), classname.getKey(), classname.getKey(), 1, new HashSet<>()));
+      } else {
+        result.put(classname.getKey(), 0);
+      }
+    }
+    return result;
+  }
+
+  /*
+    Perform DFS to determine if a class is a looping class.
+    Recursive function to traverse across associations looking for >1 multiplicity cycles on a given class
+
+    A cycle >1 that links back to the original class will by definition create an infinite loop.
+    A cycle >=1 that links back to the superclass or the original class might create an infinite loop (but not guaranteed)
+        - Note: This is because if an abstract class doesnt have enough instances, it will try to increase any subclasses.
+
+    "stopSuperclasses" and "stopClassname" are the base cases which never change between branches of the search.
+    "thisClassname", "multiplicityProduct", and "visited" will change between branches of the search.
+  
+    Returns 0 if the class is safe - (if there are no >= 1 cycles associated with this class or superclasses)
+    Returns 1 if the class is unsafe - (if there is a >=1 cycle associated with any superclass or itself)
+    Returns 2 if the class is infinite - (if there is a >1 cycle associated with this class)
+  */
+  private int traverseClassAssociations(Set<String> stopSuperclasses, String stopClassname, String thisClassname, double multiplicityProduct, Set<String> visitedAssociations) {    
+    // Base case 1: There is a cycle to this class
+    if (thisClassname.equals(stopClassname) && visitedAssociations.size() > 0) {
+      if (multiplicityProduct > 1) {
+        return 2;
+      } else if (multiplicityProduct == 1) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+
+    // Base case 2: There is a cycle to a superclass
+    if (stopSuperclasses.contains(thisClassname)) {
+
+      if (multiplicityProduct >= 1) {
+        return 1;
+      } else {
+        return 0;
+      }
+    }
+    
+    // Run recursion - saving the worst case scenario
+    int worstCase = 0;
+    for (Association assoc : umpleModel.getUmpleClass(thisClassname).getAssociations()) {
+      // Copy the visited list (otherwise it passes by reference across all branches of the search)
+      Set<String> newVisited = new HashSet<>(visitedAssociations);
+      
+      // If the association has already been visited, skip it
+      if (newVisited.contains(assoc.deriveName())) {
+        continue;
+      } else {
+        // Add it to the visited list
+        newVisited.add(assoc.deriveName());
+      }
+
+      // Get the ends of the association
+      AssociationEnd otherEnd;
+      AssociationEnd thisEnd;
+      if (assoc.getEnd(0).getClassName().equals(thisClassname)) {
+        otherEnd = assoc.getEnd(1);
+        thisEnd = assoc.getEnd(0);
+      } else {
+        otherEnd = assoc.getEnd(0);
+        thisEnd = assoc.getEnd(1);
+      }
+
+      // Calculate the new multiplicityProduct
+      double otherLower = otherEnd.getMultiplicity().getLowerBound();
+      double thisUpper = thisEnd.getMultiplicity().getUpperBound();
+      // If thisUpper is *, we will be effectively dividing infinity (~0) - so we can skip this branch entirely
+      if (thisUpper == -1) {
+        continue;
+      }
+      double newMultiplicityProduct = multiplicityProduct * otherLower / thisUpper;
+
+      // If the other end is an interface - than it must be a directed association - which also means * upper bound - so we skip it
+      if (umpleModel.getUmpleInterface(otherEnd.getClassName()) != null) {
+        continue;
+      }
+
+      // Get the recursive result
+      int recursiveResult = traverseClassAssociations(stopSuperclasses, stopClassname, otherEnd.getClassName(), newMultiplicityProduct, newVisited);
+      if (recursiveResult > worstCase) {
+        worstCase = recursiveResult;
+      }
+    }
+    return worstCase;
+  }
+
+  /*
+   Get a set of abstract/interface/singleton/etc... classes that have no possible concrete subclasses for inheritance.
+
+   These classes are not necessarily errors on their own; but they can become errors.
+   Example: An abstract class with no possible inheritors, but with 0 required instances is valid.
+  */
+  public Set<String> getNoPossibleInheritance() {
+    // Create result set
+    Set<String> noPossibleInheritance = new HashSet<>();
+
+    // Get loop scores if they do not already exist
+    if (this.loopScores == null) {
+      this.loopScores = getClassLoopScores();
+    }
+    // Get the unsafe looping classes (they cannot be used for inheritance resolution)
+    Set<String> unsafeClasses = new HashSet<>();
+    for (Map.Entry<String, Integer> loopScore : loopScores.entrySet()) {
+      if (loopScore.getValue() == 1) {
+        unsafeClasses.add(loopScore.getKey());
+      }
+    }
+
+    // For each class in the model
+    for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
+      // If it has a maximum instance count
+      if (entry.getValue().maximumInstanceCount != -1) {
+
+        // Get concrete subclasses
+        Set<String> concreteSubclasses = new HashSet<>();
+        getAllSubclassesTree(entry.getKey(), concreteSubclasses, true, true);
+
+        // Remove looping subclasses
+        concreteSubclasses.removeIf(unsafeClasses::contains);
+
+        // Check if it has any subclasses remaining
+        if (concreteSubclasses.size() == 0) {
+          // Add it to the result set
+          noPossibleInheritance.add(entry.getKey());
+        }
+      }
+    }
+
+    return noPossibleInheritance;
+  }
+
+  /*
+    This function handles the logic for inheritance.
+
+    For every abstract-class or interface, checks if there are enough concrete subclass instances to satisfy the required amount.
+    For each unsatisfied class, determines the set of concrete classes that can be increased to satisfy the required amount.
+    Ranks the concrete classes by how common they are in these "unsatisfied sets"
+        - The more common they are, the more unsatisfied superclasses they can satisfy by gaining more instances
+    Increases the concrete class counts by the required amount.
+  
+    Returns a status code as an integer
+      - 0 : No inheritance issues
+      - 1 : Inheritance issue detected, concrete class counts have been increased accordingly
+      - 2 : Inheritance issue detected, unresolvable
+  */
+  private int satisfyInheritance() {
+    // Map of each unsatisfied class to its concrete subclasses
+    Map<String, Set<String>> unsatisfiedInheritance = new HashMap<>();
+
+    for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
+      Integer instanceCountDifference = entry.getValue().requiredInstances - getNumberOfConcreteInstances(entry.getKey());
+
+      if (instanceCountDifference > 0) {
+        // Inheritance is not satisfied, we need more concrete instances
+        Set<String> concreteSubclasses = new HashSet<>();
+        // Get set of all non-singleton non-abstract subclasses
+        getAllSubclassesTree(entry.getKey(), concreteSubclasses, true, true);
+        // Put the result in the map
+        unsatisfiedInheritance.put(entry.getKey(), concreteSubclasses);
+      }
+    }
+
+    if (unsatisfiedInheritance.size() == 0) {
+      // Inheritance is satisfied
+      return 0;
+    }
+
+    // In order to prevent infinite instantiation loops, we will only take the "safe" subclasses
+    // "Safe" subclasses do not have associations that cycle back to themselves or their superclasses with a multiplicity >=1
+    // This ensures that if they are instantiated, it will not loop back and require even more instances
+    
+    // Get loop scores if they do not already exist
+    if (this.loopScores == null) {
+      this.loopScores = getClassLoopScores();
+    }
+    // Get the unsafe classes from the loop scores
+    Set<String> unsafeClasses = new HashSet<>();
+    for (Map.Entry<String, Integer> loopScore : loopScores.entrySet()) {
+      if (loopScore.getValue() == 1) {
+        unsafeClasses.add(loopScore.getKey());
+      }
+    }
+    // Remove unsafe classes from the sets
+    for (Set<String> concreteSubclasses : unsatisfiedInheritance.values()) {
+      concreteSubclasses.removeIf(unsafeClasses::contains);
+    }
+
+    // Check if a concrete subclass set has size = 0; This means it is impossible to satisfy the system
+    // This couldve been caused by a bad diagram or an infinite loop detection removal
+    for (Set<String> entry : unsatisfiedInheritance.values()) {
+      if (entry.size() == 0) {
+        return 2;
+      }
+    }
+
+    // Rank the subclasses by most common among the sets 
+    // A common concrete subclass can satisfy multiple superclasses at once
+    Map<String, Integer> concreteSubclassFrequency = new HashMap<>();
+    for (Set<String> entry : unsatisfiedInheritance.values()) {
+      for (String subclassName : entry) {
+        int count = concreteSubclassFrequency.containsKey(subclassName) ? concreteSubclassFrequency.get(subclassName) : 0;
+        concreteSubclassFrequency.put(subclassName, count+1);
+      }
+    }
+
+    // Distribute required connections among the concrete subclasses
+    for (Map.Entry<String, Set<String>> entry : unsatisfiedInheritance.entrySet()) {
+      // Recalculate number of instances required (this is required since a previous iteration of this loop couldve changed it)
+      Integer instanceCountDifference = this.instances.get(entry.getKey()).requiredInstances - getNumberOfConcreteInstances(entry.getKey());
+      
+      // Get best concrete subclass
+      String best = "";
+      Integer bestFreq = 0;
+      for (String concreteSubclass : entry.getValue()) {
+        int frequency = concreteSubclassFrequency.get(concreteSubclass);
+        if (frequency > bestFreq) {
+          bestFreq = frequency;
+          best = concreteSubclass;
+        }
+      }
+
+      // Increase the best concrete subclass by the desired number of instances
+      this.instances.get(best).requiredInstances += instanceCountDifference;
+    }
+
+    return 1;
+  }
+
+  /* 
+    Set the non-polymorphic count of every class. 
+    This should only be run once the system is solved.
+
+    Assumes that superclasses are sums of their subclasses and themselves.
+    With this assumption we can simply subtract the counts of the DIRECT subclasses to get the number of non-polymorphic instances
+  */
+  private void setTrueInstanceCount() {
+    for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
+      int current = entry.getValue().requiredInstances;
+      // Loop through direct subclasses subtracting
+      for (String directSubclass : entry.getValue().directSubclasses) {
+        current -= this.instances.get(directSubclass).requiredInstances;
+      }
+      // Set number of non-polymorphic instances
+      entry.getValue().trueInstances = current;
+    }
+  }
+
+  // Make sure that the required instance count for superclasses is >= the number of concrete subclasses
+  private void updateSuperclassInstanceCounts() {
+    for (Map.Entry<String, ClassInstanceCount> entry  : this.instances.entrySet()) {
+      entry.getValue().requiredInstances = Math.max(getNumberOfConcreteInstances(entry.getKey()), entry.getValue().requiredInstances);
+    }
+  }
+
+  /*
+    We can represent the system as a graph problem. 
+    Each class is a node, and each association is 2 directed links between the nodes.
+    For every link, the class count at the start multiplied by the multiplicity must be smaller/equal to the class count at the end.
+    
+    If you have the link A 2..4 -> 3..6 B, for every 2..4 As, there must be 3..6 Bs.
+    Thus, we have the following tightest inequality; for every 4 or less As, there must be at at least 3 Bs
+    There can be less As, or more Bs, but this equality must hold true.
+    So for A = 1-4 there are >3 Bs, for A = 5-8 there are >6 Bs
+    
+    Algorithm:
+    Initialize all class counts to their initial value
+    Loop through every association
+      End = max(End, lowerEnd*ceil(Start/UpperStart))
+    Repeat until no more changes appear
+  
+    Creates a Map of classnames and their minimum class counts
+  */
+  public void getInstanceCounts(int maxIter, int maxClasses) {
+    this.statusCode = -1;
+
+    // Get loop scores if they do not already exist
+    if (this.loopScores == null) {
+      this.loopScores = getClassLoopScores();
+    }
+    // Now check for any infinite loops using loop scores
+    if (loopScores.values().contains(2)) {
+      this.statusCode = 4;
+      return;
+    } 
+
+    boolean noChange = false;
+    int iteration = -1;
+    // Run infinite loop
+    while (true) {
+      iteration++;
+
+      // Ensure superclass counts are sums of their subclasses
+      updateSuperclassInstanceCounts();
+
+      // Check if the system has stabilized (all associations are satisfied)
+      if (noChange) {
+        // All associations are satisfied but inheritance may not be (abstract class count >= 1)
+
+        // Run the inheritance logic
+        int inheritanceStatus = satisfyInheritance();
+        if (inheritanceStatus == 0) {
+          // Everything is in order; associations satisfied, inheritance satisfied... End algorithm
+          setTrueInstanceCount();
+          this.statusCode = 0;
+          return;
+        } else if (inheritanceStatus == 1) {
+          // Inheritance was not satisfied (and the required instances have been changed), continue algorithm
+        } else if (inheritanceStatus == 2) {
+          // Inheritance was not satisfied and is impossible, return error
+          this.statusCode = 3;
+          return;
+        }
+      }
+      noChange = true;
+
+      // Check if we've reached max iterations
+      if (iteration >= maxIter) {
+        this.statusCode = 1;
+        return;
+      }
+
+      // Check if we've reached max class counts
+      int sum = 0;
+      for (ClassInstanceCount n: this.instances.values()) {
+        sum += n.requiredInstances;
+      }
+      if (sum > maxClasses) {
+        this.statusCode = 2;
+        return;
+      }
+
+      for (Association assoc : umpleModel.getAssociations()) {
+        // Traits will copy their associations to their children
+        // But the original trait association remains in the model, so we need to ignore it.
+        if (traitSet.contains(assoc.getEnd(0).getClassName()) || traitSet.contains(assoc.getEnd(1).getClassName())) {
+          continue;
+        }
+
+        int lowerLeft = assoc.getEnd(0).getMultiplicity().getLowerBound();
+        int upperLeft = assoc.getEnd(0).getMultiplicity().getUpperBound();
+        int lowerRight = assoc.getEnd(1).getMultiplicity().getLowerBound();
+        int upperRight = assoc.getEnd(1).getMultiplicity().getUpperBound();
+
+        // For directional associations, there are 3 situations for the multiplicity on the unmanaged side:
+        // - 0..1: We will treat it as bidirectional with 1 in the direction, and 0 against the direction... no changes required
+        // - *: We will treat it as bidirectional with 1 in the direction, and 0 against the direction... convert it to 0..1
+        // - 2, 2..4, anything: The user has ignored Warning036...
+        //                      We will assume the user wishes to enforce that multiplicity; so pretend its bidirectional... no changes required
+        if (!assoc.getIsLeftNavigable() && upperLeft==-1) {
+          lowerLeft = 0;
+          upperLeft = 1;
+        }
+        if (!assoc.getIsRightNavigable() && upperRight==-1) {
+          lowerRight = 0;
+          upperRight = 1;
+        }
+
+        // Get the current count for the classes
+        Integer oldInstanceLeft = this.instances.get(assoc.getEnd(0).getClassName()).requiredInstances;
+        Integer oldInstanceRight = this.instances.get(assoc.getEnd(1).getClassName()).requiredInstances;
+
+        // How many left instances do we need? 
+        // LinksPerRight*ceil(Right/HowManyLinksCanEachLeftHold)
+        Integer newInstanceLeft;
+        if (upperRight!=-1) {
+          newInstanceLeft = Integer.valueOf((int)(lowerLeft*Math.ceil((double)oldInstanceRight/(double)upperRight)));
+        } else {
+          // Ceiling of (?/*) will always be 1 since * is an extremely large constant
+          newInstanceLeft = Integer.valueOf((int)(lowerLeft));
+        }
+        // If the new required instance is higher, replace the old instance count
+        if (newInstanceLeft > oldInstanceLeft) {
+          noChange = false;
+          this.instances.get(assoc.getEnd(0).getClassName()).requiredInstances = newInstanceLeft;
+        }
+
+        // How many right instances do we need?
+        // LinksPerLeft*ceil(Left/HowManyLinksCanEachRightHold)
+        Integer newInstanceRight;
+        if (upperLeft!=-1) {
+          newInstanceRight = Integer.valueOf((int)(lowerRight*Math.ceil((double)oldInstanceLeft/(double)upperLeft)));
+        } else {
+          // Ceiling of (?/*) will always be 1 since * is an extremely large constant
+          newInstanceRight = Integer.valueOf((int)(lowerRight));
+        }
+        // If the new required instance is higher, replace the old instance count
+        if (newInstanceRight > oldInstanceRight) {
+          noChange = false;
+          this.instances.get(assoc.getEnd(1).getClassName()).requiredInstances = newInstanceRight;
+        }
+
+      }
+    }
+
+    // This is now unreachable - kept in case further changes are made to this function
+    // return;
+  }
+
+  /* 
+    Initialize the counting object for a Class.
+  */
+  private void initializeClassCount(UmpleClass umpleClass, Integer classCount) {
+    ClassInstanceCount newClassCount = new ClassInstanceCount();
+    
+    // Set subclasses
+    newClassCount.directSubclasses = new HashSet<String>();
+    for (UmpleClass subclass : umpleClass.getSubclasses()) {
+      newClassCount.directSubclasses.add(subclass.getName());
+    }
+
+    // Set superclasses
+    newClassCount.directSuperclasses = new HashSet<String>();
+    for (UmpleInterface superinterface : umpleClass.getParentInterface()) {
+      newClassCount.directSuperclasses.add(superinterface.getName());
+    }
+    if (umpleClass.getExtendsClass() != null) {
+      newClassCount.directSuperclasses.add(umpleClass.getExtendsClass().getName());
+    }
+    
+    // Set instance count and maximum instance count
+    if (umpleClass.getIsAbstract()) {
+      newClassCount.requiredInstances = 0;
+      newClassCount.maximumInstanceCount = 0;
+    } else if (umpleClass.getIsSingleton()) {
+      newClassCount.requiredInstances = 1;
+      newClassCount.maximumInstanceCount = 1;
+    } else {
+      newClassCount.requiredInstances = classCount;
+      newClassCount.maximumInstanceCount = -1;
+    }
+    
+    // Add to the map
+    this.instances.put(umpleClass.getName(), newClassCount);
+  }
+
+  /* 
+    Initialize the counting object for an Interface.
+
+    This method is horribly inefficient since interfaces do not have a "subclass" property;
+    It has to search through every class and interface to check they "extend" this interface 
+  */ 
+  private void initializeInterfaceCount(UmpleInterface umpleInterface) {
+    ClassInstanceCount newClassCount = new ClassInstanceCount();
+
+    // Set subclasses 
+    // Horribly inefficient: We are searching every class and interface to see which ones inherit
+    newClassCount.directSubclasses = new HashSet<String>();
+    // Loop through all interfaces to see which ones extend this interface
+    for (UmpleInterface umpInt : umpleModel.getUmpleInterfaces()) {
+      for (UmpleInterface extendedInt : umpInt.getExtendsInterface()) {
+        // If the interface extends, add it to the subclass list
+        if (extendedInt.getName().equals(umpleInterface.getName())) {
+          newClassCount.directSubclasses.add(umpInt.getName());
+        }
+      }
+    }
+    // Loop through all classes to see which ones extend this interface
+    for (UmpleClass umpClass : umpleModel.getUmpleClasses()) {
+      for (UmpleInterface extendedInt : umpClass.getParentInterface()) {
+        // If the interface extends, add it to the subclass list
+        if (extendedInt.getName().equals(umpleInterface.getName())) {
+          newClassCount.directSubclasses.add(umpClass.getName());
+        }
+      }
+    }
+
+    // Set superclasses
+    newClassCount.directSuperclasses = new HashSet<String>();
+    for (UmpleInterface superinterface : umpleInterface.getExtendsInterface()) {
+      newClassCount.directSuperclasses.add(superinterface.getName());
+    }
+
+    // Set instance count and maximum instance count
+    newClassCount.requiredInstances = 0;
+    newClassCount.maximumInstanceCount = 0;
+
+    // Add to the map
+    this.instances.put(umpleInterface.getName(), newClassCount);
+  }
+
+  // Set each class initially to a constant amount of instances
+  public void initializeClassCountsConstant(Integer constInt) {
+    this.instances = new HashMap<>();
+
+    // For each class
+    for (UmpleClass umpleClass : umpleModel.getUmpleClasses()) {
+      initializeClassCount(umpleClass, constInt);
+    }
+
+    // For each interface
+    for (UmpleInterface umpInt : umpleModel.getUmpleInterfaces()) {
+      initializeInterfaceCount(umpInt);
+    }
+
+    // For each trait
+    this.traitSet = new HashSet<>();
+    for (UmpleTrait umpTrait : umpleModel.getUmpleTraits()) {
+      // initializeTraitCount(umpTrait);
+      this.traitSet.add(umpTrait.getName());
+    }
+  }
+
+  /*
+    Generate the initial class counts randomly.
+    Parameter "minimumInstanceProbabilities" is a map of initial instance counts to their probabilities
+  */
+  public void initializeClassCountsRandom(Map<Integer, Double> minimumInstanceProbabilities) {    
+    this.instances = new HashMap<>();
+    
+    Random randomNumGen = new Random();
+    // For each class
+    for (UmpleClass umpClass : umpleModel.getUmpleClasses()) {
+      // Roll a random value between 0 and the sum of all probabilities
+      double totalOdds = 0;
+      for (Double odds : minimumInstanceProbabilities.values()) {
+        totalOdds += odds;
+      }
+      double randDouble = randomNumGen.nextDouble() * totalOdds;
+
+      // Loop through the probabilities to randomly select a value 
+      double cumulative = 0.0;
+      for (Map.Entry<Integer, Double> entry : minimumInstanceProbabilities.entrySet()) {
+        cumulative += entry.getValue();
+        if (randDouble <= cumulative) {
+          // Initialize the class with the random value
+          initializeClassCount(umpClass, entry.getKey());
+          // Move on to next class
+          break;
+        }
+      }
+    }
+
+    // For each interface
+    for (UmpleInterface umpInt : umpleModel.getUmpleInterfaces()) {
+      initializeInterfaceCount(umpInt);
+    }
+
+    // For each trait
+    this.traitSet = new HashSet<>();
+    for (UmpleTrait umpTrait : umpleModel.getUmpleTraits()) {
+      // initializeTraitCount(umpTrait);
+      this.traitSet.add(umpTrait.getName());
+    }
+  }
+
+  /*
+    Using the number of instance of each class, get the associations between the instances.
+
+    The linkingFlag parameter determines the number of links to create:
+    - 0 Minimum
+    - 1 Maximum
+    - 2 Random
+
+    Returns an arraylist of AssociationLinkSet, which is a data class
+  */
+  public ArrayList<AssociationLinkSet> distributeAssociations(int linkingFlag) {
+    ArrayList<AssociationLinkSet> result = new ArrayList<AssociationLinkSet>();
+    
+    // Loop through associations
+    for (Association assoc : umpleModel.getAssociations()) {
+      // Traits will copy their associations to their children
+      // But the original trait association remains in the model, so we need to ignore it.
+      if (traitSet.contains(assoc.getEnd(0).getClassName()) || traitSet.contains(assoc.getEnd(1).getClassName())) {
+        continue;
+      }
+
+      int concreteCountStart = getNumberOfConcreteInstances(assoc.getEnd(0).getClassName());
+      int concreteCountEnd = getNumberOfConcreteInstances(assoc.getEnd(1).getClassName());
+      // If either side of the association is 0 instances, skip the association
+      if (concreteCountStart==0 || concreteCountEnd==0) {
+        continue;
+      }
+
+      // Create AssociationLinkSet object
+      AssociationLinkSet nextAssoc = new AssociationLinkSet(
+        assoc, 
+        concreteCountStart,
+        concreteCountEnd
+      );
+
+      // Calculate the links and add it to the list of association links
+      nextAssoc.getLinksFromAssociation(linkingFlag);
+      result.add(nextAssoc);
+    }
+
+    return result;
+  }
+
+}
+
+/*
+ Data class to hold a 2D matrix of links between 2 classes (for 1 association)
+
+ Call getLinksFromAssociation() in order to populate the "links" attribute
+*/
+class AssociationLinkSet {
+  depend java.util.*;
+
+  public boolean[][] links;
+  internal Association association;
+  internal Integer classCountStart;
+  internal Integer classCountEnd;
+
+  /*
+    Given the num of instances of each class, get the associations/links between each instance.
+    Creates a matrix of the links between classes for a given association
+    The matrix is classCountStart by classCountEnd, and the boolean entries represent if there is a link between class instances
+
+    The linkingFlag parameter determines the number of links to create:
+      - 0 Minimum
+      - 1 Maximum
+      - 2 Random
+
+    Algorithm:
+    Check which class is the limiting factor
+    Take the limiting class (lets say B), begin assigning As round-robin until B links are satisfied
+    
+    Example: 
+    For A 2..3 -- 2..7 B with 7 As and 10 Bs (getting the minimum links)
+    B1 = A1, A2
+    B2 = A3, A4
+    B3 = A5, A6
+    B4 = A7, A1
+    B5 = A2, A3
+    ...
+    Each A should have at least its minimums (since B was the limiting class)
+    A1 = B1, B4, B8
+    A2 = B1, B5, B8
+    ...
+    A6 = B3, B7, B10
+    A7 = B4, B7
+  */
+  public void getLinksFromAssociation(int linkingFlag){
+    // If either side has 0 instances - there are no links created
+    if (classCountStart==0 || classCountEnd==0) {
+      return;
+    }
+
+    // Reflexivity uses a different algorithm; Since there is only 1 set of instances instead of 2
+    boolean isReflexive = association.getEnd(0).getClassName().equals(association.getEnd(1).getClassName());
+    if (isReflexive) {
+      getReflexiveLinks(linkingFlag);
+      return;
+    }
+
+    boolean[][] result = new boolean[classCountStart][classCountEnd];
+
+    // Minimum links is the number of classes multiplied by the lower bound on the other end
+    // Maximum links is the number of classes multiplied by the upper bound on the other end
+    int endLower = association.getEnd(1).getMultiplicity().getLowerBound();
+    int endUpper = association.getEnd(1).getMultiplicity().getUpperBound();
+    int startLower = association.getEnd(0).getMultiplicity().getLowerBound();
+    int startUpper = association.getEnd(0).getMultiplicity().getUpperBound();
+    
+    // The maximum links for a * upper bound is #OfInstances of the other class (you cannot link to 11 Bs if there are only 10 Bs)
+    if (endUpper == -1) {endUpper = classCountEnd;}
+    if (startUpper == -1) {startUpper = classCountStart;}
+
+    int maximumLinksStart = classCountStart*endUpper;
+    int minimumLinksStart = classCountStart*endLower;
+    int maximumLinksEnd = classCountEnd*startUpper;
+    int minimumLinksEnd = classCountEnd*startLower;
+
+    
+    // The smallest maximum bound determines the limiting class for max links
+    int smallestMaximum = (maximumLinksStart < maximumLinksEnd) ? maximumLinksStart : maximumLinksEnd;
+    
+    // The largest minimum bound determines the limiting class for min/random links
+    int largestMinimum = (minimumLinksStart > minimumLinksEnd) ? minimumLinksStart : minimumLinksEnd;
+
+    int totalLinkCount;
+    if (linkingFlag == 0) { // minimum
+      totalLinkCount = largestMinimum;
+    } else if (linkingFlag == 1) { // maximum
+      totalLinkCount = smallestMaximum;
+    } else { //random
+      Random random = new Random();
+      totalLinkCount = random.nextInt(smallestMaximum - largestMinimum + 1) + largestMinimum;
+    }
+
+    int linksPerStartInstance = (int)Math.floor((double)totalLinkCount / (double)classCountStart);
+    int extraInstanceCount = totalLinkCount % classCountStart;
+
+    // Loop through instances of the starting class
+    int roundRobinCount = 0;
+    for (int i=0;i<classCountStart;i++) {      
+
+      // Each instance has "linksPerStartInstance" links +1 if we need to get rid of an extra
+      int desiredLinks = linksPerStartInstance;
+      desiredLinks += (i < extraInstanceCount) ? 1 : 0;
+
+      // Loop through creating links
+      for (int linkCount=0; linkCount<desiredLinks ;linkCount++) { 
+        result[i][roundRobinCount] = true;
+        roundRobinCount = (roundRobinCount+1)%classCountEnd;
+      }
+    }
+
+    this.links = result;
+    return;
+  }
+
+  /*
+    Get the links for a reflexive association
+
+    Note: We assume that all Asymmetric reflexive associations are hierarchical...
+      - they are stricter than their non-hierarchical versions
+  */
+  private void getReflexiveLinks(int linkingFlag) {
+    boolean[][] result = new boolean[classCountStart][classCountEnd];
+
+    // There is always a 0 lower bound on both ends (umple would throw an error otherwise)
+    // So for minimum links we can simply return no links
+    if (linkingFlag == 0) {
+      this.links = result;
+      return;
+    }
+
+    int maxLinks;
+    boolean symmetryFlag;
+    if (this.association.getEnd(0).getRoleName().equals(this.association.getEnd(1).getRoleName())) {
+      // Code for Symmetric reflexive association
+      symmetryFlag = true;
+      // We can use a single undirected link between instances
+
+      int upperBound = this.association.getEnd(0).getMultiplicity().getUpperBound();
+      if (upperBound == -1) {
+        upperBound = classCountStart;
+      }
+
+      // The maximum number of links is floor(n*min(UpperBound,n-1)/2)
+      // This is the classic number of pairs in n items; but with a min() to prevent going over the UpperBound
+      maxLinks = (int)Math.floor(classCountStart*Math.min(upperBound,classCountStart-1)/2);
+
+    } else {
+      // Code for Asymmetric hierarchical reflexive association
+      symmetryFlag = false;
+      // We can use a single directed link between instances with no cycles among instances
+
+      // To prevent cycles; we need only add directed links going UP in indices.
+      // Example: A1 is parent of A2 and A3 ; A2 can be parent of A3 but not A1
+
+      // The maximum number of links is bounded by the lowest upper bound in the association
+      // Sum(min(UpperBound1, UpperBound2, n)) for each instance n starting at 0
+      // Example:  
+      //    Assume that the receiving end has the lowest maximum 0..2
+      //    Since it is acyclic, each instance "n" can only receive from "n-1" instances.
+      //    The first instance has no sender, the second can only receive from the first, etc...
+      //    But it also can't receive more than 2... which is why I use the min() function.
+      // The formula above can be rewritten as 
+
+      int upperBoundStart = this.association.getEnd(0).getMultiplicity().getUpperBound();
+      if (upperBoundStart == -1) {
+        upperBoundStart = classCountStart;
+      }
+      int upperBoundEnd = this.association.getEnd(1).getMultiplicity().getUpperBound();
+      if (upperBoundEnd == -1) {
+        upperBoundEnd = classCountStart;
+      }
+      int minimumUpperBound = (int)Math.min(upperBoundStart, upperBoundStart);
+      
+      maxLinks = 0;
+      for (int i=0;i<classCountStart;i++) {
+        maxLinks += (int)Math.min(minimumUpperBound, i);
+      }
+
+    }
+
+    int desiredLinkCount = 0;
+    if (linkingFlag == 1) {
+      desiredLinkCount = maxLinks;
+    } else if (linkingFlag == 2) {
+      Random random = new Random();
+      desiredLinkCount = random.nextInt(maxLinks + 1);
+    }
+
+    // We can create links by moving 2 pointers (indices) along; 
+    int pointer1 = 0;
+    int pointer2 = 1;
+    for (int linkCount = 0 ; linkCount < desiredLinkCount; linkCount++) {
+      if (pointer1 == pointer2) {
+        // This is only possible if something has gone wrong - break the loop...
+        break;
+      } 
+      else if (result[pointer1][pointer2]) {
+        // If already connected; increment the second pointer
+        pointer2 = (pointer2+1)%classCountStart;
+        // No link created, we do not increment the linkCount this loop
+        linkCount -= 1;
+      } 
+      else if (pointer2 < pointer1 && !symmetryFlag) {
+        // If the pointer is backwards and its acyclic asymmetric; increment both pointers
+        pointer1 = (pointer1+1)%classCountStart;
+        pointer2 = (pointer2+1)%classCountStart;
+        // No link created, we do not increment the linkCount this loop
+        linkCount -= 1;
+      } 
+      else {
+        // Create link and increment both pointers
+        result[pointer1][pointer2] = true;
+        pointer1 = (pointer1+1)%classCountStart;
+        pointer2 = (pointer2+1)%classCountStart;
+      }
+    }
+
+    this.links = result;
+    return;
+  }
+
+  public String toString() {
+    String result = "";
+    
+    result += "("+classCountStart+")"+this.association.getEnd(0).getClassName();
+    result += " X ";
+    result += "("+classCountEnd+")"+this.association.getEnd(1).getClassName();
+    result += "\n";
+    for (int i=0;i<links.length;i++) {
+      result += "|";
+      for (int j=0;j<links[i].length;j++) {
+        result += " " + (links[i][j] ? "1" : "0") + " ";
+      }
+      result += "|\n";
+    }
+
+    return result;
+  }
+
+  public Association getAssociation(){
+    return this.association;
+  }
+
+}

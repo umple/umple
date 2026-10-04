@@ -1,8 +1,24 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+
+
 class Person():
+    #------------------------
+    # MEMBER VARIABLES
+    #------------------------
+    #Person Attributes
+    #------------------------
+    # CONSTRUCTOR
+    #------------------------
     def __init__(self, aName, aAge):
+        self._age = None
+        self._name = None
         self._name = aName
         self._age = aAge
 
+    #------------------------
+    # INTERFACE
+    #------------------------
     def setName(self, aName):
         wasSet = False
         self._name = aName
@@ -25,5 +41,4 @@ class Person():
         pass
 
     def __str__(self):
-        return str(super()) + "[" + "name" + ":" + self.getName() + "," + "age" + ":" + self.getAge() + "]"
-
+        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "," + "age" + ":" + str(self.getAge()) + "]"

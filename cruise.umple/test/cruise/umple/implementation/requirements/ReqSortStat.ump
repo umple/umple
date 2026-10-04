@@ -1,0 +1,17 @@
+// Test that reqSortStat suboption sorts requirements alphabetically by statement text
+suboption "reqSortStat";
+req C01 {
+  alpha statement.
+}
+req A01 {
+  gamma statement.
+}
+req B01 {
+  beta statement.
+}
+implementsReq C01;
+implementsReq A01;
+implementsReq B01;
+class Example {
+  var1;
+}

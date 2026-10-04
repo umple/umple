@@ -1,0 +1,4 @@
+classDiagram
+  class Student {
+  }
+  Student "*" <-- "0..1" Student : mentor

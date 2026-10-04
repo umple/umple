@@ -13,16 +13,20 @@ class Student
   private $number;
 
   //Student Associations
-  private $mentors;
+  private $mentor;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public function __construct($aNumber)
+  public function __construct($aNumber, $aMentor)
   {
     $this->number = $aNumber;
-    $this->mentors = array();
+    $didAddMentor = $this->setMentor($aMentor);
+    if (!$didAddMentor)
+    {
+      throw new Exception("Unable to create student due to mentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
   }
 
   //------------------------
@@ -42,88 +46,37 @@ class Student
     return $this->number;
   }
 
-  public function getMentor($index)
+  public function getMentor()
   {
-    $aMentor = $this->mentors[$index];
-    return $aMentor;
+    return $this->mentor;
   }
 
-  public function getMentors()
+  public function setMentor($aNewMentor)
   {
-    $newMentors = $this->mentors;
-    return $newMentors;
-  }
-
-  public function numberOfMentors()
-  {
-    $number = count($this->mentors);
-    return $number;
-  }
-
-  public function hasMentors()
-  {
-    $has = $this->numberOfMentors() > 0;
-    return $has;
-  }
-
-  public function indexOfMentor($aMentor)
-  {
-    $wasFound = false;
-    $index = 0;
-    foreach($this->mentors as $mentor)
+    $wasSet = false;
+    if ($aNewMentor == null)
     {
-      if ($mentor->equals($aMentor))
-      {
-        $wasFound = true;
-        break;
-      }
-      $index += 1;
+      //Unable to setMentor to null, as student must always be associated to a mentor
+      return $wasSet;
     }
-    $index = $wasFound ? $index : -1;
-    return $index;
-  }
-
-  public static function minimumNumberOfMentors()
-  {
-    return 0;
-  }
-
-  public function addMentor($aMentor)
-  {
-    $wasAdded = false;
-    if ($this->indexOfMentor($aMentor) !== -1) { return false; }
-    $existingStudent = $aMentor->getStudent();
-    if ($existingStudent == null)
+    
+    $existingStudent = $aNewMentor->getStudent();
+    if ($existingStudent != null && $this != $existingStudent)
     {
-      $aMentor->setStudent($this);
+      //Unable to setMentor, the current mentor already has a student, which would be orphaned if it were re-assigned
+      return $wasSet;
     }
-    elseif ($this !== $existingStudent)
+    
+    $anOldMentor = $this->mentor;
+    $this->mentor = $aNewMentor;
+    $this->mentor->setStudent($this);
+    
+    if ($anOldMentor != null)
     {
-      $existingStudent->removeMentor($aMentor);
-      $this->addMentor($aMentor);
+      $anOldMentor->setStudent(null);
     }
-    else
-    {
-      $this->mentors[] = $aMentor;
-    }
-    $wasAdded = true;
-    return $wasAdded;
-  }
-
-  public function removeMentor($aMentor)
-  {
-    $wasRemoved = false;
-    if ($this->indexOfMentor($aMentor) != -1)
-    {
-      unset($this->mentors[$this->indexOfMentor($aMentor)]);
-      $this->mentors = array_values($this->mentors);
-      if ($this === $aMentor->getStudent())
-      {
-        $aMentor->setStudent(null);
-      }
-      $wasRemoved = true;
-    }
-    return $wasRemoved;
+    $wasSet = true;
+    return $wasSet;
   }
 
   public function equals($compareTo)
@@ -133,9 +86,11 @@ class Student
 
   public function delete()
   {
-    foreach ($this->mentors as $aMentor)
+    $existingMentor = $this->mentor;
+    $this->mentor = null;
+    if ($existingMentor != null)
     {
-      $aMentor->setStudent(null);
+      $existingMentor->setStudent(null);
     }
   }
 

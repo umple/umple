@@ -1,0 +1,6 @@
+classDiagram
+  class Student {
+    String foo()
+    String foo()
+    String bar()
+  }

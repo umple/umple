@@ -1,0 +1,9 @@
+req R1 {
+  include the applicable tax;
+  isA legal obligation;
+}
+
+req UC12 useCase {
+  isA UC1;
+  userStep 1 { pay }
+}

@@ -1,0 +1,9 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+  
+  digraph InstanceDiagram {
+    node [shape=rectangle]
+    edge [arrowhead=none]
+  message [label ="Reached maximum class count. Ensure that the system is instantiable and non-infinite"];
+  // All associations
+}

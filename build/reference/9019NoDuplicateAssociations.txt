@@ -12,8 +12,7 @@ noreferences
 
 <p>The third example shows that error 19 can also occur with association classes. The solution to this can be found in <a href="AssociationClassDefinition.html">the manual page for association classes.</a></p>
 
-</p>
-
+<p>Note that if warning <a href="W089AssociationRolenameMatchingClassname.html">W093</a> is being raised, resolve that issue first. This will resolve the error in some cases.</p>
 
 @@example
 @@source manualexamples/E019DuplicateAssociation1.ump
