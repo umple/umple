@@ -787,7 +787,6 @@ public class UmpleMixsetTest {
     umpleParserTest.assertHasWarningsParse(file.getFileName(), new Position(file.getFileName(),line,offset,charOff),errorCode);
   }
   
-  //Issue 2521
   @Test
   public void mixsetNamesDifferOnlyByCase107()
   {
@@ -798,7 +797,7 @@ public class UmpleMixsetTest {
       umpleParserTest.parser.getParseResult().getErrorMessage(0).getFormattedMessage());
   }
 
-  //Issue 2521: the warning follows declaration order, not line numbers, across used files
+  // The warning follows declaration order, not line numbers, across used files
   @Test
   public void mixsetNamesDifferOnlyByCaseAcrossFiles107()
   {
@@ -810,11 +809,22 @@ public class UmpleMixsetTest {
     Assert.assertEquals(1, warning.getPosition().getLineNumber());
   }
 
-  //Issue 2521: a mixset declared and used twice with the same spelling is not a clash
+  // A mixset declared and used twice with the same spelling is not a clash
   @Test
   public void mixsetNamesSameCaseNoWarning107()
   {
     umpleParserTest.assertNoWarningsParse("2521_mixsetNamesSameCase.ump");
+  }
+
+  // A mixset in a method body is declared even when unused, so the warning points at it rather than at the use statement
+  @Test
+  public void mixsetNamesInMethodDifferOnlyByCase107()
+  {
+    String file = "2521_mixsetNamesInMethod.ump";
+    umpleParserTest.assertHasWarningsParse(file, new Position(file, 6, 4, 92), 107);
+    Assert.assertEquals(1, umpleParserTest.parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more mixsets have the same characters but differ only in case: Action, action. This can increase the risk of defects.",
+      umpleParserTest.parser.getParseResult().getErrorMessage(0).getFormattedMessage());
   }
 
   @Test
