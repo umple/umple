@@ -25,3 +25,43 @@ class JsonPlayer
   // Without a start state there is nothing to save
   unused {}
 }
+
+// A restored timed state times out again
+class JsonClock
+{
+  status {
+    Waiting { after(1) -> Done; cancel -> Cancelled; }
+    Done {}
+    Cancelled {}
+  }
+}
+
+// Queued and pooled machines need their queue back to take events
+class JsonQueued
+{
+  queued status { Waiting { go -> Done; } Done {} }
+}
+
+class JsonPooled
+{
+  pooled status { Waiting { go -> Done; } Done {} }
+}
+
+// An associated object is restored with its state too
+class JsonBank
+{
+  status { Open { close -> Closed; } Closed {} }
+  1 -- * JsonAccount accounts;
+}
+
+class JsonAccount
+{
+  status { Active { block -> Blocked; } Blocked {} }
+}
+
+// State machines named like variables of the generated json code
+class JsonNamed
+{
+  parsedResult { Start { go -> Done; } Done {} }
+  indent { Low { raise -> High; } High {} }
+}

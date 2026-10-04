@@ -417,22 +417,22 @@ public class Player
           if(haveOutputItem){
             toJsonOutput.append(",\n");
           }
-          toJsonOutput.append(indent+"  \"status\" : \""+status+"\"");
+          toJsonOutput.append(indent+"  \"status\" : \""+this.status+"\"");
           haveOutputItem=true;
           if(haveOutputItem){
             toJsonOutput.append(",\n");
           }
-          toJsonOutput.append(indent+"  \"statusOn\" : \""+statusOn+"\"");
+          toJsonOutput.append(indent+"  \"statusOn\" : \""+this.statusOn+"\"");
           haveOutputItem=true;
           if(haveOutputItem){
             toJsonOutput.append(",\n");
           }
-          toJsonOutput.append(indent+"  \"mode\" : \""+mode+"\"");
+          toJsonOutput.append(indent+"  \"mode\" : \""+this.mode+"\"");
           haveOutputItem=true;
           if(haveOutputItem){
             toJsonOutput.append(",\n");
           }
-          toJsonOutput.append(indent+"  \"modeActive\" : \""+modeActive+"\"");
+          toJsonOutput.append(indent+"  \"modeActive\" : \""+this.modeActive+"\"");
           haveOutputItem=true;
               
           toJsonOutput.append(indent+"  \n");
@@ -499,13 +499,13 @@ Player anObject = new Player(aJsonString, umpleObjectIDMap);
       throw new IllegalArgumentException("Top-level class \""+parsedClassName+"\" does not exist, please check the input json string");
     }
     String umpleObjectId=parsedResult.get("umpleObjectID");
-    // Restore the current state of each state machine; a missing one starts where the constructor would
-    status=parsedResult.containsKey("status")?Status.valueOf(parsedResult.get("status")):Status.Off;
-    statusOn=parsedResult.containsKey("statusOn")?StatusOn.valueOf(parsedResult.get("statusOn")):StatusOn.Null;
-    statusOnH=StatusOn.Idle;
-    mode=parsedResult.containsKey("mode")?Mode.valueOf(parsedResult.get("mode")):Mode.Active;
-    modeActive=parsedResult.containsKey("modeActive")?ModeActive.valueOf(parsedResult.get("modeActive")):ModeActive.Waiting;
-    modeActiveHStar=ModeActive.Waiting;
+    // Restore the current state of each state machine; a missing one gets its start state
+    this.status=parsedResult.containsKey("status")?Status.valueOf(parsedResult.get("status")):Status.Off;
+    this.statusOn=parsedResult.containsKey("statusOn")?StatusOn.valueOf(parsedResult.get("statusOn")):StatusOn.Null;
+    this.statusOnH=StatusOn.Idle;
+    this.mode=parsedResult.containsKey("mode")?Mode.valueOf(parsedResult.get("mode")):Mode.Active;
+    this.modeActive=parsedResult.containsKey("modeActive")?ModeActive.valueOf(parsedResult.get("modeActive")):ModeActive.Waiting;
+    this.modeActiveHStar=ModeActive.Waiting;
     // Check if the object has already been visited and created
     //if((umpleObjectIDMap.get(umpleObjectId)==null)||visitedSuperClass){
       try{

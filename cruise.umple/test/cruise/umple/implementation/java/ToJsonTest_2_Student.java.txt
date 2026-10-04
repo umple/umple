@@ -447,6 +447,11 @@ registrations.add((Registration)umpleObjectIDMap.get(newUmpleID_1));
 
 
     
+    }catch(java.lang.reflect.InvocationTargetException e){
+      // an associated object with an unknown state must fail the load, as the top-level object does
+      if(e.getCause() instanceof IllegalArgumentException){
+        throw (IllegalArgumentException)e.getCause();
+      }
     }catch(Exception e){
     }
 

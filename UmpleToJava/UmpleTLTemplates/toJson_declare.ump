@@ -158,7 +158,7 @@ class UmpleToJava {
           if(haveOutputItem){
             toJsonOutput.append(",\n");
           }
-          toJsonOutput.append(indent+"  \"<<=gen.translate("stateMachineOne",sm)>>\" : \""+<<=gen.translate("stateMachineOne",sm)>>+"\"");
+          toJsonOutput.append(indent+"  \"<<=gen.translate("stateMachineOne",sm)>>\" : \""+this.<<=gen.translate("stateMachineOne",sm)>>+"\"");
           haveOutputItem=true;
         <<#}
       #>>
@@ -368,8 +368,8 @@ class UmpleToJava {
     }	  
 	  
     // States are assigned directly so that loading runs no entry actions.
-    // A region missing from the json gets the value the constructor would give it:
-    // its start state when every enclosing state is entered by default, otherwise Null
+    // A region missing from the json gets its start state when every enclosing state
+    // is a start state too, otherwise Null; automatic transitions are not taken
     List<StateMachine> stateMachinesFromJson = new ArrayList<StateMachine>();
     List<String> defaultStatesFromJson = new ArrayList<String>();
     for(StateMachine sm: uClass.getStateMachines())
@@ -394,18 +394,18 @@ class UmpleToJava {
     }
     #>>
     <<#if(!stateMachinesFromJson.isEmpty()){#>>
-    // Restore the current state of each state machine; a missing one starts where the constructor would
+    // Restore the current state of each state machine; a missing one gets its start state
     <<#}
     for(int smJsonCount=0; smJsonCount<stateMachinesFromJson.size(); smJsonCount++){
       StateMachine region = stateMachinesFromJson.get(smJsonCount);
       String field = gen.translate("stateMachineOne",region);
       String type = gen.translate("type",region);#>>
-    <<=field>>=parsedResult.containsKey("<<=field>>")?<<=type>>.valueOf(parsedResult.get("<<=field>>")):<<=type>>.<<=defaultStatesFromJson.get(smJsonCount)>>;
+    this.<<=field>>=parsedResult.containsKey("<<=field>>")?<<=type>>.valueOf(parsedResult.get("<<=field>>")):<<=type>>.<<=defaultStatesFromJson.get(smJsonCount)>>;
       <<#if(region.getContainsHistoryState()){#>>
-    <<=field>>H=<<=type>>.<<=region.getState(1).getName()>>;
+    this.<<=field>>H=<<=type>>.<<=region.getState(1).getName()>>;
       <<#}
       if(region.getContainsDeepHistoryState()){#>>
-    <<=field>>HStar=<<=type>>.<<=region.getState(1).getName()>>;
+    this.<<=field>>HStar=<<=type>>.<<=region.getState(1).getName()>>;
       <<#}
     }#>>
     // Check if the object has already been visited and created
@@ -545,10 +545,64 @@ class UmpleToJava {
     <<#}#>>
 
     
+    <<#if(!associationNamesFromJson.isEmpty()){#>>
+    }catch(java.lang.reflect.InvocationTargetException e){
+      // an associated object with an unknown state must fail the load, as the top-level object does
+      if(e.getCause() instanceof IllegalArgumentException){
+        throw (IllegalArgumentException)e.getCause();
+      }
+    <<#}#>>
     }catch(Exception e){
     }
 
     //}
+    <<#
+    boolean queuedFromJson = false;
+    boolean pooledFromJson = false;
+    for(StateMachine sm: uClass.getStateMachines())
+    {
+      queuedFromJson = queuedFromJson || sm.isQueued();
+      pooledFromJson = pooledFromJson || sm.isPooled();
+    }
+    List<State> timedStatesFromJson = new ArrayList<State>();
+    for(StateMachine region: stateMachinesFromJson)
+    {
+      for(State s: region.getStates())
+      {
+        for(Transition t: s.getTransitions())
+        {
+          if(t.getEvent().getIsTimer() && !timedStatesFromJson.contains(s))
+          {
+            timedStatesFromJson.add(s);
+          }
+        }
+      }
+    }
+    if(!timedStatesFromJson.isEmpty()){#>>
+    // The timers of the restored states run again from the start, as on entering them; entry actions do not
+    <<#}
+    for(State s: timedStatesFromJson){#>>
+    if(this.<<=gen.translate("stateMachineOne",s.getStateMachine())>>==<<=gen.translate("type",s.getStateMachine())>>.<<=gen.translate("stateOne",s)>>){
+      <<#for(Transition t: s.getTransitions()){
+        if(t.getEvent().getIsTimer()){#>>
+      <<=gen.translate("eventStartMethod",t.getEvent())>>();
+      <<#}
+      }#>>
+    }
+    <<#}
+    if(queuedFromJson || pooledFromJson){#>>
+    // Events wait in a queue taken by its own thread, which the other constructor starts too
+    <<#}
+    if(queuedFromJson){#>>
+    queue = new MessageQueue();
+    removal=new Thread(this);
+    removal.start();
+    <<#}
+    else if(pooledFromJson){#>>
+    pool = new MessagePool();
+    removal=new Thread(this);
+    removal.start();
+    <<#}#>>
   }
   }!>>
   
