@@ -15,14 +15,14 @@
   <table class="statetable event-statetable">
     <tr>
       <td class="event-header">&nbsp;</td>
-      <td class="event-header">action</td>
-      <td class="event-header">awayAction</td>
-      <td class="event-header">back</td>
-      <td class="event-header">concurrentAction</td>
-      <td class="event-header">down</td>
-      <td class="event-header">forward</td>
-      <td class="event-header">otherAction</td>
-      <td class="event-header">up</td>
+      <td class="event-header" data-transition="Student*^*status*^*action*^*OverState.ParentState1.ChildState1*^*OverState.ParentState1.ChildState2*^*">action</td>
+      <td class="event-header" data-transition="Student*^*status*^*awayAction*^*OverState.ParentState2.AwayChildState1*^*OverState.ParentState2.AwayChildState2*^*">awayAction</td>
+      <td class="event-header" data-transition="Student*^*status*^*back*^*OverState.ParentState2*^*OverState.ParentState1*^*">back</td>
+      <td class="event-header" data-transition="Student*^*status*^*concurrentAction*^*OverState.ConcurrentParentState1*^*OverState.ConcurrentParentState2*^*">concurrentAction</td>
+      <td class="event-header" data-transition="Student*^*status*^*down*^*OverState.ParentState1*^*OverState.ParentState1.ChildState2*^*">down</td>
+      <td class="event-header" data-transition="Student*^*status*^*forward*^*OverState.ParentState1*^*OverState.ParentState2*^*">forward</td>
+      <td class="event-header" data-transition="Student*^*status*^*otherAction*^*OverState.ParentState1.OtherChildState1*^*OverState.ParentState1.OtherChildState2*^*">otherAction</td>
+      <td class="event-header" data-transition="Student*^*status*^*up*^*OverState.ParentState1.ChildState2*^*OverState.ParentState1*^*">up</td>
     </tr>
 
     <tr>

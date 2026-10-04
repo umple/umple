@@ -15,11 +15,11 @@
   <table class="statetable event-statetable">
     <tr>
       <td class="event-header">&nbsp;</td>
-      <td class="event-header">changeParent</td>
-      <td class="event-header">crossDown</td>
-      <td class="event-header">event1</td>
-      <td class="event-header">event2</td>
-      <td class="event-header">event3</td>
+      <td class="event-header" data-transition="Student*^*status*^*changeParent*^*ParentState1*^*ParentState2*^*">changeParent</td>
+      <td class="event-header" data-transition="Student*^*status*^*crossDown*^*ParentState1*^*ParentState2.ChildState6*^*">crossDown</td>
+      <td class="event-header" data-transition="Student*^*status*^*event1*^*ParentState1.ChildState1*^*ParentState1.ChildState2*^*">event1</td>
+      <td class="event-header" data-transition="Student*^*status*^*event2*^*ParentState2.ChildState3*^*ParentState2.ChildState4*^*">event2</td>
+      <td class="event-header" data-transition="Student*^*status*^*event3*^*ParentState2.ChildState5*^*ParentState2.ChildState6*^*">event3</td>
     </tr>
 
     <tr>

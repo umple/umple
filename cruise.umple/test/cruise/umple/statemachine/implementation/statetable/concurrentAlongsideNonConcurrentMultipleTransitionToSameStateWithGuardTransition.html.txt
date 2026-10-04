@@ -15,12 +15,12 @@
   <table class="statetable event-statetable">
     <tr>
       <td class="event-header">&nbsp;</td>
-      <td class="event-header">change1</td>
-      <td class="event-header">changeNonCon</td>
-      <td class="event-header">changeParent</td>
-      <td class="event-header">double1</td>
-      <td class="event-header">double2</td>
-      <td class="event-header">guarded</td>
+      <td class="event-header" data-transition="Student*^*status*^*change1*^*ParentState2.ConcurrentSubState1*^*ParentState2.ConcurrentSubState2*^*">change1</td>
+      <td class="event-header" data-transition="Student*^*status*^*changeNonCon*^*ParentState1.NonConcurrentSubState1*^*ParentState1.NonConcurrentSubState2*^*">changeNonCon</td>
+      <td class="event-header" data-transition="Student*^*status*^*changeParent*^*ParentState1*^*ParentState2*^*">changeParent</td>
+      <td class="event-header" data-transition="Student*^*status*^*double1*^*ParentState2.ConcurrentSubState2*^*ParentState2.ConcurrentSubState1*^*">double1</td>
+      <td class="event-header" data-transition="Student*^*status*^*double2*^*ParentState2.ConcurrentSubState2*^*ParentState2.ConcurrentSubState1*^*">double2</td>
+      <td class="event-header" data-transition="Student*^*status*^*guarded*^*ParentState2.Css1*^*ParentState2.Css2*^* [guard]">guarded</td>
     </tr>
 
     <tr>

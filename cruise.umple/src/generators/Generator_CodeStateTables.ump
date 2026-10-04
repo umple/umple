@@ -1553,7 +1553,20 @@ class StateTable
     sb.append("    <tr>\n      <td class=\"event-header\">&nbsp;</td>\n");
     for(String e : allEvents) 
     {
-      sb.append("      <td class=\"event-header\">");
+      // Event headings select the first transition in their column.
+      String transitionId = "";
+      for(StateTableRow row : rows)
+      {
+        if(row.getStateEventCells().containsKey(e))
+        {
+          transitionId = ((StateEventEntry)row.getStateEventCells().get(e)
+            .getStateTableEntry(0)).getTransitionId();
+          break;
+        }
+      }
+      sb.append("      <td class=\"event-header\" data-transition=\"");
+      sb.append(transitionId);
+      sb.append("\">");
       sb.append(e);
       sb.append("</td>\n");
     }

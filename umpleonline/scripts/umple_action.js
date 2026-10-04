@@ -6524,6 +6524,8 @@ Action.updateUmpleDiagramCallback = function(response)
         jQuery(this).click(function() {
           Action.transitionClicked(jQuery(this).attr("data-transition"));
         });
+        // Event headings only select because they may represent several transitions.
+        if(jQuery(this).hasClass("event-header")) return;
         this.addEventListener("contextmenu", function(event){
           event.preventDefault();
           Action.displayTransitionMenu(event);

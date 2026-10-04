@@ -15,12 +15,12 @@
   <table class="statetable event-statetable">
     <tr>
       <td class="event-header">&nbsp;</td>
-      <td class="event-header">changeParent</td>
-      <td class="event-header">concurrentEvent</td>
-      <td class="event-header">crossAnd</td>
-      <td class="event-header">event1</td>
-      <td class="event-header">event2</td>
-      <td class="event-header">event3</td>
+      <td class="event-header" data-transition="Lock*^*status*^*changeParent*^*OverState.ParentState1*^*OverState.ParentState2*^*">changeParent</td>
+      <td class="event-header" data-transition="Lock*^*status*^*concurrentEvent*^*OverState.ConcurrentState.ConcurrentChildState1*^*OverState.ConcurrentState.ConcurrentChildState2*^*">concurrentEvent</td>
+      <td class="event-header" data-transition="Lock*^*status*^*crossAnd*^*OverState.ConcurrentState*^*OverState.ParentState2.ChildState6*^*">crossAnd</td>
+      <td class="event-header" data-transition="Lock*^*status*^*event1*^*OverState.ParentState1.ChildState1*^*OverState.ParentState1.ChildState2*^*">event1</td>
+      <td class="event-header" data-transition="Lock*^*status*^*event2*^*OverState.ParentState2.ChildState3*^*OverState.ParentState2.ChildState4*^*">event2</td>
+      <td class="event-header" data-transition="Lock*^*status*^*event3*^*OverState.ParentState2.ChildState5*^*OverState.ParentState2.ChildState6*^*">event3</td>
     </tr>
 
     <tr>

@@ -15,8 +15,8 @@
   <table class="statetable event-statetable">
     <tr>
       <td class="event-header">&nbsp;</td>
-      <td class="event-header">power</td>
-      <td class="event-header">sleepButton</td>
+      <td class="event-header" data-transition="Student*^*status*^*power*^*On.OnOn*^*Off*^*">power</td>
+      <td class="event-header" data-transition="Student*^*status*^*sleepButton*^*On.OnOn*^*On.Sleep*^*">sleepButton</td>
     </tr>
 
     <tr>

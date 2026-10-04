@@ -15,8 +15,8 @@
   <table class="statetable event-statetable">
     <tr>
       <td class="event-header">&nbsp;</td>
-      <td class="event-header">power</td>
-      <td class="event-header">push</td>
+      <td class="event-header" data-transition="RemoteControl*^*status*^*power*^*On*^*Off*^*">power</td>
+      <td class="event-header" data-transition="RemoteControl*^*status*^*push*^*On.Play*^*On.Pause*^*">push</td>
     </tr>
 
     <tr>

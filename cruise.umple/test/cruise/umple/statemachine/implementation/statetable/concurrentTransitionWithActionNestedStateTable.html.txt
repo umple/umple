@@ -15,10 +15,10 @@
   <table class="statetable event-statetable">
     <tr>
       <td class="event-header">&nbsp;</td>
-      <td class="event-header">otherButton</td>
-      <td class="event-header">power</td>
-      <td class="event-header">sleepButton</td>
-      <td class="event-header">test</td>
+      <td class="event-header" data-transition="Student*^*status*^*otherButton*^*OverState.Yes.YesYes*^*OverState.Yes.Slumber*^*">otherButton</td>
+      <td class="event-header" data-transition="Student*^*status*^*power*^*OverState.On.OnOn*^*OverState.Off*^*">power</td>
+      <td class="event-header" data-transition="Student*^*status*^*sleepButton*^*OverState.On.OnOn*^*OverState.On.Sleep*^*">sleepButton</td>
+      <td class="event-header" data-transition="Student*^*status*^*test*^*OverState.Yes.YesYes*^*OverState.No*^*">test</td>
     </tr>
 
     <tr>
