@@ -206,11 +206,8 @@ class Mentor
 
   private function setMentor($aStudent, $aMentor)
   {
-    $aStudent->mentor = $aMentor;
-    //$prop = new ReflectionProperty($aStudent, 'mentor');
-    //$prop->setAccessible(true);
-    //$prop->setValue($aStudent,$aMentor);
-    //$prop->setAccessible(false);
+    $property = new ReflectionProperty(Student::class, 'mentor');
+    $property->setValue($aStudent, $aMentor);
   }
 
   public function addStudentAt($aStudent, $index)

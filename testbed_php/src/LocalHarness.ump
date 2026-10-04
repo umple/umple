@@ -119,3 +119,47 @@ class EqBook
 {
   title;
 }
+
+// Set-all methods that write the other object's back-pointer through the private setter
+class EqClub
+{
+  name;
+  0..1 club -- 1..* EqMember members;
+}
+
+class EqMember
+{
+  name;
+}
+
+class EqTeam
+{
+  name;
+  0..1 team -- 2 EqPlayer players;
+}
+
+class EqPlayer
+{
+  name;
+}
+
+// A composition whose 0..1 whole needs at least one part, declared in the whole and in the part
+class CompWholeA
+{
+  0..1 whole <@>- 1..* CompPartA parts;
+}
+
+class CompPartA
+{
+  Integer num;
+}
+
+class CompPartB
+{
+  Integer num;
+  1..* parts -<@> 0..1 CompWholeB whole;
+}
+
+class CompWholeB
+{
+}

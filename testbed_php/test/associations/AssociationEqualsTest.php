@@ -51,6 +51,47 @@ class AssociationEqualsTest extends UnitTestCase
     $this->assertFalse($pet1->hasOwner());
   }
 
+  public function test_setMNToOptionalOne_movesValueEqualMembersFromValueEqualOwners()
+  {
+    $club1 = new EqClub("Chess", array(new EqMember("Ann")));
+    $club2 = new EqClub("Chess", array(new EqMember("Ann")));
+    $member1 = new EqMember("Joe");
+    $member2 = new EqMember("Joe");
+    $club1->addMember($member1);
+    $club2->addMember($member2);
+    $leaving = new EqMember("Sue");
+    $club3 = new EqClub("Go", array($leaving));
+    $this->assertTrue($club3 === $leaving->getClub());
+
+    $this->assertTrue($club3->setMembers(array($member1, $member2)));
+    $this->assertEqual(2, $club3->numberOfMembers());
+    $this->assertEqual(-1, $club1->indexOfMember($member1));
+    $this->assertEqual(-1, $club2->indexOfMember($member2));
+    $this->assertEqual(1, $club1->numberOfMembers());
+    $this->assertEqual(1, $club2->numberOfMembers());
+    $this->assertTrue($club3 === $member1->getClub());
+    $this->assertTrue($club3 === $member2->getClub());
+    $this->assertFalse($leaving->hasClub());
+  }
+
+  public function test_setNToOptionalOne_takesValueEqualPlayers()
+  {
+    $leaving1 = new EqPlayer("Ann");
+    $leaving2 = new EqPlayer("Bob");
+    $team = new EqTeam("Red", array($leaving1, $leaving2));
+    $this->assertTrue($team === $leaving1->getTeam());
+    $player1 = new EqPlayer("Joe");
+    $player2 = new EqPlayer("Joe");
+
+    $this->assertTrue($team->setPlayers(array($player1, $player2)));
+    $this->assertTrue($player1 === $team->getPlayer_index(0));
+    $this->assertTrue($player2 === $team->getPlayer_index(1));
+    $this->assertTrue($team === $player1->getTeam());
+    $this->assertTrue($team === $player2->getTeam());
+    $this->assertFalse($leaving1->hasTeam());
+    $this->assertFalse($leaving2->hasTeam());
+  }
+
   public function test_setOptionalNToMany_keepsValueEqualWorkersApart()
   {
     $project = new EqProject("Umple");
