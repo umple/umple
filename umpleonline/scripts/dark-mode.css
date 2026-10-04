@@ -812,6 +812,51 @@ select {
   color: var(--ai-muted) !important;
 }
 
+/* Restore Earlier Version dialog */
+.version-history-modal .dialog-buttons .jQuery-palette-button.disabled {
+  opacity: 0.5;
+  color: var(--ai-muted) !important;
+}
+
+.version-history-list,
+.version-history-preview {
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.version-history-time,
+.version-history-code {
+  color: var(--ai-text) !important;
+}
+
+.version-history-preview {
+  background-color: var(--ai-code-bg) !important;
+}
+
+.version-history-item {
+  border-bottom-color: var(--ai-border) !important;
+}
+
+.version-history-item:hover {
+  background-color: var(--ai-surface-bg-alt) !important;
+}
+
+.version-history-item.selected {
+  background-color: #2f4a63 !important;
+}
+
+.version-history-age,
+.version-history-detail,
+.version-history-reason,
+.version-history-info,
+.version-history-status {
+  color: var(--ai-muted) !important;
+}
+
+.version-history-filename {
+  color: var(--ai-link) !important;
+}
+
 /* AI Explain Dialog Minimize Button - Dark Mode */
 .ai-explain-minimize-btn {
   border-color: var(--ai-border) !important;

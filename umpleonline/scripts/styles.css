@@ -2350,6 +2350,127 @@ textarea#umpleLayoutEditorText {
   text-align: right;
   margin-top: 8px;
 }
+
+/* Restore Earlier Version dialog and newer version prompt (umple_version_history.js);
+   other styles are inherited from the ai-settings-modal */
+.version-history-modal .dialog-content {
+  width: 760px;
+  min-width: 0;
+  max-width: 92vw;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+.version-conflict-modal .dialog-content {
+  width: 460px;
+}
+.version-history-modal .dialog-buttons {
+  margin-top: 10px;
+}
+.version-history-modal .dialog-buttons .jQuery-palette-button {
+  width: auto;
+  padding: 0 12px;
+}
+.version-history-modal .dialog-buttons .jQuery-palette-button.disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.version-history-intro {
+  margin: 0 0 10px 0;
+}
+.version-history-body {
+  display: flex;
+  gap: 10px;
+  flex: 1 1 auto;
+  min-height: 240px;
+  overflow: hidden;
+}
+.version-history-list {
+  flex: 0 0 260px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+.version-history-item {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 8px;
+  border-bottom: 1px solid #e6e6e6;
+  cursor: pointer;
+}
+.version-history-item:hover {
+  background-color: #f0f6fb;
+}
+.version-history-item.selected {
+  background-color: #dcebf7;
+}
+.version-history-item:focus {
+  outline: 2px solid #3383bb;
+  outline-offset: -2px;
+}
+.version-history-time {
+  font-weight: bold;
+}
+.version-history-age,
+.version-history-detail,
+.version-history-reason {
+  font-size: 8.5pt;
+  color: #555;
+}
+.version-history-reason {
+  font-style: italic;
+}
+.version-history-preview {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: auto;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+.version-history-filename {
+  margin: 4px 0;
+  font-weight: bold;
+  color: #3383bb;
+}
+.version-history-code {
+  margin: 0 0 10px 0;
+  font-family: monospace;
+  font-size: 9pt;
+  white-space: pre;
+}
+.version-history-info {
+  color: #555;
+  font-style: italic;
+}
+.version-history-status {
+  min-height: 1.4em;
+  margin-top: 8px;
+  color: #555;
+}
+.version-history-message {
+  margin-left: 8px;
+}
+.version-history-message a {
+  margin-left: 4px;
+}
+.version-history-message-close {
+  font-weight: bold;
+  text-decoration: none;
+}
+@media (max-width: 640px) {
+  .version-history-body {
+    flex-direction: column;
+  }
+  .version-history-list {
+    flex: 0 0 auto;
+    max-height: 35vh;
+  }
+}
 /* Keep the selected draw tool cursor over diagram elements, including inline cursors. */
 #umpleCanvas.draw-tool-active * {
   cursor: inherit !important;

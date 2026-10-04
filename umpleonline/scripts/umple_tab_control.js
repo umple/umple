@@ -325,6 +325,9 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
  */
 TabControl.saveTab = function(tabId, umpleCode)
 {
+  // The page is being reloaded with a different version of the model
+  if (typeof VersionHistory !== "undefined" && VersionHistory.navigatingAway) return;
+
   var filename = TabControl.getTabFilename(TabControl.tabs[tabId].name);
   var modelname = Page.getModel();
   localStorage[filename] = umpleCode;
@@ -337,7 +340,7 @@ TabControl.saveTab = function(tabId, umpleCode)
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
     TabControl.saveTabCallback(tabId),
-    format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, modelname));
+    TabControl.withBaseVersion(format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, modelname)));
 }
 
 TabControl.saveTabCallback = function(tabId)
@@ -455,7 +458,7 @@ TabControl.deleteTab = function(tabId)
   if (Object.keys(TabControl.tabs).length > 1) {
     // Confirm deletion
     var tabName = TabControl.getTabNameDiv(tabId);
-    var result = confirm("Are you sure you want to remove the file " + tabName.text() + ".ump from the model? If you answer OK, the code will be deleted; this cannot be undone, so consider answering Cancel and saving it first.");
+    var result = confirm("Are you sure you want to remove the file " + tabName.text() + ".ump from the model? If you answer OK, the code will be deleted. You can get it back later using Restore Earlier Version in the SAVE & LOAD menu.");
     if (!result) return;
 
     // If we're deleting the currently active tab, we need to navigate away
@@ -483,7 +486,7 @@ TabControl.deleteTab = function(tabId)
     TabControl.addToRequestQueue(
       "scripts/tab_control.php",
       function(response){},
-      format("delete=1&&model={0}&&name={1}", Page.getModel(), tabName));
+      TabControl.withBaseVersion(format("delete=1&&model={0}&&name={1}", Page.getModel(), tabName)));
     
     // Navigate to the first tab as necessary
     if (shouldUpdateSelection) {
@@ -551,7 +554,7 @@ TabControl.renameTab = function(tabId, newName, updateUI)
   TabControl.addToRequestQueue(
     "scripts/tab_control.php",
     TabControl.renameTabCallback(tabId, newName, key),
-    format("rename=1&&model={0}&&oldname={1}&&newname={2}", Page.getModel(), oldName, newName));
+    TabControl.withBaseVersion(format("rename=1&&model={0}&&oldname={1}&&newname={2}", Page.getModel(), oldName, newName)));
 
   TabControl.saveActiveTabs();
 }
@@ -589,6 +592,22 @@ TabControl.getTabDiv = function(tabId)
 }
 
 /**
+ * Returns parameters for a request that changes the model's files, adding the
+ * version of the model this tab is based on when the request is actually sent,
+ * since earlier requests in the queue may change that version.
+ */
+TabControl.withBaseVersion = function(parameters)
+{
+  if (typeof VersionHistory === "undefined") return parameters;
+  return function() { return parameters + VersionHistory.baseVersionParameter(); };
+}
+
+TabControl.getRequestParameters = function(request)
+{
+  return (typeof request.parameters === "function")? request.parameters() : request.parameters;
+}
+
+/**
  * Add an ajax call to the request queue.
  */
 TabControl.addToRequestQueue = function(endpoint, callback, parameters)
@@ -606,7 +625,7 @@ TabControl.addToRequestQueue = function(endpoint, callback, parameters)
     Ajax.sendRequest(
         requestPayload.endpoint,
         TabControl.getQueuedHeadCallback(requestPayload.callback),
-        requestPayload.parameters);
+        TabControl.getRequestParameters(requestPayload));
   }
 }
 
@@ -634,6 +653,7 @@ TabControl.getQueuedCallback = function(callback)
     // The runtime of this is O(n), which is presumably okay since it's
     // running on the client and n is the number of concurrent requests
     var nextRequest = TabControl.requestQueue[0];
+    if (typeof VersionHistory !== "undefined") VersionHistory.noteResponse(response);
     callback(response);
     if (nextRequest) {
       if (nextRequest.hasOwnProperty("endpoint"))
@@ -641,7 +661,7 @@ TabControl.getQueuedCallback = function(callback)
         Ajax.sendRequest(
           nextRequest.endpoint,
           TabControl.getQueuedHeadCallback(nextRequest.callback),
-          nextRequest.parameters);
+          TabControl.getRequestParameters(nextRequest));
       }
       else
       {

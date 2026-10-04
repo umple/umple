@@ -58,8 +58,9 @@ Note that from this point on you can
 keep editing the Umple code or diagram, and your work will continue to be
 saved at this URL. You are thus saving your work in the 'cloud'. You can
 embed the URL in other pages to document your product. Note that at the
-current time, anyone who knows your URL can also edit your work (which enables collaboration), and if
-you forget your URL, or someone messes up the saved contents at that URL,
+current time, anyone who knows your URL can also edit your work (which enables collaboration). If
+someone messes up the saved contents at that URL, you can get back an earlier version
+using 'Restore Earlier Version' (see below), but if you forget your URL
 there is no way to retrieve it. Saved URLs are also only saved for one year since their last edit. Therefore it is also
 suggested that if this is a concern, you use saving mehods 2 or 3.<br/>&nbsp;<br/></li>
 
@@ -96,6 +97,27 @@ graphical pane, as described later.
 </li>
 </ol>
 </li>
+
+&nbsp;<br/>
+
+<li><b>To go back to an earlier version of your model</b>, click 'Restore Earlier Version'
+in the 'SAVE &amp; LOAD' menu. While you edit, UmpleOnline keeps earlier versions of your
+model on the server: a version is kept once you have made at least five changes and at least
+two minutes have passed since the previous one, and also just before you restore a version.
+Older versions are gradually thinned out: all versions from the last half hour are kept, then
+one every 5 minutes for versions up to 2 hours old, one every 10 minutes up to 12 hours, one
+every half hour up to 2 days, one a day up to 30 days, and one a month after that. Earlier
+versions are only kept for as long as the model itself.<br/>&nbsp;<br/>
+
+Select a version in the list to see what it contained, then click 'Restore this version'.
+Restoring can itself be undone, using the 'Undo restore' link that then appears at the top of
+the page, or, for a model with a single tab, using 'Undo' in the 'TOOLS' menu.<br/>&nbsp;<br/>
+
+If you have the same model open in more than one browser tab or window and change it in one
+of them, the others notice this when you return to them, and ask whether you want to load the
+latest version or keep the one they show. If you keep it, the newer version is saved first, so
+you can still restore it. Similarly, if a tab saves over changes made in another tab, it tells
+you, and lets you switch to the other tab's version.</li>
 
 &nbsp;<br/>
 
