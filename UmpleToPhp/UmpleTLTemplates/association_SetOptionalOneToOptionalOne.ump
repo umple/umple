@@ -19,7 +19,7 @@ class UmpleToPhp {
     }
     
     $<<=gen.translate("parameterCurrent",av)>> = $this-><<=gen.translate("getMethod",av)>>();
-    if ($<<=gen.translate("parameterCurrent",av)>> != null && !$<<=gen.translate("parameterCurrent",av)>>->equals($<<=gen.translate("parameterNew",av)>>))
+    if ($<<=gen.translate("parameterCurrent",av)>> != null && $<<=gen.translate("parameterCurrent",av)>> !== $<<=gen.translate("parameterNew",av)>>)
     {
       $<<=gen.translate("parameterCurrent",av)>>-><<=gen.relatedTranslate("setMethod",av)>>(null);
     }
@@ -27,7 +27,7 @@ class UmpleToPhp {
     $this-><<=gen.translate("associationOne",av)>> = $<<=gen.translate("parameterNew",av)>>;
     $<<=gen.relatedTranslate("parameterExisting",av)>> = $<<=gen.translate("parameterNew",av)>>-><<=gen.relatedTranslate("getMethod",av)>>();
     
-    if (!$this->equals($<<=gen.relatedTranslate("parameterExisting",av)>>))
+    if ($this !== $<<=gen.relatedTranslate("parameterExisting",av)>>)
     {
       $<<=gen.translate("parameterNew",av)>>-><<=gen.relatedTranslate("setMethod",av)>>($this);
     }

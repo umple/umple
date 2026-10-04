@@ -104,7 +104,7 @@ class Mentor
     }
     
     $currentMain = $this->getMain();
-    if ($currentMain != null && !$currentMain->equals($aNewMain))
+    if ($currentMain != null && $currentMain !== $aNewMain)
     {
       $currentMain->setMentorMain(null);
     }
@@ -112,7 +112,7 @@ class Mentor
     $this->main = $aNewMain;
     $existingMentorMain = $aNewMain->getMentorMain();
     
-    if (!$this->equals($existingMentorMain))
+    if ($this !== $existingMentorMain)
     {
       $aNewMain->setMentorMain($this);
     }

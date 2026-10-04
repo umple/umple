@@ -51,7 +51,7 @@ class Mentor
     }
     
     $currentStudent = $this->getStudent();
-    if ($currentStudent != null && !$currentStudent->equals($aNewStudent))
+    if ($currentStudent != null && $currentStudent !== $aNewStudent)
     {
       $currentStudent->setMentor(null);
     }
@@ -59,7 +59,7 @@ class Mentor
     $this->student = $aNewStudent;
     $existingMentor = $aNewStudent->getMentor();
     
-    if (!$this->equals($existingMentor))
+    if ($this !== $existingMentor)
     {
       $aNewStudent->setMentor($this);
     }

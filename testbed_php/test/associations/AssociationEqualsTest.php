@@ -168,5 +168,30 @@ class AssociationEqualsTest extends UnitTestCase
     $this->assertFalse($bag3->equals($bag1));
   }
 
+  public function test_setOneToMany_movesToEqualKeyOwner()
+  {
+    $owner1 = new EqKeyedOwner("same", "old");
+    $owner2 = new EqKeyedOwner("same", "new");
+    $member = new EqKeyedMember("Joe", $owner1);
+
+    $this->assertTrue($member->setOwner($owner2));
+    $this->assertTrue($owner2 === $member->getOwner());
+    $this->assertEqual(0, $owner1->numberOfMembers());
+    $this->assertEqual(1, $owner2->numberOfMembers());
+  }
+
+  public function test_setOptionalOneToOptionalOne_takesEqualKeyPartner()
+  {
+    $partner1 = new EqKeyedPartner("same", "old");
+    $partner2 = new EqKeyedPartner("same", "new");
+    $pet = new EqKeyedPet("Rex");
+    $partner1->setPet($pet);
+
+    $this->assertTrue($pet->setPartner($partner2));
+    $this->assertTrue($partner2 === $pet->getPartner());
+    $this->assertTrue($pet === $partner2->getPet());
+    $this->assertFalse($partner1->hasPet());
+  }
+
 }
 ?>

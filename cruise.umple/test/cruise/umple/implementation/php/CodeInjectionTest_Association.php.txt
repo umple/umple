@@ -310,7 +310,7 @@ class Student
     
     $existingM2 = $this->m2;
     $this->m2 = $aM2;
-    if ($existingM2 != null && !$existingM2->equals($aM2))
+    if ($existingM2 != null && $existingM2 !== $aM2)
     {
       $existingM2->removeTwo($this);
     }

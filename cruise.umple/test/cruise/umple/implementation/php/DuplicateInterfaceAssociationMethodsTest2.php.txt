@@ -44,7 +44,7 @@ class First implements I
     
     $existingSecond = $this->second;
     $this->second = $aSecond;
-    if ($existingSecond != null && !$existingSecond->equals($aSecond))
+    if ($existingSecond != null && $existingSecond !== $aSecond)
     {
       $existingSecond->removeFirst($this);
     }
