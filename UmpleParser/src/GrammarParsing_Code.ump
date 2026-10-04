@@ -645,7 +645,8 @@ class ParserDataPackage
       }
       input = input2.toString();
     }
-    catch(NullPointerException n)
+    // The file is not there (no reader), or it is there but cannot be read, such as a directory
+    catch(NullPointerException | IOException n)
     {
       // Special case when we don't want to read a file
       if(filename.equals("dummy__.ump")) {
@@ -655,10 +656,6 @@ class ParserDataPackage
         this.getParseResult().addErrorMessage(new ErrorMessage(1510,usePosition==null?new Position(filename,1,0,0):usePosition,filename));
       }
     }
-    catch(IOException e)
-    {
-      e.printStackTrace();
-    } 
     finally 
     {
       try 

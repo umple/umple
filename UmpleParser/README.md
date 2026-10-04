@@ -74,7 +74,7 @@ Umple reports warning 1007 about Java code in the parser's own source when it co
 What the parse result reports:
 
 * `getWasSuccess()` is false when the grammar cannot parse the text, with error 1500 at the line where parsing stopped (`RuleBasedParser.getAnalyzer().getFailedPosition()` gives the same position).
-* A grammar or text file that is not found gives warning 1510, as a missing file in an Umple use statement does, and parsing goes on without it: a missing text file parses as empty text, and without a grammar no text parses.
+* A grammar or text file that is missing or cannot be read, such as a directory, gives warning 1510, as a missing file in an Umple use statement does, and parsing goes on: such a text file parses as empty text, and without a grammar no text parses.
 * `toString()` lists the errors and warnings.
 
 The parser reads its grammar files on the first parse and keeps the rules for the rest of the run, for every `RuleBasedParser`.

@@ -127,6 +127,16 @@ public class ParserLibTest
   }
 
   @Test
+  public void reportsATextFileThatCannotBeRead() throws Exception
+  {
+    File directory = new File(programDirectory, "directory.txt");
+    Assert.assertTrue(directory.mkdir());
+    Assert.assertEquals("Warning 1510 on line 1 of file 'directory.txt':\nFile 'directory.txt' referred to in use statement was not found\n"
+      + "[ROOT:][greetings]\n",
+      run(fixture("greetings.grammar"), directory.getPath()));
+  }
+
+  @Test
   public void reportsAMissingGrammarFile() throws Exception
   {
     Assert.assertEquals("Warning 1510 on line 1 of file 'missing.grammar':\nFile 'missing.grammar' referred to in use statement was not found\n"
