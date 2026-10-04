@@ -153,5 +153,52 @@ const AiTextUtils = {
     }
 
     return blocks;
+  },
+
+  /**
+   * Find active `req ID { ... }` blocks in Umple code, skipping any that are inside
+   * // or /* *\/ comments or string literals. The body of a req is taken verbatim up
+   * to its closing brace, so text such as URLs containing // is preserved.
+   * @param {string} umpleCode - Umple source text
+   * @returns {Array<{id: string, text: string, start: number, end: number}>} Blocks with offsets into umpleCode
+   */
+  findRequirementBlocks(umpleCode) {
+    const source = String(umpleCode || "");
+    const blocks = [];
+    const reqPattern = /req\s+(\w+(?:[-_]\w+)*)\s*\{([^}]*)\}/y;
+    let i = 0;
+
+    while (i < source.length) {
+      if (source.startsWith("//", i)) {
+        const lineEnd = source.indexOf("\n", i);
+        i = lineEnd < 0 ? source.length : lineEnd + 1;
+        continue;
+      }
+      if (source.startsWith("/*", i)) {
+        const commentEnd = source.indexOf("*/", i + 2);
+        i = commentEnd < 0 ? source.length : commentEnd + 2;
+        continue;
+      }
+      if (source[i] === "\"") {
+        let j = i + 1;
+        while (j < source.length && source[j] !== "\"" && source[j] !== "\n") {
+          j += source[j] === "\\" ? 2 : 1;
+        }
+        i = j + 1;
+        continue;
+      }
+      if (source.startsWith("req", i) && (i === 0 || !/\w/.test(source[i - 1]))) {
+        reqPattern.lastIndex = i;
+        const match = reqPattern.exec(source);
+        if (match) {
+          blocks.push({ id: match[1].trim(), text: match[2].trim(), start: i, end: reqPattern.lastIndex });
+          i = reqPattern.lastIndex;
+          continue;
+        }
+      }
+      i++;
+    }
+
+    return blocks;
   }
 };
