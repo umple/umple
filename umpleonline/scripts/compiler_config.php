@@ -492,9 +492,25 @@ function ensureFullPath($relativeFilename)
   return $filename;
 }
 
+/**
+Returns the model directory named by the directory part of the given
+filename, e.g. tmpXXXX, 261006XXXX, task-XXXX or tasks/taskroot-XXXX.
+Exits with a 400 error otherwise, since a bare filename such as model.ump
+would otherwise resolve to the ump/ root that is shared by all users.
+*/
+function getModelIdFromFilename($filename){
+    $modelId = preg_replace('#^\.\./ump/#', '', dirname($filename));
+    if(!preg_match('#^(tmp|\d{6}|task-|tasks/taskroot-)[\w.-]*$#D', $modelId)){
+        http_response_code(400);
+        echo "Invalid filename: it must be in a model directory such as tmpXXXX/model.ump, or be omitted to use a new temporary directory.";
+        exit;
+    }
+    return $modelId;
+}
+
 function getOrCreateDataHandle(){
     if(isset($_REQUEST['filename'])){
-        $modelId = dirname($_REQUEST['filename']);
+        $modelId = getModelIdFromFilename($_REQUEST['filename']);
         $filename= basename($_REQUEST['filename']);
         $dataHandle = dataStore()->openData($modelId);
         if($dataHandle){

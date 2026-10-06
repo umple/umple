@@ -47,7 +47,7 @@ if (isset($_REQUEST["save"]))
           exit;
 }
  
-      $modelId = dirname($_REQUEST['filename']);
+      $modelId = getModelIdFromFilename($_REQUEST['filename']);
       $dataHandle = dataStore()->openData($modelId);
       $dataHandle->writeData($filename, $input);
     }
