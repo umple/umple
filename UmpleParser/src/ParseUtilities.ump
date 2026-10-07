@@ -135,3 +135,7 @@ use regularMode;
 mixset regularMode {
   use lib:ParseUtilities_Code.ump;
 }
+
+// A namespace stays in effect after the use statement that brings in this file;
+// end it here so that what follows the use statement is not put in it
+namespace -;

@@ -1,35 +1,55 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.33.0.6934.a386b0a58 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 
-package example;
-import java.util.*;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 import java.sql.*;
 import java.lang.reflect.Constructor;
 
-// line 4 "../toJsonTest_1.ump"
-public class Person
+// line 3 "ToJsonTest_3.ump"
+public class Player
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //Person Attributes
+  //Player Attributes
   private String name;
 
-  //Person Associations
-  private List<Address> addresses;
+  //Player State Machines
+  public enum Status { Off, On }
+  public enum StatusOn { Null, Idle, Playing, H }
+  private Status status;
+  private StatusOn statusOn;
+  private StatusOn statusOnH;
+  public enum Mode { Active, Stopped }
+  public enum ModeActive { Null, Waiting, Busy, HStar }
+  private Mode mode;
+  private ModeActive modeActive;
+  private ModeActive modeActiveHStar;
+  public enum Unused {  }
+  private Unused unused;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
 
-  public Person(String aName)
+  public Player(String aName)
   {
     name = aName;
-    addresses = new ArrayList<Address>();
+    setStatusOn(StatusOn.Null);
+    statusOnH = StatusOn.Idle;
+    setStatus(Status.Off);
+    setModeActive(ModeActive.Null);
+    modeActiveHStar = ModeActive.Waiting;
+    setMode(Mode.Active);
   }
 
   //------------------------
@@ -48,117 +68,277 @@ public class Person
   {
     return name;
   }
-  /* Code from template association_GetMany */
-  public Address getAddress(int index)
+
+  public String getStatusFullName()
   {
-    Address aAddress = addresses.get(index);
-    return aAddress;
+    String answer = status.toString();
+    if (statusOn != StatusOn.Null) { answer += "." + statusOn.toString(); }
+    return answer;
   }
 
-  public List<Address> getAddresses()
+  public String getModeFullName()
   {
-    List<Address> newAddresses = Collections.unmodifiableList(addresses);
-    return newAddresses;
+    String answer = mode.toString();
+    if (modeActive != ModeActive.Null) { answer += "." + modeActive.toString(); }
+    return answer;
   }
 
-  public int numberOfAddresses()
+  public String getUnusedFullName()
   {
-    int number = addresses.size();
-    return number;
+    String answer = unused.toString();
+    return answer;
   }
 
-  public boolean hasAddresses()
+  public Status getStatus()
   {
-    boolean has = addresses.size() > 0;
-    return has;
+    return status;
   }
 
-  public int indexOfAddress(Address aAddress)
+  public Mode getMode()
   {
-    int index = addresses.indexOf(aAddress);
-    return index;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfAddresses()
-  {
-    return 0;
-  }
-  /* Code from template association_AddManyToOne */
-  public Address addAddress(String aStreet)
-  {
-    return new Address(aStreet, this);
+    return mode;
   }
 
-  public boolean addAddress(Address aAddress)
+  public Unused getUnused()
   {
-    boolean wasAdded = false;
-    if (addresses.contains(aAddress)) { return false; }
-    Person existingPerson = aAddress.getPerson();
-    boolean isNewPerson = existingPerson != null && !this.equals(existingPerson);
-    if (isNewPerson)
+    return unused;
+  }
+
+  public StatusOn getStatusOn()
+  {
+    return statusOn;
+  }
+
+  public ModeActive getModeActive()
+  {
+    return modeActive;
+  }
+
+  public boolean turnOn()
+  {
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
-      aAddress.setPerson(this);
+      case Off:
+        setStatus(Status.On);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
     }
-    else
-    {
-      addresses.add(aAddress);
-    }
-    wasAdded = true;
-    return wasAdded;
+
+    return wasEventProcessed;
   }
 
-  public boolean removeAddress(Address aAddress)
+  public boolean resume()
   {
-    boolean wasRemoved = false;
-    //Unable to remove aAddress, as it must always have a person
-    if (!this.equals(aAddress.getPerson()))
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
-      addresses.remove(aAddress);
-      wasRemoved = true;
+      case Off:
+        setStatusOn(statusOnH);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
     }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addAddressAt(Address aAddress, int index)
-  {  
-    boolean wasAdded = false;
-    if(addAddress(aAddress))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
-      wasAdded = true;
-    }
-    return wasAdded;
+
+    return wasEventProcessed;
   }
 
-  public boolean addOrMoveAddressAt(Address aAddress, int index)
+  public boolean turnOff()
   {
-    boolean wasAdded = false;
-    if(addresses.contains(aAddress))
+    boolean wasEventProcessed = false;
+    
+    Status aStatus = status;
+    switch (aStatus)
     {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfAddresses()) { index = numberOfAddresses() - 1; }
-      addresses.remove(aAddress);
-      addresses.add(index, aAddress);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addAddressAt(aAddress, index);
+      case On:
+        exitStatus();
+        setStatus(Status.Off);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
     }
-    return wasAdded;
+
+    return wasEventProcessed;
+  }
+
+  public boolean stop()
+  {
+    boolean wasEventProcessed = false;
+    
+    Mode aMode = mode;
+    switch (aMode)
+    {
+      case Active:
+        exitMode();
+        setMode(Mode.Stopped);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean restart()
+  {
+    boolean wasEventProcessed = false;
+    
+    Mode aMode = mode;
+    switch (aMode)
+    {
+      case Stopped:
+        setModeActive(ModeActive.HStar);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean play()
+  {
+    boolean wasEventProcessed = false;
+    
+    StatusOn aStatusOn = statusOn;
+    if (statusOn != StatusOn.Null){statusOnH = statusOn;}
+    switch (aStatusOn)
+    {
+      case Idle:
+        exitStatusOn();
+        setStatusOn(StatusOn.Playing);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  public boolean work()
+  {
+    boolean wasEventProcessed = false;
+    
+    ModeActive aModeActive = modeActive;
+    if (modeActive != ModeActive.Null){modeActiveHStar = modeActive;}
+    switch (aModeActive)
+    {
+      case Waiting:
+        exitModeActive();
+        setModeActive(ModeActive.Busy);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitStatus()
+  {
+    switch(status)
+    {
+      case On:
+        exitStatusOn();
+        break;
+    }
+  }
+
+  private void setStatus(Status aStatus)
+  {
+    status = aStatus;
+
+    // entry actions and do activities
+    switch(status)
+    {
+      case On:
+        if (statusOn == StatusOn.Null) { setStatusOn(StatusOn.Idle); }
+        break;
+    }
+  }
+
+  private void exitMode()
+  {
+    switch(mode)
+    {
+      case Active:
+        exitModeActive();
+        break;
+    }
+  }
+
+  private void setMode(Mode aMode)
+  {
+    mode = aMode;
+
+    // entry actions and do activities
+    switch(mode)
+    {
+      case Active:
+        if (modeActive == ModeActive.Null) { setModeActive(ModeActive.Waiting); }
+        break;
+    }
+  }
+
+  private void exitStatusOn()
+  {
+    switch(statusOn)
+    {
+      case Idle:
+        setStatusOn(StatusOn.Null);
+        break;
+      case Playing:
+        setStatusOn(StatusOn.Null);
+        break;
+      case H:
+        setStatusOn(StatusOn.Null);
+        break;
+    }
+  }
+
+  private void setStatusOn(StatusOn aStatusOn)
+  {
+    statusOn = aStatusOn;
+    if (status != Status.On && aStatusOn != StatusOn.Null) { setStatus(Status.On); }
+  }
+
+  private void exitModeActive()
+  {
+    switch(modeActive)
+    {
+      case Waiting:
+        setModeActive(ModeActive.Null);
+        break;
+      case Busy:
+        setModeActive(ModeActive.Null);
+        break;
+      case HStar:
+        setModeActive(ModeActive.Null);
+        break;
+    }
+  }
+
+  private void setModeActive(ModeActive aModeActive)
+  {
+    modeActive = aModeActive;
+    if (mode != Mode.Active && aModeActive != ModeActive.Null) { setMode(Mode.Active); }
+    if (aModeActive == ModeActive.HStar) { modeActive = modeActiveHStar;}
   }
 
   public void delete()
-  {
-    for(int i=addresses.size(); i > 0; i--)
-    {
-      Address aAddress = addresses.get(i - 1);
-      aAddress.delete();
-    }
-  }
+  {}
 
 
   public String toString()
@@ -234,33 +414,26 @@ public class Person
           haveOutputItem=true;
       //haveOutputItem = false;
       //haveOutputItem = false;
-         if(haveOutputItem) {
-           toJsonOutput.append(",\n");
-         }
-          toJsonOutput.append(indent);
-            toJsonOutput.append("  \"");
-            toJsonOutput.append("addresses");
-            toJsonOutput.append("\"");
-            toJsonOutput.append(" : [");
-            toJsonOutput.append("\n");
-            haveOutputItem = false;
-            try{
-              for (Address anItem_0 :getAddresses()){
-              if(haveOutputItem) {
-                toJsonOutput.append(",\n");
-              }
-              toJsonOutput.append(indent+"  {");
-              toJsonOutput.append("\n");
-              anItem_0.toJsonHelper(toJsonOutput, visitedList,nestLevel+2,true);
-              toJsonOutput.append("\n");
-              toJsonOutput.append(indent+"  }");
-              haveOutputItem=true;
-            }
-            }catch (NullPointerException e){
-            }
-            toJsonOutput.append("\n");    
-            toJsonOutput.append(indent+"  ]");
-            haveOutputItem=true;
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
+          toJsonOutput.append(indent+"  \"status\" : \""+this.status+"\"");
+          haveOutputItem=true;
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
+          toJsonOutput.append(indent+"  \"statusOn\" : \""+this.statusOn+"\"");
+          haveOutputItem=true;
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
+          toJsonOutput.append(indent+"  \"mode\" : \""+this.mode+"\"");
+          haveOutputItem=true;
+          if(haveOutputItem){
+            toJsonOutput.append(",\n");
+          }
+          toJsonOutput.append(indent+"  \"modeActive\" : \""+this.modeActive+"\"");
+          haveOutputItem=true;
               
           toJsonOutput.append(indent+"  \n");
     }
@@ -287,14 +460,14 @@ public class Person
   * @return newly instantiated Object 
   */  
 
-  public static Person fromJson(String aJsonString){
+  public static Player fromJson(String aJsonString){
     // the parser below reads json with nothing between its tokens, so remove every whitespace character json allows there
     aJsonString=aJsonString.replace("\n","").replace("\r","").replace("\t","").replace(" ","");
     // a map to store the umpleObjectID present in jsonString
     Map<String, Object> umpleObjectIDMap=new HashMap<>();
     
     // instantiate a new object
-Person anObject = new Person(aJsonString, umpleObjectIDMap);
+Player anObject = new Player(aJsonString, umpleObjectIDMap);
     return anObject;
   }
    
@@ -306,7 +479,7 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
   * @param umpleObjectIDMap<String, Integer> mapping parsed objectID (from Json string) with newly instantiated object's objectID
   */ 
   @SuppressWarnings("unchecked")
-  public Person(String aJsonString, Map<String, Object> umpleObjectIDMap){
+  public Player(String aJsonString, Map<String, Object> umpleObjectIDMap){
     // Initialize a HashMap to store the parsed result
     // key is the attribute name present in the jsonString
     // value is the attribute value present in the jsonString
@@ -319,13 +492,20 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
     boolean classChildExist;
     String parsedClassName=parsedResult.get("className");
     String childName=this.getClass().getSimpleName();
-    classExist="Person".equals(parsedClassName);
+    classExist="Player".equals(parsedClassName);
     classChildExist=childName.equals(parsedClassName);
     // if top-level class does not exist, throw exception
     if(!classExist&&!classChildExist){
       throw new IllegalArgumentException("Top-level class \""+parsedClassName+"\" does not exist, please check the input json string");
     }
     String umpleObjectId=parsedResult.get("umpleObjectID");
+    // Restore the current state of each state machine; a missing one gets its start state
+    this.status=parsedResult.containsKey("status")?Status.valueOf(parsedResult.get("status")):Status.Off;
+    this.statusOn=parsedResult.containsKey("statusOn")?StatusOn.valueOf(parsedResult.get("statusOn")):StatusOn.Null;
+    this.statusOnH=StatusOn.Idle;
+    this.mode=parsedResult.containsKey("mode")?Mode.valueOf(parsedResult.get("mode")):Mode.Active;
+    this.modeActive=parsedResult.containsKey("modeActive")?ModeActive.valueOf(parsedResult.get("modeActive")):ModeActive.Waiting;
+    this.modeActiveHStar=ModeActive.Waiting;
     // Check if the object has already been visited and created
     //if((umpleObjectIDMap.get(umpleObjectId)==null)||visitedSuperClass){
       try{
@@ -340,40 +520,8 @@ Person anObject = new Person(aJsonString, umpleObjectIDMap);
         this.name=parsedResult.get(jsonKey);
     
     // below for-loop check the association class of the top level class
-       
-       jsonKey="addresses";
-       String newJsonString_0=parsedResult.get(jsonKey);
-       String newIDRegex_0="\\\"umpleObjectID\\\"\\:\\\"[0-9]*\\\"";
-       String newUmpleID_0=fromJsonParserHelper(newJsonString_0,newIDRegex_0);
-       
-       //Multiple associations
-           List<String> multiAssoObjList_0 = new ArrayList<String>();
-           multiAssoObjList_0=fromJsonParserList(newJsonString_0);
-addresses=new ArrayList<Address>();
-           for(String obj: multiAssoObjList_0){
-             newUmpleID_0=fromJsonParserHelper(obj,newIDRegex_0);
-             
-             String newClassName_0=fromJsonParserClassName(obj);
-           if(!umpleObjectIDMap.containsKey(newUmpleID_0)){
-           
-            boolean subClassFound=false;
-            Class clazz_0=Class.forName(newClassName_0);
-            Constructor constructor_0=clazz_0.getConstructor(String.class, Map.class);
-            Object objectNew_0=constructor_0.newInstance(obj,umpleObjectIDMap);
-addresses.add((Address)objectNew_0);
-            }
-           else{
-addresses.add((Address)umpleObjectIDMap.get(newUmpleID_0));
-           }
-         }
-
 
     
-    }catch(java.lang.reflect.InvocationTargetException e){
-      // an associated object with an unknown state must fail the load, as the top-level object does
-      if(e.getCause() instanceof IllegalArgumentException){
-        throw (IllegalArgumentException)e.getCause();
-      }
     }catch(Exception e){
     }
 
