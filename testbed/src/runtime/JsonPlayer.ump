@@ -1,0 +1,110 @@
+generate Java "../../src-gen-umple";
+suboption "genJson";
+
+// Compiled on its own because genJson applies to the whole model.
+// No namespace, because fromJson only accepts unqualified class names.
+class JsonPlayer
+{
+  name;
+  status {
+    Off { turnOn -> On; resume -> On.H; }
+    On {
+      turnOff -> Off;
+      Idle { play -> Playing; }
+      Playing {}
+    }
+  }
+  mode {
+    Active {
+      stop -> Stopped;
+      Waiting { work -> Busy; }
+      Busy {}
+    }
+    Stopped { restart -> Active.HStar; }
+  }
+  // Without a start state there is nothing to save
+  unused {}
+}
+
+// A restored timed state times out again
+class JsonClock
+{
+  status {
+    Waiting { after(1) -> Done; cancel -> Cancelled; }
+    Done {}
+    Cancelled {}
+  }
+}
+
+// Queued and pooled machines need their queue back to take events
+class JsonQueued
+{
+  queued status { Waiting { go -> Done; } Done {} }
+}
+
+class JsonPooled
+{
+  pooled status { Waiting { go -> Done; } Done {} }
+}
+
+// An associated object is restored with its state too
+class JsonBank
+{
+  status { Open { close -> Closed; } Closed {} }
+  1 -- * JsonAccount accounts;
+}
+
+class JsonAccount
+{
+  status { Active { block -> Blocked; } Blocked {} }
+}
+
+// A team's json starts with its members, so the first fields in it are theirs;
+// each object must read only its own fields, at any depth
+class JsonTeam
+{
+  1 -- * JsonMember members;
+}
+
+class JsonMember
+{
+  status { Off { turnOn -> On; } On { Idle { play -> Playing; } Playing {} } }
+  1 -- * JsonTask tasks;
+}
+
+class JsonTask
+{
+  name;
+  status { Open { close -> Closed; } Closed {} }
+}
+
+// A subclass's own fields come after its superclass's association
+class JsonNamedTeam
+{
+  isA JsonTeam;
+  name;
+}
+
+// State machines named like variables of the generated json code
+class JsonNamed
+{
+  parsedResult { Start { go -> Done; } Done {} }
+  indent { Low { raise -> High; } High {} }
+}
+
+// Objects loaded as part of a graph start their threads only once the whole graph has loaded
+class JsonWorkerGroup
+{
+  1 -- * JsonWorker workers;
+}
+
+class JsonWorker
+{
+  queued status { Waiting { go -> Done; } Done {} }
+}
+
+// A queued machine without states needs no event thread
+class JsonEmptyQueued
+{
+  queued status {}
+}
