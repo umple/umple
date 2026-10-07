@@ -492,14 +492,46 @@ function ensureFullPath($relativeFilename)
   return $filename;
 }
 
+/**
+Returns the model directory named by the directory part of the given
+filename, e.g. tmpXXXX, 261006XXXX, task-XXXX or tasks/taskroot-XXXX.
+Returns NULL for anything else, such as a bare model.ump, whose directory
+would be the ump/ root that is shared by all users.
+Only the name is checked, not whether the directory still exists.
+*/
+function getModelIdFromFilename($filename){
+    if(!is_string($filename)){
+        return NULL;
+    }
+    $modelId = preg_replace('#^\.\./ump/#', '', dirname($filename));
+    if(!preg_match('#^(tmp|\d{6}|task-|tasks/taskroot-)[\w.-]*$#D', $modelId)){
+        return NULL;
+    }
+    return $modelId;
+}
+
+/**
+Ends a request whose filename names no model directory with a 400 error.
+*/
+function rejectInvalidFilename(){
+    http_response_code(400);
+    echo "Invalid filename: it must be in a model directory such as tmpXXXX/model.ump, or be omitted to use a new temporary directory.";
+    exit;
+}
+
 function getOrCreateDataHandle(){
-    if(isset($_REQUEST['filename'])){
-        $modelId = dirname($_REQUEST['filename']);
+    if(isset($_REQUEST['filename']) && $_REQUEST['filename'] !== ''){
+        $modelId = getModelIdFromFilename($_REQUEST['filename']);
+        if($modelId === NULL){
+            rejectInvalidFilename();
+        }
         $filename= basename($_REQUEST['filename']);
         $dataHandle = dataStore()->openData($modelId);
         if($dataHandle){
             return array($filename, $dataHandle);
         }
+        // The directory no longer exists (old models are cleaned up),
+        // so carry on in a new temporary one
     }else{
         $filename = 'model.ump';
     }
