@@ -510,13 +510,20 @@ function getModelIdFromFilename($filename){
     return $modelId;
 }
 
+/**
+Ends a request whose filename names no model directory with a 400 error.
+*/
+function rejectInvalidFilename(){
+    http_response_code(400);
+    echo "Invalid filename: it must be in a model directory such as tmpXXXX/model.ump, or be omitted to use a new temporary directory.";
+    exit;
+}
+
 function getOrCreateDataHandle(){
     if(isset($_REQUEST['filename']) && $_REQUEST['filename'] !== ''){
         $modelId = getModelIdFromFilename($_REQUEST['filename']);
         if($modelId === NULL){
-            http_response_code(400);
-            echo "Invalid filename: it must be in a model directory such as tmpXXXX/model.ump, or be omitted to use a new temporary directory.";
-            exit;
+            rejectInvalidFilename();
         }
         $filename= basename($_REQUEST['filename']);
         $dataHandle = dataStore()->openData($modelId);
