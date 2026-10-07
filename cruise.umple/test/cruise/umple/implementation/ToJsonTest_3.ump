@@ -1,0 +1,23 @@
+generate Java --suboption "genJson";
+
+class Player {
+  name;
+  status {
+    Off { turnOn -> On; resume -> On.H; }
+    On {
+      turnOff -> Off;
+      Idle { play -> Playing; }
+      Playing {}
+    }
+  }
+  mode {
+    Active {
+      stop -> Stopped;
+      Waiting { work -> Busy; }
+      Busy {}
+    }
+    Stopped { restart -> Active.HStar; }
+  }
+  // Without a start state there is nothing to save
+  unused {}
+}

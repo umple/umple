@@ -227,3 +227,16 @@ This states that there will be one, two, or three identifiers.  The
 priority of inputs is
 attr_name,attr_type and attr_qualifier.
 </p>
+
+&nbsp;<br/>
+<h2>Parsing a language of your own</h2>
+
+<p>The parser that reads grammars in this notation can parse other languages too. An Umple program brings it in with <code>use lib:UmpleParser.ump;</code>, then reads a grammar file and parses a text file into a tree of tokens:</p>
+
+<pre>
+RuleBasedParser parser = new RuleBasedParser();
+parser.addGrammarFile("greetings.grammar");
+ParseResult result = parser.parse(new File("greetings.txt"));
+</pre>
+
+<p>When the grammar cannot parse the text, <code>result.getWasSuccess()</code> is false and the result holds error 1500 for the line where parsing stopped; otherwise <code>parser.getRootToken()</code> is the root of the tokens. The <a href="https://github.com/umple/umple/tree/master/UmpleParser">UmpleParser README</a> has a complete example.</p>

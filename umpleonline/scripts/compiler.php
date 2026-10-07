@@ -32,32 +32,15 @@ if (isset($_REQUEST["save"]))
   if(isset($_REQUEST["svgContent"]))
   {
     $input = $_REQUEST["svgContent"];
-
-    if(isset($_REQUEST["filename"]))
-    {
-      $filename = basename($_REQUEST['filename']);
-      $allowedExtensions = array( 
-    'ump',
-    'svg',
-);
-      $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-      if (!in_array($extension, $allowedExtensions, true)) {
-          http_response_code(400);
-          echo "Invalid file type."; 
-          exit;
-}
- 
-      $modelId = dirname($_REQUEST['filename']);
-      $dataHandle = dataStore()->openData($modelId);
-      $dataHandle->writeData($filename, $input);
+    list($filename, $dataHandle) = getOrCreateDataHandle();
+    $allowedExtensions = array('ump', 'svg');
+    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    if (!in_array($extension, $allowedExtensions, true)) {
+      http_response_code(400);
+      echo "Invalid file type.";
+      exit;
     }
-    else
-    {
-      // this makes no sense, but mimic old behaviour for now
-      $filename = 'model.ump';
-      $dataHandle = dataStore()->createData();
-      $dataHandle->writeData($filename, $input);
-    }
+    $dataHandle->writeData($filename, $input);
     $workDir = $dataHandle->getWorkDir();
     // it will inserted into an href, so we should actually permalink
     // the resulting file
@@ -68,11 +51,7 @@ if (isset($_REQUEST["save"]))
     $input = $_REQUEST["umpleCode"];
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     if (isset($_REQUEST["lock"]) && isset($_REQUEST["model"])){
-      $model = $_REQUEST["model"];
-  //file_put_contents("/home/jpan/test.html", ' ' . $model, FILE_APPEND);
-
-  //file_put_contents("/home/jpan/test.html", "111 " . $dataHandle->getWorkDir()->getPath(), FILE_APPEND);
-      $lock_file = "../ump/".$model."/.lockfile";
+      $lock_file = $dataHandle->getWorkDir()->getPath()."/.lockfile";
       $fp = fopen($lock_file, "w");
       if (flock($fp, LOCK_EX)) {
         try {
@@ -98,19 +77,19 @@ if (isset($_REQUEST["save"]))
 }
 else if (isset($_REQUEST["load"]))
 {
-  // extract the model ID and filename from the old-style path
-  $filename = basename($_REQUEST["filename"]);
-  $modelId = basename(dirname($_REQUEST["filename"]));
-  // echo $filename;
-  // echo $modelId;
-  if (isset($_REQUEST["isTask"]))
+  // The model directory, including the tasks/ of a task root, comes from
+  // the path, so the isTask argument that the page still sends is not needed
+  $modelId = getModelIdFromFilename($_REQUEST["filename"] ?? NULL);
+  if ($modelId === NULL)
   {
-    $modelId = "tasks/" . $modelId;
+    rejectInvalidFilename();
   }
-  //file_put_contents("/home/jpan/test.html", $modelId . "///", FILE_APPEND);
   $dataHandle = dataStore()->openData($modelId);
-  $outputUmple = $dataHandle->readData($filename);
-  echo $outputUmple;
+  // A model directory removed by the cleanup of old models loads as empty
+  if ($dataHandle)
+  {
+    echo $dataHandle->readData(basename($_REQUEST["filename"]));
+  }
 }
 else if (isset($_REQUEST["loadTask"])) //load the task in the tasks dir
 {
@@ -463,15 +442,15 @@ else if (isset($_REQUEST["umpleCode"]))
     return;
   }
 
-  if ($language == "Python")
-  {
-    echo "Generated Python has a few limitations. For more information please <a target='pythoninfo' href='https://cruise.umple.org/umple/Python.html'>click here</a>.<br>";
-  }
-
   if (!$uigu)
   { // NOTuigu
   // Generate the Java, PHP, RTCpp, Ruby, Python, Cpp or Sql and put it into the right directory
   list($dataname, $dataHandle) = getOrCreateDataHandle();
+  // Only now, so that a rejected filename gets nothing but its 400 message
+  if ($language == "Python")
+  {
+    echo "Generated Python has a few limitations. For more information please <a target='pythoninfo' href='https://cruise.umple.org/umple/Python.html'>click here</a>.<br>";
+  }
   $dataHandle->writeData($dataname, "generate {$language} \"./{$language}/\" --override-all;\n" . $input);
   $workDir = $dataHandle->getWorkDir();
   $filename = $workDir->getPath().'/'.$dataname;
