@@ -25,4 +25,10 @@ public class ToJsonTest extends TemplateTest
   {
     assertUmpleTemplateFor("ToJsonTest_1.ump",languagePath + "/ToJsonTest_1_Address."+ languagePath +".txt","Address");
   } 
+
+  @Test
+  public void GenJsonTest_3StateMachines()
+  {
+    assertUmpleTemplateFor("ToJsonTest_3.ump",languagePath + "/ToJsonTest_3_Player."+ languagePath +".txt","Player");
+  }
 }

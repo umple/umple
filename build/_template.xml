@@ -77,6 +77,7 @@
   <umple-jar name="stats" />
   <umple-jar name="docs" />
   <umple-jar name="sync" />
+  <umple-jar name="parser" />
   <umple-jar name="run" />
 
   <macrodef name="isreachable" >
@@ -225,6 +226,7 @@
 
     <junit fork="yes" forkmode="perBatch" haltonfailure="${haltonfailure}" showoutput="${showJunitOutput}" printsummary="${showJunitSummary}" >
       <jvmarg value="-Xmx500m"/>    
+      <sysproperty key="umpleparser.jar" value="${dist.dir}/umpleparser.jar"/>
       <!-- <jmvarg value="-XstartOnFirstThread"/> -->
       <formatter type="xml" unless="${showJunitOutput}"/>
       <formatter usefile="false" type="brief" if="${showJunitOutput}"/>
