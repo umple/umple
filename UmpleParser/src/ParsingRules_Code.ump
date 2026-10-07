@@ -117,9 +117,18 @@ class ChoiceRule
     self.setEndPosition(findPosition(end,data));    
   }
   /*
-    Given an offset this function constructs the Position object using the ParserDataPackage's linenumbers hashmap
+    Given an offset this function constructs the Position object using the ParserDataPackage's linenumbers hashmap.
+    It stays an instance method for programs compiled against it.
   */
   public Position findPosition(int lookfor, ParserDataPackage data)
+  {
+    return positionAt(lookfor, data);
+  }
+
+  /*
+    The work of findPosition, which needs no rule, so the parser can also use it before any rule has run
+  */
+  public static Position positionAt(int lookfor, ParserDataPackage data)
   {
     // Create a position object that has the correct line number for the lookfor character
     // This uses the ParsDataPackage that has a mapping from key (characters) to value (lines)
@@ -610,13 +619,15 @@ class RootRule
     for(int i=0;i<this.size();++i)
     {
       int parseResult = get(i).parse(getNegate()?token:self,from, max, input, data);
-      if(parseResult>=max)
+      // Rules take the whitespace around what they match, so whitespace is left over only when
+      // nothing matched, as in an input of blank lines; it is not input that failed to parse
+      if(parseResult>=max || (parseResult>=0 && input.substring(parseResult,max).trim().isEmpty()))
       {
         if(!getNegate())
         {
           token.addSubToken(self);
         }
-        return parseResult;
+        return max;
       }
       self = new Token(getName(),"START_TOKEN");
     }
