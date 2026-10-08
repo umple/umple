@@ -70,7 +70,7 @@ class Mentor
   public function setStudent($aNewStudent)
   {
     $wasSet = false;
-    if ($this->student != null && $this->student != $aNewStudent && $this == $this->student->getMentor())
+    if ($this->student != null && $this->student !== $aNewStudent && $this === $this->student->getMentor())
     {
       //Unable to setStudent, as existing student would become an orphan
       return $wasSet;
@@ -79,7 +79,7 @@ class Mentor
     $this->student = $aNewStudent;
     $anOldMentor = $aNewStudent != null ? $aNewStudent->getMentor() : null;
     
-    if ($this != $anOldMentor)
+    if ($this !== $anOldMentor)
     {
       if ($anOldMentor != null)
       {
@@ -96,7 +96,7 @@ class Mentor
 
   public function equals($compareTo)
   {
-    return $this == $compareTo;
+    return $this === $compareTo;
   }
 
   public function delete()
