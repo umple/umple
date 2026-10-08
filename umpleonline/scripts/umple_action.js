@@ -1675,7 +1675,7 @@ Action.deleteState = function(stateCode,className,smName,stateName){
 //Action.drawStateMenu() is triggered by contextmenu event on Graphviz State Diagram "node" elements
 //Draws a div containing the editing options for state GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
-Action.drawStateMenu = function(){
+Action.drawStateMenu = function(event){
   // Debug
   // console.log("Inside drawStateMenu: ")
   if(!Action.diagramInSync){
@@ -3743,6 +3743,13 @@ Action.renameAttribute = function(classCode, className, attributeName, attribute
   }
 };
 document.addEventListener("mousedown", hider);
+ input.addEventListener('keydown', function(e) {
+   if (e.key === 'Enter') {
+     e.preventDefault();
+     e.stopPropagation();
+     submitButton.click();
+   }
+ });
  // Event listener for the submit action
  submitButton.addEventListener('click', function() {
   if(Action.validateAttributeName(input.value.trim())){
@@ -3812,6 +3819,13 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
     }
   };
   document.addEventListener("mousedown", hider);
+  select.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      submitButton.click();
+    }
+  });
   // Event listener for the submit button action
     submitButton.addEventListener('click', function() {
       var selectedType = select.options[select.selectedIndex].value;
