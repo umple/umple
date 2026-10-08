@@ -11,7 +11,8 @@
     "pm2": "^7.0.4"
   },
   "scripts": {
-    "start": "pm2 start app.js --no-daemon"
+    "start": "pm2 start app.js --no-daemon",
+    "test": "node --test"
   },
   "author": "",
   "license": "MIT"
