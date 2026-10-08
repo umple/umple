@@ -158,6 +158,13 @@ if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] !== "") 
     }
 }
 
+if (isset($_REQUEST["model"])) {
+  $versionHistory = new VersionHistory($dataHandle->getWorkDir()->getPath());
+  $versionHistory->withLock(function() use ($versionHistory) {
+    $versionHistory->updateMainFileFromOnlyTab();
+  });
+}
+
 $output = $dataHandle->readData('model.ump');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -498,6 +505,8 @@ $output = $dataHandle->readData('model.ump');
   <input id="filename" type="hidden" value="<?php if (isset($_REQUEST["task"])) { echo '../ump/tasks/'.$dataHandle->getName().'/model.ump'; } else {echo '../ump/'.$dataHandle->getName().'/model.ump'; }?>" />
   <input id="advancedMode" type="hidden" value="0" />
   <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
+  <?php $versionHistory = new VersionHistory($dataHandle->getWorkDir()->getPath()); ?>
+  <input id="modelVersion" type="hidden" value="<?php echo $versionHistory->getCurrentVersion() ?>" />
 
   <div id="taskArea" style="display: none;">
     
@@ -688,6 +697,7 @@ $output = $dataHandle->readData('model.ump');
         </span>  
 
     <span id="restorecode" > &nbsp; <a href="#"> Restore Saved State</a></span>
+    <span id="versionHistoryMessage" class="version-history-message is-hidden" role="status"></span>
 
     &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
   </div>
@@ -762,6 +772,12 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png"/> 
               Load from Browser
             </li>
+            <?php if (!$readOnly) { ?>
+            <li id="buttonRestoreEarlierVersion" class="restoreEarlierVersion">
+              <img src="scripts/copy.png" alt="Restore Earlier Version icon"/> 
+              Restore Earlier Version
+            </li>
+            <?php } ?>
             <li>Drag and drop a .ump file here to load it, or drag it to any place in the text area.</li>
           </ul>
 
@@ -1443,6 +1459,52 @@ $output = $dataHandle->readData('model.ump');
         <div id="btnCloseFeatureTree"
              class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
              tabindex="0" role="button">Done</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Restore Earlier Version dialog (umple_version_history.js). Reuses .ai-settings-modal -->
+  <div id="versionHistoryModal" class="ai-settings-modal version-history-modal is-hidden"
+       role="dialog" aria-modal="true" aria-labelledby="versionHistoryTitle">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3 id="versionHistoryTitle">Restore Earlier Version</h3>
+      <p class="version-history-intro">UmpleOnline saves versions of this model on the
+        server while you edit it. Select a version to see what it contained, then restore
+        it if you want it back.</p>
+      <div class="version-history-body">
+        <ul id="versionHistoryList" class="version-history-list" role="listbox"
+            aria-label="Saved versions, newest first"></ul>
+        <div id="versionHistoryPreview" class="version-history-preview" aria-live="polite"></div>
+      </div>
+      <div id="versionHistoryStatus" class="version-history-status" role="status"></div>
+      <div class="dialog-buttons">
+        <div id="buttonRestoreSelectedVersion"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget disabled"
+             tabindex="0" role="button" aria-disabled="true">Restore this version</div>
+        <div id="buttonCloseVersionHistory"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Close</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shown when another browser tab or window has saved a newer version of the model,
+       or when this tab has saved over one -->
+  <div id="versionConflictModal" class="ai-settings-modal version-history-modal version-conflict-modal is-hidden"
+       role="alertdialog" aria-modal="true" aria-labelledby="versionConflictTitle"
+       aria-describedby="versionConflictMessage">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3 id="versionConflictTitle">A newer version of this model exists</h3>
+      <p id="versionConflictMessage"></p>
+      <div class="dialog-buttons">
+        <div id="buttonLoadLatestVersion"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Load latest version</div>
+        <div id="buttonKeepThisVersion"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Keep this tab's version</div>
       </div>
     </div>
   </div>

@@ -183,6 +183,10 @@ Action.clicked = function(event)
       }
     }
   }
+  else if (action == "RestoreEarlierVersion")
+  {
+    VersionHistory.openRestoreDialog();
+  }
   else if (action == "CreateTask") 
   {
     jQuery("#taskArea").css("display","block");

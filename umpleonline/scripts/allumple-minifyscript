@@ -30,6 +30,7 @@ cat \
  umple_tooltips.js \
  umple_feature_tree.js \
  umple_tab_control.js \
+ umple_version_history.js \
  crud/umple_crudui.js \
  crud/umple_crud_json_persistence.js \
  ai/utils/umple_ai_constants.js \

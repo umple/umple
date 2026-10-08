@@ -3,6 +3,8 @@
 Tab control handlers.
 */
 
+require_once(__DIR__."/version_history.php");
+
 header("Access-Control-Allow-Origin: *");
 if(isset($_REQUEST["model"]))
 {
@@ -11,6 +13,25 @@ if(isset($_REQUEST["model"]))
     {
         $modelId = "tasks/" . $modelId;
     }
+}
+
+function tabControlNotFound()
+{
+    header('HTTP/1.0 404 Not Found');
+    readfile('../404.shtml');
+    exit();
+}
+
+// Renames and deletions are recorded as new versions of the model, so the
+// model and tab names must stay within the model's directory
+function tabControlHistory($tabNames)
+{
+    $modelId = VersionHistory::normalizeModelId($_REQUEST["model"]);
+    foreach ($tabNames as $tabName) {
+        if (!is_string($tabName) || $tabName === "" || basename($tabName) !== $tabName) $modelId = null;
+    }
+    if ($modelId === null) tabControlNotFound();
+    return new VersionHistory("../ump/".$modelId);
 }
 
 if (isset($_REQUEST["list"]) && isset($_REQUEST["model"]))
@@ -55,32 +76,44 @@ else if (isset($_REQUEST["rename"]) &&
     isset($_REQUEST["newname"]))
 {
     $model = $modelId;
+    $history = tabControlHistory(array($_REQUEST["oldname"], $_REQUEST["newname"]));
     $oldfilename = "../ump/".$model."/".$_REQUEST["oldname"].".ump";
     $newfilename = "../ump/".$model."/".$_REQUEST["newname"].".ump";
 
-    if (!file_exists($oldfilename) || file_exists($newfilename) || $oldfilename == $newfilename) {
-        header('HTTP/1.0 404 Not Found');
-        readfile('../404.shtml');
-        exit();
-    }
+    $version = $history->withLock(function() use ($history, $oldfilename, $newfilename) {
+        if (!file_exists($oldfilename) || file_exists($newfilename) || $oldfilename == $newfilename) {
+            return null;
+        }
+        return $history->recordChange(function() use ($oldfilename, $newfilename) {
+            rename($oldfilename, $newfilename);
+        }, VersionHistory::requestedBaseVersion());
+    });
+    if ($version === null) tabControlNotFound();
 
-    rename($oldfilename, $newfilename);
+    VersionHistory::sendVersionHeaders($version, true, $history->getReplacedBackup());
     echo $newfilename;
 }
 else if (isset($_REQUEST["delete"]) &&
     isset($_REQUEST["model"]) &&
     isset($_REQUEST["name"]))
 {
+    $history = tabControlHistory(array($_REQUEST["name"]));
     $filename = "../ump/".$modelId."/".$_REQUEST["name"].".ump";
 
-    // Do not allow deletion of model.ump
-    if (!file_exists($filename) || $_REQUEST["name"] == "model") {
-        header('HTTP/1.0 404 Not Found');
-        readfile('../404.shtml');
-        exit();
-    }
+    $version = $history->withLock(function() use ($history, $filename) {
+        // Do not allow deletion of model.ump
+        if (!file_exists($filename) || $_REQUEST["name"] == "model") {
+            return null;
+        }
+        // Deleting a tab cannot be undone in the browser, so it must be restorable
+        $history->createBackup("beforeDelete", array("deletedFile" => basename($filename)));
+        return $history->recordChange(function() use ($filename) {
+            unlink($filename);
+        }, VersionHistory::requestedBaseVersion());
+    });
+    if ($version === null) tabControlNotFound();
 
-    unlink($filename);
+    VersionHistory::sendVersionHeaders($version, true, $history->getReplacedBackup());
     echo $filename;
 }
 else if (isset($_REQUEST["download"]) && isset($_REQUEST["model"]))

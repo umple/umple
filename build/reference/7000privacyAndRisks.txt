@@ -35,6 +35,8 @@ noreferences
 
 <p>Data saved automatically in this way remains stored in the cloud by the Digital Research Alliance of Canada (backed up periodically to the University of Ottawa) for two days or slightly more. This is so you can continue an editing session, even if you walk away from your computer for an extended period. We have an automated process that will normally delete such data after a few days. However we reserve the right to record general statistics about the size of models and other uses of Umple tools before we delete such data.</p>
 
+<p>While a model is stored, UmpleOnline also keeps earlier versions of its .ump files alongside it, so that you can go back to them using &apos;Restore Earlier Version&apos;. These earlier versions are deleted along with the model.</p>
+
 <p>If you choose &apos;Save as URL&apos; then your model is stored for an extended period, subject to deletion rules described below. Your files can be edited and deleted by anyone to whom you give the URL, or by anyone who guesses the URL (there is less than a 1 in a trillion chance of this though).</p>
 
 <p>If we detect abuse of UmpleOnline, we reserve the right to attempt to track the user using such tools as the originating IP address, and to block access from such an address or address range.<p>
@@ -59,7 +61,7 @@ noreferences
 
 <p>Models and associated generated outputs are always deleted after a few days unless explicitly saved as a permanent URL. If the user generates a permanent URL our normal policy is to keep the data for two years after the last time it has been edited. But this is not guaranteed, for the reasons mentioned below.</p> 
 
-<p>You may delete your own model in UmpleOnline: Simply select all the text and delete it. To delete all records of generated code, it is suggested that you replace your model by a single line of code (such as class X {} and then generate code from it (generate code in all formats you have previously generated).</p>
+<p>You may delete your own model in UmpleOnline: Simply select all the text and delete it. Note that earlier versions of the model can still be restored until the model itself is deleted. To delete all records of generated code, it is suggested that you replace your model by a single line of code (such as class X {} and then generate code from it (generate code in all formats you have previously generated).</p>
 
 <p>Staff at the University of Ottawa reserve the right to delete models for any of the following reasons:</p>
 

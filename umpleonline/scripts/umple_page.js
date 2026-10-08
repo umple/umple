@@ -98,6 +98,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Layout.isLayoutVisible = doShowLayout;
   Page.readOnly = doReadOnly;
 
+  VersionHistory.init(doReadOnly);
   TabControl.init();
   jQuery(".layoutListItem").hide();
 
@@ -333,6 +334,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonCopyCommandLine");
   Page.initHighlighter("buttonCopyLocalBrowser");
   Page.initHighlighter("buttonLoadLocalBrowser");
+  Page.initHighlighter("buttonRestoreEarlierVersion");
   if (Page.canEditTask)
   {
     //Page.initHighlighter("buttonEditTask");
@@ -409,6 +411,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonCopyCommandLine");
   Page.initAction("buttonCopyLocalBrowser");
   Page.initAction("buttonLoadLocalBrowser");
+  Page.initAction("buttonRestoreEarlierVersion");
   if (Page.canEditTask)
   {
     //Page.initAction("buttonEditTask");
