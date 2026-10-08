@@ -18,6 +18,8 @@ Umple code can result in generation of various  languages. Code from these langu
 
 <li><a href="Ruby.html">Ruby</a>: Partial support. No state machine support.</li>
 
+<li><a href="JavaScript.html">JavaScript</a>: Basic support for classes, attributes, inheritance and optional associations. No state machine support.</li>
+
 <li><a href="CPlusPlus.html">C++</a>: Complete for basic cases, but still beta.</li>
 
 </ul>
