@@ -31,7 +31,10 @@ Name of the temporary java container and image created for Java execution. Use t
 Port that the Umple Php code uses to communicate with the Docker image. Suggested: 4400. If you are running more than one instance, then each would need a new port.
 
 **timeoutValue**  
-How many seconds execution will run before the execution is ended. Default 20, but reduce if the server resources are limited.
+How many seconds to wait for execution after Docker starts the runner. Default 20, but reduce if the server resources are limited.
+
+**provisioningTimeoutValue**  
+How many seconds Docker may take to create and start the runner before the request fails. Default 25.
 
 # Setup.sh or setup.bat
 
