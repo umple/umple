@@ -393,6 +393,10 @@ task ('cleanUpDeployment') {
 
 test {
     workingDir = "${rootProject.ext.testBaseDir}/workingDir"
+    systemProperty 'umpleparser.jar', "${rootProject.ext.distdir}/gradle/libs/umpleparser-${rootProject.ext.umpleCurrentVersion}.jar"
+    // This one-stage build generates the parser from the parser source in its bootstrap umple.jar,
+    // so ParserJarTest may find the previous parser in the jar
+    systemProperty 'umpleparser.oneStageBuild', 'true'
     exclude "**/CPPCodeGenValidatorTest.class" // TODO - Fix eclipse CDT message: Unresolved inclusion: <HEADER_FILE>
 }
 
@@ -481,6 +485,7 @@ task copyParserUmpFiles(type: Copy) {
         include 'ParseUtilities*.ump'
         include 'ParsingRules*.ump'
         include 'TextParser*.ump'
+        include 'UmpleParser.ump'
     }
     from("cruise.umple/src/util") {
         include 'FileUtils.ump'
@@ -491,6 +496,7 @@ task copyParserUmpFiles(type: Copy) {
             [dir: "UmpleParser/src",       pattern: 'ParseUtilities*.ump'],
             [dir: "UmpleParser/src",       pattern: 'ParsingRules*.ump'],
             [dir: "UmpleParser/src",       pattern: 'TextParser*.ump'],
+            [dir: "UmpleParser/src",       pattern: 'UmpleParser.ump'],
             [dir: "cruise.umple/src/util", pattern: 'FileUtils.ump'],
         ].each { spec ->
             if (fileTree(spec.dir).include(spec.pattern).isEmpty()) {
@@ -625,6 +631,23 @@ task packageSync(type: Jar) {
     dependsOn ':compileJava'
 }
 
+// Task for generating the parser jar file, for programs that use the RuleBasedParser outside Umple
+task packageParser(type: Jar) {
+    group = "Custom"
+    description = "Generating the parser jar file"
+    from rootProject.ext.classfileOutputDir
+    // The parser needs only its own classes and the error catalogue
+    include 'cruise/umple/parser/**', 'en.error'
+    exclude '**/*Test.class', '**/*Test$*.class'
+    archiveFileName = "umpleparser-${rootProject.ext.umpleCurrentVersion}.jar"
+    manifest {
+        attributes 'Built-By': 'Cruise - University of Ottawa',
+                   'Version': rootProject.ext.umpleCurrentVersion
+    }
+    dependsOn ':processResources'
+    dependsOn ':compileJava'
+}
+
 // Task for generating the run jar file
 task packageRunner(type: Jar) {
     group = "Custom"
@@ -655,6 +678,7 @@ task packageAllJars {
     dependsOn packageStatistics
     dependsOn packageDocumenter
     dependsOn packageSync
+    dependsOn packageParser
     dependsOn packageRunner
 }
 
@@ -1017,11 +1041,14 @@ task deployUmpleonline(type: Copy) {
     }
     include "umplesync-${rootProject.ext.umpleCurrentVersion}.jar"
     include "umple-${rootProject.ext.umpleCurrentVersion}.jar"
+    include "umpleparser-${rootProject.ext.umpleCurrentVersion}.jar"
     rename ("umplesync-${rootProject.ext.umpleCurrentVersion}.jar", 'umplesync.jar')
     rename ("umple-${rootProject.ext.umpleCurrentVersion}.jar", 'umple.jar')
+    rename ("umpleparser-${rootProject.ext.umpleCurrentVersion}.jar", 'umpleparser.jar')
   
     dependsOn ':jar'
     dependsOn ':packageSync'
+    dependsOn ':packageParser'
 }
 
 

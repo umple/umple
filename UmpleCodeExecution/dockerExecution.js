@@ -1,5 +1,6 @@
 const fs = require('fs');
 const exec = require('child_process').exec;
+const crypto = require('crypto');
 
 class DockerExecution {
     constructor(path, mainFile, model, language="Java") {
@@ -14,6 +15,7 @@ class DockerExecution {
         this.baseOutputPath = config['tempPath'];
         this.tempContainerName = config['tempContainerName'];
         this.timeoutValue = +config['timeoutValue'];
+        this.provisioningTimeoutValue = +config['provisioningTimeoutValue'] || 25;
     }
 
     run(callback) {      
@@ -21,18 +23,24 @@ class DockerExecution {
         this.makeOutputFolder();
         const mainFilePath = this.getNormalizedMainFilename();
         console.log("Normalized main file: ", mainFilePath);
+        const outputName = this.outputFolder.substring('output/'.length);
+        const containerName = "umple-exec-" + crypto.randomBytes(16).toString('hex');
         let command;
         //if BASE_DIR environment variable exist, it means the docker was launced on Windows
         if(process.env['BASE_DIR']){
-            command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v $BASE_DIR/umpleonline/ump/${this.model}:/input/:ro -v $BASE_DIR/umpleCodeExecution/tmp/${this.model}_${this.mainFile}:/output/ ${this.tempContainerName} ${mainFilePath}` 
+            command = `sh dockerTimeout.sh ${this.timeoutValue}s ${this.provisioningTimeoutValue}s ${containerName} -i -t --network none -v $BASE_DIR/umpleonline/ump/${this.model}:/input/:ro -v $BASE_DIR/umpleCodeExecution/tmp/${outputName}:/output/ ${this.tempContainerName} ${mainFilePath}`
         }else{
-            command = `sh dockerTimeout.sh ${this.timeoutValue}s -i -t --network none -v ${this.basePath}/${this.model}:/input/:ro -v ${this.baseOutputPath}/${this.model}_${this.mainFile}:/output/ ${this.tempContainerName} ${mainFilePath}` 
+            command = `sh dockerTimeout.sh ${this.timeoutValue}s ${this.provisioningTimeoutValue}s ${containerName} -i -t --network none -v ${this.basePath}/${this.model}:/input/:ro -v ${this.baseOutputPath}/${outputName}:/output/ ${this.tempContainerName} ${mainFilePath}`
         }
         
         console.log("Docker command:'",command,"'"); 
-        exec(command); // Execute docker for Java execution
-
-        this.listenToChanges(callback);
+        exec(command, (err, stdout, stderr) => {
+            this.readOutput(err, stderr, (errorData, completeData) => {
+                // If removal failed the runner may still be writing, so keep its output.
+                if(stdout.trim() === "removed") this.deleteOutputFolder();
+                callback(errorData, completeData);
+            });
+        });
     }
 
     getNormalizedMainFilename() {
@@ -52,57 +60,31 @@ class DockerExecution {
         return path ? `${path.split('/').join('.')}.${this.mainFile}` : this.mainFile;    
     }
 
-    listenToChanges(callback) {
-        //variable to enforce the timeout_value
-        let timeValue = 0;
-
-        // Check For File named "completed" or "errors" after every 1 second
-        const intid = setInterval(() => {
-            timeValue++;
-        
-            // Listen for the completed file
-            fs.readFile(this.outputFolder + '/completed', 'utf8', (err, completeData) => {
-                // if file is not available yet and the file interval is not yet up carry on
-                // else if file is found simply display a message and proceed
-                if(err && timeValue < this.timeoutValue) {
+    readOutput(executionError, stderr, callback) {
+        fs.readFile(this.outputFolder + '/completed', 'utf8', (err, completeData) => {
+            fs.readFile(this.outputFolder + '/errors', 'utf8', (err, errorData) => {
+                // A completed result wins even if docker wait reached its deadline.
+                if(completeData !== undefined) {
+                    callback(errorData, completeData);
                     return;
-                } else if (timeValue < this.timeoutValue) {
-                    //check for possible errors
-                    fs.readFile(this.outputFolder + '/errors', 'utf8', (err, errorData) => {
-                        if(errorData) {
-                            console.log("Error file: ", errorData)
-                        }
-                        console.log("Complete file: \n", completeData);
-
-                        callback(errorData, completeData.toString())
-                    });
-                } else { 
-                    // if time is up. Save an error message to the data variable
-                    // Since the time is up, we take the partial output and return it.
-                    fs.readFile(this.outputFolder + '/logfile.txt', 'utf8', (err, partialData) => {
-                        if (!partialData) partialData = "";
-                        partialData += "\nExecution Timed Out. Maximum allowed time is " + this.timeoutValue + " seconds.";
-
-                        fs.readFile(this.outputFolder + '/errors', 'utf8', (err, errorData) => {
-                            callback(errorData ,partialData.toString())
-                        });
-                    });
                 }
-
-                // If time is finished, remove directory and clear timer
-                this.deleteOutputFolder();
-                clearInterval(intid);
+                fs.readFile(this.outputFolder + '/logfile.txt', 'utf8', (err, partialData) => {
+                    if (!partialData) partialData = "";
+                    if(executionError && executionError.code === 124) {
+                        partialData += "\nExecution Timed Out. Maximum allowed time is " + this.timeoutValue + " seconds.";
+                    } else {
+                        errorData = (errorData || "") + "\nInternal problem executing generated code. " +
+                            (stderr.trim() || "Runner exited without completing output.");
+                    }
+                    callback(errorData, partialData);
+                });
             });
-        }, 1000);
+        });
     }
 
-    
     makeOutputFolder() {
-        if(fs.existsSync(this.outputFolder)) {
-            this.deleteOutputFolder();
-        } else {
-            fs.mkdirSync(this.outputFolder);
-        }
+        // Concurrent executions of the same main must not share their output.
+        this.outputFolder = fs.mkdtempSync(this.outputFolder + "_");
     }
 
     deleteOutputFolder() {
