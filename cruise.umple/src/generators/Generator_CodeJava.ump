@@ -20,6 +20,9 @@ class JavaGenerator
   depend cruise.umple.compiler.java.*;
 
   StringBuilder uncaughtExceptions = new StringBuilder();
+  // The classes this run prepared. Their injections are internal, so postpare removes them and every
+  // run prepares its own; a generated class another generator or an earlier run left does not count.
+  private Set<UmpleClass> prepared = new HashSet<UmpleClass>();
   UmpleClass[] mainClasses;
 
   
@@ -1783,6 +1786,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       translate("hasUniqueMethod", av),
       translate("uniqueMap", av));
     CodeInjection set = new CodeInjection(when, method, code, aClass);
+    set.setIsInternal(true); // removed by postpare, so generators that run later do not see Java code
     aClass.addCodeInjection(set);
   }
   
@@ -1825,7 +1829,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       }
     }
     
-    if (aClass.getGeneratedClass() != null)
+    if (prepared.contains(aClass))
     {
       GeneratedClass genClass = aClass.createGeneratedClass(getModel());
       generateConstructorSignature(genClass);
@@ -1982,6 +1986,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
   
   private void prepareCodeInjection(UmpleClass aClass)
   {
+    prepared.add(aClass);
     prepareCodeInjectionForAttributes(aClass);
     prepareCodeInjectionForAssociations(aClass);
   }
@@ -2086,6 +2091,7 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
       cb.setCode("Php",php_code);
       cb.setCode("Ruby",ruby_code);
       set.setSnippet(cb);
+      set.setIsInternal(true); // removed by postpare, so generators that run later do not see it
       aClass.addCodeInjection(set);
     }
   }
@@ -2106,9 +2112,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           }
           hasTimedEvents = true;
           Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
+          entryAction.setIsInternal(true);
           entryAction.setActionType("entry");
         
           Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
+          exitAction.setIsInternal(true);
           exitAction.setActionType("exit");
 
           t.getFromState().addAction(entryAction);
@@ -2136,9 +2144,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
           hasTimedEvents = true;
 			
           Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
+          entryAction.setIsInternal(true);
           entryAction.setActionType("entry");
         
           Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
+          exitAction.setIsInternal(true);
           exitAction.setActionType("exit");
 
           t.getFromState().addAction(entryAction);
@@ -2158,9 +2168,11 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
             }
             hasTimedEvents = true;
             Action entryAction = new Action(StringFormatter.format("{0}();",translate("eventStartMethod",e)));
+            entryAction.setIsInternal(true);
             entryAction.setActionType("entry");
         
             Action exitAction = new Action(StringFormatter.format("{0}();",translate("eventStopMethod",e)));
+            exitAction.setIsInternal(true);
             exitAction.setActionType("exit");
 
             t.getFromState().addAction(entryAction);

@@ -1,48 +1,66 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from enum import Enum, auto
+from enum import Enum
+import threading
 
-class X():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #X State Machines
+
+class X:
     class Sm(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        s1 = "s1"
+        s2 = "s2"
+
         def __str__(self):
-            return str(self.value)
-        s1 = auto()
-        s2 = auto()
+            return self.value
 
     class SmS1(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        Null = "Null"
+        s1a = "s1a"
+        s1b = "s1b"
+
         def __str__(self):
-            return str(self.value)
-        Null = auto()
-        s1a = auto()
-        s1b = auto()
+            return self.value
 
-    #Helper Variables
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+    class TimedEventHandler:
+        def __init__(self, controller, timeoutMethodName, howLongInSeconds):
+            self._controller = controller
+            self._timeoutMethodName = timeoutMethodName
+            self._timer = threading.Timer(howLongInSeconds, self.run)
+            self._timer.daemon = False
+
+        def start(self):
+            self._timer.start()
+
+        def stop(self):
+            self._timer.cancel()
+
+        def isCurrent(self, handler, state, armedState):
+            return not self._timer.finished.is_set() and not self._controller._deleted and handler is self and state is armedState
+
+        def run(self):
+            controller = self._controller
+            if self._timeoutMethodName == "timeouts1aTos1b":
+                if self.isCurrent(controller._timeouts1aTos1bHandler, controller._smS1, X.SmS1.s1a):
+                    if not controller.timeouts1aTos1b() and self.isCurrent(controller._timeouts1aTos1bHandler, controller._smS1, X.SmS1.s1a):
+                        controller.startTimeouts1aTos1bHandler()
+
     def __init__(self):
-        self._timeouts1aTos1bHandler = None
-        self._smS1 = None
         self._sm = None
-        self.setSmS1(X.SmS1.Null)
-        self.setSm(X.Sm.s1)
+        self._smS1 = None
+        self._smS1Visit = 0
+        self._timeouts1aTos1bHandler = None
+        self._deleted = False
+        self.setSmS1(__class__.SmS1.Null)
+        if self._deleted:
+            return
+        self.setSm(__class__.Sm.s1)
+        if self._deleted:
+            return
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def getSmFullName(self):
-        answer = self._sm.__str__()
-        if self._smS1 != X.SmS1.Null :
-            answer += "." + self._smS1.__str__()
+        answer = str(self._sm)
+        if self._smS1 is not __class__.SmS1.Null:
+            answer += "." + str(self._smS1)
         return answer
 
     def getSm(self):
@@ -52,96 +70,88 @@ class X():
         return self._smS1
 
     def e2(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aSm = self._sm
-        if aSm == X.Sm.s2 :
-            self.setSm(X.Sm.s1)
+        if aSm is __class__.Sm.s2:
+            self.setSm(__class__.Sm.s1)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def timeouts1aTos1b(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aSmS1 = self._smS1
-        if aSmS1 == X.SmS1.s1a :
+        if aSmS1 is __class__.SmS1.s1a:
             self.exitSmS1()
-            self.setSmS1(X.SmS1.s1b)
+            if self._deleted:
+                return True
+            self.setSmS1(__class__.SmS1.s1b)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def e1(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aSmS1 = self._smS1
-        if aSmS1 == X.SmS1.s1b :
+        if aSmS1 is __class__.SmS1.s1b:
             self.exitSm()
-            self.setSm(X.Sm.s2)
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.s2)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def exitSm(self):
-        if self._sm == X.Sm.s1 :
+        if self._sm is __class__.Sm.s1:
             self.exitSmS1()
 
     def setSm(self, aSm):
         self._sm = aSm
-        # entry actions and do activities
-        if self._sm == X.Sm.s1 :
-            if self._smS1 == X.SmS1.Null :
-                self.setSmS1(X.SmS1.s1a)
+        if self._sm is __class__.Sm.s1:
+            if self._smS1 is __class__.SmS1.Null:
+                self.setSmS1(__class__.SmS1.s1a)
 
     def exitSmS1(self):
-        if self._smS1 == X.SmS1.s1a :
-            self.setSmS1(X.SmS1.Null)
+        self._smS1Visit += 1
+        if self._smS1 is __class__.SmS1.s1a:
+            self.setSmS1(__class__.SmS1.Null)
+            if self._deleted:
+                return
             self.stopTimeouts1aTos1bHandler()
-        elif self._smS1 == X.SmS1.s1b :
-            self.setSmS1(X.SmS1.Null)
+        elif self._smS1 is __class__.SmS1.s1b:
+            self.setSmS1(__class__.SmS1.Null)
 
     def setSmS1(self, aSmS1):
         self._smS1 = aSmS1
-        if self._sm != X.Sm.s1 and aSmS1 != X.SmS1.Null :
-            self.setSm(X.Sm.s1)
-        # entry actions and do activities
-        if self._smS1 == X.SmS1.s1a :
+        self._smS1Visit += 1
+        visit = self._smS1Visit
+        if self._sm is not __class__.Sm.s1 and aSmS1 is not __class__.SmS1.Null:
+            self.setSm(__class__.Sm.s1)
+            if self._deleted or self._smS1Visit != visit:
+                return
+        if self._smS1 is __class__.SmS1.s1a:
             self.startTimeouts1aTos1bHandler()
 
     def startTimeouts1aTos1bHandler(self):
-        self._timeouts1aTos1bHandler = self.TimedEventHandler(self, "timeouts1aTos1b", 2)
+        if self._deleted:
+            return
+        if self._timeouts1aTos1bHandler is not None:
+            self._timeouts1aTos1bHandler.stop()
+        visit = self._smS1Visit
+        delay = 2
+        if self._deleted or self._smS1Visit != visit:
+            return
+        self._timeouts1aTos1bHandler = __class__.TimedEventHandler(self, "timeouts1aTos1b", delay)
+        self._timeouts1aTos1bHandler.start()
 
     def stopTimeouts1aTos1bHandler(self):
-        self._timeouts1aTos1bHandler.stop()
-
-    class TimedEventHandler():
-        def __init__(self, aController, aTimeoutMethodName, aHowLongInSeconds):
-            from threading import Timer
-            self._timer = None
-            self._howLongInSeconds = None
-            self._timeoutMethodName = None
-            self._controller = None
-            self._controller = aController
-            self._timeoutMethodName = aTimeoutMethodName
-            self._howLongInSeconds = aHowLongInSeconds
-            self._timer = None
-            self._timer = Timer(self._howLongInSeconds, self.run)
-            self._timer.start()
-
-        def stop(self):
-            self._timer.cancel()
-
-        def run(self):
-            if "timeouts1aTos1b" == self._timeoutMethodName :
-                shouldRestart = not self._controller.timeouts1aTos1b()
-                if shouldRestart :
-                    self._controller.startTimeouts1aTos1bHandler()
-                return
+        if self._timeouts1aTos1bHandler is not None:
+            self._timeouts1aTos1bHandler.stop()
 
     def delete(self):
-        pass
-
+        self._deleted = True
+        self.stopTimeouts1aTos1bHandler()

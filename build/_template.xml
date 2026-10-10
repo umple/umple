@@ -14,6 +14,45 @@
   <local name="env" />
   <property environment="env"/>
 
+  <!-- Python 3 for checking and running generated Python, chosen as the compiler chooses it:
+       UMPLE_PYTHON if set, else python3, else python -->
+  <condition property="python.configured">
+    <and>
+      <isset property="env.UMPLE_PYTHON" />
+      <not><equals arg1="${env.UMPLE_PYTHON}" arg2="" /></not>
+    </and>
+  </condition>
+  <condition property="python.candidate" value="${env.UMPLE_PYTHON}" else="python3">
+    <isset property="python.configured" />
+  </condition>
+  <!-- Without errorproperty, the version text is captured from both streams, as the compiler reads it -->
+  <exec executable="${python.candidate}" outputproperty="python.candidate.version"
+        resultproperty="python.candidate.result" failifexecutionfails="false">
+    <arg value="--version" />
+  </exec>
+  <exec executable="python" outputproperty="python.fallback.version"
+        resultproperty="python.fallback.result" failifexecutionfails="false">
+    <arg value="--version" />
+  </exec>
+  <condition property="python.exe" value="${python.candidate}">
+    <and>
+      <equals arg1="${python.candidate.result}" arg2="0" />
+      <matches string="${python.candidate.version}" pattern="^Python 3\." />
+    </and>
+  </condition>
+  <condition property="python.exe" value="python">
+    <and>
+      <not><isset property="python.configured" /></not>
+      <equals arg1="${python.fallback.result}" arg2="0" />
+      <matches string="${python.fallback.version}" pattern="^Python 3\." />
+    </and>
+  </condition>
+  <!-- Set only for an accepted interpreter, so projects started by antcall, which inherit these
+       properties, never take a rejected candidate for a checked one -->
+  <condition property="python.found">
+    <isset property="python.exe" />
+  </condition>
+
   <condition property="myenv" value="travis">
     <and>
       <isset property="env.CI" />
@@ -234,6 +273,7 @@
          <fileset dir="${project.path}/test">
           <include name="**/${junit}.java"/>
           <include name="**/AssociationSortedWithNameSpace.java"/>
+          <include name="**/PythonAssociationSortedWithNameSpace.java"/>
           <exclude name="**/AllTests.java"/>
           <exclude name="**/vml/**"/>
         </fileset>

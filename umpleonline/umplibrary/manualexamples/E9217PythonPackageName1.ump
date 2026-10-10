@@ -1,0 +1,8 @@
+// Python packages are identifiers, so a namespace segment
+// such as 2024 cannot be imported: E9217
+generate Python;
+namespace releases.2024;
+class Release {
+  name;
+}
+// @@@skipcompile - Java packages cannot start with a digit either

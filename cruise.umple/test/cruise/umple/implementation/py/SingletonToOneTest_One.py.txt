@@ -1,64 +1,45 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-import os
 
-class Student():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Student Attributes
-    #Student Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class Student:
     def __init__(self, aNumber, aMentor):
+        self._number = aNumber
         self._mentor = None
-        self._number = None
-        self._number = aNumber
-        didAddMentor = self.setMentor(aMentor)
-        if not didAddMentor :
-            raise RuntimeError ("Unable to create student due to mentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        if not self.setMentor(aMentor):
+            raise RuntimeError("Unable to create student due to mentor. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setNumber(self, aNumber):
-        wasSet = False
         self._number = aNumber
-        wasSet = True
-        return wasSet
+        return True
 
     def getNumber(self):
         return self._number
 
-    # Code from template association_GetOne 
     def getMentor(self):
         return self._mentor
 
-    # Code from template association_SetOneToOptionalOne 
     def setMentor(self, aNewMentor):
-        wasSet = False
-        if aNewMentor is None :
-            #Unable to setMentor to null, as student must always be associated to a mentor
-            return wasSet
+        if aNewMentor is None:
+            return False
         existingStudent = aNewMentor.getStudent()
-        if not (existingStudent is None) and not self == existingStudent :
-            #Unable to setMentor, the current mentor already has a student, which would be orphaned if it were re-assigned
-            return wasSet
+        if existingStudent is not None and existingStudent is not self:
+            return False
         anOldMentor = self._mentor
         self._mentor = aNewMentor
         self._mentor.setStudent(self)
-        if not (anOldMentor is None) :
+        if anOldMentor is not None:
             anOldMentor.setStudent(None)
-        wasSet = True
-        return wasSet
+        return True
 
     def delete(self):
         existingMentor = self._mentor
         self._mentor = None
-        if not (existingMentor is None) :
+        if existingMentor is not None:
             existingMentor.setStudent(None)
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]" + str(os.linesep) + "  " + "mentor = " + ((format(id(self.getMentor()), "x")) if not (self.getMentor() is None) else "null")
+        return (super().__str__() + "["
+                + "number:" + str(self.getNumber())
+                + "]"
+                + "\n  mentor = " + ("null" if self.getMentor() is None else format(id(self.getMentor()), "x")))

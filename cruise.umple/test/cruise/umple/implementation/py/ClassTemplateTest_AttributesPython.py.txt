@@ -1,0 +1,248 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+import datetime
+
+
+class Mentor:
+    MAX = 100
+    MIN = -99
+    HELLO = "Hello"
+    nextX = 1
+    mentorsByX = {}
+    mentorsById = {}
+
+    def __init__(self, aStr, aD, aI, aId):
+        self._str = aStr
+        self._canSetStr2 = True
+        self._str2 = None
+        self._someName = None
+        self._lDoub = 0.0
+        self._lBool = False
+        self._name = "Johannes"
+        self._d = aD
+        self._t = datetime.time.fromisoformat("12:00:00")
+        self._i = aI
+        self._x = 0
+        self._id = None
+        self._p = None
+        self._q = "chicken"
+        self._r = None
+        self._s = "123"
+        self._tt = datetime.date.fromisoformat("1978-12-25")
+        self._u = datetime.time.fromisoformat("12:13:14")
+        self._v = None
+        self._w = None
+        self.resetP()
+        self.resetR()
+        self.resetV()
+        self.resetW()
+        self._x = __class__.nextX
+        __class__.nextX += 1
+        __class__.mentorsByX[self._x] = self
+        if not self.setId(aId):
+            raise RuntimeError("Cannot create due to duplicate id. See https://manual.umple.org?RE003ViolationofUniqueness.html")
+
+    def setStr2(self, aStr2):
+        if not self._canSetStr2:
+            return False
+        self._canSetStr2 = False
+        self._str2 = aStr2
+        return True
+
+    def setSomeName(self, aSomeName):
+        self._someName = aSomeName
+        return True
+
+    def setLDoub(self, aLDoub):
+        self._lDoub = aLDoub
+        return True
+
+    def setLBool(self, aLBool):
+        self._lBool = aLBool
+        return True
+
+    def setName(self, aName):
+        self._name = aName
+        return True
+
+    def setD(self, aD):
+        self._d = aD
+        return True
+
+    def setI(self, aI):
+        self._i = aI
+        return True
+
+    def setId(self, aId):
+        anOldId = self._id
+        if anOldId is not None and anOldId == aId:
+            return True
+        if __class__.hasWithId(aId):
+            return False
+        self._id = aId
+        if anOldId is not None:
+            __class__.mentorsById.pop(anOldId, None)
+        __class__.mentorsById[aId] = self
+        return True
+
+    def setP(self, aP):
+        self._p = aP
+        return True
+
+    def resetP(self):
+        self._p = self.getDefaultP()
+        return True
+
+    def setQ(self, aQ):
+        self._q = aQ
+        return True
+
+    def setR(self, aR):
+        self._r = aR
+        return True
+
+    def resetR(self):
+        self._r = self.getDefaultR()
+        return True
+
+    def setTt(self, aTt):
+        self._tt = aTt
+        return True
+
+    def setU(self, aU):
+        self._u = aU
+        return True
+
+    def setV(self, aV):
+        self._v = aV
+        return True
+
+    def resetV(self):
+        self._v = self.getDefaultV()
+        return True
+
+    def setW(self, aW):
+        self._w = aW
+        return True
+
+    def resetW(self):
+        self._w = self.getDefaultW()
+        return True
+
+    def getStr(self):
+        return self._str
+
+    def getStr2(self):
+        return self._str2
+
+    def getSomeName(self):
+        return self._someName
+
+    def getLDoub(self):
+        return self._lDoub
+
+    def getLBool(self):
+        return self._lBool
+
+    def getName(self):
+        return self._name
+
+    def getD(self):
+        return self._d
+
+    def getI(self):
+        return self._i
+
+    def getDerivedTwiceI(self):
+        return self._i * 2
+
+    def getId(self):
+        return self._id
+
+    @staticmethod
+    def getWithId(aId):
+        return __class__.mentorsById.get(aId)
+
+    @staticmethod
+    def hasWithId(aId):
+        return __class__.getWithId(aId) is not None
+
+    def getP(self):
+        return self._p
+
+    def getDefaultP(self):
+        return "robot"
+
+    def getQ(self):
+        return self._q
+
+    def getR(self):
+        return self._r
+
+    def getDefaultR(self):
+        return ""
+
+    def getS(self):
+        return self._s
+
+    def getTt(self):
+        return self._tt
+
+    def getU(self):
+        return self._u
+
+    def getV(self):
+        return self._v
+
+    def getDefaultV(self):
+        return datetime.date.fromisoformat("1978-12-26")
+
+    def getW(self):
+        return self._w
+
+    def getDefaultW(self):
+        return datetime.time.fromisoformat("12:59:59")
+
+    def getX(self):
+        return self._x
+
+    @staticmethod
+    def getWithX(aX):
+        return __class__.mentorsByX.get(aX)
+
+    @staticmethod
+    def hasWithX(aX):
+        return __class__.getWithX(aX) is not None
+
+    def isLBool(self):
+        return self._lBool
+
+    def delete(self):
+        if __class__.mentorsByX.get(self._x) is self:
+            del __class__.mentorsByX[self._x]
+        if __class__.mentorsById.get(self._id) is self:
+            del __class__.mentorsById[self._id]
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "x:" + str(self.getX()) + ","
+                + "str:" + str(self.getStr()) + ","
+                + "str2:" + str(self.getStr2()) + ","
+                + "someName:" + str(self.getSomeName()) + ","
+                + "lDoub:" + str(self.getLDoub()) + ","
+                + "lBool:" + str(self.getLBool()) + ","
+                + "name:" + str(self.getName()) + ","
+                + "i:" + str(self.getI()) + ","
+                + "derivedTwiceI:" + str(self.getDerivedTwiceI()) + ","
+                + "id:" + str(self.getId()) + ","
+                + "p:" + str(self.getP()) + ","
+                + "q:" + str(self.getQ()) + ","
+                + "r:" + str(self.getR()) + ","
+                + "s:" + str(self.getS())
+                + "]"
+                + "\n  d=" + ("null" if self.getD() is None else "this" if self.getD() is self else str(self.getD()).replace("  ", "    "))
+                + "\n  tt=" + ("null" if self.getTt() is None else "this" if self.getTt() is self else str(self.getTt()).replace("  ", "    "))
+                + "\n  u=" + ("null" if self.getU() is None else "this" if self.getU() is self else str(self.getU()).replace("  ", "    "))
+                + "\n  v=" + ("null" if self.getV() is None else "this" if self.getV() is self else str(self.getV()).replace("  ", "    "))
+                + "\n  w=" + ("null" if self.getW() is None else "this" if self.getW() is self else str(self.getW()).replace("  ", "    ")))

@@ -1,0 +1,30 @@
+use association_Guards.ump;
+
+class UmpleToPython {
+    // Adding at a position and moving to a position. The index is clamped as in Java; the object is
+    // found by identity. Moving reorders a key member, so it is refused once the hash is cached, as
+    // adding is. Like Java's, adding calls the add taking the object (objectAdd), never a factory.
+    association_AddIndexControlFunctions <<!<</*association_AddIndexControlFunctions*/>>
+
+    def <<=gen.translate("addAtMethod", av)>>(self, <<=parameter>>, index):
+        if not self.<<=objectAdd>>(<<=parameter>>):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.<<=gen.translate("numberOfMethod", av)>>():
+            index = self.<<=gen.translate("numberOfMethod", av)>>() - 1
+        del <<=field>>[<<=gen.identityIndex(field, parameter)>>]
+        <<=field>>.insert(index, <<=parameter>>)
+        return True
+
+    def <<=gen.translate("addOrMoveAtMethod", av)>>(self, <<=parameter>>, index):<<@ UmpleToPython.association_KeyGuard >>
+        if not <<=gen.containsIdentity(field, parameter)>>:
+            return self.<<=gen.translate("addAtMethod", av)>>(<<=parameter>>, index)
+        if index < 0:
+            index = 0
+        if index > self.<<=gen.translate("numberOfMethod", av)>>():
+            index = self.<<=gen.translate("numberOfMethod", av)>>() - 1
+        del <<=field>>[<<=gen.identityIndex(field, parameter)>>]
+        <<=field>>.insert(index, <<=parameter>>)
+        return True!>>
+}

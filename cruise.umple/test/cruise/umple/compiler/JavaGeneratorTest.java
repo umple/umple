@@ -1239,8 +1239,10 @@ public class JavaGeneratorTest
     Assert.assertEquals("entry",onState.getAction(1).getActionType());
     Assert.assertEquals("if (bulbOn == BulbOn.Null) { setBulbOn(BulbOn.Normal); }",onState.getAction(1).getActionCode());
     
+    // Every action preparation added is removed, so it cannot reach a later generator
     GeneratorHelper.postpare(model);
-    Assert.assertEquals(1,onState.numberOfActions());
+    Assert.assertEquals(0,onState.numberOfActions());
+    Assert.assertEquals(0,normalState.numberOfActions());
   }  
 
   @Test
@@ -1299,12 +1301,12 @@ public class JavaGeneratorTest
     Assert.assertEquals("if (bulbOnB == BulbOnB.Null) { setBulbOnB(BulbOnB.Normal2); }",onState.getAction(3).getActionCode());
     
     GeneratorHelper.postpare(model);
-    Assert.assertEquals(2,onState.numberOfActions());
+    Assert.assertEquals(0,onState.numberOfActions());
     Assert.assertEquals(0,onState.numberOfTransitions());
 //    System.out.println("Found" + normalState.getTransition(0).getFromState().getName() + ":" + normalState.getTransition(0).getNextState().getName());
-    Assert.assertEquals(1,normalState.numberOfActions());
+    Assert.assertEquals(0,normalState.numberOfActions());
     Assert.assertEquals(0,normalState.numberOfTransitions());
-    Assert.assertEquals(1,normalState2.numberOfActions());
+    Assert.assertEquals(0,normalState2.numberOfActions());
     Assert.assertEquals(0,normalState2.numberOfTransitions());
     Assert.assertEquals(0,nestedSm.getEvents().size());
     Assert.assertEquals(0,nestedSm2.getEvents().size());

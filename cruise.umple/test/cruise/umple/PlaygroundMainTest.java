@@ -60,6 +60,28 @@ public class PlaygroundMainTest
     SampleFileWriter.destroy(pathToBuild + "/myfile");
     SampleFileWriter.destroy("One.java");
     SampleFileWriter.destroy("Two.java");
+    for (String language : MAIN_LIST_LANGUAGES)
+    {
+      SampleFileWriter.destroy(language + "MainClasses.txt");
+    }
+  }
+
+  private static final String[] MAIN_LIST_LANGUAGES = {"Java", "Python"};
+
+  // A main class list left by an earlier run, of any target, would launch the wrong program
+  @Test
+  public void MainClassListsOfEarlierRunsAreDeleted()
+  {
+    SampleFileWriter.createFile("myfile.ump", "class One{}");
+    for (String language : MAIN_LIST_LANGUAGES)
+    {
+      SampleFileWriter.createFile(language + "MainClasses.txt", "Old");
+    }
+    PlaygroundMain.main(new String[] {"-generate", "Yuml", "myfile.ump"});
+    for (String language : MAIN_LIST_LANGUAGES)
+    {
+      Assert.assertFalse(language, new File(language + "MainClasses.txt").exists());
+    }
   }
   
   @Test

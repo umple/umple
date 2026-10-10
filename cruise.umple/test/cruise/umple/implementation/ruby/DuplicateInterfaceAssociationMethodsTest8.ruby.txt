@@ -50,110 +50,38 @@ class First < I
   end
 
   def addSecond (aSecond)
-    result = addSecond_original(aSecond)
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
-    return result
-  end
-
-  def addSecond_original(aSecond)
-
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
     
   end
 
   def getSeconds ()
-    result = getSeconds_original()
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
-    return result
-  end
-
-  def getSeconds_original()
-
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
     
   end
 
   def setSecond (aSecond)
-    result = setSecond_original(aSecond)
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
-    return result
-  end
-
-  def setSecond_original(aSecond)
-
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
     
   end
 
   def setSeconds (newSeconds)
-    result = setSeconds_original(newSeconds)
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
-    return result
-  end
-
-  def setSeconds_original(newSeconds)
-
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
     
   end
 
   def numberOfSeconds ()
-    result = numberOfSeconds_original()
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
-    return result
-  end
-
-  def numberOfSeconds_original()
-
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
     
   end
 
   def hasSeconds ()
-    result = hasSeconds_original()
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
-    return result
-  end
-
-  def hasSeconds_original()
-
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
     
   end
 
   def indexOfSecond (second)
-    result = indexOfSecond_original(second)
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
-    return result
-  end
-
-  def indexOfSecond_original(second)
-
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
     
   end
 
   def isNumberOfSecondsValid ()
-    result = isNumberOfSecondsValid_original()
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
-    return result
-  end
-
-  def isNumberOfSecondsValid_original()
-
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
     
   end
 
   def removeSecond (second)
-    result = removeSecond_original(second)
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
-    return result
-  end
-
-  def removeSecond_original(second)
-
-    raise "Mandatory relationship with second not satisfied" if (@initialized and !@deleted and @second.nil?)
     
   end
 

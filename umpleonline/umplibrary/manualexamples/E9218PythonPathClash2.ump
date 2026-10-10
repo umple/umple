@@ -1,0 +1,11 @@
+// One spelling of the namespace gives one package
+generate Python;
+namespace shop;
+class Item {
+  name;
+}
+
+namespace shop;
+class Order {
+  Integer number;
+}

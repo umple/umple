@@ -65,6 +65,7 @@ import cruise.umple.core.GenerationCallback.GenerationLoopElement;
 import cruise.umple.core.GenerationValueAnnotation;
 import cruise.umple.cpp.gen.Visibilities;
 import cruise.umple.cpp.util.UmpleCPPGenerationUtil;
+import cruise.umple.cpp.utils.CPPCommonConstants;
 import cruise.umple.cpp.utils.StringUtil;
 import cruise.umple.modeling.handlers.IModelingElementDefinitions;
 import cruise.umple.parser.Position;
@@ -391,16 +392,13 @@ public class UmpleModelGenerationPolicy{
 	@GenerationValueAnnotation(fieldName= IModelingElementDefinitions.CONSTRAINTS)
 	public static List<Precondition> constraints(@GenerationBaseElement Method element,
 			@GenerationLoopElement(id= {IModelingElementDefinitions.CLASSES_PROCESSOR/*, IModelingElementDefinitions.INTERFACES_PROCESSOR*/}) UmpleClass parent){
-		List<Precondition> constraints= new ArrayList<Precondition>();
 		if(parent== null){
-			return constraints;
+			return new ArrayList<Precondition>();
 		}
-		for(Precondition preCondition: parent.getPreConds()){
-			if(element.equals(preCondition.getMethod())){
-				constraints.add(preCondition);
-			}
-		}
-		return constraints;
+		// The preconditions written with the body getBody emits, as it selects that body (#2250)
+		String code = element.getMethodBody()== null? null: element.getMethodBody().getCodeblock().getCode(CPPCommonConstants.CPP_LANGUAGE);
+		String language= code!= null&& !code.isEmpty()? CPPCommonConstants.CPP_LANGUAGE: CodeBlock.languageUsed;
+		return parent.getMethodPreconditions(element, language);
 	}
 	
 	private static void findAttributeInConstraints(ConstraintVariable constraint, Attribute attribute, List<ConstraintAttribute> constraints){

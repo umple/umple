@@ -2,66 +2,52 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class C():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #C Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class C:
+    def __init__(self, aB):
+        self._myD = None
+        self._b = None
+        from example.D import D
+        self._myD = D.alternateConstructor(self)
+        if not self.setB(aB):
+            raise RuntimeError("Unable to create myC due to b. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+
     @classmethod
     def alternateConstructor(cls, aMyD, aB):
         self = cls.__new__(cls)
-        self._b = None
-        self._myD = None
-        if aMyD is None or not (aMyD.getC() is None) :
-            raise RuntimeError ("Unable to create C due to aMyD. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
-        self._myD = aMyD
-        didAddB = self.setB(aB)
-        if not didAddB :
-            raise RuntimeError ("Unable to create myC due to b. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        __class__._alternateInit(self, aMyD, aB)
         return self
 
-    def __init__(self, aB):
-        from example.D import D
-        self._b = None
+    def _alternateInit(self, aMyD, aB):
         self._myD = None
-        self._myD = D.alternateConstructor(self)
-        didAddB = self.setB(aB)
-        if not didAddB :
-            raise RuntimeError ("Unable to create myC due to b. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        self._b = None
+        if aMyD is None or aMyD.getC() is not None:
+            raise RuntimeError("Unable to create C due to aMyD. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        self._myD = aMyD
+        if not self.setB(aB):
+            raise RuntimeError("Unable to create myC due to b. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
-    #------------------------
-    # INTERFACE
-    #------------------------
-    # Code from template association_GetOne 
     def getMyD(self):
         return self._myD
 
-    # Code from template association_GetOne 
     def getB(self):
         return self._b
 
-    # Code from template association_SetOneToMany 
     def setB(self, aB):
-        wasSet = False
-        if aB is None :
-            return wasSet
+        if aB is None:
+            return False
         existingB = self._b
         self._b = aB
-        if not (existingB is None) and not existingB == aB :
+        if existingB is not None and existingB is not aB:
             existingB.removeMyC(self)
         self._b.addMyC(self)
-        wasSet = True
-        return wasSet
+        return True
 
     def delete(self):
         existingMyD = self._myD
         self._myD = None
-        if not (existingMyD is None) :
+        if existingMyD is not None:
             existingMyD.delete()
         placeholderB = self._b
         self._b = None
-        if not (placeholderB is None) :
+        if placeholderB is not None:
             placeholderB.removeMyC(self)

@@ -1,0 +1,7 @@
+// With a Python body the method is generated for Python too
+generate Python;
+class Book {
+  title;
+  String describe() Java { return "Book " + getTitle(); }
+    Python { return "Book " + self.getTitle() }
+}

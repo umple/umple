@@ -1,0 +1,14 @@
+// A guard on an entry or exit action guards every body alternative, not only the untagged one
+class X {
+  Integer n = 0;
+  sm {
+    s1 {
+      entry [n > 1] / { n = 1; } Java { n = 2; } Python { self.n = 3 }
+      exit [n < 9] / Java, Php { n = 4; }
+      e -> s2;
+    }
+    s2 {
+      entry / { n = 5; }
+    }
+  }
+}

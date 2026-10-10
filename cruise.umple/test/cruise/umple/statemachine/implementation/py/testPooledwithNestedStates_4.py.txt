@@ -1,0 +1,332 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+import threading
+
+
+class X:
+    class Sm1(Enum):
+        s1 = "s1"
+        s2 = "s2"
+
+        def __str__(self):
+            return self.value
+
+    class Sm1S1(Enum):
+        Null = "Null"
+        s1a = "s1a"
+        s1b = "s1b"
+
+        def __str__(self):
+            return self.value
+
+    class Sm1S2(Enum):
+        Null = "Null"
+        s2a = "s2a"
+        s2b = "s2b"
+
+        def __str__(self):
+            return self.value
+
+    class Sm1S2S2b(Enum):
+        Null = "Null"
+        s2b1 = "s2b1"
+        s2b2 = "s2b2"
+
+        def __str__(self):
+            return self.value
+    class MessageQueue:
+        def __init__(self, ready):
+            self._calls = []
+            self._ready = ready
+            self._started = False
+            self._stopped = False
+            self._worker = None
+            self._condition = threading.Condition()
+        def start(self):
+            with self._condition:
+                self._started = True
+                self._wake()
+        def put(self, call, *args):
+            with self._condition:
+                self._calls.append((call, args))
+                self._wake()
+        def stop(self):
+            with self._condition:
+                self._stopped = True
+                self._condition.notify()
+        def _wake(self):
+            if self._started and not self._stopped and self._worker is None:
+                self._worker = threading.Thread(target=self._run, daemon=False)
+                self._worker.start()
+            if self._worker is not None:
+                self._worker.isIdle = False
+            self._condition.notify()
+        def _run(self):
+            while True:
+                with self._condition:
+                    call = None
+                    while not self._stopped and call is None:
+                        call = self._next()
+                        self._worker.isIdle = call is None
+                        if call is None and self._programIdle():
+                            self._worker = None
+                            return
+                        if call is None:
+                            self._condition.wait(0.25)
+                    if call is None:
+                        return
+                call[0](*call[1])
+        def _next(self):
+            for i, call in enumerate(self._calls):
+                if self._ready is None or self._ready(call[0]):
+                    return self._calls.pop(i)
+            return None
+        def _programIdle(self):
+            ended = (threading.main_thread(), threading.current_thread())
+            return not ended[0].is_alive() and all(t in ended or t.daemon or getattr(t, "isIdle", False)
+                for t in threading.enumerate())
+
+    def __canProcess(self, call):
+        name = call.__name__
+        return (self._sm1 is __class__.Sm1.s1 and name in ("_e",)
+            or self._sm1 is __class__.Sm1.s2 and name in ("_e",)
+            or self._sm1S1 is __class__.Sm1S1.s1a and name in ("_f", "_g",)
+            or self._sm1S1 is __class__.Sm1S1.s1b and name in ("_h", "_i", "_k",)
+            or self._sm1S2 is __class__.Sm1S2.s2a and name in ("_i", "_j",)
+            or self._sm1S2 is __class__.Sm1S2.s2b and name in ("_h", "_k",)
+            or self._sm1S2S2b is __class__.Sm1S2S2b.s2b1 and name in ("_m",)
+            or self._sm1S2S2b is __class__.Sm1S2S2b.s2b2 and name in ("_m",))
+
+    def __init__(self):
+        self.__eventQueue = __class__.MessageQueue(self.__canProcess)
+        self._sm1 = None
+        self._sm1S1 = None
+        self._sm1S2 = None
+        self._sm1S2Visit = 0
+        self._sm1S2S2b = None
+        self._deleted = False
+        self.setSm1S1(__class__.Sm1S1.Null)
+        self.setSm1S2(__class__.Sm1S2.Null)
+        self.setSm1S2S2b(__class__.Sm1S2S2b.Null)
+        self.setSm1(__class__.Sm1.s1)
+        self.__eventQueue.start()
+
+    def getSm1FullName(self):
+        answer = str(self._sm1)
+        if self._sm1S1 is not __class__.Sm1S1.Null:
+            answer += "." + str(self._sm1S1)
+        if self._sm1S2 is not __class__.Sm1S2.Null:
+            answer += "." + str(self._sm1S2)
+        if self._sm1S2S2b is not __class__.Sm1S2S2b.Null:
+            answer += "." + str(self._sm1S2S2b)
+        return answer
+
+    def getSm1(self):
+        return self._sm1
+
+    def getSm1S1(self):
+        return self._sm1S1
+
+    def getSm1S2(self):
+        return self._sm1S2
+
+    def getSm1S2S2b(self):
+        return self._sm1S2S2b
+
+    def _e(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm1 = self._sm1
+        if aSm1 is __class__.Sm1.s1:
+            self.exitSm1()
+            self.setSm1(__class__.Sm1.s2)
+            wasEventProcessed = True
+        elif aSm1 is __class__.Sm1.s2:
+            self.exitSm1()
+            self.setSm1(__class__.Sm1.s1)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def e(self):
+        self.__eventQueue.put(self._e)
+
+    def _f(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm1S1 = self._sm1S1
+        if aSm1S1 is __class__.Sm1S1.s1a:
+            self.exitSm1()
+            self.setSm1S2(__class__.Sm1S2.s2b)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def f(self):
+        self.__eventQueue.put(self._f)
+
+    def _g(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm1S1 = self._sm1S1
+        if aSm1S1 is __class__.Sm1S1.s1a:
+            self.exitSm1S1()
+            self.setSm1S1(__class__.Sm1S1.s1a)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def g(self):
+        self.__eventQueue.put(self._g)
+
+    def _h(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm1S1 = self._sm1S1
+        aSm1S2 = self._sm1S2
+        if aSm1S1 is __class__.Sm1S1.s1b:
+            self.exitSm1S1()
+            self.setSm1S1(__class__.Sm1S1.s1a)
+            wasEventProcessed = True
+        if aSm1S2 is __class__.Sm1S2.s2b:
+            self.exitSm1S2()
+            self.setSm1S2(__class__.Sm1S2.s2a)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def h(self):
+        self.__eventQueue.put(self._h)
+
+    def _i(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm1S1 = self._sm1S1
+        aSm1S2 = self._sm1S2
+        if aSm1S1 is __class__.Sm1S1.s1b:
+            self.exitSm1()
+            self.setSm1S2(__class__.Sm1S2.s2b)
+            wasEventProcessed = True
+        if aSm1S2 is __class__.Sm1S2.s2a:
+            self.exitSm1S2()
+            self.setSm1S2(__class__.Sm1S2.s2b)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def i(self):
+        self.__eventQueue.put(self._i)
+
+    def _k(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm1S1 = self._sm1S1
+        aSm1S2 = self._sm1S2
+        if aSm1S1 is __class__.Sm1S1.s1b:
+            self.exitSm1()
+            self.setSm1(__class__.Sm1.s2)
+            wasEventProcessed = True
+        if aSm1S2 is __class__.Sm1S2.s2b:
+            self.exitSm1()
+            self.setSm1(__class__.Sm1.s1)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def k(self):
+        self.__eventQueue.put(self._k)
+
+    def _j(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm1S2 = self._sm1S2
+        if aSm1S2 is __class__.Sm1S2.s2a:
+            self.exitSm1()
+            self.setSm1S1(__class__.Sm1S1.s1b)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def j(self):
+        self.__eventQueue.put(self._j)
+
+    def _m(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSm1S2S2b = self._sm1S2S2b
+        if aSm1S2S2b is __class__.Sm1S2S2b.s2b1:
+            self.exitSm1S2S2b()
+            self.setSm1S2S2b(__class__.Sm1S2S2b.s2b2)
+            wasEventProcessed = True
+        elif aSm1S2S2b is __class__.Sm1S2S2b.s2b2:
+            self.exitSm1S2S2b()
+            self.setSm1S2S2b(__class__.Sm1S2S2b.s2b1)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def m(self):
+        self.__eventQueue.put(self._m)
+
+    def exitSm1(self):
+        if self._sm1 is __class__.Sm1.s1:
+            self.exitSm1S1()
+        elif self._sm1 is __class__.Sm1.s2:
+            self.exitSm1S2()
+
+    def setSm1(self, aSm1):
+        self._sm1 = aSm1
+        if self._sm1 is __class__.Sm1.s1:
+            if self._sm1S1 is __class__.Sm1S1.Null:
+                self.setSm1S1(__class__.Sm1S1.s1a)
+        elif self._sm1 is __class__.Sm1.s2:
+            if self._sm1S2 is __class__.Sm1S2.Null:
+                self.setSm1S2(__class__.Sm1S2.s2a)
+
+    def exitSm1S1(self):
+        if self._sm1S1 is __class__.Sm1S1.s1a:
+            self.setSm1S1(__class__.Sm1S1.Null)
+        elif self._sm1S1 is __class__.Sm1S1.s1b:
+            self.setSm1S1(__class__.Sm1S1.Null)
+
+    def setSm1S1(self, aSm1S1):
+        self._sm1S1 = aSm1S1
+        if self._sm1 is not __class__.Sm1.s1 and aSm1S1 is not __class__.Sm1S1.Null:
+            self.setSm1(__class__.Sm1.s1)
+
+    def exitSm1S2(self):
+        self._sm1S2Visit += 1
+        if self._sm1S2 is __class__.Sm1S2.s2a:
+            self.setSm1S2(__class__.Sm1S2.Null)
+        elif self._sm1S2 is __class__.Sm1S2.s2b:
+            self.exitSm1S2S2b()
+            self.setSm1S2(__class__.Sm1S2.Null)
+
+    def setSm1S2(self, aSm1S2):
+        self._sm1S2 = aSm1S2
+        self._sm1S2Visit += 1
+        visit = self._sm1S2Visit
+        if self._sm1 is not __class__.Sm1.s2 and aSm1S2 is not __class__.Sm1S2.Null:
+            self.setSm1(__class__.Sm1.s2)
+            if self._sm1S2Visit != visit:
+                return
+        if self._sm1S2 is __class__.Sm1S2.s2b:
+            if self._sm1S2S2b is __class__.Sm1S2S2b.Null:
+                self.setSm1S2S2b(__class__.Sm1S2S2b.s2b1)
+
+    def exitSm1S2S2b(self):
+        if self._sm1S2S2b is __class__.Sm1S2S2b.s2b1:
+            self.setSm1S2S2b(__class__.Sm1S2S2b.Null)
+        elif self._sm1S2S2b is __class__.Sm1S2S2b.s2b2:
+            self.setSm1S2S2b(__class__.Sm1S2S2b.Null)
+
+    def setSm1S2S2b(self, aSm1S2S2b):
+        self._sm1S2S2b = aSm1S2S2b
+        if self._sm1S2 is not __class__.Sm1S2.s2b and aSm1S2S2b is not __class__.Sm1S2S2b.Null:
+            self.setSm1S2(__class__.Sm1S2.s2b)
+
+    def delete(self):
+        self._deleted = True
+        self.__eventQueue.stop()

@@ -1,0 +1,65 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class Student:
+    def __init__(self, aId):
+        self._id = aId
+        self._Profs = []
+
+    def setId(self, aId):
+        self._id = aId
+        return True
+
+    def getId(self):
+        return self._id
+
+    def getProf(self, index):
+        return self._Profs[index]
+
+    def getProfs(self):
+        return tuple(self._Profs)
+
+    def numberOfProfs(self):
+        return len(self._Profs)
+
+    def hasProfs(self):
+        return len(self._Profs) > 0
+
+    def indexOfProf(self, aProf):
+        return next((i for i, x in enumerate(self._Profs) if x is aProf), -1)
+
+    @staticmethod
+    def minimumNumberOfProfs():
+        return 0
+
+    def addProf(self, aProf):
+        if any(x is aProf for x in self._Profs):
+            return False
+        self._Profs.append(aProf)
+        if aProf.indexOfMyStudent(self) == -1 and not aProf.addMyStudent(self):
+            del self._Profs[next((i for i, x in enumerate(self._Profs) if x is aProf), -1)]
+            return False
+        self._Profs.sort(key=lambda x: x.getName())
+        return True
+
+    def removeProf(self, aProf):
+        oldIndex = next((i for i, x in enumerate(self._Profs) if x is aProf), -1)
+        if oldIndex == -1:
+            return False
+        del self._Profs[oldIndex]
+        if aProf.indexOfMyStudent(self) != -1 and not aProf.removeMyStudent(self):
+            self._Profs.insert(oldIndex, aProf)
+            return False
+        return True
+
+    def delete(self):
+        copyOfProfs = tuple(self._Profs)
+        self._Profs.clear()
+        for aProf in copyOfProfs:
+            aProf.removeMyStudent(self)
+
+    def __str__(self):
+        return (super().__str__() + "["
+                + "id:" + str(self.getId())
+                + "]")

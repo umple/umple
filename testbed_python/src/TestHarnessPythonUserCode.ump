@@ -1,0 +1,852 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+Models for the runtime tests of user code in generated Python (testbed_python/test/usercode):
+native method bodies, overload dispatch, contracts and injections, main and extra code.
+
+*/
+
+namespace cruise.usercode.test;
+
+// Native bodies keep their meaning whatever indentation, strings and comments they use.
+class UcNativeBodies
+{
+  int nested(int n) Python {
+    total = 0
+    for i in range(n):
+        if i % 2 == 0:
+            total += i
+        else:
+            total -= 1
+    return total
+  }
+
+  String tabs() Python {
+	value = "t"
+	if value:
+		value += "abs"
+	return value
+  }
+
+  String tripleQuoted() Python {
+    text = """first
+      second
+  third"""
+    return text
+  }
+
+  String backslashString() Python {
+    text = 'one\
+    two'
+    return text
+  }
+
+  String rawAndFormatted() Python {
+    raw = r'a\
+  b'
+    word = "x"
+    formatted = f"{word}\
+  y"
+    return raw + "|" + formatted
+  }
+
+  int columnZeroComment() Python {
+    x = 1
+# a comment at column zero
+    return x + 1
+  }
+
+  int bracketsAndContinuation() Python {
+    values = [1,
+2,
+        3]
+    total = 1 + \
+2
+    return sum(values) + total
+  }
+
+  int zeroIndent() Python {
+x = 3
+if x:
+    x += 1
+return x
+  }
+
+  int blockIsWholeBody(int x) Python {
+    if x > 0:
+        return 1
+    else:
+        return -1
+  }
+
+  void emptyBody() Python {}
+
+  void commentOnly() Python {
+    # nothing to do
+  }
+
+  int oneLine() Python { return 7 }
+
+  static int twice(int in) Python { return input * 2 }
+
+  public static int increment(int x) Python { return x + 1 }
+
+  String untaggedPython() {
+    return "untagged"
+  }
+
+  String javaOnly() Java { return "java"; }
+
+  LIMIT = 5
+  def helper(self):
+      return self.LIMIT * 2
+}
+
+// Abstract methods are abstract stubs; concrete subclasses provide them.
+class UcShape
+{
+  abstract;
+  abstract Double area();
+  String describe() Python { return "area " + str(self.area()) }
+}
+
+class UcSquare
+{
+  isA UcShape;
+  Double area() Python { return 4.0 }
+}
+
+// Overloaded methods are dispatched by the arguments given, positionally or by keyword.
+class Overloads
+{
+  String describe(Integer value) Python { return "int " + str(value) }
+  String describe(String value) Python { return "text " + str(value) }
+  String describe(Double value, Boolean flag) Python { return "pair " + str(value) + " " + str(flag) }
+  String describe(Overloads other) Python { return "object" }
+  String describe() Python { return "nothing" }
+  static int combine(int a) Python { return a }
+  static int combine(int a, int b) Python { return a + b }
+  int count(int... values) Python { return len(values) }
+  int count(String text) Python { return -1 }
+  int total(int... values) Python { return sum(values) }
+}
+
+// Pre- and postconditions and before and after injections wrap Python methods.
+class UcContracts
+{
+  int half(int x) Python {
+    [pre: x > 0]
+    [post: result < x]
+    return x // 2
+  }
+
+  int grow(int x) Python {
+    [post: result > x]
+    return x + x
+  }
+
+  static int bounded(int x) Python {
+    [pre: x < 100]
+    return x
+  }
+
+  void check(String name) Python {
+    [pre: name != null]
+  }
+
+  int square(int x) Python {
+    if x < 0:
+        return 0
+    return x * x
+  }
+
+  int evens(int limit) Python {
+    [pre: limit >= 0]
+    for i in range(0, limit, 2):
+        yield i
+  }
+
+  before square Python { self.calls.append("before " + str(x)) }
+  after square Python { self.calls.append("after") }
+
+  calls = []
+}
+
+// A subclass wraps the method its parent wraps; each wrapper calls its own class's body.
+class Base
+{
+  int m(int x) Python {
+    [pre: x >= 0]
+    self.calls.append("base")
+    return x + 1
+  }
+
+  calls = []
+}
+
+class Derived
+{
+  isA Base;
+
+  int m(int x) Python {
+    [pre: x < 10]
+    self.calls.append("derived")
+    return super().m(x) * 2
+  }
+}
+
+// A precondition reads a constant the class inherits from a grandparent its module does not import.
+class LimitBase
+{
+  const Integer LIMIT = 10;
+}
+
+class LimitMiddle
+{
+  isA LimitBase;
+}
+
+class Limited
+{
+  isA LimitMiddle;
+
+  int below(int x) Python {
+    [pre: x < LIMIT]
+    return x
+  }
+}
+
+// A subclass overloads the methods its parent overloads; each implementation calls super().
+class Greeter
+{
+  String greet(int n) Python { return "hello " + str(n) }
+  String greet(String name) Python { return "hello " + name }
+}
+
+class LoudGreeter
+{
+  isA Greeter;
+  String greet(int n) Python { return super().greet(n) + "!" }
+  String greet(String name) Python { return super().greet(name) + "!" }
+}
+
+// Enumerations in overloads, a parameter named like its class, and Java's list, string and integer
+// operations in contracts.
+class Checks
+{
+  enum Color { Red, Blue }
+
+  String paint(Color c) Python { return "color " + str(c) }
+  String paint(int n) Python { return "number" }
+
+  int twice(int Checks) Python {
+    [pre: Checks > 0]
+    return Checks * 2
+  }
+
+  int sizes(String[] values, String name) Python {
+    [pre: values cardinality > 0]
+    [pre: values has all "a", "b"]
+    [pre: name.length() > 1]
+    return len(values) + len(name)
+  }
+
+  long exact(long x) Python {
+    [pre: (x / 1) == x]
+    return x
+  }
+
+  int notOddPositive(int x) Python {
+    [pre: (x % 2) != 1]
+    return x
+  }
+}
+
+// Parameters named like the wrapper's temporary, identity of model objects returned by calls, and a
+// name the class inherits.
+class AlwaysEqual
+{
+  def __eq__(self, other):
+      return True
+  def __hash__(self):
+      return 0
+}
+
+class Pair
+{
+  AlwaysEqual one;
+  AlwaysEqual two;
+
+  int distinct() Python {
+    [pre: getOne() != getTwo()]
+    return 1
+  }
+
+  int sum(int result, int result_) Python { return result + result_ }
+
+  after sum Python { self.seen = (result, result_) }
+}
+
+class Counted
+{
+  Integer count = 5;
+}
+
+class CountedChild
+{
+  isA Counted;
+
+  int positive() Python {
+    [pre: count > 0]
+    return 1
+  }
+}
+
+// Contracts use the types the model declares for calls: an int getter or method divides and takes
+// the remainder as in Java, evaluated once, also when inherited; model objects reached through a
+// chain of getters compare by identity.
+class ContractCalls
+{
+  Integer n = -3;
+  Integer bumps = 0;
+
+  int bump() Python {
+    self.setBumps(self.getBumps() + 1)
+    return self.getN()
+  }
+
+  int half() Python {
+    [pre: (getN() / 2) == -1]
+    return 7
+  }
+
+  int remainder() Python {
+    [pre: (getN() % 2) == -1]
+    return 7
+  }
+
+  int bumpedRemainder() Python {
+    [pre: (bump() % 2) == -1]
+    return 7
+  }
+}
+
+class ContractCallsChild
+{
+  isA ContractCalls;
+
+  int inherited() Python {
+    [pre: (getN() / 2) == -1]
+    [pre: (bump() % 2) == -1]
+    return 7
+  }
+}
+
+class KeyedPart
+{
+  Integer id;
+  key { id }
+}
+
+class PartBox
+{
+  KeyedPart part;
+}
+
+class PartBoxPair
+{
+  PartBox one;
+  PartBox two;
+
+  int distinct() Python {
+    [pre: getOne().getPart() != getTwo().getPart()]
+    return 7
+  }
+}
+
+// A Python main is launched with the full sys.argv when the module runs as a program.
+class Launcher
+{
+  public static void main(String[] args) Python {
+    print("arguments", len(args), args[1:])
+  }
+}
+
+// Running a main's module as a program registers it under its module name, so a module that imports
+// the main's class gets the running class rather than a second copy.
+class IdentityMain
+{
+  public static void main(String[] args) Python {
+    from cruise.usercode.test.IdentityBox import IdentityBox
+    print(IdentityBox().pick(IdentityMain()))
+  }
+}
+
+class IdentityBox
+{
+  String pick(IdentityMain value) Python { return "main" }
+  String pick(String value) Python { return "string" }
+}
+
+// A boxed parameter takes null, as in Java; a primitive one does not.
+class BoxedNull
+{
+  String m(Integer value) Python { return "null" if value is None else "value" }
+  String m(Integer value, int extra) Python { return "two" }
+}
+
+// Method text inside a string is data: it neither stands for the method nor replaces the generated
+// setter or __str__.
+class TextualSetter
+{
+  Integer x;
+  String example() Python {
+      return """
+
+    def setX(self, label):
+        return "custom"
+"""
+  }
+  String setX(String label) Python { return "custom" }
+}
+
+class TextualStr
+{
+  name;
+  def helper(self):
+      return """example
+    def __str__(self):
+        return 'text'
+"""
+}
+
+// A subclass method named like inherited ones adds an overload: calls that match the inherited ones
+// still reach them, so the association stays linked at both ends.
+class Crate
+{
+  0..1 crate -- * CrateItem items;
+}
+
+class CrateItem
+{
+}
+
+class LabelCrate
+{
+  isA Crate;
+  Boolean addItem(String label) Python { return label == "label" }
+}
+
+class Tagged
+{
+  String[] tags;
+}
+
+class CountingTagged
+{
+  isA Tagged;
+  int getTags(int n) Python { return n }
+}
+
+// A native body uses a class its owner lists with depend without importing it.
+class DependMaker
+{
+  depend cruise.usercode.test.CrateItem;
+  CrateItem make() Python { return CrateItem() }
+}
+
+// A synchronized method holds the object's monitor, which its subclasses share, for its whole run; a
+// static one holds its class's. The bodies yield between reading and writing to invite a race.
+class SyncCounter
+{
+  Integer count = 0;
+  synchronized void bump(int times) Python {
+    import time
+    for _ in range(times):
+        c = self.getCount()
+        time.sleep(0)
+        self.setCount(c + 1)
+  }
+  synchronized int bumpOnce() Python {
+    self.bump(1)
+    return self.getCount()
+  }
+  static synchronized void tally(int times) Python {
+    import time
+    for _ in range(times):
+        t = SyncCounter.tallied
+        time.sleep(0)
+        SyncCounter.tallied = t + 1
+  }
+}
+
+class SyncSubCounter
+{
+  isA SyncCounter;
+  synchronized void reset() Python { self.setCount(0) }
+  synchronized void bumpBy(int times) Python {
+    import time
+    for _ in range(times):
+        c = self.getCount()
+        time.sleep(0)
+        self.setCount(c + 1)
+  }
+}
+
+// Guards and contracts read another class's constants through that class.
+class Thresholds
+{
+  const Integer HIGH = 5;
+}
+
+class Thermostat
+{
+  Integer reading = 0;
+  mode { Normal { check [reading > Thresholds.HIGH] -> Alarm; } Alarm { } }
+  int clamp(int n) Python {
+    [pre: n <= Thresholds.HIGH]
+    return n
+  }
+}
+
+// Native code uses classes of its namespace without importing them, as Java does; a parameter of
+// such a name keeps its value, and f-strings and derived values see the classes too.
+class ImplicitUser
+{
+  Integer high = Python { Thresholds.HIGH }
+  CrateItem make() Python { return CrateItem() }
+  String echo(String CrateItem) Python { return CrateItem }
+  String label() Python { return f"high {Thresholds.HIGH}" }
+}
+
+// A main's module is registered before its class body runs, which may import it again.
+class InitMain
+{
+  const Integer COUNT = InitBoot.init();
+  public static void main(String[] args) Python {
+    print(InitBoot().pick(InitMain()))
+  }
+}
+
+class InitBoot
+{
+  public static int init() Python {
+    import cruise.usercode.test.InitMain
+    return 1
+  }
+  String pick(InitMain value) Python { return "main" }
+  String pick(String value) Python { return "string" }
+}
+
+// A subclass's overloads compete with the inherited ones it does not override: the most specific
+// candidate is called, wherever it is declared.
+class PickBase
+{
+  String pick(int n) Python { return "base-int" }
+  String pick(String s) Python { return "base-string" }
+}
+
+class PickOverride
+{
+  isA PickBase;
+  String pick(int n) Python { return "override-int" }
+}
+
+class PickWider
+{
+  isA PickBase;
+  String pick(double d) Python { return "wider-double" }
+}
+
+// Imports of namespace classes follow Python's scopes: a name a comprehension or a nested function
+// binds is theirs, and a name the injections of one method share stays theirs.
+class ScopedUser
+{
+  String shared = "";
+  String seen = "";
+  before setShared Python { CrateItem = "local" }
+  after setShared Python { self._seen = CrateItem }
+  String viaComprehension() Python {
+    ignored = [CrateItem for CrateItem in [1]]
+    return CrateItem.__name__
+  }
+  String viaNested() Python {
+    def helper():
+        CrateItem = 1
+        return CrateItem
+    return CrateItem.__name__ + str(helper())
+  }
+  String viaLambda() Python {
+    f = lambda: (CrateItem := 1)
+    return CrateItem.__name__ + str(f())
+  }
+  before viaBefore Python { CrateItem = "before" }
+  String viaBefore() Python { return CrateItem }
+  String viaAnnotation() Python {
+    CrateItem: type
+    try:
+        return CrateItem.__name__
+    except UnboundLocalError:
+        return "unbound"
+  }
+  String documented() Python {
+    """Names the item class."""
+    return CrateItem.__name__
+  }
+  String documentedTersely() Python {
+    "Names it tersely."; return CrateItem.__name__
+  }
+  String notDocumented() Python {
+    "prefix " + CrateItem.__name__
+    return CrateItem.__name__
+  }
+  before viaYielded Python { CrateItem = "before" }
+  String viaYielded() Python {
+    yielded = 1
+    return CrateItem
+  }
+}
+
+// A class value that is not a literal is computed when first read, so it can use any class of any
+// module; one that needs itself is reported.
+class ValueOwner
+{
+  const Integer SEED = 1;
+  const String LABEL = ValueSource.label();
+  const Integer PENDING = ValueSource.pending();
+  const Integer UNTAKEN = false ? ValueSource.never() : 7;
+  const Integer FROM_INNER = ValueInner.value();
+  inner class ValueInner
+  {
+    const Integer K = seed();
+    public static int seed() Python { return 5 }
+    public static int value() Python { return ValueOwner.ValueInner.K }
+  }
+}
+
+class ValueSource
+{
+  public static String label() Python { return "seed " + str(ValueOwner.SEED) }
+  public static int pending() Python { return ValueOwner.PENDING }
+  public static int never() Python { raise ValueError("an untaken branch ran") }
+}
+
+// Values that read each other's classes, in either order, each get their own value
+class LiteralOwner
+{
+  const Integer N = LiteralInner.LIT + 1;
+  inner class LiteralInner
+  {
+    const Integer LIT = 5;
+    const Integer K = LiteralOwner.N;
+  }
+}
+
+// A computed constant runs model code on its first read, so that read keeps its place in the order:
+// before what follows it in an expression, through a receiver of a static call, and in a guard,
+// which then sees a deletion
+class LazyOrder
+{
+  const Integer N = fail();
+  Integer count = 0;
+  public static int fail() Python { raise ValueError("first") }
+  sm { S { go / { count = N + (count++); } -> T; } T { } }
+}
+
+class LazyReceiver
+{
+  const LazyHelper REF = make();
+  Integer n = 0;
+  public static LazyHelper make() Python {
+    print("created")
+    return LazyHelper()
+  }
+  sm { S { go / { n = REF.value(); } -> T; } T { } }
+}
+
+class LazyHelper
+{
+  public static int value() Python { return 5 }
+}
+
+class LazyGuard
+{
+  singleton;
+  const Boolean ALLOW = drop();
+  public static boolean drop() Python {
+    LazyGuard.getInstance().delete()
+    return True
+  }
+  sm { S { go [ALLOW] -> T; } T { } }
+}
+
+// A receiver read through a literal member is still evaluated
+class LazyChain
+{
+  const LazyHolder REF = make();
+  Integer result = REF.END.value();
+  public static LazyHolder make() Python {
+    print("made")
+    return LazyHolder()
+  }
+}
+
+class LazyHolder
+{
+  const LazyEnd END = null;
+}
+
+class LazyEnd
+{
+  public static int value() Python { return 5 }
+}
+
+// A computed constant imports what it uses when it is computed, so the module of a subclass it uses
+// can be imported first
+class ValueBase
+{
+  const Integer N = ValueDerived.seven();
+}
+
+class ValueDerived
+{
+  isA ValueBase;
+  public static int seven() Python { return 7 }
+}
+
+// Two threads reading two values that need each other both hear of the cycle
+class LazyCycle
+{
+  const Integer X = left();
+  const Integer Y = right();
+  public static int left() Python {
+    import time
+    time.sleep(0.1)
+    return LazyCycle.Y
+  }
+  public static int right() Python {
+    import time
+    time.sleep(0.1)
+    return LazyCycle.X
+  }
+}
+
+// Values whose computers wait on each other, for a reader outside their cycle
+class LazyWalk
+{
+  const Integer A = one();
+  const Integer B = one();
+  public static int one() Python { return 1 }
+}
+
+// Threads reading a value at once compute it once
+class LazyOnce
+{
+  const Integer ONE = count();
+  public static int count() Python {
+    import time
+    LazyOnce.computations = getattr(LazyOnce, "computations", 0) + 1
+    time.sleep(0.05)
+    return 1
+  }
+}
+
+// A constant may have the name the generated code gives its class-value helper
+class ValueNaming
+{
+  const Integer _ClassValue = 3;
+  const Integer LIMIT = ValueInnerSeed.five();
+}
+
+class ValueInnerSeed
+{
+  public static int five() Python { return 5 }
+}
+
+class ValueFirst
+{
+  const Integer FIRST = start();
+  const Integer SECOND = ValueSecond.VALUE;
+  public static int start() Python { return 5 }
+}
+
+class ValueSecond
+{
+  const Integer VALUE = ValueFirst.FIRST;
+}
+
+// Inherited events and variable-argument methods compete with a subclass's overloads too.
+class EventBase
+{
+  sm { Off { go(int n) -> On; } On { } }
+}
+
+class EventChild
+{
+  isA EventBase;
+  boolean go(double n) Python { return False }
+}
+
+class VarargsBase
+{
+  String pick(int... ns) Python { return "base" }
+}
+
+class VarargsChild
+{
+  isA VarargsBase;
+  String pick(int n, int... ns) Python { return "child" }
+}
+
+// Guards and contracts use another class's constants with their declared types, also through a
+// namespace or an outer class.
+class Limits
+{
+  const int N = 5;
+  const String TEXT = "a😀";
+}
+
+class LimitsOuter
+{
+  inner class InnerLimits
+  {
+    const int MAX = 5;
+  }
+}
+
+class LimitsSub
+{
+  isA LimitsOuter;
+}
+
+class TypedChecks
+{
+  int half() Python {
+    [pre: (Limits.N / 2) == 2]
+    return 1
+  }
+  int length() Python {
+    [pre: Limits.TEXT.length() == 3]
+    return 2
+  }
+  int has() Python {
+    [pre: Limits.TEXT.contains("a")]
+    return 3
+  }
+  int qualified(int n) Python {
+    [pre: n < cruise.usercode.test.Limits.N]
+    return n
+  }
+  int nested(int n) Python {
+    [pre: n < LimitsOuter.InnerLimits.MAX]
+    return n
+  }
+  int inherited(int n) Python {
+    [pre: n < LimitsSub.InnerLimits.MAX]
+    return n
+  }
+}

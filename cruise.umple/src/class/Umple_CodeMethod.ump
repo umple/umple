@@ -86,17 +86,34 @@ class Method
 	  this. reqImplementations = another.getReqImplementations();
   }
 
+  /*
+   * Whether a generator for lang emits this method: a body was written for lang, or an untagged one,
+   * which every language falls back to. Methods without authored code (abstract declarations,
+   * compiler-created methods) keep the rule based on the languages their code block holds.
+   */
   public boolean getExistsInLanguage(String lang)
   {
     if (!hasMethodBody()){
       return false;
     }
     CodeBlock codeBlock = getMethodBody().getCodeblock();
+    if (codeBlock.hasAuthoredCode()){
+      return codeBlock.isAuthored(lang) || codeBlock.isAuthored("");
+    }
     // Check if another language other than 'lang' is associated with the codeblock
     if (codeBlock.hasAnAssociatedLanguage() && !codeBlock.hasCode(lang)){
       return false;
     }
     return true;
+  }
+
+  /*
+   * The body alternative a generator for lang emits, the same one CodeBlock.getCode selects: lang
+   * when the method has a body for it, otherwise the untagged body ("").
+   */
+  public String getBodyLanguageFor(String lang)
+  {
+    return hasMethodBody() && getMethodBody().getCodeblock().hasCode(lang) ? lang : "";
   }
   public String toString()
   {
@@ -225,6 +242,9 @@ class MethodParameter
  */
 class CodeBlock
 {	
+  depend cruise.umple.util.PythonSource;
+  depend cruise.umple.parser.Position;
+
   /*
    * @author Vahdat
    * @param another a CodeBlock that we would like to make a clone of.
@@ -236,16 +256,45 @@ class CodeBlock
   	this.name = another.getName();
   	this.codes = new HashMap<String,String>();
   	this.codes.putAll(another.codes);
+  	this.authoredIndents = new HashMap<String,String>(another.authoredIndents);
+  	this.authoredPositions = new HashMap<String,Position>(another.authoredPositions);
+  	this.pythonTraitGuards = new HashMap<String,String>(another.pythonTraitGuards);
+  	this.pythonTraitBlocks = new HashMap<String,CodeBlock>(another.pythonTraitBlocks);
   } 
+  // The same code with every language's text passed through change (language, text), as when a
+  // guard is applied to each body of a copied action (Action.wrapInGuard)
+  public CodeBlock map(java.util.function.BiFunction<String, String, String> change){
+    CodeBlock mapped = new CodeBlock(this);
+    for (String language : codes.keySet()) {
+      mapped.codes.put(language, change.apply(language, codes.get(language)));
+    }
+    // the changed lines no longer line up with the source
+    mapped.authoredPositions.clear();
+    return mapped;
+  }
+
+  // The languages this block has an entry for ("" is the untagged body, possibly an empty entry).
+  public List<String> getLanguages(){
+    return new ArrayList<String>(codes.keySet());
+  }
+
   /*
    * @author Vahdat
    */
 	public void removeKeyword(String keyword){
     if(keyword==null || keyword=="") return;
     for (String language : codes.keySet()) {
-    	codes.put(language, codes.get(language).replace(keyword,"")) ;
+    	codes.put(language, "Python".equals(language) ? removePythonKeyword(codes.get(language), keyword) : codes.get(language).replace(keyword,"")) ;
     }
   }  
+
+  // Python code without keyword where it stands as code; the same text in a string or a comment is kept
+  private static String removePythonKeyword(String code, String keyword){
+    for (int at = PythonSource.codeAt(code, keyword); at >= 0; at = PythonSource.codeAt(code, keyword)) {
+      code = code.substring(0, at) + code.substring(at + keyword.length());
+    }
+    return code;
+  }
   
   /*
    * @author Vahdat
@@ -284,10 +333,7 @@ class CodeBlock
   }
   public void setCode(String add)
   {
-    if(add!=null)
-      codes.put("",add);
-    else
-      codes.put("","");
+    setCode("",add);
   }
   public void setCode(String lang, String add)
   {
@@ -295,6 +341,78 @@ class CodeBlock
       codes.put(lang,add);
     else
       codes.put(lang,"");
+    // Replaced text keeps its authorship, but the recorded source indentation and position no longer
+    // apply to it
+    if(authoredIndents.containsKey(lang))
+      authoredIndents.put(lang,null);
+    authoredPositions.remove(lang);
+  }
+
+  /*
+   * Stores code written in the model for lang ("" for the untagged body), recording that it was
+   * authored, the indentation its first line had in the source (see getFirstLineIndent) and where it
+   * starts there.
+   */
+  public void setAuthoredCode(String lang, String add, String firstLineIndent, Position start)
+  {
+    setCode(lang,add);
+    authoredIndents.put(lang,firstLineIndent);
+    if(start != null)
+      authoredPositions.put(lang,start);
+  }
+
+  // Copies lang's code and its provenance from another block, as when merging method declarations
+  public void copyCode(String lang, CodeBlock source)
+  {
+    setCode(lang,source.getCode(lang));
+    if(source.isAuthored(lang))
+      authoredIndents.put(lang,source.getFirstLineIndent(lang));
+    else
+      authoredIndents.remove(lang);
+    if(source.getAuthoredPosition(lang) != null)
+      authoredPositions.put(lang,source.getAuthoredPosition(lang));
+  }
+
+  /*
+   * True when code for exactly lang ("" for the untagged body) was written in the model, even if
+   * empty. Unlike hasCode, it is false for the empty untagged placeholder every parsed method gets
+   * and for code the compiler adds.
+   */
+  public boolean isAuthored(String lang)
+  {
+    return authoredIndents.containsKey(lang);
+  }
+
+  // True when any code in this block was written in the model
+  public boolean hasAuthoredCode()
+  {
+    return !authoredIndents.isEmpty();
+  }
+
+  /*
+   * The whitespace that indented the first line of lang's authored code, which getCode(lang) keeps
+   * trimmed. Null when the code was not authored, shares its first source line with other text (as
+   * in "{ return x; }"), or has been replaced since it was parsed.
+   */
+  public String getFirstLineIndent(String lang)
+  {
+    return authoredIndents.get(lang);
+  }
+
+  // Where lang's authored code starts in the source; null when not known or the code was replaced
+  public Position getAuthoredPosition(String lang)
+  {
+    return authoredPositions.get(lang);
+  }
+
+  public Map<String,String> getPythonTraitGuards()
+  {
+    return pythonTraitGuards;
+  }
+
+  public Map<String,CodeBlock> getPythonTraitBlocks()
+  {
+    return pythonTraitBlocks;
   }
   public String getCode()
   {
@@ -394,6 +512,11 @@ class ExtraCode
   public boolean getHasCode()
   {
     return code.size() > 0;
+  }
+
+  public List<CodeBlock> getCodeBlocks()
+  {
+    return Collections.unmodifiableList(code);
   }
 }
 

@@ -1,50 +1,33 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
-# line 3 "../OptionalOneToOptionalOneTest.ump"
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-class Mentor():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Mentor Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+
+class Mentor:
     def __init__(self):
         self._student = None
 
-    #------------------------
-    # INTERFACE
-    #------------------------
-    # Code from template association_GetOne 
     def getStudent(self):
         return self._student
 
     def hasStudent(self):
-        has = not (self._student is None)
-        return has
+        return self._student is not None
 
-    # Code from template association_SetOptionalOneToOptionalOne 
     def setStudent(self, aNewStudent):
-        wasSet = False
-        if aNewStudent is None :
+        if aNewStudent is None:
             existingStudent = self._student
             self._student = None
-            if not (existingStudent is None) and not (existingStudent.getMentor() is None) :
+            if existingStudent is not None and existingStudent.getMentor() is not None:
                 existingStudent.setMentor(None)
-            wasSet = True
-            return wasSet
-        currentStudent = self.getStudent()
-        if not (currentStudent is None) and not currentStudent == aNewStudent :
+            return True
+        currentStudent = self._student
+        if currentStudent is not None and currentStudent is not aNewStudent:
             currentStudent.setMentor(None)
         self._student = aNewStudent
         existingMentor = aNewStudent.getMentor()
-        if not self == existingMentor :
+        if existingMentor is not self:
             aNewStudent.setMentor(self)
-        wasSet = True
-        return wasSet
+        return True
 
     def delete(self):
-        if not (self._student is None) :
+        if self._student is not None:
             self._student.setMentor(None)
-

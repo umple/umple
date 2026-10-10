@@ -1,0 +1,7 @@
+// An untagged body is every language's fallback; a method with bodies only for other languages is left out
+class Shape {
+  int area() { return 1; } Python { return 2 }
+  int onlyPython() Python { return 3 }
+  void resize() Php { $x = 1; } { int y = 2; }
+  abstract int perimeter();
+}

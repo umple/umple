@@ -1,35 +1,21 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
-# line 27 "../ReflexiveAssociationTest.ump"
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-class OneToMany():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #OneToMany Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+
+class OneToMany:
     def __init__(self, aOneToMany):
         self._oneToMany = None
-        if not self.setOneToMany(aOneToMany) :
-            raise RuntimeError ("Unable to create OneToMany due to aOneToMany. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        if not self.setOneToMany(aOneToMany):
+            raise RuntimeError("Unable to create OneToMany due to aOneToMany. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
 
-    #------------------------
-    # INTERFACE
-    #------------------------
-    # Code from template association_GetOne 
     def getOneToMany(self):
         return self._oneToMany
 
-    # Code from template association_SetUnidirectionalOne 
     def setOneToMany(self, aNewOneToMany):
-        wasSet = False
-        if not (aNewOneToMany is None) :
-            self._oneToMany = aNewOneToMany
-            wasSet = True
-        return wasSet
+        if aNewOneToMany is None:
+            return False
+        self._oneToMany = aNewOneToMany
+        return True
 
     def delete(self):
         self._oneToMany = None
-

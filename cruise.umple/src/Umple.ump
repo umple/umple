@@ -434,6 +434,8 @@ class ConstraintVariable
     class Precondition
     {
       * -> 1 Method ; // The method precondition belongs to
+      // The method's bodies ("" for the untagged one) whose block declares this precondition
+      String[] bodyLanguages;
     }
     /*
      * The Preconditions are constraints on methods, throughing an exception if the constraint is not sastisfied after the method has computed.
@@ -443,6 +445,8 @@ class ConstraintVariable
       depend cruise.umple.parser.Position;
       * -> 1 Method ; // The method postcondition belongs to
       lazy Position position;
+      // The method's bodies ("" for the untagged one) whose block declares this postcondition
+      String[] bodyLanguages;
     }
   }
 
@@ -575,6 +579,18 @@ class CodeBlock
   depend java.util.*;
 
   internal HashMap<String,String> codes = new HashMap<String,String>();
+
+  // The languages whose code was written in the model ("" is the untagged body), each mapped to the
+  // indentation of the code's first line in the source and to where the code starts there (see
+  // setAuthoredCode, getFirstLineIndent and getAuthoredPosition)
+  internal HashMap<String,String> authoredIndents = new HashMap<String,String>();
+  internal HashMap<String,Position> authoredPositions = new HashMap<String,Position>();
+  // The guards, as untagged code, of the guarded trait actions composed into the Python code with
+  // superCall, by the placeholder that stands for each condition there (see pythonTraitCode)
+  internal HashMap<String,String> pythonTraitGuards = new HashMap<String,String>();
+  // The trait code without a Python version composed into the Python code with superCall, by the
+  // placeholder line that stands for it there; the generator renders it as any other code slot
+  internal HashMap<String,CodeBlock> pythonTraitBlocks = new HashMap<String,CodeBlock>();
   public static String languageUsed = "";
   lazy String name;
 }
@@ -598,6 +614,8 @@ class CodeInjection
   lazy Position position;
   lazy Position codePosition;
   Boolean isInternal = false;
+  // Written with around; one without code labels has type before, which Java splits at around_proceed:
+  Boolean isAround = false;
 }
 
 class ExtraCode

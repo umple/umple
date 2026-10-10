@@ -168,16 +168,34 @@ class Action
   lazy Position endPosition;
   actionCode;  // target language code
   Boolean isInternal = false;
+
+  // The guard of an entry or exit action ("entry [guard] / {...}") as written, or null. It guards
+  // every body alternative, so each generator renders it around the body it selects.
+  lazy guardCode;
   
   CodeBlock codeblock = null;
   after constructor {codeblock = aActionCode!=null ? new CodeBlock(aActionCode) : new CodeBlock();}
   before generated setActionCode {codeblock.setCode(aActionCode);}
   after getActionCode{
   	if (codeblock.getCode()!=null)
-  	  return codeblock.getCode();
+  	  return wrapInGuard(codeblock.getCode());
   	  else
   	
   	}
+
+  /*
+   * code inside the conditional that the Java, PHP and C++ generators emit for this action's guard
+   * (code itself when there is none). getActionCode applies it to the body CodeBlock.getCode selects;
+   * a generator with another syntax renders getGuardCode around the body itself.
+   */
+  public String wrapInGuard(String code)
+  {
+    if (getGuardCode() == null)
+    {
+      return code;
+    }
+    return "if (" + getGuardCode() + ")\n        {\n          " + code + "\n        }";
+  }
   after setCodeblock {
   	if(actionCode!=null){
   	  actionCode+= aCodeblock.getCode();

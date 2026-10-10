@@ -1,0 +1,92 @@
+// Models for the compatibility suite in test/compat, which checks the contracts this generator
+// keeps from the previous generator's Python and asserts its intentional changes.
+
+namespace cruise.compat;
+
+glossary { person : people; }
+
+class Palette
+{
+  enum Color { Red, Blue }
+  Color color;
+}
+
+class Owner
+{
+  1 -- * Child;
+}
+
+class Child
+{
+  Double weight;
+}
+
+class Group
+{
+  0..1 -- * Person people;
+}
+
+class Person
+{
+  unique id;
+}
+
+class TagBag
+{
+  String[] tags;
+}
+
+class TaggedKey
+{
+  String[] tags;
+  key { tags }
+}
+
+class NamedKey
+{
+  String name;
+  Integer size = 0;
+  key { name }
+}
+
+class KeyedCollection
+{
+  0..1 -> * NamedKey members;
+}
+
+class Left
+{
+  1 lefts -- 1 Right rights;
+}
+
+class Right
+{
+}
+
+class Params
+{
+  String last = "";
+  public void accept(String in) Python { self.setLast(input) }
+}
+
+class OnlyOne
+{
+  singleton;
+}
+
+// Used only by ledger_test.py, so no instance exists before that test runs
+class FreshSingleton
+{
+  singleton;
+}
+
+class AbstractShape
+{
+  abstract;
+  name;
+}
+
+class Square
+{
+  isA AbstractShape;
+}

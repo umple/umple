@@ -1,0 +1,7 @@
+// Tracing is not available for Python yet, so generating
+// Python from this model reports E9210 and writes no Lamp.py
+generate Python;
+class Lamp {
+  Integer level;
+  trace level;
+}

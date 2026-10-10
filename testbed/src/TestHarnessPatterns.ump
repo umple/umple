@@ -67,15 +67,15 @@ class LanguageSpecificCodeBlock
 {
   name;
 
-  before setName Java {String lang = "My lang is ";} Php {$lang = "I am ";}
-  after setName Java {name = lang + "java";} Php {$this->name = $lang . "php";}
-  boolean isJava() Java {return true;} Php {return false;}
+  before setName Java {String lang = "My lang is ";} Php {$lang = "I am ";} Python {lang = "My lang is "}
+  after setName Java {name = lang + "java";} Php {$this->name = $lang . "php";} Python {self._name = lang + "python"}
+  boolean isJava() Java {return true;} Php {return false;} Python {return False}
 	
-  String languageImplementedIn = Java {"Java"} Php {"Php"}
+  String languageImplementedIn = Java {"Java"} Php {"Php"} Python {"Python"}
 
   state{
     allLanguages{
-      applySpecificAction / Java {name = "action=java";} Php {$this->name = "actionphp";} -> to;
+      applySpecificAction / Java {name = "action=java";} Php {$this->name = "actionphp";} Python {self._name = "action=python"} -> to;
     }
     to{
     }

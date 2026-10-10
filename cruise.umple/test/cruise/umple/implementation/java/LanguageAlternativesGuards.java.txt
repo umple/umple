@@ -1,0 +1,125 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+/**
+ * A guard on an entry or exit action guards the body each language selects, tagged or not
+ */
+// line 2 "LanguageAlternativesGuards.ump"
+public class Lamp
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Lamp Attributes
+  private int n;
+
+  //Lamp State Machines
+  public enum Sm { Off, On }
+  private Sm sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Lamp()
+  {
+    n = 0;
+    setSm(Sm.Off);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setN(int aN)
+  {
+    boolean wasSet = false;
+    n = aN;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getN()
+  {
+    return n;
+  }
+
+  public String getSmFullName()
+  {
+    String answer = sm.toString();
+    return answer;
+  }
+
+  public Sm getSm()
+  {
+    return sm;
+  }
+
+  public boolean flip()
+  {
+    boolean wasEventProcessed = false;
+    
+    Sm aSm = sm;
+    switch (aSm)
+    {
+      case Off:
+        exitSm();
+        setSm(Sm.On);
+        wasEventProcessed = true;
+        break;
+      case On:
+        setSm(Sm.Off);
+        wasEventProcessed = true;
+        break;
+      default:
+        // Other states do respond to this event
+    }
+
+    return wasEventProcessed;
+  }
+
+  private void exitSm()
+  {
+    switch(sm)
+    {
+      case Off:
+        // line 7 "LanguageAlternativesGuards.ump"
+        if (n < 9)
+        {
+          n = 5;
+        }
+        break;
+    }
+  }
+
+  private void setSm(Sm aSm)
+  {
+    sm = aSm;
+
+    // entry actions and do activities
+    switch(sm)
+    {
+      case Off:
+        // line 6 "LanguageAlternativesGuards.ump"
+        if (n > 1)
+        {
+          n = 2;
+        }
+        break;
+    }
+  }
+
+  public void delete()
+  {}
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "n" + ":" + getN()+ "]";
+  }
+}

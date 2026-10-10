@@ -1,0 +1,19 @@
+E9213 Python Module Name Clash
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>A class or namespace is named like a standard Python module</h2>
+
+<p>Each class becomes a Python module named after its namespace and class, and Python resolves the first part of that name before anything else. That part must not be the name of a standard library module (such as datetime, json, os, queue or email). A class without a namespace named like one would hide the standard module from the whole program, generated code included, or could not be imported when the standard module is built into the interpreter or already loaded. A namespace named like one could not be imported: Python finds the standard module before the generated directory. The Python generator reports the class or interface and does not generate it.</p>
+
+<p>Rename the class, or use a namespace whose first part is not a standard module name (<code>app.sys</code> is fine).</p>
+
+@@example
+@@source manualexamples/E9213PythonModuleNameClash1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E9213PythonModuleNameClash2.ump
+@@endexample

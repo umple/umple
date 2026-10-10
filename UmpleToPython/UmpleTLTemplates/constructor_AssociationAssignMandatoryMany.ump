@@ -1,0 +1,21 @@
+class UmpleToPython {
+    // A mandatory many end given to the constructor: the objects are linked through the batch setter,
+    // which checks the multiplicity (private for an immutable end).
+    constructor_AssociationAssignMandatoryMany <<!<</*constructor_AssociationAssignMandatoryMany*/>><<#
+  String requiredNumber;
+  if (av.isN())
+  {
+    requiredNumber = "" + av.getMultiplicity().getLowerBound();
+  }
+  else if (av.isStar())
+  {
+    requiredNumber = "at least " + av.getMultiplicity().getLowerBound();
+  }
+  else
+  {
+    requiredNumber = av.getMultiplicity().getLowerBound() + " to " + av.getMultiplicity().getUpperBound();
+  }
+  #>>
+        if not self.<<=gen.immutableEndSetterName(av, "setManyMethod")>>(*<<=gen.translate("parameterAll", av)>>):
+            raise RuntimeError("Unable to create <<=uClass.getName()>>, must have <<=requiredNumber>> <<=av.getName()>>. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")!>>
+}

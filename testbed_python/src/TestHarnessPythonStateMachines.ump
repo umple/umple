@@ -1,0 +1,1315 @@
+// State machine runtime of generated Python for what the ported Java testbed
+// does not cover. Actions are Python-tagged and use only generated methods, so these models test
+// the state machine code on its own. Class names start with Sm because the testbed is one model.
+
+namespace cruise.sm;
+
+// First-match transitions
+
+class SmFirstMatch
+{
+  String log = "";
+  state {
+    A {
+      go(Integer n) [n > 5] / Python { self.setLog(self.getLog() + "big;") } -> B;
+      go(Integer n) [n > 0] / Python { self.setLog(self.getLog() + "positive;") } -> C;
+      go(Integer n) / Python { self.setLog(self.getLog() + "other;") } -> D;
+    }
+    B { back -> A; }
+    C { back -> A; }
+    D { back -> A; }
+  }
+}
+
+// An event named like an attribute setter, with a parameter of the setter's type
+
+class SmSetterEvent
+{
+  Integer value = 0;
+  state { A { setValue(Integer n) -> B; } B {} }
+}
+
+// Enums and identity
+
+class SmEnums
+{
+  one { A { go -> B; } B {} }
+  two { A { go -> B; } B {} }
+  nest { Outer { Inner1 { go -> Inner2; } Inner2 {} } }
+}
+
+class SmSimple
+{
+  status { Open {} Closed {} }
+}
+
+// Timers. Long delays keep the real timers from firing during a test, which instead
+// calls a handler's callback itself to check what a callback does at a given moment.
+
+class SmTimerStale
+{
+  Integer count = 0;
+  state {
+    A { after(30) / Python { self.setCount(self.getCount() + 1) } -> B; leave -> C; }
+    B {}
+    C { back -> A; }
+  }
+}
+
+class SmTimerRetry
+{
+  Boolean ready = false;
+  Integer count = 0;
+  state {
+    A { afterEvery(30) [ready] / Python { self.setCount(self.getCount() + 1) } -> B; leave -> C; }
+    B {}
+    C { back -> A; }
+  }
+}
+
+class SmTimerFraction
+{
+  state { A { after(0.25) -> B; } B {} }
+}
+
+class SmTimerQuick
+{
+  state { A { after(0.02) -> B; } B {} }
+}
+
+class SmTimerZero
+{
+  Integer count = 0;
+  state { A { after(0) / Python { self.setCount(self.getCount() + 1) } -> B; } B {} }
+}
+
+class SmTimerTwo
+{
+  one { A { after(30) -> B; } B {} }
+  two { A { after(30) -> B; } B {} }
+}
+
+// A subclass with its own timer and an attribute named like the deleted flag
+
+class SmTimerBase
+{
+  Integer count = 0;
+  base { A { after(30) / Python { self.setCount(self.getCount() + 1) } -> B; } B {} }
+}
+
+class SmTimerDerived
+{
+  isA SmTimerBase;
+  Integer deleted = 0;
+  own { X { after(30) -> Y; } Y {} }
+}
+
+// Do activities
+
+class SmActivityToken
+{
+  Integer runs = 0;
+  Integer stops = 0;
+  state {
+    A { go -> B; }
+    B {
+      do Python {
+        self.setRuns(self.getRuns() + 1)
+        if thread.cancelled.wait(5):
+            self.setStops(self.getStops() + 1)
+      }
+      back -> A;
+    }
+  }
+}
+
+// The worker of the completion transition is declared first in one class and second in the other,
+// so both start orders are checked. gate holds the sibling back; reached tells the test that the
+// completing activity has run.
+class SmCompleterFirst
+{
+  Object gate;
+  Object reached;
+  Boolean siblingsStarted = false;
+  state {
+    A {
+      do Python {
+        self.setSiblingsStarted(all(sibling.ident is not None for sibling in thread._siblings))
+        self.getReached().set()
+      } -> B;
+      do Python { self.getGate().wait(5) }
+    }
+    B {}
+  }
+}
+
+class SmCompleterLast
+{
+  Object gate;
+  Object reached;
+  Boolean siblingsStarted = false;
+  state {
+    A {
+      do Python { self.getGate().wait(5) }
+      do Python {
+        self.setSiblingsStarted(all(sibling.ident is not None for sibling in thread._siblings))
+        self.getReached().set()
+      } -> B;
+    }
+    B {}
+  }
+}
+
+class SmActivityDeletes
+{
+  state {
+    A { do Python { self.delete() } -> B; }
+    B {}
+  }
+}
+
+class SmActivityFails
+{
+  state {
+    A { do Python { raise ValueError("activity failed") } -> B; }
+    B {}
+  }
+}
+
+// Deletion inside an action
+
+class SmDeleteInAction
+{
+  String log = "";
+  state {
+    A { go / Python { self.delete() } -> B; }
+    B {
+      entry / Python { self.setLog(self.getLog() + "enterB;") }
+      after(30) -> C;
+      do Python { self.setLog(self.getLog() + "doB;") }
+    }
+    C {}
+  }
+}
+
+// Final states of concurrent regions
+
+class SmRegionFinal
+{
+  sm {
+    On {
+      left { L1 { first -> L2; } L2 { firstAgain -> LeftDone; } final LeftDone {} }
+      ||
+      right { R { second -> RightDone; } final RightDone {} }
+    }
+  }
+}
+
+class SmFinal
+{
+  state { A { finish -> Final; } }
+}
+
+// History (the Java output's behaviour: history is recorded when the next event of the machine starts)
+
+class SmDeepHistory
+{
+  state {
+    On {
+      off -> Off;
+      A { next -> B; }
+      B { X { next -> Y; } Y { } }
+    }
+    Off { resume -> On.HStar; back -> On.H; }
+  }
+}
+
+// State-dependent methods
+
+class SmDependent
+{
+  state {
+    On {
+      Integer size(Integer n) { return n; }
+      Small { Integer size(Integer n) Python { return n + 1 } grow -> Big; }
+      Big { shrink -> Small; }
+      off -> Off;
+    }
+    Off { on -> On; }
+  }
+  mode {
+    Quiet { String word() { return "quiet"; } loud -> Loud; }
+    Loud { }
+  }
+  String word() { return "plain"; }
+}
+
+// Unspecified events
+
+class SmUnspecified
+{
+  state {
+    A { e1 -> B; unspecified -> Error; }
+    B { e1 -> A; }
+    Error { fix -> A; }
+  }
+}
+
+// Entry and exit order in nested and concurrent states
+
+class SmNestedOrder
+{
+  String log = "";
+  state {
+    Off { on -> On; }
+    On {
+      entry / Python { self.setLog(self.getLog() + "enterOn;") }
+      exit / Python { self.setLog(self.getLog() + "exitOn;") }
+      off -> Off;
+      Left {
+        entry / Python { self.setLog(self.getLog() + "enterLeft;") }
+        exit / Python { self.setLog(self.getLog() + "exitLeft;") }
+      }
+      ||
+      Right {
+        entry / Python { self.setLog(self.getLog() + "enterRight;") }
+        exit / Python { self.setLog(self.getLog() + "exitRight;") }
+      }
+    }
+  }
+}
+
+// Injections on generated state machine methods, at Java's positions
+
+class SmInjections
+{
+  String log = "";
+  state {
+    A { go -> B; String word() { return "a"; } }
+    B { String word() { return "b"; } }
+  }
+  before go Python { self.setLog(self.getLog() + "before go;") }
+  after go Python { self.setLog(self.getLog() + "after go;") }
+  after setState Python { self.setLog(self.getLog() + "set " + str(aState) + ";") }
+  after word Python { self.setLog(self.getLog() + "word;") }
+}
+
+// State-dependent methods implementing an interface, overloaded, with a parameter the body rebinds,
+// contracts and an after injection
+
+interface SmLabel { String label(); }
+
+class SmDependentMethods
+{
+  isA SmLabel;
+  Integer calls = 0;
+  state {
+    A {
+      String label() { return "a"; }
+      Integer twice(Integer n) Python {
+        n = n * 2
+        return n
+      }
+      String kind() { return "none"; }
+      String kind(Integer n) { return "int"; }
+      go -> B;
+    }
+    B { }
+  }
+  Integer twice(Integer n) Python {
+    [pre: n >= 0]
+    return n
+  }
+  after twice Python { self.setCalls(self.getCalls() + 1) }
+}
+
+// Deletion by an entry or exit action ends the event
+
+class SmExitDeletes
+{
+  Integer count = 0;
+  state {
+    A { exit / Python { self.delete() } go -> B; }
+    B { entry / Python { self.setCount(1) } }
+  }
+}
+
+class SmEntryDeletes
+{
+  Integer count = 0;
+  one { A { go -> B; } B { entry / Python { self.delete() } } }
+  two { X { go / Python { self.setCount(self.getCount() + 1) } -> Y; } Y {} }
+}
+
+// An event returns True when any machine took it, even if another sends it to unspecified
+
+class SmUnspecifiedOr
+{
+  one { A { go -> B; } B {} }
+  two { X { next -> Y; } Y { go -> X; unspecified -> Error; } Error {} }
+}
+
+// A region with alternative final states
+
+class SmRegionAlternative
+{
+  sm {
+    On {
+      left { A { first -> Done; alternative -> Other; } final Done {} final Other {} }
+      ||
+      right { X { second -> Finished; } final Finished {} }
+    }
+  }
+}
+
+// Guarded entry and exit actions, tagged and untagged
+
+class SmGuardedActions
+{
+  Boolean ready = false;
+  String log = "";
+  state {
+    A { go -> B; }
+    B {
+      entry [ready] / Python { self.setLog(self.getLog() + "entered;") }
+      exit [!ready] / { log = log + "left;"; }
+      back -> A;
+    }
+  }
+}
+
+// An event named like an inherited setter
+
+class SmValueBase
+{
+  Integer value = 0;
+}
+
+class SmValueEvent
+{
+  isA SmValueBase;
+  sm { A { setValue -> B; } B {} }
+}
+
+// Generator-owned names never take model names
+
+class SmNames
+{
+  Integer historyOnH = 42;
+  sm { A { go(Integer SmNames, Integer aSm) -> B; } B {} }
+  sm2 { X { go(Integer SmNames, Integer aSm) -> Y; } Y {} }
+  history { On { A { next -> B; } B {} leave -> Off; } Off { back -> On.H; } }
+}
+
+class SmHelperNames
+{
+  state { A { after(30) -> B; do Python { thread.cancelled.wait(5) } } B {} }
+  String TimedEventHandler() Python { return "timer" }
+  String DoActivityThread() Python { return "worker" }
+  String _timeoutAToBHandler() Python { return "handler" }
+}
+
+// Lifecycle regressions of visits, deletion, timers and activities.
+class SmLifecycleNestedDelete {
+  String log = "";
+  sm {
+    Off { go -> On; }
+    On {
+      A { entry / { setLog(getLog() + "delete;"); delete(); } }
+      ||
+      B { entry / { setLog(getLog() + "late;"); } }
+    }
+  }
+}
+class SmLifecycleParentDelete {
+  String log = "";
+  sm {
+    Off { go -> On.Inner; }
+    On {
+      entry / { setLog(getLog() + "delete;"); delete(); }
+      Inner { entry / { setLog(getLog() + "late;"); } }
+    }
+  }
+}
+class SmLifecycleExitDelete {
+  String log = "";
+  sm {
+    On {
+      off -> Off;
+      exit / { setLog(getLog() + "parent;"); }
+      Inner { exit / { setLog(getLog() + "delete;"); delete(); } }
+    }
+    Off {}
+  }
+}
+class SmLifecycleEntryTimer {
+  sm {
+    A { entry / { leave(); } leave -> B; after(30) -> C; }
+    B {}
+    C {}
+  }
+}
+class SmLifecycleNestedAutoTimer {
+  sm {
+    On {
+      after(30) -> Other;
+      A { -> Off; }
+    }
+    Off {}
+    Other {}
+  }
+}
+class SmLifecycleEntryActivity {
+  Integer count = 0;
+  sm {
+    A {
+      entry / { leave(); }
+      do Python {
+        self.setCount(self.getCount() + 1)
+        thread.cancelled.wait(30)
+      } Java { try { Thread.sleep(30000); } catch (InterruptedException e) {} }
+      leave -> B;
+    }
+    B {}
+  }
+}
+class SmLifecycleReentrantActivity {
+  Integer visits = 0;
+  sm {
+    A {
+      entry / { setVisits(getVisits() + 1); if (getVisits() == 1) { leave(); } }
+      do Python { thread.cancelled.wait(30) } Java { try { Thread.sleep(30000); } catch (InterruptedException e) {} }
+      leave -> B;
+    }
+    B { entry / { back(); } back -> A; }
+  }
+}
+class SmLifecyclePartialFinal {
+  Integer deletedCount = 0;
+  before delete { setDeletedCount(getDeletedCount() + 1); }
+  sm {
+    On {
+      A { finish -> Done; }
+      final Done {}
+      ||
+      R { tick -> R; }
+    }
+  }
+}
+class SmLifecycleAutoRegions {
+  sm {
+    On {
+      A { -> Off; }
+      ||
+      B { -> Other; }
+    }
+    Off {}
+    Other {}
+  }
+}
+class SmLifecycleDeepHist {
+  state {
+    On {
+      off -> Off;
+      A { next -> B; }
+      B { X { next -> Y; } Y { } }
+    }
+    Off { resume -> On.HStar; back -> On.H; }
+  }
+}
+class SmLifecycleDeepLeaves {
+  Boolean leaving = false;
+  state {
+    On {
+      off -> Off;
+      leave -> Gone;
+      A { next -> B; }
+      B {
+        entry / Python {
+          if self.getLeaving():
+              self.leave()
+        }
+        X { next -> Y; }
+        Y { }
+      }
+    }
+    Off { resume -> On.HStar; }
+    Gone {}
+  }
+}
+class SmLifecycleCrossDeletes {
+  String log = "";
+  sm {
+    On {
+      A { entry / Python { self.setLog(self.getLog() + "A;") } cross -> B2; }
+      ||
+      B1 { } B2 { entry / Python { self.delete() } }
+    }
+  }
+}
+class SmLifecycleAfterEventDeletes {
+  String log = "";
+  sm { A { go -> B; } B { entry / Python { self.delete() } } }
+  after go Python { self.setLog(self.getLog() + "after go;") }
+}
+class SmLifecycleNestedRegionFinal {
+  Integer deletes = 0;
+  before delete Python { self.setDeletes(self.getDeletes() + 1) }
+  sm {
+    On {
+      L { toG -> G; toP -> P; }
+      P { X { toF -> F; } final F {} }
+      final G {}
+      ||
+      R { second -> RightDone; }
+      final RightDone {}
+    }
+  }
+}
+
+class SmLifecycleExitActions {
+  String log = "";
+  sm {
+    A {
+      exit / { setLog(getLog() + "delete;"); delete(); }
+      exit / { setLog(getLog() + "late;"); }
+      go -> B;
+    }
+    B {}
+  }
+}
+class SmLifecycleReentrantTimer {
+  Integer visits = 0;
+  String log = "";
+  sm {
+    A {
+      entry / { setVisits(getVisits() + 1); if (getVisits() == 1) { leave(); } }
+      entry / { setLog(getLog() + "current;"); }
+      after(30) -> C;
+      leave -> B;
+    }
+    B { entry / { back(); } back -> A; }
+    C {}
+  }
+}
+class SmLifecycleExitDuringEntry {
+  sm {
+    A {
+      entry / Python { self.exitSm() }
+      after(30) -> B;
+    }
+    B {}
+  }
+}
+class SmLifecycleNamedPartialFinal {
+  Integer deletedCount = 0;
+  before delete { setDeletedCount(getDeletedCount() + 1); }
+  sm {
+    On {
+      left { A { finish -> Done; } final Done {} }
+      ||
+      right { R { tick -> R; } }
+    }
+  }
+}
+class SmLifecycleEmptyRegionFinal {
+  Integer deletedCount = 0;
+  before delete { setDeletedCount(getDeletedCount() + 1); }
+  sm {
+    On {
+      left { A { finish -> Done; } final Done {} }
+      ||
+      right {}
+    }
+  }
+}
+
+class SmLifecycleParentEntryInjection {
+  Integer visits = 0;
+  Boolean deleteOnEntry = false;
+  String log = "";
+  sm {
+    Off { go -> On.Inner; }
+    On {
+      entry / Python {
+        if self.getDeleteOnEntry():
+          self.delete()
+        else:
+          self.setVisits(self.getVisits() + 1)
+          if self.getVisits() == 1:
+            self.leave()
+            self.go()
+      }
+      leave -> Off;
+      Inner {}
+    }
+  }
+  after setSmOn Python {
+    if aSmOn is self.SmOn.Inner:
+      self.setLog(self.getLog() + "current;")
+  }
+}
+
+// A delay expression can end its visit before the timer has been published.
+class SmLifecycleDelayLeaves {
+  Integer calls = 0;
+  Double delay() Python {
+    self.setCalls(self.getCalls() + 1)
+    self.leave()
+    return 30.0
+  }
+  sm { A { after(delay()) -> C; leave -> B; } B {} C {} }
+}
+class SmLifecycleDelayDeletes {
+  Double delay() Python { self.delete(); return 30.0 }
+  sm { A { after(delay()) -> B; } B {} }
+}
+class SmLifecycleDelayReentry {
+  Integer calls = 0;
+  Double delay() Python {
+    self.setCalls(self.getCalls() + 1)
+    if self.getCalls() == 1:
+      self.leave()
+      self.back()
+    return 30.0
+  }
+  sm { A { after(delay()) -> C; leave -> B; } B { back -> A; } C {} }
+}
+class SmLifecycleDelayExit {
+  Double delay() Python { self.exitSm(); return 30.0 }
+  sm { A { after(delay()) -> B; } B {} }
+}
+class SmLifecycleDelayStable {
+  Integer calls = 0;
+  Double delay() Python { self.setCalls(self.getCalls() + 1); return 30.0 }
+  sm { A { after(delay()) -> B; } B {} }
+}
+
+// Injections can delete even when there are no authored state actions.
+class SmLifecycleBeforeEventDeletes {
+  String log = "";
+  before go { setLog(getLog() + "delete;"); delete(); }
+  sm { A { go / { setLog(getLog() + "action;"); } -> B; } B {} }
+}
+class SmLifecycleBeforeEventDeletesBare {
+  Integer deletes = 0;
+  before delete { setDeletes(getDeletes() + 1); }
+  before go { delete(); }
+  sm { A { go -> B; } B {} }
+}
+class SmLifecycleBeforeEventDeletesNative {
+  Integer deletes = 0;
+  before delete Python { self.setDeletes(self.getDeletes() + 1) }
+  before go Python { self.delete() }
+  sm { A { go -> B; } B {} }
+}
+class SmLifecycleBeforeExitDeletesBare {
+  Integer deletes = 0;
+  before delete { setDeletes(getDeletes() + 1); }
+  before exitSmOn { delete(); }
+  sm { On { A {} go -> Off; } Off {} }
+}
+class SmLifecycleBeforeSetterDeletesBare {
+  Integer deletes = 0;
+  before delete { setDeletes(getDeletes() + 1); }
+  before setSm Python {
+    if aSm is self.Sm.B:
+      self.delete()
+  }
+  sm { A { go -> B; } B {} }
+}
+
+// Authored locals share the setter's scope with its captured visit.
+class SmLifecycleVisitLocal {
+  Integer count = 0;
+  sm {
+    A {
+      entry / { int visit = 99; setCount(visit); }
+      after(30) -> B;
+    }
+    B {}
+  }
+}
+class SmLifecycleVisitNative {
+  Integer count = 0;
+  sm {
+    A {
+      entry / Python { visit = 99; self.setCount(visit) }
+      entry / Python { self.setCount(self.getCount() + 1) }
+      go -> B;
+    }
+    B {}
+  }
+}
+class SmLifecycleVisitActions {
+  Integer count = 0;
+  sm {
+    A {
+      entry / { int visit = 99; setCount(visit); }
+      entry / { setCount(getCount() + 1); }
+      go -> B;
+    }
+    B {}
+  }
+}
+class SmLifecycleVisitInjections {
+  Integer count = 0;
+  before setSm { int visit = 40; int visit2 = 50; }
+  after setSm { int visit3 = 9; }
+  sm {
+    A {
+      entry / Python { self.setCount(visit + visit2 + visit3) }
+      entry / { setCount(getCount() + 1); }
+      go -> B;
+    }
+    B {}
+  }
+}
+class SmLifecycleVisitInjectionsNative {
+  Integer count = 0;
+  before setSm Python { visit = 40; visit2 = 50 }
+  after setSm Python { visit3 = 9 }
+  sm {
+    A {
+      entry / Python { self.setCount(visit + visit2 + visit3) }
+      entry / Python { self.setCount(self.getCount() + 1) }
+      go -> B;
+    }
+    B {}
+  }
+}
+
+class SmLifecycleRetryExit {
+  Integer calls = 0;
+  Boolean ready() Python {
+    self.setCalls(self.getCalls() + 1)
+    self.exitSm()
+    return False
+  } Java { setCalls(getCalls() + 1); exitSm(); return false; }
+  sm { A { after(30) [ready()] -> B; } B {} }
+}
+
+// Each injection is a separate continuation, even when the enum stays unchanged.
+class SmLifecycleMultipleBefore {
+  String log = "";
+  before go { setLog(getLog() + "delete;"); delete(); }
+  before go { setLog(getLog() + "later;"); }
+  sm { A { go / { setLog(getLog() + "action;"); } -> B; } B {} }
+}
+class SmLifecycleMultipleBeforeNative {
+  String log = "";
+  before go Python { self.setLog(self.getLog() + "delete;"); self.delete(); self.setLog(self.getLog() + "block;") }
+  before go Python { self.setLog(self.getLog() + "later;") }
+  sm { A { go -> B; } B { after(30) -> C; } C {} }
+}
+class SmLifecycleMultipleAfter {
+  String log = "";
+  after go { setLog(getLog() + "delete;"); delete(); }
+  after go { setLog(getLog() + "later;"); }
+  sm { A { go -> B; } B {} }
+}
+class SmLifecycleMultipleSetterBefore {
+  String log = "";
+  before setSm Python {
+    if aSm is self.Sm.B:
+      self.setLog(self.getLog() + "delete;")
+      self.delete()
+  }
+  before setSm Python {
+    if aSm is self.Sm.B:
+      self.setLog(self.getLog() + "later;")
+  }
+  sm { A { go -> B; } B {} }
+}
+class SmLifecycleMultipleSetterAfter {
+  String log = "";
+  after setSm Python {
+    if aSm is self.Sm.B:
+      self.setLog(self.getLog() + "delete;")
+      self.delete()
+  }
+  after setSm Python {
+    if aSm is self.Sm.B:
+      self.setLog(self.getLog() + "later;")
+  }
+  sm { A { go -> B; } B { entry / { setLog(getLog() + "entry;"); } } }
+}
+class SmLifecycleMultipleExitBefore {
+  String log = "";
+  before exitSmOn { setLog(getLog() + "delete;"); delete(); }
+  before exitSmOn { setLog(getLog() + "later;"); }
+  sm { On { A {} go -> Off; } Off {} }
+}
+class SmLifecycleMultipleExitAfter {
+  String log = "";
+  after exitSmOn { setLog(getLog() + "delete;"); delete(); }
+  after exitSmOn { setLog(getLog() + "later;"); }
+  sm { On { A {} go -> Off; } Off {} }
+}
+
+// Python treats these compatibility characters as the same identifiers as their ASCII forms.
+class SmLifecycleUnicodeVisit {
+  Integer count = 0;
+  sm {
+    A {
+      entry / Python { vｉsit = 99; self.setCount(vｉsit) }
+              Java { int vｉsit = 99; setCount(vｉsit); }
+      entry / { setCount(getCount() + 1); }
+      go -> B;
+    }
+    B {}
+  }
+}
+class SmLifecycleUnicodeVisitInjections {
+  Integer count = 0;
+  before setSm Python { vｉsit = 40; visit２ = 50 }
+  after setSm Python { ｖisit3 = 9 }
+  sm {
+    A {
+      entry / Python { self.setCount(vｉsit + visit２ + ｖisit3) }
+      entry / { setCount(getCount() + 1); }
+      go -> B;
+    }
+    B {}
+  }
+}
+
+// Initial entry deletion also ends the constructor's remaining generated work.
+class SmLifecycleConstructorDeletes {
+  String log = "";
+  first { A { entry / { setLog(getLog() + "delete;"); delete(); } } }
+  second { B { entry / { setLog(getLog() + "later;"); } go -> C; } C {} }
+  after constructor { setLog(getLog() + "constructor;"); }
+}
+class SmLifecycleConstructorTimerDeletes {
+  String log = "";
+  first { A { entry / { setLog(getLog() + "delete;"); delete(); } } }
+  second { B { entry / { setLog(getLog() + "later;"); } after(30) -> C; } C {} }
+}
+class SmLifecycleConstructorLastDeletes {
+  String log = "";
+  sm { A { entry / { setLog(getLog() + "delete;"); delete(); } } }
+  after constructor { setLog(getLog() + "constructor;"); }
+}
+class SmLifecycleConstructorOrder {
+  String log = "";
+  first { A { entry / { setLog(getLog() + "first;"); } } }
+  second { B { entry / { setLog(getLog() + "second;"); } go -> C; } C {} }
+  after constructor { setLog(getLog() + "constructor;"); }
+}
+class SmLifecycleConstructorNestedDeletes {
+  String log = "";
+  before setSmOn Python {
+    if aSmOn is self.SmOn.Null:
+      self.setLog(self.getLog() + "delete;")
+      self.delete()
+  }
+  sm {
+    On {
+      entry / { setLog(getLog() + "later;"); }
+      A { go -> B; }
+      B {}
+    }
+  }
+  after constructor { setLog(getLog() + "constructor;"); }
+}
+
+// A guard can end its source visit before the generated transition exits it.
+class SmLifecycleCallbackGuardExit {
+  String log = "";
+  Boolean ready() Python { self.exitSm(); return True }
+                  Java { exitSm(); return true; }
+  sm {
+    A { after(30) [ready()] / { setLog(getLog()+"action;"); } -> B; }
+    B { entry / { setLog(getLog()+"entry;"); } after(30) [false] -> C; }
+    C {}
+  }
+}
+class SmLifecycleMixedGuards {
+  Integer calls = 0;
+  Boolean ready(Boolean accepted, Boolean leave) Python {
+    self.setCalls(self.getCalls() + 1)
+    if leave:
+      self.reset()
+    return accepted
+  }
+  sm {
+    A {
+      go(Integer choice, Boolean accepted, Boolean second, Boolean leave) [choice == 1] -> First;
+      go(Integer choice, Boolean accepted, Boolean second, Boolean leave) [ready(accepted, leave)] -> Called;
+      go(Integer choice, Boolean accepted, Boolean second, Boolean leave) [choice == 2] -> Second;
+      go(Integer choice, Boolean accepted, Boolean second, Boolean leave) [ready(second, leave)] -> Called;
+      go(Integer choice, Boolean accepted, Boolean second, Boolean leave) -> Default;
+      reset -> A;
+    }
+    First {} Called {} Second {} Default {}
+  }
+}
+
+class SmLifecycleGuardReceiver {
+  Boolean ready(SmLifecycleReceiverGuard owner, Boolean accepted) Python {
+    owner.delete()
+    return accepted
+  }
+}
+
+class SmLifecycleReceiverGuard {
+  sm {
+    A {
+      go(SmLifecycleGuardReceiver peer, Boolean accepted) [peer.ready(this, accepted)] -> B;
+      go(SmLifecycleGuardReceiver peer, Boolean accepted) -> B;
+    }
+    B {}
+  }
+}
+
+// Without a body in the current state, a state-dependent method returns Java's default: null for a
+// boxed type, zero or false for a primitive
+class SmLifecycleTelemetry {
+  connection {
+    Connected {
+      Integer packets() { return 7 }
+      Boolean ready() { return True }
+      Double temperature() { return 18.5 }
+      int raw() { return 3 }
+      disconnect -> Offline;
+    }
+    Offline { }
+  }
+}
+
+// A trait's Python entry code runs where the class's entry code says superCall
+trait SmLifecycleCounting { sm { S { entry / Python { self.setLog(self.getLog() + "trait;") } } } }
+class SmLifecycleTraitEntry {
+  isA SmLifecycleCounting;
+  String log = "";
+  sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+// A guarded trait action keeps its guard, and superCall works in a one-line suite and more than once
+trait SmLifecycleGuardedCounting { sm { S { entry [false] / Python { self.setLog(self.getLog() + "never;") } } } }
+class SmLifecycleTraitGuard {
+  isA SmLifecycleGuardedCounting;
+  String log = "";
+  sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+trait SmLifecycleOpenCounting { sm { S { entry [true] / Python { self.setLog(self.getLog() + "trait;") } } } }
+class SmLifecycleTraitSuite {
+  isA SmLifecycleOpenCounting;
+  String log = "";
+  sm { S { entry / Python { if True: superCall; self.setLog(self.getLog() + "class;"); superCall; } } }
+}
+
+// A trait composed into a trait keeps its own guard; untagged trait code fills every superCall,
+// code only for other languages fills none; a class action in two languages takes the trait's
+// untagged code; a header continued over lines keeps its suite
+trait SmLifecycleBaseGuarded { sm { S { entry [false] / Python { self.setLog(self.getLog() + "base;") } } } }
+trait SmLifecycleMiddle { isA SmLifecycleBaseGuarded; sm { S { entry [true] / Python { superCall; self.setLog(self.getLog() + "middle;") } } } }
+class SmLifecycleTraitNested {
+  isA SmLifecycleMiddle;
+  String log = "";
+  sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+trait SmLifecycleUntaggedTwice { sm { S { entry / { log = log + "trait;"; } } } }
+class SmLifecycleTraitRepeated {
+  isA SmLifecycleUntaggedTwice;
+  String log = "";
+  sm { S { entry / Python { superCall; superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+trait SmLifecycleJavaOnly { sm { S { entry / Java { System.out.println("java"); } } } }
+class SmLifecycleTraitOtherLanguage {
+  isA SmLifecycleJavaOnly;
+  String log = "";
+  sm { S { entry / Python { superCall; superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+trait SmLifecycleUntaggedFallback { sm { S { entry / { log = log + "trait;"; } } } }
+class SmLifecycleTraitBilingual {
+  isA SmLifecycleUntaggedFallback;
+  String log = "";
+  sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") }
+    Java { superCall; log = log + "class;"; } } }
+}
+
+trait SmLifecycleContinuedCounting { sm { S { entry / Python { self.setLog(self.getLog() + "trait;") } } } }
+class SmLifecycleTraitAnnotation {
+  isA SmLifecycleContinuedCounting;
+  String log = "";
+  sm { S { entry / Python {
+    case = {}
+    case[0]: int; superCall; self.setLog(self.getLog() + "class;")
+  } } }
+}
+
+trait SmLifecycleUntaggedBase { sm { S { entry / { log = log + "base;"; } } } }
+trait SmLifecycleUntaggedMiddle { isA SmLifecycleUntaggedBase; sm { S { entry / { superCall; log = log + "middle;"; } } } }
+class SmLifecycleTraitUntaggedChain {
+  isA SmLifecycleUntaggedMiddle;
+  String log = "";
+  sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+class SmLifecycleTraitStringHeader {
+  isA SmLifecycleContinuedCounting;
+  String log = "";
+  sm { S { entry / Python {
+    if """one
+two""": superCall; self.setLog(self.getLog() + "class;")
+  } } }
+}
+class SmLifecycleTraitContinued {
+  isA SmLifecycleContinuedCounting;
+  String log = "";
+  sm { S { entry / Python {
+    if (
+        True
+    ): superCall; self.setLog(self.getLog() + "class;")
+  } } }
+}
+
+// Untagged trait code is translated where superCall puts it, with its guard
+trait SmLifecycleUntaggedCounting { sm { S { entry [!skip] / { log = log + "trait;"; } } } }
+class SmLifecycleTraitUntagged {
+  isA SmLifecycleUntaggedCounting;
+  String log = "";
+  Boolean skip = false;
+  sm { S { entry / Python { superCall; self.setLog(self.getLog() + "class;") } } }
+}
+
+// A deleted object takes no events, also when its machines have no actions
+class SmLifecyclePlainDelete { sm { Off { turnOn -> On; } On { turnOff -> Off; } } }
+
+// A state-dependent method returns Java's default for its type in a state without a body
+class SmLifecycleRing {
+  mode {
+    Idle { String ring() { return "idle-ring" } call -> Busy; }
+    Busy { String ring() { return "busy-tone" } broke -> Broken; }
+    Broken { }
+  }
+}
+
+// A deleted object takes no events: no machine moves and no before code runs
+class SmLifecycleNoEventsAfterDelete {
+  String log = "";
+  before go { setLog(getLog() + "before;"); }
+  lock { Shut { go -> Open; } Open {} }
+  alarm { Quiet { go -> Ringing; } Ringing {} }
+}
+
+class SmLifecycleDependentGuard {
+  sm {
+    A {
+      Boolean ready(Boolean accepted) Python { self.delete(); return accepted }
+      go(Boolean accepted) [ready(accepted)] -> B;
+      go(Boolean accepted) -> B;
+    }
+    B {}
+  }
+}
+
+class SmLifecycleGuardDeletes {
+  String log = "";
+  Boolean ready() Python { self.delete(); return True } Java { delete(); return true; }
+  sm { A { go [ready()] / { setLog(getLog()+"action;"); } -> B; } B {} }
+}
+class SmLifecycleGuardRejectDeletes {
+  String log = "";
+  Boolean ready() Python { self.delete(); return False } Java { delete(); return false; }
+  Boolean later() Python { self.setLog(self.getLog() + "guard;"); return False }
+                  Java { setLog(getLog()+"guard;"); return false; }
+  sm {
+    A {
+      go [ready()] -> B;
+      go [later()] -> B;
+      go / { setLog(getLog()+"fallback;"); } -> C;
+    }
+    B {} C {}
+  }
+}
+class SmLifecycleBareGuardDeletes {
+  Boolean ready() Python { self.delete(); return True } Java { delete(); return true; }
+  sm { A { go [ready()] -> B; } B {} }
+}
+class SmLifecycleGuardReentry {
+  String log = "";
+  Integer calls = 0;
+  Boolean ready(Boolean accepted) Python {
+    self.setCalls(self.getCalls() + 1)
+    self.setSm(self.Sm.A)
+    return accepted
+  }
+  sm {
+    A {
+      go(Boolean accepted) [ready(accepted)] / { setLog(getLog()+"action;"); } -> B;
+      go(Boolean accepted) / { setLog(getLog()+"fallback;"); } -> B;
+    }
+    B {}
+  }
+}
+class SmLifecycleGuardOrder {
+  String log = "";
+  Boolean ready(Boolean accepted) Python {
+    self.setLog(self.getLog() + "guard;")
+    return accepted
+  }
+  before go Python { visit2 = 99; guard2 = 99 }
+  after go Python { self.setLog(self.getLog() + str(visit2) + str(guard2)) }
+  sm {
+    A {
+      exit / { setLog(getLog()+"exit;"); }
+      go(Boolean visit, Boolean guard) [ready(visit)] / { setLog(getLog()+"first;"); } -> B;
+      go(Boolean visit, Boolean guard) [ready(guard)] / { setLog(getLog()+"second;"); } -> B;
+      go(Boolean visit, Boolean guard) / { setLog(getLog()+"fallback;"); } -> B;
+    }
+    B {}
+  }
+}
+
+// Parent entry can delete before the child registers a key or runs either constructor injection.
+class SmLifecycleBaseDeletes {
+  String log = "";
+  sm { A { entry / { setLog(getLog()+"delete;"); delete(); } } }
+}
+class SmLifecycleDeletedRecord {
+  isA SmLifecycleBaseDeletes;
+  unique String code;
+  before constructor { setLog(getLog()+"before;"); }
+  after constructor { setLog(getLog()+"constructor;"); }
+}
+class SmLifecycleDeletedGrandchild {
+  isA SmLifecycleDeletedRecord;
+  after constructor { setLog(getLog()+"grandchild;"); }
+}
+class SmLifecycleChildContinues {
+  isA SmLifecycleBaseDeletes;
+  after constructor { setLog(getLog()+"constructor;"); }
+  second { B { entry / { setLog(getLog()+"entry;"); } go -> C; } C {} }
+}
+class SmLifecycleDeletedPair {
+  isA SmLifecycleBaseDeletes;
+  unique String code;
+  1 record -- 1 SmLifecycleDeletedPartner partner;
+  before constructor { setLog(getLog()+"before;"); }
+  after constructor { setLog(getLog()+"constructor;"); }
+  second { B { entry / { setLog(getLog()+"entry;"); } } }
+}
+class SmLifecycleDeletedPartner {}
+class SmLifecycleDeletedBarePair {
+  isA SmLifecycleBaseDeletes;
+  unique String code;
+  1 record -- 1 SmLifecycleDeletedBarePartner partner;
+  after constructor { setLog(getLog()+"constructor;"); }
+}
+class SmLifecycleDeletedBarePartner {}
+
+// The second injection belongs only to the visit that survived the first one.
+class SmLifecycleMultipleAfterLeaves {
+  String log = "";
+  after setSm Python {
+    if aSm is self.Sm.A:
+      self.leave()
+  }
+  after setSm Python { self.setLog(self.getLog() + str(aSm) + ";") }
+  sm { A { leave -> B; } B {} }
+}
+class SmLifecycleMultipleAfterReentry {
+  String log = "";
+  Integer visits = 0;
+  after setSm Python {
+    self.setVisits(self.getVisits() + 1)
+    if self.getVisits() == 1:
+      self.setSm(aSm)
+  }
+  after setSm Python { self.setLog(self.getLog() + str(aSm) + ";") }
+  sm { A { again -> A; } }
+}
+
+// Queued and pooled machines and queued methods: calls run one at a time on the object's worker, in
+// the order they were made; a pooled machine first runs a call its current state can take.
+class SmQueuedGarage
+{
+  Integer opened = 0;
+  queued status {
+    Open { close -> Closing; }
+    Closing { done -> Closed; open -> Open; }
+    Closed { open(int speed) / { opened = opened + speed; } -> Open; }
+  }
+}
+
+class SmPooledOrder
+{
+  String log = "";
+  pooled status {
+    A { go -> B; }
+    B { finish / { log = log + "f"; } -> C; }
+    C { go -> A; }
+  }
+  after go { if (wasEventProcessed) { log = log + "g"; } }
+}
+
+class SmQueuedWorker
+{
+  String log = "";
+  queued void work(int n) Python { self.setLog(self.getLog() + str(n)) }
+}
+
+class SmQueuedTimer
+{
+  queued sm { A { after(0.1) -> B; } B { } }
+}
+
+// A parent's and a subclass's queued methods each have their own queue
+class SmQueuedBase
+{
+  String log = "";
+  queued void base() Python { self.setLog(self.getLog() + "b") }
+}
+
+class SmQueuedChild
+{
+  isA SmQueuedBase;
+  queued void child() Python { self.setLog(self.getLog() + "c") }
+}
+
+// An automatic transition runs at once, before an event already waiting in the queue
+class SmQueuedAuto
+{
+  queued sm {
+    S { go / Python { import time; time.sleep(0.1) } -> T; }
+    T { -> U; }
+    U { finish -> V; }
+    V { }
+  }
+}
+
+class SmPooledAuto
+{
+  pooled sm {
+    S { go / Python { import time; time.sleep(0.1) } -> T; }
+    T { -> U; }
+    U { finish -> V; }
+    V { }
+  }
+  pooled other { X { finish -> Y; } Y { } }
+}
+
+// Objects sending each other queued calls once the main thread has ended
+class SmQueuedActor
+{
+  SmQueuedActor peer = null;
+  queued void ping(int n) Python {
+    print("ping", n, flush=True)
+    if n > 0:
+        self.getPeer().ping(n - 1)
+  }
+}
+
+// Thread.sleep in a do activity ends the activity once it is cancelled, as Java's interrupt does
+class SmSleepingActivity
+{
+  Integer ticks = 0;
+  sm { On { do { while (true) { Thread.sleep(20); ticks = ticks + 1; } } off -> Off; } Off { } }
+}

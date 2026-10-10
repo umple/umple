@@ -281,6 +281,15 @@
 9000: 1, "https://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Parsing). {0} ;
 9100: 1, "https://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Analysis). {0} ;
 9200: 1, "https://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Generation). {0} ;
+9210: 2, "https://manual.umple.org/?E9210PythonUnsupported.html", {0} cannot be generated in Python yet, so class {1} was not generated ;
+9211: 2, "https://manual.umple.org/?E9211PythonUntranslatableCode.html", This code in {0} cannot be translated to Python: {1}. Give a Python version instead, for example {2} ;
+9212: 3, "https://manual.umple.org/?W9212PythonNoPythonCode.html", {0} has code only for {1}, so it is left out of the generated Python ;
+9213: 2, "https://manual.umple.org/?E9213PythonModuleNameClash.html", {0} conflicts with a standard Python module, so choose another name or namespace ;
+9214: 2, "https://manual.umple.org/?E9214PythonSelfParameter.html", {0} has a parameter named self, the name generated methods give the object they are called on, so rename the parameter ;
+9215: 2, "https://manual.umple.org/?E9215PythonReservedName.html", {0} has a name that Python reserves or that generated code uses, so give it another name ;
+9216: 2, "https://manual.umple.org/?E9216PythonDuplicateParameter.html", {0} has two parameters named {1} in Python, so rename one of them ;
+9217: 2, "https://manual.umple.org/?E9217PythonPackageName.html", The namespace {0} of {1} is not a valid Python package name, so use dot-separated ASCII names that are not Python keywords ;
+9218: 2, "https://manual.umple.org/?E9218PythonPathClash.html", {0} clashes with {1}: {2}, so one of them could not be imported. Rename one of them ;
 
 # Message to emit when you are parsing a construct but are not yet processing it in a sensible way/
 9999: 5, "https://manual.umple.org/?W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;

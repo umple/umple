@@ -1,0 +1,11 @@
+class X {
+  Integer a;
+    TOKEN = 7
+}
+trait T {
+    LIMIT = 3
+}
+class Y {
+  isA T;
+    OTHER = 4
+}
