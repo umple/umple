@@ -14,6 +14,7 @@ cat \
  dropbox/*.js \
  umple_page.js \
  umple_layout.js \
+ umple_action_gvdiagram.js \
  umple_action.js \
  umple_position.js \
  umple_line.js \

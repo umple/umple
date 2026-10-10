@@ -134,6 +134,7 @@ document.write('<script type="text/javascript" src="scripts/ai/features/fix/umpl
 document.write('<script type="text/javascript" src="scripts/umple_page.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_layout.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_action.js"></script>');
+document.write('<script type="text/javascript" src="scripts/umple_action_gvdiagram.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_position.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_line.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_system.js"></script>');
