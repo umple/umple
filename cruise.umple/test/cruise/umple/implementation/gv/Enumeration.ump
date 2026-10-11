@@ -1,0 +1,9 @@
+generate GvClassDiagram;
+
+enum Status { FullTime, PartTime }
+class Student {
+  enum Level { Undergrad, Grad }
+  Status status;
+  Level level;
+}
+class Course {}
