@@ -240,6 +240,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('none');
     Page.useGvFeatureDiagram = false;
+    jQuery("#buttonAddState").show();
     Action.syncLiveViewSelector("stateTables");
   }
   else
@@ -1433,6 +1434,9 @@ Page.getUmpleCode = function()
 
 Page.getCurrentDiagramType = function()
 {
+  if (Page.useGvClassDiagram && Page.showTraits) {
+    return "GvClassTrait";
+  }
   if (Page.useGvClassDiagram) {
     return "GvClass";
   }
