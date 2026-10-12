@@ -63,7 +63,7 @@ ToolTips.tooltipEntries = {
   buttonAddAssociation: ["li", "Click on two classes to create an association </br><b>Shortcut: [a]</b>"],
   buttonAddGeneralization: ["li", "Click on two classes to create a generalization </br><b>Shortcut: [g]</b>"],
   buttonDeleteEntity: ["li", "Click on a class, association, or generalization to delete that entity </br><b>Shortcut: [DEL]</b>"],
-  buttonUndo: ["li", "Click to undo the most recent action </br><b>Shortcut: [" + undo + "]</b>"],
+  buttonUndo: ["li", "Click to undo the most recent action </br><b>Shortcut: [" + undo + "]</b><br/><br/><i>To go back to an even earlier version, use Restore Earlier Version under LOAD in the SAVE & LOAD menu.</i>"],
   buttonRedo: ["li", "Click to redo the most recent undone action </br><b>Shortcut: [" + redo + "]</b>"],
   buttonReindent: ["li", "Click this to adjust the text so that blocks marked by { and } have their contents indented by 2 spaces"],
   buttonSyncDiagram: ["li", "Click to sync the diagram and the text"],
