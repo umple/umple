@@ -1,0 +1,10 @@
+// This example generates the warning message
+class Supplier
+{
+  distributable;
+  0..1 -> * Product;
+}
+
+class Product
+{
+}
