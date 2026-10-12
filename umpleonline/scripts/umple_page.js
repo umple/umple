@@ -1148,7 +1148,7 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide();
-    jQuery("#itemLoadExamples4").hide();
+    jQuery("#itemLoadExamples4").show();
     jQuery("#itemLoadExamples5").hide();
     jQuery("#itemLoadExamples6").hide();   
     jQuery("#itemLoadExamples7").hide();   
