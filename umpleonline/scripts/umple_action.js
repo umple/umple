@@ -3625,7 +3625,7 @@ Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   // Create context menu for attribute
   var menu = document.createElement('customContextMenu');
   var menuHeader = document.createElement('div');
-  menuHeader.textContent = "Attribute: " + attributeName + "Type: " + attributeType;
+  menuHeader.textContent = "Attribute: " + attributeName + " Type: " + attributeType;
   menuHeader.style.padding = "5px";
   menuHeader.style.borderBottom = "1px solid #ccc";
   menuHeader.style.fontWeight = "bold";
