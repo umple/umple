@@ -66,6 +66,47 @@ module VersionHistoryTestHelper
     wait_for_typing_to_be_processed
   end
 
+  # Types text one character at a time just after the first occurrence of
+  # after, going through the editor's input handlers as a keystroke does, so
+  # that brackets are closed automatically. Then waits for every save that the
+  # edit leads to, including those made after the diagram is updated.
+  def type_as_user(text, after:)
+    execute_script(<<~JS, text, after)
+      var view = Page.codeMirrorEditor6;
+      var pos = view.state.doc.toString().indexOf(arguments[1]) + arguments[1].length;
+      view.dispatch({selection: {anchor: pos}});
+      arguments[0].split("").forEach(function(ch) {
+        var sel = view.state.selection.main;
+        var insertAsTyped = function() {
+          return view.state.update({changes: {from: sel.from, to: sel.to, insert: ch},
+            selection: {anchor: sel.from + ch.length}, userEvent: "input.type"});
+        };
+        var handled = view.state.facet(cm6.EditorView.inputHandler).some(function(handler) {
+          return handler(view, sel.from, sel.to, ch, insertAsTyped);
+        });
+        if (!handled) view.dispatch(insertAsTyped());
+      });
+    JS
+    sleep(evaluate_script("Action.waiting_time") / 1000.0 + 0.5)
+    wait_for_saves_to_settle
+  end
+
+  # Saves that follow an edit are chained through callbacks, some of which
+  # start the next request after a timeout, so the queues can be briefly empty
+  # before the last save is sent
+  def wait_for_saves_to_settle(quiet_time: 1.0)
+    quiet_since = nil
+    wait_until("all saves following the edit") do
+      if evaluate_script("TabControl.requestQueue.length == 0 && Ajax.queue.length == 0 && jQuery.active == 0")
+        quiet_since ||= Time.now
+        Time.now - quiet_since >= quiet_time
+      else
+        quiet_since = nil
+        false
+      end
+    end
+  end
+
   # Does what happens when the user comes back to this tab from another one,
   # and waits for the check for a newer version that this starts
   def return_to_tab

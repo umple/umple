@@ -85,6 +85,32 @@ describe "Version history of models saved on the server",
     end
   end
 
+  describe "Typing in the editor" do
+    # The diagram is updated after the text is saved, and the layout that comes
+    # back is saved too, but it is part of the same change as the typing
+    it "records one version when an opening bracket is closed automatically" do
+      load_model_with_text("class A {\n  name;\n  \n}")
+      wait_for_saves_to_settle
+      version = known_version
+
+      type_as_user("void foo(", after: "name;\n  ")
+
+      expect(model_text).to include("void foo()")
+      expect(known_version).to eq(version + 1)
+    end
+
+    it "records one version when the edit changes the diagram layout" do
+      load_model_with_text("class A { name; }")
+      wait_for_saves_to_settle
+      version = known_version
+
+      type_as_user("\nclass B { title; }", after: "class A { name; }")
+
+      expect(find("#umpleLayoutEditorText", visible: :all).value).to include("class B")
+      expect(known_version).to eq(version + 1)
+    end
+  end
+
   describe "Browser tabs showing the same model" do
     it "do not ask about a tab's own changes, or when the model is loaded again" do
       load_model_with_text("class Student { name; }")

@@ -143,6 +143,41 @@ UmpleTest::add("saves that only change whitespace at the end of the model are no
   assertFalse(VersionHistory::sameFiles(array("A.ump" => "a", "C.ump" => ""), array("A.ump" => "a", "B.ump" => "")));
 });
 
+UmpleTest::add("the layout saved after an edit is part of the edit's version", function() {
+  list($history, $dir) = newHistory(array("A.ump" => umpleText("class A {}")));
+  $delimiter = VersionHistory::MODEL_DELIMITER;
+  assertSame(array("version" => 1, "changed" => true), $history->writeFile("A.ump", umpleText("class A { name; }"), 0));
+
+  $positioned = "class A { name; }\n".$delimiter."\nnamespace -;\nclass A { position 50 30 109 45; }";
+  assertSame(array("version" => 1, "changed" => false), $history->writeFile("A.ump", $positioned, 1, true));
+  assertSame($positioned, file_get_contents($dir."/A.ump"), "the layout is still saved");
+  assertSame(array("version" => 1, "changed" => false),
+    $history->writeFile("A.ump", "class A { name; }\n".$delimiter."\n", 1, true), "the layout can also be removed");
+
+  // As when a class is moved in the diagram
+  assertSame(array("version" => 2, "changed" => true), $history->writeFile("A.ump", $positioned, 1));
+
+  // As when more was typed while the layout was being worked out
+  assertSame(array("version" => 3, "changed" => true),
+    $history->writeFile("A.ump", "class A { name; id; }\n".$delimiter."\n", 2, true));
+
+  // Another tab saved a newer version first, so it is backed up as usual
+  assertSame(array("version" => 4, "changed" => true),
+    $history->writeFile("A.ump", "class A { name; id; }\n".$delimiter."\nnamespace -;\nclass A { position 1 2 3 4; }", 2, true));
+  assertTrue($history->getReplacedBackup() !== null);
+});
+
+UmpleTest::add("a save is only a layout update if the browser tab says so", function() {
+  $saved = $_REQUEST;
+  UmpleTest::cleanup(function() use ($saved) { $_REQUEST = $saved; });
+  $_REQUEST = array();
+  assertFalse(VersionHistory::requestedLayoutUpdate());
+  $_REQUEST = array("layoutUpdate" => "1");
+  assertTrue(VersionHistory::requestedLayoutUpdate());
+  $_REQUEST = array("layoutUpdate" => "true");
+  assertFalse(VersionHistory::requestedLayoutUpdate());
+});
+
 UmpleTest::add("a backup differing from the latest only in whitespace at the end is not made", function() {
   list($history, $dir, $clock) = newHistory(array("A.ump" => umpleText("class A {}")));
   $first = $history->createBackup("auto");

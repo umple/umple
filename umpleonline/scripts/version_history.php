@@ -107,6 +107,13 @@ class VersionHistory
     return ctype_digit($baseVersion) ? (int) $baseVersion : null;
   }
 
+  // True if the browser tab says the save only brings the diagram layout up to
+  // date with the edit it has just saved (see VersionHistory.saveAsLayoutUpdate)
+  static function requestedLayoutUpdate()
+  {
+    return isset($_REQUEST["layoutUpdate"]) && $_REQUEST["layoutUpdate"] === "1";
+  }
+
   // $replacedBackup is the backup returned by getReplacedBackup, if any
   static function sendVersionHeaders($version, $changed, $replacedBackup = null)
   {
@@ -190,8 +197,11 @@ class VersionHistory
   }
 
   // Writes one of the model's files, recording a new version if its content is
-  // different. Returns array("version" => int, "changed" => bool).
-  function writeFile($name, $content, $baseVersion = null)
+  // different. After an edit is saved, the page saves the diagram layout that
+  // the compiler works out for it; if $layoutUpdate is true and only the layout
+  // differs, that is part of the same change, unless another tab has saved a
+  // newer version since. Returns array("version" => int, "changed" => bool).
+  function writeFile($name, $content, $baseVersion = null, $layoutUpdate = false)
   {
     $this->replacedBackup = null;
     $path = $this->modelDir."/".$name;
@@ -200,7 +210,9 @@ class VersionHistory
       if ($existing === $content) {
         return array("version" => $this->getCurrentVersion(), "changed" => false);
       }
-      if (self::sameModelText($existing, $content)) {
+      $partOfCurrentVersion = $layoutUpdate && $baseVersion === $this->getCurrentVersion()
+        && self::sameModelTextIgnoringLayout($existing, $content);
+      if ($partOfCurrentVersion || self::sameModelText($existing, $content)) {
         file_put_contents($path, $content);
         return array("version" => $this->getCurrentVersion(), "changed" => false);
       }
@@ -559,6 +571,17 @@ class VersionHistory
   static function sameModelText($a, $b)
   {
     return self::normalizeModelText($a) === self::normalizeModelText($b);
+  }
+
+  static function sameModelTextIgnoringLayout($a, $b)
+  {
+    return self::textBeforeLayout($a) === self::textBeforeLayout($b);
+  }
+
+  private static function textBeforeLayout($content)
+  {
+    $end = strpos($content, self::MODEL_DELIMITER);
+    return rtrim($end === false ? $content : substr($content, 0, $end));
   }
 
   private static function normalizeModelText($content)

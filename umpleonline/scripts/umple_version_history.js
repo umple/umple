@@ -25,6 +25,8 @@ VersionHistory.changeCount = 0;
 VersionHistory.checkInProgress = false;
 VersionHistory.checkTimer = null;
 VersionHistory.checkRetries = 0;
+// Set while saves are made that only bring the diagram layout up to date
+VersionHistory.savingLayoutUpdate = false;
 // Set once the page is about to be reloaded, after which nothing more is saved
 VersionHistory.navigatingAway = false;
 // The id of the backup of the version that this tab's change replaced, while
@@ -135,6 +137,24 @@ VersionHistory.request = function(parameters, isPost, onSuccess, onFailure)
 VersionHistory.baseVersionParameter = function()
 {
   return VersionHistory.enabled ? "&&baseVersion=" + VersionHistory.knownVersion : "";
+}
+
+// After an edit is saved, the page saves again with the diagram layout that the
+// compiler works out for it. Saves made by save are marked as doing this, so
+// that the server records them as part of the edit rather than as new versions.
+VersionHistory.saveAsLayoutUpdate = function(save)
+{
+  VersionHistory.savingLayoutUpdate = true;
+  try {
+    save();
+  } finally {
+    VersionHistory.savingLayoutUpdate = false;
+  }
+}
+
+VersionHistory.layoutUpdateParameter = function()
+{
+  return VersionHistory.enabled && VersionHistory.savingLayoutUpdate ? "&&layoutUpdate=1" : "";
 }
 
 // Called with the response to each request that may have changed the model

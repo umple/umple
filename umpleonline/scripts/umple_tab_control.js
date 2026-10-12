@@ -337,10 +337,12 @@ TabControl.saveTab = function(tabId, umpleCode)
     modelname = "tasks/" + modelname;
   }
   var umpleCodeWithoutAmpersand = umpleCode.replace(/&/g, "%26").replace(/\+/g, "%2B");
+  var parameters = format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, modelname);
+  if (typeof VersionHistory !== "undefined") parameters += VersionHistory.layoutUpdateParameter();
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
     TabControl.saveTabCallback(tabId),
-    TabControl.withBaseVersion(format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, modelname)));
+    TabControl.withBaseVersion(parameters));
 }
 
 TabControl.saveTabCallback = function(tabId)
