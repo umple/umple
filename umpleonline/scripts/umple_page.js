@@ -1013,7 +1013,7 @@ Page.initCanvasArea = function()
   canvas.mousemove(Action.mouseMove);
   canvas.focus(function(){Action.focusOn(Page.umpleCanvasId(), true);});
   canvas.blur(function(){Action.focusOn(Page.umpleCanvasId(), false);});
-  canvas.delegate("[class$='editableDoubleClick']", 'dblclick', InlineEditor.handleOnClick);
+  canvas.delegate(".editableDoubleClick, .editableSingleClick", 'dblclick contextmenu', InlineEditor.handleOnClick);
   canvas.delegate("[class$='editableSingleClick']", 'click', InlineEditor.handleOnClick);
 
   if (!Layout.isDiagramVisible) {Layout.showHideCanvas(false);}
