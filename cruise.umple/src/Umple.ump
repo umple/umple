@@ -1315,6 +1315,15 @@ class Requirement{
   when;
   what;
   why;
+
+  // Structured EARS clauses, null when absent: Where <earsWhere>, while <earsWhile>,
+  // when <earsWhen>, if <earsIf>, then the <earsSystem> shall <earsShall>
+  lazy earsWhere;
+  lazy earsWhile;
+  lazy earsWhen;
+  lazy earsIf;
+  lazy earsSystem;
+  lazy earsShall;
   
   // The requirements language used to express this requirement
   // can be blank, then 'text' is assumed
