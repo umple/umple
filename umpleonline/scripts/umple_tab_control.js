@@ -426,7 +426,7 @@ TabControl.loadAllTabsCallback = function(response)
   // If no tabs are found, we should initialize with a single tab
   if (!foundRemoteTabs)
   {
-    TabControl.createTab(null, Page.getUmpleCode());
+    TabControl.createTab(TabControl.defaultTabName, Page.getUmpleCode());
   }
   else
   {

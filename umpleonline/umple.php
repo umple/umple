@@ -94,9 +94,28 @@ if (isset($_REQUEST["nodiagram"])) {$showDiagram=false;} else {$showDiagram=true
 $diagramType = "GvClass";
 if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
-  if ($diagramType=="state") $diagramType = "GvState";
-  else if ($diagramType=="structure") $diagramType = "structureDiagram";
-  else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature" && $diagramType !="GvClassTrait" ) $diagramType = "class";
+
+  if ($diagramType=="state") {
+    $diagramType = "GvState";
+  }
+  else if ($diagramType=="structure") {
+    $diagramType = "structureDiagram";
+  }
+  else if (
+    $diagramType !="GvState" &&
+    $diagramType !="GvClass" &&
+    $diagramType !="structureDiagram" &&
+    $diagramType !="GvFeature" &&
+    $diagramType !="GvClassTrait" &&
+    $diagramType != "GvEntityRelationshipDiagram" &&
+    $diagramType != "instanceDiagram" &&
+    $diagramType != "crudUI" &&
+    $diagramType != "stateTables" &&
+    $diagramType != "eventSequence" &&
+    $diagramType != "class"
+  ) {
+    $diagramType = "class";
+    }
 }
 if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
 
@@ -198,6 +217,40 @@ $output = $dataHandle->readData('model.ump');
    color: #ccc;
    }
 
+   .button2.mode-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: auto !important;
+  min-width: 26px;
+  height: 26px;
+  padding: 2px 5px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.button2.mode-button svg {
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+  max-width: 12px !important;
+  max-height: 12px !important;
+  display: inline-block !important;
+  flex: 0 0 12px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.button2.mode-button .button-letter {
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1;
+}
   .active {
     background: #B06C5B;
   }
@@ -589,9 +642,46 @@ $output = $dataHandle->readData('model.ump');
    <span id="linetext">Line=<input size=2 style="font-size: 12px;" id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
 
     <span style="font-size: 30%">
-    <a id="ECD_button" class="button2" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
-    <a id="GCD_button" class="button2 active" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
-    <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()">S</a>&nbsp;
+    <a id="ECD_button" class="button2 mode-button" href="javascript:Page.clickShowEditableClassDiagram()"
+    title="Editable Class Diagram"
+   aria-label="Editable Class Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="4" width="13" height="16"></rect>
+    <path d="M7 9h5"></path>
+    <path d="M7 13h4"></path>
+    <path d="M14 17l6-6 2 2-6 6-3 1z"></path>
+  </svg>
+
+  <span class="button-letter">E</span>
+  </a>&nbsp;
+    <a id="GCD_button" class="button2 active mode-button" href="javascript:Page.clickShowGvClassDiagram()"
+    title="Graphviz Class Diagram"
+   aria-label="Graphviz Class Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="3" width="6" height="5"></rect>
+    <rect x="15" y="3" width="6" height="5"></rect>
+    <rect x="9" y="16" width="6" height="5"></rect>
+    <path d="M6 8l5 8"></path>
+    <path d="M18 8l-5 8"></path>
+  </svg>
+
+  <span class="button-letter">G</span>
+  </a>&nbsp;
+    <a id="SD_button" class="button2 mode-button" href="javascript:Page.clickShowGvStateDiagram()"
+    title="State Diagram"
+   aria-label="State Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="6" cy="12" r="3"></circle>
+    <circle cx="18" cy="12" r="3"></circle>
+    <path d="M9 12h6"></path>
+    <path d="M13 9l3 3-3 3"></path>
+  </svg>
+
+  <span class="button-letter">S</span>
+  </a>&nbsp;
     </span>
     <span style="font-size: 12px; margin-left: 10px; font-weight: bold;">
   Live View:
@@ -624,14 +714,61 @@ $output = $dataHandle->readData('model.ump');
 </span>
      &nbsp; 
     <span style="font-size: 30%">
-    <a id="SHT_button" class="button2 active" href="javascript:Page.clickShowHideText()">T</a>&nbsp;
-    <a id="SHD_button" class="button2 active" href="javascript:Page.clickShowHideCanvas()">D</a>&nbsp;
+    <a id="SHT_button" class="button2 active mode-button" href="javascript:Page.clickShowHideText()"
+    title="Show or Hide Text Editor"
+   aria-label="Show or Hide Text Editor">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 6h16"></path>
+    <path d="M4 10h12"></path>
+    <path d="M4 14h16"></path>
+    <path d="M4 18h10"></path>
+  </svg>
+
+  <span class="button-letter">T</span>
+  </a>&nbsp;
+    <a id="SHD_button" class="button2 active mode-button" href="javascript:Page.clickShowHideCanvas()"
+    title="Show or Hide Diagram"
+   aria-label="Show or Hide Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="3" width="7" height="6"></rect>
+    <rect x="14" y="15" width="7" height="6"></rect>
+    <path d="M10 6h4"></path>
+    <path d="M17 9v6"></path>
+  </svg>
+
+  <span class="button-letter">D</span>
+  </a>&nbsp;
     </span>
 
     &nbsp; 
     <span style="font-size: 30%">
-    <a id="SHA_button" class="button2 active" href="javascript:Page.clickToggleAttributes()">A</a>&nbsp;
-    <a id="SHM_button" class="button2" href="javascript:Page.clickToggleMethods()">M</a>&nbsp;
+    <a id="SHA_button" class="button2 active mode-button" href="javascript:Page.clickToggleAttributes()"
+    title="Show or Hide Attributes"
+   aria-label="Show or Hide Attributes">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="4" width="18" height="16"></rect>
+    <path d="M3 9h18"></path>
+    <path d="M7 13h10"></path>
+    <path d="M7 17h7"></path>
+  </svg>
+
+  <span class="button-letter">A</span>
+  </a>&nbsp;
+    <a id="SHM_button" class="button2 mode-button" href="javascript:Page.clickToggleMethods()"
+    title="Show or Hide Methods"
+   aria-label="Show or Hide Methods">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M7 5L3 12l4 7"></path>
+    <path d="M17 5l4 7-4 7"></path>
+    <path d="M10 12h4"></path>
+  </svg>
+
+  <span class="button-letter">M</span>
+  </a>&nbsp;
     </span>
 
     &nbsp; 
