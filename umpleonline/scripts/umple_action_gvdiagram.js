@@ -623,6 +623,7 @@ GvDiagramEdit.bindClassDiagram = function(canvasX, canvasY) {
 
       attributeAnchors[j].addEventListener("dblclick", function(event) {
         event.preventDefault();
+        event.stopPropagation();
         Action.displayAttributeMenu(event, attributeName, attributeType);
       });
 
