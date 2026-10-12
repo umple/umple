@@ -18,6 +18,8 @@ $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
 
+require_once(__DIR__."/version_history.php");
+
 // Trick to find the root directory of this copy of UmpleOnline
 // Assumes this script lives in /scripts; if you move this file it
 // will need to change.
