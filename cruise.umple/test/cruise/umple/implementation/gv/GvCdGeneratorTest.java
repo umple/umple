@@ -37,6 +37,7 @@ public class GvCdGeneratorTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/gv/ColourParsingTest3cd.gv");
 
     SampleFileWriter.destroy(pathToInput + "/gv/IncreaseClassSepcd.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/Enumerationcd.gv");
   }
 
   @Test
@@ -123,5 +124,12 @@ public class GvCdGeneratorTest extends TemplateTest
   {
     language = null;
     assertUmplePartialTemplateFor("gv/IncreaseClassSep.ump","gv/IncreaseClassSep.gv.txt");
+  }
+
+  @Test
+  public void display_enumerations()
+  {
+    language = null;
+    assertUmplePartialTemplateFor("gv/Enumeration.ump","gv/Enumeration.gv.txt");
   }
 }
