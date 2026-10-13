@@ -3366,20 +3366,130 @@ public void braceMismatch_filenameUsesBasename() {
   public void ReqEarsPlain()
   {
     assertNoWarningsParse("458_ReqEarsPlain.ump");
-    Assert.assertEquals("ears", model.getAllRequirements().get("E7").getLanguage());
+    Requirement req = model.getAllRequirements().get("E7");
+    Assert.assertEquals("ears", req.getLanguage());
+    Assert.assertEquals("When the power fails, the controller shall close the valve.", req.getStatement());
+    Assert.assertFalse(req.hasStructuredEarsFields());
   }
   //Issue 2484 (EARS)
   @Test
   public void ReqEarsPatterns()
   {
     assertNoWarningsParse("458_ReqEarsPatterns.ump");
-    Assert.assertEquals("ears", model.getAllRequirements().get("E6").getLanguage());
+
+    Requirement ubiquitous = model.getAllRequirements().get("E1");
+    Assert.assertNotNull(ubiquitous);
+    Assert.assertEquals("", ubiquitous.getStatement());
+    Assert.assertEquals("mobile phone", ubiquitous.getEarsSystem());
+    Assert.assertEquals("have a mass of less than 150 grams", ubiquitous.getEarsShall());
+    Assert.assertNull(ubiquitous.getEarsWhen());
+
+    Requirement eventDriven = model.getAllRequirements().get("E2");
+    Assert.assertEquals("mute is selected", eventDriven.getEarsWhen());
+    // The EARS trigger is kept apart from the userStory when field
+    Assert.assertNull(eventDriven.getWhen());
+
+    Assert.assertEquals("there is no card in the ATM", model.getAllRequirements().get("E3").getEarsWhile());
+    Assert.assertEquals("the car has a sunroof", model.getAllRequirements().get("E4").getEarsWhere());
+    Assert.assertEquals("an invalid credit card number is entered", model.getAllRequirements().get("E5").getEarsIf());
+
+    Requirement complex = model.getAllRequirements().get("E6");
+    Assert.assertEquals("ears", complex.getLanguage());
+    Assert.assertEquals("the aircraft has thrust reversers", complex.getEarsWhere());
+    Assert.assertEquals("the aircraft is on ground", complex.getEarsWhile());
+    Assert.assertEquals("reverse thrust is commanded", complex.getEarsWhen());
+    Assert.assertEquals("an engine has failed", complex.getEarsIf());
+    Assert.assertEquals("engine control system", complex.getEarsSystem());
+    Assert.assertEquals("enable reverse thrust on the working engine only", complex.getEarsShall());
   }
   //Issue 2484 (EARS)
   @Test
   public void ReqNormalStillWorksAfterEarsGrammar()
   {
     assertNoWarningsParse("458_ReqNormalStillWorksAfterEars.ump");
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsClauseLayout()
+  {
+    assertNoWarningsParse("458_ReqEarsClauseLayout.ump");
+    Requirement req = model.getAllRequirements().get("E8");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getStatement());
+
+    // A clause spanning several lines is read as one line
+    Assert.assertEquals("the vault door is open", req.getEarsWhile());
+    // Clauses sharing a line, with or without a space before the brace
+    Assert.assertEquals("the alarm is armed", req.getEarsWhen());
+    Assert.assertEquals("sound the alarm", req.getEarsShall());
+    Assert.assertEquals("the siren fails", req.getEarsIf());
+    Assert.assertEquals("vault controller", req.getEarsSystem());
+
+    // Braces inside a clause are kept
+    Requirement nested = model.getAllRequirements().get("E9");
+    Assert.assertNotNull(nested);
+    Assert.assertEquals("show {status} on the screen", nested.getEarsShall());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsFreeText()
+  {
+    assertNoWarningsParse("458_ReqEarsFreeText.ump");
+    Requirement req = model.getAllRequirements().get("E10");
+    Assert.assertNotNull(req);
+
+    // Text outside the clauses is kept as the statement
+    Assert.assertEquals("Rationale: avoids reverse thrust in flight.\nSee the safety case.", req.getStatement());
+    Assert.assertEquals("the aircraft is on ground", req.getEarsWhile());
+    Assert.assertEquals("reverse thrust is commanded", req.getEarsWhen());
+    Assert.assertEquals("enable reverse thrust", req.getEarsShall());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsCombinedOccurrences()
+  {
+    // No warning 410, since the second occurrence supplies the shall clause
+    assertNoWarningsParse("458_ReqEarsCombinedOccurrences.ump");
+    Requirement req = model.getAllRequirements().get("E12");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("ears", req.getLanguage());
+
+    Assert.assertEquals("the door is closed and the alarm is off", req.getEarsWhile());
+    Assert.assertEquals("the button is pressed", req.getEarsWhen());
+    Assert.assertEquals("open the door and turn on the light", req.getEarsShall());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsMissingShall410()
+  {
+    assertHasWarningsParse("458_ReqEarsMissingShall410.ump", 410);
+
+    // Only E13 and E15 lack a response, since an empty shall clause is ignored
+    Assert.assertEquals(2, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals(410, parser.getParseResult().getErrorMessage(1).getErrorType().getErrorCode());
+
+    Requirement withoutShall = model.getAllRequirements().get("E13");
+    Assert.assertEquals("the card is inserted", withoutShall.getEarsWhen());
+    Assert.assertNull(withoutShall.getEarsShall());
+    Assert.assertNull(model.getAllRequirements().get("E15").getEarsShall());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsKeywordsAsText()
+  {
+    assertNoWarningsParse("458_ReqEarsKeywordsAsText.ump");
+
+    Requirement ears = model.getAllRequirements().get("E16");
+    Assert.assertNotNull(ears);
+    Assert.assertFalse(ears.hasStructuredEarsFields());
+    // A body with no clauses is kept verbatim, indentation included
+    Assert.assertEquals("The alarm sounds when { it is armed } and shall { beep }\n  whenever { the door opens } systems { stay locked }", ears.getStatement());
+
+    Requirement plain = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(plain);
+    Assert.assertEquals("", plain.getLanguage());
+    Assert.assertFalse(plain.hasStructuredEarsFields());
+    Assert.assertEquals("when { the door opens }\n  shall { turn on the light }", plain.getStatement());
   }
   @Test
   public void associationName()

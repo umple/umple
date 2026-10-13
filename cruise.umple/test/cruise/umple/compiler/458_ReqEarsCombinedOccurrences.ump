@@ -1,0 +1,12 @@
+// The occurrences of a requirement are combined, so the shall clause may come from a later one.
+// EARS allows several preconditions and responses, so a repeated clause is joined with 'and'
+req E12 ears {
+  while { the door is closed }
+  while { the alarm is off }
+  when { the button is pressed }
+}
+
+req E12 ears {
+  shall { open the door }
+  shall { turn on the light }
+}

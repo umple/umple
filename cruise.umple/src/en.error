@@ -204,6 +204,7 @@
 407: 2, "https://manual.umple.org/?PageBeingDeveloped.html", Quality class '{1}' in requirement '{0}' is missing braces '{}' ;
 408: 2, "https://manual.umple.org/?PageBeingDeveloped.html", Requirement '{0}' has no quality classes defined, but implementsReq specifies quality class name '{1}' ;
 409: 2, "https://manual.umple.org/?PageBeingDeveloped.html", Quality class name '{1}' not found in requirement '{0}'. ;
+410: 4, "https://manual.umple.org/?PageBeingDeveloped.html", EARS requirement '{0}' has no shall clause stating how the system responds ;
 
 # Messages relating to deprecated features starting with 901
 901: 4, "https://manual.umple.org/?W901DeprecatedKeywordConstant.html", Keyword "constant" deprecated, please use "const" ;

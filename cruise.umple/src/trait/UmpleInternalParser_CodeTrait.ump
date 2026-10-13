@@ -413,6 +413,12 @@ class UmpleInternalParser
       }
     }
 
+    // EARS clauses such as "shall { open the door }", as { keyword, content }
+    List<String[]> parsedEarsClauses = new ArrayList<String[]>();
+    if ("ears".equals(newLanguage) && !newContent.equals("")) {
+      newContent = parseEarsClauses(newContent, parsedEarsClauses);
+    }
+
     // Validate quality section content and extract quality class data
     List<String[]> qualityClassData = new ArrayList<String[]>();
     if (QUALITY_LANG.equals(newLanguage)) {
@@ -500,6 +506,7 @@ class UmpleInternalParser
       }
 
       addUseCaseElements(existingRequirement, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
+      addEarsClauses(existingRequirement, parsedEarsClauses);
     }
     else {
       if (QUALITY_LANG.equals(newLanguage)) {
@@ -517,6 +524,7 @@ class UmpleInternalParser
       model.getAllRequirements().put(reqID, req);
 
       addUseCaseElements(req, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
+      addEarsClauses(req, parsedEarsClauses);
     }
   }
 //---------------------------------end----------------------------------------
