@@ -8,3 +8,5 @@ class Supplier
 class Product
 {
 }
+
+// @@@skipcompile distributable is a Java feature
