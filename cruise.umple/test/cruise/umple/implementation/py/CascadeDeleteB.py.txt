@@ -2,118 +2,114 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class B():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #B Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class B:
     def __init__(self):
-        self._myC = None
         self._myC = []
 
-    #------------------------
-    # INTERFACE
-    #------------------------
-    # Code from template association_GetMany 
     def getMyC1(self, index):
-        aMyC = self._myC[index]
-        return aMyC
+        return self._myC[index]
 
     def getMyC2(self):
-        newMyC = tuple(self._myC)
-        return newMyC
+        return tuple(self._myC)
+
+    def getMyC(self, *args, **kwargs):
+        bound = __class__._bindArguments(("index",), False, args, kwargs)
+        if bound is not None and (isinstance(bound[0], int) and not isinstance(bound[0], bool)):
+            return __class__.getMyC1(self, *bound)
+        bound = __class__._bindArguments((), False, args, kwargs)
+        if bound is not None:
+            return __class__.getMyC2(self, *bound)
+        raise TypeError("No method matches provided parameters")
 
     def numberOfMyC(self):
-        number = len(self._myC)
-        return number
+        return len(self._myC)
 
     def hasMyC(self):
-        has = len(self._myC) > 0
-        return has
+        return len(self._myC) > 0
 
     def indexOfMyC(self, aMyC):
-        index = (-1 if not aMyC in self._myC else self._myC.index(aMyC))
-        return index
+        return next((i for i, x in enumerate(self._myC) if x is aMyC), -1)
 
-    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMyC():
         return 0
 
-    # Code from template association_AddManyToOne 
     def addMyC1(self, aMyD):
         from example.C import C
-        return C(aMyD, self)
+        return C.alternateConstructor(aMyD, self)
 
     def addMyC2(self, aMyC):
-        wasAdded = False
-        if (aMyC) in self._myC :
+        if any(x is aMyC for x in self._myC):
             return False
         existingB = aMyC.getB()
-        isNewB = not (existingB is None) and not self == existingB
-        if isNewB :
-            aMyC.setB(self)
-        else :
+        isNewB = existingB is not None and existingB is not self
+        if isNewB:
+            if not aMyC.setB(self):
+                return False
+        else:
             self._myC.append(aMyC)
-        wasAdded = True
-        return wasAdded
+        return True
+
+    def addMyC(self, *args, **kwargs):
+        from example.C import C
+        from example.D import D
+        bound = __class__._bindArguments(("aMyC",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or isinstance(bound[0], C)):
+            return __class__.addMyC2(self, *bound)
+        bound = __class__._bindArguments(("aMyD",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or isinstance(bound[0], D)):
+            return __class__.addMyC1(self, *bound)
+        raise TypeError("No method matches provided parameters")
 
     def removeMyC(self, aMyC):
-        wasRemoved = False
-        #Unable to remove aMyC, as it must always have a b
-        if not self == aMyC.getB() :
-            self._myC.remove(aMyC)
-            wasRemoved = True
-        return wasRemoved
+        if aMyC.getB() is self:
+            return False
+        index = next((i for i, x in enumerate(self._myC) if x is aMyC), -1)
+        if index >= 0:
+            del self._myC[index]
+        return True
 
-    # Code from template association_AddIndexControlFunctions 
     def addMyCAt(self, aMyC, index):
-        wasAdded = False
-        if self.addMyC(aMyC) :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfMyC() :
-                index = self.numberOfMyC() - 1
-            self._myC.remove(aMyC)
-            self._myC.insert(index, aMyC)
-            wasAdded = True
-        return wasAdded
+        if not self.addMyC2(aMyC):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfMyC():
+            index = self.numberOfMyC() - 1
+        del self._myC[next((i for i, x in enumerate(self._myC) if x is aMyC), -1)]
+        self._myC.insert(index, aMyC)
+        return True
 
     def addOrMoveMyCAt(self, aMyC, index):
-        wasAdded = False
-        if (aMyC) in self._myC :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfMyC() :
-                index = self.numberOfMyC() - 1
-            self._myC.remove(aMyC)
-            self._myC.insert(index, aMyC)
-            wasAdded = True
-        else :
-            wasAdded = self.addMyCAt(aMyC, index)
-        return wasAdded
+        if not any(x is aMyC for x in self._myC):
+            return self.addMyCAt(aMyC, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfMyC():
+            index = self.numberOfMyC() - 1
+        del self._myC[next((i for i, x in enumerate(self._myC) if x is aMyC), -1)]
+        self._myC.insert(index, aMyC)
+        return True
 
     def delete(self):
-
-        while len(self._myC) > 0 :
-            aMyC = self._myC[len(self._myC) - 1]
+        while len(self._myC) > 0:
+            aMyC = self._myC[-1]
             aMyC.delete()
-            self._myC.remove(aMyC)
+            index = next((i for i, x in enumerate(self._myC) if x is aMyC), -1)
+            if index >= 0:
+                del self._myC[index]
 
-    def getMyC(self, *argv):
-        if len(argv) == 1 and isinstance(argv[0], int) :
-            return self.getMyC1(argv[0])
-        if len(argv) == 0 :
-            return self.getMyC2()
-        raise TypeError("No method matches provided parameters")
-
-    def addMyC(self, *argv):
-        from example.C import C
-        if len(argv) == 1 and isinstance(argv[0], D) :
-            return self.addMyC1(argv[0])
-        if len(argv) == 1 and isinstance(argv[0], C) :
-            return self.addMyC2(argv[0])
-        raise TypeError("No method matches provided parameters")
+    @staticmethod
+    def _bindArguments(names, varargs, args, kwargs):
+        if len(args) > len(names) and not varargs:
+            return None
+        bound = list(args[:len(names)])
+        for name in names[len(bound):]:
+            if name not in kwargs:
+                return None
+            bound.append(kwargs[name])
+        if len(kwargs) != len(names) - min(len(args), len(names)):
+            return None
+        if varargs:
+            bound.append(args[len(names):])
+        return bound

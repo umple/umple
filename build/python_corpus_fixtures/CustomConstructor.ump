@@ -1,0 +1,6 @@
+// Custom constructors are not generated for Python in this release (error 9210)
+class Counter
+{
+  Integer n = 0;
+  Counter() { setN(7); }
+}

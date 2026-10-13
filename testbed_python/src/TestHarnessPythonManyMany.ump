@@ -1,0 +1,38 @@
+// Models for the Python-specific behaviour of associations whose two ends are both many:
+// identity with keyed classes, rollback at a bound, batch setters, key members, sorting and
+// reflexive ends.
+namespace cruise.manymany;
+
+// Both sides are keyed, so an equal but different object exists on each side.
+class MmMentor { name; key { name } }
+class MmStudent { Integer id; key { id } }
+association { * MmMentor mentors -- 0..3 MmStudent students; }
+
+// The upper bound of courses refuses a link made from the other side.
+class MmCourse { code; }
+class MmPupil { name; }
+association { 0..2 MmCourse courses -- * MmPupil pupils; }
+
+// The lower bound of clubs refuses an unlink made from the other side.
+class MmClub { name; }
+class MmMember { name; }
+association { 2..* MmClub clubs -- 0..5 MmMember members; }
+
+// Batch setters of an m..n end and an m..* end.
+class MmPanel { name; }
+class MmJudge { name; }
+association { 2..3 MmPanel panels -- 1..* MmJudge judges; }
+
+// An association end that is a key member.
+class MmLock { name; key { name, keys } }
+class MmKey { name; }
+association { * MmLock locks -- 0..3 MmKey keys; }
+
+// Both ends sorted.
+class MmAuthor { name; }
+class MmBook { title; }
+association { * MmAuthor authors sorted {name} -- * MmBook books sorted {title}; }
+
+// Reflexive ends, without and with a lower bound.
+class MmPeer { name; 0..3 self peers; }
+class MmRing { name; 2..4 self neighbours; }

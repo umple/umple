@@ -1,0 +1,42 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+
+class NativeMethods:
+    """Native method bodies: untagged bodies are Python, tagged Python bodies win, other languages are left out."""
+
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass
+
+    def evens(self, n):
+        """Sums the even numbers below n."""
+        # line 6 "NativeMethods.ump"
+        total = 0
+        for i in range(n):
+            if i % 2 == 0:
+                total += i
+        return total
+        # end line
+
+    def text(self):
+        # line 14 "NativeMethods.ump"
+        return """one
+  two"""
+        # end line
+
+    def chosen(self):
+        # line 21 "NativeMethods.ump"
+        return "python"
+        # end line
+
+    def nothing(self):
+        pass
+
+    @staticmethod
+    def twice(input):
+        # line 30 "NativeMethods.ump"
+        return input * 2
+        # end line

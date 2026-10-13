@@ -1,78 +1,89 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from enum import Enum, auto
+from enum import Enum
 
-class A_Guard():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #A_Guard State Machines
+
+class A_Guard:
     class Status(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
-        def __str__(self):
-            return str(self.value)
-        S1 = auto()
-        S2 = auto()
-        S3 = auto()
+        S1 = "S1"
+        S2 = "S2"
+        S3 = "S3"
 
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+        def __str__(self):
+            return self.value
+
     def __init__(self):
         self._status = None
-        self.setStatus(A_Guard.Status.S1)
+        self._statusVisit = 0
+        self._deleted = False
+        self.setStatus(__class__.Status.S1)
+        if self._deleted:
+            return
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def getStatusFullName(self):
-        answer = self._status.__str__()
+        answer = str(self._status)
         return answer
 
     def getStatus(self):
         return self._status
 
     def e1(self, myB):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus == A_Guard.Status.S1 :
-            if self.checkGuard1(myB) :
-                self.setStatus(A_Guard.Status.S2)
+        visit = self._statusVisit
+        if aStatus is __class__.Status.S1:
+            guard = self.checkGuard1(myB)
+            if self._deleted:
+                return True
+            if self._statusVisit != visit:
+                return wasEventProcessed
+            if guard:
+                self.setStatus(__class__.Status.S2)
                 wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def e2(self, myB, mySecondB):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus == A_Guard.Status.S2 :
-            if self.checkGuard1(myB) :
-                self.setStatus(A_Guard.Status.S3)
+        visit = self._statusVisit
+        if aStatus is __class__.Status.S2:
+            guard = self.checkGuard1(myB)
+            if self._deleted:
+                return True
+            if self._statusVisit != visit:
+                return wasEventProcessed
+            if guard:
+                self.setStatus(__class__.Status.S3)
                 wasEventProcessed = True
-        elif aStatus == A_Guard.Status.S3 :
-            if self.checkGuard2(myB, mySecondB) :
-                self.setStatus(A_Guard.Status.S1)
+        elif aStatus is __class__.Status.S3:
+            guard = self.checkGuard2(myB, mySecondB)
+            if self._deleted:
+                return True
+            if self._statusVisit != visit:
+                return wasEventProcessed
+            if guard:
+                self.setStatus(__class__.Status.S1)
                 wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def setStatus(self, aStatus):
         self._status = aStatus
+        self._statusVisit += 1
 
     def delete(self):
-        pass
-
+        self._deleted = True
 
     def checkGuard1(self, myB):
+        # line 19 "../testTwoParameterGuardPython.ump"
         return True
-
+        # end line
 
     def checkGuard2(self, myB, mySecondB):
+        # line 22 "../testTwoParameterGuardPython.ump"
         return True
-
+        # end line

@@ -21,4 +21,11 @@ public class PythonConstraintExpressionsTest extends ConstraintExpressionsTest{
 	  language = "Python";
 	  languagePath = "py";
 	}
+
+  @Override
+  @Test
+  @Ignore("the shared model has Java in untagged method bodies or extra code, which Python emits as native code; the corpus gate classifies it as generation-only")
+  public void BasicPrecondition1()
+  {
+  }
 }

@@ -1,0 +1,3368 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+*/
+
+namespace cruise.umple.compiler;
+
+// Translation of untagged Java-style snippets in actions, injections, derived attributes and defaults
+class PythonGenerator
+{
+  // Function-level imports needed by the last translated snippet; see getSnippetImports.
+  private List<String> snippetImports = new ArrayList<String>();
+
+  // Translates an untagged snippet, resolving names against uClass and the parameters in scope.
+  // isExpression means a single expression (default value, derived attribute); isStatic means there
+  // is no object (a static method, or a class-body initializer such as a constant). Statements come
+  // back unindented, preceded by their imports; an expression's imports are in getSnippetImports.
+  // Unsupported code is reported (9211) at position and gives null. slot names the code for the user
+  // and starts with its kind (see snippetSuggestion).
+  public String translateSnippetAt(String code, UmpleClass uClass, List<MethodParameter> parameters,
+    boolean isStatic, boolean isExpression, Position position, String slot)
+  {
+    snippetImports.clear();
+    PythonSnippetTranslator translator = PythonSnippetTranslator.forClass(this, uClass, parameters, isStatic);
+    translator.setInActivity(slot.startsWith("the do activity"));
+    try
+    {
+      String python = isExpression ? translator.translateExpression(code) : translator.translateStatements(code);
+      useImports(translator);
+      return python;
+    }
+    catch (PythonSnippetException e)
+    {
+      reportSnippetError(position, slot, e.getMessage());
+      return null;
+    }
+  }
+
+  // A class value, translated to run once the class exists (classValue): the class's own names are
+  // qualified and the imports it needs are in getSnippetImports
+  public String translateClassValue(String code, UmpleClass uClass, boolean isList, Position position, String slot)
+  {
+    snippetImports.clear();
+    PythonSnippetTranslator translator = PythonSnippetTranslator.forClassValue(this, uClass);
+    try
+    {
+      String python = isList ? translator.translateList(code) : translator.translateExpression(code);
+      useImports(translator);
+      return python;
+    }
+    catch (PythonSnippetException e)
+    {
+      reportSnippetError(position, slot, e.getMessage());
+      return null;
+    }
+  }
+
+  // The Python list for the initial value of a list attribute. The model keeps {"a", "b"} as the
+  // comma-separated elements "a", "b"; each element is translated as an expression.
+  public String translateListDefault(String code, UmpleClass uClass, boolean isStatic, Position position, String slot)
+  {
+    snippetImports.clear();
+    PythonSnippetTranslator translator = PythonSnippetTranslator.forClass(this, uClass, null, isStatic);
+    try
+    {
+      String python = translator.translateList(code);
+      useImports(translator);
+      return python;
+    }
+    catch (PythonSnippetException e)
+    {
+      reportSnippetError(position, slot, e.getMessage());
+      return null;
+    }
+  }
+
+  // Import lines (for other model classes) that the function holding the last translated snippet must
+  // run first. Statements already start with them; an expression's caller emits them.
+  public List<String> getSnippetImports()
+  {
+    return new ArrayList<String>(snippetImports);
+  }
+
+  // Imports are recorded only for a translation that succeeded, so rejected code leaves none behind.
+  private void useImports(PythonSnippetTranslator translator)
+  {
+    snippetImports.addAll(translator.getImports());
+    for (String line : translator.getModuleImports())
+    {
+      addModuleImport(line);
+    }
+  }
+
+  private void reportSnippetError(Position position, String slot, String reason)
+  {
+    Position at = position != null ? position : new Position("", 0, 0, 0);
+    report(new ErrorMessage(9211, at, slot, reason, snippetSuggestion(slot)));
+  }
+
+  // The Python alternative the user can write instead, which depends on the kind of slot. Initial
+  // values have no language alternatives in Umple, so they call a Python method instead.
+  private static String snippetSuggestion(String slot)
+  {
+    String kind = slot == null ? "" : slot.toLowerCase().replaceFirst("^the ", "");
+    if (kind.startsWith("entry"))
+    {
+      return "entry / Python { self.setN(1) }";
+    }
+    if (kind.startsWith("exit"))
+    {
+      return "exit / Python { self.setN(1) }";
+    }
+    if (kind.startsWith("do"))
+    {
+      return "do Python { self.setN(1) }";
+    }
+    if (kind.startsWith("before") || kind.startsWith("after"))
+    {
+      return kind.replaceFirst(" .*", "") + " setN Python { print(aN) }";
+    }
+    if (kind.startsWith("derived"))
+    {
+      return "Integer total = { a + b } Python { self.getA() + self.getB() }";
+    }
+    if (kind.startsWith("constant"))
+    {
+      return "a literal value";
+    }
+    if (kind.startsWith("default"))
+    {
+      return "Integer n = initialN(); with Integer initialN() Python { return len(\"abc\") }";
+    }
+    return "e -> / Python { self.setN(1) } s2;";
+  }
+}
+
+// Translates untagged Java snippets for one class: a tokenizer, a recursive descent parser for the
+// supported subset, and an emitter that resolves names against the model and writes typed Python.
+// Where Java's evaluation order needs it (x++ inside an expression, a receiver read once, effects in
+// a short-circuit branch) the emitter writes statements first, keeping earlier values in temporaries.
+class PythonSnippetTranslator
+{
+  depend java.util.*;
+  depend java.util.regex.*;
+  depend cruise.umple.util.*;
+
+  // Python operator precedence, lowest first. An operand is parenthesized when its own level is lower
+  // than its place requires.
+  private static final int COND = 1;
+  private static final int OR = 2;
+  private static final int AND = 3;
+  private static final int NOT = 4;
+  private static final int COMPARE = 5;
+  private static final int BIT_OR = 6;
+  private static final int BIT_XOR = 7;
+  private static final int BIT_AND = 8;
+  private static final int SHIFT = 9;
+  private static final int SUM = 10;
+  private static final int PRODUCT = 11;
+  private static final int UNARY = 12;
+  private static final int ATOM = 13;
+
+  // Java binary operators by precedence level, lowest first.
+  private static final String[][] BINARY_LEVELS = {
+    { "||" }, { "&&" }, { "|" }, { "^" }, { "&" }, { "==", "!=" }, { "<", ">", "<=", ">=" },
+    { "<<", ">>", ">>>" }, { "+", "-" }, { "*", "/", "%" } };
+
+  private static final List<String> ASSIGNMENTS = Arrays.asList("=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<=", ">>=", ">>>=");
+
+  // Longest first, so that the tokenizer takes the longest operator.
+  private static final String[] OPERATORS = { ">>>=", "<<=", ">>=", ">>>", "...", "->", "::", "++", "--", "&&", "||",
+    "==", "!=", "<=", ">=", "+=", "-=", "*=", "/=", "%=", "&=", "|=", "^=", "<<", ">>",
+    "(", ")", "{", "}", "[", "]", ";", ",", ".", "@", "=", ">", "<", "!", "~", "?", ":", "+", "-", "*", "/", "&", "|", "^", "%" };
+
+  private static final List<String> PRIMITIVES = Arrays.asList("boolean", "byte", "char", "short", "int", "long", "float", "double");
+
+  private static final List<String> JAVA_KEYWORDS = Arrays.asList("abstract", "assert", "boolean", "break", "byte", "case",
+    "catch", "char", "class", "const", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally",
+    "float", "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native", "new", "package",
+    "private", "protected", "public", "return", "short", "static", "strictfp", "super", "switch", "synchronized", "this",
+    "throw", "throws", "transient", "try", "void", "volatile", "while", "true", "false", "null");
+
+  // Names the translation itself uses, or a constraint in the same method (len, Fraction), which a
+  // snippet's locals therefore cannot keep.
+  private static final List<String> TRANSLATION_NAMES = Arrays.asList("self", "str", "int", "float", "print", "math", "RuntimeError",
+    "len", "Fraction", "fractions", "time", "random", "abs", "max", "min", "thread", "_javaRound", "_javaMax", "_javaMin", "_javaFloor",
+    "_javaCeil", "_javaSqrt", "_javaPow");
+
+  // Java's numeric literals, which model values share: underscores only between digits.
+  private static final String DIGITS = "[0-9](?:[0-9_]*[0-9])?";
+  private static final Pattern NUMBER = Pattern.compile(
+    "0[xX][0-9a-fA-F](?:[0-9a-fA-F_]*[0-9a-fA-F])?[lL]?|0[bB][01](?:[01_]*[01])?[lL]?"
+    + "|(?:" + DIGITS + "\\.(?:" + DIGITS + ")?|\\." + DIGITS + ")(?:[eE][+-]?" + DIGITS + ")?[fFdD]?"
+    + "|" + DIGITS + "(?:[eE][+-]?" + DIGITS + "[fFdD]?|[fFdD])|" + DIGITS + "[lL]?");
+
+  public static boolean isJavaNumber(String text)
+  {
+    return NUMBER.matcher(text).matches();
+  }
+
+  private PythonGenerator gen;
+  private UmpleClass uClass;
+  private boolean isStatic;
+  private Map<String, String[]> parameters = new LinkedHashMap<String, String[]>();
+
+  // The snippet being translated
+  private boolean expressionOnly;
+  private boolean classBody;
+  // A class value evaluated once the class exists, at module level, rather than in its body
+  private boolean afterClass;
+  // Code of a do activity, which runs with its worker, thread, in scope
+  private boolean inActivity;
+  private String source;
+  private List<PythonSnippetNode> tokens;
+  private List<PythonSnippetNode> comments;
+  private int pos;
+
+  // Emitted Python and the state of emission
+  private List<String> out;
+  private int indent;
+  private List<Map<String, String[]>> scopes;
+  private List<PythonSnippetNode> loops;
+  private List<Integer> loopScopes;
+  private Set<String> usedNames;
+  private int tempCount;
+  private List<String> imports;
+  private List<String> moduleImports;
+  private Map<UmpleClass, List<String[]>> generatedMethods = new HashMap<UmpleClass, List<String[]>>();
+
+  // A translator for snippets of uClass with the given method or event parameters in scope. isStatic
+  // means the code has no object (self).
+  public static PythonSnippetTranslator forClass(PythonGenerator gen, UmpleClass uClass, List<MethodParameter> parameters, boolean isStatic)
+  {
+    PythonSnippetTranslator translator = new PythonSnippetTranslator();
+    translator.gen = gen;
+    translator.uClass = uClass;
+    translator.isStatic = isStatic;
+    if (parameters != null)
+    {
+      for (MethodParameter parameter : parameters)
+      {
+        String kind = known(translator.kindOf(parameter.getType(), uClass));
+        translator.parameters.put(parameter.getName(),
+          new String[] { PythonGenerator.parameterName(parameter.getName()), parameter.getIsList() ? "list:" + kind : kind });
+      }
+    }
+    return translator;
+  }
+
+  public void setInActivity(boolean inActivity)
+  {
+    this.inActivity = inActivity;
+  }
+
+  // For a class value evaluated once the class exists (PythonGenerator.classValue)
+  public static PythonSnippetTranslator forClassValue(PythonGenerator gen, UmpleClass uClass)
+  {
+    PythonSnippetTranslator translator = forClass(gen, uClass, null, true);
+    translator.afterClass = true;
+    return translator;
+  }
+
+  // Python statements for a snippet of Java statements, unindented, preceded by the imports they need;
+  // pass when the snippet has no statements.
+  public String translateStatements(String code)
+  {
+    begin(code, false);
+    List<PythonSnippetNode> body = new ArrayList<PythonSnippetNode>();
+    while (!atEnd())
+    {
+      body.add(statement());
+    }
+    emitStatements(body);
+    emitComments(source.length());
+    if (onlyComments(0))
+    {
+      line("pass");
+    }
+    List<String> lines = new ArrayList<String>(imports);
+    lines.addAll(out);
+    return String.join("\n", lines);
+  }
+
+  public String translateExpression(String code)
+  {
+    begin(code, true);
+    PythonSnippetNode node = expression();
+    accept(";"); // Java places the expression in "return <code>;", so a closing semicolon is harmless
+    expectEnd();
+    return value(emit(node)).code;
+  }
+
+  public String translateList(String code)
+  {
+    begin(code, true);
+    List<String> elements = new ArrayList<String>();
+    if (!atEnd())
+    {
+      do
+      {
+        elements.add(value(emit(expression())).code);
+      }
+      while (accept(","));
+    }
+    expectEnd();
+    return "[" + String.join(", ", elements) + "]";
+  }
+
+  // Import lines for other model classes the translated code uses, to run inside its function.
+  public List<String> getImports()
+  {
+    return imports == null ? new ArrayList<String>() : imports;
+  }
+
+  // Import lines the translated code needs at module level: standard modules, and model classes that
+  // code in the class body uses.
+  public List<String> getModuleImports()
+  {
+    return moduleImports == null ? new ArrayList<String>() : moduleImports;
+  }
+
+  private void begin(String code, boolean isExpression)
+  {
+    expressionOnly = isExpression;
+    classBody = isExpression && isStatic && !afterClass;
+    tokenize(code == null ? "" : code);
+    pos = 0;
+    out = new ArrayList<String>();
+    indent = 0;
+    scopes = new ArrayList<Map<String, String[]>>();
+    loops = new ArrayList<PythonSnippetNode>();
+    loopScopes = new ArrayList<Integer>();
+    tempCount = 0;
+    imports = new ArrayList<String>();
+    moduleImports = new ArrayList<String>();
+    usedNames = new HashSet<String>();
+    for (PythonSnippetNode token : tokens)
+    {
+      if (token.getType().equals("ident"))
+      {
+        usedNames.add(token.getText());
+      }
+    }
+    for (String[] parameter : parameters.values())
+    {
+      usedNames.add(parameter[0]);
+    }
+  }
+
+  private static PythonSnippetException fail(String reason)
+  {
+    return new PythonSnippetException(reason, null);
+  }
+
+  //------------------------
+  // Tokenizer
+  //------------------------
+
+  private void tokenize(String code)
+  {
+    source = code;
+    tokens = new ArrayList<PythonSnippetNode>();
+    comments = new ArrayList<PythonSnippetNode>();
+    int i = 0;
+    int n = code.length();
+    while (i < n)
+    {
+      char c = code.charAt(i);
+      if (Character.isWhitespace(c))
+      {
+        i++;
+      }
+      else if (code.startsWith("//", i))
+      {
+        int end = i;
+        while (end < n && code.charAt(end) != '\n' && code.charAt(end) != '\r')
+        {
+          end++;
+        }
+        comments.add(new PythonSnippetNode("comment", code.substring(i + 2, end), i));
+        i = end;
+      }
+      else if (code.startsWith("/*", i))
+      {
+        int end = code.indexOf("*/", i + 2);
+        if (end < 0)
+        {
+          throw fail("a comment is not closed");
+        }
+        comments.add(new PythonSnippetNode("comment", code.substring(i + 2, end), i));
+        i = end + 2;
+      }
+      else if (c == '$')
+      {
+        throw fail("names starting with $ are not Java as Umple uses it (this looks like PHP)");
+      }
+      else if (Character.isJavaIdentifierStart(c))
+      {
+        int start = i;
+        while (i < n && Character.isJavaIdentifierPart(code.charAt(i)))
+        {
+          i++;
+        }
+        String name = code.substring(start, i);
+        if (!name.matches("[\\p{L}_][\\p{L}\\p{Nd}_]*"))
+        {
+          throw fail("the name " + name + " is not supported, because Python names can only have letters, digits and _");
+        }
+        tokens.add(new PythonSnippetNode("ident", name, start));
+      }
+      else if (Character.isDigit(c) || (c == '.' && i + 1 < n && Character.isDigit(code.charAt(i + 1))))
+      {
+        i = number(code, i);
+      }
+      else if (c == '"')
+      {
+        i = stringLiteral(code, i);
+      }
+      else if (c == '\'')
+      {
+        i = charLiteral(code, i);
+      }
+      else
+      {
+        String op = null;
+        for (String candidate : OPERATORS)
+        {
+          if (code.startsWith(candidate, i))
+          {
+            op = candidate;
+            break;
+          }
+        }
+        if (op == null)
+        {
+          throw fail("'" + c + "' is not Java syntax");
+        }
+        tokens.add(new PythonSnippetNode("op", op, i));
+        i += op.length();
+      }
+    }
+    tokens.add(new PythonSnippetNode("end", "", n));
+  }
+
+  // A numeric literal becomes its Python spelling: suffixes dropped, octal written 0o, and a float
+  // without a point or exponent given .0 so that it stays a float.
+  private int number(String code, int i)
+  {
+    Matcher m = NUMBER.matcher(code);
+    m.region(i, code.length());
+    if (!m.lookingAt() || (m.end() < code.length() && (Character.isJavaIdentifierPart(code.charAt(m.end())) || code.charAt(m.end()) == '.')))
+    {
+      throw fail("the number starting at '" + code.substring(i, Math.min(code.length(), i + 10)).trim() + "' is not supported");
+    }
+    String text = m.group();
+    // Java allows any number of underscores between digits, Python only single ones: they are dropped.
+    boolean isFloat = !text.matches("0[xXbB].*") && text.matches(".*[.eEfFdD].*");
+    String python = text.replaceAll(isFloat ? "[fFdD]$" : "[lL]$", "").replace("_", "");
+    if (isFloat && !python.matches(".*[.eE].*"))
+    {
+      python = python + ".0";
+    }
+    else if (!isFloat && python.length() > 1 && python.matches("0[0-9]+"))
+    {
+      if (python.matches(".*[89].*"))
+      {
+        throw fail("'" + text + "' is not a valid octal number");
+      }
+      python = "0o" + python.substring(1);
+    }
+    if (!isFloat && python.matches("0[xXbBoO].*"))
+    {
+      // Java reads a hexadecimal, octal or binary literal as the bits of a signed int, or long with L
+      char radix = Character.toLowerCase(python.charAt(1));
+      java.math.BigInteger value = new java.math.BigInteger(python.substring(2), radix == 'x' ? 16 : radix == 'b' ? 2 : 8);
+      int bits = text.matches(".*[lL]$") ? 64 : 32;
+      python = value.testBit(bits - 1) ? "(" + value.subtract(java.math.BigInteger.ONE.shiftLeft(bits)) + ")" : python;
+    }
+    PythonSnippetNode token = new PythonSnippetNode(isFloat ? "float" : text.matches(".*[lL]$") ? "long" : "int", python, i);
+    tokens.add(token);
+    return m.end();
+  }
+
+  private int stringLiteral(String code, int i)
+  {
+    if (code.startsWith("\"\"\"", i))
+    {
+      throw fail("text blocks are not supported");
+    }
+    StringBuilder value = new StringBuilder();
+    int j = i + 1;
+    while (true)
+    {
+      if (j >= code.length() || code.charAt(j) == '\n')
+      {
+        throw fail("a string is not closed");
+      }
+      if (code.charAt(j) == '"')
+      {
+        break;
+      }
+      if (code.charAt(j) == '\\')
+      {
+        j = escape(code, j, value);
+      }
+      else
+      {
+        value.append(code.charAt(j++));
+      }
+    }
+    tokens.add(new PythonSnippetNode("string", PythonGenerator.pythonString(value.toString()), i));
+    return j + 1;
+  }
+
+  private int charLiteral(String code, int i)
+  {
+    StringBuilder value = new StringBuilder();
+    int j = i + 1;
+    if (j < code.length() && code.charAt(j) == '\\')
+    {
+      j = escape(code, j, value);
+    }
+    else if (j < code.length() && code.charAt(j) != '\'' && code.charAt(j) != '\n')
+    {
+      value.append(code.charAt(j++));
+    }
+    if (j >= code.length() || code.charAt(j) != '\'' || value.length() != 1)
+    {
+      throw fail("a character literal is not valid");
+    }
+    tokens.add(new PythonSnippetNode("char", PythonGenerator.pythonString(value.toString()), i));
+    return j + 1;
+  }
+
+  // Decodes the Java escape sequence starting with the backslash at j into value; returns the index
+  // after it.
+  private int escape(String code, int j, StringBuilder value)
+  {
+    if (j + 1 >= code.length())
+    {
+      throw fail("a string is not closed");
+    }
+    char e = code.charAt(j + 1);
+    switch (e)
+    {
+      case 'b': value.append('\b'); return j + 2;
+      case 't': value.append('\t'); return j + 2;
+      case 'n': value.append('\n'); return j + 2;
+      case 'f': value.append('\f'); return j + 2;
+      case 'r': value.append('\r'); return j + 2;
+      case 's': value.append(' '); return j + 2;
+      case '"': case '\'': case '\\': value.append(e); return j + 2;
+      case 'u':
+        int k = j + 1;
+        while (k < code.length() && code.charAt(k) == 'u')
+        {
+          k++;
+        }
+        if (k + 4 > code.length() || !code.substring(k, k + 4).matches("[0-9a-fA-F]{4}"))
+        {
+          throw fail("a \\u escape needs four hexadecimal digits");
+        }
+        value.append((char) Integer.parseInt(code.substring(k, k + 4), 16));
+        return k + 4;
+      default:
+        int end = j + 1;
+        int limit = e <= '3' ? j + 4 : j + 3;
+        while (end < limit && end < code.length() && code.charAt(end) >= '0' && code.charAt(end) <= '7')
+        {
+          end++;
+        }
+        if (end == j + 1)
+        {
+          throw fail("\\" + e + " is not a Java escape sequence");
+        }
+        value.append((char) Integer.parseInt(code.substring(j + 1, end), 8));
+        return end;
+    }
+  }
+
+  //------------------------
+  // Parser
+  //------------------------
+
+  private PythonSnippetNode peek()
+  {
+    return tokens.get(pos);
+  }
+
+  private PythonSnippetNode peek(int ahead)
+  {
+    return tokens.get(Math.min(pos + ahead, tokens.size() - 1));
+  }
+
+  private PythonSnippetNode next()
+  {
+    PythonSnippetNode token = tokens.get(pos);
+    if (pos < tokens.size() - 1)
+    {
+      pos++;
+    }
+    return token;
+  }
+
+  private boolean atEnd()
+  {
+    return peek().getType().equals("end");
+  }
+
+  private boolean isAt(int ahead, String text)
+  {
+    PythonSnippetNode token = peek(ahead);
+    return (token.getType().equals("op") || token.getType().equals("ident")) && token.getText().equals(text);
+  }
+
+  private boolean is(String text)
+  {
+    return isAt(0, text);
+  }
+
+  private boolean accept(String text)
+  {
+    if (is(text))
+    {
+      next();
+      return true;
+    }
+    return false;
+  }
+
+  private PythonSnippetNode expect(String text)
+  {
+    if (!is(text))
+    {
+      throw unexpected("'" + text + "'");
+    }
+    return next();
+  }
+
+  private void expectEnd()
+  {
+    if (!atEnd())
+    {
+      throw unexpected("the end of the code");
+    }
+  }
+
+  private PythonSnippetException unexpected(String wanted)
+  {
+    PythonSnippetNode token = peek();
+    if (token.getType().equals("op") && ASSIGNMENTS.contains(token.getText()))
+    {
+      return fail("assignments inside expressions are not supported");
+    }
+    String found = token.getType().equals("end") ? "the end of the code"
+      : token.getType().equals("string") ? "a string" : "'" + token.getText() + "'";
+    return fail("expected " + wanted + " but found " + found);
+  }
+
+  private PythonSnippetNode identifier()
+  {
+    PythonSnippetNode token = peek();
+    if (!token.getType().equals("ident") || JAVA_KEYWORDS.contains(token.getText()) && !PRIMITIVES.contains(token.getText()))
+    {
+      throw unexpected("a name");
+    }
+    return next();
+  }
+
+  private static PythonSnippetNode node(String type, String text, PythonSnippetNode at)
+  {
+    return new PythonSnippetNode(type, text, at.getOffset());
+  }
+
+  private PythonSnippetNode statement()
+  {
+    PythonSnippetNode token = peek();
+    if (is("{"))
+    {
+      return block();
+    }
+    if (accept(";"))
+    {
+      return node("empty", "", token);
+    }
+    if (token.getType().equals("ident"))
+    {
+      String word = token.getText();
+      if (isAt(1, ":") && !JAVA_KEYWORDS.contains(word))
+      {
+        throw fail(word.equals("around_proceed") ? "around_proceed is not supported" : "labelled statements are not supported");
+      }
+      switch (word)
+      {
+        case "if": return ifStatement();
+        case "while": return whileStatement();
+        case "for": return forStatement();
+        case "return": return returnStatement();
+        case "break": case "continue":
+          next();
+          expect(";");
+          return node(word, "", token);
+        case "throw": return throwStatement();
+        case "switch": case "do": case "try": case "synchronized": case "assert": case "class": case "interface": case "enum":
+          throw fail("'" + word + "' statements are not supported");
+        default:
+      }
+      if (isDeclaration())
+      {
+        PythonSnippetNode declaration = declaration();
+        expect(";");
+        return declaration;
+      }
+    }
+    PythonSnippetNode statement = expressionStatement();
+    expect(";");
+    return statement;
+  }
+
+  private PythonSnippetNode block()
+  {
+    PythonSnippetNode block = node("block", "", expect("{"));
+    while (!is("}"))
+    {
+      if (atEnd())
+      {
+        throw unexpected("'}'");
+      }
+      block.children.add(statement());
+    }
+    // The closing brace, as an empty statement, keeps the block's last comments inside it.
+    block.children.add(node("empty", "", next()));
+    return block;
+  }
+
+  private PythonSnippetNode ifStatement()
+  {
+    PythonSnippetNode statement = node("if", "", next());
+    expect("(");
+    statement.children.add(expression());
+    expect(")");
+    statement.children.add(statement());
+    if (accept("else"))
+    {
+      statement.children.add(statement());
+    }
+    return statement;
+  }
+
+  private PythonSnippetNode whileStatement()
+  {
+    PythonSnippetNode statement = node("while", "", next());
+    expect("(");
+    statement.children.add(expression());
+    expect(")");
+    statement.children.add(statement());
+    return statement;
+  }
+
+  private PythonSnippetNode forStatement()
+  {
+    PythonSnippetNode token = next();
+    expect("(");
+    if (isForEach())
+    {
+      accept("final");
+      PythonSnippetNode type = node("type", type(), token);
+      PythonSnippetNode statement = node("foreach", identifier().getText(), token);
+      expect(":");
+      statement.children.add(type);
+      statement.children.add(expression());
+      expect(")");
+      statement.children.add(statement());
+      return statement;
+    }
+    PythonSnippetNode statement = node("for", "", token);
+    PythonSnippetNode init = node("block", "", token);
+    if (!is(";"))
+    {
+      if (isDeclaration())
+      {
+        init.children.add(declaration());
+      }
+      else
+      {
+        do
+        {
+          init.children.add(expressionStatement());
+        }
+        while (accept(","));
+      }
+    }
+    expect(";");
+    statement.children.add(init);
+    statement.children.add(is(";") ? null : expression());
+    expect(";");
+    PythonSnippetNode update = node("block", "", token);
+    if (!is(")"))
+    {
+      do
+      {
+        update.children.add(expressionStatement());
+      }
+      while (accept(","));
+    }
+    expect(")");
+    statement.children.add(update);
+    statement.children.add(statement());
+    return statement;
+  }
+
+  // for (Type name : ...), possibly final, with a qualified type
+  private boolean isForEach()
+  {
+    int i = isAt(0, "final") ? 1 : 0;
+    if (!peek(i).getType().equals("ident"))
+    {
+      return false;
+    }
+    i++;
+    while (isAt(i, ".") && peek(i + 1).getType().equals("ident"))
+    {
+      i += 2;
+    }
+    return peek(i).getType().equals("ident") && isAt(i + 1, ":");
+  }
+
+  private PythonSnippetNode returnStatement()
+  {
+    PythonSnippetNode statement = node("return", "", next());
+    if (!accept(";"))
+    {
+      statement.children.add(expression());
+      expect(";");
+    }
+    return statement;
+  }
+
+  // Only throw new RuntimeException(message) is supported; it becomes raise RuntimeError(message).
+  private PythonSnippetNode throwStatement()
+  {
+    PythonSnippetNode statement = node("throw", "", next());
+    if (!is("new") || !isAt(1, "RuntimeException") || !isAt(2, "("))
+    {
+      throw fail("exceptions are not supported, except throw new RuntimeException(message)");
+    }
+    next();
+    next();
+    statement.children.addAll(arguments());
+    if (statement.children.size() > 1)
+    {
+      throw fail("exceptions are not supported, except throw new RuntimeException(message)");
+    }
+    expect(";");
+    return statement;
+  }
+
+  // True when the statement starting here declares local variables: a type followed by a name.
+  private boolean isDeclaration()
+  {
+    PythonSnippetNode first = peek();
+    if (first.getText().equals("final") || PRIMITIVES.contains(first.getText()))
+    {
+      return true;
+    }
+    if (JAVA_KEYWORDS.contains(first.getText()))
+    {
+      return false;
+    }
+    int i = 1;
+    while (isAt(i, ".") && peek(i + 1).getType().equals("ident"))
+    {
+      i += 2;
+    }
+    PythonSnippetNode after = peek(i);
+    return (after.getType().equals("ident") && !after.getText().equals("instanceof"))
+      || isAt(i, "<") && peek(i + 1).getType().equals("ident") && (isAt(i + 2, ">") || isAt(i + 2, ",") || isAt(i + 2, "<"))
+      || isAt(i, "[") && isAt(i + 1, "]");
+  }
+
+  private PythonSnippetNode declaration()
+  {
+    PythonSnippetNode token = peek();
+    accept("final");
+    PythonSnippetNode declaration = node("local", type(), token);
+    do
+    {
+      PythonSnippetNode name = identifier();
+      if (is("["))
+      {
+        throw fail("arrays are not supported");
+      }
+      PythonSnippetNode declarator = node("declarator", name.getText(), name);
+      if (accept("="))
+      {
+        if (is("{"))
+        {
+          throw fail("arrays are not supported");
+        }
+        declarator.children.add(expression());
+      }
+      declaration.children.add(declarator);
+    }
+    while (accept(","));
+    return declaration;
+  }
+
+  private String type()
+  {
+    String name = identifier().getText();
+    while (is(".") && peek(1).getType().equals("ident"))
+    {
+      next();
+      name = name + "." + next().getText();
+    }
+    if (is("<"))
+    {
+      throw fail("generic types such as " + name + "<...> are not supported");
+    }
+    if (is("["))
+    {
+      throw fail("arrays are not supported");
+    }
+    return name;
+  }
+
+  // An assignment, an increment, a call or an object creation, as Java allows for statements.
+  private PythonSnippetNode expressionStatement()
+  {
+    PythonSnippetNode token = peek();
+    PythonSnippetNode target = expression();
+    if (peek().getType().equals("op") && ASSIGNMENTS.contains(peek().getText()))
+    {
+      PythonSnippetNode assignment = node("assign", next().getText(), token);
+      if (assignment.getText().equals(">>>="))
+      {
+        throw fail("the operator >>>= is not supported");
+      }
+      assignment.children.add(target);
+      assignment.children.add(expression());
+      if (peek().getType().equals("op") && ASSIGNMENTS.contains(peek().getText()))
+      {
+        throw fail("chained assignments such as a = b = c are not supported");
+      }
+      return assignment;
+    }
+    String type = target.getType();
+    if (!type.equals("prefix") && !type.equals("postfix") && !type.equals("call") && !type.equals("new"))
+    {
+      throw fail("'" + source.substring(token.getOffset(), peek().getOffset()).trim() + "' is not a statement");
+    }
+    PythonSnippetNode statement = node("expression", "", token);
+    statement.children.add(target);
+    return statement;
+  }
+
+  private PythonSnippetNode expression()
+  {
+    PythonSnippetNode condition = binary(0);
+    if (!is("?"))
+    {
+      return condition;
+    }
+    PythonSnippetNode choice = node("ternary", "", next());
+    choice.children.add(condition);
+    choice.children.add(expression());
+    expect(":");
+    choice.children.add(expression());
+    return choice;
+  }
+
+  private PythonSnippetNode binary(int level)
+  {
+    if (level == BINARY_LEVELS.length)
+    {
+      return unary();
+    }
+    PythonSnippetNode left = binary(level + 1);
+    while (true)
+    {
+      PythonSnippetNode token = peek();
+      if (token.getText().equals("instanceof") && token.getType().equals("ident"))
+      {
+        throw fail("instanceof is not supported");
+      }
+      if (!token.getType().equals("op") || !Arrays.asList(BINARY_LEVELS[level]).contains(token.getText()))
+      {
+        return left;
+      }
+      next();
+      PythonSnippetNode operation = node("binary", token.getText(), token);
+      operation.children.add(left);
+      operation.children.add(binary(level + 1));
+      left = operation;
+    }
+  }
+
+  private PythonSnippetNode unary()
+  {
+    PythonSnippetNode token = peek();
+    if (token.getType().equals("op"))
+    {
+      String op = token.getText();
+      if (op.equals("++") || op.equals("--") || op.equals("+") || op.equals("-") || op.equals("!") || op.equals("~"))
+      {
+        next();
+        PythonSnippetNode operation = node(op.length() == 2 ? "prefix" : "unary", op, token);
+        operation.children.add(unary());
+        return operation;
+      }
+      if (op.equals("(") && peek(1).getType().equals("ident") && isAt(2, ")"))
+      {
+        String type = peek(1).getText();
+        PythonSnippetNode after = peek(3);
+        boolean operandFollows = after.getType().equals("ident") ? !after.getText().equals("instanceof")
+          : !after.getType().equals("op") && !after.getType().equals("end") || isAt(3, "(") || isAt(3, "!") || isAt(3, "~");
+        if (PRIMITIVES.contains(type) || operandFollows)
+        {
+          next();
+          next();
+          next();
+          PythonSnippetNode cast = node("cast", type, token);
+          cast.children.add(unary());
+          return cast;
+        }
+      }
+    }
+    return postfix(primary());
+  }
+
+  private PythonSnippetNode postfix(PythonSnippetNode e)
+  {
+    while (true)
+    {
+      PythonSnippetNode token = peek();
+      if (accept("."))
+      {
+        PythonSnippetNode name = identifier();
+        if (is("("))
+        {
+          e = call(e, name);
+        }
+        else
+        {
+          PythonSnippetNode field = node("field", name.getText(), name);
+          field.children.add(e);
+          e = field;
+        }
+      }
+      else if (is("["))
+      {
+        throw fail("arrays are not supported");
+      }
+      else if (is("++") || is("--"))
+      {
+        PythonSnippetNode increment = node("postfix", next().getText(), token);
+        increment.children.add(e);
+        e = increment;
+      }
+      else if (is("->") || is("::"))
+      {
+        throw fail("'" + token.getText() + "' is not supported (Java lambdas and method references are not, and other languages are not Java)");
+      }
+      else
+      {
+        return e;
+      }
+    }
+  }
+
+  private PythonSnippetNode primary()
+  {
+    PythonSnippetNode token = peek();
+    String type = token.getType();
+    if (isInteger(type) || type.equals("float") || type.equals("string") || type.equals("char"))
+    {
+      next();
+      return literal(token.getText(), type.equals("string") ? "str" : type, token);
+    }
+    if (type.equals("op") && is("(") && !isLambda())
+    {
+      next();
+      PythonSnippetNode e = expression();
+      expect(")");
+      return e;
+    }
+    if (type.equals("op") && (is("(") || is("{")))
+    {
+      throw fail(is("{") ? "arrays are not supported" : "lambdas are not supported");
+    }
+    if (!type.equals("ident"))
+    {
+      throw unexpected("an expression");
+    }
+    String word = token.getText();
+    switch (word)
+    {
+      case "true": case "false":
+        next();
+        return literal(word.equals("true") ? "True" : "False", "bool", token);
+      case "null":
+        next();
+        return literal("None", "null", token);
+      case "this":
+        next();
+        return node("this", "", token);
+      case "super":
+        throw fail("super is not supported");
+      case "new":
+        return creation();
+      default:
+    }
+    if (JAVA_KEYWORDS.contains(word))
+    {
+      throw unexpected("an expression");
+    }
+    next();
+    return is("(") ? call(null, token) : node("name", word, token);
+  }
+
+  private static PythonSnippetNode literal(String code, String kind, PythonSnippetNode at)
+  {
+    PythonSnippetNode literal = node("literal", code, at);
+    return set(literal, code, kind, ATOM, true, true);
+  }
+
+  // A parenthesis that starts a lambda: (a, b) -> ...
+  private boolean isLambda()
+  {
+    int depth = 0;
+    for (int i = 0; !peek(i).getType().equals("end"); i++)
+    {
+      if (isAt(i, "("))
+      {
+        depth++;
+      }
+      else if (isAt(i, ")") && --depth == 0)
+      {
+        return isAt(i + 1, "->");
+      }
+    }
+    return false;
+  }
+
+  private PythonSnippetNode call(PythonSnippetNode receiver, PythonSnippetNode name)
+  {
+    PythonSnippetNode call = node("call", name.getText(), name);
+    call.children.add(receiver);
+    call.children.addAll(arguments());
+    return call;
+  }
+
+  private List<PythonSnippetNode> arguments()
+  {
+    expect("(");
+    List<PythonSnippetNode> arguments = new ArrayList<PythonSnippetNode>();
+    if (!accept(")"))
+    {
+      do
+      {
+        arguments.add(expression());
+      }
+      while (accept(","));
+      expect(")");
+    }
+    return arguments;
+  }
+
+  private PythonSnippetNode creation()
+  {
+    PythonSnippetNode token = next();
+    PythonSnippetNode creation = node("new", type(), token);
+    creation.children.addAll(arguments());
+    if (is("{"))
+    {
+      throw fail("anonymous classes are not supported");
+    }
+    return creation;
+  }
+
+  //------------------------
+  // Statements
+  //------------------------
+
+  private void line(String text)
+  {
+    out.add(pad(indent) + text);
+  }
+
+  private static String pad(int level)
+  {
+    return String.join("", Collections.nCopies(level, "    "));
+  }
+
+  private List<String> cut(int mark)
+  {
+    List<String> lines = new ArrayList<String>(out.subList(mark, out.size()));
+    out.subList(mark, out.size()).clear();
+    return lines;
+  }
+
+  private void emitStatements(List<PythonSnippetNode> statements)
+  {
+    scopes.add(new HashMap<String, String[]>());
+    for (PythonSnippetNode statement : statements)
+    {
+      emitComments(statement.getOffset());
+      emitStatement(statement);
+    }
+    scopes.remove(scopes.size() - 1);
+  }
+
+  // The snippet's comments that come before offset, as Python comments before the statement there.
+  private void emitComments(int offset)
+  {
+    while (!comments.isEmpty() && comments.get(0).getOffset() < offset)
+    {
+      for (String text : comments.remove(0).getText().split("\r\n|\r|\n"))
+      {
+        String comment = text.trim().replaceFirst("^\\*+", "").trim();
+        line(comment.isEmpty() ? "#" : "# " + comment);
+      }
+    }
+  }
+
+  // Whether the lines since mark hold no statement, which a Python suite needs.
+  private boolean onlyComments(int mark)
+  {
+    for (String text : out.subList(mark, out.size()))
+    {
+      if (!text.trim().startsWith("#"))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // The indented suite of a compound statement, followed by more statements (a for loop's update);
+  // pass when it would be empty.
+  private void emitSuite(PythonSnippetNode statement, List<PythonSnippetNode> more)
+  {
+    indent++;
+    int mark = out.size();
+    List<PythonSnippetNode> statements = new ArrayList<PythonSnippetNode>();
+    statements.add(statement);
+    if (more != null)
+    {
+      statements.addAll(more);
+    }
+    emitStatements(statements);
+    if (onlyComments(mark))
+    {
+      line("pass");
+    }
+    indent--;
+  }
+
+  private void emitStatement(PythonSnippetNode s)
+  {
+    switch (s.getType())
+    {
+      case "block":
+        emitStatements(s.children);
+        break;
+      case "local":
+        emitLocal(s);
+        break;
+      case "assign":
+        emitAssignment(s);
+        break;
+      case "expression":
+        emitExpressionStatement(s.child(0));
+        break;
+      case "empty":
+        break;
+      case "if":
+        line("if " + condition(emit(s.child(0))).code + ":");
+        emitIfRest(s);
+        break;
+      case "while":
+        emitLoop(s.child(0), null, s.child(1));
+        break;
+      case "for":
+        scopes.add(new HashMap<String, String[]>());
+        for (PythonSnippetNode init : s.child(0).children)
+        {
+          emitStatement(init);
+        }
+        emitLoop(s.child(1), s.child(2), s.child(3));
+        scopes.remove(scopes.size() - 1);
+        break;
+      case "foreach":
+        emitForEach(s);
+        break;
+      case "return":
+        line(s.children.isEmpty() ? "return" : "return " + value(emit(s.child(0))).code);
+        break;
+      case "break":
+      case "continue":
+        if (loops.isEmpty())
+        {
+          throw fail(s.getType() + " is outside a loop");
+        }
+        PythonSnippetNode update = loops.get(loops.size() - 1);
+        if (s.getType().equals("continue") && update != null)
+        {
+          // The update belongs to the loop header, so the body's locals must not hide its names.
+          int depth = loopScopes.get(loopScopes.size() - 1);
+          List<Map<String, String[]>> body = new ArrayList<Map<String, String[]>>(scopes.subList(depth, scopes.size()));
+          scopes.subList(depth, scopes.size()).clear();
+          emitStatements(update.children);
+          scopes.addAll(body);
+        }
+        line(s.getType());
+        break;
+      case "throw":
+        requireBuiltin("RuntimeError");
+        line("raise RuntimeError(" + (s.children.isEmpty() ? "" : value(emit(s.child(0))).code) + ")");
+        break;
+      default:
+        throw fail("'" + describe(s) + "' is not supported");
+    }
+  }
+
+  // The rest of an if statement after its "if condition:" line. An else holding only another if
+  // becomes elif, unless that condition needs statements before it.
+  private void emitIfRest(PythonSnippetNode s)
+  {
+    emitSuite(s.child(1), null);
+    if (s.children.size() < 3)
+    {
+      return;
+    }
+    PythonSnippetNode otherwise = s.child(2);
+    if (!otherwise.getType().equals("if"))
+    {
+      line("else:");
+      emitSuite(otherwise, null);
+      return;
+    }
+    int mark = out.size();
+    String condition = condition(emit(otherwise.child(0))).code;
+    if (out.size() == mark)
+    {
+      line("elif " + condition + ":");
+      emitIfRest(otherwise);
+      return;
+    }
+    List<String> before = cut(mark);
+    line("else:");
+    for (String text : before)
+    {
+      out.add("    " + text);
+    }
+    indent++;
+    line("if " + condition + ":");
+    emitIfRest(otherwise);
+    indent--;
+  }
+
+  // while and for loops. A for loop's update ends the body and also runs before each continue, so
+  // continue does not skip it. A condition that needs statements first is tested inside the loop.
+  private void emitLoop(PythonSnippetNode condition, PythonSnippetNode update, PythonSnippetNode body)
+  {
+    String test = "True";
+    List<String> check = new ArrayList<String>();
+    if (condition != null)
+    {
+      int mark = out.size();
+      indent++;
+      PythonSnippetNode c = condition(emit(condition));
+      check = cut(mark);
+      if (check.isEmpty())
+      {
+        test = c.code;
+      }
+      else
+      {
+        check.add(pad(indent) + "if not " + wrap(c, NOT) + ":");
+        check.add(pad(indent + 1) + "break");
+      }
+      indent--;
+    }
+    line("while " + test + ":");
+    out.addAll(check);
+    loops.add(update);
+    loopScopes.add(scopes.size());
+    emitSuite(body, update == null ? null : update.children);
+    loops.remove(loops.size() - 1);
+    loopScopes.remove(loopScopes.size() - 1);
+  }
+
+  private void emitForEach(PythonSnippetNode s)
+  {
+    String kind = localKind(s.child(0).getText());
+    PythonSnippetNode collection = value(emit(s.child(1)));
+    if (!collection.kind.startsWith("list:"))
+    {
+      throw fail("an enhanced for loop can only go through a collection of the model, such as getXs() or an association");
+    }
+    scopes.add(new HashMap<String, String[]>());
+    line("for " + declareLocal(s.getText(), kind) + " in " + collection.code + ":");
+    loops.add(null);
+    loopScopes.add(scopes.size());
+    emitSuite(s.child(2), null);
+    loops.remove(loops.size() - 1);
+    loopScopes.remove(loopScopes.size() - 1);
+    scopes.remove(scopes.size() - 1);
+  }
+
+  private void emitLocal(PythonSnippetNode s)
+  {
+    String kind = localKind(s.getText());
+    for (PythonSnippetNode declarator : s.children)
+    {
+      if (declarator.children.isEmpty())
+      {
+        declareLocal(declarator.getText(), kind);
+        continue;
+      }
+      String initial = convert(value(emit(declarator.child(0))), kind).code;
+      line(declareLocal(declarator.getText(), kind) + " = " + initial);
+    }
+  }
+
+  private void emitExpressionStatement(PythonSnippetNode e)
+  {
+    if (e.getType().equals("prefix") || e.getType().equals("postfix"))
+    {
+      emitIncrement(e, false);
+    }
+    else
+    {
+      line(emit(e).code);
+    }
+  }
+
+  // Java evaluates an assigned attribute's object first, then the value. A compound assignment reads
+  // the old value before evaluating the right-hand side, and narrows to int like Java's implicit cast.
+  private void emitAssignment(PythonSnippetNode a)
+  {
+    String op = a.getText();
+    PythonSnippetNode place = place(a.child(0));
+    PythonSnippetNode receiver = place.children.isEmpty() ? null : place.child(0);
+    if (!op.equals("=") && receiver != null && !receiver.stable)
+    {
+      capture(receiver);
+    }
+    int mark = out.size();
+    PythonSnippetNode right = value(emit(a.child(1)));
+    if (op.equals("="))
+    {
+      // Python evaluates the value before the object it is stored in, so the object is kept first
+      // whenever either of them could affect the other.
+      boolean interact = out.size() > mark || !right.stable && !(receiver != null && receiver.pure && right.pure);
+      if (receiver != null && !receiver.stable && interact)
+      {
+        out.addAll(mark, captureLines(Arrays.asList(receiver)));
+      }
+      line(placeCode(place) + " = " + convert(right, place.kind).code);
+      return;
+    }
+    String target = placeCode(place);
+    PythonSnippetNode old = set(node("value", "", a), target, place.kind, ATOM, true, false);
+    boolean readFirst = out.size() > mark;
+    if (readFirst)
+    {
+      out.addAll(mark, captureLines(Arrays.asList(old)));
+    }
+    String javaOp = op.substring(0, op.length() - 1);
+    PythonSnippetNode combined = combine(node("binary", javaOp, a), javaOp, old, right);
+    boolean narrow = isInteger(place.kind) && combined.kind.equals("float");
+    // Python's augmented assignment also reads the old value first; it matches Java unless the
+    // operator is written differently in Python or the result must be narrowed.
+    if (!readFirst && !narrow && !javaOp.equals("%") && (!javaOp.equals("/") || combined.kind.equals("float")))
+    {
+      String converted = javaOp.equals("+") && place.kind.equals("str") ? text(right).code
+        : javaOp.equals("<<") || javaOp.equals(">>") ? shiftDistance(right, place.kind).code : right.code;
+      line(target + " " + javaOp + "= " + converted);
+      return;
+    }
+    if (narrow)
+    {
+      requireBuiltin("int");
+    }
+    line(target + " = " + (narrow ? "int(" + combined.code + ")" : combined.code));
+  }
+
+  // x++, ++x, x-- and --x. As a statement this is x += 1. As a value, Java gives the old (postfix) or
+  // new (prefix) value, which is kept in a temporary so that later effects cannot change it.
+  private PythonSnippetNode emitIncrement(PythonSnippetNode e, boolean asValue)
+  {
+    if (expressionOnly)
+    {
+      throw fail(e.getText() + " changes a variable, which an initial value or derived attribute cannot do");
+    }
+    PythonSnippetNode place = place(e.child(0));
+    if (place.kind.equals("char"))
+    {
+      throw fail("arithmetic on char values is not supported");
+    }
+    if (!isNumber(place.kind))
+    {
+      throw fail(e.getText() + " needs a number, but '" + describe(e.child(0)) + "' is " + describeKind(place.kind));
+    }
+    String change = e.getText().equals("++") ? " += 1" : " -= 1";
+    if (!asValue)
+    {
+      line(placeCode(place) + change);
+      return null;
+    }
+    if (!place.children.isEmpty() && !place.child(0).stable)
+    {
+      capture(place.child(0));
+    }
+    String target = placeCode(place);
+    String temp = newTemp();
+    if (e.getType().equals("postfix"))
+    {
+      line(temp + " = " + target);
+      line(target + change);
+    }
+    else
+    {
+      line(target + change);
+      line(temp + " = " + target);
+    }
+    return set(e, temp, place.kind, ATOM, true, true);
+  }
+
+  // What an assignment or increment changes: a local, a parameter or an attribute. The result holds
+  // the Python target's kind and, for another object's attribute, the object's value as its child
+  // and the attribute's Python name as its code.
+  private PythonSnippetNode place(PythonSnippetNode target)
+  {
+    PythonSnippetNode place = node("place", "", target);
+    if (target.getType().equals("name"))
+    {
+      String name = target.getText();
+      String[] variable = lookupVariable(name);
+      if (variable != null)
+      {
+        return set(place, variable[0], variable[1], ATOM, true, false);
+      }
+      String[] field = findField(uClass, name);
+      if (field != null)
+      {
+        requireObject(name);
+        return set(place, "self." + field[0], field[1], ATOM, true, false);
+      }
+      if (findConstant(uClass, name) != null)
+      {
+        throw fail("the constant " + name + " cannot be changed");
+      }
+      throw unknownName(name);
+    }
+    if (target.getType().equals("field"))
+    {
+      PythonSnippetNode receiver = value(emitReceiver(target.child(0)));
+      String[] field = receiver.kind.startsWith("object:") ? fieldOf(receiver.kind, target.getText()) : null;
+      if (field == null)
+      {
+        throw fail("'" + describe(target) + "' is not an attribute that can be assigned");
+      }
+      place.children.add(receiver);
+      return set(place, field[0], field[1], ATOM, true, false);
+    }
+    throw fail("only local variables, parameters and attributes can be assigned, not '" + describe(target) + "'");
+  }
+
+  private static String placeCode(PythonSnippetNode place)
+  {
+    return place.children.isEmpty() ? place.code : wrap(place.child(0), ATOM) + "." + place.code;
+  }
+
+  //------------------------
+  // Expressions
+  //------------------------
+
+  private PythonSnippetNode emit(PythonSnippetNode n)
+  {
+    switch (n.getType())
+    {
+      case "literal": return n;
+      case "name": return emitName(n, false);
+      case "this":
+        requireObject("this");
+        return set(n, "self", "object:" + uClass.getName(), ATOM, true, true);
+      case "field": return emitField(n);
+      case "call": return emitCall(n);
+      case "new": return emitNew(n);
+      case "prefix": case "postfix": return emitIncrement(n, true);
+      case "unary": return emitUnary(n);
+      case "binary": return emitBinary(n);
+      case "ternary": return emitTernary(n);
+      case "cast": return emitCast(n);
+      default: throw fail("'" + describe(n) + "' is not supported");
+    }
+  }
+
+  // The object or type before a dot. An unknown capitalized name there is a Java library class.
+  private PythonSnippetNode emitReceiver(PythonSnippetNode n)
+  {
+    return n.getType().equals("name") ? emitName(n, true) : emit(n);
+  }
+
+  // Java's resolution order: locals, parameters, attributes, associations and state machines of the
+  // class and its superclasses, constants, then types.
+  private PythonSnippetNode emitName(PythonSnippetNode n, boolean isReceiver)
+  {
+    String name = n.getText();
+    String[] variable = lookupVariable(name);
+    if (variable != null)
+    {
+      return set(n, variable[0], variable[1], ATOM, true, false);
+    }
+    String[] field = findField(uClass, name);
+    if (field != null)
+    {
+      requireObject(name);
+      return set(n, "self." + field[0], field[1], ATOM, true, false);
+    }
+    String[] constant = findConstant(uClass, name);
+    if (constant != null)
+    {
+      // a computed constant can run model code on its first read, so its place in the order counts
+      boolean computed = gen.isComputedConstant(uClass, name);
+      return set(n, constantRef(constant[0], name), constant[1], ATOM, !computed, !computed);
+    }
+    String type = resolveType(name, uClass);
+    if (type != null)
+    {
+      return set(n, typeRef(type), type, ATOM, true, true);
+    }
+    if (isReceiver && Character.isUpperCase(name.charAt(0)))
+    {
+      throw fail(name + " is a Java library class, which Python snippets cannot use");
+    }
+    throw unknownName(name);
+  }
+
+  private PythonSnippetException unknownName(String name)
+  {
+    for (UmpleClass k = uClass; k != null; k = k.getExtendsClass())
+    {
+      for (Attribute a : k.getAttributes())
+      {
+        if (a.getName().equals(name) && a.getIsDerived())
+        {
+          return fail("'" + name + "' is a derived attribute, which has no field; call " + gen.translate("getMethod", a) + "() instead");
+        }
+      }
+    }
+    return fail("'" + name + "' is not a local variable, parameter, attribute, association, state machine or constant of class " + uClass.getName());
+  }
+
+  private PythonSnippetNode emitField(PythonSnippetNode n)
+  {
+    String name = n.getText();
+    if (isSystemStream(n.child(0)))
+    {
+      throw fail("System." + n.child(0).getText() + "." + name + " is not supported");
+    }
+    if (isSystemStream(n))
+    {
+      throw fail("System." + name + " can only be used as System.out.println(...) or System.out.print(...)");
+    }
+    PythonSnippetNode target = emitReceiver(n.child(0));
+    String kind = target.kind;
+    if (kind.startsWith("type:"))
+    {
+      UmpleClassifier owner = classifier(kind.substring(5));
+      String[] constant = findConstant(owner, name);
+      if (constant != null)
+      {
+        boolean computed = gen.isComputedConstant(owner, name);
+        return set(n, constantRef(constant[0], name), constant[1], ATOM, !computed, !computed);
+      }
+      String type = owner instanceof UmpleClass ? memberType((UmpleClass) owner, name) : null;
+      if (type != null)
+      {
+        return set(n, typeRef(type), type, ATOM, true, true);
+      }
+      throw fail("'" + name + "' is not a constant, enumeration or inner class of " + owner.getName());
+    }
+    if (kind.startsWith("enumtype:"))
+    {
+      String enumeration = kind.substring(9);
+      if (!enumValues(enumeration).contains(name))
+      {
+        throw fail("'" + name + "' is not a value of " + enumeration.substring(enumeration.indexOf('.') + 1));
+      }
+      return set(n, target.code + "." + name, "enum:" + enumeration, ATOM, true, true);
+    }
+    value(target);
+    if (kind.startsWith("enum:") && enumValues(kind.substring(5)).contains(name))
+    {
+      // Java reads a static member through an expression of its type: a state machine can share
+      // its enumeration's name, as in Light.Green where Light is also the machine's field.
+      String member = typeRef("enumtype:" + kind.substring(5)) + "." + name;
+      String code = afterEvaluating(target, member);
+      return set(n, code, kind, ATOM, code.equals(member), code.equals(member));
+    }
+    String[] field = kind.startsWith("object:") ? fieldOf(kind, name) : null;
+    if (field != null)
+    {
+      return set(n, wrap(target, ATOM) + "." + field[0], field[1], ATOM, target.pure, false);
+    }
+    String[] constant = kind.startsWith("object:") ? findConstant(classifier(kind.substring(7)), name) : null;
+    if (constant != null)
+    {
+      String member = constantRef(constant[0], name);
+      String code = afterEvaluating(target, member);
+      boolean plain = code.equals(member) && !gen.isComputedConstant(classifier(kind.substring(7)), name);
+      return set(n, code, constant[1], ATOM, plain, plain);
+    }
+    if (kind.startsWith("object:"))
+    {
+      throw fail("'" + name + "' is not an attribute, association or state machine of class " + kind.substring(7));
+    }
+    throw fail("'." + name + "' cannot be used on " + describeKind(kind) + (kind.startsWith("list:") ? " (arrays are not supported)" : ""));
+  }
+
+  // Thread, Math or System as Java's classes, when the snippet does not name something of its own so
+  private boolean isLibraryClass(PythonSnippetNode n)
+  {
+    return n != null && n.getType().equals("name") && Arrays.asList("Thread", "Math", "System").contains(n.getText())
+      && lookupVariable(n.getText()) == null && findField(uClass, n.getText()) == null && resolveType(n.getText(), uClass) == null;
+  }
+
+  // The Java library calls untagged code may make: Thread.sleep, which in a do activity ends the
+  // activity when it is cancelled, as Java's InterruptedException does; System.currentTimeMillis; and
+  // Math's abs, max, min, sqrt, pow, floor, ceil, round and random, with Java's results
+  private PythonSnippetNode emitLibraryCall(PythonSnippetNode n, String library, String name, List<PythonSnippetNode> values)
+  {
+    String call = library + "." + name + "/" + values.size();
+    if (!LIBRARY_CALLS.contains(call))
+    {
+      throw fail(library + "." + name + "(...) is a Java library call; the ones translated are Thread.sleep,"
+        + " System.currentTimeMillis and Math's abs, max, min, sqrt, pow, floor, ceil, round and random");
+    }
+    for (PythonSnippetNode value : values)
+    {
+      if (!isInteger(value.kind) && !value.kind.equals("float") && !value.kind.equals("unknown"))
+      {
+        throw fail(library + "." + name + "(...) takes numbers");
+      }
+    }
+    String first = values.isEmpty() ? null : values.get(0).code;
+    boolean floating = false;
+    boolean integral = true;
+    for (PythonSnippetNode value : values)
+    {
+      floating = floating || value.kind.equals("float");
+      integral = integral && isInteger(value.kind);
+    }
+    switch (call)
+    {
+      case "Thread.sleep/1":
+        return inActivity
+          ? set(n, "if thread.sleep(" + first + "): return", "void", ATOM, false, false)
+          : set(n, module("time") + ".sleep(" + wrap(values.get(0), PRODUCT) + " / 1000)", "void", ATOM, false, false);
+      case "System.currentTimeMillis/0":
+        return set(n, "int(" + module("time") + ".time() * 1000)", "long", ATOM, false, false);
+      case "Math.abs/1":
+        requireBuiltin("abs");
+        return set(n, "abs(" + first + ")", values.get(0).kind, ATOM, false, false);
+      case "Math.max/2": case "Math.min/2":
+        // Java widens both to the wider type: integers compare as Python's do, doubles need Java's rules
+        if (!floating)
+        {
+          requireBuiltin(name);
+          return set(n, name + "(" + argumentList(values) + ")", integral ? promotedInteger(values.get(0).kind, values.get(1).kind) : "unknown",
+            ATOM, false, false);
+        }
+        return set(n, javaMath(name) + "(" + argumentList(values) + ")", "float", ATOM, false, false);
+      case "Math.sqrt/1": case "Math.pow/2":
+        return set(n, javaMath(name) + "(" + argumentList(values) + ")", "float", ATOM, false, false);
+      case "Math.floor/1": case "Math.ceil/1":
+        return set(n, javaMath(name) + "(" + first + ")", "float", ATOM, false, false);
+      case "Math.round/1":
+        // Java rounds an integer as a float, to an int; a double to a long (Float is a double here)
+        return integral ? set(n, javaMath(name) + "(" + first + ", 2147483647)", "int", ATOM, false, false)
+          : set(n, javaMath(name) + "(" + first + ")", "long", ATOM, false, false);
+      default: // Math.random/0
+        return set(n, module("random") + ".random()", "float", ATOM, false, false);
+    }
+  }
+
+  private static final List<String> LIBRARY_CALLS = Arrays.asList("Thread.sleep/1", "System.currentTimeMillis/0", "Math.abs/1",
+    "Math.max/2", "Math.min/2", "Math.sqrt/1", "Math.pow/2", "Math.floor/1", "Math.ceil/1", "Math.round/1", "Math.random/0");
+
+  // The module-level function giving Java's result of Math's name, which a parameter must not hide
+  private String javaMath(String name)
+  {
+    String function = gen.javaMath(name);
+    requireBuiltin(function);
+    return function;
+  }
+
+  // A standard module the translation calls, imported as the generated code's other standard modules
+  // are, under an alias when the module defines the name itself
+  private String module(String name)
+  {
+    String alias = gen.standardAlias(name);
+    requireBuiltin(alias);
+    if (!moduleImports.contains(PythonGenerator.standardImport(name, null, alias)))
+    {
+      moduleImports.add(PythonGenerator.standardImport(name, null, alias));
+    }
+    return alias;
+  }
+
+  // System.out or System.err, which only the print calls can use.
+  private boolean isSystemStream(PythonSnippetNode n)
+  {
+    return n != null && n.getType().equals("field") && n.child(0).getType().equals("name")
+      && n.child(0).getText().equals("System") && lookupVariable("System") == null && findField(uClass, "System") == null;
+  }
+
+  private PythonSnippetNode emitCall(PythonSnippetNode n)
+  {
+    PythonSnippetNode receiver = n.child(0);
+    String name = n.getText();
+    List<PythonSnippetNode> arguments = n.children.subList(1, n.children.size());
+    if (isSystemStream(receiver))
+    {
+      return emitPrint(n, receiver.getText(), arguments);
+    }
+    if (receiver == null)
+    {
+      List<PythonSnippetNode> values = emitArguments(arguments, null);
+      String[] method = findMethod(uClass, name, values);
+      if (method == null && name.equals("print"))
+      {
+        // Python's own print, which such snippets already use
+        requireBuiltin("print");
+        return set(n, "print(" + argumentList(values) + ")", "void", ATOM, false, false);
+      }
+      if (method == null)
+      {
+        throw fail("'" + name + "(...)' is not a method of class " + uClass.getName());
+      }
+      if (method[1].equals("static"))
+      {
+        if (classBody)
+        {
+          throw fail("an initial value evaluated while the class is being defined cannot call " + name + "(...)");
+        }
+        return set(n, classRef(classifier(method[2])) + "." + name + "(" + argumentList(values) + ")", method[0], ATOM, false, false);
+      }
+      requireObject(name + "(...)");
+      return set(n, "self." + name + "(" + argumentList(values) + ")", method[0], ATOM, false, false);
+    }
+    if (isLibraryClass(receiver))
+    {
+      return emitLibraryCall(n, receiver.getText(), name, emitArguments(arguments, null));
+    }
+    List<PythonSnippetNode> values = emitArguments(arguments, receiver);
+    PythonSnippetNode target = values.remove(0);
+    String kind = target.kind;
+    if (kind.startsWith("type:") || kind.startsWith("object:"))
+    {
+      boolean onType = kind.startsWith("type:");
+      UmpleClassifier owner = classifier(kind.substring(onType ? 5 : 7));
+      String[] method = findMethod(owner, name, values);
+      if (method == null)
+      {
+        throw fail("'" + name + "(...)' is not a method of " + owner.getName());
+      }
+      boolean isStaticMethod = method[1].equals("static");
+      if (onType && !isStaticMethod)
+      {
+        throw fail(name + "(...) is not a static method of " + owner.getName());
+      }
+      if (onType && classBody && owner == uClass)
+      {
+        throw fail("an initial value evaluated while the class is being defined cannot call " + name + "(...)");
+      }
+      if (isStaticMethod && !onType)
+      {
+        // Java calls a static method through an object without using the object, which may be null.
+        String call = classRef(classifier(method[2])) + "." + name + "(" + argumentList(values) + ")";
+        return set(n, afterEvaluating(target, call), method[0], ATOM, false, false);
+      }
+      if (!onType && mayBeNull(target) && !allSafeArguments(values))
+      {
+        // Python looks the method up on a null object before evaluating the arguments, and Java
+        // evaluates them before it fails.
+        if (expressionOnly)
+        {
+          return set(n, "(lambda x, *y: x." + name + "(*y))(" + target.code + ", " + argumentList(values) + ")", method[0], ATOM, false, false);
+        }
+        List<PythonSnippetNode> operands = new ArrayList<PythonSnippetNode>(values);
+        operands.add(0, target);
+        out.addAll(captureLines(operands));
+      }
+      return set(n, wrap(target, ATOM) + "." + name + "(" + argumentList(values) + ")", method[0], ATOM, false, false);
+    }
+    if (kind.startsWith("enum"))
+    {
+      throw fail("methods of enumerations, such as " + name + "(), are not supported");
+    }
+    if (kind.equals("str"))
+    {
+      return stringMethod(n, target, name, values);
+    }
+    if (kind.equals("char"))
+    {
+      throw fail("methods of characters, such as " + name + "(), are not supported");
+    }
+    if (kind.startsWith("list:"))
+    {
+      throw fail("collection methods such as " + name + "() are not supported; use the generated methods such as numberOfX() or getX(index)");
+    }
+    throw fail(name + "() is called on " + describeKind(kind) + ", which is not supported");
+  }
+
+  // The String methods untagged code may call, with Java's null, type and UTF-16 rules: they go through
+  // str, so a null string raises as Java's NullPointerException does; equals of anything but a string,
+  // a char included, is false; length counts UTF-16 code units.
+  private PythonSnippetNode stringMethod(PythonSnippetNode n, PythonSnippetNode target, String name, List<PythonSnippetNode> values)
+  {
+    String receiver = target.code;
+    String argument = values.size() == 1 ? values.get(0).code : null;
+    if (values.size() == 1 && !name.equals("equals") && !Arrays.asList("str", "unknown", "null").contains(values.get(0).kind))
+    {
+      throw fail(name + "() takes a string");
+    }
+    switch (name + "/" + values.size())
+    {
+      case "equals/1":
+        requireBuiltin("str");
+        // a char is a one-character str in Python, but a Character in Java
+        return set(n, "(str.__eq__(" + receiver + ", " + argument + ")" + ("char".equals(values.get(0).kind) ? " and False)" : " is True)"),
+          "bool", ATOM, false, false);
+      case "contains/1":
+        requireBuiltin("str");
+        return set(n, "str.__contains__(" + receiver + ", " + argument + ")", "bool", ATOM, false, false);
+      case "startsWith/1":
+        requireBuiltin("str");
+        return set(n, "str.startswith(" + receiver + ", " + argument + ")", "bool", ATOM, false, false);
+      case "endsWith/1":
+        requireBuiltin("str");
+        return set(n, "str.endswith(" + receiver + ", " + argument + ")", "bool", ATOM, false, false);
+      case "length/0":
+        requireBuiltin("len");
+        requireBuiltin("str");
+        return set(n, PythonGenerator.javaStringLength(receiver), "int", ATOM, false, false);
+      case "isEmpty/0":
+        requireBuiltin("len");
+        return set(n, "(len(" + receiver + ") == 0)", "bool", ATOM, false, false);
+      default:
+        throw fail("String methods other than equals, contains, startsWith, endsWith, length and isEmpty, such as "
+          + name + "(), are not supported");
+    }
+  }
+
+  // A call's receiver, when it has one, and its arguments, in Java's order. Arguments must be
+  // values; the receiver may also be a type.
+  private List<PythonSnippetNode> emitArguments(List<PythonSnippetNode> arguments, PythonSnippetNode receiver)
+  {
+    List<PythonSnippetNode> nodes = new ArrayList<PythonSnippetNode>();
+    if (receiver != null)
+    {
+      nodes.add(receiver);
+    }
+    nodes.addAll(arguments);
+    List<PythonSnippetNode> values = emitInOrder(nodes, receiver != null);
+    for (PythonSnippetNode argument : values.subList(receiver != null ? 1 : 0, values.size()))
+    {
+      value(argument);
+    }
+    return values;
+  }
+
+  // code, which reaches a static member through target, preceded by target's evaluation: Java
+  // evaluates target without using it, so its effects and failures (s.child when s is null) must stay.
+  // Reads that can do neither (a local, a parameter, this or its fields, a kept value) are left out.
+  private String afterEvaluating(PythonSnippetNode target, String code)
+  {
+    if (target.stable || target.pure && (target.getType().equals("name") || target.getType().equals("field") && target.child(0).getType().equals("this")))
+    {
+      return code;
+    }
+    if (expressionOnly)
+    {
+      return "(" + target.code + ", " + code + ")[1]";
+    }
+    line(target.code);
+    return code;
+  }
+
+  // Whether a call's object may be null: anything but this or a new object.
+  private static boolean mayBeNull(PythonSnippetNode target)
+  {
+    return !target.getType().equals("this") && !target.getType().equals("new");
+  }
+
+  private static boolean allSafeArguments(List<PythonSnippetNode> values)
+  {
+    for (PythonSnippetNode v : values)
+    {
+      if (!safeArgument(v))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // Purity alone does not preserve exception order: division and dereferencing a field can fail.
+  // Captured values and plain reads are safe; compound expressions must also have safe operands.
+  private static boolean safeArgument(PythonSnippetNode value)
+  {
+    if (!value.pure)
+    {
+      return false;
+    }
+    if (value.stable)
+    {
+      return true;
+    }
+    String type = value.getType();
+    if (type.equals("field"))
+    {
+      return value.child(0).getType().equals("this");
+    }
+    if (type.equals("binary") && Arrays.asList("/", "%").contains(value.getText()))
+    {
+      return isLiteral(value.child(0), "[0-9][0-9_]*") && isLiteral(value.child(1), "[1-9][0-9_]*");
+    }
+    if (type.equals("binary") && Arrays.asList("<<", ">>").contains(value.getText())
+      || type.equals("cast") && !value.kind.equals(value.child(0).kind)
+        && !(isInteger(value.kind) && isInteger(value.child(0).kind)))
+    {
+      return false;
+    }
+    return allSafeArguments(value.children);
+  }
+
+  private PythonSnippetNode emitPrint(PythonSnippetNode n, String stream, List<PythonSnippetNode> arguments)
+  {
+    String name = n.getText();
+    boolean println = name.equals("println");
+    if (!stream.equals("out") || !println && !name.equals("print"))
+    {
+      throw fail("System." + stream + "." + name + " is not supported; only System.out.println and System.out.print are");
+    }
+    if (arguments.size() > 1 || !println && arguments.size() != 1)
+    {
+      throw fail("System.out." + name + " takes one argument");
+    }
+    requireBuiltin("print");
+    List<PythonSnippetNode> values = emitArguments(arguments, null);
+    String printed = values.size() == 1 ? values.get(0).kind : "";
+    if (printed.equals("bool") || printed.equals("null") || printed.startsWith("object:") || printed.startsWith("enum:"))
+    {
+      values.set(0, text(values.get(0))); // Java prints true, false and null
+    }
+    String argument = argumentList(values);
+    return set(n, "print(" + argument + (println ? "" : ", end=\"\"") + ")", "void", ATOM, false, false);
+  }
+
+  private PythonSnippetNode emitNew(PythonSnippetNode n)
+  {
+    String name = n.getText();
+    if (name.equals("RuntimeException"))
+    {
+      throw fail("exceptions are not supported, except throw new RuntimeException(message)");
+    }
+    String type = resolveType(name, uClass);
+    UmpleClassifier created = type != null && type.startsWith("type:") ? classifier(type.substring(5)) : null;
+    if (!(created instanceof UmpleClass))
+    {
+      throw fail("new " + name + "(...) creates " + (created != null ? "an interface" : "a Java library object") + ", which Python snippets cannot use");
+    }
+    if ("external".equals(created.getModifier()))
+    {
+      throw fail("class " + name + " is external, so there is no Python class to create");
+    }
+    if (classBody && created == uClass)
+    {
+      throw fail("an initial value evaluated while the class is being defined cannot create a " + name);
+    }
+    String args = argumentList(emitArguments(n.children, null));
+    return set(n, classRef(created) + "(" + args + ")", "object:" + created.getName(), ATOM, false, false);
+  }
+
+  private PythonSnippetNode emitUnary(PythonSnippetNode n)
+  {
+    PythonSnippetNode operand = value(emit(n.child(0)));
+    String op = n.getText();
+    if (op.equals("!"))
+    {
+      return set(n, "not " + wrap(condition(operand), NOT), "bool", NOT, operand.pure, false);
+    }
+    if (operand.kind.equals("char"))
+    {
+      throw fail("arithmetic on char values is not supported");
+    }
+    if (!isNumber(operand.kind) && !operand.kind.equals("unknown"))
+    {
+      throw fail("the operator " + op + " cannot be used on " + describeKind(operand.kind));
+    }
+    if (op.equals("~") && operand.kind.equals("float"))
+    {
+      throw fail("the operator ~ needs an integer");
+    }
+    if (op.equals("+"))
+    {
+      return set(n, operand.code, operand.kind, operand.prec, operand.pure, operand.stable);
+    }
+    String code = wrap(operand, UNARY);
+    return set(n, op + (code.startsWith("-") || code.startsWith("+") || code.startsWith("~") ? "(" + code + ")" : code),
+      operand.kind, UNARY, operand.pure, operand.stable);
+  }
+
+  private PythonSnippetNode emitBinary(PythonSnippetNode n)
+  {
+    String op = n.getText();
+    if (op.equals("&&") || op.equals("||"))
+    {
+      return emitShortCircuit(n);
+    }
+    List<PythonSnippetNode> operands = emitInOrder(n.children, false);
+    return combine(n, op, value(operands.get(0)), value(operands.get(1)));
+  }
+
+  // The right operand of && and || runs only when needed. If it needs statements first, they go
+  // inside an if on the left operand's value.
+  private PythonSnippetNode emitShortCircuit(PythonSnippetNode n)
+  {
+    boolean and = n.getText().equals("&&");
+    PythonSnippetNode left = condition(emit(n.child(0)));
+    int mark = out.size();
+    indent++;
+    PythonSnippetNode right = condition(emit(n.child(1)));
+    indent--;
+    if (out.size() == mark)
+    {
+      return plain(n, and ? "and" : "or", and ? AND : OR, left, right, "bool");
+    }
+    List<String> before = cut(mark);
+    String temp = newTemp();
+    line(temp + " = " + left.code);
+    line((and ? "if " : "if not ") + temp + ":");
+    out.addAll(before);
+    indent++;
+    line(temp + " = " + right.code);
+    indent--;
+    return set(n, temp, "bool", ATOM, true, true);
+  }
+
+  // condition ? a : b. Only the chosen branch runs, so statements a branch needs go inside an if.
+  private PythonSnippetNode emitTernary(PythonSnippetNode n)
+  {
+    PythonSnippetNode condition = condition(emit(n.child(0)));
+    int mark = out.size();
+    indent++;
+    PythonSnippetNode first = value(emit(n.child(1)));
+    List<String> firstBefore = cut(mark);
+    PythonSnippetNode second = value(emit(n.child(2)));
+    List<String> secondBefore = cut(mark);
+    indent--;
+    String kind = first.kind.equals(second.kind) || second.kind.equals("null") ? first.kind
+      : first.kind.equals("null") ? second.kind
+      : isInteger(first.kind) && isInteger(second.kind) ? promotedInteger(first.kind, second.kind)
+      : isNumber(first.kind) && isNumber(second.kind) ? "float" : "unknown";
+    first = convert(first, kind);
+    second = convert(second, kind);
+    if (firstBefore.isEmpty() && secondBefore.isEmpty())
+    {
+      return set(n, wrap(first, OR) + " if " + wrap(condition, OR) + " else " + wrap(second, COND), kind, COND,
+        condition.pure && first.pure && second.pure, false);
+    }
+    String temp = newTemp();
+    line("if " + condition.code + ":");
+    out.addAll(firstBefore);
+    indent++;
+    line(temp + " = " + first.code);
+    indent--;
+    line("else:");
+    out.addAll(secondBefore);
+    indent++;
+    line(temp + " = " + second.code);
+    indent--;
+    return set(n, temp, kind, ATOM, true, true);
+  }
+
+  // Casts to int, long, double and float; Python's int() truncates toward zero like Java's cast.
+  private PythonSnippetNode emitCast(PythonSnippetNode n)
+  {
+    String type = n.getText();
+    boolean toInt = type.equals("int") || type.equals("long");
+    if (!toInt && !type.equals("double") && !type.equals("float"))
+    {
+      throw fail("casts to " + type + " are not supported" + (type.equals("byte") || type.equals("short") || type.equals("char") ? " (they need Java's narrowing)" : ""));
+    }
+    PythonSnippetNode operand = value(emit(n.child(0)));
+    String target = toInt ? type : "float";
+    if (operand.kind.equals("char"))
+    {
+      throw fail("converting a char to a number is not supported");
+    }
+    if (operand.kind.equals(target) || isInteger(operand.kind) && toInt)
+    {
+      return set(n, operand.code, target, operand.prec, operand.pure, operand.stable);
+    }
+    if (!isNumber(operand.kind) && !operand.kind.equals("unknown"))
+    {
+      throw fail("the cast to " + type + " cannot be used on " + describeKind(operand.kind));
+    }
+    String function = toInt ? "int" : "float";
+    requireBuiltin(function);
+    return set(n, function + "(" + operand.code + ")", target, ATOM, operand.pure, false);
+  }
+
+  // Applies a Java binary operator to operands that have been emitted, following their kinds.
+  private PythonSnippetNode combine(PythonSnippetNode n, String op, PythonSnippetNode left, PythonSnippetNode right)
+  {
+    String lk = left.kind;
+    String rk = right.kind;
+    if (op.equals("==") || op.equals("!="))
+    {
+      if (lk.equals("char") && isNumber(rk) || rk.equals("char") && isNumber(lk))
+      {
+        throw fail("comparing a char with a number is not supported");
+      }
+      boolean identity = isReference(lk) || isReference(rk);
+      String pythonOp = identity ? (op.equals("==") ? "is" : "is not") : op;
+      return lk.equals("null") && !rk.equals("null")
+        ? plain(n, pythonOp, COMPARE, right, left, "bool")
+        : plain(n, pythonOp, COMPARE, left, right, "bool");
+    }
+    if (op.equals("<") || op.equals(">") || op.equals("<=") || op.equals(">="))
+    {
+      if (lk.equals("char") != rk.equals("char"))
+      {
+        throw fail("comparing a char with a number is not supported");
+      }
+      return plain(n, op, COMPARE, left, right, "bool");
+    }
+    if (op.equals("+") && (lk.equals("str") || rk.equals("str")))
+    {
+      // String concatenation converts the other operand to text as Java does
+      return plain(n, "+", SUM, text(left), text(right), "str");
+    }
+    if ((op.equals("&") || op.equals("|") || op.equals("^")) && lk.equals("bool") && rk.equals("bool"))
+    {
+      return plain(n, op, op.equals("&") ? BIT_AND : op.equals("|") ? BIT_OR : BIT_XOR, left, right, "bool");
+    }
+    if (lk.equals("char") || rk.equals("char"))
+    {
+      throw fail("arithmetic on char values is not supported");
+    }
+    if (!(isNumber(lk) || lk.equals("unknown")) || !(isNumber(rk) || rk.equals("unknown")))
+    {
+      throw fail("the operator " + op + " cannot be used on " + describeKind(lk) + " and " + describeKind(rk));
+    }
+    boolean integral = isInteger(lk) && isInteger(rk);
+    String kind = integral ? promotedInteger(lk, rk) : lk.equals("float") || rk.equals("float") ? "float" : "unknown";
+    if (Arrays.asList("<<", ">>", "&", "^", "|").contains(op) && kind.equals("float"))
+    {
+      throw fail("the operator " + op + " needs integers");
+    }
+    switch (op)
+    {
+      case "/":
+      case "%":
+        if (lk.equals("unknown") || rk.equals("unknown"))
+        {
+          throw fail("division needs to know whether its operands are integers, and the type of '"
+            + describe(lk.equals("unknown") ? left : right) + "' is not known");
+        }
+        if (integral)
+        {
+          return integerDivision(n, op.equals("/") ? "//" : "%", left, right, kind);
+        }
+        if (op.equals("/"))
+        {
+          return plain(n, "/", PRODUCT, left, right, "float");
+        }
+        return set(n, module("math") + ".fmod(" + left.code + ", " + right.code + ")", "float", ATOM, false, false);
+      case "*": return plain(n, "*", PRODUCT, left, right, kind);
+      case "+": case "-": return plain(n, op, SUM, left, right, kind);
+      case "<<": case ">>": return plain(n, op, SHIFT, left, shiftDistance(right, lk), lk);
+      case "&": return plain(n, op, BIT_AND, left, right, kind);
+      case "^": return plain(n, op, BIT_XOR, left, right, kind);
+      case "|": return plain(n, op, BIT_OR, left, right, kind);
+      default: throw fail("the operator " + op + " is not supported");
+    }
+  }
+
+  // Java masks the distance using the promoted left operand, regardless of the distance's type.
+  private static PythonSnippetNode shiftDistance(PythonSnippetNode right, String leftKind)
+  {
+    int mask = leftKind.equals("long") ? 63 : 31;
+    if (right.getType().equals("literal"))
+    {
+      String code = right.code;
+      int radix = code.matches("0[xX].*") ? 16 : code.matches("0[bB].*") ? 2 : code.startsWith("0o") ? 8 : 10;
+      try
+      {
+        long distance = Long.parseLong(radix == 10 ? code : code.substring(2), radix);
+        if (distance >= 0 && distance <= mask)
+        {
+          return right;
+        }
+      }
+      catch (NumberFormatException e)
+      {
+        // A nonintegral or oversized literal cannot be an already normalized distance.
+      }
+    }
+    // Only literal distances from 0 to 31 are safe for every possible integral width.
+    if (!leftKind.equals("int") && !leftKind.equals("long"))
+    {
+      throw fail("a shift needs to know whether its left operand is int or long unless its distance is a literal from 0 to 31");
+    }
+    return set(node("value", "", right), wrap(right, BIT_AND) + " & " + mask, right.kind, BIT_AND, right.pure, right.stable);
+  }
+
+  // Java's integer division and remainder truncate toward zero; Python's // and % round toward
+  // negative infinity. The operands appear more than once, so effectful ones are computed once first,
+  // into temporaries or, where no statement may come first, through a lambda's parameters.
+  private PythonSnippetNode integerDivision(PythonSnippetNode n, String op, PythonSnippetNode left, PythonSnippetNode right, String kind)
+  {
+    if (isLiteral(left, "[0-9][0-9_]*") && isLiteral(right, "[1-9][0-9_]*"))
+    {
+      return plain(n, op, PRODUCT, left, right, kind);
+    }
+    // truncating writes its operands more than once, so only plain names and literals are inlined;
+    // anything larger is evaluated once, or nested divisions would grow the code threefold per level
+    if (left.pure && right.pure && isPlain(left) && isPlain(right))
+    {
+      return set(n, truncating(op, left, right), kind, COND, true, false);
+    }
+    if (expressionOnly)
+    {
+      PythonSnippetNode x = set(node("value", "", n), "x", kind, ATOM, true, true);
+      PythonSnippetNode y = set(node("value", "", n), "y", kind, ATOM, true, true);
+      return set(n, "(lambda x, y: " + truncating(op, x, y) + ")(" + left.code + ", " + right.code + ")", kind, ATOM, false, false);
+    }
+    capture(left);
+    capture(right);
+    return set(n, truncating(op, left, right), kind, COND, true, false);
+  }
+
+  private static String truncating(String op, PythonSnippetNode left, PythonSnippetNode right)
+  {
+    String a = wrap(left, PRODUCT);
+    String b = wrap(right, PRODUCT + 1);
+    String negated = "-" + parenthesizedIfSigned(wrap(left, UNARY));
+    String test = isLiteral(right, "[1-9][0-9_]*")
+      ? wrap(left, COMPARE + 1) + " >= 0"
+      : "(" + wrap(left, COMPARE + 1) + " < 0) == (" + wrap(right, COMPARE + 1) + " < 0)";
+    return a + " " + op + " " + b + " if " + test + " else -(" + negated + " " + op + " " + b + ")";
+  }
+
+  // A name, a field or a literal, which costs nothing to write twice.
+  private static boolean isPlain(PythonSnippetNode n)
+  {
+    return n.code.matches("[A-Za-z_][\\w.]*|\\(?-?[0-9][\\w.]*\\)?");
+  }
+
+  private static boolean isLiteral(PythonSnippetNode n, String pattern)
+  {
+    return n.getType().equals("literal") && n.code.matches(pattern);
+  }
+
+  private static String parenthesizedIfSigned(String code)
+  {
+    return code.startsWith("-") || code.startsWith("+") ? "(" + code + ")" : code;
+  }
+
+  // A string concatenation operand: booleans and null spelt as in Java, other non-strings through
+  // str(). A value that may be None (a model object or enumeration value other than self or a
+  // constant) is evaluated once.
+  private PythonSnippetNode text(PythonSnippetNode operand)
+  {
+    if (operand.kind.equals("str") || operand.kind.equals("char"))
+    {
+      return operand;
+    }
+    if (operand.kind.equals("null"))
+    {
+      return set(node("value", "", operand), "\"null\"", "str", ATOM, true, false);
+    }
+    if (operand.kind.equals("bool"))
+    {
+      return set(node("value", "", operand), "\"true\" if " + wrap(operand, OR) + " else \"false\"", "str", COND, operand.pure, false);
+    }
+    requireBuiltin("str");
+    if ((operand.kind.startsWith("object:") || operand.kind.startsWith("enum:")) && !operand.stable)
+    {
+      String code = operand.pure ? "\"null\" if " + wrap(operand, COMPARE + 1) + " is None else str(" + operand.code + ")"
+        : "(lambda x: \"null\" if x is None else str(x))(" + operand.code + ")";
+      return set(node("value", "", operand), code, "str", operand.pure ? COND : ATOM, operand.pure, false);
+    }
+    return set(node("value", "", operand), "str(" + operand.code + ")", "str", ATOM, operand.pure, false);
+  }
+
+  private static PythonSnippetNode plain(PythonSnippetNode n, String op, int precedence, PythonSnippetNode left, PythonSnippetNode right, String kind)
+  {
+    // Comparisons do not chain in Java, so neither side may be a bare comparison in Python.
+    int leftLevel = precedence == COMPARE ? COMPARE + 1 : precedence;
+    return set(n, wrap(left, leftLevel) + " " + op + " " + wrap(right, precedence + 1), kind, precedence, left.pure && right.pure, false);
+  }
+
+  // Java's assignment conversions: an int stored in a float variable becomes a float, which Python
+  // does not do by itself; a char is never stored as a number; other kinds must match.
+  private PythonSnippetNode convert(PythonSnippetNode v, String target)
+  {
+    if (v.kind.equals("char") && isNumber(target))
+    {
+      throw fail("converting a char to a number is not supported");
+    }
+    if (!assignable(v.kind, target))
+    {
+      throw fail("'" + describe(v) + "' is " + describeKind(v.kind) + ", which cannot be stored where " + describeKind(target) + " is expected");
+    }
+    if (!target.equals("float") || !isInteger(v.kind))
+    {
+      return v;
+    }
+    if (isLiteral(v, "[0-9][0-9_]*"))
+    {
+      return set(node("value", "", v), v.code + ".0", "float", ATOM, true, true);
+    }
+    requireBuiltin("float");
+    return set(node("value", "", v), "float(" + v.code + ")", "float", ATOM, v.pure, false);
+  }
+
+  // Emits expressions in Java's left-to-right order. When one of them needs statements first, the
+  // values of the earlier ones are kept in temporaries before those statements, so the statements
+  // cannot change them.
+  private List<PythonSnippetNode> emitInOrder(List<PythonSnippetNode> nodes, boolean firstIsReceiver)
+  {
+    List<PythonSnippetNode> done = new ArrayList<PythonSnippetNode>();
+    for (PythonSnippetNode node : nodes)
+    {
+      int mark = out.size();
+      PythonSnippetNode result = done.isEmpty() && firstIsReceiver ? emitReceiver(node) : emit(node);
+      if (out.size() > mark)
+      {
+        out.addAll(mark, captureLines(done));
+      }
+      done.add(result);
+    }
+    return done;
+  }
+
+  // Assignments keeping the current values of the given results in temporaries, which the results
+  // then refer to.
+  private List<String> captureLines(List<PythonSnippetNode> results)
+  {
+    List<String> lines = new ArrayList<String>();
+    for (PythonSnippetNode result : results)
+    {
+      if (!result.stable)
+      {
+        String temp = newTemp();
+        lines.add(pad(indent) + temp + " = " + result.code);
+        set(result, temp, result.kind, ATOM, true, true);
+      }
+    }
+    return lines;
+  }
+
+  private void capture(PythonSnippetNode result)
+  {
+    out.addAll(captureLines(Arrays.asList(result)));
+  }
+
+  private String newTemp()
+  {
+    String name;
+    do
+    {
+      name = "_tmp" + (++tempCount);
+    }
+    while (usedNames.contains(name));
+    return name;
+  }
+
+  private static String argumentList(List<PythonSnippetNode> values)
+  {
+    List<String> codes = new ArrayList<String>();
+    for (PythonSnippetNode v : values)
+    {
+      codes.add(v.code);
+    }
+    return String.join(", ", codes);
+  }
+
+  private static PythonSnippetNode set(PythonSnippetNode n, String code, String kind, int precedence, boolean pure, boolean stable)
+  {
+    n.code = code;
+    n.kind = kind;
+    n.prec = precedence;
+    n.pure = pure;
+    n.stable = stable;
+    return n;
+  }
+
+  private static String wrap(PythonSnippetNode n, int precedence)
+  {
+    return n.prec >= precedence ? n.code : "(" + n.code + ")";
+  }
+
+  // A value used as a condition, which Java requires to be a boolean.
+  private PythonSnippetNode condition(PythonSnippetNode n)
+  {
+    if (!value(n).kind.equals("bool") && !n.kind.equals("unknown"))
+    {
+      throw fail("a condition must be a boolean, but '" + describe(n) + "' is " + describeKind(n.kind));
+    }
+    return n;
+  }
+
+  // A result that is a value: not a type name and not the result of a method returning nothing.
+  private PythonSnippetNode value(PythonSnippetNode n)
+  {
+    if (n.kind.startsWith("type:") || n.kind.startsWith("enumtype:"))
+    {
+      throw fail("'" + describe(n) + "' is a type, not a value");
+    }
+    if (n.kind.equals("void"))
+    {
+      throw fail("'" + describe(n) + "' returns nothing, so it has no value");
+    }
+    return n;
+  }
+
+  // The Java source of a node, for messages.
+  private String describe(PythonSnippetNode n)
+  {
+    if (n.getType().equals("name") || n.getType().equals("literal"))
+    {
+      return n.getText();
+    }
+    if (n.getType().equals("field"))
+    {
+      return describe(n.child(0)) + "." + n.getText();
+    }
+    if (n.getType().equals("call"))
+    {
+      return (n.child(0) == null ? "" : describe(n.child(0)) + ".") + n.getText() + "(...)";
+    }
+    return n.getType().equals("this") ? "this" : source.substring(n.getOffset(), Math.min(source.length(), n.getOffset() + 20)).trim();
+  }
+
+  private static String describeKind(String kind)
+  {
+    switch (kind)
+    {
+      case "int": case "long": case "integral": return "an integer";
+      case "float": return "a floating-point number";
+      case "str": return "a String";
+      case "char": return "a char";
+      case "bool": return "a boolean";
+      case "null": return "null";
+      case "unknown": return "a value whose type is not known";
+      default:
+    }
+    if (kind.startsWith("object:"))
+    {
+      return "a " + kind.substring(7);
+    }
+    return kind.startsWith("list:") ? "a collection" : "an enumeration value";
+  }
+
+  // Whether the translator accepts a value of kind value where kind target is expected: the same
+  // kind, an int for a float, null, an unknown kind, or any object, enumeration value or list where
+  // another is expected. Looser than Java: subtyping is not checked.
+  private static boolean assignable(String value, String target)
+  {
+    return value.equals(target) || value.equals("unknown") || target.equals("unknown") || value.equals("null")
+      || isInteger(value) && (isInteger(target) || target.equals("float"))
+      || value.startsWith("object:") && target.startsWith("object:")
+      || value.startsWith("enum:") && target.startsWith("enum:")
+      || value.startsWith("list:") && target.startsWith("list:");
+  }
+
+  // Keep Java's integral width for shift promotion, although Python stores both in int.
+  private static boolean isInteger(String kind)
+  {
+    return kind.equals("int") || kind.equals("long") || kind.equals("integral");
+  }
+
+  private static String promotedInteger(String left, String right)
+  {
+    return left.equals("long") || right.equals("long") ? "long"
+      : left.equals("integral") || right.equals("integral") ? "integral" : "int";
+  }
+
+  private static boolean isNumber(String kind)
+  {
+    return isInteger(kind) || kind.equals("float");
+  }
+
+  // Values compared by identity: model objects, enumeration values, collections and null.
+  private static boolean isReference(String kind)
+  {
+    return kind.startsWith("object:") || kind.startsWith("enum:") || kind.startsWith("list:") || kind.equals("null");
+  }
+
+  private static String known(String kind)
+  {
+    return kind == null ? "unknown" : kind;
+  }
+
+  //------------------------
+  // Names
+  //------------------------
+
+  private String[] lookupVariable(String name)
+  {
+    for (int i = scopes.size() - 1; i >= 0; i--)
+    {
+      String[] variable = scopes.get(i).get(name);
+      if (variable != null)
+      {
+        return variable;
+      }
+    }
+    return parameters.get(name);
+  }
+
+  // Declares a local; its Python name avoids keywords, the names the translation uses, model class
+  // names and parameter names.
+  private String declareLocal(String name, String kind)
+  {
+    String python = name;
+    while (isReserved(python) || !python.equals(name) && usedNames.contains(python))
+    {
+      python = python + "_";
+    }
+    usedNames.add(python);
+    scopes.get(scopes.size() - 1).put(name, new String[] { python, kind });
+    return python;
+  }
+
+  private boolean isReserved(String name)
+  {
+    if (PythonGenerator.isPythonKeyword(name) || TRANSLATION_NAMES.contains(name) || gen.getModel().getUmpleClass(name) != null || gen.getModel().getUmpleInterface(name) != null)
+    {
+      return true;
+    }
+    for (String[] parameter : parameters.values())
+    {
+      if (parameter[0].equals(name))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // A parameter can hide a Python or class name the translation needs.
+  private void requireBuiltin(String name)
+  {
+    for (Map.Entry<String, String[]> parameter : parameters.entrySet())
+    {
+      if (parameter.getValue()[0].equals(name))
+      {
+        throw fail("the parameter " + parameter.getKey() + " hides the name " + name + ", which this code needs");
+      }
+    }
+  }
+
+  private void requireObject(String what)
+  {
+    if (isStatic)
+    {
+      throw fail(classBody ? "an initial value evaluated while the class is being defined cannot use " + what
+        : "static code cannot use " + what + ", which needs an object");
+    }
+  }
+
+  private String localKind(String type)
+  {
+    String kind = kindOf(type, uClass);
+    if (kind == null || kind.equals("void"))
+    {
+      throw fail("variables of type " + type + " are not supported; use a primitive type, String or a class of the model");
+    }
+    return kind;
+  }
+
+  // The kind of values of an Umple or Java type as seen from owner, or null when it is none of the
+  // kinds snippets know (primitives, String, model classes and enumerations).
+  private String kindOf(String type, UmpleClassifier owner)
+  {
+    if (type == null || type.trim().length() == 0)
+    {
+      return "str";
+    }
+    String name = type.trim();
+    switch (name)
+    {
+      case "long": case "Long": return "long";
+      case "int": case "Integer": case "short": case "Short": case "byte": case "Byte": return "int";
+      case "double": case "Double": case "float": case "Float": return "float";
+      case "boolean": case "Boolean": return "bool";
+      case "String": return "str";
+      case "char": case "Character": return "char";
+      case "void": return "void";
+      case "Date": case "Time": return "unknown";
+      default:
+    }
+    String resolved = resolveType(name, owner);
+    if (resolved == null)
+    {
+      return null;
+    }
+    return resolved.startsWith("enumtype:") ? "enum:" + resolved.substring(9) : "object:" + resolved.substring(5);
+  }
+
+  // A type name as seen from owner: a state machine's or a class's enumeration, a model enumeration
+  // (generated inside each class that uses it, as in Java), or a model class or interface; Outer.Inner
+  // names a nested one. Enumerations are "enumtype:Owner.Name", classes "type:Name".
+  private String resolveType(String name, UmpleClassifier owner)
+  {
+    if (name.contains("."))
+    {
+      String outer = resolveType(name.substring(0, name.lastIndexOf('.')), owner);
+      UmpleClassifier outerClass = outer != null && outer.startsWith("type:") ? classifier(outer.substring(5)) : null;
+      return outerClass instanceof UmpleClass ? memberType((UmpleClass) outerClass, name.substring(name.lastIndexOf('.') + 1)) : null;
+    }
+    UmpleClass start = owner instanceof UmpleClass ? (UmpleClass) owner : null;
+    for (UmpleClass c = start; c != null; c = c.getExtendsClass())
+    {
+      String type = ownType(c, name);
+      if (type != null)
+      {
+        return type;
+      }
+    }
+    if (start != null && modelEnumeration(name) != null)
+    {
+      return "enumtype:" + start.getName() + "." + name;
+    }
+    if (gen.getModel().getUmpleClass(name) != null || gen.getModel().getUmpleInterface(name) != null)
+    {
+      return "type:" + name;
+    }
+    return null;
+  }
+
+  // A state machine enumeration or enumeration declared in class c itself.
+  private String ownType(UmpleClass c, String name)
+  {
+    for (StateMachine sm : c.getAllStateMachines())
+    {
+      if (gen.translate("type", sm).equals(name))
+      {
+        return "enumtype:" + c.getName() + "." + name;
+      }
+    }
+    for (UmpleEnumeration e : c.getEnums())
+    {
+      if (StringFormatter.toPascalCase(e.getName()).equals(name))
+      {
+        return "enumtype:" + c.getName() + "." + name;
+      }
+    }
+    return null;
+  }
+
+  // A model enumeration named name in Java, which spells enumerations and their values in PascalCase.
+  private UmpleEnumeration modelEnumeration(String name)
+  {
+    for (UmpleEnumeration e : gen.getModel().getEnums())
+    {
+      if (StringFormatter.toPascalCase(e.getName()).equals(name))
+      {
+        return e;
+      }
+    }
+    return null;
+  }
+
+  // Owner.Name: an enumeration of Owner or its superclasses, a model enumeration (generated inside
+  // Owner), or an inner class.
+  private String memberType(UmpleClass owner, String name)
+  {
+    for (UmpleClass c = owner; c != null; c = c.getExtendsClass())
+    {
+      String type = ownType(c, name);
+      if (type != null)
+      {
+        return type;
+      }
+    }
+    if (modelEnumeration(name) != null)
+    {
+      return "enumtype:" + owner.getName() + "." + name;
+    }
+    for (UmpleClass inner : owner.getInnerClasses())
+    {
+      if (inner.getName().equals(name))
+      {
+        return "type:" + name;
+      }
+    }
+    return null;
+  }
+
+  // The values of an enumeration "Owner.Name": the states of a state machine (nested machines also
+  // have Null), or an enumeration's values.
+  private List<String> enumValues(String enumeration)
+  {
+    String ownerName = enumeration.substring(0, enumeration.indexOf('.'));
+    String name = enumeration.substring(enumeration.indexOf('.') + 1);
+    List<String> values = new ArrayList<String>();
+    UmpleClass owner = gen.getModel().getUmpleClass(ownerName);
+    for (StateMachine sm : owner.getAllStateMachines())
+    {
+      if (gen.translate("type", sm).equals(name))
+      {
+        for (State state : sm.getStates())
+        {
+          values.add(state.getName());
+        }
+        if (sm.getParentState() != null)
+        {
+          values.add("Null");
+        }
+        return values;
+      }
+    }
+    List<UmpleEnumeration> enumerations = new ArrayList<UmpleEnumeration>(owner.getEnums());
+    enumerations.addAll(gen.getModel().getEnums());
+    for (UmpleEnumeration e : enumerations)
+    {
+      if (StringFormatter.toPascalCase(e.getName()).equals(name))
+      {
+        for (String value : e.getEnumValues())
+        {
+          values.add(StringFormatter.toPascalCase(value));
+        }
+        return values;
+      }
+    }
+    return values;
+  }
+
+  private UmpleClassifier classifier(String name)
+  {
+    UmpleClass c = gen.getModel().getUmpleClass(name);
+    return c != null ? c : gen.getModel().getUmpleInterface(name);
+  }
+
+  // How code refers to a model class: Outer.Inner for inner classes. A class from another module is
+  // imported inside the function, or at module level for code in the class body; the superclass is
+  // already imported at module level as a base.
+  private String classRef(UmpleClassifier c)
+  {
+    String ref = c.getName();
+    UmpleClassifier top = c;
+    if (c instanceof UmpleClass)
+    {
+      top = PythonGenerator.outermost((UmpleClass) c);
+      for (UmpleClass k = (UmpleClass) c; k.getOuterClass() != null; k = k.getOuterClass())
+      {
+        ref = k.getOuterClass().getName() + "." + ref;
+      }
+    }
+    if (classBody && top == PythonGenerator.outermost(uClass) && c != uClass)
+    {
+      throw fail("an initial value evaluated while the class is being defined cannot use " + ref + ", which is also still being defined");
+    }
+    requireBuiltin(top.getName());
+    if (top != PythonGenerator.outermost(uClass) && top != uClass.getExtendsClass())
+    {
+      String line = gen.importOf(top.getName());
+      List<String> target = classBody ? moduleImports : imports;
+      if (!target.contains(line))
+      {
+        target.add(line);
+      }
+    }
+    return ref;
+  }
+
+  // Code in the class body sees the class's own names bare, because the class does not exist yet;
+  // everywhere else names are qualified by their owner.
+  private String constantRef(String ownerName, String name)
+  {
+    UmpleClassifier owner = classifier(ownerName);
+    return classBody && owner == uClass ? name : classRef(owner) + "." + name;
+  }
+
+  private String typeRef(String type)
+  {
+    if (type.startsWith("type:"))
+    {
+      return classRef(classifier(type.substring(5)));
+    }
+    String enumeration = type.substring(9);
+    String ownerName = enumeration.substring(0, enumeration.indexOf('.'));
+    String name = enumeration.substring(enumeration.indexOf('.') + 1);
+    return constantRef(ownerName, name);
+  }
+
+  // An attribute, association or state machine of class c or its superclasses, as the Python field
+  // name and the kind of its value. Derived attributes, constants and the comparator Java keeps for a
+  // sorted end have no field.
+  private String[] findField(UmpleClass c, String name)
+  {
+    for (UmpleClass k = c; k != null; k = k.getExtendsClass())
+    {
+      for (Attribute a : PythonGenerator.attributes(k))
+      {
+        if (a.getName().equals(name) && !a.getIsDerived() && !a.isConstant())
+        {
+          String kind = known(kindOf(a.getType(), k));
+          return new String[] { "_" + name, a.getIsList() ? "list:" + kind : kind };
+        }
+      }
+      for (AssociationVariable av : k.getAssociationVariables())
+      {
+        if (av.getName().equals(name) && av.getIsNavigable())
+        {
+          String kind = "object:" + av.getType();
+          return new String[] { "_" + name, av.isMany() ? "list:" + kind : kind };
+        }
+      }
+      for (StateMachine sm : k.getAllStateMachines())
+      {
+        if (gen.translate("stateMachineOne", sm).equals(name))
+        {
+          return new String[] { "_" + name, "enum:" + k.getName() + "." + gen.translate("type", sm) };
+        }
+      }
+    }
+    return null;
+  }
+
+  private String[] fieldOf(String objectKind, String name)
+  {
+    UmpleClassifier owner = classifier(objectKind.substring(7));
+    return owner instanceof UmpleClass ? findField((UmpleClass) owner, name) : null;
+  }
+
+  // A constant of c, its superclasses or interfaces, as its owner's name and its kind.
+  private String[] findConstant(UmpleClassifier c, String name)
+  {
+    if (c instanceof UmpleClass)
+    {
+      for (UmpleClass k = (UmpleClass) c; k != null; k = k.getExtendsClass())
+      {
+        for (Attribute a : k.getAttributes())
+        {
+          if (a.getName().equals(name) && a.isConstant())
+          {
+            String kind = known(kindOf(a.getType(), k));
+            return new String[] { k.getName(), a.getIsList() ? "list:" + kind : kind };
+          }
+        }
+        String[] constant = declaredConstant(k, name);
+        if (constant != null)
+        {
+          return constant;
+        }
+      }
+    }
+    return c instanceof UmpleInterface ? declaredConstant(c, name) : null;
+  }
+
+  // A constant declared with the Java syntax in c, or in an interface it implements or extends.
+  private String[] declaredConstant(UmpleClassifier c, String name)
+  {
+    return declaredConstant(c, name, new HashSet<UmpleClassifier>());
+  }
+
+  private String[] declaredConstant(UmpleClassifier c, String name, Set<UmpleClassifier> seen)
+  {
+    if (!seen.add(c))
+    {
+      return null; // reached already through another path
+    }
+    for (Constant constant : c.getConstants())
+    {
+      if (constant.getName().equals(name))
+      {
+        return new String[] { c.getName(), known(kindOf(constant.getType(), c)) };
+      }
+    }
+    List<UmpleInterface> parents = c instanceof UmpleClass ? ((UmpleClass) c).getParentInterface() : ((UmpleInterface) c).getExtendsInterface();
+    for (UmpleInterface parent : parents)
+    {
+      String[] constant = declaredConstant(parent, name, seen);
+      if (constant != null)
+      {
+        return constant;
+      }
+    }
+    return null;
+  }
+
+  // The method of c or its ancestors, user or generated, that a call with these arguments reaches, as
+  // { returned kind, "static" or "", declaring class }, or null when none has the name. When several
+  // overloads still fit, a return kind they do not share is unknown.
+  private String[] findMethod(UmpleClassifier c, String name, List<PythonSnippetNode> arguments)
+  {
+    List<String[]> candidates = new ArrayList<String[]>();
+    collectMethods(c, name, candidates);
+    if (candidates.isEmpty())
+    {
+      return null;
+    }
+    List<String[]> exact = new ArrayList<String[]>();
+    List<String[]> any = new ArrayList<String[]>();
+    for (String[] signature : candidates)
+    {
+      if (signature[0].equals("*"))
+      {
+        any.add(signature);
+      }
+      else if (accepts(signature[0], arguments))
+      {
+        exact.add(signature);
+      }
+    }
+    List<String[]> chosen = exact.isEmpty() ? any : exact;
+    if (chosen.isEmpty())
+    {
+      throw fail("'" + name + "(...)' of " + c.getName() + " does not take these arguments");
+    }
+    String kind = chosen.get(0)[1];
+    boolean allStatic = true;
+    boolean certain = false;
+    for (String[] signature : chosen)
+    {
+      // Different integral returns still establish integer arithmetic, even without a known width.
+      if (!certain)
+      {
+        kind = signature[1].equals(kind) ? kind : isInteger(kind) && isInteger(signature[1]) ? "integral" : "unknown";
+        certain = certainlyAccepts(signature[0], arguments);
+      }
+      allStatic = allStatic && signature[2].equals("static");
+    }
+    return new String[] { kind, allStatic ? "static" : "", chosen.get(0)[3] };
+  }
+
+  // The dispatcher stops at its first certain match; distinct references may overlap at null.
+  private static boolean certainlyAccepts(String parameters, List<PythonSnippetNode> arguments)
+  {
+    if (parameters.equals("*"))
+    {
+      return false;
+    }
+    String[] kinds = parameters.isEmpty() ? new String[0] : parameters.split(",");
+    for (int i = 0; i < kinds.length; i++)
+    {
+      if (!Boolean.TRUE.equals(argumentMatches(arguments.get(i), kinds[i])))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static boolean accepts(String parameters, List<PythonSnippetNode> arguments)
+  {
+    String[] kinds = parameters.isEmpty() ? new String[0] : parameters.split(",");
+    if (kinds.length != arguments.size())
+    {
+      return false;
+    }
+    for (int i = 0; i < kinds.length; i++)
+    {
+      if (Boolean.FALSE.equals(argumentMatches(arguments.get(i), kinds[i])))
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  private static Boolean argumentMatches(PythonSnippetNode argument, String expected)
+  {
+    String actual = argument.kind;
+    if (actual.equals("unknown") || expected.equals("unknown"))
+    {
+      return null;
+    }
+    if (actual.equals(expected) || isInteger(actual) && (isInteger(expected) || expected.equals("float"))
+      || Arrays.asList("str", "char").contains(actual) && Arrays.asList("str", "char").contains(expected)
+      || actual.equals("null") && (isReference(expected) || expected.equals("str") || expected.equals("char")))
+    {
+      return true;
+    }
+    // Text and model references can overlap only at null, which these expressions cannot return.
+    if (Arrays.asList("str", "char").contains(actual) && nonNullText(argument))
+    {
+      return false;
+    }
+    // Nullable reference kinds can overlap even when their declared types differ.
+    return isNumber(actual) || actual.equals("bool") || isNumber(expected) || expected.equals("bool") ? Boolean.FALSE : null;
+  }
+
+  private static boolean nonNullText(PythonSnippetNode argument)
+  {
+    return argument.getType().equals("literal") && !argument.kind.equals("null")
+      || argument.getType().equals("binary") && argument.getText().equals("+")
+      || argument.getType().equals("ternary") && nonNullText(argument.child(1)) && nonNullText(argument.child(2));
+  }
+
+  // Signatures { parameter kinds ("*" for any), returned kind, "static" or "", declaring class } of
+  // the methods named name in k, its superclasses and interfaces.
+  private void collectMethods(UmpleClassifier k, String name, List<String[]> signatures)
+  {
+    collectMethods(k, name, signatures, new HashSet<UmpleClassifier>());
+  }
+
+  // seen keeps an interface reached through several paths from being collected once per path
+  private void collectMethods(UmpleClassifier k, String name, List<String[]> signatures, Set<UmpleClassifier> seen)
+  {
+    if (!seen.add(k))
+    {
+      return;
+    }
+    List<Method> declared = new ArrayList<Method>(k.getMethods());
+    if (k instanceof UmpleClass)
+    {
+      declared.addAll(((UmpleClass) k).getStateDependentMethods());
+    }
+    for (Method m : declared)
+    {
+      if (m.getName().equals(name) && !m.getIsConstructor() && m.getSource() != Method.Source.fAutoAPI)
+      {
+        List<String> kinds = new ArrayList<String>();
+        for (MethodParameter parameter : m.getMethodParameters())
+        {
+          String kind = known(kindOf(parameter.getType(), k));
+          kinds.add(parameter.getIsList() ? "list:" + kind : kind);
+        }
+        boolean isStaticMethod = m.getModifier() != null && m.getModifier().contains("static");
+        signatures.add(new String[] { String.join(",", kinds), known(kindOf(m.getType(), k)), isStaticMethod ? "static" : "", k.getName() });
+      }
+    }
+    if (k instanceof UmpleClass)
+    {
+      for (String[] signature : generatedMethods((UmpleClass) k))
+      {
+        if (signature[0].equals(name))
+        {
+          signatures.add(new String[] { signature[1], signature[2], signature[3], k.getName() });
+        }
+      }
+      if (((UmpleClass) k).getExtendsClass() != null)
+      {
+        collectMethods(((UmpleClass) k).getExtendsClass(), name, signatures, seen);
+      }
+    }
+    List<UmpleInterface> parents = k instanceof UmpleClass ? ((UmpleClass) k).getParentInterface() : ((UmpleInterface) k).getExtendsInterface();
+    for (UmpleInterface parent : parents)
+    {
+      collectMethods(parent, name, signatures, seen);
+    }
+  }
+
+  // Whether Python generates a public method of this name for the members or events of class k
+  public boolean generates(UmpleClass k, String name)
+  {
+    for (String[] method : generatedMethods(k))
+    {
+      if (method[0].equals(name))
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // The public methods generated for class k's members, as { name, parameter kinds, returned kind,
+  // "static" or "" }. Must match the Python templates (a state machine's setter returns nothing when
+  // the machine has events, True otherwise).
+  private List<String[]> generatedMethods(UmpleClass k)
+  {
+    List<String[]> methods = generatedMethods.get(k);
+    if (methods != null)
+    {
+      return methods;
+    }
+    methods = new ArrayList<String[]>();
+    for (Attribute a : PythonGenerator.attributes(k))
+    {
+      if (a.isConstant() || a.isInternal())
+      {
+        continue;
+      }
+      String kind = known(kindOf(a.getType(), k));
+      boolean settable = PythonGenerator.hasSetter(a);
+      if (a.getIsList())
+      {
+        method(methods, gen.translate("getMethod", a), "int", kind);
+        method(methods, gen.translate("getManyMethod", a), "", "list:" + kind);
+        method(methods, gen.translate("numberOfMethod", a), "", "int");
+        method(methods, gen.translate("hasManyMethod", a), "", "bool");
+        method(methods, gen.translate("indexOfMethod", a), kind, "int");
+        if (settable)
+        {
+          method(methods, gen.translate("addMethod", a), kind, "bool");
+          method(methods, gen.translate("removeMethod", a), kind, "bool");
+        }
+        continue;
+      }
+      method(methods, gen.translate("getMethod", a), "", kind);
+      if ("Boolean".equals(a.getType()))
+      {
+        method(methods, gen.translate("isMethod", a), "", "bool");
+      }
+      if (settable)
+      {
+        method(methods, gen.translate("setMethod", a), kind, "bool");
+      }
+      if (a.isDefaulted())
+      {
+        method(methods, gen.translate("getDefaultMethod", a), "", kind);
+        method(methods, gen.translate("resetMethod", a), "", "bool");
+      }
+      if (a.getIsUnique() || a.getIsAutounique())
+      {
+        method(methods, gen.translate("getUniqueMethod", a), kind, "static object:" + k.getName());
+        method(methods, gen.translate("hasUniqueMethod", a), kind, "static bool");
+      }
+    }
+    for (AssociationVariable av : k.getAssociationVariables())
+    {
+      if (!av.getIsNavigable())
+      {
+        continue;
+      }
+      String kind = "object:" + av.getType();
+      // An immutable end has no public mutator: only the constructor sets it (Java's are private)
+      boolean mutable = !av.isImmutable();
+      if (!av.isMany())
+      {
+        method(methods, gen.translate("getMethod", av), "", kind);
+        if (av.getMultiplicity().getLowerBound() == 0)
+        {
+          method(methods, gen.translate("hasMethod", av), "", "bool");
+        }
+        if (mutable)
+        {
+          method(methods, gen.translate("setMethod", av), kind, "bool");
+        }
+        continue;
+      }
+      method(methods, gen.translate("getMethod", av), "int", kind);
+      method(methods, gen.translate("getManyMethod", av), "", "list:" + kind);
+      method(methods, gen.translate("numberOfMethod", av), "", "int");
+      method(methods, gen.translate("hasManyMethod", av), "", "bool");
+      method(methods, gen.translate("indexOfMethod", av), kind, "int");
+      if (mutable)
+      {
+        method(methods, gen.translate("addMethod", av), kind, "bool");
+        if (av.getRelatedAssociation() != null && av.getRelatedAssociation().isOnlyOne())
+        {
+          // The other class needs this object to exist, so addX(...) can also create it.
+          method(methods, gen.translate("addMethod", av), "*", kind);
+        }
+        method(methods, gen.translate("removeMethod", av), kind, "bool");
+        method(methods, gen.translate("addAtMethod", av), kind + ",int", "bool");
+        method(methods, gen.translate("addOrMoveAtMethod", av), kind + ",int", "bool");
+        method(methods, gen.translate("setManyMethod", av), "*", "bool");
+      }
+      method(methods, gen.translate("minimumNumberOfMethod", av), "", "static int");
+      if (!av.isStar())
+      {
+        method(methods, gen.translate("maximumNumberOfMethod", av), "", "static int");
+      }
+      if (av.isN())
+      {
+        method(methods, gen.translate("requiredNumberOfMethod", av), "", "static int");
+      }
+      if (av.isMandatoryMany())
+      {
+        method(methods, gen.translate("isNumberOfValidMethod", av), "", "bool");
+      }
+    }
+    for (StateMachine sm : k.getAllStateMachines())
+    {
+      String kind = "enum:" + k.getName() + "." + gen.translate("type", sm);
+      method(methods, gen.translate("getMethod", sm), "", kind);
+      method(methods, gen.translate("setMethod", sm), kind, "Simple".equals(sm.getType()) ? "bool" : "void");
+    }
+    // Only a top-level machine has a full name
+    for (StateMachine sm : k.getStateMachines())
+    {
+      method(methods, gen.translate("getFullMethod", sm), "", "str");
+    }
+    for (Event e : k.getEvents())
+    {
+      List<String> kinds = new ArrayList<String>();
+      for (MethodParameter parameter : e.getParams())
+      {
+        kinds.add(known(kindOf(parameter.getType(), k)));
+      }
+      if (e.isUnspecified())
+      {
+        kinds.add(known(kindOf("String", k))); // the state and the event it was not specified for
+        kinds.add(known(kindOf("String", k)));
+      }
+      method(methods, gen.translate("eventMethod", e), String.join(",", kinds), "bool");
+    }
+    if (k.getKey().isProvided())
+    {
+      method(methods, "equals", known(kindOf("Object", k)), "bool");
+    }
+    method(methods, "delete", "", "void");
+    if (k.getIsSingleton())
+    {
+      method(methods, "getInstance", "", "static object:" + k.getName());
+    }
+    generatedMethods.put(k, methods);
+    return methods;
+  }
+
+  // Adds a generated method; kind may start with "static ".
+  private static void method(List<String[]> methods, String name, String parameters, String kind)
+  {
+    boolean isStaticMethod = kind.startsWith("static ");
+    methods.add(new String[] { name, parameters, isStaticMethod ? kind.substring(7) : kind, isStaticMethod ? "static" : "" });
+  }
+}
+
+// A token or node of a parsed snippet. The parser sets type, text and children; the emitter sets
+// code, kind (int, float, bool, str, char, null, unknown, void, object:Class, enum:Owner.Name,
+// list:kind, or type:Class and enumtype:Owner.Name for type names), prec, pure (evaluating it again
+// has no effect) and stable (its value can no longer change).
+class PythonSnippetNode
+{
+  depend java.util.*;
+
+  immutable String type;
+  immutable String text;
+  immutable Integer offset;
+
+  public List<PythonSnippetNode> children = new ArrayList<PythonSnippetNode>();
+  public String code;
+  public String kind;
+  public int prec;
+  public boolean pure;
+  public boolean stable;
+
+  public PythonSnippetNode child(int index)
+  {
+    return children.get(index);
+  }
+}
+
+// Stops the translation of a snippet or a constraint; the message says why.
+class PythonSnippetException
+{
+  isA RuntimeException;
+  static final long serialVersionUID = 1;
+}

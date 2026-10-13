@@ -34,6 +34,8 @@ public class PythonStateMachineTest extends StateMachineTest
 	SampleFileWriter.destroy(pathToInput + "/Game.py");
 	SampleFileWriter.destroy(pathToInput + "/LightFixture.py");
 	SampleFileWriter.destroy(pathToInput + "/Moose.py");
+	SampleFileWriter.destroy(pathToInput + "/PooledSMwithUnspecifiedReception.py");
+	SampleFileWriter.destroy(pathToInput + "/QSMwithUnspecifiedRecep.py");
 	SampleFileWriter.destroy(pathToInput + "/Player.py");
 	SampleFileWriter.destroy(pathToInput + "/Session.py");
 	SampleFileWriter.destroy(pathToInput + "/Sheep.py");
@@ -44,6 +46,7 @@ public class PythonStateMachineTest extends StateMachineTest
 	SampleFileWriter.destroy(pathToInput + "/World.py");
 	SampleFileWriter.destroy(pathToInput + "/py/A.py");
 	SampleFileWriter.destroy(pathToInput + "/py/X.py");
+	SampleFileWriter.destroy(pathToInput + "/py/QSMwithUnspecifiedRecep.py");
   }
   @Test
   @Override
@@ -66,11 +69,9 @@ public class PythonStateMachineTest extends StateMachineTest
   @Test
   public void guardNameBothAttributeAndMethod2()
   {
-	Event.setNextAutoTransitionId(1);
-	assertUmpleTemplateFor(languagePath + "/guardNameBothAttributeAndMethod2Python.ump",languagePath + "/guardNameBothAttributeAndMethod2."+ languagePath +".txt","A");
-    Event.setNextAutoTransitionId(1);
+    // a guard names z, which the model does not define, so it would fail each time it runs
+    assertPythonDiagnostic(languagePath + "/guardNameBothAttributeAndMethod2Python.ump", 9210);
   }
-
 
   @Override
   @Test
@@ -83,405 +84,223 @@ public class PythonStateMachineTest extends StateMachineTest
 
   @Override
   @Test
+  public void stateMachine_unSpecifiedReception_QSM() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
+  {
+    Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
+    f1.setAccessible(true);
+    f1.setInt(null, 1);
+    // the shared model's method body is Java
+    assertUmpleTemplateFor(languagePath + "/stateMachine_unSpecifiedReception_QSMPython.ump",
+      languagePath + "/stateMachine_unSpecifiedReception_QSM." + languagePath + ".txt", "QSMwithUnspecifiedRecep");
+  }
+
+  @Override
+  @Test
   public void checkExternalTransitions_withExitActions_1()
   {
     assertUmpleTemplateFor(languagePath + "/checkExternalTransitions_withExitActions_1Python.ump",languagePath + "/checkExternalTransitions_withExitActions_1."+ languagePath +".txt","X");
   }
 
-  @Override @Ignore
-  @Test
-  public void eventlessStateMachine_before_QueuedStateMachine()
-  {
-    assertUmpleTemplateFor("eventlessStateMachine_QueuedStateMachine.ump",languagePath + "/eventlessStateMachine_QueuedStateMachine."+ languagePath +".txt","X");
-  }
-
-  @Override @Ignore
+  @Override
   @Test
   public void queuedSM_UnspecifiedReception() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
-  Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
-  f1.setAccessible(true);
-  f1.setInt(null, 1);
-
-    assertUmpleTemplateFor("queuedSM_UnspecifiedRecep.ump",languagePath + "/queuedSM_UnspecifiedRecep."+ languagePath +".txt","AutomatedTellerMachine");
+    // its untagged actions are Java, which Python does not translate
+    assertPythonDiagnostic("queuedSM_UnspecifiedRecep.ump", 9211);
   }
 
-  @Override @Ignore
+  @Override
   @Test
   public void queuedSMwithConcurrentStatesTest()
   {
-    assertUmpleTemplateFor("queuedSMwithConcurrentStatesTest.ump",languagePath + "/queuedSMwithConcurrentStatesTest."+ languagePath +".txt","QueuedSMwithConcurrentStates");
+    // its untagged actions are Java, which Python does not translate
+    assertPythonDiagnostic("queuedSMwithConcurrentStatesTest.ump", 9211);
   }
 
-  @Override @Ignore
-  @Test
-  public void queuedStateMachine()
-  {
-    assertUmpleTemplateFor("queuedStateMachine.ump",languagePath + "/queuedStateMachine."+ languagePath +".txt","Course");
-  }
-
-  @Override @Ignore
-  @Test
-  public void queuedStateMachine_2()
-  {
-    assertUmpleTemplateFor("queuedStateMachine_2.ump",languagePath + "/queuedStateMachine_2."+ languagePath +".txt","GarageDoor");
-  }
-
-  @Override @Ignore
-  @Test
-  public void queuedStateMachine_timedEvents_and_autoTansitions() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-  Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
-  f1.setAccessible(true);
-  f1.setInt(null, 1);
-
-  assertUmpleTemplateFor("queuedStateMachine_timedEvents_and_autoTansitions.ump",languagePath + "/queuedStateMachine_timedEvents_and_autoTansitions."+ languagePath +".txt","X");
-  }
-
-  @Override @Ignore
-  @Test
-  public void queuedStateMachine_timedTransition_1()
-  {
-    assertUmpleTemplateFor("queuedStateMachine_timedTransition_1.ump",languagePath + "/queuedStateMachine_timedTransition_1."+ languagePath +".txt","X");
-  }
-
-  @Override @Ignore
-  @Test
-  public void queuedStateMachine_timedTransition_2()
-  {
-    assertUmpleTemplateFor("queuedStateMachine_timedTransition_2.ump",languagePath + "/queuedStateMachine_timedTransition_2."+ languagePath +".txt","X");
-  }
-
-  @Override @Ignore
+  @Override
   @Test
   public void queuedStateMachine_withParameters()
   {
-    assertUmpleTemplateFor("queuedStateMachine_withParameters.ump",languagePath + "/queuedStateMachine_withParameters."+ languagePath +".txt","LightFixture");
+    // a feature Python does not generate yet is reported
+    assertPythonDiagnostic("queuedStateMachine_withParameters.ump", 9210);
   }
 
-  @Override @Ignore
+  @Override
   @Test
   public void queuedStateMachine_withParameters_1()
   {
-    assertUmpleTemplateFor("queuedStateMachine_withParameters_1.ump",languagePath + "/queuedStateMachine_withParameters_1."+ languagePath +".txt","LightFixture");
+    // a feature Python does not generate yet is reported
+    assertPythonDiagnostic("queuedStateMachine_withParameters_1.ump", 9210);
   }
 
-  @Override @Ignore
+  @Override
   @Test
   public void queuedWithConcurrensStatesCourseAttempt() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
-  Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
-  f1.setAccessible(true);
-  f1.setInt(null, 1);
-
-  assertUmpleTemplateFor("queuedWithConcurrensStatesCourseAttempt.ump",languagePath + "/queuedWithConcurrensStatesCourseAttempt."+ languagePath +".txt","CourseAttempt");
+    // its untagged actions are Java, which Python does not translate
+    assertPythonDiagnostic("queuedWithConcurrensStatesCourseAttempt.ump", 9211);
   }
 
-  @Override @Ignore
-  @Test
-  public void queuedWithConcurrentStateMachines()
-  {
-    assertUmpleTemplateFor("queuedWithConcurrentStateMachines.ump",languagePath + "/queuedWithConcurrentStateMachines."+ languagePath +".txt","QueuedWithConcurrentStateMachines");
-  }
-
-  @Override @Ignore
+  @Override
   @Test
   public void queuedWithNestingStatesATM()
   {
-    assertUmpleTemplateFor("queuedWithNestingStatesATM.ump",languagePath + "/queuedWithNestingStatesATM."+ languagePath +".txt","AutomatedTellerMachine");
+    // its untagged actions are Java, which Python does not translate
+    assertPythonDiagnostic("queuedWithNestingStatesATM.ump", 9211);
   }
 
-  @Override @Ignore
+  @Override
   @Test
   public void guardNegSymbolSpacing() {
-    assertUmpleTemplateFor("guardNegSymbolSpacing.ump",languagePath + "/guardNegSymbolSpacing."+ languagePath +".txt","Agent");
+    // the guards name not_achieved, which the model does not define
+    assertPythonDiagnostic("guardNegSymbolSpacing.ump", 9210);
   }
 
-  @Override @Ignore
+  @Override
   @Test
   public void checkExternalTransitions_noExitActions_1()
   {
     assertUmpleTemplateFor("checkExternalTransitions_noExitActions_1.ump",languagePath + "/checkExternalTransitions_noExitActions_1."+ languagePath +".txt","X");
   }
 
-  @Override @Ignore
-  @Test
-  public void stateMachine_unSpecifiedReception_QSM() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
-	f1.setAccessible(true);
-	f1.setInt(null, 1);
-
-	assertUmpleTemplateFor("stateMachine_unSpecifiedReception_QSM.ump",languagePath + "/stateMachine_unSpecifiedReception_QSM."+ languagePath +".txt","QSMwithUnspecifiedRecep");
-  }
-
-  @Override @Ignore
-  @Test
-  public void queuedStateMachine_implements()
-  {
-	assertUmpleTemplateFor("queuedStateMachine_implementsInterface.ump",languagePath + "/queuedStateMachine_interfaceX."+ languagePath +".txt","IX");
-    assertUmpleTemplateFor("queuedStateMachine_implementsInterface.ump",languagePath + "/queuedStateMachine_implementsInterface."+ languagePath +".txt","X");
-
-  }
-
-  @Override @Ignore
-  @Test
-  public void queuedWithNestingStateMachines()
-  {
-    assertUmpleTemplateFor("queuedWithNestedStateMachines.ump",languagePath + "/queuedWithNestedStateMachines."+ languagePath +".txt","QueuedWithNestedStateMachines");
-  }
-
-  @Override @Ignore
-  @Test
-  public void queuedStateMachine_timedEvents()
-  {
-	assertUmpleTemplateFor("queuedStateMachine_timedEvents.ump",languagePath + "/queuedStateMachine_timedEvents."+ languagePath +".txt","Mentor");
-  }
-
-  @Override @Ignore
-  @Test
-  public void queuedStateMachine_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
-	f1.setAccessible(true);
-	f1.setInt(null, 1);
-
-	assertUmpleTemplateFor("queuedStateMachine_autoTransition.ump",languagePath + "/queuedStateMachine_autoTransition."+ languagePath +".txt","Light");
-  }
-
-  @Override @Ignore
-  @Test
-  public void testMultipleQSMs()
-  {
-    assertUmpleTemplateFor("testMultipleQSMs.ump",languagePath + "/testMultipleQSMs."+ languagePath +".txt","X");
-  }
-
-
-
-@Override @Ignore
-  @Test
-  public void pooledStateMachine()
-  {
-	assertUmpleTemplateFor("pooledStateMachine.ump",languagePath + "/pooledStateMachine."+ languagePath +".txt","Course");
-  }
-  @Override @Ignore
+  @Override
   @Test
   public void pooledStateMachine_withParameters()
   {
-	assertUmpleTemplateFor("pooledStateMachine_withParameters.ump",languagePath + "/pooledStateMachine_withParameters."+ languagePath +".txt","LightFixture");
-  }
-  @Override @Ignore
-  @Test
-  public void pooledStateMachine_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-	 }
-
-@Override @Ignore
-  @Test
-  public void pooledStateMachineWithConcurrentStates_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException{}
-
-  @Override @Ignore
-  @Test
-  public void pooledStateMachine_timedEvents_and_autoTansitions() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-	Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
-	f1.setAccessible(true);
-	f1.setInt(null, 1);
-
-	assertUmpleTemplateFor("pooledStateMachine_timedEvents_and_autoTansitions.ump",languagePath + "/pooledStateMachine_timedEvents_and_autoTansitions."+ languagePath +".txt","X");
+    // a feature Python does not generate yet is reported
+    assertPythonDiagnostic("pooledStateMachine_withParameters.ump", 9210);
   }
 
-@Override @Ignore
-@Test
-  public void pooledStateMachine_timedTransition_2()
+@Override
+  @Test
+  public void pooledStateMachineWithConcurrentStates_autoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
-    assertUmpleTemplateFor("pooledStateMachine_timedTransition_2.ump",languagePath + "/pooledStateMachine_timedTransition_2."+ languagePath +".txt","X");
+    // its untagged actions are Java, which Python does not translate
+    assertPythonDiagnostic("pooledStateMachineWithConcurrentStates_autoTransition.ump", 9211);
   }
 
-@Override @Ignore
- @Test
-  public void pooledStateMachine_timedTransition_1()
-  {
-    assertUmpleTemplateFor("pooledStateMachine_timedTransition_1.ump",languagePath + "/pooledStateMachine_timedTransition_1."+ languagePath +".txt","X");
-  }
-@Override @Ignore
-
-  @Test
-  public void pooledStateMachine_UnspecifiedReception() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
-  {
-
-     assertUmpleTemplateFor("pooledStateMachine_UnspecifiedReception.ump",languagePath + "/pooledStateMachine_UnspecifiedReception."+ languagePath +".txt","PooledSMwithUnspecifiedReception");
-  }
-  @Override @Ignore
-  @Test
-  public void testPooledwithNestedStates()
-  {
-	assertUmpleTemplateFor("testPooledwithNestedStates.ump",languagePath + "/testPooledwithNestedStates."+ languagePath +".txt","X");
-  }
-  @Override @Ignore
-  @Test
-  public void testPooledwithNestedStates_2()
-  {
-	assertUmpleTemplateFor("testPooledwithNestedStates_2.ump",languagePath + "/testPooledwithNestedStates_2."+ languagePath +".txt","X");
-  }
-  @Override @Ignore
-  @Test
-  public void testPooledwithNestedStates_3()
-  {
-	assertUmpleTemplateFor("testPooledwithNestedStates_3.ump",languagePath + "/testPooledwithNestedStates_3."+ languagePath +".txt","X");
-  }
-  @Override @Ignore
-  @Test
-  public void testPooledwithNestedStates_4()
-  {
-	assertUmpleTemplateFor("testPooledwithNestedStates_4.ump",languagePath + "/testPooledwithNestedStates_4."+ languagePath +".txt","X");
-  }
-  @Override @Ignore
-  @Test
-  public void multiplePooledStateMachine()
-  {
-    assertUmpleTemplateFor("multiplePooledStateMachine.ump",languagePath + "/multiplePooledStateMachine."+ languagePath +".txt","X");
-  }
-  @Override @Ignore
-  @Test
-  public void multiplePooledStateMachine_EventlessStateMachine()
-  {
-    assertUmpleTemplateFor("multiplePooledStateMachine_EventlessStateMachine.ump",languagePath + "/multiplePooledStateMachine_EventlessStateMachine."+ languagePath +".txt","X");
-  }
-  @Override @Ignore
-  @Test
-  public void multiplePooledStateMachine_nestedStates()
-  {
-    assertUmpleTemplateFor("multiplePooledStateMachine_nestedStates.ump",languagePath + "/multiplePooledStateMachine_nestedStates."+ languagePath +".txt","X");
-  }
-  @Override @Ignore
-  @Test
-  public void multiplePooledStateMachines_sameEvents()
-  {
-    assertUmpleTemplateFor("multiplePooledStateMachines_sameEvents.ump",languagePath + "/multiplePooledStateMachines_sameEvents."+ languagePath +".txt","X");
-  }
-@Override @Ignore
+@Override
   @Test
   public void exitAction()
   {
-    assertUmpleTemplateFor("exitAction.ump",languagePath + "/exitAction."+ languagePath +".txt","LightFixture");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("exitAction.ump", 9211);
   }
-  @Override @Ignore
+  @Override
   @Test
   public void exitActionSelfTransition()
   {
-    assertUmpleTemplateFor("exitActionSelfTransition.ump",languagePath + "/exitActionSelfTransition."+ languagePath +".txt","A");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("exitActionSelfTransition.ump", 9211);
   }
-@Override @Ignore
+@Override
   @Test
   public void entryExitTransitionAction()
   {
-    assertUmpleTemplateFor("entryExitTransitionAction.ump",languagePath + "/entryExitTransitionAction."+ languagePath +".txt","LightFixture");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("entryExitTransitionAction.ump", 9211);
   }
-@Override @Ignore
+@Override
   @Test
   public void entryExitTransitionActionWithGuard()
   {
-    assertUmpleTemplateFor("entryExitTransitionActionWithGuard.ump",languagePath + "/entryExitTransitionActionWithGuard."+ languagePath +".txt","LightFixture");
+    // a guard names isTurnedOn, which the model does not define
+    assertPythonDiagnostic("entryExitTransitionActionWithGuard.ump", 9210);
   }
-@Override @Ignore
+@Override
   @Test
   public void entryExitActionNoTransitions()
   {
-    assertUmpleTemplateFor("entryExitActionNoTransitions.ump",languagePath + "/entryExitActionNoTransitions." + languagePath + ".txt", "LightFixture");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("entryExitActionNoTransitions.ump", 9211);
   }
-@Override @Ignore
+@Override
   @Test
   public void entryExitActionDuplicates()
   {
-  assertUmpleTemplateFor("entryExitActionDuplicates.ump",languagePath + "/entryExitActionDuplicates." + languagePath + ".txt", "Duplicate");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("entryExitActionDuplicates.ump", 9211);
   }
 
 //Generates unsupported feature
-@Override @Ignore
+@Override
 @Test
 public void queuedSMwithConcurrentStatesTest_2()
 {
-  assertUmpleTemplateFor("/queuedSMwithConcurrentStatesTest_2Python.ump",languagePath + "/queuedSMwithConcurrentStatesTest_2."+ languagePath +".txt","QueuedSMwithConcurrentStates_2");
+  // its untagged actions are Java, which Python does not translate
+  assertPythonDiagnostic("queuedSMwithConcurrentStatesTest_2.ump", 9211);
 }
 
 @Override
   @Test
   public void doActivity()
   {
-    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivity."+ languagePath +".txt","Switch");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("py/doActivityPython.ump", 9211);
   }
 
   @Override
   @Test
   public void doActivity_Multiple()
   {
-    assertUmpleTemplateFor(languagePath + "/doActivityPython.ump",languagePath + "/doActivityMultiple."+ languagePath +".txt","Lamp");
+    // the shared model's untagged code is Java, so the Python case has a do activity in each of two states
+    assertUmpleTemplateFor("py/doActivityMultiplePython.ump", languagePath + "/doActivityMultiple." + languagePath + ".txt", "Lamp");
   }
 
   @Override
   @Test
   public void doActivityMultipleInSameState()
   {
-    assertUmpleTemplateFor(languagePath + "/doActivityMultiPython.ump",languagePath + "/doActivityMulti."+ languagePath +".txt","X", true, false);
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("py/doActivityMultiPython.ump", 9211);
   }
 
   @Override
   @Test
   public void doActivityMultiMixin()
   {
-    assertUmpleTemplateFor(languagePath + "/doActivityMultiMixinPython.ump",languagePath + "/doActivityMultiMixin."+ languagePath +".txt","X");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("py/doActivityMultiMixinPython.ump", 9211);
   }
 
   @Override
   @Test
   public void doActivityNestedStateMachine()
   {
-	  assertUmpleTemplateFor(languagePath + "/doActivityNestedStateMachinePython.ump",languagePath + "/doActivityNestedStateMachine."+ languagePath +".txt","Course");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("py/doActivityNestedStateMachinePython.ump", 9211);
   }
 
   @Override
   @Test
   public void doActivityNoTransitions()
   {
-    assertUmpleTemplateFor(languagePath + "/doActivityNoTransitionsPython.ump",languagePath + "/doActivityNoTransitions."+ languagePath +".txt","LightFixture");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("py/doActivityNoTransitionsPython.ump", 9211);
   }
 
   @Override
   @Test
   public void activeObject()
   {
-    assertUmpleTemplateFor(languagePath + "/activeObjectPython.ump", languagePath + "/activeObject."+ languagePath + ".txt", "Lamp");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("py/activeObjectPython.ump", 9211);
   }
 
-  // Auto transition does not work
-  @Override @Ignore
+  @Override
   @Test
   public void doActivitiesWithAutoTransition() throws SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException
   {
-    Field f1 = Event.class.getDeclaredField("nextAutoTransitionId");
-    f1.setAccessible(true);
-    f1.setInt(null, 1);
-    assertUmpleTemplateFor("doActivitiesWithAutoTransition.ump",languagePath + "/doActivitiesWithAutoTransition."+languagePath +".txt","LightFixture");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("doActivitiesWithAutoTransition.ump", 9211);
   }
 
-  @Override @Ignore
+  @Override
   @Test
   public void equivalentGuards()
   {
-    assertUmpleTemplateFor("equivalentGuards.ump",languagePath + "/equivalentGuards."+ languagePath +".txt","A");
-  }
-@Override @Ignore
-   @Test
-  public void eventlessStateMachine_before_PooledStateMachine()
-  {
-    assertUmpleTemplateFor("eventlessStateMachine_PooledStateMachine.ump",languagePath + "/eventlessStateMachine_PooledStateMachine."+ languagePath +".txt","X");
-  }
-  @Override @Ignore
-  @Test
-  public void pooledStateMachine_timedEvents()
-  {
-	assertUmpleTemplateFor("pooledStateMachine_timedEvents.ump",languagePath + "/pooledStateMachine_timedEvents."+ languagePath +".txt","Mentor");
+    // the guards name x, y and z, which the model does not define
+    assertPythonDiagnostic("equivalentGuards.ump", 9210);
   }
   @Override
   @Test
@@ -489,74 +308,47 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
     assertUmpleTemplateFor(languagePath + "/testRegionFinalStates_6Python.ump",languagePath + "/testRegionFinalStates_6."+ languagePath +".txt","X");
   }
-@Override @Ignore
-@Test
-  public void multipleQSM()
-  {
-    assertUmpleTemplateFor("multipleQSM.ump",languagePath + "/multipleQSM."+ languagePath +".txt","X");
-  }
-@Override @Ignore
-  @Test
-  public void multipleQSM_EventlessStateMachine()
-  {
-    assertUmpleTemplateFor("multipleQSM_EventlessStateMachine.ump",languagePath + "/multipleQSM_EventlessStateMachine."+ languagePath +".txt","X");
-  }
-  @Override @Ignore
-  @Test
-  public void multipleQSMe_nestedStates()
-  {
-    assertUmpleTemplateFor("multipleQSMe_nestedStates.ump",languagePath + "/multipleQSMe_nestedStates."+ languagePath +".txt","X");
-  }
-  @Override @Ignore
-  @Test
-  public void multipleQSM_sameEvents()
-  {
-    assertUmpleTemplateFor("multipleQSM_sameEvents.ump",languagePath + "/multipleQSM_sameEvents."+ languagePath +".txt","X");
-  }
-    @Override @Ignore
-  @Test
-  public void nestedStatesOfQSMwithSameEventNames()
-  {
-    assertUmpleTemplateFor("nestedStatesOfQSMwithSameEventNames.ump",languagePath + "/nestedStatesOfQSMwithSameEventNames."+ languagePath +".txt","NestedStatesWthSameEventNames");
-  }
-@Override @Ignore 
+@Ignore("the shared model has Java in untagged method bodies or extra code, which Python emits as native code; the corpus gate classifies it as generation-only")
+@Override
 @Test
   public void nestedState_StateMachine_timedEvents()
   {
   	assertUmpleTemplateFor("nestedStates_StateMachine_timedEvent.ump",languagePath + "/nestedStates_StateMachine_timedEvent."+ languagePath +".txt","Window");
   }
-  @Override @Ignore
+  @Override
   @Test
   public void sameEvent_twoStates_differentStatemachines()
   {
     assertUmpleTemplateFor("sameEvent_twoStates_differentStateMachines.ump",languagePath + "/sameEvent_twoStates_differentStatemachines."+ languagePath +".txt","LightFixture");
   }
-  @Override @Ignore
+  @Override
   @Test
   public void nestedStates_exitInnerBeforeOutter()
   {
     assertUmpleTemplateFor("nestedStates_exitInnerBeforeOutter.ump",languagePath + "/nestedStates_exitInnerBeforeOutter."+ languagePath +".txt","LightFixture");
   }
   
-  @Override @Ignore
+  @Override
   @Test
   public void refactorFinalState_hasAllInvalidElements()
   {
-	  assertUmpleTemplateFor(languagePath + "/refactorFinalState_hasAllInvalidElementsPython.ump",languagePath + "/refactorFinalState_hasAllInvalidElements."+ languagePath +".txt","X");
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("py/refactorFinalState_hasAllInvalidElementsPython.ump", 9211);
   }
 
-  @Override @Ignore
+  @Override
   @Test
   public void parallelSm_diffNamesDiffStatesEntryExitActions()
   {
     assertUmpleTemplateFor(languagePath + "/parallelSm_diffNamesDiffStatesEntryExitActionsPython.ump",languagePath + "/parallelSm_diffNamesDiffStatesEntryExitActions."+ languagePath +".txt","X");
   }
 
-  @Override @Ignore
+  @Override
   @Test
   public void noDefaultEntryMethodGenerated()
   {
-    assertUmpleTemplateFor(languagePath + "/noDefaultEntryMethodGeneratedPython.ump",languagePath + "/noDefaultEntryMethodGenerated."+ languagePath +".txt","X");    
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("py/noDefaultEntryMethodGeneratedPython.ump", 9211);
   }
   
   @Test
@@ -564,10 +356,82 @@ public void queuedSMwithConcurrentStatesTest_2()
   {
     assertUmpleTemplateFor(languagePath + "/noDefaultEntryMethodGenerated_2Python.ump",languagePath + "/noDefaultEntryMethodGenerated_2."+ languagePath +".txt","X");    
   }
-  @Override @Ignore
+  @Override
   @Test
   public void parallelSm_sameNameDiffStatesEntryExitActions()
   {
     assertUmpleTemplateFor("parallelSm_sameNameDiffStatesEntryExitActions.ump",languagePath + "/parallelSm_sameNameDiffStatesEntryExitActions."+ languagePath +".txt","X");
+  }
+
+  @Override
+  @Test
+  public void eventWithArguments()
+  {
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("eventWithArguments.ump", 9211);
+  }
+
+  @Override
+  @Test
+  public void refactorFinalState_invalidElementsInNestedFinalState()
+  {
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("refactorFinalState_invalidElementsInNestedFinalState.ump", 9211);
+  }
+
+  @Override
+  @Test
+  public void refactorFinalState_onlyEntryAction()
+  {
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("refactorFinalState_onlyEntryAction.ump", 9211);
+  }
+
+  @Override
+  @Test
+  public void checkExternalTransitions_withExitActions_2()
+  {
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("checkExternalTransitions_withExitActions_2.ump", 9211);
+  }
+
+  @Override
+  @Test
+  public void checkExternalTransitions_concurrentStateMachines_2()
+  {
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("checkExternalTransitions_concurrentStateMachines_2.ump", 9211);
+  }
+
+  @Override
+  @Test
+  public void eventWithArguments_1()
+  {
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("eventWithArguments_1.ump", 9211);
+  }
+
+  @Override
+  @Test
+  public void stateMachineSpacing()
+  {
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("stateMachineSpacing1.ump", 9211);
+  }
+
+  @Override
+  @Test
+  public void guardsOnEntryAndExit()
+  {
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("1600_guardsOnEntryAndExit.ump", 9211);
+  }
+
+  @Override
+  @Test
+  public void checkExternalTransitions_concurrentStateMachines()
+  {
+    // untagged code Python cannot translate is reported
+    assertPythonDiagnostic("checkExternalTransitions_concurrentStateMachines.ump", 9211);
   }
 }

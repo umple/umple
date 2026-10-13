@@ -174,9 +174,9 @@ class ExitActionSelfTransition{
   boolean b = false;
   boolean exitCodeCalled = false;
   
-  void execute_exit_code()
+  void execute_exit_code() Python
   {
-    setExitCodeCalled(true);
+    self.setExitCodeCalled(True)
   }
   
   sm{

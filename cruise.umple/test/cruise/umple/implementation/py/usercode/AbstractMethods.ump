@@ -1,0 +1,19 @@
+interface Measured
+{
+  int size();
+  String unit();
+}
+
+// Abstract methods are abstract stubs, and a class gets a stub for an interface method it lacks.
+class Shape
+{
+  abstract;
+  abstract Double area();
+}
+
+class Square
+{
+  isA Shape, Measured;
+  Double area() Python { return 4.0 }
+  String unit() Python { return "cm" }
+}

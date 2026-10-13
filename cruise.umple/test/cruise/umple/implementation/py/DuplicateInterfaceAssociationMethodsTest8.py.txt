@@ -1,0 +1,59 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from I import I
+
+
+class First(I):
+    def __init__(self):
+        self._second = None
+        from Second import Second
+        self._second = Second.alternateConstructor(self)
+
+    @classmethod
+    def alternateConstructor(cls, aSecond):
+        self = cls.__new__(cls)
+        __class__._alternateInit(self, aSecond)
+        return self
+
+    def _alternateInit(self, aSecond):
+        self._second = None
+        if aSecond is None or aSecond.getFirst() is not None:
+            raise RuntimeError("Unable to create First due to aSecond. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        self._second = aSecond
+
+    def getSecond(self):
+        return self._second
+
+    def delete(self):
+        existingSecond = self._second
+        self._second = None
+        if existingSecond is not None:
+            existingSecond.delete()
+
+    def addSecond(self, aSecond):
+        return False
+
+    def getSeconds(self):
+        return None
+
+    def setSecond(self, aSecond):
+        return False
+
+    def setSeconds(self, *newSeconds):
+        return False
+
+    def numberOfSeconds(self):
+        return 0
+
+    def hasSeconds(self):
+        return False
+
+    def indexOfSecond(self, second):
+        return 0
+
+    def isNumberOfSecondsValid(self):
+        return False
+
+    def removeSecond(self, second):
+        return False

@@ -53,6 +53,7 @@ For compiler changes (`cruise.umple/src/`):
 For code generation template changes (`UmpleTo*/`):
 - `tumple` must pass
 - Run relevant testbed tests: `ant -Dmyenv=local -f build.testbed.xml test`
+- When changing what `UmpleToJava/` generates, keep `UmpleToPython/` in step: see "Keeping Python in step with Java" in `UmpleToPython/ReadMe.txt`
 
 For UmpleOnline changes (`umpleonline/`):
 - JS-only changes: run `uminify` (minification only, much faster)

@@ -23,6 +23,7 @@
 
 require_once("compiler_config.php");
 require_once("Parsedown.php");
+require_once("python_traceback.php");
 
 // Allow CORS so that any site may use the Umple compiler.
 header("Access-Control-Allow-Origin: *");
@@ -485,7 +486,11 @@ else if (isset($_REQUEST["umpleCode"]))
     if (json_last_error() === JSON_ERROR_NONE) {
       if($output->output || $output->errors) {
         echo "<p><strong class='executionHeader'>Execution Output</strong></p>";
-        echo translateToLineNums($output->output.$output->errors);
+        $executionText = $output->output.$output->errors;
+        if ($language == "Python") {
+          $executionText = mapPythonTraceback($executionText, $workDir->getPath());
+        }
+        echo translateToLineNums($executionText);
       }
     } else {
       echo $content;
@@ -1264,7 +1269,7 @@ function executeCode($modelName, $error)
   if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
   }
-  curl_close($ch);
+
 
   if (isset($error_msg)) {
     return "The docker service to execute code is not working. Please contact the system administrator for help.\n".$error_msg;

@@ -53,8 +53,7 @@ class Shape2D {
   }
 
   public static void main(String [] argc) Python{
-    import RegularPolygon
-    s = RegularPolygon.RegularPolygon("0,0","0","3","100")
+    s = RegularPolygon("0,0","0","3","100")
     print(str(s))
   }
 }
@@ -62,7 +61,6 @@ class Shape2D {
 // @@@skipcppcompile - Contains Java code
 // @@@skipphpcompile - Contains Java code
 // @@@skiprubycompile - Contains Java code
-// @@@skippythoncompile - Contains Java code
 // Positioning
 class Shape2D
 {

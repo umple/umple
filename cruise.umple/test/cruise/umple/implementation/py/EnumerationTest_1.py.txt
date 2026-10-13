@@ -1,47 +1,33 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from enum import Enum, auto
+from enum import Enum
 
-class Student():
-    #------------------------
-    # ENUMERATIONS
-    #------------------------
+
+class Student:
     class Status(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        FullTime = "FullTime"
+        PartTime = "PartTime"
+
         def __str__(self):
-            return str(self.value)
-        FullTime = auto()
-        PartTime = auto()
+            return self.value
 
     class Grade(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        High = "High"
+
         def __str__(self):
-            return str(self.value)
-        High = auto()
+            return self.value
 
     class RelationshipStatus(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
-        def __str__(self):
-            return str(self.value)
-        Single = auto()
-        Married = auto()
-        Divorced = auto()
+        Single = "Single"
+        Married = "Married"
+        Divorced = "Divorced"
 
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+        def __str__(self):
+            return self.value
+
     def __init__(self):
         pass
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def delete(self):
         pass

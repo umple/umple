@@ -177,8 +177,45 @@ public class GeneratorHelperTest
     Assert.assertEquals("exit", normalState.getAction(0).getActionType());
     Assert.assertEquals("setBulbOn(BulbOn.Null);", normalState.getAction(0).getActionCode());
     
+    // The exit actions are internal too, so cleanup leaves nothing for the next generator
     GeneratorHelper.postpare(model);
-    Assert.assertEquals(1,onState.numberOfActions());
+    Assert.assertEquals(0,onState.numberOfActions());
+    Assert.assertEquals(0,normalState.numberOfActions());
+
+    // A second generation starts from the same model
+    GeneratorHelper.prepareNestedStateMachine(nestedSm, 0,lookups);
+    Assert.assertEquals(2,onState.numberOfActions());
+    Assert.assertEquals(1,normalState.numberOfActions());
+    GeneratorHelper.postpare(model);
+    Assert.assertEquals(0,onState.numberOfActions());
+    Assert.assertEquals(0,normalState.numberOfActions());
+  }
+
+  @Test
+  public void postpare_nestedStateMachine_keepsAuthoredExitActions()
+  {
+    UmpleClass c = model.addUmpleClass("LightFixture");
+    StateMachine sm = new StateMachine("bulb");
+    StateMachine nestedSm = new StateMachine("On");
+    sm.setUmpleClass(c);
+    State onState = new State("On",sm);
+    onState.addNestedStateMachine(nestedSm);
+    State normalState = new State("Normal",nestedSm);
+    normalState.setIsStartState(true);
+    Action authored = new Action("userExit();");
+    authored.setActionType("exit");
+    normalState.addAction(authored);
+
+    Map<String,String> lookups = new HashMap<String,String>();
+    lookups.put("setSmToNullExitActionCode", "setBulbOn(BulbOn.Null);");
+    lookups.put("parentEntryActionCode","pEntry");
+    lookups.put("parentExitActionCode","exitBulbOn();");
+
+    GeneratorHelper.prepareNestedStateMachine(nestedSm, 0,lookups);
+    Assert.assertEquals(2,normalState.numberOfActions());
+    GeneratorHelper.postpare(model);
+    Assert.assertEquals(1,normalState.numberOfActions());
+    Assert.assertSame(authored,normalState.getAction(0));
   }
   
 

@@ -1,96 +1,71 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Student():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Student Attributes
-    #Student Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class Student:
     def __init__(self, aNumber):
-        self._ta = None
+        self._number = aNumber
         self._pupil = None
-        self._number = None
-        self._number = aNumber
+        self._ta = None
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setNumber(self, aNumber):
-        wasSet = False
         self._number = aNumber
-        wasSet = True
-        return wasSet
+        return True
 
     def getNumber(self):
         return self._number
 
-    # Code from template association_GetOne 
     def getPupil(self):
         return self._pupil
 
     def hasPupil(self):
-        has = not (self._pupil is None)
-        return has
+        return self._pupil is not None
 
-    # Code from template association_GetOne 
     def getTa(self):
         return self._ta
 
     def hasTa(self):
-        has = not (self._ta is None)
-        return has
+        return self._ta is not None
 
-    # Code from template association_SetOptionalOneToOptionalOne 
     def setPupil(self, aNewPupil):
-        wasSet = False
-        if aNewPupil is None :
+        if aNewPupil is None:
             existingPupil = self._pupil
             self._pupil = None
-            if not (existingPupil is None) and not (existingPupil.getTa() is None) :
+            if existingPupil is not None and existingPupil.getTa() is not None:
                 existingPupil.setTa(None)
-            wasSet = True
-            return wasSet
-        currentPupil = self.getPupil()
-        if not (currentPupil is None) and not currentPupil == aNewPupil :
+            return True
+        currentPupil = self._pupil
+        if currentPupil is not None and currentPupil is not aNewPupil:
             currentPupil.setTa(None)
         self._pupil = aNewPupil
         existingTa = aNewPupil.getTa()
-        if not self == existingTa :
+        if existingTa is not self:
             aNewPupil.setTa(self)
-        wasSet = True
-        return wasSet
+        return True
 
-    # Code from template association_SetOptionalOneToOptionalOne 
     def setTa(self, aNewTa):
-        wasSet = False
-        if aNewTa is None :
+        if aNewTa is None:
             existingTa = self._ta
             self._ta = None
-            if not (existingTa is None) and not (existingTa.getPupil() is None) :
+            if existingTa is not None and existingTa.getPupil() is not None:
                 existingTa.setPupil(None)
-            wasSet = True
-            return wasSet
-        currentTa = self.getTa()
-        if not (currentTa is None) and not currentTa == aNewTa :
+            return True
+        currentTa = self._ta
+        if currentTa is not None and currentTa is not aNewTa:
             currentTa.setPupil(None)
         self._ta = aNewTa
         existingPupil = aNewTa.getPupil()
-        if not self == existingPupil :
+        if existingPupil is not self:
             aNewTa.setPupil(self)
-        wasSet = True
-        return wasSet
+        return True
 
     def delete(self):
-        if not (self._pupil is None) :
+        if self._pupil is not None:
             self._pupil.setTa(None)
-        if not (self._ta is None) :
+        if self._ta is not None:
             self._ta.setPupil(None)
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "number" + ":" + str(self.getNumber()) + "]"
-
+        return (super().__str__() + "["
+                + "number:" + str(self.getNumber())
+                + "]")
