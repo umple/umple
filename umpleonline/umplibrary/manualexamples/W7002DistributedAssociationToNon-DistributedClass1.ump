@@ -8,3 +8,5 @@ class Supplier
 class Product
 {
 }
+
+// @@@skippythoncompile - distributable only works with Java as it relies on Java features
