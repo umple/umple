@@ -1101,6 +1101,12 @@ class Requirement{
     when = aReq.getWhen();
     what = aReq.getWhat();
     why = aReq.getWhy();
+    earsWhere = aReq.getEarsWhere();
+    earsWhile = aReq.getEarsWhile();
+    earsWhen = aReq.getEarsWhen();
+    earsIf = aReq.getEarsIf();
+    earsSystem = aReq.getEarsSystem();
+    earsShall = aReq.getEarsShall();
     language = aReq.getLanguage();
 
     qualityClasses = new ArrayList<QualityClass>();
