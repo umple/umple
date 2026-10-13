@@ -5,7 +5,7 @@ noreferences
 
 @@description Examples of requirements documents in Umple that can be used to generate code
 
-<p>This page provides examples of Umple requirements using both plain-text and structured userStory styles. They show possible ways of specifying requirements. They can be used to guide you before manually creating a model, or to use UmpleOnline AI capabilities to generate actual Umple code.</p>
+<p>This page provides examples of Umple requirements using plain-text, structured userStory and structured useCase styles. They show possible ways of specifying requirements. They can be used to guide you before manually creating a model, or to use UmpleOnline AI capabilities to generate actual Umple code.</p>
 <br />
 
 @@example  @@caption Hotel booking requirements for creating class diagrams or state machines @@endcaption
@@ -38,6 +38,22 @@ noreferences
 
 @@example @@caption Partial structured userStory requirement example @@endcaption
 @@source manualexamples/ReqUserStoryStructuredPartial.ump
+@@endexample
+
+@@example @@caption Plain-text useCase requirement example @@endcaption
+@@source manualexamples/ReqUseCasePlain.ump
+@@endexample
+
+@@example @@caption Structured useCase requirement using who, when, what, why, userStep and systemResponse @@endcaption
+@@source manualexamples/ReqUseCaseStructured.ump
+@@endexample
+
+@@example @@caption Partial structured useCase requirement example @@endcaption
+@@source manualexamples/ReqUseCaseStructuredPartial.ump
+@@endexample
+
+@@example @@caption Use cases related by isA and include, with conditional steps @@endcaption
+@@source manualexamples/ReqUseCaseExtended.ump
 @@endexample
 
 @@example @@caption Quality requirement with named quality classes @@endcaption

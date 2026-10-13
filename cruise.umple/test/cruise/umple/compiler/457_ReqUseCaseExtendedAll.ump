@@ -1,0 +1,11 @@
+req UC10 useCase {
+  who { returning customer }
+  when { a saved address exists }
+  what { check out quickly }
+  why { avoid retyping delivery details }
+  isA UC1;
+  include UC2, UC3;
+  userStep 1 { confirm the saved address }
+  systemResponse 1 [address still valid] { show the order summary }
+  userStep 2 { pay }
+}

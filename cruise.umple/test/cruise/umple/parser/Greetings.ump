@@ -1,0 +1,21 @@
+use lib:UmpleParser.ump;
+
+// Prints the tokens of a text file parsed with a grammar: java Greetings <grammar> <text>
+class Greetings
+{
+  depend java.io.File;
+  depend cruise.umple.parser.ParseResult;
+  depend cruise.umple.parser.analysis.RuleBasedParser;
+
+  public static void main(String[] args)
+  {
+    RuleBasedParser parser = new RuleBasedParser();
+    parser.addGrammarFile(args[0]);
+    ParseResult result = parser.parse(new File(args[1]));
+    System.out.print(result);
+    if (result.getWasSuccess())
+    {
+      System.out.println(parser.getRootToken());
+    }
+  }
+}

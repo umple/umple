@@ -134,6 +134,7 @@ document.write('<script type="text/javascript" src="scripts/ai/features/fix/umpl
 document.write('<script type="text/javascript" src="scripts/umple_page.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_layout.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_action.js"></script>');
+document.write('<script type="text/javascript" src="scripts/umple_action_gvdiagram.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_position.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_line.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_system.js"></script>');
@@ -149,6 +150,7 @@ document.write('<script type="text/javascript" src="scripts/umple_action_diagram
 document.write('<script type="text/javascript" src="scripts/umple_tooltips.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_feature_tree.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tab_control.js"></script>');
+document.write('<script type="text/javascript" src="scripts/umple_version_history.js"></script>');
 //CRUD UI
 document.write('<script type="text/javascript" src="scripts/crud/umple_crudui.js"></script>');
 document.write('<script type="text/javascript" src="scripts/crud/umple_crud_json_persistence.js"></script>');

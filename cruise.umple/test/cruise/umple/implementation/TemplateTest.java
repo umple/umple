@@ -384,6 +384,8 @@ public class TemplateTest
     SampleFileWriter.destroy(pathToInput + "/Second.php");
     SampleFileWriter.destroy(pathToInput + "/I.php");
 
+    SampleFileWriter.destroy(pathToInput + "/First.py");
+    SampleFileWriter.destroy(pathToInput + "/Second.py");
     SampleFileWriter.destroy(pathToInput + "/I.py");
 
     // Tear down issue 1521 tests
@@ -502,8 +504,17 @@ public class TemplateTest
     File expected = new File(pathToInput, codeFile);
     System.out.println(actual);
 
+    boolean isPython = "Python".equals(language);
+    if (isPython)
+    {
+      assertGeneratedPythonCompiles(model);
+    }
 
-    if (isFullMatch)
+    if (isFullMatch && isPython)
+    {
+      assertPythonFileContent(expected, actual, ignoreLineComments);
+    }
+    else if (isFullMatch)
     {
       if (ignoreLineComments)
         SampleFileWriter.assertFileContent(expected, actual, true);
@@ -518,6 +529,30 @@ public class TemplateTest
 
   }
   
+  // For a shared test model that Python cannot generate: generating it reports the diagnostic
+  // code (for example 9210 for an unsupported feature, 9211 for untranslatable untagged code).
+  public void assertPythonDiagnostic(String umpleFile, int code)
+  {
+    File file = new File(pathToInput, umpleFile);
+    UmpleModel model = new UmpleModel(new UmpleFile(pathToInput, umpleFile));
+    model.setShouldGenerate(false);
+    RuleBasedParser rbp = new RuleBasedParser();
+    UmpleParser parser = new UmpleInternalParser(umpleParserName, model, rbp);
+    ParseResult result = rbp.parse(file);
+    model.extractAnalyzersFromParser(rbp);
+    model.setLastResult(result);
+    Assert.assertTrue("Syntax Failed at:" + result.getPosition(), result.getWasSuccess());
+    model.setUmpleFile(new UmpleFile(new File(pathToInput, umpleFile)));
+    model.addGenerate("Python");
+    result = parser.analyze(true);
+    List<Integer> codes = new ArrayList<Integer>();
+    for (cruise.umple.parser.ErrorMessage message : model.getLastResult().getErrorMessages())
+    {
+      codes.add(message.getErrorType().getErrorCode());
+    }
+    Assert.assertTrue("expected diagnostic " + code + " but got " + codes, codes.contains(code));
+  }
+
   public String[] addNewSuboption(String subOption){
     suboptions = new String[]{"genJson"};
     return suboptions;
@@ -730,4 +765,108 @@ public class TemplateTest
     || m.contains("numberOf") || m.contains("indexOf") ||  m.contains("has") || m.contains("remove"));
   }
   
+
+  // Source-location comments that the generator emits and that tests may ignore: whole lines outside
+  // string literals, so string data that merely looks like one is still compared.
+  private static final Pattern PYTHON_MARKER =
+    Pattern.compile("\\s*# (line \\d+ \".*\"|end line)\\s*");
+
+  private static List<String> pythonLines(String text, boolean dropMarkers)
+  {
+    List<String> lines = new ArrayList<String>();
+    String[] all = text.replace("\r\n", "\n").split("\n", -1);
+    boolean[] insideString = cruise.umple.util.PythonSource.linesInsideStrings(Arrays.asList(all));
+    for (int i = 0; i < all.length; i++)
+    {
+      String line = all[i];
+      if (i < 3 && line.startsWith("#This code was generated using the UMPLE"))
+      {
+        continue; // the header names the compiler version, which differs between builds
+      }
+      if (dropMarkers && !insideString[i] && PYTHON_MARKER.matcher(line).matches())
+      {
+        continue;
+      }
+      lines.add(line);
+    }
+    while (!lines.isEmpty() && lines.get(lines.size() - 1).isEmpty())
+    {
+      lines.remove(lines.size() - 1);
+    }
+    return lines;
+  }
+
+  // Exact comparison for whole Python files: every line must match and both files must end together.
+  public void assertPythonFileContent(File expected, String actual, boolean ignoreLineComments)
+  {
+    String expectedText;
+    try
+    {
+      expectedText = new String(java.nio.file.Files.readAllBytes(expected.toPath()), "UTF-8");
+    }
+    catch (java.io.IOException e)
+    {
+      throw new AssertionError("Unable to read " + expected, e);
+    }
+    Assert.assertEquals(String.join("\n", pythonLines(expectedText, ignoreLineComments)),
+      String.join("\n", pythonLines(actual, ignoreLineComments)));
+  }
+
+  // Skips a test that needs Python 3 when none is available, unless UMPLE_REQUIRE_PYTHON is set,
+  // which makes the missing interpreter a failure.
+  public static void assumePython()
+  {
+    if (CodeCompiler.getPythonInterpreter() == null)
+    {
+      Assert.assertNull("Python 3 is required (UMPLE_REQUIRE_PYTHON is set) but was not found", System.getenv("UMPLE_REQUIRE_PYTHON"));
+      Assume.assumeTrue("Skipping: no Python 3 found", false);
+    }
+  }
+
+  // Python's syntax errors in files, or null when there are none. The check is skipped when no
+  // Python 3 is available, unless UMPLE_REQUIRE_PYTHON is set.
+  public static String pythonSyntaxErrors(List<File> files)
+  {
+    if (CodeCompiler.getPythonInterpreter() == null)
+    {
+      if (System.getenv("UMPLE_REQUIRE_PYTHON") != null)
+      {
+        Assert.fail("Python 3 is required (UMPLE_REQUIRE_PYTHON is set) but was not found");
+      }
+      System.out.println("Skipping Python compilation check: no Python 3 found");
+      return null;
+    }
+    return files.isEmpty() ? null : CodeCompiler.checkPythonSyntax(files);
+  }
+
+  // Compiles every Python module the model generated, so expected output that is not valid Python
+  // cannot pass.
+  public void assertGeneratedPythonCompiles(UmpleModel model)
+  {
+    File dir = null;
+    try
+    {
+      dir = java.nio.file.Files.createTempDirectory("umple-python-check").toFile();
+      List<File> files = new ArrayList<File>();
+      for (Map.Entry<String, String> generated : model.getGeneratedCode().entrySet())
+      {
+        File file = new File(dir, generated.getKey() + ".py");
+        java.nio.file.Files.write(file.toPath(), generated.getValue().getBytes("UTF-8"));
+        files.add(file);
+      }
+      String errors = pythonSyntaxErrors(files);
+      Assert.assertNull("Generated Python does not compile:\n" + errors, errors);
+    }
+    catch (java.io.IOException e)
+    {
+      throw new AssertionError("Unable to check generated Python", e);
+    }
+    finally
+    {
+      if (dir != null)
+      {
+        SampleFileWriter.destroy(dir.getPath());
+      }
+    }
+  }
 }

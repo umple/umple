@@ -1,0 +1,8 @@
+// The value comes from a method with a Java body and a
+// Python body, so each language uses its own library
+generate Python;
+class Session {
+  String user = currentUser();
+  String currentUser() Java { return System.getProperty("user.name"); }
+    Python { import getpass; return getpass.getuser() }
+}

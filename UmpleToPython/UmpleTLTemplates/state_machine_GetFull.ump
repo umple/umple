@@ -1,0 +1,16 @@
+class UmpleToPython {
+    // The machine's state followed by the state of each active nested machine, dot-separated. Java
+    // repeats machines nested three or more levels deep; each machine appears once here.
+    state_machine_GetFull <<!<</*state_machine_GetFull*/>>
+
+    def <<=gen.translate("getFullMethod", sm)>>(self):
+        answer = str(<<=gen.smField(sm)>>)<<#
+  for (StateMachine childSm : sm.getNestedStateMachines())
+  {
+    #>>
+        if <<=gen.smField(childSm)>> is not <<=gen.smType(childSm)>>.Null:
+            answer += "." + str(<<=gen.smField(childSm)>>)<<#
+  }
+  #>>
+        return answer!>>
+}

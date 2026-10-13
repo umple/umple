@@ -1,0 +1,12 @@
+class UmpleToPython {
+    // An optional one end whose owner needs at least m objects: an owner at its lower bound is
+    // deleted, any other only loses this object.
+    delete_OptionalOneFromMN <<!<</*delete_OptionalOneFromMN*/>>
+        if <<=field>> is not None:
+            if <<=field>>.<<=gen.relatedTranslate("numberOfMethod", av)>>() <= <<=relatedAssociation.getMultiplicity().getLowerBound()>>:
+                <<=field>>.delete()
+            else:
+                <<=gen.translate("removeParameterOne", av)>> = <<=field>>
+                <<=field>> = None
+                <<=gen.translate("removeParameterOne", av)>>.<<=gen.relatedTranslate("removeMethod", av)>>(self)!>>
+}

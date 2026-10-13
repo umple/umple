@@ -1,0 +1,20 @@
+class UmpleToPython {
+    // delete, for a many end whose other end has a lower bound (m..n, m..* or n): a linked object
+    // that would fall below that bound is deleted too, the others drop this one. The other class is
+    // imported here when it is in another module.
+    delete_ManyFromMN <<!<</*delete_ManyFromMN*/>><<#
+  String[] relatedClass = gen.classUse(uClass, av.getType(), gen.translate("parameterCopyOfMany", av) + ", " + parameter);
+  if (relatedClass[1] != null)
+  {
+    #>>
+        <<=relatedClass[1]>><<#
+  }
+  #>>
+        <<=gen.translate("parameterCopyOfMany", av)>> = tuple(<<=field>>)
+        <<=field>>.clear()
+        for <<=parameter>> in <<=gen.translate("parameterCopyOfMany", av)>>:
+            if <<=parameter>>.<<=gen.relatedTranslate("numberOfMethod", av)>>() <= <<=relatedClass[0]>>.<<=gen.relatedTranslate("minimumNumberOfMethod", av)>>():
+                <<=parameter>>.delete()
+            else:
+                <<=parameter>>.<<=gen.relatedTranslate("removeMethod", av)>>(self)!>>
+}

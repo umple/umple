@@ -1,0 +1,245 @@
+// User-written code in generated Python. Python-tagged and untagged method bodies and extra code
+// are native Python; untagged actions, injections, derived attributes and defaults are Java-shaped
+// snippets that the generator translates.
+
+namespace cruise.usercode.behaviour;
+
+// Overloaded user methods are dispatched by their arguments
+
+class OverloadByType
+{
+  int f(int x) Python,Java { return 1; }
+  int f(String x) Python,Java { return 2; }
+}
+
+class OverloadByArity
+{
+  int f() Python,Java { return 1; }
+  int f(int x) Python,Java { return 2; }
+}
+
+class StaticMethods
+{
+  static int next(int x) Python { return x + 1 }
+  public static int half(int x) Python {
+    [pre: x >= 0]
+    return x // 2
+  }
+}
+
+// Native bodies keep their relative indentation and their literal text
+
+class NativeBodies
+{
+  int zeroIndent() Python {
+x = 7
+return x
+  }
+
+  int twoIndent() Python {
+  x = 7
+  return x
+  }
+
+  int nestedBlocks() Python {
+    total = 0
+    for i in range(4):
+        if i % 2 == 0:
+            total += i
+
+    return total
+  }
+
+  int tabs() Python {
+    if True:
+    	return 7
+    return 0
+  }
+
+  String multiline() Python {
+    return """first
+    second
+      third"""
+  }
+
+  String braces() Python {
+    x = 7
+    return f"value={x} {{ok}} #" + "{x} # }"
+  }
+
+  String marker() Python { return "<TXL UGM>" }
+
+  void empty() Python { }
+
+  void emptyShared() Python,Java {}
+
+  int varargs(int... xs) Python { return sum(xs) }
+}
+
+// Language selection
+
+class LanguageSelection
+{
+  int both() Python { return 7 } Java { return 8; }
+  int fallback() { return 1 } Java { return 2; }
+  int javaOnly() Java { return 3; }
+}
+
+// Contracts and injections on user methods
+
+class Contracts
+{
+  Integer n = 0;
+  int positive(int x) Python {
+    [pre: x > 0]
+    return x
+  }
+  int positiveUntagged(int x) {
+    [pre: x > 0]
+    return x
+  }
+  int postPerLanguage(int x) Python { [post: x > 0] return x } Java { [post: x > 5] return x; }
+}
+
+class UserMethodInjections
+{
+  Integer n = 0;
+  String log = "";
+  int withBefore() Python { return self.getN() }
+  before custom withBefore Python { self.setN(9) }
+  int withAfter() Python {
+    self.setN(5)
+    return self.getN()
+  }
+  after custom withAfter Python { self.setN(self.getN() * 2) }
+  void voidWithResult() Python { return 5 }
+  before custom voidWithResult Python { self.setLog(self.getLog() + "before;") }
+}
+
+class InjectionBase
+{
+  before custom f Python { pass }
+  public String f() Python { return "base" }
+}
+
+class InjectionChild
+{
+  isA InjectionBase;
+  before custom f Python { pass }
+  public String f() Python { return "child:" + super().f() }
+}
+
+// Injections on generated methods
+
+class GeneratedMethodInjections
+{
+  Integer n = 0;
+  String log = "";
+  before setN Python { self.setLog(self.getLog() + "before;") }
+  after setN Python {
+    self.setLog(self.getLog() + "after;")
+    self.setLog(self.getLog() + "again;")
+  }
+}
+
+// Actions
+
+class PythonActions
+{
+  Integer n = 0;
+  sm {
+    A {
+      go / Python { self.setN(7) } -> B;
+      block / Python {
+        if self.getN() == 0:
+            self.setN(8)
+      } -> B;
+      javaOnly / Java { setN(9); } -> B;
+      entryExit -> C;
+    }
+    B { reset -> A; }
+    C {
+      entry / Python { self.setN(self.getN() + 10) }
+      exit / Python { self.setN(self.getN() + 100) }
+      reset -> A;
+    }
+  }
+}
+
+class GuardHelper
+{
+  Boolean allowed = false;
+  boolean ok() Python { return self.getAllowed() } Java { return getAllowed(); }
+  sm { A { go [ok()] -> B; } B {} }
+}
+
+// Derived attributes, extra code, string form, main
+
+class DerivedPython
+{
+  Integer n = 3;
+  Integer twice = Python { self.getN() * 2 }
+}
+
+class ExtraCode
+{
+  TOKEN = 7
+  def triple(self, x):
+      return 3 * x
+}
+
+class UserToString
+{
+  String toString() Python { return "CUSTOM" }
+}
+
+class MainEntry
+{
+  public static void main(String[] args) Python { print(len(args), args[1:]) }
+}
+
+class MainDefault
+{
+  public static void main(String[] args) { print("DEFAULT", len(args)) } Java { System.out.println("JAVA"); }
+}
+
+// Untagged snippets translated from their Java form
+
+class UntaggedSnippets
+{
+  Integer n = 0;
+  Integer arithmetic = 2 + 3 * 4;
+  Integer division = 7 / 2;
+  Integer negativeDivision = -7 / 2;
+  Integer twice = { getN() * 2 }
+  String log = "";
+  before setN { log = log + "set " + n + ";"; }
+  sm {
+    A { go / { setN(7); } -> B; }
+    B { [n == 7] -> C; }
+    C {}
+  }
+}
+
+// Java evaluates the object of a call, then its arguments, and only then fails on a null object; a
+// static member reached through an object evaluates the object and does not use its value.
+
+class SnippetReceivers
+{
+  SnippetReceivers child = null;
+  Integer calls = 0;
+  Integer answered = 0;
+  const Integer VALUE = 7;
+  SnippetReceivers receiver() Python { self._calls += 1; return None }
+  Integer change() Python { self._calls += 1; return 3 }
+  static Integer answer() Python { return 7 }
+  Integer twice(Integer n) Python { return 2 * n }
+  Integer answerThroughNull = { receiver().answer() }
+  Integer twiceThroughChild = { child.twice(change()) }
+  void staticCall() {}
+  before staticCall { answered = receiver().answer(); }
+  void staticConstant() {}
+  before staticConstant { SnippetReceivers s = null; answered = s.child.VALUE; }
+  void callOnChild() {}
+  before callOnChild { answered = child.twice(change()); }
+}

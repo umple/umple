@@ -5,6 +5,7 @@ import cruise.umple.UmpleConsoleMain;
 import cruise.umple.compiler.UmpleParserTest;
 import cruise.umple.util.SampleFileWriter;
 import cruise.umple.parser.Position;
+import cruise.umple.parser.ErrorMessage;
 import cruise.umple.compiler.UmpleFile;
 import cruise.umple.compiler.UmpleModel;
 import cruise.umple.compiler.UmpleClass;
@@ -33,7 +34,7 @@ public class UmpleFeatureModelTest {
   {
 
     String[] args = {"-generate","GvFeatureDiagram","GvFeatureConsoleTest.ump"} ;
-    SampleFileWriter.createFile("GvFeatureConsoleTest.ump", "require [A and B or C];");
+    SampleFileWriter.createFile("GvFeatureConsoleTest.ump", "require [A and B or C]; mixset A {} mixset B {} use A, B;");
    try 
     {
       UmpleConsoleMain.main(args);
@@ -143,11 +144,7 @@ public class UmpleFeatureModelTest {
   @Test
   public void parseReqStArgumetToFeaureModel()
   {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_featureModel.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
+    FeatureModel featureModel = parseUnsatisfiedFeatureModel("reqStArgumentParse_featureModel.ump");
     //source --> (and A B)
     Assert.assertEquals(((FeatureNode) featureModel.getFeaturelink(0).getTargetFeatureNode()).getName() ,"and");
     Assert.assertEquals(((FeatureLeaf) featureModel.getFeaturelink(1).getTargetFeatureNode()).getMixsetOrFileNode().getName() ,"B");
@@ -167,11 +164,7 @@ public class UmpleFeatureModelTest {
   @Test
   public void parseReqStArgumetToSatisfyFeatureModel_1()
   {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_featureModel.ump");//reuse ump file from parseReqStArgumetToFeaureModel()
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
+    FeatureModel featureModel = parseUnsatisfiedFeatureModel("reqStArgumentParse_featureModel.ump");//reuse ump file from parseReqStArgumetToFeaureModel()
     Assert.assertEquals(featureModel.satisfyFeatureModel(), false);
   }
   @Test
@@ -187,11 +180,7 @@ public class UmpleFeatureModelTest {
   @Test
   public void parseReqStArgumetToSatisfyFeatureModel_3()
   {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_NotValidXorFeatureModel.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
+    FeatureModel featureModel = parseUnsatisfiedFeatureModel("reqStArgumentParse_NotValidXorFeatureModel.ump");
     Assert.assertEquals(false,featureModel.satisfyFeatureModel());
   }
   @Test
@@ -207,21 +196,13 @@ public class UmpleFeatureModelTest {
   @Test
   public void parseReqStArgumetToSatisfyFeatureModel_5()
   {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_NotvalidSetFeatureModel.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
+    FeatureModel featureModel = parseUnsatisfiedFeatureModel("reqStArgumentParse_NotvalidSetFeatureModel.ump");
     Assert.assertEquals(false,featureModel.satisfyFeatureModel());
   }
   @Test
   public void parseReqStArgumetToSatisfyFeatureModel_6()
   {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_NotvalidBitWiseFeatuerModel.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
+    FeatureModel featureModel = parseUnsatisfiedFeatureModel("reqStArgumentParse_NotvalidBitWiseFeatuerModel.ump");
     Assert.assertEquals(false,featureModel.satisfyFeatureModel());
   }
  @Test
@@ -247,11 +228,7 @@ public class UmpleFeatureModelTest {
  @Test
   public void parseReqStArgumetToSatisfyFeatureModel_9()
   {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_NotvalidCombinedOpWithRoundBracket.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel= model.getFeatureModel();
+    FeatureModel featureModel = parseUnsatisfiedFeatureModel("reqStArgumentParse_NotvalidCombinedOpWithRoundBracket.ump");
     Assert.assertEquals(false,featureModel.satisfyFeatureModel());
   }
  @Test
@@ -279,11 +256,7 @@ public class UmpleFeatureModelTest {
   @Test
   public void parseReqStArgumetToSatisfyFeatureModel_cycleBehindUnused()
   {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_cycleBehindUnused.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel = model.getFeatureModel();
+    FeatureModel featureModel = parseUnsatisfiedFeatureModel("reqStArgumentParse_cycleBehindUnused.ump");
     Assert.assertEquals(false, featureModel.satisfyFeatureModel());
   }
 
@@ -301,38 +274,28 @@ public class UmpleFeatureModelTest {
   @Test
   public void parseReqStArgumetToSatisfyFeatureModel_cycleSelfLoop()
   {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_cycleSelfLoop.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel = model.getFeatureModel();
-    // Termination check only: a self-require + use must not StackOverflow.
-    // We do NOT assert on the boolean -- self-require semantics (warn vs
-    // satisfied vs unsatisfied) are out of scope for this fix and a future
-    // diagnostic could legitimately change the answer either way.
-    featureModel.satisfyFeatureModel();
+    umpleParserTest.assertNoWarningsParse("reqStArgumentParse_cycleSelfLoop.ump");
+    Assert.assertEquals(true, umpleParserTest.model.getFeatureModel().satisfyFeatureModel());
   }
 
   @Test
   public void parseReqStArgumetToSatisfyFeatureModel_diamondSharedRequire()
   {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_diamondSharedRequire.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel = model.getFeatureModel();
+    FeatureModel featureModel = parseUnsatisfiedFeatureModel("reqStArgumentParse_diamondSharedRequire.ump");
     Assert.assertEquals(false, featureModel.satisfyFeatureModel());
+    // only X's require statement fails
+    Assert.assertEquals(1, umpleParserTest.parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals(7, umpleParserTest.parser.getParseResult().getErrorMessage(0).getPosition().getLineNumber());
   }
 
   @Test
   public void parseReqStArgumetToSatisfyFeatureModel_cycleXorOver()
   {
-    UmpleFile umpleFile = new UmpleFile(umpleParserTest.pathToInput,"reqStArgumentParse_cycleXorOver.ump");
-    UmpleModel model = new UmpleModel(umpleFile);
-    model.setShouldGenerate(false);
-    model.run();
-    FeatureModel featureModel = model.getFeatureModel();
+    FeatureModel featureModel = parseUnsatisfiedFeatureModel("reqStArgumentParse_cycleXorOver.ump");
     Assert.assertEquals(false, featureModel.satisfyFeatureModel());
+    // only Root's require statement fails
+    Assert.assertEquals(1, umpleParserTest.parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals(10, umpleParserTest.parser.getParseResult().getErrorMessage(0).getPosition().getLineNumber());
   }
 
   @Test
@@ -383,5 +346,48 @@ public class UmpleFeatureModelTest {
         designBLeaf.getMixsetOrFileNode());
   }
 
+  @Test
+  public void unsatisfiedRequireStatementsInUsedMixsetsRaiseWarning1514()
+  {
+    umpleParserTest.parseWarnings("requireStatementNotSatisfied.ump");
+    Assert.assertEquals(2, umpleParserTest.parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals(1514, umpleParserTest.parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+    Assert.assertEquals(2, umpleParserTest.parser.getParseResult().getErrorMessage(0).getPosition().getLineNumber());
+    Assert.assertEquals(1514, umpleParserTest.parser.getParseResult().getErrorMessage(1).getErrorType().getErrorCode());
+    Assert.assertEquals(7, umpleParserTest.parser.getParseResult().getErrorMessage(1).getPosition().getLineNumber());
+  }
+
+  @Test
+  public void unsatisfiedRequireStatementAtFileLevelRaisesWarning1514()
+  {
+    UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"requireStatementMissingUse.ump");
+    umpleParserTest.assertHasWarningsParse(file.getFileName(), new Position(file.getFileName(),1,0,0), 1514);
+  }
+
+  @Test
+  public void requireStatementOfUnusedMixsetIsNotChecked()
+  {
+    umpleParserTest.assertNoWarningsParse("requireStatementInUnusedMixset.ump");
+  }
+
+  @Test
+  public void requireStatementWithSeveralConstraintsRaisesOneWarning()
+  {
+    UmpleFile file = new UmpleFile(umpleParserTest.pathToInput,"requireStatementWithSeveralConstraints.ump");
+    umpleParserTest.assertHasWarningsParse(file.getFileName(), new Position(file.getFileName(),1,0,0), 1514);
+    Assert.assertEquals(1, umpleParserTest.parser.getParseResult().numberOfErrorMessages());
+  }
+
+  // Parses a model whose use statements do not satisfy its feature model: the parse must succeed,
+  // and warning 1514 must be the only kind of message raised.
+  private FeatureModel parseUnsatisfiedFeatureModel(String fileName)
+  {
+    Assert.assertTrue(umpleParserTest.parseWarnings(fileName));
+    for(ErrorMessage message : umpleParserTest.parser.getParseResult().getErrorMessages())
+    {
+      Assert.assertEquals(1514, message.getErrorType().getErrorCode());
+    }
+    return umpleParserTest.model.getFeatureModel();
+  }
+
 }
- 

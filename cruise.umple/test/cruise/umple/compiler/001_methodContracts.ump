@@ -1,0 +1,29 @@
+// Pre and postconditions belong to their method and to the body written with them (#2250)
+class Client {
+  Integer minAge;
+  int someMethod(Integer arg) Java
+  {
+    [post: arg > 5]
+    return 0;
+  }
+  int someMethod(Integer arg) Python
+  {
+    [post: arg > 6]
+    return 0
+  }
+  int f(int x) { [pre: x > 10] return x; }
+  int f(String s) { [pre: s != null] return 1; }
+  int h(int a) Java { [pre: a > 1] return 1; }
+  int h(int a) Java { [pre: a > 2] return 2; }
+  int k(int a) Java, Php { [pre: a > 3] return 3; } Python { [pre: a > 4] return 4 }
+  int k(int a) Php { [pre: a > 5] return 5; } Ruby { [pre: a > 6] return 6 }
+  int m(int a) { [pre: a > 7] }
+  int m(int a) { [pre: a > 8] return a; }
+  int same(int x) Python { [pre: x > 0] [post: x < 10] return x } Java { [pre: x > 0] [post: x < 10] return x; }
+  int limit(int a) { [pre: minAge > 1] return a; }
+  int limit(String s) { [pre: minAge > 1] return 1; }
+  int refine(int a) { return a; }
+  int refine(int a) { [pre: a < 50] }
+  int refine(int a) { [pre: minAge < 60] }
+  int refine(int a) { [pre: minAge < 60] }
+}

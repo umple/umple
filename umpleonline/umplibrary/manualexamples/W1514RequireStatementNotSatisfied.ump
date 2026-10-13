@@ -1,0 +1,14 @@
+// DesignA and DesignB exclude each other, so using both of them
+// does not satisfy the feature model and raises the warning.
+mixset DesignA {
+  require [not DesignB];
+  class X { name; }
+}
+
+mixset DesignB {
+  require [not DesignA];
+  class X { age; }
+}
+
+// To get rid of the warning, use only one of the two designs.
+use DesignA, DesignB;

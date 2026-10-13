@@ -1306,7 +1306,8 @@ class StateTableRow
     }
 
     stateEventCells.get(label).addStateTableEntry(
-      new StateEventEntry(t.getNextState(), guard, action, isDerived));
+      new StateEventEntry(t.getNextState(), guard, action, isDerived,
+                          extractTransitionId(t)));
   }
 
   private void addStateStateCell(String label, Transition t, String guard, 
@@ -1318,7 +1319,63 @@ class StateTableRow
     }
 
     stateStateCells.get(t.getNextState()).addStateTableEntry(
-      new StateStateEntry(label, guard, action, isDerived));
+      new StateStateEntry(label, guard, action, isDerived,
+                          extractTransitionId(t)));
+  }
+
+  // Builds the same transition identifier as the Graphviz state diagram, so
+  // UmpleOnline can select and edit the transition in the code.
+  // The from state is the state defining the transition, so derived cells
+  // refer to the transition of the superstate.
+  private String extractTransitionId(Transition t)
+  {
+    Event event = t.getEvent();
+    Guard guard = t.getGuard();
+    String transitionLabel = "";
+    String guardString = "";
+
+    if(!event.isAutoTransition())
+    {
+      if(event.getIsTimer())
+      {
+        transitionLabel = "after(" + event.getTimerInSeconds() + ")";
+      }
+      else if(event.getArgs() == null || event.getArgs().equals(""))
+      {
+        transitionLabel = event.getName();
+      }
+      else
+      {
+        transitionLabel = event.getName() + "(" + event.getArgs() + ")";
+      }
+    }
+
+    if(guard != null)
+    {
+      if(event.isAutoTransition()) guardString = "[";
+      else guardString = " [";
+      guardString += guard.getExpression().replaceAll("\"","&quot;") + "]";
+    }
+
+    return getStateTable().getUClass().getName() + "*^*"
+      + getStateTable().getSm().getName() + "*^*" + transitionLabel + "*^*"
+      + getDottedName(t.getFromState()) + "*^*"
+      + getDottedName(t.getNextState()) + "*^*" + guardString;
+  }
+
+  // Returns the name of the state prefixed by the names of its parent states,
+  // separated by dots, as in the state paths of the Graphviz state diagram
+  private String getDottedName(State s)
+  {
+    String name = s.getName();
+    State parentState = s.getStateMachine().getParentState();
+
+    while(parentState != null)
+    {
+      name = parentState.getName() + "." + name;
+      parentState = parentState.getStateMachine().getParentState();
+    }
+    return name;
   }
 
   // Output the first cell in the row of the table, i.e. the state name with indentation
@@ -1404,6 +1461,7 @@ class StateEventEntry
   String guard;
   String action;
   boolean isDerived;
+  String transitionId;
 
   // Output this state cell as html - appears in state-event table
   public StringBuilder htmlString() 
@@ -1417,6 +1475,10 @@ class StateEventEntry
       sb.append(action);
       sb.append("\"");
     }
+
+    sb.append(" data-transition=\"");
+    sb.append(transitionId);
+    sb.append("\"");
 
     sb.append(">");
 
@@ -1441,6 +1503,7 @@ class StateStateEntry
   String guard;
   String action;
   boolean isDerived;
+  String transitionId;
 
   // Output this state cell as html - appears in state-state table
   public StringBuilder htmlString() 
@@ -1448,6 +1511,9 @@ class StateStateEntry
     StringBuilder sb = new StringBuilder();
     sb.append("<span");
     if(isDerived) sb.append(" class=\"derived\"");
+    sb.append(" data-transition=\"");
+    sb.append(transitionId);
+    sb.append("\"");
     sb.append(">");
     sb.append(label);
 
@@ -1487,7 +1553,20 @@ class StateTable
     sb.append("    <tr>\n      <td class=\"event-header\">&nbsp;</td>\n");
     for(String e : allEvents) 
     {
-      sb.append("      <td class=\"event-header\">");
+      // Event headings select the first transition in their column.
+      String transitionId = "";
+      for(StateTableRow row : rows)
+      {
+        if(row.getStateEventCells().containsKey(e))
+        {
+          transitionId = ((StateEventEntry)row.getStateEventCells().get(e)
+            .getStateTableEntry(0)).getTransitionId();
+          break;
+        }
+      }
+      sb.append("      <td class=\"event-header\" data-transition=\"");
+      sb.append(transitionId);
+      sb.append("\">");
       sb.append(e);
       sb.append("</td>\n");
     }

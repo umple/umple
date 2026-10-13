@@ -29,9 +29,41 @@ req &lt;ReqIdentifier&gt; [&lt;reqLanguage&gt;] { ... }
 <ul>
   <li><b>plain</b> (default, tag may be omitted) &mdash; free text.</li>
   <li><b>userStory</b> &mdash; free text optionally structured with <code>who</code>, <code>when</code>, <code>what</code>, and <code>why</code> sub-blocks.</li>
-  <li><b>useCase</b> &mdash; free text optionally structured with <code>userStep</code> and <code>systemResponse</code> sub-blocks.</li>
+  <li><b>useCase</b> (also written <code>usecase</code>) &mdash; free text, or the steps of an interaction between an actor and
+      the system. See the section below.</li>
   <li><b>quality</b> &mdash; introduces named quality classes (e.g. <i>High</i>, <i>Medium</i>, <i>Low</i>) for a non-functional property. See <a href="RequirementQualityClasses.html">Requirement Quality Classes</a>.</li>
 </ul>
+
+<h3>useCase requirements</h3>
+
+<p>A <code>useCase</code> requirement describes an interaction between an actor and the system. Its body may be free text, or may be
+structured with any combination of the sub-blocks below, written one per line and in any order:</p>
+
+<ul>
+  <li><code>who</code>, <code>when</code>, <code>what</code> and <code>why</code> &mdash; the same sub-blocks used by
+      <code>userStory</code> requirements.</li>
+  <li><code>userStep &lt;id&gt; { ... }</code> and <code>systemResponse &lt;id&gt; { ... }</code> &mdash; the steps of the scenario.
+      The identifier may be a number or alphanumeric, and the steps are kept in the order they are written.</li>
+  <li><code>isA &lt;ReqIdentifier&gt; [, &lt;ReqIdentifier&gt;]* ;</code> &mdash; the use case is a special case of the named use
+      cases, as with UML generalization.</li>
+  <li><code>include &lt;ReqIdentifier&gt; [, &lt;ReqIdentifier&gt;]* ;</code> &mdash; the use case incorporates the steps of the
+      named use cases, as with the UML include relationship.</li>
+</ul>
+
+<p>A step may carry a condition in square brackets, written like a state machine guard. The step applies only when the condition
+holds, so several steps can share one identifier to describe alternative outcomes of the same point in the scenario:</p>
+
+<pre>
+req UC5 useCase {
+  isA UC3;
+  include UC4;
+  userStep 1 { select a payment method }
+  systemResponse 1 [card accepted] { confirm the order }
+  systemResponse 1 [card declined] { ask for another card }
+}
+</pre>
+
+<p>See <a href="RequirementsExamples.html">Requirements Examples</a> for complete useCase models in plain, structured and related forms.</p>
 
 <h3>implementsReq statement</h3>
 

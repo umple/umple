@@ -1,0 +1,29 @@
+suboption "genJson";
+class Order {
+  String orderId;
+  status {
+    Placed {
+      pay -> Paid;
+    }
+    Paid {
+      ship -> Shipping;
+      Packing { pack -> ReadyToShip; }
+      ReadyToShip {}
+    }
+    Shipping {}
+  }
+
+  public static void main(String[] args) Java{
+    Order order = new Order("A-17");
+    order.pay();
+    order.pack();
+    String jsonString = order.toJson();
+    System.out.println(jsonString);
+
+    // The reloaded order is in Paid.ReadyToShip and continues from there
+    Order reloaded = Order.fromJson(jsonString);
+    System.out.println(reloaded.getStatusFullName());
+    reloaded.ship();
+    System.out.println(reloaded.getStatusFullName());
+  }
+}

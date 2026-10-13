@@ -969,6 +969,9 @@ class InstanceDiagramGenerator
     code.append(SuperGvGenerator.appendTooltipComment(umpClass.getComments(), false));
     code.append("\"");
 
+    // Clicking on the instance selects its class
+    code.append(", href=\"javascript:Action.selectClass(&quot;"+className+"&quot;);\"");
+
     // Terminate the class as a whole
     code.append("];\n");
   }

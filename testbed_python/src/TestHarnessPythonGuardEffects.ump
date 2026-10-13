@@ -1,0 +1,287 @@
+// Accessor and event guards can end a visit before the outer transition continues.
+namespace cruise.sm;
+
+class SmGuardGetterExit {
+ String log = "";
+ Boolean enabled = true;
+ before getEnabled Python { self.exitSm() }
+ sm {
+   A { after(30) [getEnabled()] / { setLog(getLog()+"action;"); } -> B; }
+   B { entry / { setLog(getLog()+"entry;"); } after(30) [false] -> C; }
+   C {}
+ }
+}
+class SmGuardDerivedExit {
+ String log = "";
+ Boolean enabled = { ready() }
+ Boolean ready() Python { self.exitSm(); return True }
+ sm {
+   A { after(30) [enabled] / { setLog(getLog()+"action;"); } -> B; }
+   B { entry / { setLog(getLog()+"entry;"); } after(30) [false] -> C; }
+   C {}
+ }
+}
+class SmGuardDerivedExplicitExit {
+ String log = "";
+ Boolean enabled = { ready() }
+ Boolean ready() Python { self.exitSm(); return True }
+ sm {
+   A { after(30) [getEnabled()] / { setLog(getLog()+"action;"); } -> B; }
+   B { entry / { setLog(getLog()+"entry;"); } after(30) [false] -> C; }
+   C {}
+ }
+}
+
+class SmGuardDirectControl {
+ String log = "";
+ Boolean enabled = { ready() }
+ Boolean ready() Python { self.exitSm(); return True }
+ sm {
+   A { after(30) [ready()] / { setLog(getLog()+"action;"); } -> B; }
+   B { entry / { setLog(getLog()+"entry;"); } after(30) [false] -> C; }
+   C {}
+ }
+}
+class SmGuardGetterAfterExit {
+ String log = "";
+ Boolean enabled = true;
+ after getEnabled Python { self.exitSm() }
+ sm {
+   A { after(30) [getEnabled()] / { setLog(getLog()+"action;"); } -> B; }
+   B { entry / { setLog(getLog()+"entry;"); } after(30) [false] -> C; }
+   C {}
+ }
+}
+class SmGuardImplicitGetterExit {
+ String log = "";
+ Boolean enabled = true;
+ before getEnabled Python { self.exitSm() }
+ sm {
+   A { after(30) [enabled] / { setLog(getLog()+"action;"); } -> B; }
+   B { entry / { setLog(getLog()+"entry;"); } after(30) [false] -> C; }
+   C {}
+ }
+}
+class SmGuardDerivedBooleanExit {
+ String log = "";
+ Boolean enabled = { ready() }
+ Boolean ready() Python { self.exitSm(); return True }
+ sm {
+   A { after(30) [isEnabled()] / { setLog(getLog()+"action;"); } -> B; }
+   B { entry / { setLog(getLog()+"entry;"); } after(30) [false] -> C; }
+   C {}
+ }
+}
+
+class SmGuardPeer {}
+class SmGuardAssociationExit {
+  0..1 -> 0..1 SmGuardPeer peer;
+  after getPeer Python { self.setSm(self.Sm.A) }
+  sm { A { go [peer == null] -> B; go -> B; } B {} }
+}
+class SmGuardAssociationCountExit {
+  0..1 -> 0..3 SmGuardPeer peers;
+  before numberOfPeers Python { self.setSm(self.Sm.A) }
+  sm { A { go [numberOfPeers() == 0] -> B; go -> B; } B {} }
+}
+class SmGuardEventCall {
+  sm { A { go [leave()] -> B; go -> B; leave -> C; } B {} C {} }
+}
+class SmGuardEventReject {
+  sm { A { go [!leave()] -> B; go -> B; leave -> C; } B {} C {} }
+}
+class SmGuardEventReentry {
+  sm { A { go [reset()] -> B; go -> B; reset -> A; } B {} }
+}
+class SmGuardSharedEvent {
+  Integer calls = 0;
+  Boolean ready() Python { self.setCalls(self.getCalls() + 1); return True }
+  first { A { go [ready()] -> B; go -> C; } B {} C {} }
+  second { A { go [ready()] -> B; go -> C; } B {} C {} }
+}
+class SmGuardMatchedLocal {
+  String log = "";
+  before go Python { matched2 = 2 }
+  after go Python { self.setLog(self.getLog() + str(matched2)) }
+  Boolean ready() Python { return True }
+  sm {
+    A {
+      go(Boolean matched) [matched] / Python { matched3 = 3; self.setLog(str(matched3)) } -> B;
+      go(Boolean matched) [ready()] / Python { self.setLog("called;") } -> B;
+      go(Boolean matched) -> C;
+    }
+    B {} C {}
+  }
+}
+class SmGuardManyAlternatives {
+  Integer choice = 99;
+  Integer stop = -1;
+  Boolean deleting = false;
+  String log = "";
+  Boolean ready(Integer n) Python {
+    self.setLog(self.getLog() + str(n) + ";")
+    if n == self.getStop():
+      if self.getDeleting():
+        self.delete()
+      else:
+        self.setSm(self.Sm.A)
+    return n >= self.getChoice()
+  }
+  sm {
+    A {
+      go [ready(0)] -> B;
+      go [ready(1)] -> B;
+      go [ready(2)] -> B;
+      go [ready(3)] -> B;
+      go [ready(4)] -> B;
+      go [ready(5)] -> B;
+      go [ready(6)] -> B;
+      go [ready(7)] -> B;
+      go [ready(8)] -> B;
+      go [ready(9)] -> B;
+      go [ready(10)] -> B;
+      go [ready(11)] -> B;
+      go [ready(12)] -> B;
+      go [ready(13)] -> B;
+      go [ready(14)] -> B;
+      go [ready(15)] -> B;
+      go [ready(16)] -> B;
+      go [ready(17)] -> B;
+      go [ready(18)] -> B;
+      go [ready(19)] -> B;
+      go [ready(20)] -> B;
+      go [ready(21)] -> B;
+      go [ready(22)] -> B;
+      go [ready(23)] -> B;
+      go [ready(24)] -> B;
+      go [ready(25)] -> B;
+      go [ready(26)] -> B;
+      go [ready(27)] -> B;
+      go [ready(28)] -> B;
+      go [ready(29)] -> B;
+      go [ready(30)] -> B;
+      go [ready(31)] -> B;
+      go [ready(32)] -> B;
+      go [ready(33)] -> B;
+      go [ready(34)] -> B;
+      go [ready(35)] -> B;
+      go [ready(36)] -> B;
+      go [ready(37)] -> B;
+      go [ready(38)] -> B;
+      go [ready(39)] -> B;
+      go [ready(40)] -> B;
+      go [ready(41)] -> B;
+      go [ready(42)] -> B;
+      go [ready(43)] -> B;
+      go [ready(44)] -> B;
+      go [ready(45)] -> B;
+      go [ready(46)] -> B;
+      go [ready(47)] -> B;
+      go [ready(48)] -> B;
+      go [ready(49)] -> B;
+      go [ready(50)] -> B;
+      go [ready(51)] -> B;
+      go [ready(52)] -> B;
+      go [ready(53)] -> B;
+      go [ready(54)] -> B;
+      go [ready(55)] -> B;
+      go [ready(56)] -> B;
+      go [ready(57)] -> B;
+      go [ready(58)] -> B;
+      go [ready(59)] -> B;
+      go [ready(60)] -> B;
+      go [ready(61)] -> B;
+      go [ready(62)] -> B;
+      go [ready(63)] -> B;
+      go [ready(64)] -> B;
+      go [ready(65)] -> B;
+      go [ready(66)] -> B;
+      go [ready(67)] -> B;
+      go [ready(68)] -> B;
+      go [ready(69)] -> B;
+      go [ready(70)] -> B;
+      go [ready(71)] -> B;
+      go [ready(72)] -> B;
+      go [ready(73)] -> B;
+      go [ready(74)] -> B;
+      go [ready(75)] -> B;
+      go [ready(76)] -> B;
+      go [ready(77)] -> B;
+      go [ready(78)] -> B;
+      go [ready(79)] -> B;
+      go [ready(80)] -> B;
+      go [ready(81)] -> B;
+      go [ready(82)] -> B;
+      go [ready(83)] -> B;
+      go [ready(84)] -> B;
+      go [ready(85)] -> B;
+      go [ready(86)] -> B;
+      go [ready(87)] -> B;
+      go [ready(88)] -> B;
+      go [ready(89)] -> B;
+      go [ready(90)] -> B;
+      go [ready(91)] -> B;
+      go [ready(92)] -> B;
+      go [ready(93)] -> B;
+      go [ready(94)] -> B;
+      go [ready(95)] -> B;
+      go [ready(96)] -> B;
+      go [ready(97)] -> B;
+      go [ready(98)] -> B;
+      go [ready(99)] -> B;
+      go -> C;
+    }
+    B {} C {}
+  }
+}
+
+// A computed default runs model code in its default getter and in reset; armed lets construction,
+// which also evaluates the default, finish first.
+class SmGuardDefaultExit {
+ String log = "";
+ Boolean armed = false;
+ defaulted Boolean enabled = ready();
+ Boolean ready() Python {
+   if self.getArmed():
+     self.exitSm()
+   return True
+ }
+ sm {
+   A { after(30) [getDefaultEnabled()] / { setLog(getLog()+"action;"); } -> B; }
+   B { entry / { setLog(getLog()+"entry;"); } after(30) [false] -> C; }
+   C {}
+ }
+}
+class SmGuardResetExit {
+ String log = "";
+ Boolean armed = false;
+ defaulted Boolean enabled = ready();
+ Boolean ready() Python {
+   if self.getArmed():
+     self.exitSm()
+   return True
+ }
+ sm {
+   A { after(30) [resetEnabled()] / { setLog(getLog()+"action;"); } -> B; }
+   B { entry / { setLog(getLog()+"entry;"); } after(30) [false] -> C; }
+   C {}
+ }
+}
+
+// this.enabled reads the attribute, and its getter's injection, although a parameter has its name.
+class SmGuardThisRead {
+ Boolean enabled = true;
+ before getEnabled Python { self.setSm(self.Sm.C) }
+ sm { A { go(Boolean enabled) [this.enabled] -> B; go(Boolean enabled) -> B; } B {} C {} }
+}
+
+// The same through an attribute inherited from a parent, which the parser leaves unresolved.
+class SmGuardThisBase {
+ Boolean enabled = true;
+ before getEnabled Python { self.setSm(self.Sm.C) }
+}
+class SmGuardInheritedThisRead {
+ isA SmGuardThisBase;
+ sm { A { go(Boolean enabled) [this.enabled] -> B; go(Boolean enabled) -> B; } B {} C {} }
+}
+

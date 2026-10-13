@@ -443,4 +443,102 @@ public class RequirementTest
     Assert.assertNull(impl.getQualityClassName());
     Assert.assertNull(impl.getQualityClass());
   }
+
+  @Test
+  public void useCaseStepConditionIsOptional()
+  {
+    Requirement req = new Requirement("UC3", "checkout flow", null, null, null, null, "useCase");
+
+    UseCaseStep unconditional = new UseCaseStep("1", UseCaseStep.UseCaseStepType.UserStep, "select product", req);
+    UseCaseStep conditional = new UseCaseStep("1", UseCaseStep.UseCaseStepType.SystemResponse, "display price", req);
+    conditional.setCondition("product in stock");
+
+    Assert.assertNull(unconditional.getCondition());
+    Assert.assertEquals("product in stock", conditional.getCondition());
+  }
+
+  @Test
+  public void useCaseRelationshipsStoredInOrder()
+  {
+    Requirement req = new Requirement("UC4", "checkout flow", null, null, null, null, "useCase");
+
+    req.addParentUseCase("UC1");
+    req.addIncludedUseCase("UC2");
+    req.addIncludedUseCase("UC3");
+
+    Assert.assertEquals(1, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+
+    Assert.assertEquals(2, req.numberOfIncludedUseCases());
+    Assert.assertEquals("UC2", req.getIncludedUseCase(0));
+    Assert.assertEquals("UC3", req.getIncludedUseCase(1));
+  }
+
+  @Test
+  public void deepCopyConstructorCopiesUseCaseExtensions()
+  {
+    Requirement original = new Requirement("UC5", "checkout flow", null, null, null, null, "useCase");
+    original.addParentUseCase("UC1");
+    original.addIncludedUseCase("UC2");
+
+    UseCaseStep step = new UseCaseStep("1", UseCaseStep.UseCaseStepType.UserStep, "select product", original);
+    step.setCondition("store is open");
+
+    Requirement copy = new Requirement(original);
+
+    Assert.assertEquals(1, copy.numberOfParentUseCases());
+    Assert.assertEquals("UC1", copy.getParentUseCase(0));
+    Assert.assertEquals(1, copy.numberOfIncludedUseCases());
+    Assert.assertEquals("UC2", copy.getIncludedUseCase(0));
+
+    Assert.assertEquals(1, copy.numberOfUseCaseSteps());
+    Assert.assertEquals("store is open", copy.getUseCaseStep(0).getCondition());
+
+    // The copy owns its own lists
+    copy.addIncludedUseCase("UC3");
+    Assert.assertEquals(1, original.numberOfIncludedUseCases());
+  }
+
+  @Test
+  public void earsClausesStored()
+  {
+    Requirement req = new Requirement("E1", "", null, null, null, null, "ears");
+    Assert.assertNull(req.getEarsShall());
+
+    req.setEarsWhere("the car has a sunroof");
+    req.setEarsWhile("the ignition is on");
+    req.setEarsWhen("rain is detected");
+    req.setEarsIf("the motor stalls");
+    req.setEarsSystem("roof controller");
+    req.setEarsShall("close the sunroof");
+
+    Assert.assertEquals("the car has a sunroof", req.getEarsWhere());
+    Assert.assertEquals("the ignition is on", req.getEarsWhile());
+    Assert.assertEquals("rain is detected", req.getEarsWhen());
+    Assert.assertEquals("the motor stalls", req.getEarsIf());
+    Assert.assertEquals("roof controller", req.getEarsSystem());
+    Assert.assertEquals("close the sunroof", req.getEarsShall());
+  }
+
+  @Test
+  public void deepCopyConstructorCopiesEarsClauses()
+  {
+    Requirement original = new Requirement("E2", "notes", null, null, null, null, "ears");
+    original.setEarsWhere("the car has a sunroof");
+    original.setEarsWhile("the ignition is on");
+    original.setEarsWhen("rain is detected");
+    original.setEarsIf("the motor stalls");
+    original.setEarsSystem("roof controller");
+    original.setEarsShall("close the sunroof");
+
+    Requirement copy = new Requirement(original);
+
+    Assert.assertEquals("the car has a sunroof", copy.getEarsWhere());
+    Assert.assertEquals("the ignition is on", copy.getEarsWhile());
+    Assert.assertEquals("rain is detected", copy.getEarsWhen());
+    Assert.assertEquals("the motor stalls", copy.getEarsIf());
+    Assert.assertEquals("roof controller", copy.getEarsSystem());
+    Assert.assertEquals("close the sunroof", copy.getEarsShall());
+    Assert.assertEquals("notes", copy.getStatement());
+  }
 }

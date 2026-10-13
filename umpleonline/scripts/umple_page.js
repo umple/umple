@@ -98,6 +98,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Layout.isLayoutVisible = doShowLayout;
   Page.readOnly = doReadOnly;
 
+  VersionHistory.init(doReadOnly);
   TabControl.init();
   jQuery(".layoutListItem").hide();
 
@@ -114,6 +115,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.setDiagramTypeIconState('GvState');
     Page.useGvFeatureDiagram = false;
     jQuery(".view_opt_state").show();
+    Action.syncLiveViewSelector("sd");
 
   }
   else if(diagramType.toLowerCase() == "gvclass")
@@ -129,6 +131,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useGvFeatureDiagram = false;
     jQuery(".view_opt_class").show();
     jQuery(".view_opt_class_palette").show();
+    Action.syncLiveViewSelector("gcd");
 
   }
   else if(diagramType.toLowerCase() == "gvclasstrait")
@@ -144,6 +147,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useGvFeatureDiagram = false;
     Page.showTraits=true;
     jQuery(".view_opt_class").show();
+    Action.syncLiveViewSelector("gcd");
   } 
   else if(diagramType.toLowerCase() == "gvfeature")
   {
@@ -158,6 +162,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useStructureDiagram = false;
     Page.setDiagramTypeIconState('GvFeature');
     jQuery(".view_opt_feature").show();
+    Action.syncLiveViewSelector("gfd");
 
   }
   else if(diagramType.toLowerCase() == "structurediagram")
@@ -171,6 +176,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('structureDiagram');
     Page.useGvFeatureDiagram = false;
+    Action.syncLiveViewSelector("std");
   }
   else if(diagramType.toLowerCase() == "gventityrelationshipdiagram")
   {
@@ -183,6 +189,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('none');
     Page.useGvFeatureDiagram = false;
+    Action.syncLiveViewSelector("erd");
   }
   else if(diagramType.toLowerCase() == "instancediagram")
   {
@@ -195,6 +202,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('none');
     Page.useGvFeatureDiagram = false;
+    Action.syncLiveViewSelector("instanceDiagram");
   }
   else if(diagramType.toLowerCase() == "crudui" || diagramType.toLowerCase() == "crudjson")
   {
@@ -207,6 +215,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('none');
     Page.useGvFeatureDiagram = false;
+    Action.syncLiveViewSelector("crudUI");
   }
   else if(diagramType.toLowerCase() == "eventsequence")
   {
@@ -219,6 +228,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('none');
     Page.useGvFeatureDiagram = false;
+    Action.syncLiveViewSelector("eventSequence");
   }
   else if(diagramType.toLowerCase() == "statetables")
   {
@@ -231,11 +241,17 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('none');
     Page.useGvFeatureDiagram = false;
+    jQuery("#buttonAddState").show();
+    Action.syncLiveViewSelector("stateTables");
   }
   else
   {
     jQuery(".view_opt_class").show();
     jQuery(".view_opt_class_palette").show();
+    Page.useEditableClassDiagram = true;
+    Page.useGvClassDiagram = false;
+    Page.setDiagramTypeIconState('editableClass');
+    Action.syncLiveViewSelector("ecd");
   }
 
   // Set the default displayoptions if there are any
@@ -316,6 +332,7 @@ Page.initPaletteArea = function()
   Page.initJQueryButton("buttonLoadBlankModel");
   
   Page.initHighlighter("buttonAddClass");
+  Page.initHighlighter("buttonAddState");
   Page.initHighlighter("buttonAddAssociation");
   Page.initHighlighter("buttonAddTransition");
   Page.initHighlighter("buttonAddGeneralization");
@@ -332,6 +349,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonCopyCommandLine");
   Page.initHighlighter("buttonCopyLocalBrowser");
   Page.initHighlighter("buttonLoadLocalBrowser");
+  Page.initHighlighter("buttonRestoreEarlierVersion");
   if (Page.canEditTask)
   {
     //Page.initHighlighter("buttonEditTask");
@@ -364,6 +382,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonSelectReq");
 
   Page.initToggleTool("buttonAddClass");
+  Page.initToggleTool("buttonAddState");
   Page.initToggleTool("buttonAddAssociation");
   Page.initToggleTool("buttonAddTransition");
   Page.initToggleTool("buttonAddGeneralization");
@@ -407,6 +426,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonCopyCommandLine");
   Page.initAction("buttonCopyLocalBrowser");
   Page.initAction("buttonLoadLocalBrowser");
+  Page.initAction("buttonRestoreEarlierVersion");
   if (Page.canEditTask)
   {
     //Page.initAction("buttonEditTask");
@@ -451,7 +471,7 @@ Page.initPaletteArea = function()
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
   Page.enablePaletteItem("buttonSyncDiagram", false);
-  Page.enablePaletteItem("buttonAddTransition", false);
+  Page.enablePaletteItem("buttonAddTransition", Page.useGvStateDiagram);
 
   jQuery("#genstatus").hide();
   jQuery("#buttonViewComplete").hide();
@@ -482,7 +502,7 @@ Page.initPaletteArea = function()
     }
   }
 
-  // Only show execute code button for the Java language
+  // Only show the execute code button for languages the execution service runs
   jQuery("#inputGenerateCode").on('change', function() {
     if(this.value.split(":")[1] === 'Java' || this.value.split(":")[1] === 'Python') {
       jQuery("#buttonExecuteCode").show();
@@ -593,13 +613,12 @@ Page.enablePaletteItem = function(id, doEnable)
   
   if (doEnable)
   {
-    item.removeClass();
+    item.removeClass("disabled");
     item.prop('disabled', true);
     Page.initHighlighter(id);
   }
   else
   {
-    item.removeClass();
     item.addClass("disabled");
     item.prop('disabled', false);
     Page.removeHighlighter(id);
@@ -805,17 +824,17 @@ Page.initCodeMirrorEditor = function() {
 Page.setDiagramTypeIconState = function(diagramType){
   buttonList = ['ECD_button','GCD_button','SD_button'];
   for (i = 0, l = buttonList.length; i<l;++i){
-    document.getElementById(buttonList[i]).className = "button2";
+    document.getElementById(buttonList[i]).className = "button2 mode-button";
   }
   switch(diagramType){
     case 'editableClass':
-    document.getElementById('ECD_button').className = "button2 active";
+    document.getElementById('ECD_button').className = "button2 mode-button active";
     break;
     case 'GvClass':
-    document.getElementById('GCD_button').className = "button2 active";
+    document.getElementById('GCD_button').className = "button2 mode-button active";
     break;
     case 'GvState':
-    document.getElementById('SD_button').className = "button2 active";
+    document.getElementById('SD_button').className = "button2 mode-button active";
     break;
   }
 }
@@ -825,30 +844,30 @@ Page.setShowHideIconState = function(selectedButton){
   switch(selectedButton){
     case 'SHT_button':
       if(Page.showText){
-        document.getElementById(selectedButton).className = "button2 active";
+        document.getElementById(selectedButton).className = "button2 mode-button active";
       } else {
-        document.getElementById(selectedButton).className = "button2";
+        document.getElementById(selectedButton).className = "button2 mode-button";
       }
       break;
     case 'SHD_button':
       if(Page.showCanvas){
-        document.getElementById(selectedButton).className = "button2 active";
+        document.getElementById(selectedButton).className = "button2 mode-button active";
       } else {
-        document.getElementById(selectedButton).className = "button2";
+        document.getElementById(selectedButton).className = "button2 mode-button";
       }
       break;
     case 'SHA_button':
       if(Page.showAttributes){
-        document.getElementById(selectedButton).className = "button2 active";
+        document.getElementById(selectedButton).className = "button2 mode-button active";
       } else {
-        document.getElementById(selectedButton).className = "button2";
+        document.getElementById(selectedButton).className = "button2 mode-button";
       }
       break;
     case 'SHM_button':
       if(Page.showMethods){
-        document.getElementById(selectedButton).className = "button2 active";
+        document.getElementById(selectedButton).className = "button2 mode-button active";
       } else {
-        document.getElementById(selectedButton).className = "button2";
+        document.getElementById(selectedButton).className = "button2 mode-button";
       }
       break;
   }
@@ -1012,7 +1031,7 @@ Page.initCanvasArea = function()
   canvas.mousemove(Action.mouseMove);
   canvas.focus(function(){Action.focusOn(Page.umpleCanvasId(), true);});
   canvas.blur(function(){Action.focusOn(Page.umpleCanvasId(), false);});
-  canvas.delegate("[class$='editableDoubleClick']", 'dblclick', InlineEditor.handleOnClick);
+  canvas.delegate(".editableDoubleClick, .editableSingleClick", 'dblclick contextmenu', InlineEditor.handleOnClick);
   canvas.delegate("[class$='editableSingleClick']", 'click', InlineEditor.handleOnClick);
 
   if (!Layout.isDiagramVisible) {Layout.showHideCanvas(false);}
@@ -1132,6 +1151,7 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").show();
     jQuery("#itemLoadExamples5").hide();
     jQuery("#itemLoadExamples6").hide();   
     jQuery("#itemLoadExamples7").hide();   
@@ -1143,6 +1163,7 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples").show();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").hide();
     jQuery("#itemLoadExamples5").hide();
     jQuery("#itemLoadExamples6").hide();   
     jQuery("#itemLoadExamples7").hide();   
@@ -1155,6 +1176,7 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples").show();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").hide();
     jQuery("#itemLoadExamples5").hide();
     jQuery("#itemLoadExamples6").hide();   
     jQuery("#itemLoadExamples7").hide();   
@@ -1179,6 +1201,7 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples").show();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").hide();
     jQuery("#itemLoadExamples5").hide();
     jQuery("#itemLoadExamples6").hide();   
     jQuery("#itemLoadExamples7").hide();   
@@ -1191,6 +1214,7 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples").show();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").hide();
     jQuery("#itemLoadExamples5").hide();
     jQuery("#itemLoadExamples6").hide();   
     jQuery("#itemLoadExamples7").hide();   
@@ -1232,6 +1256,8 @@ Page.enableDiagram = function(doEnable)
 {
   Page.enableEditDragAndResize(doEnable);
   Page.enablePaletteItem("buttonAddClass", doEnable);
+  Page.enablePaletteItem("buttonAddState", doEnable);
+  Page.enablePaletteItem("buttonAddTransition", doEnable);
   Page.enablePaletteItem("buttonAddAssociation", doEnable);
   Page.enablePaletteItem("buttonAddGeneralization", doEnable);
   Page.enablePaletteItem("buttonDeleteEntity", doEnable);
@@ -1281,6 +1307,7 @@ Page.toggleToolItem = function(id, doubleClicked)
 
 Page.unselectAllToggleTools = function()
 {
+  if (typeof GvDiagramEdit !== "undefined") GvDiagramEdit.clearPendingPaletteState();
   var unselected = false;
   var temp = false;
 
@@ -1307,6 +1334,7 @@ Page.unselectAllToggleTools = function()
 
 Page.selectToggleTool = function(toolSelected)
 {
+  if (typeof GvDiagramEdit !== "undefined") GvDiagramEdit.clearPendingPaletteState();
   if (Page.selectedItem != null)
   {
     DiagramEdit.removeNewClass();
@@ -1353,6 +1381,7 @@ Page.updateCanvasCursor = function()
         : "url('scripts/generalization.png') 8 8, auto";
       break;
 
+    case "AddState":
     case "AddClass":
       cursorValue = "url('scripts/class.png') 8 8, auto";
       break;
@@ -1373,6 +1402,7 @@ Page.updateCanvasCursor = function()
   }
 
   canvas.style.cursor = cursorValue;
+  canvas.classList.toggle("draw-tool-active", cursorValue !== "default");
 };
 
 Page.canShowHovers = function()
@@ -1405,13 +1435,49 @@ Page.getUmpleCode = function()
   return umpleCode;
 }
 
+Page.getCurrentDiagramType = function()
+{
+  if (Page.useGvClassDiagram && Page.showTraits) {
+    return "GvClassTrait";
+  }
+  if (Page.useGvClassDiagram) {
+    return "GvClass";
+  }
+  if (Page.useGvStateDiagram) {
+    return "GvState";
+  }
+  if (Page.useGvFeatureDiagram) {
+    return "GvFeature";
+  }
+  if (Page.useStructureDiagram) {
+    return "structureDiagram";
+  }
+  if (Page.useGvEntityRelationshipDiagram) {
+    return "GvEntityRelationshipDiagram";
+  }
+  if (Page.useInstanceDiagram) {
+    return "instanceDiagram";
+  }
+  if (Page.useCRUDUI) {
+    return "crudUI";
+  }
+  if (Page.useStateTables) {
+    return "stateTables";
+  }
+  if (Page.useEventSequence) {
+    return "eventSequence";
+  }
+
+  return "class";
+}
 Page.getEncodedURL = function()
 {
   var server=window.location.href.split("?")[0];
   if(server.substr(0,37)=="https://cruise.umple.org/umpleonline/") {
     server = "https://try.umple.org/";
   }
-  return server+"?text=" + encodeURIComponent(Page.getUmpleCode());
+  return server+"?text=" + encodeURIComponent(Page.getUmpleCode())+
+  "&diagramtype=" + encodeURIComponent(Page.getCurrentDiagramType());
 }
 
 Page.splitUmpleCode = function(umpleCode)

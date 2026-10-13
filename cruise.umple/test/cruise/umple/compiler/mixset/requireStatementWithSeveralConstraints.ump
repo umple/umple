@@ -1,0 +1,5 @@
+require [1..2 of {C,D} not E];
+
+mixset C {} mixset D {} mixset E {}
+
+use E;

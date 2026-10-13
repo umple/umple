@@ -9,13 +9,13 @@ digraph "ColouredDerivedAttr" {
 "];
 
   // Attributes for X
-  "xX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   x\ :\ Float   ", tooltip="Float x&#13;"];
+  "xX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   x\ :\ Float   ", tooltip="Float x&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;x&quot;);"];
   "X" -> "xX" [arrowhead="none"];
 
-  "yX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   y\ :\ Float   ", tooltip="Float y&#13;"];
+  "yX" [ fillcolor="#FFCCCC", shape=ellipse, style=filled, label="   y\ :\ Float   ", tooltip="Float y&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;y&quot;);"];
   "X" -> "yX" [arrowhead="none"];
 
-  "sumX" [ fillcolor="#FFCCCC", shape=ellipse, style="dashed, filled", label="   sum\ :\ Float   ", tooltip="Float sum&#13;"];
+  "sumX" [ fillcolor="#FFCCCC", shape=ellipse, style="dashed, filled", label="   sum\ :\ Float   ", tooltip="Float sum&#13;", href="javascript:Action.selectAttribute(&quot;X&quot;,&quot;sum&quot;);"];
   "X" -> "sumX" [arrowhead="none"];
 
   // All associations

@@ -73,7 +73,7 @@ class UmpleInternalParser
       {
         List<TokenTree> tokenTreeList = generateFeatureTreeTokenFromRequireStList(requireTokenList);
         for(TokenTree tree: tokenTreeList)
-        createFeatureModelSegment(sourceFeatureLeaf,tree,isSubFeature);
+        createFeatureModelSegment(sourceFeatureLeaf,tree,isSubFeature,t.getPosition());
         
         //
         // TO Do: add tree for the feature model : Done
@@ -87,13 +87,14 @@ class UmpleInternalParser
   this method generates a new feature and links it with a source feature based on its token in the TokenTree.
   It return null if either treeNode or source feature is null.
   */
-  public FeatureNode createTargetFeature(TokenTree treeNode, FeatureNode sourceFeature, boolean isSubFeature)
+  public FeatureNode createTargetFeature(TokenTree treeNode, FeatureNode sourceFeature, boolean isSubFeature, Position position)
   {
     if (treeNode == null || sourceFeature == null)
     return null; // To Do : should raise error here 
     FeatureNode newFeatureNode = new FeatureNode(model.getFeatureModel());
     newFeatureNode.setName(treeNode.getNodeToken().getName());
     FeatureLink edge = new FeatureLink();
+    edge.setPosition(position);
     edge.setFeatureConnectingOpType(treeNode.getFeatureConnectionOpType(isSubFeature));
     edge.setSourceFeatureNode(sourceFeature);
     edge.setIsSub(isSubFeature);
@@ -105,7 +106,7 @@ class UmpleInternalParser
   /*
   This method takes a require-st as a token tree and then it generates its segment in the feature model 
   */
-  public void createFeatureModelSegment(FeatureNode sourceFeature, TokenTree tokenTree, boolean isSubFeature)
+  public void createFeatureModelSegment(FeatureNode sourceFeature, TokenTree tokenTree, boolean isSubFeature, Position position)
   {
     Token node = tokenTree.getNodeToken();
     TokenTree linkingParent = tokenTree.getParentTokenTree();
@@ -121,6 +122,7 @@ class UmpleInternalParser
           FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
           targetFeature.setMixsetOrFileNode(targetMixset);
           edge = new FeatureLink();
+          edge.setPosition(position);
           edge.setFeatureConnectingOpType(tokenTree.getFeatureConnectionOpType(isSubFeature));
           edge.setSourceFeatureNode(sourceFeature);
           edge.setTargetFeatureNode(targetFeature);
@@ -137,6 +139,7 @@ class UmpleInternalParser
         FeatureLeaf targetFeature = featureModel.getOrCreateFeatureLeafNode(targetMixset.getName()); 
         targetFeature.setMixsetOrFileNode(targetMixset);
         edge = new FeatureLink();
+        edge.setPosition(position);
         edge.setFeatureConnectingOpType(linkingParent.getFeatureConnectionOpType(isSubFeature));
         edge.setSourceFeatureNode(sourceFeature);       
         edge.setTargetFeatureNode(targetFeature);
@@ -150,6 +153,7 @@ class UmpleInternalParser
         featureLinkMultiplicity.setRange(node.getSubToken("lowerBound").getValue(), node.getSubToken("upperBound").getValue());
         multiplicityFeatureConnectingOpTypeEdge.setMultiplicity(featureLinkMultiplicity);
         edge = (FeatureLink) multiplicityFeatureConnectingOpTypeEdge;
+        edge.setPosition(position);
 
         CompoundFeatureNode newCompoundFeatureNode = new CompoundFeatureNode(model.getFeatureModel());
         newCompoundFeatureNode.setName("multiplicityTerminal");
@@ -184,14 +188,14 @@ class UmpleInternalParser
         boolean parentTokenEqualsCurrentNodeToken = node.is(linkingParent.getNodeToken().getName());
         if (!parentTokenEqualsCurrentNodeToken)
         {
-          intermediateFeatureNode = createTargetFeature(tokenTree, sourceFeature, isSubFeature);
-          createFeatureModelSegment(intermediateFeatureNode,rightTokenTree,isSubFeature);
-          createFeatureModelSegment(intermediateFeatureNode,leftTokenTree,isSubFeature);
+          intermediateFeatureNode = createTargetFeature(tokenTree, sourceFeature, isSubFeature, position);
+          createFeatureModelSegment(intermediateFeatureNode,rightTokenTree,isSubFeature,position);
+          createFeatureModelSegment(intermediateFeatureNode,leftTokenTree,isSubFeature,position);
         }
         else 
         {
-          createFeatureModelSegment(sourceFeature,rightTokenTree,isSubFeature);
-          createFeatureModelSegment(sourceFeature,leftTokenTree,isSubFeature);
+          createFeatureModelSegment(sourceFeature,rightTokenTree,isSubFeature,position);
+          createFeatureModelSegment(sourceFeature,leftTokenTree,isSubFeature,position);
         }
 
     }
@@ -401,7 +405,28 @@ private ArrayList<TokenTree> generateFeatureTreeTokenFromRequireStList(List<Toke
     if(model.getFeatureModel() != null)
     {
       model.getFeatureModel().rebindFeatureLeavesToCanonicalMixsets();
-      model.getFeatureModel().satisfyFeatureModel();
+      // A require statement may create several links, so warn once per statement.
+      Set<Position> reportedPositions = new HashSet<Position>();
+      for(FeatureLink unsatisfiedLink : model.getFeatureModel().getUnsatisfiedFeatureLinks())
+      {
+        if(reportedPositions.add(unsatisfiedLink.getPosition()))
+        {
+          warnRequireStatementNotSatisfied(unsatisfiedLink);
+        }
+      }
+    }
+  }
+
+  private void warnRequireStatementNotSatisfied(FeatureLink unsatisfiedLink)
+  {
+    MixsetOrFile owner = ((FeatureLeaf) unsatisfiedLink.getSourceFeatureNode()).getMixsetOrFileNode();
+    if(owner instanceof Mixset)
+    {
+      setFailedPosition(unsatisfiedLink.getPosition(), 1514, "in mixset", owner.getName());
+    }
+    else
+    {
+      setFailedPosition(unsatisfiedLink.getPosition(), 1514, "at the top level of file", ((UmpleFile) owner).getFileName());
     }
   }
 }
@@ -484,57 +509,37 @@ class FeatureModel{
   /*
   This method takes a feature link (from the feature model) and decides whether the link is satisfied.
   If the link is not satisfied, it return false.
+  Only the require statement the link belongs to is checked: the require statements of the features
+  it reaches are separate constraints, checked on their own when those features are used.
   Ex: the link "source--> and" for M1 and M2 is true if there are use-statements for both M1 and M2.   
   */
   public boolean evaluateFeatureLink(FeatureLink featureLink)
   {
-    return evaluateFeatureLinkLoop(featureLink, new HashSet<FeatureNode>());
-  }
-  /*
-  visited tracks FeatureNodes whose evaluteLinkedFeatures call is already on
-  the current stack, so a require-cycle terminates instead of recursing
-  forever.
-  */
-  private boolean evaluateFeatureLinkLoop(FeatureLink featureLink, Set<FeatureNode> visited)
-  {
     FeatureNode featureNode = ((FeatureNode) featureLink.getTargetFeatureNode());
     if(featureNode.getIsLeaf())
     {
-      boolean isUsedfeature = false;
-      // when a feature is used, its include statement should be evalutated.
       boolean featureLeafHasUseStatement = isUsedFeatureLeaf((FeatureLeaf)featureNode);
-      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Mandatory))
+      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Exclude))
       {
-        isUsedfeature =  featureLeafHasUseStatement;
-      } 
-      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Include))
-      {
-        isUsedfeature =  featureLeafHasUseStatement;
-      } 
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Exclude))
-      {
-        return  isUsedfeature = !featureLeafHasUseStatement; // return true when there is no use-statement, or no def for mixset 
+        return !featureLeafHasUseStatement; // return true when there is no use-statement, or no def for mixset
       }
-      else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Optional))
+      if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Optional))
       {
-        isUsedfeature = true;      // opt is always has a true value 
+        return true; // opt always has a true value
       }
-      else
-      {
-        return isUsedFeatureLeaf((FeatureLeaf)featureNode) && evaluteLinkedFeaturesLoop(featureNode, visited);
-      }
-      if(featureLeafHasUseStatement) // to check a feature's require statement.
-      {
-        return isUsedfeature && evaluteLinkedFeaturesLoop(featureNode, visited) ;
-      }
-      return isUsedfeature;
+      return featureLeafHasUseStatement; // Mandatory, Include, or a leaf under a linking operator
     }
      // if not leaf node
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Conjunctive))
     { 
       if(!featureNode.getIsLeaf())
       {
-        return  evaluteLinkedFeaturesLoop(featureNode, visited);
+        List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
+        boolean result = true;
+        for(int i=0 ; i<outgoingLinks.size(); i++){
+          result = result && evaluateFeatureLink(outgoingLinks.get(i));
+        }
+        return result;
       }
     }
     else if(featureLink.getFeatureConnectingOpType().equals(FeatureConnectingOpType.Disjunctive))
@@ -544,7 +549,7 @@ class FeatureModel{
         boolean result = false;
         List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
         for(int i=0 ; i<outgoingLinks.size(); i++){
-          result = result || evaluateFeatureLinkLoop(outgoingLinks.get(i), visited);
+          result = result || evaluateFeatureLink(outgoingLinks.get(i));
         }
         return result;
       }
@@ -556,7 +561,7 @@ class FeatureModel{
             List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
             int countOfUsedTarget = 0;
             for(int i=0 ; i < outgoingLinks.size(); i++){
-              if(evaluateFeatureLinkLoop(outgoingLinks.get(i), visited))  // bitwise xor (^) can not be used here because it does not mean always only one. Example: (true ^ true ^ true == true)
+              if(evaluateFeatureLink(outgoingLinks.get(i)))  // bitwise xor (^) can not be used here because it does not mean always only one. Example: (true ^ true ^ true == true)
               countOfUsedTarget++;
             }
             return (countOfUsedTarget == 1) ? true: false;
@@ -581,25 +586,46 @@ class FeatureModel{
     return false;
   }
   /*
-  This method checks whether the use-statements plus the feature model results in valid configuration.
-  It return true If there is no feature model.
+  This method checks whether the use-statements satisfy every require statement that applies,
+  i.e. whether they form a valid configuration of the feature model.
   */
   public boolean satisfyFeatureModel()
   {
-    UmpleModel model = getUmpleModel();
-    boolean isSatisfied = true;
-    // get root features : has outgoing links but no incoming links
-    List <FeatureNode> rootFeatures = getRootFeatures();
-    //getNode().stream().filter(n -> (n.hasSourceFeatureLink() && n.getIsLeaf())).collect(Collectors.toList());
-    for(FeatureNode featureNode: rootFeatures)
+    return getUnsatisfiedFeatureLinks().isEmpty();
+  }
+  /*
+  This method returns the feature links, each created by a require statement, that the use-statements do not satisfy.
+  A require statement applies when it is at the top level of a file, or in a mixset that has a use-statement;
+  the require statements of unused mixsets are ignored.
+  */
+  public List<FeatureLink> getUnsatisfiedFeatureLinks()
+  {
+    List<FeatureLink> unsatisfiedLinks = new ArrayList<FeatureLink>();
+    for(FeatureNode featureNode : getNode())
     {
-      List <FeatureLink> featureNodeOutgoingLinks = featureNode.getOutgoingFeatureLinks();
-      for(FeatureLink featureLink : featureNodeOutgoingLinks)
+      if(!(featureNode instanceof FeatureLeaf) || !requireStatementsApply((FeatureLeaf) featureNode))
       {
-        isSatisfied = isSatisfied && evaluateFeatureLink(featureLink);
+        continue;
+      }
+      for(FeatureLink featureLink : featureNode.getOutgoingFeatureLinks())
+      {
+        if(!evaluateFeatureLink(featureLink))
+        {
+          unsatisfiedLinks.add(featureLink);
+        }
       }
     }
-    return isSatisfied;
+    return unsatisfiedLinks;
+  }
+
+  private boolean requireStatementsApply(FeatureLeaf featureLeaf)
+  {
+    MixsetOrFile mixsetOrFile = featureLeaf.getMixsetOrFileNode();
+    if(mixsetOrFile == null)
+    {
+      return false;
+    }
+    return !mixsetOrFile.getIsMixset() || isUsedFeatureLeaf(featureLeaf);
   }
 
   public List <FeatureNode> getRootFeatures()
@@ -607,41 +633,6 @@ class FeatureModel{
     // A root feature : has outgoing links but no incoming links.
     List <FeatureNode> rootFeatures = getNode().stream().filter(n -> (n.hasOutgoingFeatureLinks() && (! n.hasIncomingFeatureLinks()))).collect(Collectors.toList());
     return rootFeatures;
-  }
-
-  private boolean evaluteLinkedFeatures(FeatureNode featureNode) {
-    return evaluteLinkedFeaturesLoop(featureNode, new HashSet<FeatureNode>());
-  }
-
-  private boolean evaluteLinkedFeaturesLoop(FeatureNode featureNode, Set<FeatureNode> visited) {
-    if(visited.contains(featureNode))
-    {
-      // Cycle: this node's outgoing requirements are already being evaluated
-      // higher on the stack. Returning true here is correct because the higher
-      // frame is iterating ALL of this node's outgoing links itself; we must
-      // not re-walk them or we'd recurse forever. Mutual require between two
-      // use'd mixsets resolves to true under this semantic.
-      return true;
-    }
-    visited.add(featureNode);
-    try
-    {
-      boolean includedFeatures = true;
-      List<FeatureLink> outgoingLinks = featureNode.getOutgoingFeatureLinks();
-      for(int i=0 ; i<outgoingLinks.size(); i++){
-        includedFeatures = includedFeatures && evaluateFeatureLinkLoop(outgoingLinks.get(i), visited);
-      }
-      return includedFeatures;
-    }
-    finally
-    {
-      // Pop on exit so the visited set stays equal to "nodes currently on the
-      // evaluation stack". Without this pop a non-cycle DAG (e.g. Root -> A or C
-      // where A and C both require X) would let the second sibling inherit a
-      // bogus "true" cache for X from the first sibling's traversal, even when
-      // X has its own unsatisfied requirement downstream.
-      visited.remove(featureNode);
-    }
   }
 }
 /*

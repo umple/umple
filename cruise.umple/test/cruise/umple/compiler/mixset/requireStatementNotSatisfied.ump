@@ -1,0 +1,11 @@
+mixset DesignA {
+  require [not DesignB];
+  class X { name; }
+}
+
+mixset DesignB {
+  require [not DesignA];
+  class X { age; }
+}
+
+use DesignA, DesignB;

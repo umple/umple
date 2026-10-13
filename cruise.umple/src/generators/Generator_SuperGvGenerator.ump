@@ -112,6 +112,7 @@ class SuperGvGenerator
     for (UmpleInterface uInterface : getModel().getUmpleInterfaces()){
     	createInterfacesAndTheirHirerarchy(uInterface,code); 
     }
+    createEnumerations(code);
     terminateCode(code, associations);
   }
   
@@ -171,6 +172,8 @@ class SuperGvGenerator
   protected abstract void associationCreation(UmpleClass uClass, Association uAssoc, StringBuilder associations, String className);
   protected abstract void createInterfacesAndTheirHirerarchy(UmpleInterface inInterface, StringBuilder code);
   protected void interfaceCreation(UmpleClass uClass, StringBuilder code) {}
+  // Class diagrams draw one box per enumeration. Other Graphviz diagrams leave this empty.
+  protected void createEnumerations(StringBuilder code) {}
 
   protected void terminateCode(StringBuilder code, StringBuilder associations) {
 
@@ -263,8 +266,12 @@ class SuperGvGenerator
 
   public static String labelAssociation(String left, String right, String arrow, String label, String tooltip)
   {
+    return labelAssociation(left, right, arrow, label, tooltip, left + "," + right+ "," + label);
+  }
+
+  public static String labelAssociation(String left, String right, String arrow, String label, String tooltip, String associationDetails)
+  {
     String association;
-    String associationDetails = left + "," + right+ "," + label;
     String hrefAction = "javascript:Action.selectAssociation('" + associationDetails + "')";
     association = "  \""+left+"\" -> \""+right+"\" ["+arrow+
         ", label=\""+label+"\""+", tooltip=\""+tooltip+"\" labeltooltip=\""+tooltip+"\" headtooltip=\"" + tooltip + "\" tailtooltip=\"" + tooltip + "\" URL=\"" + hrefAction + "\"" +  // Use URL for embedding clickable actions

@@ -26,6 +26,7 @@ import cruise.umple.util.*;
 import java.io.*;
 
 import cruise.umple.parser.Token;
+import cruise.umple.parser.TokenTest;
 import cruise.umple.parser.Position;
 import cruise.umple.util.SampleFileWriter;
 import cruise.umple.compiler.exceptions.*;
@@ -169,6 +170,23 @@ public class UmpleParserTest
     // Class without { — stray } is an unmatched closing brace
     assertBraceMismatchErrorAtLine("2167_missingOpenBrace.ump", 1505, 3);
   }
+
+  @Test
+public void braceMismatch_filenameUsesBasename() {
+  String filename = "2167_missingOpenBrace.ump";
+  parse(filename);
+
+  for (int i = 0; i < parser.getParseResult().numberOfErrorMessages(); i++) {
+    ErrorMessage em = parser.getParseResult().getErrorMessage(i);
+
+    if (em.getErrorType().getErrorCode() == 1505) {
+      Assert.assertEquals(filename, em.getPosition().getFilename());
+      return;
+    }
+  }
+
+  Assert.fail("Expected error 1505 in " + filename);
+}
 
   @Test
   public void toplevelExtracode()
@@ -387,6 +405,290 @@ public class UmpleParserTest
     Assert.assertEquals(false,cb2.hasCode("Php"));
     Assert.assertEquals(false,cb2.hasCode("Cpp"));
   }
+
+  // Native code stays trimmed; the indentation its first line had in the source is kept apart
+  @Test
+  public void nativeCodeFirstLineIndent()
+  {
+    TokenTest.assumeParserRecordsFirstLineIndent();
+    assertSimpleParse("001_nativeCodeIndent.ump");
+    UmpleClass a = model.getUmpleClass("A");
+
+    CodeBlock spaces = methodNamed(a, "spaces").getMethodBody().getCodeblock();
+    Assert.assertEquals("x = 1\n    if x:\n        return x", spaces.getCode("Python"));
+    Assert.assertEquals("    ", spaces.getFirstLineIndent("Python"));
+
+    CodeBlock tabs = methodNamed(a, "tabs").getMethodBody().getCodeblock();
+    Assert.assertEquals("y = 2\n\t\treturn y", tabs.getCode("Python"));
+    Assert.assertEquals("\t\t", tabs.getFirstLineIndent("Python"));
+
+    // A body starting on the line of its brace, or an empty one, has no indentation of its own
+    Assert.assertNull(methodNamed(a, "sameLine").getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+    Assert.assertNull(methodNamed(a, "empty").getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+
+    // Removing an inline mixset that opened the body leaves no first line to describe
+    Assert.assertEquals("\n    b();", methodNamed(a, "mixsetFirst").getMethodBody().getCodeblock().getCode(""));
+    Assert.assertNull(methodNamed(a, "mixsetFirst").getMethodBody().getCodeblock().getFirstLineIndent(""));
+    Assert.assertEquals("    ", methodNamed(a, "mixsetLater").getMethodBody().getCodeblock().getFirstLineIndent(""));
+
+    // Every language of a multi-language block, and each alternative, has its own record
+    CodeBlock multi = methodNamed(a, "multi").getMethodBody().getCodeblock();
+    Assert.assertEquals("      ", multi.getFirstLineIndent("Java"));
+    Assert.assertEquals("      ", multi.getFirstLineIndent("Php"));
+    Assert.assertEquals("        ", multi.getFirstLineIndent("Python"));
+    Assert.assertNull(multi.getFirstLineIndent(""));
+
+    CodeBlock derived = a.getAttribute("d").getCodeblock();
+    Assert.assertNull(derived.getFirstLineIndent(""));
+    Assert.assertEquals("      ", derived.getFirstLineIndent("Python"));
+
+    CodeBlock injection = a.getCodeInjection(0).getSnippet();
+    Assert.assertEquals("b = 2", injection.getCode("Python"));
+    Assert.assertEquals("      ", injection.getFirstLineIndent("Python"));
+    CodeBlock expanded = a.getCodeInjection(1).getSnippet();
+    Assert.assertEquals("\n      d = 4", expanded.getCode("Python"));
+    Assert.assertNull(expanded.getFirstLineIndent("Python"));
+
+    State s1 = a.getStateMachine(0).getState(0);
+    CodeBlock entry = s1.getAction(0).getCodeblock();
+    Assert.assertEquals("        ", entry.getFirstLineIndent(""));
+    Assert.assertEquals("          ", entry.getFirstLineIndent("Python"));
+    Assert.assertEquals("         ", s1.getActivity(0).getCodeblock().getFirstLineIndent(""));
+
+    // Extra code: a marker per target, then the code as written
+    List<CodeBlock> extra = model.getUmpleClass("B").getExtraCodeBlocks();
+    Assert.assertEquals(2, extra.size());
+    Assert.assertEquals("TOKEN = 7", extra.get(1).getCode(""));
+
+    // Line breaks before the first line do not count, whatever their form
+    assertSimpleParse("001_nativeCodeIndentCrlf.ump");
+    CodeBlock crlf = methodNamed(model.getUmpleClass("C"), "f").getMethodBody().getCodeblock();
+    Assert.assertEquals("      ", crlf.getFirstLineIndent("Python"));
+  }
+
+  // Copies of a method carry its code's provenance
+  @Test
+  public void nativeCodeFirstLineIndentCopied()
+  {
+    TokenTest.assumeParserRecordsFirstLineIndent();
+    assertSimpleParse("001_nativeCodeIndent.ump");
+    Method original = methodNamed(model.getUmpleClass("A"), "spaces");
+    Method copy = new Method(original);
+    Assert.assertEquals("    ", copy.getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+    Assert.assertTrue(copy.getMethodBody().getCodeblock().isAuthored("Python"));
+
+    // Replacing the text keeps its authorship but drops the indentation, which no longer applies
+    CodeBlock cb = new CodeBlock(original.getMethodBody().getCodeblock());
+    cb.setCode("Python", "return 0");
+    Assert.assertTrue(cb.isAuthored("Python"));
+    Assert.assertNull(cb.getFirstLineIndent("Python"));
+    Assert.assertEquals("    ", original.getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+  }
+
+  // Authored bodies: the exact slot versus the untagged fallback every language may use
+  @Test
+  public void authoredMethodBodies()
+  {
+    assertSimpleParse("001_authoredBodies.ump");
+    UmpleClass a = model.getUmpleClass("A");
+
+    Method both = methodNamed(a, "both");
+    Assert.assertTrue(both.getMethodBody().getCodeblock().isAuthored(""));
+    Assert.assertTrue(both.getMethodBody().getCodeblock().isAuthored("Python"));
+    Assert.assertFalse(both.getMethodBody().getCodeblock().isAuthored("Java"));
+    Assert.assertTrue(both.getExistsInLanguage("Java"));
+    Assert.assertTrue(both.getExistsInLanguage("Php"));
+    Assert.assertTrue(both.getExistsInLanguage("Python"));
+    Assert.assertEquals("", both.getBodyLanguageFor("Java"));
+    Assert.assertEquals("Python", both.getBodyLanguageFor("Python"));
+
+    // The untagged placeholder of a method is not an authored body
+    Method onlyPython = methodNamed(a, "onlyPython");
+    Assert.assertTrue(onlyPython.getMethodBody().getCodeblock().hasCode(""));
+    Assert.assertFalse(onlyPython.getMethodBody().getCodeblock().isAuthored(""));
+    Assert.assertFalse(onlyPython.getExistsInLanguage("Java"));
+    Assert.assertFalse(onlyPython.getExistsInLanguage("Ruby"));
+    Assert.assertTrue(onlyPython.getExistsInLanguage("Python"));
+
+    // Empty bodies that were written are authored
+    Assert.assertTrue(methodNamed(a, "emptyDefault").getMethodBody().getCodeblock().isAuthored(""));
+    Assert.assertTrue(methodNamed(a, "emptyDefault").getExistsInLanguage("Python"));
+    Method emptyJava = methodNamed(a, "emptyJava");
+    Assert.assertTrue(emptyJava.getMethodBody().getCodeblock().isAuthored("Java"));
+    Assert.assertTrue(emptyJava.getExistsInLanguage("Java"));
+    Assert.assertFalse(emptyJava.getExistsInLanguage("Php"));
+
+    Method multi = methodNamed(a, "multi");
+    Assert.assertTrue(multi.getExistsInLanguage("Java"));
+    Assert.assertTrue(multi.getExistsInLanguage("Php"));
+    Assert.assertFalse(multi.getExistsInLanguage("Python"));
+
+    // Abstract declarations and methods made by the compiler keep existing in every language
+    Method shape = methodNamed(model.getUmpleClass("C"), "shape");
+    Assert.assertFalse(shape.getMethodBody().getCodeblock().hasAuthoredCode());
+    Assert.assertTrue(shape.getExistsInLanguage("Java"));
+    Assert.assertTrue(shape.getExistsInLanguage("Python"));
+    Method size = methodNamed(model.getUmpleClass("D"), "size");
+    Assert.assertTrue(size.getExistsInLanguage("Php"));
+    Assert.assertTrue(size.getExistsInLanguage("Python"));
+
+    // Main discovery uses the same rule
+    List<UmpleClass> javaMains = CodeCompiler.getMainClasses(model, "Java");
+    Assert.assertEquals(1, javaMains.size());
+    Assert.assertEquals("B", javaMains.get(0).getName());
+    List<UmpleClass> pythonMains = CodeCompiler.getMainClasses(model, "Python");
+    Assert.assertEquals(2, pythonMains.size());
+  }
+
+  // Merging declarations compares exact slots: an untagged fallback is no duplicate
+  @Test
+  public void mergeMethodDeclarationsByExactBody()
+  {
+    assertHasWarningsParse("001_mergeAuthoredBodies.ump", 49);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    UmpleClass x = model.getUmpleClass("X");
+
+    CodeBlock f = methodNamed(x, "f").getMethodBody().getCodeblock();
+    Assert.assertEquals("return;", f.getCode(""));
+    Assert.assertTrue(f.isAuthored("Java"));
+    Assert.assertEquals("", f.getCode("Java"));
+    Assert.assertEquals("return", f.getCode("Python"));
+
+    CodeBlock g = methodNamed(x, "g").getMethodBody().getCodeblock();
+    Assert.assertEquals("int a;", g.getCode("Java"));
+    Assert.assertEquals("int b;", g.getCode(""));
+    Assert.assertTrue(g.isAuthored(""));
+
+    // A duplicate of one language of a multi-language block is disregarded with a warning
+    CodeBlock h = methodNamed(x, "h").getMethodBody().getCodeblock();
+    Assert.assertEquals("int c;", h.getCode("Java"));
+    Assert.assertEquals("int c;", h.getCode("Php"));
+  }
+
+  // Pre and postconditions belong to their method and the body written with them (#2250)
+  @Test
+  public void methodContractsFollowTheirBody()
+  {
+    assertHasWarningsParse("001_methodContracts.ump", 49);
+    UmpleClass c = model.getUmpleClass("Client");
+
+    Method someMethod = methodNamed(c, "someMethod");
+    Assert.assertEquals(1, c.getMethodPostconditions(someMethod, "Java").size());
+    Assert.assertEquals("arg", c.getMethodPostconditions(someMethod, "Java").get(0).getNamedNames());
+    Assert.assertSame(someMethod, c.getMethodPostconditions(someMethod, "Python").get(0).getMethod());
+    Assert.assertNotSame(c.getMethodPostconditions(someMethod, "Java").get(0), c.getMethodPostconditions(someMethod, "Python").get(0));
+    Assert.assertEquals(0, c.getMethodPostconditions(someMethod, "Php").size());
+
+    // Overloads keep their own conditions
+    Method fInt = null;
+    Method fString = null;
+    for (Method m : c.getMethods())
+    {
+      if (!"f".equals(m.getName())) continue;
+      if ("int".equals(m.getMethodParameter(0).getType())) fInt = m; else fString = m;
+    }
+    Assert.assertEquals("x", c.getMethodPreconditions(fInt, "Java").get(0).getNamedNames());
+    Assert.assertEquals(1, c.getMethodPreconditions(fInt, "Java").size());
+    Assert.assertEquals(1, c.getMethodPreconditions(fString, "Python").size());
+    Assert.assertEquals("null and s", c.getMethodPreconditions(fString, "Python").get(0).getNamedNames());
+
+    // The condition of a disregarded duplicate body is dropped with it
+    Method h = methodNamed(c, "h");
+    Assert.assertEquals(1, c.getMethodPreconditions(h, "Java").size());
+    Assert.assertEquals(0, c.getMethodPreconditions(h, "Php").size());
+
+    // A condition in a multi-language block serves each of its languages; the Php duplicate is
+    // disregarded while the Ruby body that came with it is taken, with its condition
+    Method k = methodNamed(c, "k");
+    Precondition javaAndPhp = c.getMethodPreconditions(k, "Java").get(0);
+    Assert.assertSame(javaAndPhp, c.getMethodPreconditions(k, "Php").get(0));
+    Assert.assertEquals(1, c.getMethodPreconditions(k, "Php").size());
+    Assert.assertEquals(1, c.getMethodPreconditions(k, "Python").size());
+    Assert.assertNotSame(javaAndPhp, c.getMethodPreconditions(k, "Python").get(0));
+    Assert.assertEquals(1, c.getMethodPreconditions(k, "Ruby").size());
+    Assert.assertSame(k, c.getMethodPreconditions(k, "Ruby").get(0).getMethod());
+    Assert.assertEquals("return 6", k.getMethodBody().getCodeblock().getCode("Ruby"));
+
+    // A declaration that fills an empty body keeps the conditions of both declarations
+    Method m = methodNamed(c, "m");
+    Assert.assertEquals(2, c.getMethodPreconditions(m, "Java").size());
+
+    // Equal conditions in other alternatives or overloads are separate conditions
+    Method same = methodNamed(c, "same");
+    Assert.assertEquals(1, c.getMethodPreconditions(same, "Java").size());
+    Assert.assertEquals(1, c.getMethodPostconditions(same, "Java").size());
+    Assert.assertEquals(1, c.getMethodPreconditions(same, "Python").size());
+    Assert.assertNotSame(c.getMethodPreconditions(same, "Java").get(0), c.getMethodPreconditions(same, "Python").get(0));
+    for (Method limit : c.getMethods())
+    {
+      if ("limit".equals(limit.getName()))
+      {
+        Assert.assertEquals(1, c.getMethodPreconditions(limit, "Java").size());
+      }
+    }
+
+    // A redeclaration without code adds its conditions (#1488); equal ones are checked once
+    Method refine = methodNamed(c, "refine");
+    Assert.assertEquals(2, c.getMethodPreconditions(refine, "Java").size());
+    Assert.assertEquals("return a;", refine.getMethodBody().getCodeblock().getCode(""));
+
+    // Disregarded conditions are gone from the class: preconditions f 2, h 1, k 3, m 2, same 2,
+    // limit 2, refine 3; postconditions someMethod 2, same 2
+    Assert.assertEquals(15, c.numberOfPreConds());
+    Assert.assertEquals(4, c.numberOfPostConds());
+  }
+
+  // Extra code markers have a Python form, also when extra code comes from a trait
+  @Test
+  public void extraCodeMarkersPerLanguage()
+  {
+    assertSimpleParse("001_extraCodeMarkers.ump");
+    // Other targets' markers end with the platform's line separator; Python's with "\n". The joined
+    // text, whose line breaks come from the platform, is compared with "\n" breaks.
+    String NL = System.getProperty("line.separator");
+    List<CodeBlock> x = model.getUmpleClass("X").getExtraCodeBlocks();
+    Assert.assertEquals("// line 3 001_extraCodeMarkers.ump" + NL + "  ", x.get(0).getCode(""));
+    Assert.assertEquals("# line 3 001_extraCodeMarkers.ump" + NL + "  ", x.get(0).getCode("Ruby"));
+    Assert.assertEquals("# line 3 \"001_extraCodeMarkers.ump\"\n", x.get(0).getCode("Python"));
+    Assert.assertFalse(x.get(0).hasAuthoredCode());
+
+    // The text every other target gets is unchanged
+    Assert.assertEquals("// line 3 001_extraCodeMarkers.ump\n  TOKEN = 7", lf(extraCodeFor(model.getUmpleClass("X"), "Java")));
+
+    // A trait's extra code is copied block by block, so each language keeps its own form
+    UmpleClass y = model.getUmpleClass("Y");
+    Assert.assertEquals("// line 10 001_extraCodeMarkers.ump\n  OTHER = 4\n// line 6 001_extraCodeMarkers.ump\n  LIMIT = 3", lf(extraCodeFor(y, "Java")));
+    Assert.assertEquals("# line 10 001_extraCodeMarkers.ump\n  OTHER = 4\n# line 6 001_extraCodeMarkers.ump\n  LIMIT = 3", lf(extraCodeFor(y, "Ruby")));
+    Assert.assertEquals("# line 10 \"001_extraCodeMarkers.ump\"\nOTHER = 4\n# line 6 \"001_extraCodeMarkers.ump\"\nLIMIT = 3", lf(extraCodeFor(y, "Python")));
+    CodeBlock fromTrait = y.getExtraCodeBlocks().get(y.getExtraCodeBlocks().size() - 1);
+    Assert.assertEquals("LIMIT = 3", fromTrait.getCode(""));
+  }
+
+  private static String lf(String text)
+  {
+    return text.replace(System.getProperty("line.separator"), "\n");
+  }
+
+  // The extra code a generator for lang gets, as ExtraCode.getExtraCode selects it
+  private String extraCodeFor(UmpleClass uClass, String lang)
+  {
+    StringBuilder code = new StringBuilder();
+    for (CodeBlock cb : uClass.getExtraCodeBlocks())
+    {
+      code.append(cb.hasCode(lang) ? cb.getCode(lang) : cb.getCode(""));
+    }
+    return code.toString();
+  }
+
+  private Method methodNamed(UmpleClass uClass, String name)
+  {
+    for (Method m : uClass.getMethods())
+    {
+      if (name.equals(m.getName())) return m;
+    }
+    return null;
+  }
+
 
 
   @Test
@@ -1036,6 +1338,92 @@ public class UmpleParserTest
   public void warningClassNameCapitalLetter()
   { // Test to make sure a warning is generated when a class name does not start with a capital letter
     assertHasWarningsParse("043_warningClassNameNotCapital.ump", 101);
+  }
+
+  @Test
+  public void warningClassNamesDifferOnlyByCase107()
+  {
+    assertHasWarningsParse("2521_classNamesDifferOnlyByCase.ump", new Position("2521_classNamesDifferOnlyByCase.ump", 3, 0, 25), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more classes or interfaces have the same characters but differ only in case: PinG, Ping. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // A class and an interface generate files that overwrite each other; the warning points at the later one
+  @Test
+  public void warningClassThenInterfaceNamesDifferOnlyByCase107()
+  {
+    String file = "2521_classInterfaceNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 2, 0, 14), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more classes or interfaces have the same characters but differ only in case: Ping, PING. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  @Test
+  public void warningInterfaceThenClassNamesDifferOnlyByCase107()
+  {
+    String file = "2521_interfaceClassNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 2, 0, 18), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more classes or interfaces have the same characters but differ only in case: PING, Ping. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  @Test
+  public void warningAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_attributeNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, 107);
+    ParseResult result = parser.getParseResult();
+    Assert.assertEquals(2, result.numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Ping have the same characters but differ only in case: apple, apPle. This can increase the risk of defects.",
+      result.getErrorMessage(0).getFormattedMessage());
+    Assert.assertEquals(new Position(file, 3, 2, 24), result.getErrorMessage(0).getPosition());
+    // class X is declared twice; its attributes are compared as one class
+    Assert.assertEquals(107, result.getErrorMessage(1).getErrorType().getErrorCode());
+    Assert.assertEquals(new Position(file, 11, 2, 69), result.getErrorMessage(1).getPosition());
+  }
+
+  // Reported once, in the subclass that introduces the clash, and not again in its own subclass,
+  // which only refines the attribute, or in the unrelated class Course
+  @Test
+  public void warningInheritedAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_inheritedAttributeNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 7, 2, 62), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Student have the same characters but differ only in case: fullname, fullName. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // An attribute applied from a trait keeps its position in the trait
+  @Test
+  public void warningTraitAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_traitAttributeNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 2, 2, 16), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Person have the same characters but differ only in case: fullName, fullname. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // The comparator attribute generated for a sorted association is placed at the association
+  @Test
+  public void warningSortedAssociationAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_sortedAssociationNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 3, 2, 41), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Academy have the same characters but differ only in case: registrantspriority, registrantsPriority. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // Same letters in unrelated classes, and a class declared twice, are not a clash
+  @Test
+  public void noWarningNamesDifferOnlyByCase107()
+  {
+    assertNoWarningsParse("2521_namesDifferOnlyByCaseNone.ump");
   }
 
   @Test
@@ -2813,6 +3201,186 @@ public class UmpleParserTest
     Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(3).getStepType());
     Assert.assertEquals("update total", req.getUseCaseStep(3).getContent());
   }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseInclude()
+  {
+    assertNoWarningsParse("457_ReqUseCaseInclude.ump");
+    Requirement req = model.getAllRequirements().get("UC7");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+    Assert.assertEquals("customer", req.getWho());
+
+    Assert.assertEquals(2, req.numberOfIncludedUseCases());
+    Assert.assertEquals("UC1", req.getIncludedUseCase(0));
+    Assert.assertEquals("UC2", req.getIncludedUseCase(1));
+    Assert.assertEquals(0, req.numberOfParentUseCases());
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("start checkout", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseIsA()
+  {
+    assertNoWarningsParse("457_ReqUseCaseIsA.ump");
+    Requirement req = model.getAllRequirements().get("UC8");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals(1, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+    Assert.assertEquals(0, req.numberOfIncludedUseCases());
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("pay with the saved card", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseIsAMultipleParents()
+  {
+    assertNoWarningsParse("457_ReqUseCaseIsAMultipleParents.ump");
+    Requirement req = model.getAllRequirements().get("UC11");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals(2, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+    Assert.assertEquals("UC2", req.getParentUseCase(1));
+    Assert.assertEquals(0, req.numberOfIncludedUseCases());
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("confirm the order", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseStepConditions()
+  {
+    assertNoWarningsParse("457_ReqUseCaseStepConditions.ump");
+    Requirement req = model.getAllRequirements().get("UC9");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+
+    Assert.assertEquals(4, req.numberOfUseCaseSteps());
+
+    // An unconditional step keeps a null condition
+    Assert.assertEquals("1", req.getUseCaseStep(0).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.UserStep, req.getUseCaseStep(0).getStepType());
+    Assert.assertEquals("select a payment method", req.getUseCaseStep(0).getContent());
+    Assert.assertNull(req.getUseCaseStep(0).getCondition());
+
+    // Two responses share an id and are told apart by their conditions
+    Assert.assertEquals("1", req.getUseCaseStep(1).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(1).getStepType());
+    Assert.assertEquals("card accepted", req.getUseCaseStep(1).getCondition());
+    Assert.assertEquals("confirm the order", req.getUseCaseStep(1).getContent());
+
+    Assert.assertEquals("1", req.getUseCaseStep(2).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(2).getStepType());
+    Assert.assertEquals("card declined", req.getUseCaseStep(2).getCondition());
+    Assert.assertEquals("ask for another card", req.getUseCaseStep(2).getContent());
+
+    Assert.assertEquals("2", req.getUseCaseStep(3).getId());
+    Assert.assertEquals("collect the receipt", req.getUseCaseStep(3).getContent());
+    Assert.assertNull(req.getUseCaseStep(3).getCondition());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseExtendedAll()
+  {
+    assertNoWarningsParse("457_ReqUseCaseExtendedAll.ump");
+    Requirement req = model.getAllRequirements().get("UC10");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals("returning customer", req.getWho());
+    Assert.assertEquals("a saved address exists", req.getWhen());
+    Assert.assertEquals("check out quickly", req.getWhat());
+    Assert.assertEquals("avoid retyping delivery details", req.getWhy());
+
+    Assert.assertEquals(1, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+
+    Assert.assertEquals(2, req.numberOfIncludedUseCases());
+    Assert.assertEquals("UC2", req.getIncludedUseCase(0));
+    Assert.assertEquals("UC3", req.getIncludedUseCase(1));
+
+    Assert.assertEquals(3, req.numberOfUseCaseSteps());
+    Assert.assertEquals("confirm the saved address", req.getUseCaseStep(0).getContent());
+    Assert.assertNull(req.getUseCaseStep(0).getCondition());
+    Assert.assertEquals("address still valid", req.getUseCaseStep(1).getCondition());
+    Assert.assertEquals("show the order summary", req.getUseCaseStep(1).getContent());
+    Assert.assertEquals("pay", req.getUseCaseStep(2).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUsecaseExtendedAliasLowercase()
+  {
+    assertNoWarningsParse("457_ReqUsecaseExtendedAlias.ump");
+    Requirement req = model.getAllRequirements().get("UC11");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+
+    Assert.assertEquals(1, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+    Assert.assertEquals(1, req.numberOfIncludedUseCases());
+    Assert.assertEquals("UC2", req.getIncludedUseCase(0));
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("express lane open", req.getUseCaseStep(0).getCondition());
+    Assert.assertEquals("skip the queue", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqNormalStillWorksAfterUseCaseExtensions()
+  {
+    assertNoWarningsParse("457_ReqNormalStillWorksAfterUseCaseExtensions.ump");
+
+    // include and isA are only use case keywords; a plain requirement keeps them as text
+    Requirement plain = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(plain);
+    Assert.assertEquals("", plain.getLanguage());
+    // A plain requirement keeps its body verbatim, indentation included
+    Assert.assertEquals("include the applicable tax;\n  isA legal obligation;", plain.getStatement());
+    Assert.assertEquals(0, plain.numberOfIncludedUseCases());
+    Assert.assertEquals(0, plain.numberOfParentUseCases());
+
+    Requirement useCase = model.getAllRequirements().get("UC12");
+    Assert.assertNotNull(useCase);
+    Assert.assertEquals(1, useCase.numberOfParentUseCases());
+    Assert.assertEquals("UC1", useCase.getParentUseCase(0));
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsPlain()
+  {
+    assertNoWarningsParse("458_ReqEarsPlain.ump");
+    Assert.assertEquals("ears", model.getAllRequirements().get("E7").getLanguage());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsPatterns()
+  {
+    assertNoWarningsParse("458_ReqEarsPatterns.ump");
+    Assert.assertEquals("ears", model.getAllRequirements().get("E6").getLanguage());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqNormalStillWorksAfterEarsGrammar()
+  {
+    assertNoWarningsParse("458_ReqNormalStillWorksAfterEars.ump");
+  }
   @Test
   public void associationName()
   {
@@ -3873,6 +4441,9 @@ public class UmpleParserTest
   public void multipleConstraintMethodBody() 
   {
     assertNoWarningsParse("1488_multipleConstraintMethodBody.ump");
+    // The conditions of the code-less declarations apply to the method
+    UmpleClass x = model.getUmpleClass("X");
+    Assert.assertEquals(2, x.getMethodPreconditions(methodNamed(x, "m1"), "Java").size());
   }
 
   // Issue 1488

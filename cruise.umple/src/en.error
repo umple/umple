@@ -113,6 +113,7 @@
 # Messages relating to format of identifiers.
 100: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Class name '{0}' must be alphanumeric and start with an alpha character, or _ (underscore) ;
 101: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Class name '{0}' should start with a capital letter ;
+107: 4, "https://manual.umple.org/?W107NamesDifferOnlyByCase.html", Two or more {0} have the same characters but differ only in case: {1}. This can increase the risk of defects. ;
 
 110: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Interface name '{0}' must be alphanumeric and start with an alpha character or _ (underscore) ;
 111: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Interface name '{0}' should start with a capital letter ;
@@ -231,11 +232,12 @@
 1503 : 1, "https://manual.umple.org/?E15xxParsingError.html", Parsing error: {0}, did you mean {1} ;
 1504 : 1, "https://manual.umple.org/?E15xxParsingError.html", Parsing error: Unmatched opening brace in '{0}' ;
 1505 : 1, "https://manual.umple.org/?E15xxParsingError.html", Parsing error: Unmatched closing brace in '{0}' ;
-1510 : 3, "https://manual.umple.org/?E1510UseFileMissing.html", File '{0}' referred to in use statement was not found ; 
+1510 : 3, "https://manual.umple.org/?PageBeingDeveloped.html", File '{0}' referred to in use statement was not found ; 
 
 1511 : 2, "https://manual.umple.org/?E1511InlineMixsetIsNotSupported.html", Inline syntax for the mixset '{0}' is not supported. Please enclose the body of '{0}' with curly brackets. ; 
 1512 : 4, "https://manual.umple.org/?W1512CodeLabelsInsideMethodAreNotUnique.html", Multiple code labels having the same name should be avoided for the method '{0}' at line '{1}'. Please consider unique names for code labels. ; 
 1513 : 4, "https://manual.umple.org/?W1513MixsetUsedWithNoDeclaration.html", The mixset '{0}' has a use statement at line '{1}', however there is no declaration for this mixset. To avoid this warning, you may remove the use statement or you may add a declaration for mixset '{0}'. ; 
+1514 : 4, "https://manual.umple.org/?PageBeingDeveloped.html", The use statements do not satisfy the require statement {0} '{1}'. Adjust the use statements so that they form a valid configuration of the feature model, or change the require statement. ;
 
 # Messages to be emitted when embedded code from another language is compiled and you are passing on the error. These have not yet been activated.
 2001: 5, "https://manual.umple.org/?W20xxErrorinEmbeddedCode.html", Error in Java embedded in Umple: '{0}' ;
@@ -260,16 +262,16 @@
 3604: 1, "https://manual.umple.org/?PageBeingDeveloped.html", Port binding to component '{0}' can not be resolved.;
 3605: 1, "https://manual.umple.org/?PageBeingDeveloped.html", Port binding from port can not be resolved.;
 3606: 1, "https://manual.umple.org/?PageBeingDeveloped.html", Port binding to port can not be resolved.;
-3607: 1, "https://manual.umple.org/?E3607PortNameCannotBeResolved.html", Port name '{0}' from class '{1}' can not be resolved or else you intended to create an association but omitted destination class.;
+3607: 1, "https://manual.umple.org/?PageBeingDeveloped.html", Port name '{0}' from class '{1}' can not be resolved or else you intended to create an association but omitted destination class.;
 
 # Messages related to fixml
 4500: 1,  "https://manual.umple.org/?E4500TagNotClosedCorrectly.html", The tag '{0}' is not closed correctly.  ;
 
 # Warning messages related to distributed systems
 
-7002: 4, "https://manual.umple.org/?AssociationDistToNonDistributed.html", Distributed class '{0}' has an association with non-distributed class '{1}'. ;
-7001: 4, "https://manual.umple.org/?StaticAttributeExists.html", System is distributed but class '{0}' has a static attribute {1}. This might result in multiple instances;
-7003: 4, "https://manual.umple.org/?DistributedWOAssociation.html", Distributed class '{0}' has no associations {1} It is better to define it as regular class if it is not called remotely;
+7002: 4, "https://manual.umple.org/?PageBeingDeveloped.html", Distributed class '{0}' has an association with non-distributed class '{1}'. ;
+7001: 4, "https://manual.umple.org/?PageBeingDeveloped.html", System is distributed but class '{0}' has a static attribute {1}. This might result in multiple instances;
+7003: 4, "https://manual.umple.org/?PageBeingDeveloped.html", Distributed class '{0}' has no associations {1} It is better to define it as regular class if it is not called remotely;
 
 # Special testing messages for debugging
 8001: 1, "https://manual.umple.org/?PageBeingDeveloped.html", Debug error : '{0}' ;
@@ -279,6 +281,15 @@
 9000: 1, "https://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Parsing). {0} ;
 9100: 1, "https://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Analysis). {0} ;
 9200: 1, "https://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Generation). {0} ;
+9210: 2, "https://manual.umple.org/?E9210PythonUnsupported.html", {0} cannot be generated in Python yet, so class {1} was not generated ;
+9211: 2, "https://manual.umple.org/?E9211PythonUntranslatableCode.html", This code in {0} cannot be translated to Python: {1}. Give a Python version instead, for example {2} ;
+9212: 3, "https://manual.umple.org/?W9212PythonNoPythonCode.html", {0} has code only for {1}, so it is left out of the generated Python ;
+9213: 2, "https://manual.umple.org/?E9213PythonModuleNameClash.html", {0} conflicts with a standard Python module, so choose another name or namespace ;
+9214: 2, "https://manual.umple.org/?E9214PythonSelfParameter.html", {0} has a parameter named self, the name generated methods give the object they are called on, so rename the parameter ;
+9215: 2, "https://manual.umple.org/?E9215PythonReservedName.html", {0} has a name that Python reserves or that generated code uses, so give it another name ;
+9216: 2, "https://manual.umple.org/?E9216PythonDuplicateParameter.html", {0} has two parameters named {1} in Python, so rename one of them ;
+9217: 2, "https://manual.umple.org/?E9217PythonPackageName.html", The namespace {0} of {1} is not a valid Python package name, so use dot-separated ASCII names that are not Python keywords ;
+9218: 2, "https://manual.umple.org/?E9218PythonPathClash.html", {0} clashes with {1}: {2}, so one of them could not be imported. Rename one of them ;
 
 # Message to emit when you are parsing a construct but are not yet processing it in a sensible way/
 9999: 5, "https://manual.umple.org/?W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;

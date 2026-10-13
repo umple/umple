@@ -1,0 +1,21 @@
+E9211 Python Untranslatable Code
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Untagged code cannot be translated to Python</h2>
+
+<p>Code written without a language tag in an action, an entry, exit or do activity, a code injection, a derived attribute or an initial value is Java. For Python, Umple translates such code when it keeps to the subset of Java listed on the <a href="Python.html">Python</a> page. Code outside that subset, for example a call to the Java library or to a method the model does not define, is reported with this error, which names the code and shows how that kind of code is written in Python. The class is then not generated.</p>
+
+<p>The error is also reported for a derived attribute written only for other languages, which would have no value in Python, and for an interface constant whose value is not a literal, which Umple does not translate to Python.</p>
+
+<p>Give the code a Python version: add a Python block beside the Java one, or move the code into a method with a Python body and call that method. Method bodies and extra code are never translated: an untagged method body is taken to be Python already.</p>
+
+@@example
+@@source manualexamples/E9211PythonUntranslatableCode1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E9211PythonUntranslatableCode2.ump
+@@endexample

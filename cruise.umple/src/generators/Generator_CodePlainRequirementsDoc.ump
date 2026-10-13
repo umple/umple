@@ -116,6 +116,18 @@ class PlainRequirementsDocGenerator
 						}
 						useCaseText.append(req.getStatement());
 					}
+					if (req.hasParentUseCases()) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append("Specializes ").append(String.join(", ", req.getParentUseCases()));
+					}
+					if (req.hasIncludedUseCases()) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append("Includes ").append(String.join(", ", req.getIncludedUseCases()));
+					}
 					for (int i = 0; i < req.numberOfUseCaseSteps(); i++) {
 						UseCaseStep step = req.getUseCaseStep(i);
 						if (useCaseText.length() > 0) {
@@ -127,7 +139,11 @@ class PlainRequirementsDocGenerator
 						else {
 							useCaseText.append("System response ");
 						}
-						useCaseText.append(step.getId()).append(": ").append(step.getContent());
+						useCaseText.append(step.getId());
+						if (step.getCondition() != null && !step.getCondition().equals("")) {
+							useCaseText.append(" [").append(step.getCondition()).append("]");
+						}
+						useCaseText.append(": ").append(step.getContent());
 					}
 					if (useCaseText.length() > 0) {
 						mainReqText = Requirement.translateToHTML(useCaseText.toString(), req.getLanguage());

@@ -132,7 +132,7 @@
         <table>
           <tr>
             <td class="column-header"><div><span>START</span></div></td>
-            <td class="column-header"><div><span>1. ev111</span></div></td>
+            <td class="column-header" data-transition="SimpleFirst*^*sm11*^*ev111*^*s111*^*s112*^*"><div><span>1. ev111</span></div></td>
           </tr>
           <tr>
             <td class="content-cell" data-parent="">X</td>
@@ -161,7 +161,7 @@
   </tr>
   <tr>
     <td class="">1</td>
-    <td class="">ev111</td>
+    <td class="" data-transition="SimpleFirst*^*sm11*^*ev111*^*s111*^*s112*^*">ev111</td>
     <td class="">s112</td>
   </tr>
 </table>
@@ -191,7 +191,7 @@
         <table>
           <tr>
             <td class="column-header"><div><span>START</span></div></td>
-            <td class="column-header"><div><span>1. ev121</span></div></td>
+            <td class="column-header" data-transition="SimpleFirst*^*sm12*^*ev121*^*s121*^*s122*^*"><div><span>1. ev121</span></div></td>
           </tr>
           <tr>
             <td class="content-cell" data-parent="">X</td>
@@ -220,7 +220,7 @@
   </tr>
   <tr>
     <td class="">1</td>
-    <td class="">ev121</td>
+    <td class="" data-transition="SimpleFirst*^*sm12*^*ev121*^*s121*^*s122*^*">ev121</td>
     <td class="">s122</td>
   </tr>
 </table>
@@ -250,7 +250,7 @@
         <table>
           <tr>
             <td class="column-header"><div><span>START</span></div></td>
-            <td class="column-header"><div><span>1. ev211</span></div></td>
+            <td class="column-header" data-transition="SimpleSecond*^*sm21*^*ev211*^*s211*^*s212*^*"><div><span>1. ev211</span></div></td>
           </tr>
           <tr>
             <td class="content-cell" data-parent="">X</td>
@@ -279,7 +279,7 @@
   </tr>
   <tr>
     <td class="">1</td>
-    <td class="">ev211</td>
+    <td class="" data-transition="SimpleSecond*^*sm21*^*ev211*^*s211*^*s212*^*">ev211</td>
     <td class="">s212</td>
   </tr>
 </table>
@@ -309,7 +309,7 @@
         <table>
           <tr>
             <td class="column-header"><div><span>START</span></div></td>
-            <td class="column-header"><div><span>1. ev221</span></div></td>
+            <td class="column-header" data-transition="SimpleSecond*^*sm22*^*ev221*^*s221*^*s222*^*"><div><span>1. ev221</span></div></td>
           </tr>
           <tr>
             <td class="content-cell" data-parent="">X</td>
@@ -338,7 +338,7 @@
   </tr>
   <tr>
     <td class="">1</td>
-    <td class="">ev221</td>
+    <td class="" data-transition="SimpleSecond*^*sm22*^*ev221*^*s221*^*s222*^*">ev221</td>
     <td class="">s222</td>
   </tr>
 </table>

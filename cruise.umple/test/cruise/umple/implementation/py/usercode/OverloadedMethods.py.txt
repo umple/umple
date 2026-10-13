@@ -1,0 +1,99 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+import datetime
+
+
+class OverloadedMethods:
+    """Overloaded methods become numbered implementations and a dispatcher that binds the arguments."""
+
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass
+
+    def describe1(self, value):
+        return "int"
+
+    def describe2(self, value, flag):
+        return "pair"
+
+    def describe3(self, part):
+        return "part"
+
+    def describe4(self, names):
+        return "names"
+
+    def describe5(self, day):
+        return "day"
+
+    def describe(self, *args, **kwargs):
+        from Part import Part
+        bound = __class__._bindArguments(("value",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or (isinstance(bound[0], int) and not isinstance(bound[0], bool))):
+            return __class__.describe1(self, *bound)
+        bound = __class__._bindArguments(("value", "flag"), False, args, kwargs)
+        if bound is not None and (bound[0] is None or (isinstance(bound[0], (int, float)) and not isinstance(bound[0], bool))) and (bound[1] is None or isinstance(bound[1], bool)):
+            return __class__.describe2(self, *bound)
+        bound = __class__._bindArguments(("part",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or isinstance(bound[0], Part)):
+            return __class__.describe3(self, *bound)
+        bound = __class__._bindArguments(("names",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or isinstance(bound[0], (list, tuple)) and all((e is None or isinstance(e, str)) for e in bound[0])):
+            return __class__.describe4(self, *bound)
+        bound = __class__._bindArguments(("day",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or isinstance(bound[0], datetime.date)):
+            return __class__.describe5(self, *bound)
+        raise TypeError("No method matches provided parameters")
+
+    @staticmethod
+    def combine1(a):
+        return a
+
+    @staticmethod
+    def combine2(a, b):
+        return a + b
+
+    @staticmethod
+    def combine(*args, **kwargs):
+        bound = __class__._bindArguments(("a",), False, args, kwargs)
+        if bound is not None and (isinstance(bound[0], int) and not isinstance(bound[0], bool)):
+            return __class__.combine1(*bound)
+        bound = __class__._bindArguments(("a", "b"), False, args, kwargs)
+        if bound is not None and (isinstance(bound[0], int) and not isinstance(bound[0], bool)) and (isinstance(bound[1], int) and not isinstance(bound[1], bool)):
+            return __class__.combine2(*bound)
+        raise TypeError("No method matches provided parameters")
+
+    def count2(self, *values):
+        return len(values)
+
+    def count3(self, text):
+        return -1
+
+    def count(self, *args, **kwargs):
+        bound = __class__._bindArguments(("text",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or isinstance(bound[0], str)):
+            return __class__.count3(self, *bound)
+        bound = __class__._bindArguments((), True, args, kwargs)
+        if bound is not None and all((isinstance(v, int) and not isinstance(v, bool)) for v in bound[0]):
+            return __class__.count2(self, *bound[:-1], *bound[-1])
+        raise TypeError("No method matches provided parameters")
+
+    def count1(self):
+        return 99
+
+    @staticmethod
+    def _bindArguments(names, varargs, args, kwargs):
+        if len(args) > len(names) and not varargs:
+            return None
+        bound = list(args[:len(names)])
+        for name in names[len(bound):]:
+            if name not in kwargs:
+                return None
+            bound.append(kwargs[name])
+        if len(kwargs) != len(names) - min(len(args), len(names)):
+            return None
+        if varargs:
+            bound.append(args[len(names):])
+        return bound

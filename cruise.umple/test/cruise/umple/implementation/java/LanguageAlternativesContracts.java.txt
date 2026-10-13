@@ -1,0 +1,125 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+/**
+ * Each pre or postcondition belongs to its method and to the body written with it (#2250)
+ */
+// line 2 "LanguageAlternativesContracts.ump"
+public class Account
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Account Attributes
+  private int balance;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Account()
+  {
+    balance = 0;
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public boolean setBalance(int aBalance)
+  {
+    boolean wasSet = false;
+    balance = aBalance;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public int getBalance()
+  {
+    return balance;
+  }
+
+  public void delete()
+  {}
+
+  // line 7 "LanguageAlternativesContracts.ump"
+  // line 7 "LanguageAlternativesContracts.ump"
+  public int deposit(int amount){
+    int result = deposit_Original(amount);
+    if (amount>=1000)
+    {
+        throw new RuntimeException("Please provide a valid amount");
+    }
+    return result;
+  }
+
+  public int deposit_Original(int amount){
+
+    if (amount<=0)
+    {
+        throw new RuntimeException("Please provide a valid amount");
+    }
+    return amount;
+  }
+
+  // line 11 "LanguageAlternativesContracts.ump"
+  public int deposit(String note){
+
+    if (note==null)
+    {
+        throw new RuntimeException("Please provide a valid note and null");
+    }
+    return 0;
+  }
+
+  // line 15 "LanguageAlternativesContracts.ump"
+  public int withdraw(int amount){
+
+    if (amount>=100)
+    {
+        throw new RuntimeException("Please provide a valid amount");
+    }
+    return amount;
+  }
+
+  // line 25 "LanguageAlternativesContracts.ump"
+  public int close(int code){
+
+    if (code<=1)
+    {
+        throw new RuntimeException("Please provide a valid code");
+    }
+    return code;
+  }
+
+  // line 33 "LanguageAlternativesContracts.ump"
+  public int limit(int v){
+
+    if (v<=0)
+    {
+        throw new RuntimeException("Please provide a valid v");
+    }
+    return v;
+  }
+
+  // line 42 "LanguageAlternativesContracts.ump"
+  public int refine(int v){
+
+    if (v>=50)
+    {
+        throw new RuntimeException("Please provide a valid v");
+    }
+    return v;
+  }
+
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "balance" + ":" + getBalance()+ "]";
+  }
+}

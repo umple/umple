@@ -488,8 +488,8 @@ public class CourseSection
   */  
 
   public static CourseSection fromJson(String aJsonString){
-    // process the input jsonString so that it can further processed using regex
-    aJsonString=aJsonString.replace("\n","").replace(" ","");   
+    // the parser below reads json with nothing between its tokens, so remove every whitespace character json allows there
+    aJsonString=aJsonString.replace("\n","").replace("\r","").replace("\t","").replace(" ","");
     // a map to store the umpleObjectID present in jsonString
     Map<String, Object> umpleObjectIDMap=new HashMap<>();
     
@@ -616,6 +616,11 @@ registrations.add((Registration)umpleObjectIDMap.get(newUmpleID_2));
 
 
     
+    }catch(java.lang.reflect.InvocationTargetException e){
+      // an associated object with an unknown state must fail the load, as the top-level object does
+      if(e.getCause() instanceof IllegalArgumentException){
+        throw (IllegalArgumentException)e.getCause();
+      }
     }catch(Exception e){
     }
 
@@ -640,81 +645,41 @@ registrations.add((Registration)umpleObjectIDMap.get(newUmpleID_2));
         Pattern topLevelPattern = Pattern.compile(topLevelString);
         Matcher topLevelMatcher = topLevelPattern.matcher(jsonString);
         String quotes="\\\"";
-        String colon="\\:";
-        String colonSquareBracket="\\:\\[";
         
         if(topLevelMatcher.find()){
             //actual string that represent the topLevel className
             String topLevelStringFound=topLevelMatcher.group(0);
             String className=topLevelStringFound.split(quotes)[1];
             parsedResultMap.put("className", className);
-            jsonString=jsonString.split(topLevelString,2)[1];
-            
-            //objIDString is the regex representing umpleObjectID that could be found in jsonString
-            String objIDString = "\"umpleObjectID\"\\:\"[0-9]*\",";
-            Pattern objIDPattern = Pattern.compile(objIDString);
-            Matcher objIDMatcher = objIDPattern.matcher(jsonString);
-            if(objIDMatcher.find()){
-              String objIDFound=objIDMatcher.group(0);
-              parsedResultMap.put("umpleObjectID", objIDFound.split(colon)[1].split(quotes)[1]);
-              jsonString=jsonString.replaceFirst(objIDFound,"");
-            }
-            String timeString="\\\"\\w*\\\"\\:\\\"\\d{2}:\\d{2}\\:\\d{2}\\\"";
-            Pattern timeStringPattern=Pattern.compile(timeString);
-            Matcher timeStringPatternMatcher=timeStringPattern.matcher(jsonString);
-            if(timeStringPatternMatcher.find()){
-              String timeStringFound=timeStringPatternMatcher.group(0);
-              parsedResultMap.put(timeStringFound.split(colon,2)[0].split(quotes)[1], timeStringFound.split(colon,2)[1].split(quotes)[1]);
-          
-            }
-            // pairString is the regex for an object's attribute and attribute value, the string parsed will be in key-value formate
-        String pairString = "(\\\"(?!umpleObjectID)[^\\\"]+)\\\":\\\"((?:\\\\\\\"|[^\\\"])*)";
-        Pattern pairPattern=Pattern.compile(pairString);
-        Matcher pairMatcher=pairPattern.matcher(jsonString);
-        String associationString="(?=\\\"\\w*\\\"\\:\\[\\{)(?:(?=.*?\\[\\{(?!.*?\\1)(.*\\}\\](?!.*\\2).*))(?=.*?\\}\\](?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\[]*(?=\\2$)";
-        Pattern associationPattern=Pattern.compile(associationString);
-        String newObjJsonString="(?=\\,\\\"\\w*\\\"\\:\\{)(?:(?=.*?\\{\\\"(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
-        Pattern newObjJsonPattern=Pattern.compile(newObjJsonString);
-        String quoteColonQuote="\\\"\\:\\\"";
-        //Keep on parsing the attribute's key-value pair, 
-        //until a List (multi-associations) pattern or a newObject parttern (single association) is found
-        while(pairMatcher.find()){
-               String pairStringFound=pairMatcher.group(0);
-              if(parsedResultMap.get(pairStringFound.split(colon)[0].split(quotes)[1])==null){
-                String keyPair=pairStringFound.split(colon)[0].split(quotes)[1];
-                String valuePair=pairStringFound.split(quoteColonQuote,2)[1];
-                keyPair=keyPair.replace("\\\\","\\").replace("\\\"","\"");
-                valuePair=valuePair.replace("\\\\","\\").replace("\\\"","\"");
-                parsedResultMap.put(keyPair,valuePair);
-                jsonString=jsonString.replaceFirst(pairString, "");
+            // The object's own "key":value pairs follow, a value being a "string", a [list] or an {object}.
+            // Each value is skipped whole, so the pairs of an associated object are left for that object to read
+            int pairStart=topLevelMatcher.end()+1;
+            while(pairStart<jsonString.length()&&jsonString.charAt(pairStart)=='"'){
+              int keyEnd=fromJsonParserValueEnd(jsonString,pairStart);
+              // without the colon there is no telling which value is the key's, so read no further
+              if(keyEnd<0||!jsonString.startsWith(":",keyEnd)){
+                break;
               }
-                int lastIndex = 0;
-                while (lastIndex<jsonString.length()){
-                  String remainingJson=jsonString.substring(lastIndex);
-                  Matcher associationMatcher=associationPattern.matcher(jsonString);
-                  Matcher newObjJsonMatcher=newObjJsonPattern.matcher(jsonString);
-                  
-                  boolean assoFound=associationMatcher.find();
-                  boolean newObjFound=newObjJsonMatcher.find();
-                  
-                  if (assoFound&&(!newObjFound||associationMatcher.start()<newObjJsonMatcher.start())){
-                    String assoStringFound=associationMatcher.group(0);
-                    String associationName=assoStringFound.split(colon,2)[0].split(quotes)[1];;
-                    String associationItems=assoStringFound.split(colonSquareBracket,2)[1];
-                    parsedResultMap.put(associationName, associationItems);
-                    jsonString=jsonString.replaceFirst(associationString, "");
-                  }
-                  else if (newObjFound){
-                    String newObjJsonFound=newObjJsonMatcher.group(0);
-                    String newObjName=newObjJsonFound.split(colon,2)[0].split(quotes)[1];
-                    String newObjItems=newObjJsonFound.split(colon,2)[1];
-                    parsedResultMap.put(newObjName, newObjItems);
-                    jsonString=jsonString.replaceFirst(newObjJsonString, "");
-                  }else{
-                    break;
-                  }
-                }
-        }
+              int valueEnd=fromJsonParserValueEnd(jsonString,keyEnd+1);
+              if(valueEnd<0){
+                break;
+              }
+              String key=jsonString.substring(pairStart+1,keyEnd-1);
+              String value=jsonString.substring(keyEnd+1,valueEnd);
+              // The class name and object id come first and win over an attribute named like them.
+              // toJson quotes every attribute and state, so a bare null, boolean or number is left unread, as it always was
+              if(value.startsWith("\"")){
+                parsedResultMap.putIfAbsent(key,value.substring(1,value.length()-1).replace("\\\\","\\").replace("\\\"","\""));
+              }
+              else if(value.startsWith("[")||value.startsWith("{")){
+                parsedResultMap.putIfAbsent(key,value);
+              }
+              // skip the comma, and the extra one left by a superclass with nothing to output
+              pairStart=valueEnd;
+              while(pairStart<jsonString.length()&&jsonString.charAt(pairStart)==','){
+                pairStart++;
+              }
+            }
         }
         return parsedResultMap;
     }catch(NullPointerException e){
@@ -746,11 +711,18 @@ registrations.add((Registration)umpleObjectIDMap.get(newUmpleID_2));
   public static List<String> fromJsonParserList(String objListString){
     List<String> objList=new ArrayList<String>();
     try{
-      String objString="(?:(?=.*?\\{(?!.*?\\1)(.*\\}(?!.*\\2).*))(?=.*?\\}(?!.*?\\2)(.*)).)+?.*?(?=\\1)[^\\{]*(?=\\2$)";
-      Pattern objStringPattern=Pattern.compile(objString);
-      Matcher objStringMatcher=objStringPattern.matcher(objListString);
-      while(objStringMatcher.find()){
-        objList.add(objStringMatcher.group(0));
+      // objListString is a [list]; each {object} in it is taken whole with the objects nested in it,
+      // and any other element, which toJson does not write, is skipped
+      int itemStart=1;
+      while(itemStart<objListString.length()&&objListString.charAt(itemStart)!=']'){
+        int itemEnd=fromJsonParserValueEnd(objListString,itemStart);
+        if(itemEnd<0){
+          break;
+        }
+        if(objListString.charAt(itemStart)=='{'){
+          objList.add(objListString.substring(itemStart,itemEnd));
+        }
+        itemStart=itemEnd+1;
       }
       return objList;
    }catch(NullPointerException e){
@@ -773,6 +745,51 @@ registrations.add((Registration)umpleObjectIDMap.get(newUmpleID_2));
    }catch(NullPointerException e){
      return nextName;
    }
+  }
+   
+  /*
+  * Returns the index just after the json value that starts at index start,
+  * or -1 if there is none there or it is cut short.
+  * A "string", [list] or {object} ends where it closes; brackets and escaped quotes inside a string are text.
+  * A bare null, boolean or number ends at the next comma or closing bracket
+  */
+  private static int fromJsonParserValueEnd(String jsonString, int start){
+    if(start>=jsonString.length()){
+      return -1;
+    }
+    if("\"[{".indexOf(jsonString.charAt(start))<0){
+      int end=start;
+      while(end<jsonString.length()&&",}]".indexOf(jsonString.charAt(end))<0){
+        end++;
+      }
+      return end>start&&end<jsonString.length()?end:-1;
+    }
+    int depth=0;
+    boolean inString=false;
+    for(int i=start;i<jsonString.length();i++){
+      char c=jsonString.charAt(i);
+      if(inString){
+        if(c=='\\'){
+          i++;
+        }
+        else if(c=='"'){
+          inString=false;
+        }
+      }
+      else if(c=='"'){
+        inString=true;
+      }
+      else if(c=='{'||c=='['){
+        depth++;
+      }
+      else if(c=='}'||c==']'){
+        depth--;
+      }
+      if(!inString&&depth==0){
+        return i+1;
+      }
+    }
+    return -1;
   }
   
 }
