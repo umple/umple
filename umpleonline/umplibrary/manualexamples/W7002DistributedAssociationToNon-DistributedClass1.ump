@@ -9,4 +9,4 @@ class Product
 {
 }
 
-// @@@skippythoncompile - distributable only works with Java as it relies on Java features
+// @@@testlanguage=java distributable is a Java feature
