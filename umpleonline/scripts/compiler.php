@@ -1269,7 +1269,7 @@ function executeCode($modelName, $error)
   if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
   }
-  curl_close($ch);
+
 
   if (isset($error_msg)) {
     return "The docker service to execute code is not working. Please contact the system administrator for help.\n".$error_msg;
