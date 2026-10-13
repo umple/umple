@@ -8,5 +8,3 @@ class Supplier
 class Product
 {
 }
-
-// @@@testlanguage=java distributable is a Java feature
