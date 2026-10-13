@@ -56,7 +56,10 @@ if (isset($_REQUEST["save"]))
       $fp = fopen($lock_file, "w");
       if (flock($fp, LOCK_EX)) {
         try {
-          $dataHandle->writeData($dataname, $input);
+          $history = new VersionHistory($dataHandle->getWorkDir()->getPath());
+          $saved = $history->writeFile($dataname, $input, VersionHistory::requestedBaseVersion(),
+            VersionHistory::requestedLayoutUpdate());
+          VersionHistory::sendVersionHeaders($saved["version"], $saved["changed"], $history->getReplacedBackup());
         } catch (Exception $e) {
           // Do nothing for now here
         } finally {

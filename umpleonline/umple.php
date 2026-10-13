@@ -94,9 +94,28 @@ if (isset($_REQUEST["nodiagram"])) {$showDiagram=false;} else {$showDiagram=true
 $diagramType = "GvClass";
 if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
-  if ($diagramType=="state") $diagramType = "GvState";
-  else if ($diagramType=="structure") $diagramType = "structureDiagram";
-  else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature" && $diagramType !="GvClassTrait" ) $diagramType = "class";
+
+  if ($diagramType=="state") {
+    $diagramType = "GvState";
+  }
+  else if ($diagramType=="structure") {
+    $diagramType = "structureDiagram";
+  }
+  else if (
+    $diagramType !="GvState" &&
+    $diagramType !="GvClass" &&
+    $diagramType !="structureDiagram" &&
+    $diagramType !="GvFeature" &&
+    $diagramType !="GvClassTrait" &&
+    $diagramType != "GvEntityRelationshipDiagram" &&
+    $diagramType != "instanceDiagram" &&
+    $diagramType != "crudUI" &&
+    $diagramType != "stateTables" &&
+    $diagramType != "eventSequence" &&
+    $diagramType != "class"
+  ) {
+    $diagramType = "class";
+    }
 }
 if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
 
@@ -158,6 +177,13 @@ if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] !== "") 
     }
 }
 
+if (isset($_REQUEST["model"])) {
+  $versionHistory = new VersionHistory($dataHandle->getWorkDir()->getPath());
+  $versionHistory->withLock(function() use ($versionHistory) {
+    $versionHistory->updateMainFileFromOnlyTab();
+  });
+}
+
 $output = $dataHandle->readData('model.ump');
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -198,6 +224,40 @@ $output = $dataHandle->readData('model.ump');
    color: #ccc;
    }
 
+   .button2.mode-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: auto !important;
+  min-width: 26px;
+  height: 26px;
+  padding: 2px 5px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.button2.mode-button svg {
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+  max-width: 12px !important;
+  max-height: 12px !important;
+  display: inline-block !important;
+  flex: 0 0 12px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.button2.mode-button .button-letter {
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1;
+}
   .active {
     background: #B06C5B;
   }
@@ -498,6 +558,8 @@ $output = $dataHandle->readData('model.ump');
   <input id="filename" type="hidden" value="<?php if (isset($_REQUEST["task"])) { echo '../ump/tasks/'.$dataHandle->getName().'/model.ump'; } else {echo '../ump/'.$dataHandle->getName().'/model.ump'; }?>" />
   <input id="advancedMode" type="hidden" value="0" />
   <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
+  <?php $versionHistory = new VersionHistory($dataHandle->getWorkDir()->getPath()); ?>
+  <input id="modelVersion" type="hidden" value="<?php echo $versionHistory->getCurrentVersion() ?>" />
 
   <div id="taskArea" style="display: none;">
     
@@ -589,9 +651,46 @@ $output = $dataHandle->readData('model.ump');
    <span id="linetext">Line=<input size=2 style="font-size: 12px;" id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
 
     <span style="font-size: 30%">
-    <a id="ECD_button" class="button2" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
-    <a id="GCD_button" class="button2 active" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
-    <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()">S</a>&nbsp;
+    <a id="ECD_button" class="button2 mode-button" href="javascript:Page.clickShowEditableClassDiagram()"
+    title="Editable Class Diagram"
+   aria-label="Editable Class Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="4" width="13" height="16"></rect>
+    <path d="M7 9h5"></path>
+    <path d="M7 13h4"></path>
+    <path d="M14 17l6-6 2 2-6 6-3 1z"></path>
+  </svg>
+
+  <span class="button-letter">E</span>
+  </a>&nbsp;
+    <a id="GCD_button" class="button2 active mode-button" href="javascript:Page.clickShowGvClassDiagram()"
+    title="Graphviz Class Diagram"
+   aria-label="Graphviz Class Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="3" width="6" height="5"></rect>
+    <rect x="15" y="3" width="6" height="5"></rect>
+    <rect x="9" y="16" width="6" height="5"></rect>
+    <path d="M6 8l5 8"></path>
+    <path d="M18 8l-5 8"></path>
+  </svg>
+
+  <span class="button-letter">G</span>
+  </a>&nbsp;
+    <a id="SD_button" class="button2 mode-button" href="javascript:Page.clickShowGvStateDiagram()"
+    title="State Diagram"
+   aria-label="State Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="6" cy="12" r="3"></circle>
+    <circle cx="18" cy="12" r="3"></circle>
+    <path d="M9 12h6"></path>
+    <path d="M13 9l3 3-3 3"></path>
+  </svg>
+
+  <span class="button-letter">S</span>
+  </a>&nbsp;
     </span>
     <span style="font-size: 12px; margin-left: 10px; font-weight: bold;">
   Live View:
@@ -624,14 +723,61 @@ $output = $dataHandle->readData('model.ump');
 </span>
      &nbsp; 
     <span style="font-size: 30%">
-    <a id="SHT_button" class="button2 active" href="javascript:Page.clickShowHideText()">T</a>&nbsp;
-    <a id="SHD_button" class="button2 active" href="javascript:Page.clickShowHideCanvas()">D</a>&nbsp;
+    <a id="SHT_button" class="button2 active mode-button" href="javascript:Page.clickShowHideText()"
+    title="Show or Hide Text Editor"
+   aria-label="Show or Hide Text Editor">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 6h16"></path>
+    <path d="M4 10h12"></path>
+    <path d="M4 14h16"></path>
+    <path d="M4 18h10"></path>
+  </svg>
+
+  <span class="button-letter">T</span>
+  </a>&nbsp;
+    <a id="SHD_button" class="button2 active mode-button" href="javascript:Page.clickShowHideCanvas()"
+    title="Show or Hide Diagram"
+   aria-label="Show or Hide Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="3" width="7" height="6"></rect>
+    <rect x="14" y="15" width="7" height="6"></rect>
+    <path d="M10 6h4"></path>
+    <path d="M17 9v6"></path>
+  </svg>
+
+  <span class="button-letter">D</span>
+  </a>&nbsp;
     </span>
 
     &nbsp; 
     <span style="font-size: 30%">
-    <a id="SHA_button" class="button2 active" href="javascript:Page.clickToggleAttributes()">A</a>&nbsp;
-    <a id="SHM_button" class="button2" href="javascript:Page.clickToggleMethods()">M</a>&nbsp;
+    <a id="SHA_button" class="button2 active mode-button" href="javascript:Page.clickToggleAttributes()"
+    title="Show or Hide Attributes"
+   aria-label="Show or Hide Attributes">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="4" width="18" height="16"></rect>
+    <path d="M3 9h18"></path>
+    <path d="M7 13h10"></path>
+    <path d="M7 17h7"></path>
+  </svg>
+
+  <span class="button-letter">A</span>
+  </a>&nbsp;
+    <a id="SHM_button" class="button2 mode-button" href="javascript:Page.clickToggleMethods()"
+    title="Show or Hide Methods"
+   aria-label="Show or Hide Methods">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M7 5L3 12l4 7"></path>
+    <path d="M17 5l4 7-4 7"></path>
+    <path d="M10 12h4"></path>
+  </svg>
+
+  <span class="button-letter">M</span>
+  </a>&nbsp;
     </span>
 
     &nbsp; 
@@ -688,6 +834,7 @@ $output = $dataHandle->readData('model.ump');
         </span>  
 
     <span id="restorecode" > &nbsp; <a href="#"> Restore Saved State</a></span>
+    <span id="versionHistoryMessage" class="version-history-message is-hidden" role="status"></span>
 
     &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
   </div>
@@ -762,6 +909,12 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png"/> 
               Load from Browser
             </li>
+            <?php if (!$readOnly) { ?>
+            <li id="buttonRestoreEarlierVersion" class="restoreEarlierVersion">
+              <img src="scripts/copy.png" alt="Restore Earlier Version icon"/> 
+              Restore Earlier Version
+            </li>
+            <?php } ?>
             <li>Drag and drop a .ump file here to load it, or drag it to any place in the text area.</li>
           </ul>
 
@@ -1393,6 +1546,52 @@ $output = $dataHandle->readData('model.ump');
         <div id="btnCloseFeatureTree"
              class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
              tabindex="0" role="button">Done</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Restore Earlier Version dialog (umple_version_history.js). Reuses .ai-settings-modal -->
+  <div id="versionHistoryModal" class="ai-settings-modal version-history-modal is-hidden"
+       role="dialog" aria-modal="true" aria-labelledby="versionHistoryTitle">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3 id="versionHistoryTitle">Restore Earlier Version</h3>
+      <p class="version-history-intro">UmpleOnline saves versions of this model on the
+        server while you edit it. Select a version to see what it contained, then restore
+        it if you want it back.</p>
+      <div class="version-history-body">
+        <ul id="versionHistoryList" class="version-history-list" role="listbox"
+            aria-label="Saved versions, newest first"></ul>
+        <div id="versionHistoryPreview" class="version-history-preview" aria-live="polite"></div>
+      </div>
+      <div id="versionHistoryStatus" class="version-history-status" role="status"></div>
+      <div class="dialog-buttons">
+        <div id="buttonRestoreSelectedVersion"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget disabled"
+             tabindex="0" role="button" aria-disabled="true">Restore this version</div>
+        <div id="buttonCloseVersionHistory"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Close</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shown when another browser tab or window has saved a newer version of the model,
+       or when this tab has saved over one -->
+  <div id="versionConflictModal" class="ai-settings-modal version-history-modal version-conflict-modal is-hidden"
+       role="alertdialog" aria-modal="true" aria-labelledby="versionConflictTitle"
+       aria-describedby="versionConflictMessage">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3 id="versionConflictTitle">A newer version of this model exists</h3>
+      <p id="versionConflictMessage"></p>
+      <div class="dialog-buttons">
+        <div id="buttonLoadLatestVersion"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Load latest version</div>
+        <div id="buttonKeepThisVersion"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Keep this tab's version</div>
       </div>
     </div>
   </div>

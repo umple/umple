@@ -183,6 +183,10 @@ Action.clicked = function(event)
       }
     }
   }
+  else if (action == "RestoreEarlierVersion")
+  {
+    VersionHistory.openRestoreDialog();
+  }
   else if (action == "CreateTask") 
   {
     jQuery("#taskArea").css("display","block");
@@ -5918,7 +5922,9 @@ Action.updateUmpleLayoutEditor = function(response)
   //TODO: for some reason in the live version this call isnt being made
   //but oddly the diagram is updated, and that is done in the callback
       
-  Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",umpleJson));  
+  VersionHistory.saveAsLayoutUpdate(function() {
+    Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",umpleJson));
+  });
 }
 
 Action.updateUmpleLayoutEditorCallback = function(response)
@@ -5929,7 +5935,7 @@ Action.updateUmpleLayoutEditorCallback = function(response)
   var positioning = Page.splitUmpleCode(umpleCode)[1];
   Page.setUmplePositioningCode(positioning);
   Page.hideLoading();
-  Action.updateUmpleDiagramForce(true);
+  Action.updateUmpleDiagramForce(true, true);
 }
 
 Action.updateUmpleDiagram = function() {
@@ -6021,7 +6027,9 @@ Action.fetchFeatureModelTreeThen = function(next)
   );
 };
 
-Action.updateUmpleDiagramForce = function(forceUpdate)
+// isLayoutUpdate is true when the diagram is updated with the layout just
+// worked out for an edit that has already been saved
+Action.updateUmpleDiagramForce = function(forceUpdate, isLayoutUpdate)
 {
   // DEBUG
   // console.log("Inside updateUmpleDiagramForce")
@@ -6038,7 +6046,11 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   Page.showCanvasLoading();
 
   Action.fetchFeatureModelTreeThen(function(){
-    Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+    var update = function() {
+      Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+    };
+    if (isLayoutUpdate) VersionHistory.saveAsLayoutUpdate(update);
+    else update();
   });
 
 }

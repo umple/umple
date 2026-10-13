@@ -26,6 +26,8 @@
   There are several entry targets for this build script:
   testUmpleOnlineMain - runs the tests against the public umpleonline (https://cruise.umple.org/umpleonline/)
   testUmpleOnlineLocal - runs against the local server (https://cruise.local/)
+  testUmpleOnlinePhp - runs the tests of UmpleOnline's server-side PHP code (in umpleonline/testsuite/php);
+    these need only the php command line, and start their own local PHP web server
 
   You can specify a custom hostName with -DhostName="yourserver" 
   eg. ant testUmpleOnlineLocal -DhostName=https://cruise2.local/
@@ -54,6 +56,8 @@
     tests that the graphical editing functionality leave the positional data of the model intact
   optionsMenu:               
     tests that all of the "options" panel menu items work correctly
+  versionHistory:
+    tests restoring earlier versions of a model, and the prompt shown when another browser tab has changed it
     </echo>
   </target>
 
@@ -71,6 +75,12 @@
     <property name="hostName" value="https://cruise.local/" />
     <property name="env" value=""/>
     <antcall target="doWebsiteTests" />
+  </target>
+
+  <target name="testUmpleOnlinePhp">
+    <exec executable="php" dir="${project.path}/php" failonerror="true">
+      <arg value="run_tests.php" />
+    </exec>
   </target>
 
   <!-- The main target that runs the tests -->
