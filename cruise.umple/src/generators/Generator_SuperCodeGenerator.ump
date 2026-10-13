@@ -559,29 +559,38 @@ class SuperCodeGenerator {
         aClass.addCodeInjection(cons);
       }
     }
+  }
 
-    for (Precondition pc : aClass.getPreConds())
-    { 
-      String methodName = pc.getMethod().getName();
-      pc.negate();
-      String inject = "  "+StringFormatter.format(ConstraintLookupMap.get("exception"),pc.getNamedNames());
-      String ifstatement = translate("Closed",pc);
-      String complete = StringFormatter.format(ifstatement,inject);
-      CodeInjection before = new CodeInjection("before", methodName+"Precondition", complete, aClass);         
-      before.setIsInternal(true);
-      aClass.addCodeInjection(before);    
-    }
+  /*
+   * The checks for aMethod's preconditions in this generator's language, or null when it has none.
+   * They are the conditions written with the method body that generation selects (the same body
+   * MethodBody.getExtraCode returns), found by method and not by name (#2250).
+   */
+  public String getPreconditionCode(UmpleClass aClass, Method aMethod)
+  {
+    return getMethodConditionCode(aClass.getMethodPreconditions(aMethod, CodeBlock.languageUsed));
+  }
 
-    for (Postcondition pc : aClass.getPostConds())
-    { 
-      String methodName = pc.getMethod().getName();
-      pc.negate();
-      String inject = "  "+StringFormatter.format(ConstraintLookupMap.get("exception"),pc.getNamedNames());
-      String ifstatement = translate("Closed",pc);
-      String complete = StringFormatter.format(ifstatement,inject);
-      CodeInjection before = new CodeInjection("before", methodName+"Postcondition", complete, aClass);         
-      before.setIsInternal(true);
-      aClass.addCodeInjection(before);    
+  // The checks for aMethod's postconditions, or null; see getPreconditionCode
+  public String getPostconditionCode(UmpleClass aClass, Method aMethod)
+  {
+    return getMethodConditionCode(aClass.getMethodPostconditions(aMethod, CodeBlock.languageUsed));
+  }
+
+  private String getMethodConditionCode(List<? extends ConstraintTree> conditions)
+  {
+    String code = null;
+    for (ConstraintTree condition : conditions)
+    {
+      // Negate a copy: negation rewrites a tree in place and negating again does not always undo it,
+      // while the model must keep the condition as written for the next generator
+      ConstraintTree negated = condition.createNew();
+      negated.addElementAll(condition.getRoot());
+      negated.negate();
+      String inject = "  "+StringFormatter.format(ConstraintLookupMap.get("exception"),condition.getNamedNames());
+      String check = StringFormatter.format(translate("Closed",negated),inject);
+      code = code == null ? check : code + "\n" + check;
     }
+    return code;
   }
 }

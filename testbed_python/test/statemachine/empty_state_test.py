@@ -11,4 +11,4 @@ from ImportModules import *
 class EmptyStateTest(unittest.TestCase):
     def test_getStateMachine(self):
         course = CourseA.CourseA()
-        self.assertEquals(None, course.getStatus())
+        self.assertIsNone(course.getStatus())

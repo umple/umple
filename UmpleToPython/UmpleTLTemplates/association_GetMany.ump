@@ -1,0 +1,36 @@
+class UmpleToPython {
+    // A many end: indexed access, a tuple snapshot of the linked objects, the count, and the index of
+    // an object (by identity) or -1. Each accessor runs its injections.
+    association_GetMany <<!<</*association_GetMany*/>><<#
+  MethodParameter indexParameter = gen.parameter("index", "int");
+  MethodParameter valueParameter = gen.parameter(parameter, av.getType());
+  if (gen.translate("getMethod", av).equals(gen.translate("getManyMethod", av)))
+  {
+    // Singular and plural are the same word: Java's two overloads become numbered methods behind
+    // one dispatcher.
+    List<String> getters = gen.overloadNames(uClass, gen.translate("getMethod", av), 2, "getters");
+    List<List<MethodParameter>> getterParameters = new ArrayList<List<MethodParameter>>();
+    getterParameters.add(Arrays.asList(indexParameter));
+    getterParameters.add(new ArrayList<MethodParameter>());
+    #>>
+
+    def <<=getters.get(0)>>(self, index):<<=gen.accessorBody(uClass, gen.translate("getMethod", av), parameter, field + "[index]", indexParameter)>>
+
+    def <<=getters.get(1)>>(self):<<=gen.docstring(av.getComments(), av.getReqImplementations(), "        ")>><<=gen.accessorBody(uClass, gen.translate("getManyMethod", av), gen.translate("parameterMany", av), "tuple(" + field + ")")>><<=gen.overloadDispatcher(uClass, gen.translate("getMethod", av), false, getters, getterParameters)>><<#
+  }
+  else
+  {
+    #>>
+
+    def <<=gen.translate("getMethod", av)>>(self, index):<<=gen.accessorBody(uClass, gen.translate("getMethod", av), parameter, field + "[index]", indexParameter)>>
+
+    def <<=gen.translate("getManyMethod", av)>>(self):<<=gen.docstring(av.getComments(), av.getReqImplementations(), "        ")>><<=gen.accessorBody(uClass, gen.translate("getManyMethod", av), gen.translate("parameterMany", av), "tuple(" + field + ")")>><<#
+  }
+  #>>
+
+    def <<=gen.translate("numberOfMethod", av)>>(self):<<=gen.accessorBody(uClass, gen.translate("numberOfMethod", av), "number", "len(" + field + ")")>>
+
+    def <<=gen.translate("hasManyMethod", av)>>(self):<<=gen.accessorBody(uClass, gen.translate("hasManyMethod", av), "has", "len(" + field + ") > 0")>>
+
+    def <<=gen.translate("indexOfMethod", av)>>(self, <<=parameter>>):<<=gen.accessorBody(uClass, gen.translate("indexOfMethod", av), "index", gen.identityIndex(field, parameter), valueParameter)>>!>>
+}

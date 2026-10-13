@@ -1,0 +1,189 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+import threading
+
+
+class NestedStatesWthSameEventNames:
+    class Sm(Enum):
+        nestedState1 = "nestedState1"
+        nestedState2 = "nestedState2"
+        state5 = "state5"
+
+        def __str__(self):
+            return self.value
+
+    class SmNestedState1(Enum):
+        Null = "Null"
+        state1 = "state1"
+        state2 = "state2"
+
+        def __str__(self):
+            return self.value
+
+    class SmNestedState2(Enum):
+        Null = "Null"
+        state3 = "state3"
+        state4 = "state4"
+
+        def __str__(self):
+            return self.value
+    class MessageQueue:
+        def __init__(self, ready):
+            self._calls = []
+            self._ready = ready
+            self._started = False
+            self._stopped = False
+            self._worker = None
+            self._condition = threading.Condition()
+        def start(self):
+            with self._condition:
+                self._started = True
+                self._wake()
+        def put(self, call, *args):
+            with self._condition:
+                self._calls.append((call, args))
+                self._wake()
+        def stop(self):
+            with self._condition:
+                self._stopped = True
+                self._condition.notify()
+        def _wake(self):
+            if self._started and not self._stopped and self._worker is None:
+                self._worker = threading.Thread(target=self._run, daemon=False)
+                self._worker.start()
+            if self._worker is not None:
+                self._worker.isIdle = False
+            self._condition.notify()
+        def _run(self):
+            while True:
+                with self._condition:
+                    call = None
+                    while not self._stopped and call is None:
+                        call = self._next()
+                        self._worker.isIdle = call is None
+                        if call is None and self._programIdle():
+                            self._worker = None
+                            return
+                        if call is None:
+                            self._condition.wait(0.25)
+                    if call is None:
+                        return
+                call[0](*call[1])
+        def _next(self):
+            for i, call in enumerate(self._calls):
+                if self._ready is None or self._ready(call[0]):
+                    return self._calls.pop(i)
+            return None
+        def _programIdle(self):
+            ended = (threading.main_thread(), threading.current_thread())
+            return not ended[0].is_alive() and all(t in ended or t.daemon or getattr(t, "isIdle", False)
+                for t in threading.enumerate())
+
+    def __init__(self):
+        self.__eventQueue = __class__.MessageQueue(None)
+        self._sm = None
+        self._smNestedState1 = None
+        self._smNestedState2 = None
+        self._deleted = False
+        self.setSmNestedState1(__class__.SmNestedState1.Null)
+        self.setSmNestedState2(__class__.SmNestedState2.Null)
+        self.setSm(__class__.Sm.nestedState1)
+        self.__eventQueue.start()
+
+    def getSmFullName(self):
+        answer = str(self._sm)
+        if self._smNestedState1 is not __class__.SmNestedState1.Null:
+            answer += "." + str(self._smNestedState1)
+        if self._smNestedState2 is not __class__.SmNestedState2.Null:
+            answer += "." + str(self._smNestedState2)
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSmNestedState1(self):
+        return self._smNestedState1
+
+    def getSmNestedState2(self):
+        return self._smNestedState2
+
+    def _moveTo(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmNestedState1 = self._smNestedState1
+        aSmNestedState2 = self._smNestedState2
+        if aSmNestedState1 is __class__.SmNestedState1.state1:
+            self.exitSmNestedState1()
+            self.setSmNestedState1(__class__.SmNestedState1.state2)
+            wasEventProcessed = True
+        if aSmNestedState2 is __class__.SmNestedState2.state3:
+            self.exitSmNestedState2()
+            self.setSmNestedState2(__class__.SmNestedState2.state4)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def moveTo(self):
+        self.__eventQueue.put(self._moveTo)
+
+    def _transit(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmNestedState1 = self._smNestedState1
+        aSmNestedState2 = self._smNestedState2
+        if aSmNestedState1 is __class__.SmNestedState1.state2:
+            self.exitSm()
+            self.setSm(__class__.Sm.state5)
+            wasEventProcessed = True
+        if aSmNestedState2 is __class__.SmNestedState2.state4:
+            self.exitSm()
+            self.setSm(__class__.Sm.state5)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def transit(self):
+        self.__eventQueue.put(self._transit)
+
+    def exitSm(self):
+        if self._sm is __class__.Sm.nestedState1:
+            self.exitSmNestedState1()
+        elif self._sm is __class__.Sm.nestedState2:
+            self.exitSmNestedState2()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        if self._sm is __class__.Sm.nestedState1:
+            if self._smNestedState1 is __class__.SmNestedState1.Null:
+                self.setSmNestedState1(__class__.SmNestedState1.state1)
+        elif self._sm is __class__.Sm.nestedState2:
+            if self._smNestedState2 is __class__.SmNestedState2.Null:
+                self.setSmNestedState2(__class__.SmNestedState2.state3)
+
+    def exitSmNestedState1(self):
+        if self._smNestedState1 is __class__.SmNestedState1.state1:
+            self.setSmNestedState1(__class__.SmNestedState1.Null)
+        elif self._smNestedState1 is __class__.SmNestedState1.state2:
+            self.setSmNestedState1(__class__.SmNestedState1.Null)
+
+    def setSmNestedState1(self, aSmNestedState1):
+        self._smNestedState1 = aSmNestedState1
+        if self._sm is not __class__.Sm.nestedState1 and aSmNestedState1 is not __class__.SmNestedState1.Null:
+            self.setSm(__class__.Sm.nestedState1)
+
+    def exitSmNestedState2(self):
+        if self._smNestedState2 is __class__.SmNestedState2.state3:
+            self.setSmNestedState2(__class__.SmNestedState2.Null)
+        elif self._smNestedState2 is __class__.SmNestedState2.state4:
+            self.setSmNestedState2(__class__.SmNestedState2.Null)
+
+    def setSmNestedState2(self, aSmNestedState2):
+        self._smNestedState2 = aSmNestedState2
+        if self._sm is not __class__.Sm.nestedState2 and aSmNestedState2 is not __class__.SmNestedState2.Null:
+            self.setSm(__class__.Sm.nestedState2)
+
+    def delete(self):
+        self._deleted = True
+        self.__eventQueue.stop()

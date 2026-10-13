@@ -22,7 +22,6 @@ pipeline {
           ruby --version
           python3 --version
           gcc --version | head -1
-          txl -v 2>&1 | head -1
         '''
       }
     }

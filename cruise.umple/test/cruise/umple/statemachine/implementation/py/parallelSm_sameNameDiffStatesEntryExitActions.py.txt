@@ -1,0 +1,300 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+
+
+class X:
+    class Sm(Enum):
+        s0 = "s0"
+        s1 = "s1"
+
+        def __str__(self):
+            return self.value
+
+    class SmS0T1(Enum):
+        Null = "Null"
+        t1 = "t1"
+
+        def __str__(self):
+            return self.value
+
+    class SmS0T2(Enum):
+        Null = "Null"
+        t2 = "t2"
+        t3 = "t3"
+
+        def __str__(self):
+            return self.value
+
+    class SmS1T1(Enum):
+        Null = "Null"
+        t1 = "t1"
+        t4 = "t4"
+
+        def __str__(self):
+            return self.value
+
+    class SmS1T2(Enum):
+        Null = "Null"
+        t2 = "t2"
+        t5 = "t5"
+
+        def __str__(self):
+            return self.value
+
+    def __init__(self):
+        self._sm = None
+        self._smVisit = 0
+        self._smS0T1 = None
+        self._smS0T1Visit = 0
+        self._smS0T2 = None
+        self._smS0T2Visit = 0
+        self._smS1T1 = None
+        self._smS1T1Visit = 0
+        self._smS1T2 = None
+        self._smS1T2Visit = 0
+        self._deleted = False
+        self.setSmS0T1(__class__.SmS0T1.Null)
+        if self._deleted:
+            return
+        self.setSmS0T2(__class__.SmS0T2.Null)
+        if self._deleted:
+            return
+        self.setSmS1T1(__class__.SmS1T1.Null)
+        if self._deleted:
+            return
+        self.setSmS1T2(__class__.SmS1T2.Null)
+        if self._deleted:
+            return
+        self.setSm(__class__.Sm.s0)
+        if self._deleted:
+            return
+
+    def getSmFullName(self):
+        answer = str(self._sm)
+        if self._smS0T1 is not __class__.SmS0T1.Null:
+            answer += "." + str(self._smS0T1)
+        if self._smS0T2 is not __class__.SmS0T2.Null:
+            answer += "." + str(self._smS0T2)
+        if self._smS1T1 is not __class__.SmS1T1.Null:
+            answer += "." + str(self._smS1T1)
+        if self._smS1T2 is not __class__.SmS1T2.Null:
+            answer += "." + str(self._smS1T2)
+        return answer
+
+    def getSm(self):
+        return self._sm
+
+    def getSmS0T1(self):
+        return self._smS0T1
+
+    def getSmS0T2(self):
+        return self._smS0T2
+
+    def getSmS1T1(self):
+        return self._smS1T1
+
+    def getSmS1T2(self):
+        return self._smS1T2
+
+    def goS1(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmS0T1 = self._smS0T1
+        if aSmS0T1 is __class__.SmS0T1.t1:
+            self.exitSm()
+            if self._deleted:
+                return True
+            self.setSm(__class__.Sm.s1)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def goT3(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmS0T2 = self._smS0T2
+        if aSmS0T2 is __class__.SmS0T2.t2:
+            self.exitSmS0T2()
+            if self._deleted:
+                return True
+            self.setSmS0T2(__class__.SmS0T2.t3)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def goT4(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmS1T1 = self._smS1T1
+        if aSmS1T1 is __class__.SmS1T1.t1:
+            self.exitSmS1T1()
+            if self._deleted:
+                return True
+            self.setSmS1T1(__class__.SmS1T1.t4)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def goT5(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aSmS1T2 = self._smS1T2
+        if aSmS1T2 is __class__.SmS1T2.t2:
+            self.exitSmS1T2()
+            if self._deleted:
+                return True
+            self.setSmS1T2(__class__.SmS1T2.t5)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def exitSm(self):
+        self._smVisit += 1
+        if self._sm is __class__.Sm.s0:
+            self.exitSmS0T1()
+            if self._deleted:
+                return
+            self.exitSmS0T2()
+        elif self._sm is __class__.Sm.s1:
+            self.exitSmS1T1()
+            if self._deleted:
+                return
+            self.exitSmS1T2()
+
+    def setSm(self, aSm):
+        self._sm = aSm
+        self._smVisit += 1
+        visit = self._smVisit
+        if self._sm is __class__.Sm.s0:
+            if self._smS0T1 is __class__.SmS0T1.Null:
+                self.setSmS0T1(__class__.SmS0T1.t1)
+            if self._deleted or self._smVisit != visit:
+                return
+            if self._smS0T2 is __class__.SmS0T2.Null:
+                self.setSmS0T2(__class__.SmS0T2.t2)
+        elif self._sm is __class__.Sm.s1:
+            if self._smS1T1 is __class__.SmS1T1.Null:
+                self.setSmS1T1(__class__.SmS1T1.t1)
+            if self._deleted or self._smVisit != visit:
+                return
+            if self._smS1T2 is __class__.SmS1T2.Null:
+                self.setSmS1T2(__class__.SmS1T2.t2)
+
+    def exitSmS0T1(self):
+        self._smS0T1Visit += 1
+        if self._smS0T1 is __class__.SmS0T1.t1:
+            self.s0_t1_exit()
+            if self._deleted:
+                return
+            self.setSmS0T1(__class__.SmS0T1.Null)
+
+    def setSmS0T1(self, aSmS0T1):
+        self._smS0T1 = aSmS0T1
+        self._smS0T1Visit += 1
+        visit = self._smS0T1Visit
+        if self._sm is not __class__.Sm.s0 and aSmS0T1 is not __class__.SmS0T1.Null:
+            self.setSm(__class__.Sm.s0)
+            if self._deleted or self._smS0T1Visit != visit:
+                return
+        if self._smS0T1 is __class__.SmS0T1.t1:
+            self.s0_t1_entry()
+            if self._deleted:
+                return
+
+    def exitSmS0T2(self):
+        self._smS0T2Visit += 1
+        if self._smS0T2 is __class__.SmS0T2.t2:
+            self.s0_t2_exit()
+            if self._deleted:
+                return
+            self.setSmS0T2(__class__.SmS0T2.Null)
+        elif self._smS0T2 is __class__.SmS0T2.t3:
+            self.setSmS0T2(__class__.SmS0T2.Null)
+
+    def setSmS0T2(self, aSmS0T2):
+        self._smS0T2 = aSmS0T2
+        self._smS0T2Visit += 1
+        visit = self._smS0T2Visit
+        if self._sm is not __class__.Sm.s0 and aSmS0T2 is not __class__.SmS0T2.Null:
+            self.setSm(__class__.Sm.s0)
+            if self._deleted or self._smS0T2Visit != visit:
+                return
+        if self._smS0T2 is __class__.SmS0T2.t2:
+            self.s0_t2_entry()
+            if self._deleted:
+                return
+
+    def exitSmS1T1(self):
+        self._smS1T1Visit += 1
+        if self._smS1T1 is __class__.SmS1T1.t1:
+            self.s1_t1_exit()
+            if self._deleted:
+                return
+            self.setSmS1T1(__class__.SmS1T1.Null)
+        elif self._smS1T1 is __class__.SmS1T1.t4:
+            self.setSmS1T1(__class__.SmS1T1.Null)
+
+    def setSmS1T1(self, aSmS1T1):
+        self._smS1T1 = aSmS1T1
+        self._smS1T1Visit += 1
+        visit = self._smS1T1Visit
+        if self._sm is not __class__.Sm.s1 and aSmS1T1 is not __class__.SmS1T1.Null:
+            self.setSm(__class__.Sm.s1)
+            if self._deleted or self._smS1T1Visit != visit:
+                return
+        if self._smS1T1 is __class__.SmS1T1.t1:
+            self.s1_t1_entry()
+            if self._deleted:
+                return
+
+    def exitSmS1T2(self):
+        self._smS1T2Visit += 1
+        if self._smS1T2 is __class__.SmS1T2.t2:
+            self.s1_t2_exit()
+            if self._deleted:
+                return
+            self.setSmS1T2(__class__.SmS1T2.Null)
+        elif self._smS1T2 is __class__.SmS1T2.t5:
+            self.setSmS1T2(__class__.SmS1T2.Null)
+
+    def setSmS1T2(self, aSmS1T2):
+        self._smS1T2 = aSmS1T2
+        self._smS1T2Visit += 1
+        visit = self._smS1T2Visit
+        if self._sm is not __class__.Sm.s1 and aSmS1T2 is not __class__.SmS1T2.Null:
+            self.setSm(__class__.Sm.s1)
+            if self._deleted or self._smS1T2Visit != visit:
+                return
+        if self._smS1T2 is __class__.SmS1T2.t2:
+            self.s1_t2_entry()
+            if self._deleted:
+                return
+
+    def delete(self):
+        self._deleted = True
+
+    def s0_t1_entry(self):
+        pass
+
+    def s0_t2_entry(self):
+        pass
+
+    def s1_t1_entry(self):
+        pass
+
+    def s1_t2_entry(self):
+        pass
+
+    def s0_t1_exit(self):
+        pass
+
+    def s0_t2_exit(self):
+        pass
+
+    def s1_t1_exit(self):
+        pass
+
+    def s1_t2_exit(self):
+        pass

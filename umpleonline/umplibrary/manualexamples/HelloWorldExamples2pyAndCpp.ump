@@ -78,4 +78,3 @@
   }
 
   //$?[End_of_model]$?
-  // @@@skippythoncompile - quires Python 3, Current CLI uses Python 2.7

@@ -2727,7 +2727,32 @@ public class UmpleParserStateMachineTest
 
     State s1 = sm.getState(0);
     Action s1Entry = s1.getAction(0);
-    Assert.assertEquals("if (condition)\n        {\n          System.out.println(\"s1 entry!\");\n        }", s1Entry.getCodeblock().getCode());
+    // The guard is kept apart from the body; the action's code text still wraps the body in it
+    Assert.assertEquals("condition", s1Entry.getGuardCode());
+    Assert.assertEquals("System.out.println(\"s1 entry!\");", s1Entry.getCodeblock().getCode(""));
+    Assert.assertEquals("if (condition)\n        {\n          System.out.println(\"s1 entry!\");\n        }", s1Entry.getActionCode());
+  }
+
+  @Test
+  public void guardsOnTaggedEntryAndExit()
+  {
+    assertNoWarnings("1600_guardsOnTaggedEntryAndExit.ump");
+    StateMachine sm = model.getUmpleClass("X").getStateMachine(0);
+
+    Action entry = sm.getState(0).getAction(0);
+    Assert.assertEquals("n > 1", entry.getGuardCode());
+    Assert.assertEquals("n = 1;", entry.getCodeblock().getCode(""));
+    Assert.assertEquals("n = 2;", entry.getCodeblock().getCode("Java"));
+    Assert.assertEquals("self.n = 3", entry.getCodeblock().getCode("Python"));
+    Assert.assertEquals("if (n > 1)\n        {\n          n = 2;\n        }", entry.wrapInGuard(entry.getCodeblock().getCode("Java")));
+
+    Action exit = sm.getState(0).getAction(1);
+    Assert.assertEquals("n < 9", exit.getGuardCode());
+    Assert.assertEquals("n = 4;", exit.getCodeblock().getCode("Php"));
+
+    Action unguarded = sm.getState(1).getAction(0);
+    Assert.assertNull(unguarded.getGuardCode());
+    Assert.assertEquals("n = 5;", unguarded.wrapInGuard("n = 5;"));
   }
 
   public void walkGraphTwiceNested_StateMachineGraph_ClearNodes()

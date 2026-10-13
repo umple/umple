@@ -1,0 +1,31 @@
+// Native method bodies: untagged bodies are Python, tagged Python bodies win, other languages are left out.
+class NativeMethods
+{
+  // Sums the even numbers below n.
+  int evens(int n) {
+    total = 0
+    for i in range(n):
+        if i % 2 == 0:
+            total += i
+    return total
+  }
+
+  String text() Python {
+    return """one
+  two"""
+  }
+
+  String chosen() {
+    return "untagged"
+  } Python {
+    return "python"
+  } Java {
+    return "java";
+  }
+
+  void nothing() {}
+
+  void javaOnly() Java { System.out.println("java"); }
+
+  static int twice(int in) Python { return input * 2 }
+}

@@ -1,19 +1,10 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class X():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class X:
     def __init__(self):
         pass
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def delete(self):
         pass

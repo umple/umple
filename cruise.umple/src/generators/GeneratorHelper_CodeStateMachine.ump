@@ -116,6 +116,7 @@ class GeneratorHelper
 	  // Issue 935 - Have the parent state call the exit method for this state machine
       Action parentExitAction = new Action(parentExitActionCode);
       parentExitAction.setActionType("exit");
+      parentExitAction.setIsInternal(true);
       parentState.addAction(parentExitAction, concurrentIndex);
   
   	  // Issue 935 - Add an exit action to each state to set the state machine to its Null state
@@ -125,6 +126,7 @@ class GeneratorHelper
         if (state == nullState) { continue; }
         Action setSmToNullExitAction = new Action(setSmToNullExitActionCode);
         setSmToNullExitAction.setActionType("exit");
+        setSmToNullExitAction.setIsInternal(true);
         state.addAction(setSmToNullExitAction);
       }
 

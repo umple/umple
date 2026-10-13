@@ -84,6 +84,15 @@ if (!$tempModelData->hasData('model.ump.erroroutput'))
 
 $savedModelData->cloneFrom($tempModelData);
 
+// A bookmarked or forked model keeps the earlier versions of the model it was
+// made from; task participants start without the task author's history
+if (!isset($_REQUEST["taskname"]))
+{
+  $tempHistory = new VersionHistory($tempModelData->getWorkDir()->getPath());
+  $tempHistory->transferHistoryTo($savedModelData->getWorkDir()->getPath(),
+    !isset($_REQUEST["forkSoMakeTmpOnly"]));
+}
+
 // Empty anything else in directory and remove it
 // Exceptions are if we are copy a task
 // or we are forking a permanent URL

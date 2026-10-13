@@ -1,85 +1,66 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 from ThingInWorld import ThingInWorld
-import os
-from enum import Enum, auto
+from enum import Enum
+
 
 class Animal(ThingInWorld):
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Animal Attributes
-    #Animal State Machines
     class State(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        alive = "alive"
+        dead = "dead"
+
         def __str__(self):
-            return str(self.value)
-        alive = auto()
-        dead = auto()
+            return self.value
 
     class StateAlive(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        Null = "Null"
+        normal = "normal"
+        zombie = "zombie"
+
         def __str__(self):
-            return str(self.value)
-        Null = auto()
-        normal = auto()
-        zombie = auto()
+            return self.value
 
     class StateAliveNormal(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
-        def __str__(self):
-            return str(self.value)
-        Null = auto()
-        baby = auto()
-        adult = auto()
+        Null = "Null"
+        baby = "baby"
+        adult = "adult"
 
-    #Animal Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+        def __str__(self):
+            return self.value
+
     def __init__(self, aIsAlive, aWorld):
-        self._world = None
-        self._drops = None
-        self._stateAliveNormal = None
-        self._stateAlive = None
-        self._state = None
-        self._isAlive = None
-        super().__init__()
         self._isAlive = aIsAlive
         self._drops = []
-        didAddWorld = self.setWorld(aWorld)
-        if not didAddWorld :
-            raise RuntimeError ("Unable to create animal due to world. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
-        self.setStateAlive(Animal.StateAlive.Null)
-        self.setStateAliveNormal(Animal.StateAliveNormal.Null)
-        self.setState(Animal.State.alive)
+        self._world = None
+        self._state = None
+        self._stateAlive = None
+        self._stateAliveVisit = 0
+        self._stateAliveNormal = None
+        self._deleted = False
+        super().__init__()
+        if not self.setWorld(aWorld):
+            raise RuntimeError("Unable to create animal due to world. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html")
+        self.setStateAlive(__class__.StateAlive.Null)
+        self.setStateAliveNormal(__class__.StateAliveNormal.Null)
+        self.setState(__class__.State.alive)
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setIsAlive(self, aIsAlive):
-        wasSet = False
         self._isAlive = aIsAlive
-        wasSet = True
-        return wasSet
+        return True
 
     def getIsAlive(self):
         return self._isAlive
 
-    # Code from template attribute_IsBoolean 
     def isIsAlive(self):
         return self._isAlive
 
     def getStateFullName(self):
-        answer = self._state.__str__()
-        if self._stateAlive != Animal.StateAlive.Null :
-            answer += "." + self._stateAlive.__str__()
-        if self._stateAliveNormal != Animal.StateAliveNormal.Null :
-            answer += "." + self._stateAliveNormal.__str__()
+        answer = str(self._state)
+        if self._stateAlive is not __class__.StateAlive.Null:
+            answer += "." + str(self._stateAlive)
+        if self._stateAliveNormal is not __class__.StateAliveNormal.Null:
+            answer += "." + str(self._stateAliveNormal)
         return answer
 
     def getState(self):
@@ -92,202 +73,177 @@ class Animal(ThingInWorld):
         return self._stateAliveNormal
 
     def kill(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aState = self._state
-        if aState == Animal.State.alive :
+        if aState is __class__.State.alive:
             self.exitState()
-            self.setState(Animal.State.dead)
+            self.setState(__class__.State.dead)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def haveBaby(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aStateAlive = self._stateAlive
-        if aStateAlive == Animal.StateAlive.zombie :
+        if aStateAlive is __class__.StateAlive.zombie:
             self.exitStateAlive()
-            self.setStateAliveNormal(Animal.StateAliveNormal.adult)
+            self.setStateAliveNormal(__class__.StateAliveNormal.adult)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def growUp(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aStateAliveNormal = self._stateAliveNormal
-        if aStateAliveNormal == Animal.StateAliveNormal.baby :
+        if aStateAliveNormal is __class__.StateAliveNormal.baby:
             self.exitStateAliveNormal()
-            self.setStateAliveNormal(Animal.StateAliveNormal.adult)
+            self.setStateAliveNormal(__class__.StateAliveNormal.adult)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def zombify(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aStateAliveNormal = self._stateAliveNormal
-        if aStateAliveNormal == Animal.StateAliveNormal.adult :
+        if aStateAliveNormal is __class__.StateAliveNormal.adult:
             self.exitStateAlive()
-            self.setStateAlive(Animal.StateAlive.zombie)
+            self.setStateAlive(__class__.StateAlive.zombie)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def exitState(self):
-        if self._state == Animal.State.alive :
+        if self._state is __class__.State.alive:
             self.exitStateAlive()
 
     def setState(self, aState):
         self._state = aState
-        # entry actions and do activities
-        if self._state == Animal.State.alive :
-            if self._stateAlive == Animal.StateAlive.Null :
-                self.setStateAlive(Animal.StateAlive.normal)
+        if self._state is __class__.State.alive:
+            if self._stateAlive is __class__.StateAlive.Null:
+                self.setStateAlive(__class__.StateAlive.normal)
 
     def exitStateAlive(self):
-        if self._stateAlive == Animal.StateAlive.normal :
+        self._stateAliveVisit += 1
+        if self._stateAlive is __class__.StateAlive.normal:
             self.exitStateAliveNormal()
-            self.setStateAlive(Animal.StateAlive.Null)
-        elif self._stateAlive == Animal.StateAlive.zombie :
-            self.setStateAlive(Animal.StateAlive.Null)
+            self.setStateAlive(__class__.StateAlive.Null)
+        elif self._stateAlive is __class__.StateAlive.zombie:
+            self.setStateAlive(__class__.StateAlive.Null)
 
     def setStateAlive(self, aStateAlive):
         self._stateAlive = aStateAlive
-        if self._state != Animal.State.alive and aStateAlive != Animal.StateAlive.Null :
-            self.setState(Animal.State.alive)
-        # entry actions and do activities
-        if self._stateAlive == Animal.StateAlive.normal :
-            if self._stateAliveNormal == Animal.StateAliveNormal.Null :
-                self.setStateAliveNormal(Animal.StateAliveNormal.baby)
+        self._stateAliveVisit += 1
+        visit = self._stateAliveVisit
+        if self._state is not __class__.State.alive and aStateAlive is not __class__.StateAlive.Null:
+            self.setState(__class__.State.alive)
+            if self._stateAliveVisit != visit:
+                return
+        if self._stateAlive is __class__.StateAlive.normal:
+            if self._stateAliveNormal is __class__.StateAliveNormal.Null:
+                self.setStateAliveNormal(__class__.StateAliveNormal.baby)
 
     def exitStateAliveNormal(self):
-        if self._stateAliveNormal == Animal.StateAliveNormal.baby :
-            self.setStateAliveNormal(Animal.StateAliveNormal.Null)
-        elif self._stateAliveNormal == Animal.StateAliveNormal.adult :
-            self.setStateAliveNormal(Animal.StateAliveNormal.Null)
+        if self._stateAliveNormal is __class__.StateAliveNormal.baby:
+            self.setStateAliveNormal(__class__.StateAliveNormal.Null)
+        elif self._stateAliveNormal is __class__.StateAliveNormal.adult:
+            self.setStateAliveNormal(__class__.StateAliveNormal.Null)
 
     def setStateAliveNormal(self, aStateAliveNormal):
         self._stateAliveNormal = aStateAliveNormal
-        if self._stateAlive != Animal.StateAlive.normal and aStateAliveNormal != Animal.StateAliveNormal.Null :
-            self.setStateAlive(Animal.StateAlive.normal)
+        if self._stateAlive is not __class__.StateAlive.normal and aStateAliveNormal is not __class__.StateAliveNormal.Null:
+            self.setStateAlive(__class__.StateAlive.normal)
 
-    # Code from template association_GetMany 
     def getDrop(self, index):
-        aDrop = self._drops[index]
-        return aDrop
+        return self._drops[index]
 
     def getDrops(self):
-        newDrops = tuple(self._drops)
-        return newDrops
+        return tuple(self._drops)
 
     def numberOfDrops(self):
-        number = len(self._drops)
-        return number
+        return len(self._drops)
 
     def hasDrops(self):
-        has = len(self._drops) > 0
-        return has
+        return len(self._drops) > 0
 
     def indexOfDrop(self, aDrop):
-        index = (-1 if not aDrop in self._drops else self._drops.index(aDrop))
-        return index
+        return next((i for i, x in enumerate(self._drops) if x is aDrop), -1)
 
-    # Code from template association_GetOne 
     def getWorld(self):
         return self._world
 
-    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfDrops():
         return 0
 
-    # Code from template association_AddManyToManyMethod 
     def addDrop(self, aDrop):
-        wasAdded = False
-        if (aDrop) in self._drops :
+        if any(x is aDrop for x in self._drops):
             return False
         self._drops.append(aDrop)
-        if aDrop.indexOfAnimal(self) != -1 :
-            wasAdded = True
-        else :
-            wasAdded = aDrop.addAnimal(self)
-            if not wasAdded :
-                self._drops.remove(aDrop)
-        return wasAdded
+        if aDrop.indexOfAnimal(self) == -1 and not aDrop.addAnimal(self):
+            del self._drops[next((i for i, x in enumerate(self._drops) if x is aDrop), -1)]
+            return False
+        return True
 
-    # Code from template association_RemoveMany 
     def removeDrop(self, aDrop):
-        wasRemoved = False
-        if not (aDrop) in self._drops :
-            return wasRemoved
-        oldIndex = (-1 if not aDrop in self._drops else self._drops.index(aDrop))
-        self._drops.remove(oldIndex)
-        if aDrop.indexOfAnimal(self) == -1 :
-            wasRemoved = True
-        else :
-            wasRemoved = aDrop.removeAnimal(self)
-            if not wasRemoved :
-                self._drops.insert(oldIndex, aDrop)
-        return wasRemoved
+        oldIndex = next((i for i, x in enumerate(self._drops) if x is aDrop), -1)
+        if oldIndex == -1:
+            return False
+        del self._drops[oldIndex]
+        if aDrop.indexOfAnimal(self) != -1 and not aDrop.removeAnimal(self):
+            self._drops.insert(oldIndex, aDrop)
+            return False
+        return True
 
-    # Code from template association_AddIndexControlFunctions 
     def addDropAt(self, aDrop, index):
-        wasAdded = False
-        if self.addDrop(aDrop) :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfDrops() :
-                index = self.numberOfDrops() - 1
-            self._drops.remove(aDrop)
-            self._drops.insert(index, aDrop)
-            wasAdded = True
-        return wasAdded
+        if not self.addDrop(aDrop):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfDrops():
+            index = self.numberOfDrops() - 1
+        del self._drops[next((i for i, x in enumerate(self._drops) if x is aDrop), -1)]
+        self._drops.insert(index, aDrop)
+        return True
 
     def addOrMoveDropAt(self, aDrop, index):
-        wasAdded = False
-        if (aDrop) in self._drops :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfDrops() :
-                index = self.numberOfDrops() - 1
-            self._drops.remove(aDrop)
-            self._drops.insert(index, aDrop)
-            wasAdded = True
-        else :
-            wasAdded = self.addDropAt(aDrop, index)
-        return wasAdded
+        if not any(x is aDrop for x in self._drops):
+            return self.addDropAt(aDrop, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfDrops():
+            index = self.numberOfDrops() - 1
+        del self._drops[next((i for i, x in enumerate(self._drops) if x is aDrop), -1)]
+        self._drops.insert(index, aDrop)
+        return True
 
-    # Code from template association_SetOneToMany 
     def setWorld(self, aWorld):
-        wasSet = False
-        if aWorld is None :
-            return wasSet
+        if aWorld is None:
+            return False
         existingWorld = self._world
         self._world = aWorld
-        if not (existingWorld is None) and not existingWorld == aWorld :
+        if existingWorld is not None and existingWorld is not aWorld:
             existingWorld.removeAnimal(self)
         self._world.addAnimal(self)
-        wasSet = True
-        return wasSet
+        return True
 
     def delete(self):
-        copyOfDrops = self._drops.copy()
+        self._deleted = True
+        copyOfDrops = tuple(self._drops)
         self._drops.clear()
         for aDrop in copyOfDrops:
             aDrop.removeAnimal(self)
-
         placeholderWorld = self._world
         self._world = None
-        if not (placeholderWorld is None) :
+        if placeholderWorld is not None:
             placeholderWorld.removeAnimal(self)
         super().delete()
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "isAlive" + ":" + str(self.getIsAlive()) + "]" + str(os.linesep) + "  " + "world = " + ((format(id(self.getWorld()), "x")) if not (self.getWorld() is None) else "null")
-
+        return (super().__str__() + "["
+                + "isAlive:" + str(self.getIsAlive())
+                + "]"
+                + "\n  world = " + ("null" if self.getWorld() is None else format(id(self.getWorld()), "x")))

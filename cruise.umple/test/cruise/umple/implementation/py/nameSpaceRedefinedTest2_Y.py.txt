@@ -2,105 +2,72 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Y():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Y Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class Y:
     def __init__(self):
-        self._xs = None
         self._xs = []
 
-    #------------------------
-    # INTERFACE
-    #------------------------
-    # Code from template association_GetMany 
     def getX(self, index):
-        aX = self._xs[index]
-        return aX
+        return self._xs[index]
 
     def getXs(self):
-        newXs = tuple(self._xs)
-        return newXs
+        return tuple(self._xs)
 
     def numberOfXs(self):
-        number = len(self._xs)
-        return number
+        return len(self._xs)
 
     def hasXs(self):
-        has = len(self._xs) > 0
-        return has
+        return len(self._xs) > 0
 
     def indexOfX(self, aX):
-        index = (-1 if not aX in self._xs else self._xs.index(aX))
-        return index
+        return next((i for i, x in enumerate(self._xs) if x is aX), -1)
 
-    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfXs():
         return 0
 
-    # Code from template association_AddManyToManyMethod 
     def addX(self, aX):
-        wasAdded = False
-        if (aX) in self._xs :
+        if any(x is aX for x in self._xs):
             return False
         self._xs.append(aX)
-        if aX.indexOfY(self) != -1 :
-            wasAdded = True
-        else :
-            wasAdded = aX.addY(self)
-            if not wasAdded :
-                self._xs.remove(aX)
-        return wasAdded
+        if aX.indexOfY(self) == -1 and not aX.addY(self):
+            del self._xs[next((i for i, x in enumerate(self._xs) if x is aX), -1)]
+            return False
+        return True
 
-    # Code from template association_RemoveMany 
     def removeX(self, aX):
-        wasRemoved = False
-        if not (aX) in self._xs :
-            return wasRemoved
-        oldIndex = (-1 if not aX in self._xs else self._xs.index(aX))
-        self._xs.remove(oldIndex)
-        if aX.indexOfY(self) == -1 :
-            wasRemoved = True
-        else :
-            wasRemoved = aX.removeY(self)
-            if not wasRemoved :
-                self._xs.insert(oldIndex, aX)
-        return wasRemoved
+        oldIndex = next((i for i, x in enumerate(self._xs) if x is aX), -1)
+        if oldIndex == -1:
+            return False
+        del self._xs[oldIndex]
+        if aX.indexOfY(self) != -1 and not aX.removeY(self):
+            self._xs.insert(oldIndex, aX)
+            return False
+        return True
 
-    # Code from template association_AddIndexControlFunctions 
     def addXAt(self, aX, index):
-        wasAdded = False
-        if self.addX(aX) :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfXs() :
-                index = self.numberOfXs() - 1
-            self._xs.remove(aX)
-            self._xs.insert(index, aX)
-            wasAdded = True
-        return wasAdded
+        if not self.addX(aX):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfXs():
+            index = self.numberOfXs() - 1
+        del self._xs[next((i for i, x in enumerate(self._xs) if x is aX), -1)]
+        self._xs.insert(index, aX)
+        return True
 
     def addOrMoveXAt(self, aX, index):
-        wasAdded = False
-        if (aX) in self._xs :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfXs() :
-                index = self.numberOfXs() - 1
-            self._xs.remove(aX)
-            self._xs.insert(index, aX)
-            wasAdded = True
-        else :
-            wasAdded = self.addXAt(aX, index)
-        return wasAdded
+        if not any(x is aX for x in self._xs):
+            return self.addXAt(aX, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfXs():
+            index = self.numberOfXs() - 1
+        del self._xs[next((i for i, x in enumerate(self._xs) if x is aX), -1)]
+        self._xs.insert(index, aX)
+        return True
 
     def delete(self):
-        copyOfXs = self._xs.copy()
+        copyOfXs = tuple(self._xs)
         self._xs.clear()
         for aX in copyOfXs:
             aX.removeY(self)

@@ -2,99 +2,72 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Teacher():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Teacher Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class Teacher:
     def __init__(self):
-        self._myStudents = None
         self._myStudents = []
 
-    #------------------------
-    # INTERFACE
-    #------------------------
-    # Code from template association_GetMany 
     def getMyStudent(self, index):
-        aMyStudent = self._myStudents[index]
-        return aMyStudent
+        return self._myStudents[index]
 
     def getMyStudents(self):
-        newMyStudents = tuple(self._myStudents)
-        return newMyStudents
+        return tuple(self._myStudents)
 
     def numberOfMyStudents(self):
-        number = len(self._myStudents)
-        return number
+        return len(self._myStudents)
 
     def hasMyStudents(self):
-        has = len(self._myStudents) > 0
-        return has
+        return len(self._myStudents) > 0
 
     def indexOfMyStudent(self, aMyStudent):
-        index = (-1 if not aMyStudent in self._myStudents else self._myStudents.index(aMyStudent))
-        return index
+        return next((i for i, x in enumerate(self._myStudents) if x is aMyStudent), -1)
 
-    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMyStudents():
         return 0
 
-    # Code from template association_AddManyToOne 
     def addMyStudent(self, aMyStudent):
-        wasAdded = False
-        if (aMyStudent) in self._myStudents :
+        if any(x is aMyStudent for x in self._myStudents):
             return False
         existingTeacher = aMyStudent.getTeacher()
-        isNewTeacher = not (existingTeacher is None) and not self == existingTeacher
-        if isNewTeacher :
-            aMyStudent.setTeacher(self)
-        else :
+        isNewTeacher = existingTeacher is not None and existingTeacher is not self
+        if isNewTeacher:
+            if not aMyStudent.setTeacher(self):
+                return False
+        else:
             self._myStudents.append(aMyStudent)
-        wasAdded = True
-        return wasAdded
+        return True
 
     def removeMyStudent(self, aMyStudent):
-        wasRemoved = False
-        #Unable to remove aMyStudent, as it must always have a teacher
-        if not self == aMyStudent.getTeacher() :
-            self._myStudents.remove(aMyStudent)
-            wasRemoved = True
-        return wasRemoved
+        if aMyStudent.getTeacher() is self:
+            return False
+        index = next((i for i, x in enumerate(self._myStudents) if x is aMyStudent), -1)
+        if index >= 0:
+            del self._myStudents[index]
+        return True
 
-    # Code from template association_AddIndexControlFunctions 
     def addMyStudentAt(self, aMyStudent, index):
-        wasAdded = False
-        if self.addMyStudent(aMyStudent) :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfMyStudents() :
-                index = self.numberOfMyStudents() - 1
-            self._myStudents.remove(aMyStudent)
-            self._myStudents.insert(index, aMyStudent)
-            wasAdded = True
-        return wasAdded
+        if not self.addMyStudent(aMyStudent):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfMyStudents():
+            index = self.numberOfMyStudents() - 1
+        del self._myStudents[next((i for i, x in enumerate(self._myStudents) if x is aMyStudent), -1)]
+        self._myStudents.insert(index, aMyStudent)
+        return True
 
     def addOrMoveMyStudentAt(self, aMyStudent, index):
-        wasAdded = False
-        if (aMyStudent) in self._myStudents :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfMyStudents() :
-                index = self.numberOfMyStudents() - 1
-            self._myStudents.remove(aMyStudent)
-            self._myStudents.insert(index, aMyStudent)
-            wasAdded = True
-        else :
-            wasAdded = self.addMyStudentAt(aMyStudent, index)
-        return wasAdded
+        if not any(x is aMyStudent for x in self._myStudents):
+            return self.addMyStudentAt(aMyStudent, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfMyStudents():
+            index = self.numberOfMyStudents() - 1
+        del self._myStudents[next((i for i, x in enumerate(self._myStudents) if x is aMyStudent), -1)]
+        self._myStudents.insert(index, aMyStudent)
+        return True
 
     def delete(self):
-        i = len(self._myStudents)
-        while i > 0 :
+        for i in range(len(self._myStudents), 0, -1):
             aMyStudent = self._myStudents[i - 1]
             aMyStudent.delete()
-            i -= 1

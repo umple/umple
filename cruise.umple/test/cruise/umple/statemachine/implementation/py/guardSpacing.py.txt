@@ -1,72 +1,58 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from enum import Enum, auto
+from enum import Enum
 
-class Garage():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Garage Attributes
-    #Garage State Machines
+
+class Garage:
     class GarageDoor(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        Open = "Open"
+        Closing = "Closing"
+
         def __str__(self):
-            return str(self.value)
-        Open = auto()
-        Closing = auto()
+            return self.value
 
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
     def __init__(self, aEntranceClear):
+        self._entranceClear = aEntranceClear
         self._garageDoor = None
-        self._entranceClear = None
-        self._entranceClear = aEntranceClear
-        self.setGarageDoor(Garage.GarageDoor.Open)
+        self._deleted = False
+        self.setGarageDoor(__class__.GarageDoor.Open)
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setEntranceClear(self, aEntranceClear):
-        wasSet = False
         self._entranceClear = aEntranceClear
-        wasSet = True
-        return wasSet
+        return True
 
     def getEntranceClear(self):
         return self._entranceClear
 
-    # Code from template attribute_IsBoolean 
     def isEntranceClear(self):
         return self._entranceClear
 
     def getGarageDoorFullName(self):
-        answer = self._garageDoor.__str__()
+        answer = str(self._garageDoor)
         return answer
 
     def getGarageDoor(self):
         return self._garageDoor
 
     def pressButton(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aGarageDoor = self._garageDoor
-        if aGarageDoor == Garage.GarageDoor.Open :
-            if self.getEntranceClear() :
-                self.setGarageDoor(Garage.GarageDoor.Closing)
+        if aGarageDoor is __class__.GarageDoor.Open:
+            if self.getEntranceClear():
+                self.setGarageDoor(__class__.GarageDoor.Closing)
                 wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def setGarageDoor(self, aGarageDoor):
         self._garageDoor = aGarageDoor
 
     def delete(self):
-        pass
+        self._deleted = True
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "entranceClear" + ":" + str(self.getEntranceClear()) + "]"
-
+        return (super().__str__() + "["
+                + "entranceClear:" + str(self.getEntranceClear())
+                + "]")

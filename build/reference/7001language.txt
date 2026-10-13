@@ -12,7 +12,7 @@ Umple code can result in generation of various  languages. Code from these langu
 
 <li><a href="Java.html">Java</a>: Complete functionality. Umple is written in itself using embedded and generated Java. In UmpleOnline the Java code can be executed in the cloud.</li>
 
-<li><a href="Python.html">Python</a>: Very comprehensive support, with a few minor gaps..</li>
+<li><a href="Python.html">Python</a>: Very comprehensive support, generated directly from the model; the Python page lists the few features not generated yet. In UmpleOnline the Python code can be executed in the cloud.</li>
 
 <li><a href="PHP.html">Php</a>: reasonably comprehensive generation from Umple features.</li>
 

@@ -25,14 +25,85 @@ mixset Trait {
     * Currently, we deal with code style at the code generation level (UmpleTemplate Language);
     */
     public void findKeywordAndReplace(String keyword, CodeBlock cBlock, StateMachine inStateMachine){
+      findKeywordAndReplace(keyword, cBlock, inStateMachine, null);
+    }
+
+    // guard is the untagged guard of the trait action cBlock comes from, or null; the other languages'
+    // bodies in cBlock already carry it
+    public void findKeywordAndReplace(String keyword, CodeBlock cBlock, StateMachine inStateMachine, String guard){
       if(keyword==null || keyword=="") return;
         for (String language : codes.keySet()) {
+          if ("Python".equals(language)) {
+            String composed = cBlock.codes.isEmpty() ? null
+              : pythonTraitCode(keyword, cBlock, inStateMachine.getRootStateMachine().getUmpleTrait().getName(), guard);
+            if (composed != null) {
+              codes.put(language, composed);
+              // the composed lines no longer line up with the class's source
+              authoredPositions.remove(language);
+              // the trait's code brings the placeholders of its own compositions with it
+              pythonTraitGuards.putAll(cBlock.pythonTraitGuards);
+              pythonTraitBlocks.putAll(cBlock.pythonTraitBlocks);
+            }
+            continue;
+          }
+          // the trait's body for this language, or its untagged one
+          String traitBody = cBlock.codes.get(language) != null ? cBlock.codes.get(language) : cBlock.codes.get("");
           String replacement=System.lineSeparator()+"\t\t//This part of code comes from the trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' -> begins"+System.lineSeparator()+"\t\t";
-          replacement = replacement+cBlock.codes.get(language).replace(keyword, "");
+          replacement = replacement+(traitBody == null ? "" : traitBody.replace(keyword, ""));
           replacement=replacement+System.lineSeparator()+"\t\t//The code coming from trait '"+inStateMachine.getRootStateMachine().getUmpleTrait().getName()+"' ends here"+System.lineSeparator()+"\t\t";
           codes.put(language,codes.get(language).replace(keyword,replacement+keyword)) ;
         }
       } 
+
+    // Python has no statement brackets, so the trait's code goes in as lines at the indentation of the
+    // statement each keyword stands for, once that statement has a line of its own (PythonSource.ownLine
+    // takes it out of a one-line suite or a list of statements). A guarded trait action's lines go
+    // under an if whose condition is a placeholder the generator replaces with the translated guard
+    // (pythonTraitGuards). Trait code without a Python version is a placeholder line the generator
+    // renders as any other code slot (pythonTraitBlocks). The class's code is first re-indented to
+    // column zero, which becomes its first-line indentation. null when the keyword occurs only in
+    // strings or comments.
+    private String pythonTraitCode(String keyword, CodeBlock cBlock, String trait, String guard){
+      String code = PythonSource.reindent(codes.get("Python"), getFirstLineIndent("Python"), "").substring(1);
+      List<Integer> found = PythonSource.codePositions(code, keyword);
+      if (found.isEmpty()) {
+        return null;
+      }
+      if (authoredIndents.containsKey("Python")) {
+        authoredIndents.put("Python", "");
+      }
+      // code without a Python version already carries the guard in its own syntax (Action.wrapInGuard)
+      String placeholder = cBlock.codes.get("Python") == null ? PythonSource.placeholder("trait_code") : null;
+      if (placeholder != null) {
+        // without the markers its own composition left, as the class's code loses them later
+        CodeBlock slot = new CodeBlock(cBlock);
+        slot.removeKeyword(keyword);
+        pythonTraitBlocks.put(placeholder, slot);
+      }
+      String condition = guard == null || placeholder != null ? null : PythonSource.placeholder("trait_guard");
+      if (condition != null) {
+        pythonTraitGuards.put(condition, guard);
+      }
+      // from the last keyword back, so that each edit leaves the earlier positions in place
+      for (int k = found.size() - 1; k >= 0; k--) {
+        code = PythonSource.ownLine(code, found.get(k));
+        List<Integer> now = PythonSource.codePositions(code, keyword);
+        if (k >= now.size()) {
+          continue;
+        }
+        int at = now.get(k);
+        String indent = code.substring(code.lastIndexOf('\n', at) + 1, at);
+        String inner = condition == null ? indent : indent + "    ";
+        String traitCode = placeholder != null ? "\n" + inner + placeholder
+          : PythonSource.reindent(removePythonKeyword(cBlock.codes.get("Python"), keyword), cBlock.getFirstLineIndent("Python"), inner);
+        String after = code.substring(at + keyword.length()).replaceFirst("^[ \t]+", "");
+        code = code.substring(0, at) + "#This part of code comes from the trait '" + trait + "' -> begins"
+          + (condition == null ? "" : "\n" + indent + "if " + condition + ":") + traitCode
+          + "\n" + indent + "#The code coming from trait '" + trait + "' ends here\n" + indent + keyword
+          + (after.isEmpty() || after.startsWith("\n") ? after : "\n" + indent + after);
+      }
+      return code;
+    }
     
   }
 } 

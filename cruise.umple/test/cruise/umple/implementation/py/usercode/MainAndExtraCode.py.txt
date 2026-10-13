@@ -1,0 +1,32 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+import sys
+if __name__ == "__main__":
+    sys.modules.setdefault("MainAndExtraCode", sys.modules[__name__])
+
+
+class MainAndExtraCode:
+    """A Python main is launched with the full sys.argv, and extra class code is class-level Python."""
+
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass
+
+    @staticmethod
+    def main(args):
+        # line 5 "MainAndExtraCode.ump"
+        print(MainAndExtraCode.GREETING, len(args))
+        # end line
+
+    # line 8 "MainAndExtraCode.ump"
+    GREETING = "hello"
+    def helper(self):
+        return self.GREETING
+    # end line
+
+
+if __name__ == "__main__":
+    MainAndExtraCode.main(sys.argv)

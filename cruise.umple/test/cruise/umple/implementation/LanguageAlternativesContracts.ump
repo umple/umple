@@ -1,0 +1,47 @@
+// Each pre or postcondition belongs to its method and to the body written with it (#2250)
+class Account {
+  Integer balance = 0;
+  int deposit(int amount) {
+    [pre: amount > 0]
+    [post: amount < 1000]
+    return amount;
+  }
+  int deposit(String note) {
+    [pre: note != null]
+    return 0;
+  }
+  int withdraw(int amount) Java {
+    [pre: amount < 100]
+    return amount;
+  } Php {
+    [pre: amount < 200]
+    return $amount;
+  } Ruby {
+    [pre: amount < 300]
+    return amount
+  }
+  int close(int code) Java, Php, Ruby {
+    [pre: code > 1]
+    return code;
+  }
+  int close(int code) Java {
+    [pre: code > 2]
+    return 0;
+  }
+  int limit(int v) Java {
+    [pre: v > 0]
+    return v;
+  } Php {
+    [pre: v > 0]
+    return $v;
+  } Ruby {
+    [pre: v > 0]
+    return v
+  }
+  int refine(int v) {
+    return v;
+  }
+  int refine(int v) {
+    [pre: v < 50]
+  }
+}

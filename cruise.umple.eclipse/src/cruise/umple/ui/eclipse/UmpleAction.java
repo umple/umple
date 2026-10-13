@@ -146,7 +146,7 @@ public class UmpleAction implements IWorkbenchWindowActionDelegate
         if(successfulCompilation)
         {
           System.out.println("Was successfully compiled");
-          List<UmpleClass> classes = CodeCompiler.getMainClasses(model);
+          List<UmpleClass> classes = CodeCompiler.getMainClasses(model, "Java");
           String[] possibilities = new String[classes.size()];
           for(int i=0;i<classes.size();i++)
           {
