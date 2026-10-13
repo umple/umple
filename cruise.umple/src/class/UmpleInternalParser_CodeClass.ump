@@ -331,6 +331,12 @@ class UmpleInternalParser
       }
     }
 
+    // EARS clauses such as "shall { open the door }", as { keyword, content }
+    List<String[]> parsedEarsClauses = new ArrayList<String[]>();
+    if ("ears".equals(newLanguage) && !newContent.equals("")) {
+      newContent = parseEarsClauses(newContent, parsedEarsClauses);
+    }
+
     // Validate quality section content and extract quality class data
     List<String[]> qualityClassData = new ArrayList<String[]>();
     if (QUALITY_LANG.equals(newLanguage)) {
@@ -418,6 +424,7 @@ class UmpleInternalParser
       }
 
       addUseCaseElements(existingRequirement, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
+      addEarsClauses(existingRequirement, parsedEarsClauses);
     }
     else {
       if (QUALITY_LANG.equals(newLanguage)) {
@@ -435,7 +442,102 @@ class UmpleInternalParser
       model.getAllRequirements().put(reqID, req);
 
       addUseCaseElements(req, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
+      addEarsClauses(req, parsedEarsClauses);
     }
+  }
+
+  // Separates the clauses of an EARS requirement, such as "while { the door is open }", from the
+  // free text around them and returns that free text, or the whole body when it has no clauses.
+  // A clause starts a line or follows another clause, and may span several lines.
+  // Each clause found is added to clauses as { keyword, content }, in the order written.
+  private static String parseEarsClauses(String body, List<String[]> clauses) {
+    Matcher clauseStart = Pattern.compile("(where|while|when|if|system|shall)\\s*\\{").matcher(body);
+    StringBuilder freeText = new StringBuilder();
+    int position = 0;
+    while (position < body.length()) {
+      while (position < body.length() && Character.isWhitespace(body.charAt(position))) {
+        position++;
+      }
+      if (position == body.length()) {
+        break;
+      }
+
+      clauseStart.region(position, body.length());
+      if (clauseStart.lookingAt()) {
+        int clauseEnd = findClosingBrace(body, clauseStart.end() - 1);
+        if (clauseEnd >= 0) {
+          // Line breaks inside a clause are not significant
+          String content = body.substring(clauseStart.end(), clauseEnd).trim().replaceAll("\\s+", " ");
+          clauses.add(new String[] { clauseStart.group(1), content });
+          position = clauseEnd + 1;
+          continue;
+        }
+      }
+
+      // Anything else, up to the end of the line, is free text
+      int lineEnd = body.indexOf('\n', position);
+      if (lineEnd < 0) {
+        lineEnd = body.length();
+      }
+      if (freeText.length() > 0) {
+        freeText.append("\n");
+      }
+      freeText.append(body.substring(position, lineEnd).trim());
+      position = lineEnd;
+    }
+    return clauses.isEmpty() ? body : freeText.toString();
+  }
+
+  // Returns the index of the brace closing the one at openIndex, or -1 when it is never closed
+  private static int findClosingBrace(String text, int openIndex) {
+    int depth = 0;
+    for (int i = openIndex; i < text.length(); i++) {
+      if (text.charAt(i) == '{') {
+        depth++;
+      }
+      else if (text.charAt(i) == '}') {
+        depth--;
+        if (depth == 0) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
+
+  // Stores the EARS clauses found in a requirement body; empty clauses are ignored.
+  // EARS allows several preconditions and several responses, so a clause given more than once,
+  // in one or several occurrences of the requirement, is combined with the earlier one using 'and'
+  private static void addEarsClauses(Requirement req, List<String[]> clauses) {
+    for (String[] clause : clauses) {
+      String keyword = clause[0];
+      String content = clause[1];
+      if (content.equals("")) {
+        continue;
+      }
+      if ("where".equals(keyword)) {
+        req.setEarsWhere(combineEarsClause(req.getEarsWhere(), content));
+      }
+      else if ("while".equals(keyword)) {
+        req.setEarsWhile(combineEarsClause(req.getEarsWhile(), content));
+      }
+      else if ("when".equals(keyword)) {
+        req.setEarsWhen(combineEarsClause(req.getEarsWhen(), content));
+      }
+      else if ("if".equals(keyword)) {
+        req.setEarsIf(combineEarsClause(req.getEarsIf(), content));
+      }
+      else if ("system".equals(keyword)) {
+        req.setEarsSystem(combineEarsClause(req.getEarsSystem(), content));
+      }
+      else if ("shall".equals(keyword)) {
+        req.setEarsShall(combineEarsClause(req.getEarsShall(), content));
+      }
+    }
+  }
+
+  private static String combineEarsClause(String earlier, String content) {
+    return earlier == null || earlier.equals("") ? content : earlier + " and " + content;
   }
 
   // Matches a use case relationship line such as "include UC1, UC2;" or "isA UC3;"

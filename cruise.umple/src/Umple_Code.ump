@@ -970,6 +970,16 @@ class Requirement{
       || hasDisplayText(getWhy());
   }
 
+  public boolean hasStructuredEarsFields()
+  {
+    return hasDisplayText(getEarsWhere())
+      || hasDisplayText(getEarsWhile())
+      || hasDisplayText(getEarsWhen())
+      || hasDisplayText(getEarsIf())
+      || hasDisplayText(getEarsSystem())
+      || hasDisplayText(getEarsShall());
+  }
+
   // format logic moved from cruise.umple/src/generators/Generator_CodePlainRequirementsDoc.ump:generator()
   public String getUserStoryDisplayText(String separator)
   {

@@ -416,6 +416,16 @@ class UmpleInternalParser
        }
      }
     } 
+
+    // An ears requirement written with clauses needs a shall clause. This is checked once all
+    // occurrences of a requirement have been combined, since any of them can supply it
+    for (Requirement req : model.getAllRequirements().values())
+    {
+      if ("ears".equals(req.getLanguage()) && req.hasStructuredEarsFields() && req.getEarsShall() == null && req.hasReqToken())
+      {
+        setFailedPosition(req.getReqToken(0).getPosition(), 410, req.getIdentifier());
+      }
+    }
   }
   private void postTokenAnalysis()
   {
