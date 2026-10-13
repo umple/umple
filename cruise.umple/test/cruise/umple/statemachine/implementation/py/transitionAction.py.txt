@@ -1,53 +1,45 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from enum import Enum, auto
+from enum import Enum
 
-class Course():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Course State Machines
+
+class Course:
     class Status(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
-        def __str__(self):
-            return str(self.value)
-        Open = auto()
+        Open = "Open"
 
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+        def __str__(self):
+            return self.value
+
     def __init__(self):
         self._status = None
-        self.setStatus(Course.Status.Open)
+        self._deleted = False
+        self.setStatus(__class__.Status.Open)
+        if self._deleted:
+            return
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def getStatusFullName(self):
-        answer = self._status.__str__()
+        answer = str(self._status)
         return answer
 
     def getStatus(self):
         return self._status
 
     def register(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus == Course.Status.Open :
-
+        if aStatus is __class__.Status.Open:
             print("transition")
-            self.setStatus(Course.Status.Open)
+            if self._deleted:
+                return True
+            self.setStatus(__class__.Status.Open)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def setStatus(self, aStatus):
         self._status = aStatus
 
     def delete(self):
-        pass
-
+        self._deleted = True

@@ -1,0 +1,98 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from enum import Enum
+import threading
+
+
+class Light:
+    class Bulb(Enum):
+        Off = "Off"
+        On = "On"
+
+        def __str__(self):
+            return self.value
+    class MessageQueue:
+        def __init__(self, ready):
+            self._calls = []
+            self._ready = ready
+            self._started = False
+            self._stopped = False
+            self._worker = None
+            self._condition = threading.Condition()
+        def start(self):
+            with self._condition:
+                self._started = True
+                self._wake()
+        def put(self, call, *args):
+            with self._condition:
+                self._calls.append((call, args))
+                self._wake()
+        def stop(self):
+            with self._condition:
+                self._stopped = True
+                self._condition.notify()
+        def _wake(self):
+            if self._started and not self._stopped and self._worker is None:
+                self._worker = threading.Thread(target=self._run, daemon=False)
+                self._worker.start()
+            if self._worker is not None:
+                self._worker.isIdle = False
+            self._condition.notify()
+        def _run(self):
+            while True:
+                with self._condition:
+                    call = None
+                    while not self._stopped and call is None:
+                        call = self._next()
+                        self._worker.isIdle = call is None
+                        if call is None and self._programIdle():
+                            self._worker = None
+                            return
+                        if call is None:
+                            self._condition.wait(0.25)
+                    if call is None:
+                        return
+                call[0](*call[1])
+        def _next(self):
+            for i, call in enumerate(self._calls):
+                if self._ready is None or self._ready(call[0]):
+                    return self._calls.pop(i)
+            return None
+        def _programIdle(self):
+            ended = (threading.main_thread(), threading.current_thread())
+            return not ended[0].is_alive() and all(t in ended or t.daemon or getattr(t, "isIdle", False)
+                for t in threading.enumerate())
+
+    def __init__(self):
+        self.__eventQueue = __class__.MessageQueue(None)
+        self._bulb = None
+        self._deleted = False
+        self.setBulb(__class__.Bulb.Off)
+        self.__eventQueue.start()
+
+    def getBulbFullName(self):
+        answer = str(self._bulb)
+        return answer
+
+    def getBulb(self):
+        return self._bulb
+
+    def __autotransition1__(self):
+        if self._deleted:
+            return False
+        wasEventProcessed = False
+        aBulb = self._bulb
+        if aBulb is __class__.Bulb.Off:
+            self.setBulb(__class__.Bulb.On)
+            wasEventProcessed = True
+        return wasEventProcessed
+
+    def setBulb(self, aBulb):
+        self._bulb = aBulb
+        if self._bulb is __class__.Bulb.Off:
+            self.__autotransition1__()
+
+    def delete(self):
+        self._deleted = True
+        self.__eventQueue.stop()

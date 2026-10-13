@@ -1,0 +1,311 @@
+class UmpleToPython {
+    // Java's event algorithm: all machines' current states are read first, then each machine takes its
+    // current state's first enabled transition (guarded ones in model order, then the unguarded one),
+    // exiting, running the action and entering the target. An action, exit or entry that deletes the
+    // object ends the event, which returns True. A deleted object takes no events. States compare by
+    // identity through the machine's own enum.
+    state_machine_Event <<!<</*state_machine_Event*/>><<#
+  List<MethodParameter> eventParameters = e.getParams();
+  Set<String> locals = gen.localNames(eventParameters);
+  if (e.isUnspecified())
+  {
+    locals.add("state");
+    locals.add("event");
+  }
+  String processed = gen.localName("wasEventProcessed", locals);
+  String methodName = gen.translate("eventMethod", e);
+  List<MethodParameter> injectionParameters = new ArrayList<MethodParameter>(eventParameters);
+  if (e.isUnspecified())
+  {
+    injectionParameters.add(gen.parameter("state", "String"));
+    injectionParameters.add(gen.parameter("event", "String"));
+  }
+  MethodParameter[] injectable = injectionParameters.toArray(new MethodParameter[0]);
+  // After injections may read whether the event was processed, as Java's read its local of that name
+  List<MethodParameter> afterParameters = new ArrayList<MethodParameter>(injectionParameters);
+  if (processed.equals("wasEventProcessed"))
+  {
+    afterParameters.add(gen.parameter(processed, "boolean"));
+  }
+  MethodParameter[] afterInjectable = afterParameters.toArray(new MethodParameter[0]);
+  // Guard results and visit captures share the scope of authored event code.
+  locals.addAll(gen.localNames(gen.injected(uClass, "before", methodName, injectable),
+    gen.injected(uClass, "after", methodName, afterInjectable)));
+  Set<StateMachine> guardedMachines = new HashSet<StateMachine>();
+  // Guards sit in if-elif chains, so the classes they read are imported at the start
+  Set<String> guardImports = new LinkedHashSet<String>();
+  for (StateMachine sm : uClass.getStateMachines(e))
+  {
+    for (State state : sm.getStates())
+    {
+      for (Transition t : state.getTransitionsFor(e))
+      {
+        if (t.getGuard() != null)
+        {
+          if (gen.guardNeedsCheck(t, uClass))
+          {
+            guardedMachines.add(sm);
+          }
+          locals.addAll(gen.localNames(gen.condition(t.getGuard(), uClass, eventParameters)));
+          guardImports.addAll(gen.getConditionImports());
+        }
+        if (t.getAction() != null)
+        {
+          CodeBlock code = t.getAction().getCodeblock();
+          String language = gen.pythonLanguage(code);
+          if (language != null)
+          {
+            locals.addAll(gen.localNames(code.getCode(language)));
+          }
+        }
+      }
+    }
+  }
+  String guard = gen.localName("guard", locals);
+  String matched = gen.localName("matched", locals);
+  String before = gen.stateMachineInjections(uClass, "before", methodName, gen.deletedCheck(deletingFlag, "        ", "True"), injectable);
+  String after = gen.stateMachineInjections(uClass, "after", methodName, gen.deletedCheck(deletingFlag, "        ", processed),
+    afterInjectable);
+
+  StringBuilder declarations = new StringBuilder();
+  for (String line : guardImports)
+  {
+    declarations.append("\n        " + line);
+  }
+  StringBuilder cases = new StringBuilder();
+  for (StateMachine sm : uClass.getStateMachines(e))
+  {
+    String field = gen.smField(sm);
+    String current = gen.localName(gen.translate("parameterOne", sm), locals);
+    declarations.append("\n        " + current + " = " + field);
+    String visitField = gen.visitField(uClass, sm);
+    String visit = gen.localName("visit", locals);
+    if (guardedMachines.contains(sm))
+    {
+      declarations.append("\n        " + visit + " = " + visitField);
+    }
+    if (sm.getContainsHistoryState())
+    {
+      declarations.append("\n        if " + field + " is not " + gen.smType(sm) + ".Null:\n            " + gen.historyField(uClass, sm, "H") + " = " + field);
+    }
+    if (sm.getContainsDeepHistoryState())
+    {
+      declarations.append("\n        if " + field + " is not " + gen.smType(sm) + ".Null:\n            " + gen.historyField(uClass, sm, "HStar") + " = " + field);
+    }
+    if (cases.length() > 0)
+    {
+      // An earlier machine's transition deleted the object: the event ends
+      cases.append(gen.deletedCheck(deletingFlag, "        ", "True"));
+    }
+
+    // A transition first exits the state machine it leaves
+    StateMachine superStateMachine = sm.getSuperStateMachine();
+    State nullState = sm.getNullState();
+    boolean isFirstState = true;
+    for (State state : sm.getStates())
+    {
+      List<Transition> allT = state.getTransitionsFor(e);
+      if (allT.isEmpty())
+      {
+        continue;
+      }
+      cases.append("\n        " + (isFirstState ? "if " : "elif ") + current + " is " + gen.stateReference(state) + ":");
+      isFirstState = false;
+      boolean isFirstGuard = true;
+      boolean checkedAlternatives = false;
+      for (Transition t : allT)
+      {
+        checkedAlternatives = checkedAlternatives || gen.guardNeedsCheck(t, uClass);
+      }
+      checkedAlternatives = checkedAlternatives && allT.size() > 1;
+      if (checkedAlternatives)
+      {
+        // A local match keeps lazy first-match order without nesting once per checked guard.
+        cases.append("\n            " + matched + " = False");
+      }
+      for (Transition t : allT)
+      {
+        State nextState = t.getNextState();
+        String guardIndent = "            ";
+        if (checkedAlternatives)
+        {
+          cases.append("\n            if not " + matched + ":");
+          guardIndent += "    ";
+        }
+        String indent = guardIndent;
+        if (t.getGuard() != null)
+        {
+          String condition = gen.condition(t.getGuard(), uClass, eventParameters);
+          if (gen.guardNeedsCheck(t, uClass))
+          {
+            // Check before the generated exit: the call itself may end the source visit.
+            cases.append("\n" + guardIndent + guard + " = " + condition);
+            cases.append(gen.deletedCheck(deletingFlag, guardIndent, "True"));
+            cases.append(gen.visitCheck(null, visitField, visit, guardIndent, processed));
+            condition = guard;
+          }
+          cases.append("\n" + guardIndent + (isFirstGuard || checkedAlternatives ? "if " : "elif ") + condition + ":");
+          isFirstGuard = false;
+          indent = guardIndent + "    ";
+        }
+        else if (!isFirstGuard && !checkedAlternatives)
+        {
+          cases.append("\n" + guardIndent + "else:");
+          indent += "    ";
+        }
+        if (checkedAlternatives)
+        {
+          cases.append("\n" + indent + matched + " = True");
+        }
+
+        State concurrentParent = null;
+        if (state != nullState && state.getHasExitAction())
+        {
+          StateMachine smToExit;
+          State fromConcurrentParentState = state.getConcurrentParentState();
+          if (fromConcurrentParentState == null)
+          {
+            smToExit = t.getSmToExit(superStateMachine);
+          }
+          else if (nextState.getStateMachine().equals(superStateMachine))
+          {
+            smToExit = superStateMachine;
+          }
+          else if (state.getStateMachine().equals(nextState.getStateMachine()))
+          {
+            smToExit = state.getStateMachine();
+          }
+          else
+          {
+            smToExit = t.getSmToExit(superStateMachine);
+            if (fromConcurrentParentState.equals(nextState.getConcurrentParentState()) && t.isTransitionAndCross(fromConcurrentParentState))
+            {
+              concurrentParent = fromConcurrentParentState;
+            }
+          }
+          cases.append("\n" + indent + "self." + gen.translate("exitMethod", smToExit) + "()");
+          cases.append(gen.deletedCheck(deletingFlag, indent, "True"));
+        }
+
+        if (t.getAction() != null)
+        {
+          cases.append(gen.actionCode(t.getAction(), uClass, eventParameters, indent,
+            "the action of the transition on " + e.getName() + " from state " + state.getName()));
+          cases.append(gen.deletedCheck(deletingFlag, indent, "True"));
+        }
+
+        StateMachine nextSm = nextState.getStateMachine();
+        if (nextState.getIsHistoryState())
+        {
+          cases.append("\n" + indent + "self." + gen.translate("setMethod", nextSm) + "(" + gen.historyField(uClass, nextSm, gen.translate("stateOne", nextState)) + ")");
+        }
+        else
+        {
+          cases.append("\n" + indent + "self." + gen.translate("setMethod", nextSm) + "(" + gen.stateReference(nextState) + ")");
+        }
+
+        // A transition between regions of a concurrent state restarts the region it left, unless
+        // entering the target deleted the object
+        if (concurrentParent != null)
+        {
+          cases.append(gen.deletedCheck(deletingFlag, indent, "True"));
+          for (StateMachine smToReset : concurrentParent.getNestedStateMachines())
+          {
+            boolean reset = smToReset.indexOfState(state) != -1;
+            for (StateMachine nestedStateMachine : smToReset.getNestedStateMachines())
+            {
+              reset = reset || nestedStateMachine.indexOfState(state) != -1;
+            }
+            if (reset)
+            {
+              cases.append("\n" + indent + "self." + gen.translate("setMethod", smToReset) + "(" + gen.stateReference(smToReset.getStartState()) + ")");
+              break;
+            }
+          }
+        }
+        cases.append("\n" + indent + processed + " = True");
+
+        if (t.getGuard() == null)
+        {
+          // Only one unguarded transition can be taken; later ones never are
+          break;
+        }
+      }
+    }
+
+    // As in Java: when a state handles both this event and unspecified, the event in a state that does
+    // not handle it goes to unspecified (once, where Java repeats the call for each such state)
+    String exitEvent = sm.getParentState() == null ? null : gen.translate("exitMethod", sm.getParentState());
+    for (State s : sm.getStates())
+    {
+      Transition unspecified = null;
+      Transition handled = null;
+      for (Transition tran : s.getTransitions())
+      {
+        if (tran.getEvent().isUnspecified())
+        {
+          unspecified = tran;
+        }
+        if (tran.getEvent().getName().equals(e.getName()))
+        {
+          handled = tran;
+        }
+      }
+      if (unspecified != null && handled != null && !e.isUnspecified() && !e.getName().equals(exitEvent))
+      {
+        // The call comes first, so it runs even when another machine already took the event. The
+        // state's name is its value (as its str()), since a parameter of the event may be named str
+        cases.append("\n        else:\n            " + processed + " = self.unspecified(self." + gen.translate("getMethod", sm) + "().value, "
+          + gen.pythonString(e.getName()) + ") or " + processed);
+        break;
+      }
+    }
+  }
+  if (!after.isEmpty() && cases.length() > 0)
+  {
+    // The after injections do not run once the event deleted the object, which only a transition
+    // taken, and so recorded, can do
+    cases.append(gen.deletedCheck(deletingFlag, "        ", processed));
+  }
+  Attribute setter = gen.setterSharingName(uClass, e);
+  List<String> implementations = setter == null ? Arrays.asList(methodName) : gen.overloadNames(uClass, methodName, 2, "event");
+  if (setter != null)
+  {
+    // An inherited setter is reached through the parent, which the module imports, whichever
+    // ancestor declares it; a trait's is the class's own
+    String inherited = gen.attributes(uClass).contains(setter) ? "" : gen.classReference(uClass.getExtendsClass()) + ".";
+    #>>
+
+    <<=implementations.get(0)>> = <<=inherited>><<=methodName>><<#
+  }
+  int eventStart = realSb.length();
+  // In a queued or pooled machine the event's method puts a call to the method doing its work in the
+  // queue, as Java's does. The unspecified event and automatic transitions run at once.
+  String eventQueue = e.isUnspecified() || e.isAutoTransition() ? null : gen.eventQueue(uClass);
+  String eventMethod = implementations.get(implementations.size() - 1);
+  String worker = eventQueue == null ? eventMethod : gen.queuedName(uClass, methodName);
+#>>
+
+    def <<=worker>>(self<<=gen.parameterList(eventParameters)>><<=e.isUnspecified() ? ", state, event" : "">>):<<=gen.deletedCheck(deletedFlag, "        ", "False")>><<=before>>
+        <<=processed>> = False<<=declarations>><<=cases>><<=after>>
+        return <<=processed>><<#
+  if (eventQueue != null)
+  {
+    eventStart = realSb.length();
+    realSb.append(gen.enqueuer(eventMethod, worker, eventQueue, injectionParameters, e.getIsTimer()));
+  }
+  // The event's method is typed from the event when it meets a method of the same name (an
+  // unspecified event's method also takes the state and event)
+  if (!e.isUnspecified())
+  {
+    gen.emitted(uClass, eventParameters, realSb.substring(eventStart));
+  }
+  if (setter != null)
+  {
+    List<List<MethodParameter>> overloads = new ArrayList<List<MethodParameter>>();
+    overloads.add(Arrays.asList(gen.parameter(gen.translate("parameterOne", setter), setter.getType())));
+    overloads.add(eventParameters);
+    realSb.append(gen.overloadDispatcher(uClass, methodName, false, implementations, overloads));
+  }
+#>>!>>
+}

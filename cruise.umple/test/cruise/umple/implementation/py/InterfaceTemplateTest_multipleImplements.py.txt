@@ -1,11 +1,9 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from abc import ABC, abstractmethod
-from ISomething import ISomething
-from IGarbage import IGarbage
+from example.ISomething import ISomething
+from example.IGarbage import IGarbage
 
-class ISecondChild(ABC, ISomething, IGarbage):
-    @abstractmethod
-    def __init__(self):
-        pass
+
+class ISecondChild(ISomething, IGarbage):
+    pass

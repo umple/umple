@@ -1,0 +1,8 @@
+// A class without a namespace may not share its name with a standard
+// module that generated Python imports; Python generation reports error 9213
+class sys {}
+
+class Box
+{
+  1 -- * sys;
+}

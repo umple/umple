@@ -1,0 +1,62 @@
+use attribute_Get.ump;
+use attribute_GetMany.ump;
+
+class UmpleToPython {
+    attribute_Get_All <<!<</*attribute_Get_All*/>><<#
+  for (Attribute av : gen.attributes(uClass))
+  {
+    if (av.getIsAutounique() || av.isConstant() || "internal".equals(av.getModifier()))
+    {
+      continue;
+    }
+    String field = gen.field(av);
+    String parameter = gen.translate("parameterOne", av);
+    if (av.getIsList())
+    {
+      #>><<@ UmpleToPython.attribute_GetMany >><<#
+    }
+    else
+    {
+      #>><<@ UmpleToPython.attribute_Get >><<#
+    }
+  }
+  // Getters of ancestors' attributes that this class injects code into.
+  for (Attribute av : gen.inheritedAttributes(uClass))
+  {
+    if (av.isConstant() || "internal".equals(av.getModifier()))
+    {
+      continue;
+    }
+    String parameter = gen.translate("parameterOne", av);
+    if (av.getIsList() && !gen.translate("getMethod", av).equals(gen.translate("getManyMethod", av)))
+    {
+      realSb.append(gen.inheritedOverride(uClass, gen.translate("getMethod", av), "", false, parameter, gen.parameter("index", "int")));
+      realSb.append(gen.inheritedOverride(uClass, gen.translate("getManyMethod", av), "", false, gen.translate("parameterMany", av)));
+      realSb.append(gen.inheritedOverride(uClass, gen.translate("numberOfMethod", av), "", false, "number"));
+      realSb.append(gen.inheritedOverride(uClass, gen.translate("hasManyMethod", av), "", false, "has"));
+      realSb.append(gen.inheritedOverride(uClass, gen.translate("indexOfMethod", av), "", false, "index", gen.parameter(parameter, av.getType())));
+    }
+    else if (!av.getIsList())
+    {
+      realSb.append(gen.inheritedOverride(uClass, gen.translate("getMethod", av), "", false, parameter));
+      if ("defaulted".equals(av.getModifier()))
+      {
+        realSb.append(gen.inheritedOverride(uClass, gen.translate("getDefaultMethod", av), "", false, parameter));
+      }
+      if ("Boolean".equals(av.getType()))
+      {
+        realSb.append(gen.inheritedOverride(uClass, gen.translate("isMethod", av), "", false, parameter));
+      }
+    }
+  }
+  for (Attribute av : gen.attributes(uClass))
+  {
+    if (av.getIsAutounique())
+    {
+      String field = gen.field(av);
+      String parameter = gen.translate("parameterOne", av);
+      #>><<@ UmpleToPython.attribute_Get >><<#
+    }
+  }
+#>>!>>
+}

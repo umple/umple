@@ -1,0 +1,12 @@
+// The two namespaces differ only in case, so where file names
+// ignore case they would share one folder: E9218
+generate Python;
+namespace Shop;
+class Item {
+  name;
+}
+
+namespace shop;
+class Order {
+  Integer number;
+}

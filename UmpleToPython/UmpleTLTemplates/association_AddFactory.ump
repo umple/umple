@@ -1,0 +1,45 @@
+class UmpleToPython {
+    // Java's add overload that creates the object from its class's constructor arguments, passing this
+    // object as its partner: the add method's first numbered implementation. A bounded end returns
+    // None when full; an abstract class gets none. Only a mandatory end has a factory, and Umple
+    // rejects those on reflexive associations, so the class is always another one. The arguments
+    // follow its ordinary constructor, alternateConstructor when it creates a one-to-one partner.
+    association_AddFactory <<!<</*association_AddFactory*/>><<#
+  if (!relatedAssociation.getUmpleClass().getIsAbstract())
+  {
+    String[] factoryClass = gen.classUse(uClass, av.getType(), gen.factoryArguments(av));
+    boolean createsPartner = model.getUmpleClass(av.getType()).getGeneratedClass().getLookup(PythonGenerator.MANDATORY_CONSTRUCTOR_PARAMETERS) != null;
+    #>>
+
+    def <<=gen.addImplementationNames(uClass, av).get(0)>>(self<<=gen.factoryParameters(av)>>):<<#
+    if (!av.isStar())
+    {
+      #>>
+        if self.<<=gen.translate("numberOfMethod", av)>>() >= self.<<=gen.translate("maximumNumberOfMethod", av)>>():
+            return None<<#
+    }
+    if (factoryClass[1] != null)
+    {
+      #>>
+        <<=factoryClass[1]>><<#
+    }
+    #>>
+        return <<=factoryClass[0]>><<=createsPartner ? ".alternateConstructor" : "">>(<<=gen.factoryArguments(av)>>)<<#
+  }
+#>>!>>
+
+    association_AddName <<!<</*association_AddName*/>><<=relatedAssociation.getUmpleClass().getIsAbstract() ? gen.translate("addMethod", av) : gen.addImplementationNames(uClass, av).get(1)>>!>>
+
+    // The add method's dispatcher when there is a factory; the class's binding helper comes with the
+    // user methods. The object's add is tried first, so None reaches it and fails there, as Java's
+    // null does, rather than creating an object.
+    association_AddDispatcher <<!<</*association_AddDispatcher*/>><<#
+  if (!relatedAssociation.getUmpleClass().getIsAbstract())
+  {
+    List<String> names = gen.addImplementationNames(uClass, av);
+    List<List<MethodParameter>> parameters = gen.addImplementationParameters(av);
+    realSb.append(gen.overloadDispatcher(uClass, gen.translate("addMethod", av), false, Arrays.asList(names.get(1), names.get(0)),
+      Arrays.asList(parameters.get(1), parameters.get(0))));
+  }
+#>>!>>
+}

@@ -1,0 +1,5 @@
+// A method parameter named self is reported with error 9214
+class Account
+{
+  public int f(int self) Python { return 1 }
+}

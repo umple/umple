@@ -303,6 +303,7 @@ class Token
     Token nToken = this.shallowCopy();
     setName(newName);
     setValue(newValue);
+    setFirstLineIndent(null);
     ArrayList<Token> subTokenList = new ArrayList<Token>(subTokens);
     for(Token t : subTokenList)
     {
@@ -324,6 +325,7 @@ class Token
   private Token shallowCopy()
   {
     Token nToken = new Token(this.getName()+"", this.getValue()+"");
+    nToken.setFirstLineIndent(getFirstLineIndent());
     if (getPosition() != null)
     {
       nToken.setPosition(getPosition().copy());      

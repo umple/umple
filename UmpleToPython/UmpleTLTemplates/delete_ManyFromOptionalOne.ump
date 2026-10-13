@@ -1,0 +1,8 @@
+class UmpleToPython {
+    // A many end whose objects may lose their owner: each is unlinked through its own setter. Java
+    // loops until the list is empty, which never ends when a key member refuses the change; a snapshot
+    // gives the same result otherwise.
+    delete_ManyFromOptionalOne <<!<</*delete_ManyFromOptionalOne*/>>
+        for <<=parameter>> in tuple(<<=field>>):
+            <<=parameter>>.<<=gen.relatedTranslate("setMethod", av)>>(None)!>>
+}

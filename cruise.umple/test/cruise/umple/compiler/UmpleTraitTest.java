@@ -43,6 +43,20 @@ public class UmpleTraitTest {
 		Assert.assertEquals(2, uMode.getUmpleClass("A").numberOfAttributes());
 	}
 
+	// in the order the traits are listed, not one that changes between runs
+	@Test
+	public void attributesFromSeveralTraitsKeepTheirOrderTest() {
+		String code = "class C { isA T1, T2, T3, T4, T5, T6, T7, T8; }";
+		for (int i = 1; i <= 8; i++) {
+			code += " trait T" + i + " { a" + i + "; }";
+		}
+		StringBuilder names = new StringBuilder();
+		for (Attribute attribute : getRunModel(code).getUmpleClass("C").getAttributes()) {
+			names.append(attribute.getName()).append(' ');
+		}
+		Assert.assertEquals("a1 a2 a3 a4 a5 a6 a7 a8 ", names.toString());
+	}
+
 	@Test
 	public void traitInheritanceTest() {
 		Assert.assertEquals(1, uMode.getUmpleClass("A").numberOfExtendsTraits());
@@ -582,6 +596,30 @@ public class UmpleTraitTest {
 				model.getUmpleClass("A").getStateMachine("sm").getState(0).getAction(0).getCodeblock().getCode("Java"));
 		Assert.assertEquals("test3();",
 				model.getUmpleClass("A").getStateMachine("sm").getState(0).getAction(1).getCodeblock().getCode("Java"));
+	}
+
+	// A trait's guarded entry action keeps its guard when a class's entry action takes it in with
+	// superCall; merged Python code gets Python comments
+	@Test
+	public void guardedTraitActionMergedWithSuperCall() {
+		String code = "trait T{ Boolean ok = true; sm{ s1{ entry [ok] / { fromTrait(); } go -> s1; } } }"
+				+ "class A{ isA T; sm{ s1{ entry / { superCall; fromClass(); } } } }";
+		String entry = getRunModel(code).getUmpleClass("A").getStateMachine("sm").getState(0).getAction(0).getCodeblock().getCode();
+		Assert.assertTrue(entry, entry.indexOf("if (ok)") >= 0 && entry.indexOf("fromTrait();") > entry.indexOf("if (ok)"));
+		String python = "trait T{ sm{ s1{ entry / Python { self.fromTrait() } go -> s1; } } }"
+				+ "class A{ isA T; sm{ s1{ entry / Python { superCall; self.fromClass() } } } }";
+		String merged = getRunModel(python).getUmpleClass("A").getStateMachine("sm").getState(0).getAction(0).getCodeblock().getCode("Python");
+		Assert.assertTrue(merged, merged.contains("self.fromTrait()") && merged.contains("#This part of code comes from the trait") && !merged.contains("//"));
+		// In Python, superCall; inside a string or a comment, or as a member (self.superCall;), is not the
+		// composition statement: the class's code stays as written
+		String text = "trait T{ sm{ s1{ entry / Python { self.fromTrait() } go -> s1; } } }"
+				+ "class A{ isA T; sm{ s1{ entry / Python { self.log(\"superCall;\")  # superCall;\n} } } }";
+		String kept = getRunModel(text).getUmpleClass("A").getStateMachine("sm").getState(0).getAction(0).getCodeblock().getCode("Python");
+		Assert.assertEquals("self.log(\"superCall;\")  # superCall;", kept.trim());
+		String member = "trait T{ sm{ s1{ entry / Python { self.fromTrait() } go -> s1; } } }"
+				+ "class A{ isA T; sm{ s1{ entry / Python { self.superCall; self.after() } } } }";
+		Assert.assertEquals("self.superCall; self.after()", getRunModel(member).getUmpleClass("A").getStateMachine("sm").getState(0).getAction(0)
+				.getCodeblock().getCode("Python").trim());
 	}
 
 	@Test
