@@ -22,13 +22,16 @@ and compile sets of .ump files.</p>
 
 <ul class="big-coloured-bullets">
 
-<li><a href="https://try.umple.org"><b style="background-color: #A7593D; padding: 2px; color: white">UmpleOnline.</b> UmpleOnline</a> 
+<li><a href="https://try.umple.org"><b style="background-color: #A7593D; padding: 2px; color: white">UmpleOnline Classic</b> UmpleOnline</a> 
 allows you to instantly experiment with Umple on the web. You can explore 
 examples or create your own and save them in the "cloud". You can generate 
-diagrams, code in several languages and several other outputs. <a href="UsingUmpleOnline.html">The UmpleOnline
+diagrams, code in several languages and produce many outputs. <a href="UsingUmpleOnline.html">The UmpleOnline
 section of this User manual describes how to use UmpleOnline</a>. Note that UmpleOnline
-can be run locally on your machine by using a Docker image. <a href="https://hub.docker.com/r/umple/umpleonline/">See the DockerHub page for information.</a>  <i>Note that a <a href="https://umple.org/uol2" target="newulgh">completely rewritten experimental version of UmpleOnline</a> is avalable for early exploration; it is still missing some features and needed improvements (<a href="https://github.com/umple/umpleonline/" target="newulghrepo">its repository is here</a>).</i></li>
+can be run locally on your machine by using a Docker image. <a href="https://hub.docker.com/r/umple/umpleonline/">See the DockerHub page for information.</a></li>
 
+<br />&nbsp;<br />
+
+<li><a href="https://newumpleonline.umple.org"><b style="background-color: #A7593D; padding: 2px; color: white">UmpleOnline V2</b> UmpleOnline V2</a> is a new version written with AI that has almost all the same features as classic UmpleOnline, but presents a different user experience. <a href="https://github.com/umple/umpleonline/" target="newulghrepo">Its repository is here.</a> V2 is still being fine tuned, but both versions are fully usable. Part of our research is to determine what aspects of each version people like best. Both versions will be maintained for at least another year or two.</li>
 
 <br />&nbsp;<br />
 

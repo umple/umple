@@ -4,7 +4,7 @@ noreferences
 @@tooltip Capabilities within UmpleOnline to ask LLMs to generate Umple models from requirements.
 @@description
 
-<p><b>This page describes the AI capabilities built in to UmpleOnline. As of early 2026 this is a beta feature.</b></p>
+<p><b>This page describes the AI capabilities built in to <a href="https://try.umple.org/">UmpleOnline</a>. This works at a basic level and is subject to extensive improvement in late 2026 and 2027. The capabilities described below focus on classic UmpleOnline, but the same capability is present in <a href="https://newumpleonline.umple.org/">UmpleOnline V2.</a></b></p>
 
 <p>The AI capability can use various large language models (LLMs) to generate class diagrams and state machines from <a href="Requirements.html">requirements specified in Umple</a>. Before using this feature you will need to create a  set of requirements, or <a href="RequirementsExamples.html">load an example set of requirements, such as one of the examples in this manual</a>.</p>
 
