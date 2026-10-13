@@ -1,0 +1,20 @@
+W7002 Distributed Association To Non-Distributed Class
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>Umple semantic warning reported when a distributable class navigates to a class that is not distributable</h2>
+
+<p>A class marked <a href="BasicDistributedSystems.html"><i>distributable</i></a> may have its objects in another virtual machine, so an association from that class is a remote reference. This warning is reported when such a class has an association that is navigable toward a class that is not distributable. The distributable class would then refer to an ordinary object that is not set up for remote access. An arrow pointing at the ordinary class, or a bidirectional association written in the distributable class, both cause the warning.</p>
+
+<p>To avoid the warning, mark the other class <i>distributable</i> as well, as shown in the second example. If the first class does not need to be remote, remove <i>distributable</i> from it instead.</p>
+
+
+@@example
+@@source manualexamples/W7002DistributedAssociationToNon-DistributedClass1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/W7002DistributedAssociationToNon-DistributedClass2.ump
+@@endexample
