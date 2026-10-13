@@ -487,7 +487,7 @@ def main():
         for f in sorted(Path(name) for name in glob.glob(str(ROOT / pattern), recursive=True)):
             if f.relative_to(ROOT).as_posix() not in cases:
                 failures[f.relative_to(ROOT).as_posix()] = ("not classified in the manifest: add it to %s with its expected "
-                                                      "outcome (see UmpleToPython/ReadMe.txt)" % Path(options.manifest).name)
+                                                      "outcome" % Path(options.manifest).name)
     for path, expectation in cases.items():
         parse_expectation(expectation)
         if not (ROOT / path).is_file():
@@ -525,6 +525,8 @@ def main():
     for path, problem in sorted(failures.items()):
         print("NOT AS EXPECTED %s [%s]: %s" % (path, cases.get(path, "unclassified"), problem[:300]))
     print("Details: %s" % (gate.out / "results.json"))
+    if failures:
+        print('To fix these, see "Keeping Python in step with Java" in UmpleToPython/ReadMe.txt')
     sys.exit(1 if failures else 0)
 
 

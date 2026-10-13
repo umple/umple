@@ -1,4 +1,6 @@
+import json
 import os
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -65,6 +67,18 @@ class CorpusGateTest(unittest.TestCase):
             (own / "old.txt").write_text("from an earlier run")
             prepare_output(own)
             self.assertEqual([".python-corpus-gate"], sorted(p.name for p in own.iterdir()))
+
+    # A failing run ends by pointing to the guidance on fixing it; a clean run does not
+    def test_aFailingRunPointsToTheGuidance(self):
+        gate = os.path.join(HERE, os.pardir, os.pardir, os.pardir, "build", "python_corpus_gate.py")
+        with tempfile.TemporaryDirectory() as scratch:
+            for cases, status in (({}, 0), ({"gone/Missing.ump": "supported"}, 1)):
+                manifest = Path(scratch) / "manifest.json"
+                manifest.write_text(json.dumps({"corpus": [], "cases": cases}))
+                run = subprocess.run([sys.executable, gate, "--manifest", str(manifest), "--output", str(Path(scratch) / "out")],
+                                     stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, timeout=60)
+                self.assertEqual(status, run.returncode, run.stdout)
+                self.assertEqual(status, run.stdout.count("Keeping Python in step with Java"))
 
 
 if __name__ == "__main__":

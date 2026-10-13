@@ -5,10 +5,23 @@ PythonInterfaceGenerator, which cruise.umple/src/generators/Generator_CodePython
 Each template that has a Java counterpart keeps the name of the Java template with the same
 behaviour (UmpleToJava/UmpleTLTemplates/<same name>.ump), so the two can be read side by side.
 
-Drift rule: Umple's semantics are implemented by both the Java and the Python templates. A change
-to the behaviour of a Java template needs the same change in the Python template of the same name,
-with a test, or an issue that records the difference. The template tests run every shared test
-model for Python too, and the Python testbed (testbed_python) mirrors the Java testbed's scenarios.
+Keeping Python in step with Java: the Python templates are written beside the Java ones, not
+generated from them, so they change by hand when Java's output does. By what changed:
+
+  - A new model in a folder the corpus gate checks: classify it in the manifest (see Corpus gate).
+  - What a Java template generates, such as a new public method: make the same change in the Python
+    template of the same name, with a test. The gate reports "missing Java's public method" for
+    each model Python supports until Python has it. If Python cannot have the feature yet, report
+    it with error 9210 instead (see unsupportedFeature in
+    cruise.umple/src/generators/Generator_CodePython.ump) and classify the models that use it as
+    "unsupported 9210: why".
+  - How the generated code behaves, with the same methods: the gate does not compare Java's
+    behaviour with Python's, so make the same change with a test, or open an issue that records
+    the difference.
+
+Tests: the shared template tests run for Python through their subclasses in the py folders beside
+them (expected output in *.py.txt); a shared test without one, such as ToJsonTest, runs for Java
+only. The Python testbed (testbed_python) mirrors the Java testbed's scenarios.
 
 Corpus gate: build/python_corpus_gate.py generates Python for every example, manual example,
 testbed model and shared test model matched by the "corpus" patterns of
