@@ -1,0 +1,60 @@
+class Ratio
+{
+  Integer half = 7/2;
+}
+
+class Area
+{
+  Integer side = 3*3;
+}
+
+class Counter
+{
+  Integer start = 1;
+  Integer next = start + 1;
+}
+
+class Ledger
+{
+  Integer total = 10L;
+}
+
+class Mask
+{
+  Integer bits = 010;
+}
+
+class Census
+{
+  Integer people = 2147483648;
+}
+
+class Distance
+{
+  Double meters = 3000000000;
+}
+
+class Letter
+{
+  String code = "\101";
+}
+
+class Session
+{
+  String user = System.getProperty("user.name");
+}
+
+class Shift
+{
+  Integer steps = -0;
+}
+
+class Sign
+{
+  Double level = -0;
+}
+
+class Floor
+{
+  Double height = -0.0;
+}

@@ -1,0 +1,8 @@
+class UmpleToJavaScript {
+    constructor_AttributeUnassignedImmutable <<!<</*constructor_AttributeUnassignedImmutable*/>><<#
+  // Java leaves the field at the default of its type until it is set, even when the model gives a value
+  String defaultValue = "String".equals(av.getType()) ? "null" : "Boolean".equals(av.getType()) ? "false" : "0";
+#>>
+    this._<<=gen.translate("attributeCanSet",av)>> = true;
+    this._<<=gen.translate("attributeOne",av)>> = <<=defaultValue>>;!>>
+}

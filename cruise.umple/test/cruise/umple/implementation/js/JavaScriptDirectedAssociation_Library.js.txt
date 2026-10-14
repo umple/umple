@@ -1,0 +1,131 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 1 "JavaScriptDirectedAssociation.ump"
+class Library
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Library Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._books = [];
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  getBook(index)
+  {
+    let aBook = this._books[index];
+    return aBook;
+  }
+  getBooks()
+  {
+    let newBooks = this._books.slice();
+    return newBooks;
+  }
+  numberOfBooks()
+  {
+    let number = this._books.length;
+    return number;
+  }
+  hasBooks()
+  {
+    let has = this._books.length > 0;
+    return has;
+  }
+  indexOfBook(aBook)
+  {
+    let index = this._books.indexOf(aBook);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfBooks()
+  {
+    return 0;
+  }
+  /* Code from template association_AddUnidirectionalMany */
+  addBook(aBook)
+  {
+    let wasAdded = false;
+    if (this._books.includes(aBook))
+    {
+      return false;
+    }
+    this._books.push(aBook);
+    wasAdded = true;
+    return wasAdded;
+  }
+  removeBook(aBook)
+  {
+    let wasRemoved = false;
+    if (this._books.includes(aBook))
+    {
+      if (this._books.includes(aBook))
+      {
+        this._books.splice(this._books.indexOf(aBook), 1);
+      }
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addBookAt(aBook, index)
+  {
+    let wasAdded = false;
+    if (this.addBook(aBook))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfBooks())
+      {
+        index = this.numberOfBooks() - 1;
+      }
+      if (this._books.includes(aBook))
+      {
+        this._books.splice(this._books.indexOf(aBook), 1);
+      }
+      this._books.splice(index, 0, aBook);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMoveBookAt(aBook, index)
+  {
+    let wasAdded = false;
+    if (this._books.includes(aBook))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfBooks())
+      {
+        index = this.numberOfBooks() - 1;
+      }
+      if (this._books.includes(aBook))
+      {
+        this._books.splice(this._books.indexOf(aBook), 1);
+      }
+      this._books.splice(index, 0, aBook);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addBookAt(aBook, index);
+    }
+    return wasAdded;
+  }
+  delete()
+  {
+    this._books.splice(0);
+  }
+}
+
+module.exports = Library;

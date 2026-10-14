@@ -1,0 +1,193 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+*/
+
+namespace cruise.umple.compiler;
+class JavaScriptGenerator
+{
+  isA JavaGenerator;
+  depend java.io.*;
+  depend cruise.umple.compiler.javascript.*;
+  depend cruise.umple.util.StringFormatter;
+
+  @Override
+  public ILang getLanguageFor(UmpleElement aElement)
+  {
+    if (aElement instanceof UmpleClass)
+    {
+      return new JavaScriptClassGenerator();
+    }
+    return null;
+  }
+
+  @Override
+  public void writeFile(UmpleElement aClass) throws IOException
+  {
+    String className=aClass.getName();
+    if (aClass instanceof UmpleClass)
+    {
+      if(((UmpleClass)aClass).hasOuterClass())
+      {
+        return ; // inner classes should not be writen in single files.
+      }
+    }
+
+    String path = StringFormatter.addPathOrAbsolute(
+                  getModel().getUmpleFile().getPath(),
+                            getOutput()) +
+                            aClass.getPackageName().replace(".", File.separator);
+    File file = new File(path);
+    file.mkdirs();
+    String javascriptFilename = path + File.separator + className + ".js";
+    String contents = "";
+
+    String errorMessage = isUnsupportedFeature(aClass);
+    if (errorMessage!=null) {
+      System.err.println("Unsupported : Could not Generate file '" + new File(javascriptFilename).getName() + "'. This file will be missing from the output.");
+      System.err.println("\t" + errorMessage);
+
+      contents = "//An Unsupported feature for JavaScript generation was used. File could not be generated.";
+
+      //Writting empty JavaScript file
+      BufferedWriter bw = new BufferedWriter(new FileWriter(javascriptFilename));
+
+      try
+      {
+        bw.write(contents);
+        bw.flush();
+      }
+      finally
+      {
+        bw.close();
+      }
+
+      getModel().getGeneratedCode().put(aClass.getName(), contents);
+      return;
+    }
+
+    try {
+      contents = getLanguageFor(aClass).getCode(getModel(), aClass);
+    } catch(Exception e) {
+      System.err.println("Unsupported : An error occured during the code generation of " + className + ". This file will be missing form the output.");
+      System.err.println("\tYou may have been using a feature which is not currently supported for JavaScript code generation.");
+      return;
+    }
+
+    BufferedWriter bw = new BufferedWriter(new FileWriter(javascriptFilename));
+
+    try
+    {
+      bw.write(contents);
+      bw.flush();
+    }
+    finally
+    {
+      bw.close();
+    }
+
+    getModel().getGeneratedCode().put(aClass.getName(), contents);
+  }
+
+  //Distributed classes are not generated, so the Java runtime that JavaGenerator writes for them is not needed
+  @Override
+  public void writeObjectFactoryClass() throws IOException
+  {
+    return;
+  }
+
+  @Override
+  public void writeObjectFactoryInterface() throws IOException
+  {
+    return;
+  }
+
+  //Checks to see if the class uses a feature that is not part of basic javascript generation
+  private String isUnsupportedFeature(UmpleElement aClass) {
+    if (!(aClass instanceof UmpleClass)) {
+      return "Interfaces are currently unsupported for JavaScript generation.";
+    }
+    UmpleClass uClass = (UmpleClass)aClass;
+    if (uClass.numberOfStateMachines() > 0) {
+      return "State machines are currently unsupported for JavaScript generation.";
+    }
+    else if (uClass.numberOfParentInterface() > 0 || uClass.getIsSingleton() || uClass.getKey().isProvided() || uClass.numberOfConstraintTrees() > 0 || uClass.numberOfEnums() > 0 || uClass.numberOfTraceDirectives() > 0) {
+      return "Interfaces, singletons, keys, constraints, enumerations and tracing are currently unsupported for JavaScript generation.";
+    }
+    else if (uClass.hasOuterClass() || uClass.numberOfInnerClasses() > 0) {
+      //An inner class is not written to a file of its own, and its outer class does not contain it
+      return "Inner classes are currently unsupported for JavaScript generation.";
+    }
+    else if (uClass.getExtendsClass() != null && !uClass.getExtendsClass().getPackageName().equals(uClass.getPackageName())) {
+      //The superclass is required from the same folder
+      return "A superclass in another namespace is currently unsupported for JavaScript generation.";
+    }
+    else if (uClass.getExtendsClass() != null && !"external".equals(uClass.getExtendsClass().getModifier()) && isUnsupportedFeature(uClass.getExtendsClass()) != null) {
+      //The superclass file would contain only a comment, so the subclass could not be loaded
+      return "The superclass '" + uClass.getExtendsClass().getName() + "' uses a feature that is currently unsupported for JavaScript generation.";
+    }
+    else if (uClass.getIsDistributed()) {
+      return "Distributed classes are currently unsupported for JavaScript generation.";
+    }
+    else if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) {
+      //Lines that Umple could not interpret are passed to the generated code as they are, and they are not JavaScript
+      return "Code that Umple could not interpret (extra code) is currently unsupported for JavaScript generation.";
+    }
+    for (Method aMethod : uClass.getMethods()) {
+      //Methods generated by Umple (fAutoAPI) are translated, methods written by the user are not
+      if (aMethod.getSource() != Method.Source.fAutoAPI) {
+        return "Method '" + aMethod.getName() + "' is currently unsupported for JavaScript generation.";
+      }
+    }
+    for (CodeInjection inject : uClass.getCodeInjections()) {
+      //Code injections added by the generator are internal, the ones written by the user are not
+      if (!inject.getIsInternal()) {
+        return "Code injections are currently unsupported for JavaScript generation.";
+      }
+    }
+    for (Attribute attribute : uClass.getAttributes()) {
+      if (attribute.getIsDerived()) {
+        //The expression of a derived attribute is written in Java
+        return "Derived attribute '" + attribute.getName() + "' is currently unsupported for JavaScript generation.";
+      }
+      if (attribute.getIsList() || attribute.getIsAutounique() || attribute.getIsUnique() || "const".equals(attribute.getModifier()) || "fixml".equals(attribute.getModifier()) ||
+          !("String".equals(attribute.getType()) || "Integer".equals(attribute.getType()) || "Double".equals(attribute.getType()) || "Boolean".equals(attribute.getType()))) {
+        return "Attribute '" + attribute.getName() + "' is currently unsupported for JavaScript generation. Only String, Integer, Double and Boolean attributes are supported.";
+      }
+      //The initial value is copied as it is written, so only a literal that Java accepts means the same in JavaScript
+      String value = attribute.getValue();
+      String literal = "Boolean".equals(attribute.getType()) ? "true|false" :
+                       "String".equals(attribute.getType()) ? "null|\"([^\"\\\\]|\\\\[btnfr\"'\\\\])*\"" :
+                       "-?(0|[1-9][0-9]*)" + ("Double".equals(attribute.getType()) ? "(\\.[0-9]+)?" : "");
+      //Java reads -0 as the int 0, but JavaScript keeps the negative zero
+      boolean isSupportedValue = value == null || value.matches(literal) && !"-0".equals(value);
+      if (isSupportedValue && value != null && value.matches("-?[0-9.]+")) {
+        //Java rejects a whole number outside the int range, and a decimal number that becomes infinite or zero
+        try {
+          double number = value.contains(".") ? Double.parseDouble(value) : Integer.parseInt(value);
+          isSupportedValue = !Double.isInfinite(number) && (number != 0 || !value.matches(".*[1-9].*"));
+        }
+        catch (NumberFormatException e) {
+          isSupportedValue = false;
+        }
+      }
+      if (!isSupportedValue) {
+        return "The initial value of attribute '" + attribute.getName() + "' is currently unsupported for JavaScript generation. Only literals, such as 3, -1.5, true, \"text\" or null, are supported.";
+      }
+    }
+    for (AssociationVariable av : uClass.getAssociationVariables()) {
+      AssociationVariable relatedAssociation = av.getRelatedAssociation();
+      //Mandatory ends need overloaded methods, and bounded ends call static methods of the other class
+      if ((av.getIsNavigable() && (av.getMultiplicity().getLowerBound() > 0 || av.getMultiplicity().getUpperBound() > 1 || av.isSorted() || av.getIsSpecialization() || (av.isImmutable() && av.isMany()))) ||
+          (relatedAssociation != null && relatedAssociation.getIsNavigable() &&
+           (relatedAssociation.getMultiplicity().getLowerBound() > 0 || relatedAssociation.getMultiplicity().getUpperBound() > 1))) {
+        return "Association '" + av.getName() + "' is currently unsupported for JavaScript generation. Mandatory or bounded ends, sorted or specialized associations, and immutable associations with a many end are unsupported.";
+      }
+    }
+    return null;
+  }
+}

@@ -1,0 +1,21 @@
+class Car2
+{
+  0..1 <@>- 0..1 Engine;
+}
+class Engine
+{
+}
+class Folder
+{
+  * <@>- * Doc;
+}
+class Doc
+{
+}
+class Fleet
+{
+  * <@>- 0..1 Flag;
+}
+class Flag
+{
+}

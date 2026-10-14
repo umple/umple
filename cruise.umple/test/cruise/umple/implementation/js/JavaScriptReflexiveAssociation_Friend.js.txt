@@ -1,0 +1,296 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 6 "JavaScriptReflexiveAssociation.ump"
+class Friend
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Friend Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._buddies = [];
+    this._friends = [];
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  getBuddy(index)
+  {
+    let aBuddy = this._buddies[index];
+    return aBuddy;
+  }
+  getBuddies()
+  {
+    let newBuddies = this._buddies.slice();
+    return newBuddies;
+  }
+  numberOfBuddies()
+  {
+    let number = this._buddies.length;
+    return number;
+  }
+  hasBuddies()
+  {
+    let has = this._buddies.length > 0;
+    return has;
+  }
+  indexOfBuddy(aBuddy)
+  {
+    let index = this._buddies.indexOf(aBuddy);
+    return index;
+  }
+  /* Code from template association_GetMany */
+  getFriend(index)
+  {
+    let aFriend = this._friends[index];
+    return aFriend;
+  }
+  getFriends()
+  {
+    let newFriends = this._friends.slice();
+    return newFriends;
+  }
+  numberOfFriends()
+  {
+    let number = this._friends.length;
+    return number;
+  }
+  hasFriends()
+  {
+    let has = this._friends.length > 0;
+    return has;
+  }
+  indexOfFriend(aFriend)
+  {
+    let index = this._friends.indexOf(aFriend);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfBuddies()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToManyMethod */
+  addBuddy(aBuddy)
+  {
+    let wasAdded = false;
+    if (this._buddies.includes(aBuddy))
+    {
+      return false;
+    }
+    this._buddies.push(aBuddy);
+    if (aBuddy.indexOfFriend(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aBuddy.addFriend(this);
+      if (! wasAdded)
+      {
+        if (this._buddies.includes(aBuddy))
+        {
+          this._buddies.splice(this._buddies.indexOf(aBuddy), 1);
+        }
+      }
+    }
+    return wasAdded;
+  }
+  /* Code from template association_RemoveMany */
+  removeBuddy(aBuddy)
+  {
+    let wasRemoved = false;
+    if (! this._buddies.includes(aBuddy))
+    {
+      return wasRemoved;
+    }
+    let oldIndex = this._buddies.indexOf(aBuddy);
+    this._buddies.splice(oldIndex, 1);
+    if (aBuddy.indexOfFriend(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aBuddy.removeFriend(this);
+      if (! wasRemoved)
+      {
+        this._buddies.splice(oldIndex, 0, aBuddy);
+      }
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addBuddyAt(aBuddy, index)
+  {
+    let wasAdded = false;
+    if (this.addBuddy(aBuddy))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfBuddies())
+      {
+        index = this.numberOfBuddies() - 1;
+      }
+      if (this._buddies.includes(aBuddy))
+      {
+        this._buddies.splice(this._buddies.indexOf(aBuddy), 1);
+      }
+      this._buddies.splice(index, 0, aBuddy);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMoveBuddyAt(aBuddy, index)
+  {
+    let wasAdded = false;
+    if (this._buddies.includes(aBuddy))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfBuddies())
+      {
+        index = this.numberOfBuddies() - 1;
+      }
+      if (this._buddies.includes(aBuddy))
+      {
+        this._buddies.splice(this._buddies.indexOf(aBuddy), 1);
+      }
+      this._buddies.splice(index, 0, aBuddy);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addBuddyAt(aBuddy, index);
+    }
+    return wasAdded;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfFriends()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToManyMethod */
+  addFriend(aFriend)
+  {
+    let wasAdded = false;
+    if (this._friends.includes(aFriend))
+    {
+      return false;
+    }
+    this._friends.push(aFriend);
+    if (aFriend.indexOfBuddy(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aFriend.addBuddy(this);
+      if (! wasAdded)
+      {
+        if (this._friends.includes(aFriend))
+        {
+          this._friends.splice(this._friends.indexOf(aFriend), 1);
+        }
+      }
+    }
+    return wasAdded;
+  }
+  /* Code from template association_RemoveMany */
+  removeFriend(aFriend)
+  {
+    let wasRemoved = false;
+    if (! this._friends.includes(aFriend))
+    {
+      return wasRemoved;
+    }
+    let oldIndex = this._friends.indexOf(aFriend);
+    this._friends.splice(oldIndex, 1);
+    if (aFriend.indexOfBuddy(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aFriend.removeBuddy(this);
+      if (! wasRemoved)
+      {
+        this._friends.splice(oldIndex, 0, aFriend);
+      }
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addFriendAt(aFriend, index)
+  {
+    let wasAdded = false;
+    if (this.addFriend(aFriend))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfFriends())
+      {
+        index = this.numberOfFriends() - 1;
+      }
+      if (this._friends.includes(aFriend))
+      {
+        this._friends.splice(this._friends.indexOf(aFriend), 1);
+      }
+      this._friends.splice(index, 0, aFriend);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMoveFriendAt(aFriend, index)
+  {
+    let wasAdded = false;
+    if (this._friends.includes(aFriend))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfFriends())
+      {
+        index = this.numberOfFriends() - 1;
+      }
+      if (this._friends.includes(aFriend))
+      {
+        this._friends.splice(this._friends.indexOf(aFriend), 1);
+      }
+      this._friends.splice(index, 0, aFriend);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addFriendAt(aFriend, index);
+    }
+    return wasAdded;
+  }
+  delete()
+  {
+    let copyOfBuddies = this._buddies.slice();
+    this._buddies.splice(0);
+    for (let aBuddy of copyOfBuddies) {
+      aBuddy.removeFriend(this);
+    }
+    let copyOfFriends = this._friends.slice();
+    this._friends.splice(0);
+    for (let aFriend of copyOfFriends) {
+      aFriend.removeBuddy(this);
+    }
+  }
+}
+
+module.exports = Friend;
