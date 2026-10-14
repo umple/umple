@@ -1,0 +1,5 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqEarsStructured.ump
+</p><p><b>E1: While the aircraft is on ground, when reverse thrust is commanded, the engine control system shall enable reverse thrust</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;state machine:&nbsp;thrust&nbsp;in class&nbsp;EngineControl&nbsp;ReqEarsStructured.ump&nbsp;line&nbsp;10 ; 
+</p></html>
