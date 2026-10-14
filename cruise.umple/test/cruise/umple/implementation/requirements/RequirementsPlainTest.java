@@ -46,6 +46,8 @@ public class RequirementsPlainTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUseCaseMultipleSteps.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUseCaseRelationships.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqUseCaseStepConditions.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqEarsStructured.html");
+    SampleFileWriter.destroy(pathToInput + "/requirements/ReqEarsPatterns.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideImpl.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideStatements.html");
     SampleFileWriter.destroy(pathToInput + "/requirements/ReqHideStatementsQuality.test.html");
@@ -178,6 +180,17 @@ public class RequirementsPlainTest extends TemplateTest
   public void useCaseStepConditions()
   {
     assertUmpleTemplateFor("requirements/ReqUseCaseStepConditions.ump","requirements/ReqUseCaseStepConditions.html.txt");
+  }
+
+  @Test
+  public void earsStructured()
+  {
+    assertUmpleTemplateFor("requirements/ReqEarsStructured.ump","requirements/ReqEarsStructured.html.txt");
+  }
+  @Test
+  public void earsPatterns()
+  {
+    assertUmpleTemplateFor("requirements/ReqEarsPatterns.ump","requirements/ReqEarsPatterns.html.txt");
   }
 
   @Test

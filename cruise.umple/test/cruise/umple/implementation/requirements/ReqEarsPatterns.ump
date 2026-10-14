@@ -1,0 +1,27 @@
+req E1 ears {
+  shall { log every transaction }
+}
+
+req E2 ears {
+  when { mute is selected }
+  system { laptop }
+  shall { suppress all audio output }
+}
+
+req E3 ears {
+  while { there is no card in the ATM }
+  system { ATM }
+  shall { display 'insert card to begin' }
+}
+
+req E4 ears {
+  where { the car has a sunroof }
+  system { car }
+  shall { have a sunroof control panel on the driver door }
+}
+
+req E5 ears {
+  if { an invalid credit card number is entered }
+  system { website }
+  shall { display 'please re-enter credit card details' }
+}
