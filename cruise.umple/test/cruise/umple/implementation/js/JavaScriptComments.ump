@@ -1,0 +1,7 @@
+// A class comment
+class Doc1
+{
+  // attribute comment
+  title;
+  Integer pages = 1;
+}

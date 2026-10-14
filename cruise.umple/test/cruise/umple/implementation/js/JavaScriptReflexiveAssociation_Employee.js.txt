@@ -1,0 +1,194 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 1 "JavaScriptReflexiveAssociation.ump"
+class Employee
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Employee Attributes
+  //Employee Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor(aName)
+  {
+    this._name = aName;
+    this._reports = [];
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  setName(aName)
+  {
+    let wasSet = false;
+    this._name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+  getName()
+  {
+    return this._name;
+  }
+  /* Code from template association_GetMany */
+  getReport(index)
+  {
+    let aReport = this._reports[index];
+    return aReport;
+  }
+  getReports()
+  {
+    let newReports = this._reports.slice();
+    return newReports;
+  }
+  numberOfReports()
+  {
+    let number = this._reports.length;
+    return number;
+  }
+  hasReports()
+  {
+    let has = this._reports.length > 0;
+    return has;
+  }
+  indexOfReport(aReport)
+  {
+    let index = this._reports.indexOf(aReport);
+    return index;
+  }
+  /* Code from template association_GetOne */
+  getBoss()
+  {
+    return this._boss;
+  }
+  hasBoss()
+  {
+    let has = this._boss != null;
+    return has;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfReports()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOptionalOne */
+  addReport(aReport)
+  {
+    let wasAdded = false;
+    if (this._reports.includes(aReport))
+    {
+      return false;
+    }
+    let existingBoss = aReport.getBoss();
+    if (existingBoss == null)
+    {
+      aReport.setBoss(this);
+    }
+    else if (! (this == existingBoss))
+    {
+      existingBoss.removeReport(aReport);
+      this.addReport(aReport);
+    }
+    else
+    {
+      this._reports.push(aReport);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+  removeReport(aReport)
+  {
+    let wasRemoved = false;
+    if (this._reports.includes(aReport))
+    {
+      if (this._reports.includes(aReport))
+      {
+        this._reports.splice(this._reports.indexOf(aReport), 1);
+      }
+      aReport.setBoss(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addReportAt(aReport, index)
+  {
+    let wasAdded = false;
+    if (this.addReport(aReport))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfReports())
+      {
+        index = this.numberOfReports() - 1;
+      }
+      if (this._reports.includes(aReport))
+      {
+        this._reports.splice(this._reports.indexOf(aReport), 1);
+      }
+      this._reports.splice(index, 0, aReport);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMoveReportAt(aReport, index)
+  {
+    let wasAdded = false;
+    if (this._reports.includes(aReport))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfReports())
+      {
+        index = this.numberOfReports() - 1;
+      }
+      if (this._reports.includes(aReport))
+      {
+        this._reports.splice(this._reports.indexOf(aReport), 1);
+      }
+      this._reports.splice(index, 0, aReport);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addReportAt(aReport, index);
+    }
+    return wasAdded;
+  }
+  /* Code from template association_SetOptionalOneToMany */
+  setBoss(aBoss)
+  {
+    let wasSet = false;
+    let existingBoss = this._boss;
+    this._boss = aBoss;
+    if (existingBoss != null && ! (existingBoss == aBoss))
+    {
+      existingBoss.removeReport(this);
+    }
+    if (aBoss != null)
+    {
+      aBoss.addReport(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+  delete()
+  {
+    while (! (this._reports.length == 0))
+    {
+      this._reports[0].setBoss(null);
+    }
+    if (this._boss != null)
+    {
+      let placeholderBoss = this._boss;
+      this._boss = null;
+      placeholderBoss.removeReport(this);
+    }
+  }
+}
+
+module.exports = Employee;

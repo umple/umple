@@ -1,0 +1,164 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 8 "JavaScriptCompositionVariants.ump"
+class Folder
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Folder Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._docs = [];
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  getDoc(index)
+  {
+    let aDoc = this._docs[index];
+    return aDoc;
+  }
+  getDocs()
+  {
+    let newDocs = this._docs.slice();
+    return newDocs;
+  }
+  numberOfDocs()
+  {
+    let number = this._docs.length;
+    return number;
+  }
+  hasDocs()
+  {
+    let has = this._docs.length > 0;
+    return has;
+  }
+  indexOfDoc(aDoc)
+  {
+    let index = this._docs.indexOf(aDoc);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfDocs()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToManyMethod */
+  addDoc(aDoc)
+  {
+    let wasAdded = false;
+    if (this._docs.includes(aDoc))
+    {
+      return false;
+    }
+    this._docs.push(aDoc);
+    if (aDoc.indexOfFolder(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aDoc.addFolder(this);
+      if (! wasAdded)
+      {
+        if (this._docs.includes(aDoc))
+        {
+          this._docs.splice(this._docs.indexOf(aDoc), 1);
+        }
+      }
+    }
+    return wasAdded;
+  }
+  /* Code from template association_RemoveMany */
+  removeDoc(aDoc)
+  {
+    let wasRemoved = false;
+    if (! this._docs.includes(aDoc))
+    {
+      return wasRemoved;
+    }
+    let oldIndex = this._docs.indexOf(aDoc);
+    this._docs.splice(oldIndex, 1);
+    if (aDoc.indexOfFolder(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aDoc.removeFolder(this);
+      if (! wasRemoved)
+      {
+        this._docs.splice(oldIndex, 0, aDoc);
+      }
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addDocAt(aDoc, index)
+  {
+    let wasAdded = false;
+    if (this.addDoc(aDoc))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfDocs())
+      {
+        index = this.numberOfDocs() - 1;
+      }
+      if (this._docs.includes(aDoc))
+      {
+        this._docs.splice(this._docs.indexOf(aDoc), 1);
+      }
+      this._docs.splice(index, 0, aDoc);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMoveDocAt(aDoc, index)
+  {
+    let wasAdded = false;
+    if (this._docs.includes(aDoc))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfDocs())
+      {
+        index = this.numberOfDocs() - 1;
+      }
+      if (this._docs.includes(aDoc))
+      {
+        this._docs.splice(this._docs.indexOf(aDoc), 1);
+      }
+      this._docs.splice(index, 0, aDoc);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addDocAt(aDoc, index);
+    }
+    return wasAdded;
+  }
+  delete()
+  {
+    while (this._docs.length > 0)
+    {
+      let aDoc = this._docs[this._docs.length - 1];
+      aDoc.delete();
+      if (this._docs.includes(aDoc))
+      {
+        this._docs.splice(this._docs.indexOf(aDoc), 1);
+      }
+    }
+  }
+}
+
+module.exports = Folder;

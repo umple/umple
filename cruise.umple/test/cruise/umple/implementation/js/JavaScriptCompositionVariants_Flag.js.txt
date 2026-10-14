@@ -1,0 +1,153 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 19 "JavaScriptCompositionVariants.ump"
+class Flag
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Flag Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._fleets = [];
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  getFleet(index)
+  {
+    let aFleet = this._fleets[index];
+    return aFleet;
+  }
+  getFleets()
+  {
+    let newFleets = this._fleets.slice();
+    return newFleets;
+  }
+  numberOfFleets()
+  {
+    let number = this._fleets.length;
+    return number;
+  }
+  hasFleets()
+  {
+    let has = this._fleets.length > 0;
+    return has;
+  }
+  indexOfFleet(aFleet)
+  {
+    let index = this._fleets.indexOf(aFleet);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfFleets()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOptionalOne */
+  addFleet(aFleet)
+  {
+    let wasAdded = false;
+    if (this._fleets.includes(aFleet))
+    {
+      return false;
+    }
+    let existingFlag = aFleet.getFlag();
+    if (existingFlag == null)
+    {
+      aFleet.setFlag(this);
+    }
+    else if (! (this == existingFlag))
+    {
+      existingFlag.removeFleet(aFleet);
+      this.addFleet(aFleet);
+    }
+    else
+    {
+      this._fleets.push(aFleet);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+  removeFleet(aFleet)
+  {
+    let wasRemoved = false;
+    if (this._fleets.includes(aFleet))
+    {
+      if (this._fleets.includes(aFleet))
+      {
+        this._fleets.splice(this._fleets.indexOf(aFleet), 1);
+      }
+      aFleet.setFlag(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addFleetAt(aFleet, index)
+  {
+    let wasAdded = false;
+    if (this.addFleet(aFleet))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfFleets())
+      {
+        index = this.numberOfFleets() - 1;
+      }
+      if (this._fleets.includes(aFleet))
+      {
+        this._fleets.splice(this._fleets.indexOf(aFleet), 1);
+      }
+      this._fleets.splice(index, 0, aFleet);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMoveFleetAt(aFleet, index)
+  {
+    let wasAdded = false;
+    if (this._fleets.includes(aFleet))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfFleets())
+      {
+        index = this.numberOfFleets() - 1;
+      }
+      if (this._fleets.includes(aFleet))
+      {
+        this._fleets.splice(this._fleets.indexOf(aFleet), 1);
+      }
+      this._fleets.splice(index, 0, aFleet);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addFleetAt(aFleet, index);
+    }
+    return wasAdded;
+  }
+  delete()
+  {
+    while (! (this._fleets.length == 0))
+    {
+      let aFleet = this._fleets[0];
+      aFleet.setFlag(null);
+      if (this._fleets.includes(aFleet))
+      {
+        this._fleets.splice(this._fleets.indexOf(aFleet), 1);
+      }
+    }
+  }
+}
+
+module.exports = Flag;

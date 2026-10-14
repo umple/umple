@@ -1,0 +1,52 @@
+class UmpleToJavaScript {
+    association_AddIndexControlFunctions <<!<</*association_AddIndexControlFunctions*/>>
+  /* Code from template association_AddIndexControlFunctions */
+  <<=gen.translate("addAtMethod",av)>>(<<=gen.translate("parameterOne",av)>>, index)
+  {
+    let wasAdded = false;
+    if (this.<<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.<<=gen.translate("numberOfMethod",av)>>())
+      {
+        index = this.<<=gen.translate("numberOfMethod",av)>>() - 1;
+      }
+      if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+      {
+        this._<<=gen.translate("associationMany",av)>>.splice(this._<<=gen.translate("associationMany",av)>>.indexOf(<<=gen.translate("parameterOne",av)>>), 1);
+      }
+      this._<<=gen.translate("associationMany",av)>>.splice(index, 0, <<=gen.translate("parameterOne",av)>>);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  <<=gen.translate("addOrMoveAtMethod",av)>>(<<=gen.translate("parameterOne",av)>>, index)
+  {
+    let wasAdded = false;
+    if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.<<=gen.translate("numberOfMethod",av)>>())
+      {
+        index = this.<<=gen.translate("numberOfMethod",av)>>() - 1;
+      }
+      if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+      {
+        this._<<=gen.translate("associationMany",av)>>.splice(this._<<=gen.translate("associationMany",av)>>.indexOf(<<=gen.translate("parameterOne",av)>>), 1);
+      }
+      this._<<=gen.translate("associationMany",av)>>.splice(index, 0, <<=gen.translate("parameterOne",av)>>);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.<<=gen.translate("addAtMethod",av)>>(<<=gen.translate("parameterOne",av)>>, index);
+    }
+    return wasAdded;
+  }!>>
+}

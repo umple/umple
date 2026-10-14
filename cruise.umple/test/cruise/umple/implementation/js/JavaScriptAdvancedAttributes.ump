@@ -1,0 +1,12 @@
+class Gadget
+{
+  name;
+  Double price;
+  Double weight = 1.5;
+  defaulted Integer stock = 10;
+  lazy note;
+  lazy Boolean sold;
+  immutable code;
+  lazy immutable serial;
+  immutable Integer year = 2026;
+}

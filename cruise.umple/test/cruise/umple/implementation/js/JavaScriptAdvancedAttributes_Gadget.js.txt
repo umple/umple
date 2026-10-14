@@ -1,0 +1,143 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 1 "JavaScriptAdvancedAttributes.ump"
+class Gadget
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Gadget Attributes
+  //Helper Variables
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor(aName, aPrice, aCode)
+  {
+    this._name = aName;
+    this._price = aPrice;
+    this._weight = 1.5;
+    this.resetStock();
+    this._note = null;
+    this._sold = false;
+    this._code = aCode;
+    this._canSetSerial = true;
+    this._year = 2026;
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  setName(aName)
+  {
+    let wasSet = false;
+    this._name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+  setPrice(aPrice)
+  {
+    let wasSet = false;
+    this._price = aPrice;
+    wasSet = true;
+    return wasSet;
+  }
+  setWeight(aWeight)
+  {
+    let wasSet = false;
+    this._weight = aWeight;
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template attribute_SetDefaulted */
+  setStock(aStock)
+  {
+    let wasSet = false;
+    this._stock = aStock;
+    wasSet = true;
+    return wasSet;
+  }
+  resetStock()
+  {
+    let wasReset = false;
+    this._stock = this.getDefaultStock();
+    wasReset = true;
+    return wasReset;
+  }
+  setNote(aNote)
+  {
+    let wasSet = false;
+    this._note = aNote;
+    wasSet = true;
+    return wasSet;
+  }
+  setSold(aSold)
+  {
+    let wasSet = false;
+    this._sold = aSold;
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template attribute_SetImmutable */
+  setSerial(aSerial)
+  {
+    let wasSet = false;
+    if (! this._canSetSerial)
+    {
+      return false;
+    }
+    this._canSetSerial = false;
+    this._serial = aSerial;
+    wasSet = true;
+    return wasSet;
+  }
+  getName()
+  {
+    return this._name;
+  }
+  getPrice()
+  {
+    return this._price;
+  }
+  getWeight()
+  {
+    return this._weight;
+  }
+  getStock()
+  {
+    return this._stock;
+  }
+  /* Code from template attribute_GetDefaulted */
+  getDefaultStock()
+  {
+    return 10;
+  }
+  getNote()
+  {
+    return this._note;
+  }
+  getSold()
+  {
+    return this._sold;
+  }
+  getCode()
+  {
+    return this._code;
+  }
+  getSerial()
+  {
+    return this._serial;
+  }
+  getYear()
+  {
+    return this._year;
+  }
+  /* Code from template attribute_IsBoolean */
+  isSold()
+  {
+    return this._sold;
+  }
+  delete()
+  {
+  }
+}
+
+module.exports = Gadget;

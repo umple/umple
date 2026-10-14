@@ -1,0 +1,153 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 18 "JavaScriptUnsupportedFeatures.ump"
+class Shelf
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Shelf Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._items = [];
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  getItem(index)
+  {
+    let aItem = this._items[index];
+    return aItem;
+  }
+  getItems()
+  {
+    let newItems = this._items.slice();
+    return newItems;
+  }
+  numberOfItems()
+  {
+    let number = this._items.length;
+    return number;
+  }
+  hasItems()
+  {
+    let has = this._items.length > 0;
+    return has;
+  }
+  indexOfItem(aItem)
+  {
+    let index = this._items.indexOf(aItem);
+    return index;
+  }
+  /* Code from template association_GetMany_clear */
+  clear_items()
+  {
+    this._items.splice(0);
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfItems()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOptionalOne */
+  addItem(aItem)
+  {
+    let wasAdded = false;
+    if (this._items.includes(aItem))
+    {
+      return false;
+    }
+    let existingShelf = aItem.getShelf();
+    if (existingShelf == null)
+    {
+      aItem.setShelf(this);
+    }
+    else if (! (this == existingShelf))
+    {
+      existingShelf.removeItem(aItem);
+      this.addItem(aItem);
+    }
+    else
+    {
+      this._items.push(aItem);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+  removeItem(aItem)
+  {
+    let wasRemoved = false;
+    if (this._items.includes(aItem))
+    {
+      if (this._items.includes(aItem))
+      {
+        this._items.splice(this._items.indexOf(aItem), 1);
+      }
+      aItem.setShelf(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addItemAt(aItem, index)
+  {
+    let wasAdded = false;
+    if (this.addItem(aItem))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfItems())
+      {
+        index = this.numberOfItems() - 1;
+      }
+      if (this._items.includes(aItem))
+      {
+        this._items.splice(this._items.indexOf(aItem), 1);
+      }
+      this._items.splice(index, 0, aItem);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMoveItemAt(aItem, index)
+  {
+    let wasAdded = false;
+    if (this._items.includes(aItem))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfItems())
+      {
+        index = this.numberOfItems() - 1;
+      }
+      if (this._items.includes(aItem))
+      {
+        this._items.splice(this._items.indexOf(aItem), 1);
+      }
+      this._items.splice(index, 0, aItem);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addItemAt(aItem, index);
+    }
+    return wasAdded;
+  }
+  delete()
+  {
+    while (! (this._items.length == 0))
+    {
+      this._items[0].setShelf(null);
+    }
+  }
+}
+
+module.exports = Shelf;

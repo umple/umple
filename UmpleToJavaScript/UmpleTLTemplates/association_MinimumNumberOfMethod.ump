@@ -1,0 +1,8 @@
+class UmpleToJavaScript {
+    association_MinimumNumberOfMethod <<!<</*association_MinimumNumberOfMethod*/>>
+  /* Code from template association_MinimumNumberOfMethod */
+  static <<=gen.translate("minimumNumberOfMethod",av)>>()
+  {
+    return <<=av.getMultiplicity().getLowerBound()>>;
+  }!>>
+}

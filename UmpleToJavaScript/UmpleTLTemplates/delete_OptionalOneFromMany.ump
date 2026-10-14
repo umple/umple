@@ -1,0 +1,9 @@
+class UmpleToJavaScript {
+    delete_OptionalOneFromMany <<!<</*delete_OptionalOneFromMany*/>>
+    if (this._<<=gen.translate("associationOne",av)>> != null)
+    {
+      let <<=gen.translate("removeParameterOne",av)>> = this._<<=gen.translate("associationOne",av)>>;
+      this._<<=gen.translate("associationOne",av)>> = null;
+      <<=gen.translate("removeParameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+    }!>>
+}

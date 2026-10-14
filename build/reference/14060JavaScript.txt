@@ -9,7 +9,9 @@ The JavaScript generator provides basic support for generating JavaScript from U
 
 <p>The generated code uses CommonJS modules: each class is exported with <code>module.exports</code>, and a subclass uses <code>require</code> to obtain its superclass. The generated files can be run with Node.js without any other library.</p>
 
-<p><b>Command line use:</b> As for <a href="Python.html">Python</a>, <a target="txl" href="https://www.txl.ca">TXL</a> transformation technology is used to convert generated Java to JavaScript, so you need to install <a target="txl" href="https://www.txl.ca">version 10.8b of FreeTXL</a> first.</p>
+<p>JavaScript is generated directly by the Umple compiler, so no other tool needs to be installed.</p>
+
+<p>The initial value of an attribute is copied to the generated code as it is written: it is not translated from Java. It must therefore be valid JavaScript, and it is evaluated with JavaScript semantics, which can differ from Java; for example, <code>Integer half = 7/2;</code> gives 3.5 rather than 3. An initial value that refers to another attribute by name is not rewritten to use that attribute, so creating an object then fails.</p>
 
 <p>
 Currently unsupported features:
@@ -20,7 +22,12 @@ Currently unsupported features:
     <li>Interfaces, singletons, keys, constraints and constants</li>
     <li>Enumerations and tracing</li>
     <li>A superclass in another namespace</li>
+    <li>A subclass of a class that is not generated because it uses an unsupported feature</li>
     <li>Attributes of other types, such as Date, Time or lists, and fixml attributes</li>
+    <li>Unique and autounique attributes</li>
+    <li>Derived attributes</li>
+    <li>Code in a class that Umple could not interpret (extra code)</li>
+    <li>Distributed classes</li>
     <li>The generated toString method</li>
 </ul>
 A class that uses an unsupported feature is not generated: a message is displayed and the file contains only a comment.

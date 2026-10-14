@@ -1,0 +1,19 @@
+class Driver
+{
+  0..1 -> 0..1 Car;
+}
+class Car
+{
+  plate;
+}
+class Badge
+{
+  immutable;
+  label;
+  0..1 -> 0..1 Stamp;
+}
+class Stamp
+{
+  immutable;
+  mark;
+}

@@ -1,0 +1,15 @@
+class UmpleToJavaScript {
+    association_GetOne <<!<</*association_GetOne*/>>
+  /* Code from template association_GetOne */
+  <<=gen.translate("getMethod",av)>>()
+  {
+    return this._<<=gen.translate("associationOne",av)>>;
+  }<<#
+  if(av.getMultiplicity().getLowerBound() == 0) {
+  #>>
+  <<=gen.translate("hasMethod",av)>>()
+  {
+    let has = this._<<=gen.translate("associationOne",av)>> != null;
+    return has;
+  }<<# } #>>!>>
+}

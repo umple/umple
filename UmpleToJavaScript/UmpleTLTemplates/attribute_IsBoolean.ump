@@ -1,0 +1,8 @@
+class UmpleToJavaScript {
+    attribute_IsBoolean <<!<</*attribute_IsBoolean*/>>
+  /* Code from template attribute_IsBoolean */
+  <<=gen.translate("isMethod",av)>>()
+  {
+    return this._<<=gen.translate("attributeOne",av)>>;
+  }!>>
+}
