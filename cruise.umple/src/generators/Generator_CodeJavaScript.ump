@@ -118,6 +118,10 @@ class JavaScriptGenerator
     else if (uClass.numberOfParentInterface() > 0 || uClass.getIsSingleton() || uClass.getKey().isProvided() || uClass.numberOfConstraintTrees() > 0 || uClass.numberOfEnums() > 0 || uClass.numberOfTraceDirectives() > 0) {
       return "Interfaces, singletons, keys, constraints, enumerations and tracing are currently unsupported for JavaScript generation.";
     }
+    else if (uClass.hasOuterClass() || uClass.numberOfInnerClasses() > 0) {
+      //An inner class is not written to a file of its own, and its outer class does not contain it
+      return "Inner classes are currently unsupported for JavaScript generation.";
+    }
     else if (uClass.getExtendsClass() != null && !uClass.getExtendsClass().getPackageName().equals(uClass.getPackageName())) {
       //The superclass is required from the same folder
       return "A superclass in another namespace is currently unsupported for JavaScript generation.";
@@ -153,6 +157,26 @@ class JavaScriptGenerator
       if (attribute.getIsList() || attribute.getIsAutounique() || attribute.getIsUnique() || "const".equals(attribute.getModifier()) || "fixml".equals(attribute.getModifier()) ||
           !("String".equals(attribute.getType()) || "Integer".equals(attribute.getType()) || "Double".equals(attribute.getType()) || "Boolean".equals(attribute.getType()))) {
         return "Attribute '" + attribute.getName() + "' is currently unsupported for JavaScript generation. Only String, Integer, Double and Boolean attributes are supported.";
+      }
+      //The initial value is copied as it is written, so only a literal that Java accepts means the same in JavaScript
+      String value = attribute.getValue();
+      String literal = "Boolean".equals(attribute.getType()) ? "true|false" :
+                       "String".equals(attribute.getType()) ? "null|\"([^\"\\\\]|\\\\[btnfr\"'\\\\])*\"" :
+                       "-?(0|[1-9][0-9]*)" + ("Double".equals(attribute.getType()) ? "(\\.[0-9]+)?" : "");
+      //Java reads -0 as the int 0, but JavaScript keeps the negative zero
+      boolean isSupportedValue = value == null || value.matches(literal) && !"-0".equals(value);
+      if (isSupportedValue && value != null && value.matches("-?[0-9.]+")) {
+        //Java rejects a whole number outside the int range, and a decimal number that becomes infinite or zero
+        try {
+          double number = value.contains(".") ? Double.parseDouble(value) : Integer.parseInt(value);
+          isSupportedValue = !Double.isInfinite(number) && (number != 0 || !value.matches(".*[1-9].*"));
+        }
+        catch (NumberFormatException e) {
+          isSupportedValue = false;
+        }
+      }
+      if (!isSupportedValue) {
+        return "The initial value of attribute '" + attribute.getName() + "' is currently unsupported for JavaScript generation. Only literals, such as 3, -1.5, true, \"text\" or null, are supported.";
       }
     }
     for (AssociationVariable av : uClass.getAssociationVariables()) {

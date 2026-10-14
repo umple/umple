@@ -1,6 +1,8 @@
 package cruise.umple.implementation.js;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.PrintStream;
 
 import org.junit.*;
 
@@ -73,6 +75,21 @@ public class JavaScriptClassTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/js/Truck.js");
     SampleFileWriter.destroy(pathToInput + "/js/Pickup.js");
     SampleFileWriter.destroy(pathToInput + "/js/Worker.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Ratio.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Area.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Counter.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Ledger.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Mask.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Census.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Distance.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Letter.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Session.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Shift.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Sign.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Floor.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Panel.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Button.js");
+    SampleFileWriter.destroy(pathToInput + "/js/IconButton.js");
   }
 
   @Test
@@ -213,5 +230,55 @@ public class JavaScriptClassTemplateTest extends TemplateTest
     assertUmpleTemplateFor("js/JavaScriptUnsupportedSuperclass.ump","js/JavaScriptUnsupportedSuperclass_Truck.js.txt","Truck");
     assertUmpleTemplateFor("js/JavaScriptUnsupportedSuperclass.ump","js/JavaScriptUnsupportedSuperclass_Pickup.js.txt","Pickup");
     assertUmpleTemplateFor("js/JavaScriptUnsupportedSuperclass.ump","js/JavaScriptUnsupportedSuperclass_Worker.js.txt","Worker");
+  }
+
+  @Test
+  public void UnsupportedInitialValue()
+  {
+    String errors = generateAndReadErrors("js/JavaScriptUnsupportedInitialValue.ump");
+    String[][] classAndAttribute = {{"Ratio", "half"}, {"Area", "side"}, {"Counter", "next"}, {"Ledger", "total"}, {"Mask", "bits"},
+      {"Census", "people"}, {"Distance", "meters"}, {"Letter", "code"}, {"Session", "user"}, {"Shift", "steps"}, {"Sign", "level"}};
+    for (String[] expected : classAndAttribute)
+    {
+      assertUnsupported(errors, expected[0], "The initial value of attribute '" + expected[1] + "' is currently unsupported for JavaScript generation.");
+    }
+    //-0.0 is a negative zero in both Java and JavaScript
+    Assert.assertTrue(lastModel.getGeneratedCode().get("Floor").contains("this._height = -0.0;"));
+  }
+
+  @Test
+  public void UnsupportedInnerClass()
+  {
+    String errors = generateAndReadErrors("js/JavaScriptUnsupportedInnerClass.ump");
+    assertUnsupported(errors, "Panel", "Inner classes are currently unsupported for JavaScript generation.");
+    assertUnsupported(errors, "IconButton", "The superclass 'Button' uses a feature that is currently unsupported for JavaScript generation.");
+    Assert.assertFalse(new File(pathToInput + "/js/Button.js").exists());
+  }
+
+  private UmpleModel lastModel;
+
+  // Generates the model and returns what the generator printed about unsupported features
+  private String generateAndReadErrors(String umpleFile)
+  {
+    PrintStream originalErr = System.err;
+    ByteArrayOutputStream errors = new ByteArrayOutputStream();
+    System.setErr(new PrintStream(errors, true));
+    try
+    {
+      lastModel = createUmpleSystem(pathToInput, umpleFile);
+    }
+    finally
+    {
+      System.setErr(originalErr);
+    }
+    return errors.toString();
+  }
+
+  // The class is not generated: its file holds only the comment, and the reason is reported for it
+  private void assertUnsupported(String errors, String className, String reason)
+  {
+    Assert.assertEquals("//An Unsupported feature for JavaScript generation was used. File could not be generated.", lastModel.getGeneratedCode().get(className));
+    Assert.assertTrue(new File(pathToInput + "/js/" + className + ".js").exists());
+    Assert.assertTrue(errors, errors.contains("Could not Generate file '" + className + ".js'. This file will be missing from the output." + System.lineSeparator() + "\t" + reason));
   }
 }

@@ -21,7 +21,19 @@ class Gadget
     this._sold = false;
     this._code = aCode;
     this._canSetSerial = true;
+    this._serial = null;
+    this._canSetBatch = true;
+    this._batch = 0;
+    this._canSetRatio = true;
+    this._ratio = 0;
+    this._canSetSealed = true;
+    this._sealed = false;
     this._year = 2026;
+    this._offset = -1;
+    this._depth = -0.5;
+    this._visible = true;
+    this._label = "say \"hi\"\n";
+    this._tag = null;
   }
   //------------------------
   // INTERFACE
@@ -89,6 +101,80 @@ class Gadget
     wasSet = true;
     return wasSet;
   }
+  /* Code from template attribute_SetImmutable */
+  setBatch(aBatch)
+  {
+    let wasSet = false;
+    if (! this._canSetBatch)
+    {
+      return false;
+    }
+    this._canSetBatch = false;
+    this._batch = aBatch;
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template attribute_SetImmutable */
+  setRatio(aRatio)
+  {
+    let wasSet = false;
+    if (! this._canSetRatio)
+    {
+      return false;
+    }
+    this._canSetRatio = false;
+    this._ratio = aRatio;
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template attribute_SetImmutable */
+  setSealed(aSealed)
+  {
+    let wasSet = false;
+    if (! this._canSetSealed)
+    {
+      return false;
+    }
+    this._canSetSealed = false;
+    this._sealed = aSealed;
+    wasSet = true;
+    return wasSet;
+  }
+  setOffset(aOffset)
+  {
+    let wasSet = false;
+    this._offset = aOffset;
+    wasSet = true;
+    return wasSet;
+  }
+  setDepth(aDepth)
+  {
+    let wasSet = false;
+    this._depth = aDepth;
+    wasSet = true;
+    return wasSet;
+  }
+  setVisible(aVisible)
+  {
+    let wasSet = false;
+    this._visible = aVisible;
+    wasSet = true;
+    return wasSet;
+  }
+  setLabel(aLabel)
+  {
+    let wasSet = false;
+    this._label = aLabel;
+    wasSet = true;
+    return wasSet;
+  }
+  setTag(aTag)
+  {
+    let wasSet = false;
+    this._tag = aTag;
+    wasSet = true;
+    return wasSet;
+  }
   getName()
   {
     return this._name;
@@ -126,14 +212,56 @@ class Gadget
   {
     return this._serial;
   }
+  getBatch()
+  {
+    return this._batch;
+  }
+  getRatio()
+  {
+    return this._ratio;
+  }
+  getSealed()
+  {
+    return this._sealed;
+  }
   getYear()
   {
     return this._year;
+  }
+  getOffset()
+  {
+    return this._offset;
+  }
+  getDepth()
+  {
+    return this._depth;
+  }
+  getVisible()
+  {
+    return this._visible;
+  }
+  getLabel()
+  {
+    return this._label;
+  }
+  getTag()
+  {
+    return this._tag;
   }
   /* Code from template attribute_IsBoolean */
   isSold()
   {
     return this._sold;
+  }
+  /* Code from template attribute_IsBoolean */
+  isSealed()
+  {
+    return this._sealed;
+  }
+  /* Code from template attribute_IsBoolean */
+  isVisible()
+  {
+    return this._visible;
   }
   delete()
   {

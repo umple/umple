@@ -8,5 +8,13 @@ class Gadget
   lazy Boolean sold;
   immutable code;
   lazy immutable serial;
+  lazy immutable Integer batch;
+  lazy immutable Double ratio;
+  lazy immutable Boolean sealed;
   immutable Integer year = 2026;
+  Integer offset = -1;
+  Double depth = -0.5;
+  Boolean visible = true;
+  String label = "say \"hi\"\n";
+  String tag = null;
 }

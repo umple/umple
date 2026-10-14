@@ -11,7 +11,7 @@ The JavaScript generator provides basic support for generating JavaScript from U
 
 <p>JavaScript is generated directly by the Umple compiler, so no other tool needs to be installed.</p>
 
-<p>The initial value of an attribute is copied to the generated code as it is written: it is not translated from Java. It must therefore be valid JavaScript, and it is evaluated with JavaScript semantics, which can differ from Java; for example, <code>Integer half = 7/2;</code> gives 3.5 rather than 3. An initial value that refers to another attribute by name is not rewritten to use that attribute, so creating an object then fails.</p>
+<p>The initial value of an attribute must be a literal, such as <code>3</code>, <code>-1.5</code>, <code>true</code>, <code>"text"</code> or <code>null</code> for a String, because it is copied to the generated code as it is written. Expressions are not translated from Java, so even a constant expression such as <code>2*3</code> is unsupported: write its value instead. Numbers must also be valid in Java: an Integer value must fit in an int, and a number cannot have a leading zero (as in 010) or a suffix (as in 10L).</p>
 
 <p>
 Currently unsupported features:
@@ -21,10 +21,12 @@ Currently unsupported features:
     <li>Associations with a mandatory end (such as 1 or 1..*) or with a bounded multiplicity (such as 0..3), sorted associations, specialized associations, and immutable associations with a many end</li>
     <li>Interfaces, singletons, keys, constraints and constants</li>
     <li>Enumerations and tracing</li>
+    <li>Inner classes, and classes that contain them</li>
     <li>A superclass in another namespace</li>
     <li>A subclass of a class that is not generated because it uses an unsupported feature</li>
     <li>Attributes of other types, such as Date, Time or lists, and fixml attributes</li>
     <li>Unique and autounique attributes</li>
+    <li>Initial values that are not literals, such as <code>7/2</code>, <code>start + 1</code> or a method call</li>
     <li>Derived attributes</li>
     <li>Code in a class that Umple could not interpret (extra code)</li>
     <li>Distributed classes</li>
