@@ -1,0 +1,114 @@
+<?php
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+// A guard on an entry or exit action guards the body each language selects, tagged or not
+class Lamp
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //Lamp Attributes
+  private $n;
+
+  //Lamp State Machines
+  private static $SmOff = 1;
+  private static $SmOn = 2;
+  private $sm;
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public function __construct()
+  {
+    $this->n = 0;
+    $this->setSm(self::$SmOff);
+  }
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public function setN($aN)
+  {
+    $wasSet = false;
+    $this->n = $aN;
+    $wasSet = true;
+    return $wasSet;
+  }
+
+  public function getN()
+  {
+    return $this->n;
+  }
+
+  public function getSmFullName()
+  {
+    $answer = $this->getSm();
+    return $answer;
+  }
+
+  public function getSm()
+  {
+    if ($this->sm == self::$SmOff) { return "SmOff"; }
+    elseif ($this->sm == self::$SmOn) { return "SmOn"; }
+    return null;
+  }
+
+  public function flip()
+  {
+    $wasEventProcessed = false;
+    
+    $aSm = $this->sm;
+    if ($aSm == self::$SmOff)
+    {
+      $this->exitSm();
+      $this->setSm(self::$SmOn);
+      $wasEventProcessed = true;
+    }
+    elseif ($aSm == self::$SmOn)
+    {
+      $this->setSm(self::$SmOff);
+      $wasEventProcessed = true;
+    }
+    return $wasEventProcessed;
+  }
+
+  private function exitSm()
+  {
+    if ($this->sm == self::$SmOff)
+    {
+      if (n < 9)
+        {
+          n = 4;
+        }
+    }
+  }
+
+  private function setSm($aSm)
+  {
+    $this->sm = $aSm;
+
+    // entry actions and do activities
+    if ($this->sm == self::$SmOff)
+    {
+      if (n > 1)
+        {
+          $this->n = 3;
+        }
+    }
+  }
+
+  public function equals($compareTo)
+  {
+    return $this == $compareTo;
+  }
+
+  public function delete()
+  {}
+
+}
+?>

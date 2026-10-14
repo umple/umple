@@ -90,6 +90,10 @@ class Token
 
   // The value of the token.
   value;
+
+  // For arbitrary-text values such as native code, which are stored trimmed: the whitespace that
+  // preceded the value on its source line, or null when other text precedes it there (see Terminal)
+  lazy firstLineIndent;
   0..1 parentToken -- * Token subTokens;
   * -> 0..1 Position;
   * -> 0..1 Position endPosition;
@@ -135,3 +139,7 @@ use regularMode;
 mixset regularMode {
   use lib:ParseUtilities_Code.ump;
 }
+
+// A namespace stays in effect after the use statement that brings in this file;
+// end it here so that what follows the use statement is not put in it
+namespace -;

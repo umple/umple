@@ -1,40 +1,23 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-import os
-from enum import Enum, auto
+from enum import Enum
 
-class X2():
-    #------------------------
-    # ENUMERATIONS
-    #------------------------
+
+class X2:
     class Fruit(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        Apple = "Apple"
+        Orange = "Orange"
+
         def __str__(self):
-            return str(self.value)
-        Apple = auto()
-        Orange = auto()
+            return self.value
 
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #X2 Attributes
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
     def __init__(self, aT):
-        self._t = None
         self._t = aT
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setT(self, aT):
-        wasSet = False
         self._t = aT
-        wasSet = True
-        return wasSet
+        return True
 
     def getT(self):
         return self._t
@@ -43,4 +26,6 @@ class X2():
         pass
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "]" + str(os.linesep) + "  " + "t" + "=" + (((self.getT().__str__().replaceAll("  ", "    ")) if not self.getT() == self else "this") if not (self.getT() is None) else "null")
+        return (super().__str__() + "["
+                + "]"
+                + "\n  t=" + ("null" if self.getT() is None else "this" if self.getT() is self else str(self.getT()).replace("  ", "    ")))

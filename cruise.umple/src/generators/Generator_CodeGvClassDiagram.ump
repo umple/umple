@@ -527,5 +527,53 @@ class GvClassDiagramGenerator
 	        code.append("  \""+inInterface.getName()+"\" -> \""+uInt.getName());
 	        code.append("\" [  arrowhead=\"empty\"; samehead=\"\"];\n\n");
 	      }
-   }  
+   }
+
+  // One box per enumeration: the name, then «enum», then the values.
+  // Model-level enums use their name as the node id. Class-level enums use
+  // Owner.Name so two classes can each declare an enum with the same name.
+  protected void createEnumerations(StringBuilder code)
+  {
+    for (UmpleEnumeration uEnum : getModel().getEnums())
+    {
+      enumerationCreation(uEnum, uEnum.getName(), code);
+    }
+
+    for (UmpleClass uClass : getModel().getUmpleClasses())
+    {
+      for (UmpleEnumeration uEnum : uClass.getEnums())
+      {
+        enumerationCreation(uEnum, uClass.getName() + "." + uEnum.getName(), code);
+      }
+    }
+  }
+
+  private void enumerationCreation(UmpleEnumeration uEnum, String nodeId, StringBuilder code)
+  {
+    String displayName = escapeGvHtml(uEnum.getName());
+    code.append("\n  // Enumeration: " + nodeId + "\n");
+    code.append("  \"" + nodeId + "\" [href=\"\", shape=plaintext margin=0 label=");
+    code.append("<<table border=\"1\" cellspacing=\"0\" cellborder=\"0\" cellpadding=\"2\">");
+    code.append("<tr><td cellpadding=\"10\">    " + displayName + " </td></tr>");
+    code.append("<tr><td cellpadding=\"4\">&laquo;enum&raquo;</td></tr>");
+
+    String[] values = uEnum.getEnumValues();
+    if (values.length > 0)
+    {
+      code.append("<hr/>");
+      for (int i = 0; i < values.length; i++)
+      {
+        code.append("<tr><td align=\"left\">  " + escapeGvHtml(values[i]) + "  </td></tr>");
+      }
+    }
+
+    code.append("</table>>,\n   tooltip=\"enum " + escapeGvHtml(nodeId) + "\n");
+    code.append("\"");
+    code.append("];\n");
+  }
+
+  private String escapeGvHtml(String value)
+  {
+    return value.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace("\"", "'");
+  }
 }

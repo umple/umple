@@ -2,113 +2,102 @@
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Teacher():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Teacher Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class Teacher:
     def __init__(self):
-        self._myFooss = None
         self._myFooss = []
 
-    #------------------------
-    # INTERFACE
-    #------------------------
-    # Code from template association_GetMany 
     def getMyFooss1(self, index):
-        aMyFooss = self._myFooss[index]
-        return aMyFooss
+        return self._myFooss[index]
 
     def getMyFooss2(self):
-        newMyFooss = tuple(self._myFooss)
-        return newMyFooss
+        return tuple(self._myFooss)
+
+    def getMyFooss(self, *args, **kwargs):
+        bound = __class__._bindArguments(("index",), False, args, kwargs)
+        if bound is not None and (isinstance(bound[0], int) and not isinstance(bound[0], bool)):
+            return __class__.getMyFooss1(self, *bound)
+        bound = __class__._bindArguments((), False, args, kwargs)
+        if bound is not None:
+            return __class__.getMyFooss2(self, *bound)
+        raise TypeError("No method matches provided parameters")
 
     def numberOfMyFooss(self):
-        number = len(self._myFooss)
-        return number
+        return len(self._myFooss)
 
     def hasMyFooss(self):
-        has = len(self._myFooss) > 0
-        return has
+        return len(self._myFooss) > 0
 
     def indexOfMyFooss(self, aMyFooss):
-        index = (-1 if not aMyFooss in self._myFooss else self._myFooss.index(aMyFooss))
-        return index
+        return next((i for i, x in enumerate(self._myFooss) if x is aMyFooss), -1)
 
-    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfMyFooss():
         return 0
 
-    # Code from template association_MaximumNumberOfMethod 
     @staticmethod
     def maximumNumberOfMyFooss():
         return 2
 
-    # Code from template association_AddOptionalNToOne 
     def addMyFooss(self, aMyFooss):
-        wasAdded = False
-        if (aMyFooss) in self._myFooss :
+        if any(x is aMyFooss for x in self._myFooss):
             return False
-        if self.numberOfMyFooss() >= Teacher.maximumNumberOfMyFooss() :
-            return wasAdded
+        if self.numberOfMyFooss() >= self.maximumNumberOfMyFooss():
+            return False
         existingTeacher = aMyFooss.getTeacher()
-        isNewTeacher = not (existingTeacher is None) and not self == existingTeacher
-        if isNewTeacher :
-            aMyFooss.setTeacher(self)
-        else :
+        isNewTeacher = existingTeacher is not None and existingTeacher is not self
+        if isNewTeacher:
+            if not aMyFooss.setTeacher(self):
+                return False
+        else:
             self._myFooss.append(aMyFooss)
-        wasAdded = True
-        return wasAdded
+        return True
 
     def removeMyFooss(self, aMyFooss):
-        wasRemoved = False
-        #Unable to remove aMyFooss, as it must always have a teacher
-        if not self == aMyFooss.getTeacher() :
-            self._myFooss.remove(aMyFooss)
-            wasRemoved = True
-        return wasRemoved
+        if aMyFooss.getTeacher() is self:
+            return False
+        index = next((i for i, x in enumerate(self._myFooss) if x is aMyFooss), -1)
+        if index >= 0:
+            del self._myFooss[index]
+        return True
 
-    # Code from template association_AddIndexControlFunctions 
     def addMyFoossAt(self, aMyFooss, index):
-        wasAdded = False
-        if self.addMyFooss(aMyFooss) :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfMyFooss() :
-                index = self.numberOfMyFooss() - 1
-            self._myFooss.remove(aMyFooss)
-            self._myFooss.insert(index, aMyFooss)
-            wasAdded = True
-        return wasAdded
+        if not self.addMyFooss(aMyFooss):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfMyFooss():
+            index = self.numberOfMyFooss() - 1
+        del self._myFooss[next((i for i, x in enumerate(self._myFooss) if x is aMyFooss), -1)]
+        self._myFooss.insert(index, aMyFooss)
+        return True
 
     def addOrMoveMyFoossAt(self, aMyFooss, index):
-        wasAdded = False
-        if (aMyFooss) in self._myFooss :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfMyFooss() :
-                index = self.numberOfMyFooss() - 1
-            self._myFooss.remove(aMyFooss)
-            self._myFooss.insert(index, aMyFooss)
-            wasAdded = True
-        else :
-            wasAdded = self.addMyFoossAt(aMyFooss, index)
-        return wasAdded
+        if not any(x is aMyFooss for x in self._myFooss):
+            return self.addMyFoossAt(aMyFooss, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfMyFooss():
+            index = self.numberOfMyFooss() - 1
+        del self._myFooss[next((i for i, x in enumerate(self._myFooss) if x is aMyFooss), -1)]
+        self._myFooss.insert(index, aMyFooss)
+        return True
 
     def delete(self):
-        i = len(self._myFooss)
-        while i > 0 :
+        for i in range(len(self._myFooss), 0, -1):
             aMyFooss = self._myFooss[i - 1]
             aMyFooss.delete()
-            i -= 1
 
-    def getMyFooss(self, *argv):
-        if len(argv) == 1 and isinstance(argv[0], int) :
-            return self.getMyFooss1(argv[0])
-        if len(argv) == 0 :
-            return self.getMyFooss2()
-        raise TypeError("No method matches provided parameters")
+    @staticmethod
+    def _bindArguments(names, varargs, args, kwargs):
+        if len(args) > len(names) and not varargs:
+            return None
+        bound = list(args[:len(names)])
+        for name in names[len(bound):]:
+            if name not in kwargs:
+                return None
+            bound.append(kwargs[name])
+        if len(kwargs) != len(names) - min(len(args), len(names)):
+            return None
+        if varargs:
+            bound.append(args[len(names):])
+        return bound

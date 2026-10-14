@@ -15,31 +15,31 @@
   <table class="statetable event-statetable">
     <tr>
       <td class="event-header">&nbsp;</td>
-      <td class="event-header">power</td>
-      <td class="event-header">push</td>
+      <td class="event-header" data-transition="RemoteControl*^*status*^*power*^*On*^*Off*^*">power</td>
+      <td class="event-header" data-transition="RemoteControl*^*status*^*push*^*On.Play*^*On.Pause*^*">push</td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="">On</td>
-      <td class="event-entry"><span>Off</span></td>
+      <td class="event-entry"><span data-transition="RemoteControl*^*status*^*power*^*On*^*Off*^*">Off</span></td>
       <td class="event-entry">&nbsp;</td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="0">- Play</td>
-      <td class="event-entry"><span class="derived">Off</span></td>
-      <td class="event-entry"><span>Pause</span></td>
+      <td class="event-entry"><span class="derived" data-transition="RemoteControl*^*status*^*power*^*On*^*Off*^*">Off</span></td>
+      <td class="event-entry"><span data-transition="RemoteControl*^*status*^*push*^*On.Play*^*On.Pause*^*">Pause</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="0">- Pause</td>
-      <td class="event-entry"><span class="derived">Off</span></td>
-      <td class="event-entry"><span>Play</span></td>
+      <td class="event-entry"><span class="derived" data-transition="RemoteControl*^*status*^*power*^*On*^*Off*^*">Off</span></td>
+      <td class="event-entry"><span data-transition="RemoteControl*^*status*^*push*^*On.Pause*^*On.Play*^*">Play</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="">Off</td>
-      <td class="event-entry"><span>On</span></td>
+      <td class="event-entry"><span data-transition="RemoteControl*^*status*^*power*^*Off*^*On*^*">On</span></td>
       <td class="event-entry">&nbsp;</td>
     </tr>
 
@@ -62,28 +62,28 @@
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>power</span></td>
+      <td class="state-entry"><span data-transition="RemoteControl*^*status*^*power*^*On*^*Off*^*">power</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="0">- Play</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>push</span></td>
-      <td class="state-entry"><span class="derived">power</span></td>
+      <td class="state-entry"><span data-transition="RemoteControl*^*status*^*push*^*On.Play*^*On.Pause*^*">push</span></td>
+      <td class="state-entry"><span class="derived" data-transition="RemoteControl*^*status*^*power*^*On*^*Off*^*">power</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="0">- Pause</td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span>push</span></td>
+      <td class="state-entry"><span data-transition="RemoteControl*^*status*^*push*^*On.Pause*^*On.Play*^*">push</span></td>
       <td class="state-entry">&nbsp;</td>
-      <td class="state-entry"><span class="derived">power</span></td>
+      <td class="state-entry"><span class="derived" data-transition="RemoteControl*^*status*^*power*^*On*^*Off*^*">power</span></td>
     </tr>
 
     <tr>
       <td class="state-header" data-parent="">Off</td>
-      <td class="state-entry"><span>power</span></td>
+      <td class="state-entry"><span data-transition="RemoteControl*^*status*^*power*^*Off*^*On*^*">power</span></td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>
       <td class="state-entry">&nbsp;</td>

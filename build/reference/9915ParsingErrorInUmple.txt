@@ -12,5 +12,6 @@ noreferences
 <li>The syntax (i.e. arguments) to one of the <a href="TypesofDirectives.html">directives</a> such as 'generate' or 'use' is not properly typed.
 <li>There is a missing semicolon at the end of a directive, or a missing space separating elements of the syntax.
 <li>The overall structure of an umple element does not conform to the Umple grammar. For example specifying a <a href=""ClassDefinition.html>class</a> without a name, or without a body in curly brackets.
+<li>Some text cannot be parsed at all, such as a stray &lt;&lt;! that opens no template. Error 1500 then shows the rest of the line where parsing stopped.
 </ul>
 </p>

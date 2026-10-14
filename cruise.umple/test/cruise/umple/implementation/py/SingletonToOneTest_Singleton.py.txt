@@ -1,73 +1,60 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-import os
 
-class Mentor():
+class Mentor:
     theInstance = None
-    #------------------------
-    # STATIC VARIABLES
-    #------------------------
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Mentor Attributes
-    #Mentor Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+
     def __init__(self):
+        if __class__.theInstance is not self:
+            raise RuntimeError("Mentor is a singleton, so use Mentor.getInstance()")
+        self._name = None
         self._student = None
-        self._name = None
-        self._name = None
 
     @staticmethod
     def getInstance():
-        if Mentor.theInstance is None :
-            Mentor.theInstance = Mentor()
-        return Mentor.theInstance
+        if __class__.theInstance is None:
+            __class__.theInstance = __class__.__new__(__class__)
+            try:
+                __class__.theInstance.__init__()
+            except BaseException:
+                __class__.theInstance = None
+                raise
+        return __class__.theInstance
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setName(self, aName):
-        wasSet = False
         self._name = aName
-        wasSet = True
-        return wasSet
+        return True
 
     def getName(self):
         return self._name
 
-    # Code from template association_GetOne 
     def getStudent(self):
         return self._student
 
     def hasStudent(self):
-        has = not (self._student is None)
-        return has
+        return self._student is not None
 
-    # Code from template association_SetOptionalOneToOne 
     def setStudent(self, aNewStudent):
-        wasSet = False
-        if not (self._student is None) and not self._student == aNewStudent and self == self._student.getMentor() :
-            #Unable to setStudent, as existing student would become an orphan
-            return wasSet
+        if self._student is not None and self._student is not aNewStudent and self._student.getMentor() is self:
+            return False
         self._student = aNewStudent
-        anOldMentor = (aNewStudent.getMentor()) if not (aNewStudent is None) else None
-        if not self == anOldMentor :
-            if not (anOldMentor is None) :
-                anOldMentor.student = None
-            if not (self._student is None) :
+        anOldMentor = aNewStudent.getMentor() if aNewStudent is not None else None
+        if anOldMentor is not self:
+            if anOldMentor is not None:
+                anOldMentor._student = None
+            if self._student is not None:
                 self._student.setMentor(self)
-        wasSet = True
-        return wasSet
+        return True
 
     def delete(self):
         existingStudent = self._student
         self._student = None
-        if not (existingStudent is None) :
+        if existingStudent is not None:
             existingStudent.delete()
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "student = " + ((format(id(self.getStudent()), "x")) if not (self.getStudent() is None) else "null")
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]"
+                + "\n  student = " + ("null" if self.getStudent() is None else format(id(self.getStudent()), "x")))

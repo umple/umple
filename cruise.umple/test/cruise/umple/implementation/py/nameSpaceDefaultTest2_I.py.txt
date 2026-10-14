@@ -1,9 +1,8 @@
 #PLEASE DO NOT EDIT THIS CODE
 #This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from abc import ABC, abstractmethod
+from abc import ABC
+
 
 class I(ABC):
-    @abstractmethod
-    def __init__(self):
-        pass
+    pass

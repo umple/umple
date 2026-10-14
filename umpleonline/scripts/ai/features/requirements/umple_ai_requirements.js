@@ -8,20 +8,11 @@
 const AiRequirements = {
   activeStream: null,
 
+  // Only active reqs are returned; commented-out ones are ignored (issue #2541).
   parseRequirements(umpleCode) {
-    const requirements = [];
-    const reqPattern = /req\s+(\w+(?:[-_]\w+)*)\s*\{([^}]*)\}/gs;
-    let match;
-
-    while ((match = reqPattern.exec(umpleCode)) !== null) {
-      const id = match[1].trim();
-      const text = match[2].trim();
-      if (id && text) {
-        requirements.push({ id, text });
-      }
-    }
-
-    return requirements;
+    return AiTextUtils.findRequirementBlocks(umpleCode)
+      .filter(block => block.id && block.text)
+      .map(({ id, text }) => ({ id, text }));
   },
 
   abortActiveStream() {

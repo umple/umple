@@ -113,6 +113,7 @@
 # Messages relating to format of identifiers.
 100: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Class name '{0}' must be alphanumeric and start with an alpha character, or _ (underscore) ;
 101: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Class name '{0}' should start with a capital letter ;
+107: 4, "https://manual.umple.org/?W107NamesDifferOnlyByCase.html", Two or more {0} have the same characters but differ only in case: {1}. This can increase the risk of defects. ;
 
 110: 2, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Interface name '{0}' must be alphanumeric and start with an alpha character or _ (underscore) ;
 111: 4, "https://manual.umple.org/?WE1xxIdentifierInvalid.html", Interface name '{0}' should start with a capital letter ;
@@ -203,6 +204,7 @@
 407: 2, "https://manual.umple.org/?PageBeingDeveloped.html", Quality class '{1}' in requirement '{0}' is missing braces '{}' ;
 408: 2, "https://manual.umple.org/?PageBeingDeveloped.html", Requirement '{0}' has no quality classes defined, but implementsReq specifies quality class name '{1}' ;
 409: 2, "https://manual.umple.org/?PageBeingDeveloped.html", Quality class name '{1}' not found in requirement '{0}'. ;
+410: 4, "https://manual.umple.org/?PageBeingDeveloped.html", EARS requirement '{0}' has no shall clause stating how the system responds ;
 
 # Messages relating to deprecated features starting with 901
 901: 4, "https://manual.umple.org/?W901DeprecatedKeywordConstant.html", Keyword "constant" deprecated, please use "const" ;
@@ -268,7 +270,7 @@
 
 # Warning messages related to distributed systems
 
-7002: 4, "https://manual.umple.org/?PageBeingDeveloped.html", Distributed class '{0}' has an association with non-distributed class '{1}'. ;
+7002: 4, "https://manual.umple.org/?W7002DistributedAssociationToNon-DistributedClass.html", Distributed class '{0}' has an association with non-distributed class '{1}'. ;
 7001: 4, "https://manual.umple.org/?PageBeingDeveloped.html", System is distributed but class '{0}' has a static attribute {1}. This might result in multiple instances;
 7003: 4, "https://manual.umple.org/?PageBeingDeveloped.html", Distributed class '{0}' has no associations {1} It is better to define it as regular class if it is not called remotely;
 
@@ -280,6 +282,15 @@
 9000: 1, "https://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Parsing). {0} ;
 9100: 1, "https://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Analysis). {0} ;
 9200: 1, "https://manual.umple.org/?E9x00CompilerError.html", Compiler Error (Generation). {0} ;
+9210: 2, "https://manual.umple.org/?E9210PythonUnsupported.html", {0} cannot be generated in Python yet, so class {1} was not generated ;
+9211: 2, "https://manual.umple.org/?E9211PythonUntranslatableCode.html", This code in {0} cannot be translated to Python: {1}. Give a Python version instead, for example {2} ;
+9212: 3, "https://manual.umple.org/?W9212PythonNoPythonCode.html", {0} has code only for {1}, so it is left out of the generated Python ;
+9213: 2, "https://manual.umple.org/?E9213PythonModuleNameClash.html", {0} conflicts with a standard Python module, so choose another name or namespace ;
+9214: 2, "https://manual.umple.org/?E9214PythonSelfParameter.html", {0} has a parameter named self, the name generated methods give the object they are called on, so rename the parameter ;
+9215: 2, "https://manual.umple.org/?E9215PythonReservedName.html", {0} has a name that Python reserves or that generated code uses, so give it another name ;
+9216: 2, "https://manual.umple.org/?E9216PythonDuplicateParameter.html", {0} has two parameters named {1} in Python, so rename one of them ;
+9217: 2, "https://manual.umple.org/?E9217PythonPackageName.html", The namespace {0} of {1} is not a valid Python package name, so use dot-separated ASCII names that are not Python keywords ;
+9218: 2, "https://manual.umple.org/?E9218PythonPathClash.html", {0} clashes with {1}: {2}, so one of them could not be imported. Rename one of them ;
 
 # Message to emit when you are parsing a construct but are not yet processing it in a sensible way/
 9999: 5, "https://manual.umple.org/?W9999FeatureUnderDevelopment.html", Feature under development. '{0}' found and ignored. processed as: '{1}' ;

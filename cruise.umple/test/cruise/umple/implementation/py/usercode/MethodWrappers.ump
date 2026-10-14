@@ -1,0 +1,31 @@
+// Contracts and injections wrap a method; the body runs in a helper bound to the declaring class.
+class MethodWrappers
+{
+  int half(int x) Python {
+    [pre: x > 0]
+    [post: result < x]
+    return x // 2
+  }
+
+  static int bounded(int x) Python {
+    [pre: x < 100]
+    return x
+  }
+
+  int logged(int x) Python {
+    return x + 1
+  }
+
+  int keep(int result) Python {
+    [pre: result > 0]
+    return result * 2
+  }
+
+  int m() Python { return 1 }
+
+  int m_Original() Python { return 2 }
+
+  before logged Python { print("before", x) }
+  after logged Python { print("after") }
+  before m Python { print("m") }
+}

@@ -1,0 +1,377 @@
+// Models for the Python-specific behaviour of the core generator (keys, registries, singletons,
+// abstract classes, enumerations, interfaces, list attributes).
+namespace cruise.core.test;
+
+interface CorePriced {
+  const Integer CURRENCY = 1;
+  Double price();
+  String label(String prefix);
+  String label(Integer n);
+}
+
+class CoreItem {
+  isA CorePriced;
+  abstract;
+  name;
+  Double weight = 2;
+  String[] tags = {"a", "b,c"};
+  defaulted Integer stock = 5;
+  autounique serial;
+  enum Color { red, dark_green }
+  Color color;
+}
+
+class CoreBook {
+  isA CoreItem;
+  key { isbn, name }
+  isbn;
+  Boolean used = false;
+  Double price() Python { return 1.5 }
+  String label(String prefix) Python { return prefix + self.getIsbn() }
+}
+
+class CoreCode {
+  unique Integer number;
+}
+
+class CoreRegistry {
+  singleton;
+  lazy Integer count;
+}
+
+class CoreSettings {
+  immutable;
+  host;
+  Integer port;
+}
+
+class CoreLazy {
+  lazy immutable String label;
+}
+
+class CoreTaggedBase {
+  String[] tags;
+  defaulted Integer level = 1;
+}
+
+class CoreTagged {
+  isA CoreTaggedBase;
+  key { tags, level }
+}
+
+interface CoreRootI { }
+interface CoreChildI { isA CoreRootI; }
+interface CoreBothI { isA CoreRootI, CoreChildI; }
+
+class CoreEnumNames {
+  enum Enum { red }
+  enum Other { blue }
+}
+
+// Nested classes: a subclass declared before its sibling base, and associations, deletion and
+// overloads that name another nested class or a nested class from another module
+class CoreOuter {
+  inner class NestChild { isA NestBase; Integer c; }
+  inner class NestBase { Integer b; }
+  inner class NestOwner { name; 1 -- * NestPart; }
+  inner class NestPart { }
+  inner class NestTeam { 2..3 -- * NestMember; }
+  inner class NestMember { }
+  inner class NestHolder { 1 -- 1 NestTag; }
+  inner class NestTag { label; }
+  inner class NestHub {
+    String take(NestPart p) Python { return "part" }
+    String take(NestMember m) Python { return "member" }
+  }
+}
+
+class CoreNestedUser {
+  1 -- * NestMember;
+  String take(NestPart p) Python { return "part" }
+  String take(NestMember m) Python { return "member" }
+}
+
+// A factory for a class whose constructor creates its one-to-one partner goes through
+// alternateConstructor, which takes the partner
+class FpOwner { }
+class FpItem { * items -- 1 FpOwner owner; 1 item -- 1 FpDetail detail; }
+class FpDetail { name; }
+
+// A subclass attribute named like the parent's key flag or hash cache keeps its own field
+class KfBase { name; key { name } }
+class KfFlagChild { isA KfBase; Boolean canSetName; }
+class KfCacheChild { isA KfBase; String cachedHashCode; }
+
+// Moving a key member is refused once the hash is cached
+class KmOwner { * -> * KmTag tags; key { tags } }
+class KmTag { name; }
+
+// The constructor parameter aTitle does not hide the class's own counter and registry
+class aTitle { title; autounique id; unique Integer code; }
+
+// Translated code can use the queries of an autounique key
+class AutoFinder { autounique id; Boolean found = false; sm { S { go / { found = hasWithId(id); } -> T; } T { } } }
+
+// Overloads on a model class whose name is also a local name of the dispatcher, and on the class itself
+class bound { }
+class OvUser {
+  String f(bound x) Python { return "bound" }
+  String f(Integer x) Python { return "int" }
+  String g(OvUser other) Python { return "self type" }
+  String g(Integer x) Python { return "int" }
+}
+
+// Classes of the same module whose outer class a method local hides, and two imported classes whose
+// names would share an alias in one dispatcher
+class aName {
+  inner class NameItem { name; * items -- 1 NameOwner owner; }
+  inner class NameOwner { }
+}
+class args {
+  inner class ArgsTarget { }
+  inner class ArgsUser {
+    String f(ArgsTarget x) Python { return "target" }
+    String f(Integer x) Python { return "int" }
+  }
+}
+class bound_ { }
+class OvPair {
+  String h(bound x) Python { return "bound" }
+  String h(bound_ x) Python { return "bound_" }
+}
+
+// Methods Python would define twice under one name are dispatched as Java overloads: getBox() of one
+// association end and getBox(index) of another, a user overload of a getter, and of an event.
+class MgBox { }
+class MgItem { }
+association { 0..1 MgBox -- * MgItem ones; }
+association { * MgBox -- * MgItem manys; }
+class MgNamed {
+  name;
+  String getName(String prefix) Python { return prefix + self.getName() }
+}
+class MgSwitch {
+  sm { Off { go -> On; } On {} }
+  Boolean go(Integer times) Python { return self.go() }
+}
+
+// A constant whose name starts with an underscore is a name, not a number
+class MgView {
+  const Integer _3D = 30;
+  Integer mode = _3D;
+}
+
+// Java calls the most specific overload that fits, whatever the declaration order
+class OvShape { name; }
+class OvCircle { isA OvShape; }
+class OvSpecific {
+  String area(OvShape s) Python { return "shape" }
+  String area(OvCircle c) Python { return "circle" }
+  String size(Double d) Python { return "double" }
+  String size(Integer i) Python { return "integer" }
+  String count(Integer... values) Python { return "many" }
+  String count(Integer value) Python { return "one" }
+}
+
+// As in Java, the before code of an add runs first, also for an add then refused, and a sorted end
+// is sorted after the after code
+class InjTeam { String log = ""; before addInjPlayer { setLog(getLog() + "adding;"); } }
+class InjPlayer { }
+association { 0..1 InjTeam -- * InjPlayer; }
+class SortBoard {
+  String log = "";
+  after addCard { setLog(getLog() + getCard(0).getRank() + ";"); }
+}
+class SortCard { Integer rank; }
+association { 0..1 SortBoard board -> * SortCard cards sorted {rank}; }
+
+// None given to an add that also creates objects fails as Java's null does, creating nothing
+class FacGarage { }
+class FacCar { plate; }
+association { 1 FacGarage -- * FacCar; }
+
+// A generated getter joins the dispatcher of the user overloads sharing its name; a definition inside
+// a string is text and stays as written
+class MgProduct {
+  name;
+  String getName(String prefix) Python { return prefix + self.getName() }
+  String getName(String prefix, String suffix) Python { return prefix + self.getName() + suffix }
+}
+class MgDoc {
+  name;
+  String sample() Python {
+    return """class Example:
+    def getName(self, locale):
+        return locale
+"""
+  }
+}
+
+// Between two variable argument lists, the narrower element type is the more specific
+class OvCanvas {
+  String describe(OvShape... items) Python { return "shapes" }
+  String describe(OvCircle... items) Python { return "circles" }
+  String count(Double... values) Python { return "doubles" }
+  String count(Integer... values) Python { return "integers" }
+}
+
+// Translated text writes a missing model object as Java's null
+class TxBox { }
+class TxLabel {
+  TxBox box = null;
+  String text = "";
+  sm { A { go / { text = "box=" + box; } -> B; } B { } }
+}
+
+// A user method with as many parameters as a generated method of the same name, but other types, is
+// dispatched by type: the generated add and event stay reachable, also from generated code
+class MgTeam {
+  String log = "";
+  Boolean addMgPlayer(String name) Python { self.setLog(self.getLog() + name + ";"); return True }
+  sm { Open { register(String who) -> Open; } }
+  Boolean register(MgPlayer player) Python { self.setLog(self.getLog() + "player;"); return True }
+}
+class MgPlayer { }
+association { 0..1 MgTeam -- * MgPlayer; }
+
+// Overloads told apart by their types whatever their parameter names, also against varargs; a
+// variable list with a narrower first parameter is more specific
+class MgGauge {
+  Integer level = 7;
+  Boolean setLevel(String aLevel) Python { return aLevel == "ok" }
+  Boolean setPrice(String... parts) Python { return True }
+  Integer price = 1;
+  sm { Shut { open(Integer amount) -> Open; } Open { } }
+  Boolean open(String amount) Python { return amount == "text" }
+}
+class OvMessage { }
+class OvUrgent { isA OvMessage; }
+class OvInbox {
+  String deliver(OvMessage... messages) Python { return "ordinary" }
+  String deliver(OvUrgent first, OvMessage... messages) Python { return "urgent" }
+}
+
+// Static user methods overloading generated static ones: a unique attribute's lookup and a bounded end's minimum
+class MgAccount {
+  unique email;
+  static String getWithEmail(String anEmail, Boolean ignoreCase) Python { return "user" }
+}
+class MgRoster {
+  0..1 -- 2..5 MgMember members;
+  static Integer minimumNumberOfMembers(Boolean strict) Python { return 3 if strict else 2 }
+}
+class MgMember { }
+
+// Before-injections run ahead of the invariant, as in Java, so they can adjust the value
+class InvClamp {
+  Integer balance = 0;
+  [balance >= 0]
+  before setBalance { if (aBalance < 0) { aBalance = 0; } }
+}
+
+// A char overload takes one character only; a Python float goes to the Double overload
+class OvChar {
+  String f(char c) Python { return "char" }
+  String f(String s) Python { return "string" }
+  String g(Float x) Python { return "float" }
+  String g(Double x) Python { return "double" }
+}
+
+// An abstract method beside a generated one of its name: the dispatcher is abstract, and a subclass
+// that implements the method by its name can be created
+class AbsShape { abstract; Integer size = 0; abstract String setSize(String s); }
+class AbsSquare { isA AbsShape; String setSize(String s) Python { return "square " + s } }
+
+// A user method beside a state machine's setter, and an event named like an association's remove with
+// the same parameter name, are dispatched by type
+class SmLabel {
+  Boolean setStatus(String label) Python { return label == "custom" }
+  status { Quiet { wake -> Active; } Active { } }
+}
+class EvVehicle {
+  0..1 -- * EvPassenger passengers;
+  String log = "";
+  trip { Parked { removePassenger(String aPassenger) / { log = log + aPassenger + ";"; } -> Parked; } }
+}
+class EvPassenger { }
+
+// A user method with the types of one generated overload (the factory add) replaces that one only
+class RdOrder { 1 <@>- * RdLine lines; Boolean addLine(String aSku, Integer aQty) Python { return False } }
+class RdLine { sku; Integer qty; }
+
+// Before-injections run ahead of a once-set guard, as in Java
+class InjBadge { lazy immutable String badge; String log = ""; before setBadge { log = log + "attempt " + aBadge + ";"; } }
+
+// Before-injections also run ahead of a key guard on a directed end
+class InjRoom { Integer number; * -> 0..1 InjBuilding building; key { number, building } String log = "";
+  before setBuilding { log = log + "b;"; } before setNumber { log = log + "n;"; } }
+class InjBuilding { }
+
+// An abstract method in a user overload group beside a generated method of its name: the generated
+// method stays a candidate of the abstract dispatcher
+class AbsGroupShape { abstract; Integer size = 0; abstract String setSize(String s);
+  String setSize(Integer a, Integer b) Python { return "two" } }
+class AbsGroupSquare { isA AbsGroupShape; String setSize(String s) Python { return "square " + s }
+  Boolean grow(Integer n) Python { return super().setSize(n) } }
+
+// A validity query runs its before and after injections, whatever it answers
+class InjBox { 1 -- 1..* InjBoxItem items; Integer hits = 0;
+  before isNumberOfItemsValid { hits = hits + 1; } after isNumberOfItemsValid { hits = hits + 10; } }
+class InjBoxItem { }
+
+// An attribute setter, an event of its name and a user method of its name share one dispatcher
+class SetEvThermostat {
+  Integer target;
+  mode { Manual { setTarget(String preset) -> Scheduled; } Scheduled { override -> Manual; } }
+  Boolean setTarget(Integer low, Integer high) Python {
+    return self.setTarget((low + high) // 2)
+  }
+}
+
+// A nested class's code is left as written, also text that looks like the module's import marker
+class NestMarker { inner class NestMarkerInner { String text() Python { return "#<<IMPORTS>>" } } }
+
+// Before-injections run ahead of the guards of every generated mutator, as in Java: a key frozen by
+// hashing, duplicates, bounds, and a link that is not there
+class InjGuardA { * -- * InjGuardB bees; * -- 2..4 InjGuardD dees; * -> 0..1 InjGuardC cee; key { cee } String log = "";
+  before removeBee { log = log + "removeBee;"; } before setDees { log = log + "setDees;"; } before setCee { log = log + "setCee;"; } }
+class InjGuardB { } class InjGuardC { } class InjGuardD { }
+class InjGuardK { String[] names; Integer n; defaulted Integer level = 1; key { names, n, level } String log = "";
+  before addName { log = log + "addName " + aName + ";"; } before removeName { log = log + "removeName " + aName + ";"; }
+  before setN { log = log + "setN " + aN + ";"; } before setLevel { log = log + "setLevel " + aLevel + ";"; } }
+class InjGuardBase { Integer n; }
+class InjGuardSub { isA InjGuardBase; key { n } String log = ""; before setN { log = log + "setN " + aN + ";"; } }
+class InjGuardU { * -> * InjGuardV vs; * -> 1..2 InjGuardW ws; * -> 1 InjGuardX x; * -> 3 InjGuardY ys; * -> 0..3 InjGuardZ zs;
+  * -> 2..* InjGuardT ts; key { vs, ws, x, ys, zs, ts } String log = "";
+  before setWs { log = log + "setWs;"; } before setX { log = log + "setX;"; } before setYs { log = log + "setYs;"; }
+  before setZs { log = log + "setZs;"; } before setTs { log = log + "setTs;"; } before addV { log = log + "addV;"; }
+  before removeV { log = log + "removeV;"; } }
+class InjGuardV { } class InjGuardW { } class InjGuardX { } class InjGuardY { } class InjGuardZ { } class InjGuardT { }
+class InjGuardM { 0..1 -- * InjGuardN ns; key { ns } String log = ""; before removeN { log = log + "removeN;"; } }
+class InjGuardN { }
+
+// Generated queries run their injections as Java's do; the static ones have no object to log to
+class InjQuery { unique email; defaulted Integer level = 3; Boolean on = true; 0..1 -- 0..4 InjQueryItem items; String log = "";
+  before isOn { log = log + "isOn;"; } after isOn { log = log + "isOn after;"; }
+  before getDefaultLevel { log = log + "default;"; } after getDefaultLevel { log = log + "default after;"; }
+  before hasWithEmail { System.out.println("hasWithEmail"); } after getWithEmail { System.out.println("getWithEmail after"); }
+  before minimumNumberOfItems { System.out.println("minimum"); } after maximumNumberOfItems { System.out.println("maximum"); } }
+class InjQueryItem { }
+
+// An event named like a setter that a grandparent or a trait declares
+class EvGrand { Integer x = 0; }
+class EvParent { isA EvGrand; }
+class EvChild { isA EvParent; sm { S { setX(String v) -> T; } T {} } }
+trait EvTrait { Integer x = 0; }
+class EvTraitUser { isA EvTrait; sm { S { setX(String v) -> T; } T {} } }
+
+// An event parameter named str, in a machine with unspecified events
+class EvStrParam { sm { Off { press(String str) -> On; unspecified -> Error; } On { unspecified -> Error; } Error {} } }
+
+// A class named math: the remainder of doubles uses the standard module under another name
+class math { Double x = 5.5; Double y = 0.0; sm { S { go -> / { y = x % 2.0; } S; } } }
+
+// A typed overload beside a generated method of its name keeps the generated one: a keyed class's
+// equals takes any object, an immutable list's indexOf an element
+class OvKeyed { String value; key { value } Boolean equals(Boolean b) Python { return False } }
+class OvImmList { immutable String[] values = {"x", "y"}; Integer indexOfValue(Boolean b) Python { return 771 } }

@@ -1,0 +1,17 @@
+class Person {
+  fullname;
+}
+
+class Student {
+  isA Person;
+  fullName;
+}
+
+class GraduateStudent {
+  isA Student;
+  fullName = "unknown";
+}
+
+class Course {
+  fullName;
+}

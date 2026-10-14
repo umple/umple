@@ -1,84 +1,72 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from enum import Enum, auto
+from enum import Enum
 
-class X():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #X State Machines
+
+class X:
     class Sm(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        s0 = "s0"
+        s1 = "s1"
+
         def __str__(self):
-            return str(self.value)
-        s0 = auto()
-        s1 = auto()
+            return self.value
 
     class SmS0T1(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        Null = "Null"
+        t1 = "t1"
+
         def __str__(self):
-            return str(self.value)
-        Null = auto()
-        t1 = auto()
+            return self.value
 
     class SmS0T2(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        Null = "Null"
+        t2 = "t2"
+        t3 = "t3"
+
         def __str__(self):
-            return str(self.value)
-        Null = auto()
-        t2 = auto()
-        t3 = auto()
+            return self.value
 
     class SmS1T4(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        Null = "Null"
+        t4 = "t4"
+        t5 = "t5"
+
         def __str__(self):
-            return str(self.value)
-        Null = auto()
-        t4 = auto()
-        t5 = auto()
+            return self.value
 
     class SmS1T6(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
+        Null = "Null"
+        t6 = "t6"
+        t7 = "t7"
+
         def __str__(self):
-            return str(self.value)
-        Null = auto()
-        t6 = auto()
-        t7 = auto()
+            return self.value
 
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
     def __init__(self):
-        self._smS1T6 = None
-        self._smS1T4 = None
-        self._smS0T2 = None
-        self._smS0T1 = None
         self._sm = None
-        self.setSmS0T1(X.SmS0T1.Null)
-        self.setSmS0T2(X.SmS0T2.Null)
-        self.setSmS1T4(X.SmS1T4.Null)
-        self.setSmS1T6(X.SmS1T6.Null)
-        self.setSm(X.Sm.s0)
+        self._smVisit = 0
+        self._smS0T1 = None
+        self._smS0T2 = None
+        self._smS1T4 = None
+        self._smS1T6 = None
+        self._deleted = False
+        self.setSmS0T1(__class__.SmS0T1.Null)
+        self.setSmS0T2(__class__.SmS0T2.Null)
+        self.setSmS1T4(__class__.SmS1T4.Null)
+        self.setSmS1T6(__class__.SmS1T6.Null)
+        self.setSm(__class__.Sm.s0)
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def getSmFullName(self):
-        answer = self._sm.__str__()
-        if self._smS0T1 != X.SmS0T1.Null :
-            answer += "." + self._smS0T1.__str__()
-        if self._smS0T2 != X.SmS0T2.Null :
-            answer += "." + self._smS0T2.__str__()
-        if self._smS1T4 != X.SmS1T4.Null :
-            answer += "." + self._smS1T4.__str__()
-        if self._smS1T6 != X.SmS1T6.Null :
-            answer += "." + self._smS1T6.__str__()
+        answer = str(self._sm)
+        if self._smS0T1 is not __class__.SmS0T1.Null:
+            answer += "." + str(self._smS0T1)
+        if self._smS0T2 is not __class__.SmS0T2.Null:
+            answer += "." + str(self._smS0T2)
+        if self._smS1T4 is not __class__.SmS1T4.Null:
+            answer += "." + str(self._smS1T4)
+        if self._smS1T6 is not __class__.SmS1T6.Null:
+            answer += "." + str(self._smS1T6)
         return answer
 
     def getSm(self):
@@ -97,117 +85,118 @@ class X():
         return self._smS1T6
 
     def goS1(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aSmS0T1 = self._smS0T1
-        if aSmS0T1 == X.SmS0T1.t1 :
+        if aSmS0T1 is __class__.SmS0T1.t1:
             self.exitSm()
-            self.setSm(X.Sm.s1)
+            self.setSm(__class__.Sm.s1)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def goT3(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aSmS0T2 = self._smS0T2
-        if aSmS0T2 == X.SmS0T2.t2 :
+        if aSmS0T2 is __class__.SmS0T2.t2:
             self.exitSmS0T2()
-            self.setSmS0T2(X.SmS0T2.t3)
+            self.setSmS0T2(__class__.SmS0T2.t3)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def goT5(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aSmS1T4 = self._smS1T4
-        if aSmS1T4 == X.SmS1T4.t4 :
+        if aSmS1T4 is __class__.SmS1T4.t4:
             self.exitSmS1T4()
-            self.setSmS1T4(X.SmS1T4.t5)
+            self.setSmS1T4(__class__.SmS1T4.t5)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def goT7(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aSmS1T6 = self._smS1T6
-        if aSmS1T6 == X.SmS1T6.t6 :
+        if aSmS1T6 is __class__.SmS1T6.t6:
             self.exitSmS1T6()
-            self.setSmS1T6(X.SmS1T6.t7)
+            self.setSmS1T6(__class__.SmS1T6.t7)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def exitSm(self):
-        if self._sm == X.Sm.s0 :
+        self._smVisit += 1
+        if self._sm is __class__.Sm.s0:
             self.exitSmS0T1()
             self.exitSmS0T2()
-        elif self._sm == X.Sm.s1 :
+        elif self._sm is __class__.Sm.s1:
             self.exitSmS1T4()
             self.exitSmS1T6()
 
     def setSm(self, aSm):
         self._sm = aSm
-        # entry actions and do activities
-        if self._sm == X.Sm.s0 :
-            if self._smS0T1 == X.SmS0T1.Null :
-                self.setSmS0T1(X.SmS0T1.t1)
-            if self._smS0T2 == X.SmS0T2.Null :
-                self.setSmS0T2(X.SmS0T2.t2)
-        elif self._sm == X.Sm.s1 :
-            if self._smS1T4 == X.SmS1T4.Null :
-                self.setSmS1T4(X.SmS1T4.t4)
-            if self._smS1T6 == X.SmS1T6.Null :
-                self.setSmS1T6(X.SmS1T6.t6)
+        self._smVisit += 1
+        visit = self._smVisit
+        if self._sm is __class__.Sm.s0:
+            if self._smS0T1 is __class__.SmS0T1.Null:
+                self.setSmS0T1(__class__.SmS0T1.t1)
+            if self._smVisit != visit:
+                return
+            if self._smS0T2 is __class__.SmS0T2.Null:
+                self.setSmS0T2(__class__.SmS0T2.t2)
+        elif self._sm is __class__.Sm.s1:
+            if self._smS1T4 is __class__.SmS1T4.Null:
+                self.setSmS1T4(__class__.SmS1T4.t4)
+            if self._smVisit != visit:
+                return
+            if self._smS1T6 is __class__.SmS1T6.Null:
+                self.setSmS1T6(__class__.SmS1T6.t6)
 
     def exitSmS0T1(self):
-        if self._smS0T1 == X.SmS0T1.t1 :
-            self.setSmS0T1(X.SmS0T1.Null)
+        if self._smS0T1 is __class__.SmS0T1.t1:
+            self.setSmS0T1(__class__.SmS0T1.Null)
 
     def setSmS0T1(self, aSmS0T1):
         self._smS0T1 = aSmS0T1
-        if self._sm != X.Sm.s0 and aSmS0T1 != X.SmS0T1.Null :
-            self.setSm(X.Sm.s0)
+        if self._sm is not __class__.Sm.s0 and aSmS0T1 is not __class__.SmS0T1.Null:
+            self.setSm(__class__.Sm.s0)
 
     def exitSmS0T2(self):
-        if self._smS0T2 == X.SmS0T2.t2 :
-            self.setSmS0T2(X.SmS0T2.Null)
-        elif self._smS0T2 == X.SmS0T2.t3 :
-            self.setSmS0T2(X.SmS0T2.Null)
+        if self._smS0T2 is __class__.SmS0T2.t2:
+            self.setSmS0T2(__class__.SmS0T2.Null)
+        elif self._smS0T2 is __class__.SmS0T2.t3:
+            self.setSmS0T2(__class__.SmS0T2.Null)
 
     def setSmS0T2(self, aSmS0T2):
         self._smS0T2 = aSmS0T2
-        if self._sm != X.Sm.s0 and aSmS0T2 != X.SmS0T2.Null :
-            self.setSm(X.Sm.s0)
+        if self._sm is not __class__.Sm.s0 and aSmS0T2 is not __class__.SmS0T2.Null:
+            self.setSm(__class__.Sm.s0)
 
     def exitSmS1T4(self):
-        if self._smS1T4 == X.SmS1T4.t4 :
-            self.setSmS1T4(X.SmS1T4.Null)
-        elif self._smS1T4 == X.SmS1T4.t5 :
-            self.setSmS1T4(X.SmS1T4.Null)
+        if self._smS1T4 is __class__.SmS1T4.t4:
+            self.setSmS1T4(__class__.SmS1T4.Null)
+        elif self._smS1T4 is __class__.SmS1T4.t5:
+            self.setSmS1T4(__class__.SmS1T4.Null)
 
     def setSmS1T4(self, aSmS1T4):
         self._smS1T4 = aSmS1T4
-        if self._sm != X.Sm.s1 and aSmS1T4 != X.SmS1T4.Null :
-            self.setSm(X.Sm.s1)
+        if self._sm is not __class__.Sm.s1 and aSmS1T4 is not __class__.SmS1T4.Null:
+            self.setSm(__class__.Sm.s1)
 
     def exitSmS1T6(self):
-        if self._smS1T6 == X.SmS1T6.t6 :
-            self.setSmS1T6(X.SmS1T6.Null)
-        elif self._smS1T6 == X.SmS1T6.t7 :
-            self.setSmS1T6(X.SmS1T6.Null)
+        if self._smS1T6 is __class__.SmS1T6.t6:
+            self.setSmS1T6(__class__.SmS1T6.Null)
+        elif self._smS1T6 is __class__.SmS1T6.t7:
+            self.setSmS1T6(__class__.SmS1T6.Null)
 
     def setSmS1T6(self, aSmS1T6):
         self._smS1T6 = aSmS1T6
-        if self._sm != X.Sm.s1 and aSmS1T6 != X.SmS1T6.Null :
-            self.setSm(X.Sm.s1)
+        if self._sm is not __class__.Sm.s1 and aSmS1T6 is not __class__.SmS1T6.Null:
+            self.setSm(__class__.Sm.s1)
 
     def delete(self):
-        pass
-
+        self._deleted = True

@@ -23,4 +23,3 @@ class X {
 // @@@skipcppcompile - Contains Java Code
 // @@@skipphpcompile - Contains Java Code
 // @@@skiprubycompile - Contains Java Code
-// @@@skippythoncompile - quires Python 3, Current CLI uses Python 2.7

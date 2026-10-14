@@ -1,0 +1,7 @@
+class UmpleToPython {
+    // A do activity's code, run by its worker, which it receives as thread. Code that
+    // wants to stop when its state is left checks thread.cancelled.
+    state_machine_doActivity <<!<</*state_machine_doActivity*/>>
+
+    def <<=gen.translate("doActivityMethod", activity)>>(self, thread):<<=gen.activityCode(activity, uClass, "        ")>>!>>
+}

@@ -50,6 +50,12 @@ function updateConnectionStatus() {
 // Listen for changes
 window.addEventListener('offline', updateConnectionStatus);
 
+// True while this page is connected to the collaboration server and so is
+// sharing the text being edited with every other page open on the same model
+Collab.isConnected = function() {
+  return isConnected;
+};
+
 // called from Action.initialLoadFinished() once the model text is in the editor; connects to
 // UmpleCollabServer if the current URL is a Bookmarked/Collaborative URL
 // umpdir represents the current model

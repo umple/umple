@@ -1,0 +1,9 @@
+// Enumeration: Status
+"Status" [href="", shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    Status </td></tr><tr><td cellpadding="4">&laquo;enum&raquo;</td></tr><hr/><tr><td align="left">  FullTime  </td></tr><tr><td align="left">  PartTime  </td></tr></table>>,
+   tooltip="enum Status
+"];
+
+// Enumeration: Student.Level
+"Student.Level" [href="", shape=plaintext margin=0 label=<<table border="1" cellspacing="0" cellborder="0" cellpadding="2"><tr><td cellpadding="10">    Level </td></tr><tr><td cellpadding="4">&laquo;enum&raquo;</td></tr><hr/><tr><td align="left">  Undergrad  </td></tr><tr><td align="left">  Grad  </td></tr></table>>,
+   tooltip="enum Student.Level
+"];

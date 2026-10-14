@@ -1,61 +1,56 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from enum import Enum, auto
+from enum import Enum
 
-class Light():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Light State Machines
+
+class Light:
     class Status(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
-        def __str__(self):
-            return str(self.value)
-        On = auto()
-        Off = auto()
+        On = "On"
+        Off = "Off"
 
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+        def __str__(self):
+            return self.value
+
     def __init__(self):
         self._status = None
-        self.setStatus(Light.Status.On)
+        self._statusVisit = 0
+        self._deleted = False
+        self.setStatus(__class__.Status.On)
+        if self._deleted:
+            return
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def getStatusFullName(self):
-        answer = self._status.__str__()
+        answer = str(self._status)
         return answer
 
     def getStatus(self):
         return self._status
 
     def flip(self):
+        if self._deleted:
+            return False
         wasEventProcessed = False
         aStatus = self._status
-        if aStatus == Light.Status.On :
-            self.setStatus(Light.Status.Off)
+        if aStatus is __class__.Status.On:
+            self.setStatus(__class__.Status.Off)
             wasEventProcessed = True
-        elif aStatus == Light.Status.Off :
-            self.setStatus(Light.Status.On)
+        elif aStatus is __class__.Status.Off:
+            self.setStatus(__class__.Status.On)
             wasEventProcessed = True
-        else :
-            # Other states do respond to this event
-            pass
         return wasEventProcessed
 
     def setStatus(self, aStatus):
         self._status = aStatus
-        # entry actions and do activities
-        if self._status == Light.Status.On :
-
+        self._statusVisit += 1
+        visit = self._statusVisit
+        if self._status is __class__.Status.On:
             print("entry")
-
+            if self._deleted or self._statusVisit != visit:
+                return
             print("entry2")
+            if self._deleted:
+                return
 
     def delete(self):
-        pass
-
+        self._deleted = True

@@ -1,0 +1,23 @@
+generate Python "../src-gen-umple";
+namespace cruise.sm.timerlocals;
+
+// These class names test import collisions without affecting locals in the main harness's snippets.
+class visit {
+  const Double SECONDS = 7.5;
+  static Double duration() Python { return 30.0 } Java { return 30.0; }
+}
+class visit2 { const Double SECONDS = 7.5; }
+class delay {
+  const Double SECONDS = 7.5;
+  static Double duration() Python { return 30.0 } Java { return 30.0; }
+}
+class delay2 { const Double SECONDS = 7.5; }
+class SmLifecycleDelayClassName {
+  sm { A { after(visit.duration()) -> B; } B {} }
+}
+class SmLifecycleDelayValueName {
+  sm { A { after(delay.duration()) -> B; } B {} }
+}
+class SmLifecycleDelayNumberedNames {
+  sm { A { after(visit.SECONDS+visit2.SECONDS+delay.SECONDS+delay2.SECONDS) -> B; } B {} }
+}
