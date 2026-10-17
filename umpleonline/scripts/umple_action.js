@@ -1064,6 +1064,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery("#buttonShowGvEntityRelationshipDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('none');
     jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
     Page.initExamples();
 
   }
@@ -6239,7 +6240,7 @@ Action.updateUmpleDiagramCallback = function(response)
 
       // If gv class mode is gvmanual then we need to update all the umple 
       // positioning information given the diagram locations
-      if(Page.useGvClassDiagram && Page.isGvManual()) {
+      if((Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram) && Page.isGvManual()) {
 
         // First, in case we have used a special algorithm to reformulate we first turn them all off
         // This will not have effect if the algorithm is specified in the code.
@@ -6446,7 +6447,7 @@ Action.updateUmpleDiagramCallback = function(response)
   
   Page.hideLoading();
 
-  if (Page.useGvClassDiagram) {
+  if (Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram) {
     GvDiagramEdit.bindClassDiagram(canvasX, canvasY);
   }
 
