@@ -1,0 +1,174 @@
+Using UmpleOnline V2
+UmpleOnline
+noreferences
+@@tooltip How to use UmpleOnline V2, the new version of UmpleOnline at newumpleonline.umple.org
+
+@@description
+
+<p>The following describes how to use <a href="https://newumpleonline.umple.org">UmpleOnline V2, accessible
+online at newumpleonline.umple.org</a>. UmpleOnline V2 is a new version of UmpleOnline with almost all the
+same capabilities as <a href="UsingUmpleOnline.html">classic UmpleOnline</a>, but a different user experience.
+Both versions use the same Umple compiler and are maintained; the classic version remains available at
+<a href="https://try.umple.org">try.umple.org</a>. <a href="https://github.com/umple/umpleonline/" target="newulghrepo">The
+repository for V2 is here</a>.</p>
+
+<p>For information about writing Umple models or code, look at the <a href="GettingStarted.html">Getting
+Started section of this user manual</a>, or any other topic in the left column of this page. Every example in this
+manual has a link to load it into classic UmpleOnline and a link to load it into UmpleOnline V2.</p>
+
+<br />
+
+<p><b>Basic use of UmpleOnline V2</b></p>
+
+<ul>
+
+<li><b>The first time you open V2</b>, a welcome dialog offers a quick tour that walks you through building a
+state machine, viewing its diagram and generating code. You can skip it and explore on your own.</li>
+
+<br />
+
+<li><b>To explore examples of Umple</b>, open the example picker at the top centre of the page (it shows the
+name of the current example or model). You can also directly access these examples using a URL ending with the
+name of the example, as in classic UmpleOnline. For example <a href="https://newumpleonline.umple.org/?example=2DShapes">click
+here to jump to the 2DShapes example: https://newumpleonline.umple.org/?example=2DShapes</a>. The classic
+equivalent is described in <a href="UsingUmpleOnline.html">Using UmpleOnline</a>.</li>
+
+<br />
+
+<li><b>To start a new model</b>, choose 'Start Blank Model' in the example picker.</li>
+
+<br />
+
+<li><b>To find any command quickly</b>, open the command palette using the search (magnifying glass) button at the
+top right. You can type the name of an output, a view or an example to jump to it.</li>
+
+<br />
+
+<li><b>To change preferences</b>, click the sidebar button at the top left of the text editor, or press Ctrl+B.
+There you can choose a light, dark or system theme, and turn off 'Dynamically generate while editing' on slower
+machines or networks.</li>
+
+</ul>
+
+<br />
+
+<p><b>Saving, sharing and collaborating</b></p>
+
+<ul>
+
+<li><b>To share your model or work on it with others</b>, click 'Share' at the top right of the text editor. The
+model is saved on the server, the URL in your browser changes to one ending in ?model= followed by an identifier,
+and that URL is copied to your clipboard. Anyone who opens this URL sees the same model and can edit it with you
+in real time; each collaborator appears in the Share menu. Use 'Copy link' to copy the URL again, and 'Stop
+collaborating' to stop. As with saved URLs in classic UmpleOnline, anyone who knows the URL can edit the model.</li>
+
+<br />
+
+<li><b>To download your work</b>, use the download button at the top of the diagram pane. You can download the
+Umple code as a .ump file, or the diagram as an SVG or PNG image.</li>
+
+<br />
+
+<li><b>To work with several files</b>, click the '+' next to the tab names above the text editor to add a new
+file. Each tab is a separate .ump file of the same model.</li>
+
+</ul>
+
+<br />
+
+<p><b>Left pane: Umple textual code</b></p>
+
+<ul>
+
+<li>Type any Umple code into this pane. Shortly after you stop typing, your model is compiled and the diagram
+or other output on the right is updated.</li>
+
+<br />
+
+<li><b>Errors and warnings</b> appear in the Output panel below the text editor. Each message has a link to the line
+that caused it and a 'More information' link to the page of this manual describing the problem. If the model has an
+error, the diagram is kept but marked as out of date.</li>
+
+<br />
+
+<li>The editor highlights Umple keywords, and you can collapse blocks of code using the arrows next to the line
+numbers.</li>
+
+</ul>
+
+<br />
+
+<p><b>Right pane: diagrams and other outputs</b></p>
+
+<ul>
+
+<li><b>To choose what is shown in the right pane</b>, use the output picker at the top centre (for example
+'GraphViz Class Diagram'). It groups all outputs in one list: data model views (class diagram, entity-relationship
+diagram, CRUD user interface, Sql), state model views (state diagram, state tables), instance views, special
+views (feature diagram, structure diagram, Plain Requirements Doc, metrics and others), programming language code
+(Java, PHP, Python, C++, Ruby and others), formal methods and other modeling notations. In classic UmpleOnline,
+diagrams are chosen with the E, G and S buttons and generated code with the GENERATE menu.</li>
+
+<br />
+
+<li><b>To edit a class diagram graphically</b>, switch the 'Edit / GV' toggle at the top of a class diagram to
+'Edit'. In this editable diagram:
+  <ul>
+    <li>right-click the background and choose 'Add Class Here' to add a <a href="ClassDefinition.html">class</a>;</li>
+    <li>right-click a class to rename or delete it;</li>
+    <li>drag a connection from one class to another and choose 'Association' or 'Generalization';</li>
+    <li>right-click an association or generalization to delete it;</li>
+    <li>remove an attribute or method with the button next to it.</li>
+  </ul>
+The Umple text on the left is updated with each change. Switch back to 'GV' for a diagram laid out by GraphViz.</li>
+
+<br />
+
+<li><b>To change the layout of a GraphViz diagram</b>, use the layout menu ('Dot (default)', SFDP, Circo, Neato,
+FDP or Twopi).</li>
+
+<br />
+
+<li><b>To show or hide parts of a class diagram</b>, use the eye button: you can filter classes, show or hide
+attributes, methods and traits, and use orthogonal edges. This corresponds to the Show and Hide options of classic
+UmpleOnline.</li>
+
+<br />
+
+<li><b>To zoom</b>, use the + and - buttons at the bottom left of the diagram, scroll, or click the button that
+fits the whole diagram in view. The button at the top right of the pane shows the diagram alone.</li>
+
+<br />
+
+<li><b>To run your model</b>, select 'Java Code' or 'Python Code' in the output picker for a model that has a
+main method, then click 'Execute' at the top of the page. Execution is only supported for Java and Python.</li>
+
+</ul>
+
+<br />
+
+<p><b>AI and tasks</b></p>
+
+<ul>
+
+<li><b>The 'AI' button</b> at the top of the page opens the Umple AI configuration, where you choose a provider and
+enter your own API key and model. See <a href="UmpleOnlineAICapabilities.html">UmpleOnline AI Capabilities</a> for
+how the AI features work.</li>
+
+<br />
+
+<li><b>The 'Tasks' menu</b> lets you create and manage tasks, as described in <a href="SettingupTasks.html">Setting
+Up Tasks</a> for classic UmpleOnline.</li>
+
+</ul>
+
+<br />
+
+<p><b>URL options</b></p>
+
+<p>V2 accepts ?example= to load an example and ?model= to load a shared model. Some of the other
+<a href="UmpleOnlineURLoptions.html">URL options of classic UmpleOnline</a> are not yet supported in V2.</p>
+
+<hr />
+
+<p><a href="PrivacyandRisks.html">See here for the statement regarding <b>privacy and other risks when using UmpleOnline</b>.</a></p>

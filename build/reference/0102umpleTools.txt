@@ -31,7 +31,7 @@ can be run locally on your machine by using a Docker image. <a href="https://hub
 
 <br />&nbsp;<br />
 
-<li><a href="https://newumpleonline.umple.org"><b style="background-color: #A7593D; padding: 2px; color: white">UmpleOnline V2</b> UmpleOnline V2</a> is a new version written with AI that has almost all the same features as classic UmpleOnline, but presents a different user experience. <a href="https://github.com/umple/umpleonline/" target="newulghrepo">Its repository is here.</a> V2 is still being fine tuned, but both versions are fully usable. Part of our research is to determine what aspects of each version people like best. Both versions will be maintained for at least another year or two.</li>
+<li><a href="https://newumpleonline.umple.org"><b style="background-color: #A7593D; padding: 2px; color: white">UmpleOnline V2</b> UmpleOnline V2</a> is a new version written with AI that has almost all the same features as classic UmpleOnline, but presents a different user experience. <a href="https://github.com/umple/umpleonline/" target="newulghrepo">Its repository is here.</a> V2 is still being fine tuned, but both versions are fully usable. <a href="UsingUmpleOnlineV2.html">The Using UmpleOnline V2 page of this User manual describes how to use V2</a>. Part of our research is to determine what aspects of each version people like best. Both versions will be maintained for at least another year or two.</li>
 
 <br />&nbsp;<br />
 
