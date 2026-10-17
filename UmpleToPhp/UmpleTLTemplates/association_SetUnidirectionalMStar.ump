@@ -7,9 +7,12 @@ class UmpleToPhp {
     $<<=gen.translate("parameterVerifiedMany",av)>> = array();
     foreach ($<<=gen.translate("parameterMany",av)>> as $<<=gen.translate("parameterOne",av)>>)
     {
-      if (array_search($<<=gen.translate("parameterOne",av)>>,$<<=gen.translate("parameterVerifiedMany",av)>>) !== false)
+      foreach ($<<=gen.translate("parameterVerifiedMany",av)>> as $verified)
       {
-        continue;
+        if ($<<=gen.translate("parameterOne",av)>> === null ? $verified === null : $<<=gen.translate("parameterOne",av)>>->equals($verified))
+        {
+          continue 2;
+        }
       }
       $<<=gen.translate("parameterVerifiedMany",av)>>[] = $<<=gen.translate("parameterOne",av)>>;
     }

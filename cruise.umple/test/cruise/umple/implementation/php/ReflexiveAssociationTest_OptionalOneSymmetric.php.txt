@@ -69,7 +69,7 @@ class Mentor
     }
     
     $currentSuperMentor = $this->getSuperMentor();
-    if ($currentSuperMentor != null && $currentSuperMentor != $aNewSuperMentor)
+    if ($currentSuperMentor != null && $currentSuperMentor !== $aNewSuperMentor)
     {
       $currentSuperMentor->setSuperMentor(null);
     }
@@ -77,7 +77,7 @@ class Mentor
     $this->superMentor = $aNewSuperMentor;
     $existingSuperMentor = $aNewSuperMentor->getSuperMentor();
     
-    if ($this != $existingSuperMentor)
+    if ($this !== $existingSuperMentor)
     {
       $aNewSuperMentor->setSuperMentor($this);
     }
@@ -87,7 +87,7 @@ class Mentor
 
   public function equals($compareTo)
   {
-    return $this == $compareTo;
+    return $this === $compareTo;
   }
 
   public function delete()
