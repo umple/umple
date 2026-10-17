@@ -1,64 +1,45 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
-# line 3 "../OneToOptionalOneTest.ump"
-import os
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-class MyDriver():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #MyDriver Attributes
-    #MyDriver Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+
+class MyDriver:
     def __init__(self, aName):
+        self._name = aName
         self._mySubordinate = None
-        self._name = None
-        self._name = aName
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setName(self, aName):
-        wasSet = False
         self._name = aName
-        wasSet = True
-        return wasSet
+        return True
 
     def getName(self):
         return self._name
 
-    # Code from template association_GetOne 
     def getMySubordinate(self):
         return self._mySubordinate
 
     def hasMySubordinate(self):
-        has = not (self._mySubordinate is None)
-        return has
+        return self._mySubordinate is not None
 
-    # Code from template association_SetOptionalOneToOne 
     def setMySubordinate(self, aNewMySubordinate):
-        wasSet = False
-        if not (self._mySubordinate is None) and not self._mySubordinate == aNewMySubordinate and self == self._mySubordinate.getMyDriver() :
-            #Unable to setMySubordinate, as existing mySubordinate would become an orphan
-            return wasSet
+        if self._mySubordinate is not None and self._mySubordinate is not aNewMySubordinate and self._mySubordinate.getMyDriver() is self:
+            return False
         self._mySubordinate = aNewMySubordinate
-        anOldMyDriver = (aNewMySubordinate.getMyDriver()) if not (aNewMySubordinate is None) else None
-        if not self == anOldMyDriver :
-            if not (anOldMyDriver is None) :
-                anOldMyDriver.mySubordinate = None
-            if not (self._mySubordinate is None) :
+        anOldMyDriver = aNewMySubordinate.getMyDriver() if aNewMySubordinate is not None else None
+        if anOldMyDriver is not self:
+            if anOldMyDriver is not None:
+                anOldMyDriver._mySubordinate = None
+            if self._mySubordinate is not None:
                 self._mySubordinate.setMyDriver(self)
-        wasSet = True
-        return wasSet
+        return True
 
     def delete(self):
         existingMySubordinate = self._mySubordinate
         self._mySubordinate = None
-        if not (existingMySubordinate is None) :
+        if existingMySubordinate is not None:
             existingMySubordinate.delete()
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "mySubordinate = " + ((format(id(self.getMySubordinate()), "x")) if not (self.getMySubordinate() is None) else "null")
-
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]"
+                + "\n  mySubordinate = " + ("null" if self.getMySubordinate() is None else format(id(self.getMySubordinate()), "x")))

@@ -1,0 +1,95 @@
+// Models for the Python-specific behaviour of one-to-one, directed and immutable associations:
+// links by identity among objects with equal keys, bounds and rollback, batch setters, key and
+// immutability guards, and one-to-one construction.
+namespace cruise.oneone;
+
+strictness ignore 36;
+
+class OoTag { name; key { name } }
+
+class OoFrozenTag { immutable; name; key { name } }
+
+// Directed ends of each multiplicity
+class OoBag { * -> * OoTag tags; }
+class OoBox { * -> 0..2 OoTag tags; }
+class OoShelf { * -> 1..2 OoTag tags; }
+class OoPile { * -> 1..* OoTag tags; }
+class OoRack { * -> 2 OoTag tags; }
+class OoPin { * -> 1 OoTag tag; 0..1 -> 0..1 OoTag spare; }
+
+// Association ends that are key members
+class OoBadge { 0..1 -> 1 OoTag tag; key { tag } }
+class OoBadgeSet { * -> 0..2 OoTag tags; key { tags } }
+
+// Immutable ends in a mutable class
+class OoHolder { immutable 0..1 -> 0..2 OoFrozenTag tags; immutable 0..1 -> 0..1 OoFrozenTag single; }
+
+// Bidirectional ends that are at most one, between keyed classes
+class OoDesk { code; key { code } 0..1 desk -- 0..1 OoChair chair; }
+class OoChair { code; key { code } }
+class OoLock { code; key { code } 0..1 lock -- 1 OoCard card; }
+class OoCard { code; key { code } }
+class OoTwin { name; key { name } 0..1 self twin; }
+
+// Mandatory one-to-one pairs, one of them with a parent class
+class OoBase { Integer x; }
+class OoCar { isA OoBase; 1 car -- 1 OoEngine engine; }
+class OoEngine { Integer power; }
+
+// Subclasses of a class in a mandatory one-to-one pair, one of them in a pair of its own
+class OoVehicle { Integer wheels; 1 vehicle -- 1 OoPlate plate; }
+class OoPlate { code; }
+class OoTruck { isA OoVehicle; }
+class OoBus { isA OoVehicle; 1 bus -- 1 OoDriver driver; }
+class OoDriver { name; }
+
+// Both classes of a mandatory one-to-one pair have a collection in their constructor
+class OoSeat { 1 seat -- 1 OoBelt belt; * -> 1..2 OoTag tags; }
+class OoBelt { * -> 1..* OoTag tags; }
+
+// Sorted directed ends
+class OoRanked { Integer rank; }
+class OoLadder { * -> * OoRanked rungs sorted {rank}; }
+class OoPodium { * -> 0..3 OoRanked places sorted {rank}; }
+
+// Before and after injections in the mutators of this family
+class OoWatched {
+  String[] calls;
+  0..1 -> 0..2 OoTag tags;
+  0..1 -> 0..1 OoTag tag;
+  0..1 watched -- 0..1 OoWatcher watcher;
+  before addTag Python { self.addCall("before add " + aTag.getName()) }
+  after addTag Python { self.addCall("after add") }
+  before removeTag Python { self.addCall("before remove") }
+  after removeTag Python { self.addCall("after remove") }
+  before setTags Python { self.addCall("before set " + str(len(newTags))) }
+  after setTags Python { self.addCall("after set") }
+  before setTag Python { self.addCall("before tag") }
+  after setTag Python { self.addCall("after tag") }
+  before setWatcher Python { self.addCall("before watcher") }
+  after setWatcher Python { self.addCall("after watcher") }
+}
+class OoWatcher { }
+
+// Untagged injections that go through the objects given to a batch setter
+class OoCounted {
+  Integer count = 0;
+  0..1 -> 0..3 OoTag tags;
+  before setTags { for (OoTag tag : newTags) { count++; } }
+}
+
+// User methods with the name of the helper that initializes from an existing partner
+class OoHelm { 1 helm -- 1 OoWheel wheel; void _alternateInit(OoWheel aWheel) Python { self.hijacked = True } }
+class OoWheel { Integer size; }
+class OoRudder { isA OoHelm; void _alternateInit(OoWheel aWheel) Python { self.hijacked = True } }
+
+// A partner nested in another class, and a class named like a constructor parameter (aOoGauge)
+class OoDock { static class OoBerth { Integer size; 1 berth -- 1 OoBoat boat; } }
+class OoBoat { name; }
+class aOoGauge { Integer ooGauge; 1 gauge -- 1 OoDial dial; }
+class OoDial { Integer value; }
+class OoGaugeChild { isA aOoGauge; }
+
+// A mandatory many end whose other end is 0..1, released on delete
+class OoTeam { 0..1 team -- 1..* OoPlayer players; }
+class OoPlayer { }

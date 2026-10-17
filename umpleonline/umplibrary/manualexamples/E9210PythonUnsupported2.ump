@@ -1,0 +1,5 @@
+// Without the trace directive the class is generated
+generate Python;
+class Lamp {
+  Integer level;
+}

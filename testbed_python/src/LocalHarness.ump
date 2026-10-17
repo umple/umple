@@ -1,29 +1,27 @@
-
-//Date.parse("1978-12-01")
 namespace cruise.attributes.test;
 
 class DoorA
 {
   immutable DoorB doorId = new DoorB(5);
-  immutable Date dateId = Date.parse("1978-12-05");
-  immutable Time timeId = Time.parse("10:11:15");
+  immutable Date dateId = "1978-12-05";
+  immutable Time timeId = "10:11:15";
 }
 
 class DoorD
 {
   defaulted DoorB doorId = new DoorB(5);
-  defaulted Date dateId = Date.parse("1978-12-05");
-  defaulted Time timeId = Time.parse("10:11:15");
+  defaulted Date dateId = "1978-12-05";
+  defaulted Time timeId = "10:11:15";
 }
 
 class DoorE
 {
-  Date d4 = Date.parse("1978-12-04");
+  Date d4 = "1978-12-04";
 }
 
 class DoorF
 {
-  Time d4 = Time.parse("12:53:54");
+  Time d4 = "12:54:54";
 }
 
 class DoorG
@@ -36,4 +34,61 @@ class DoorG
 class ExtraCodeTest
 {
   // extracode
+}
+
+// The association classes of the Java testbed's LocalHarness.ump, used by the same tests
+namespace cruise.associations;
+
+class ConstructorManyClass
+{
+  * -> 3..5 Otherclass othersOne;
+  * -> 1..3 Otherclass othersTwo;
+}
+
+class GradStudentAN
+{
+}
+
+class MentorAN
+{
+  name;
+  1 -- 1 GradStudentAN gradStudent;
+}
+
+class StudentAN
+{
+  int number;
+  * students -- 1 MentorAN mentor;
+}
+
+class GradStudentAO
+{
+}
+
+class MentorAO
+{
+  name;
+  1 -- 1 GradStudentAO gradStudent;
+}
+
+class StudentAO
+{
+  int number;
+  2 students -- 1 MentorAO mentor;
+}
+
+class GradStudentAP
+{
+}
+
+class MentorAP
+{
+  name;
+  1 -- 1 GradStudentAP gradStudent;
+}
+
+class StudentAP
+{
+  int number;
+  1 student -- 1 MentorAP mentor;
 }

@@ -1,0 +1,9 @@
+// Merging declarations checks exact slots, so an untagged fallback is not a duplicate
+class X {
+  void f() { return; } Python { return }
+  void f() Java {}
+  void g() Java { int a; }
+  void g() { int b; }
+  void h() Java, Php { int c; }
+  void h() Java { int d; }
+}

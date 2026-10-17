@@ -1,118 +1,65 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
-import os
-import pickle
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-class Mentor():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Mentor Attributes
-    #Mentor Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
-    def __init__(self, aName, aStudentsPriority):
-        self._students = None
-        self._studentsPriority = None
-        self._name = None
+
+class Mentor:
+    def __init__(self, aName):
         self._name = aName
-        self._studentsPriority = aStudentsPriority
         self._students = []
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setName(self, aName):
-        wasSet = False
         self._name = aName
-        wasSet = True
-        return wasSet
-
-    def setStudentsPriority(self, aStudentsPriority):
-        wasSet = False
-        self._studentsPriority = aStudentsPriority
-        wasSet = True
-        return wasSet
+        return True
 
     def getName(self):
         return self._name
 
-    def getStudentsPriority(self):
-        return self._studentsPriority
-
-    # Code from template association_GetMany 
     def getStudent(self, index):
-        aStudent = self._students[index]
-        return aStudent
+        return self._students[index]
 
     def getStudents(self):
-        newStudents = tuple(self._students)
-        return newStudents
+        return tuple(self._students)
 
     def numberOfStudents(self):
-        number = len(self._students)
-        return number
+        return len(self._students)
 
     def hasStudents(self):
-        has = len(self._students) > 0
-        return has
+        return len(self._students) > 0
 
     def indexOfStudent(self, aStudent):
-        index = (-1 if not aStudent in self._students else self._students.index(aStudent))
-        return index
+        return next((i for i, x in enumerate(self._students) if x is aStudent), -1)
 
-    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfStudents():
         return 0
 
-    # Code from template association_AddManyToManyMethod 
     def addStudent(self, aStudent):
-        wasAdded = False
-        if (aStudent) in self._students :
+        if any(x is aStudent for x in self._students):
             return False
         self._students.append(aStudent)
-        if aStudent.indexOfMentor(self) != -1 :
-            wasAdded = True
-        else :
-            wasAdded = aStudent.addMentor(self)
-            if not wasAdded :
-                self._students.remove(aStudent)
-        return wasAdded
+        if aStudent.indexOfMentor(self) == -1 and not aStudent.addMentor(self):
+            del self._students[next((i for i, x in enumerate(self._students) if x is aStudent), -1)]
+            return False
+        self._students.sort(key=lambda x: x.getId())
+        return True
 
-    # Code from template association_RemoveMany 
     def removeStudent(self, aStudent):
-        wasRemoved = False
-        if not (aStudent) in self._students :
-            return wasRemoved
-        oldIndex = (-1 if not aStudent in self._students else self._students.index(aStudent))
-        self._students.remove(oldIndex)
-        if aStudent.indexOfMentor(self) == -1 :
-            wasRemoved = True
-        else :
-            wasRemoved = aStudent.removeMentor(self)
-            if not wasRemoved :
-                self._students.insert(oldIndex, aStudent)
-        return wasRemoved
-
-    # Code from template association_sorted_serializable_readObject 
-    def readObject(self, input):
-        self.__dict__.clear()
-        self.__dict__.update(pickle.load(input).__dict__)
-        self._studentsPriority = None
+        oldIndex = next((i for i, x in enumerate(self._students) if x is aStudent), -1)
+        if oldIndex == -1:
+            return False
+        del self._students[oldIndex]
+        if aStudent.indexOfMentor(self) != -1 and not aStudent.removeMentor(self):
+            self._students.insert(oldIndex, aStudent)
+            return False
+        return True
 
     def delete(self):
-        copyOfStudents = self._students.copy()
+        copyOfStudents = tuple(self._students)
         self._students.clear()
         for aStudent in copyOfStudents:
             aStudent.removeMentor(self)
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "name" + ":" + str(self.getName()) + "]" + str(os.linesep) + "  " + "studentsPriority" + "=" + (((self.getStudentsPriority().__str__().replaceAll("  ", "    ")) if not self.getStudentsPriority() == self else "this") if not (self.getStudentsPriority() is None) else "null")
-
-    def __getstate__(self):
-        state = dict(self.__dict__)
-        state.pop("_studentsPriority")
-        return state
-
+        return (super().__str__() + "["
+                + "name:" + str(self.getName())
+                + "]")

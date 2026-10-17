@@ -1,0 +1,90 @@
+#PLEASE DO NOT EDIT THIS CODE
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
+
+from I import I
+
+
+class First(I):
+    def __init__(self):
+        self._seconds = []
+
+    def getSecond(self, index):
+        return self._seconds[index]
+
+    def getSeconds(self):
+        return tuple(self._seconds)
+
+    def numberOfSeconds(self):
+        return len(self._seconds)
+
+    def hasSeconds(self):
+        return len(self._seconds) > 0
+
+    def indexOfSecond(self, aSecond):
+        return next((i for i, x in enumerate(self._seconds) if x is aSecond), -1)
+
+    def isNumberOfSecondsValid(self):
+        return self.numberOfSeconds() >= __class__.minimumNumberOfSeconds() and self.numberOfSeconds() <= __class__.maximumNumberOfSeconds()
+
+    @staticmethod
+    def requiredNumberOfSeconds():
+        return 5
+
+    @staticmethod
+    def minimumNumberOfSeconds():
+        return 5
+
+    @staticmethod
+    def maximumNumberOfSeconds():
+        return 5
+
+    def addSecond(self, aSecond):
+        if any(x is aSecond for x in self._seconds):
+            return False
+        if self.numberOfSeconds() >= __class__.maximumNumberOfSeconds():
+            return False
+        self._seconds.append(aSecond)
+        if aSecond.indexOfFirst(self) == -1 and not aSecond.addFirst(self):
+            del self._seconds[next((i for i, x in enumerate(self._seconds) if x is aSecond), -1)]
+            return False
+        return True
+
+    def removeSecond(self, aSecond):
+        oldIndex = next((i for i, x in enumerate(self._seconds) if x is aSecond), -1)
+        if oldIndex == -1:
+            return False
+        if self.numberOfSeconds() <= __class__.minimumNumberOfSeconds():
+            return False
+        del self._seconds[oldIndex]
+        if aSecond.indexOfFirst(self) != -1 and not aSecond.removeFirst(self):
+            self._seconds.insert(oldIndex, aSecond)
+            return False
+        return True
+
+    def setSeconds(self, *newSeconds):
+        if len({id(x) for x in newSeconds}) != len(newSeconds) or len(newSeconds) < __class__.minimumNumberOfSeconds() or len(newSeconds) > __class__.maximumNumberOfSeconds():
+            return False
+        oldSeconds = {id(x): x for x in self._seconds}
+        self._seconds.clear()
+        for aNewSecond in newSeconds:
+            self._seconds.append(aNewSecond)
+            if id(aNewSecond) in oldSeconds:
+                del oldSeconds[id(aNewSecond)]
+            else:
+                aNewSecond.addFirst(self)
+        for anOldSecond in oldSeconds.values():
+            anOldSecond.removeFirst(self)
+        return True
+
+    def delete(self):
+        from Second import Second
+        copyOfSeconds = tuple(self._seconds)
+        self._seconds.clear()
+        for aSecond in copyOfSeconds:
+            if aSecond.numberOfFirsts() <= Second.minimumNumberOfFirsts():
+                aSecond.delete()
+            else:
+                aSecond.removeFirst(self)
+
+    def setSecond(self, aSecond):
+        return False

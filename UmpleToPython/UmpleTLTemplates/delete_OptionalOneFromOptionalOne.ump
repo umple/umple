@@ -1,0 +1,6 @@
+class UmpleToPython {
+    // Both ends 0..1: the partner is released and releases this object in turn.
+    delete_OptionalOneFromOptionalOne <<!<</*delete_OptionalOneFromOptionalOne*/>>
+        if <<=field>> is not None:
+            <<=field>>.<<=gen.relatedTranslate("setMethod", av)>>(None)!>>
+}

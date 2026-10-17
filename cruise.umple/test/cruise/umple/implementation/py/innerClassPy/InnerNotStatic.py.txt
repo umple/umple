@@ -1,47 +1,15 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
-# line 3 "innerNonStatic.ump"
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-class OuterClass_2():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
-    def __init__(self):
-        pass
 
-    #------------------------
-    # INTERFACE
-    #------------------------
-    def delete(self):
-        pass
-
-    #PLEASE DO NOT EDIT THIS CODE
-    #This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
-    # line 5 "innerNonStatic.ump"
-
-    class InnerClass():
-        #------------------------
-        # MEMBER VARIABLES
-        #------------------------
-        #InnerClass Attributes
-        #------------------------
-        # CONSTRUCTOR
-        #------------------------
+class OuterClass_2:
+    class InnerClass:
         def __init__(self, aX):
-            self._x = None
             self._x = aX
 
-        #------------------------
-        # INTERFACE
-        #------------------------
         def setX(self, aX):
-            wasSet = False
             self._x = aX
-            wasSet = True
-            return wasSet
+            return True
 
         def getX(self):
             return self._x
@@ -50,5 +18,12 @@ class OuterClass_2():
             pass
 
         def __str__(self):
-            return str(super().__str__()) + "[" + "x" + ":" + str(self.getX()) + "]"
+            return (super().__str__() + "["
+                    + "x:" + str(self.getX())
+                    + "]")
 
+    def __init__(self):
+        pass
+
+    def delete(self):
+        pass

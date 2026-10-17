@@ -413,6 +413,12 @@ class UmpleInternalParser
       }
     }
 
+    // EARS clauses such as "shall { open the door }", as { keyword, content }
+    List<String[]> parsedEarsClauses = new ArrayList<String[]>();
+    if ("ears".equals(newLanguage) && !newContent.equals("")) {
+      newContent = parseEarsClauses(newContent, parsedEarsClauses);
+    }
+
     // Validate quality section content and extract quality class data
     List<String[]> qualityClassData = new ArrayList<String[]>();
     if (QUALITY_LANG.equals(newLanguage)) {
@@ -500,6 +506,7 @@ class UmpleInternalParser
       }
 
       addUseCaseElements(existingRequirement, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
+      addEarsClauses(existingRequirement, parsedEarsClauses);
     }
     else {
       if (QUALITY_LANG.equals(newLanguage)) {
@@ -517,6 +524,7 @@ class UmpleInternalParser
       model.getAllRequirements().put(reqID, req);
 
       addUseCaseElements(req, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
+      addEarsClauses(req, parsedEarsClauses);
     }
   }
 //---------------------------------end----------------------------------------
@@ -617,11 +625,11 @@ class UmpleInternalParser
       } else if(tkn.is("code")) {
         if(codelangs.isEmpty())
         {
-          languageSpecificCode.setCode(tkn.getValue());
+          languageSpecificCode.setAuthoredCode("", tkn.getValue(), tkn.getFirstLineIndent(), tkn.getPosition());
         } else {
           for(String lang: codelangs)
           {
-            languageSpecificCode.setCode(lang, tkn.getValue());
+            languageSpecificCode.setAuthoredCode(lang, tkn.getValue(), tkn.getFirstLineIndent(), tkn.getPosition());
           }
           codelangs.clear();
         }
@@ -737,16 +745,15 @@ class UmpleInternalParser
       String extraCodeLineNumberComment = " line " + token.getPosition().getLineNumber() + " " + aTrait.getRelativePath(token.getPosition().getFilename(),"Java");
 	  String rubyComment = "#" + extraCodeLineNumberComment;
 	  String otherComment = "//" + extraCodeLineNumberComment;
+	  String pythonComment = pythonLineComment(aTrait, token.getPosition());
  	  if(aTrait.hasExtraCode())
 	  {
 	    rubyComment = System.getProperty("line.separator") + rubyComment;
 	    otherComment = System.getProperty("line.separator") + otherComment;
+	    pythonComment = System.getProperty("line.separator") + pythonComment;
 	  }
-      CodeBlock cb = new CodeBlock();
-      cb.setCode(otherComment);
-      cb.setCode("Ruby", rubyComment);
-      aTrait.appendExtraCode(true,cb);
-      aTrait.appendExtraCode("  " + token.getValue());
+      aTrait.appendExtraCode(true,newExtraCodeMarker(otherComment, rubyComment, pythonComment));
+      aTrait.appendExtraCode(true,newExtraCodeBlock(token));
       // Issue 516 Fix : Michael Kmicik
       setFailedPosition(token.getPosition(), 1007, token.getValue("name"));
     }
@@ -924,6 +931,7 @@ mixset Association {
 
       cb.setCode(otherComment);
       cb.setCode("Ruby", rubyComment);
+      cb.setCode("Python", pythonLineComment(aTrait, exception.getPosition()));
 
       aTrait.appendExtraCode(true,cb);
       aTrait.appendExtraCode("  "+extraCode+"\n");
@@ -1049,8 +1057,8 @@ mixset Association {
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------    
 private void copyMethodsFromTraitToClass(UmpleClass inClass){
-    Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>();
-	Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+    Map<UmpleTrait, List<Method>> traitMethods = new LinkedHashMap<UmpleTrait, List<Method>>();
+	Map<UmpleTrait, List<Method>> tempTraitMethods = new LinkedHashMap<UmpleTrait, List<Method>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 		checkClassSupportTraitsInterfaces(inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
 		if ( ! getParseResult().getWasSuccess() ) return;
@@ -1145,8 +1153,8 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 //---------------------------------Start--------------------------------------     
    private Map<UmpleTrait, List<Method>> gatherConcreteMethods (UmpleTrait inTrait, GeneralTPApplied inGTPApplied) 
   {
-	 Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>(); 
- 	 Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+	 Map<UmpleTrait, List<Method>> traitMethods = new LinkedHashMap<UmpleTrait, List<Method>>(); 
+ 	 Map<UmpleTrait, List<Method>> tempTraitMethods = new LinkedHashMap<UmpleTrait, List<Method>>();
  	 //----------------------------------------------------------------------------------------
   	 if (inGTPApplied!=null){
 	 	 for (MethodTemplateSignature mTSignature : inGTPApplied.getMethodTemplateSignatures()) {
@@ -1400,8 +1408,8 @@ mixset Association {
                inClass.addCodeInjection(cj);
        }
     }
-       // copy Extra code
-       inClass.appendExtraCode(inTrait.getExtraCode());
+       // copy Extra code block by block, so that each target keeps its own form of it
+       inClass.appendExtraCodeBlocks(inTrait.getExtraCodeBlocks());
        
        // copy associations
        /*
@@ -1895,8 +1903,8 @@ mixset StateMachine {
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 private void copyAttributesFromTraitsToClass(UmpleClass inClass){
-	Map<UmpleTrait, List<Attribute>> traitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
-	Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	Map<UmpleTrait, List<Attribute>> traitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>();
+	Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 		tempTraitAttributes = gatherAttributes(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
 		if ( ! getParseResult().getWasSuccess() ) return;
@@ -1922,8 +1930,8 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 //---------------------------------Start--------------------------------------
 mixset Association {
   private void copyAssociationsFromTraitToClass(UmpleClass inClass) {
-    Map<UmpleTrait, List<AssociationVariable>> traiAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
-	Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+    Map<UmpleTrait, List<AssociationVariable>> traiAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>();
+	Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 		tempTraitAssociationVariables = gatherAssociations(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
 		if ( ! getParseResult().getWasSuccess() ) return;
@@ -1967,8 +1975,8 @@ mixset Association {
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, GeneralTPApplied inGTPApplied) {
-	 Map<UmpleTrait, List<Attribute>> traitAttributes = new HashMap<UmpleTrait, List<Attribute>>(); 
-	 Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	 Map<UmpleTrait, List<Attribute>> traitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>(); 
+	 Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>();
 	 //----------------------------------------------------------------------------------------
 	 List<Attribute> attributes = new ArrayList<Attribute>();	  
 	 for (Attribute attribute : inTrait.getAttributes()) {
@@ -1997,8 +2005,8 @@ private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, Ge
 //---------------------------------Start--------------------------------------
 mixset Association {
 private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait inTrait, GeneralTPApplied inGTPApplied, UmpleClass inClass) {
-     Map<UmpleTrait, List<AssociationVariable>> traitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>(); 
- 	 Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+     Map<UmpleTrait, List<AssociationVariable>> traitAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>(); 
+ 	 Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>();
  	 //----------------------------------------------------------------------------------------
  	 List<AssociationVariable> associationVariables = new ArrayList<AssociationVariable>();	  
  	 for (AssociationVariable associationVariable : inTrait.getAssociationVariables()) {

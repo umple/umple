@@ -1,0 +1,7 @@
+req E10 ears {
+  Rationale: avoids reverse thrust in flight.
+  while { the aircraft is on ground }
+  when { reverse thrust is commanded }
+  shall { enable reverse thrust }
+  See the safety case.
+}

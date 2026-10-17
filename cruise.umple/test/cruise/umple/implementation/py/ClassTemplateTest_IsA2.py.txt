@@ -1,29 +1,17 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.32.1.6535.66c005ced modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from Mentor import Mentor
+from example.Mentor import Mentor
+
 
 class SubMentor2(Mentor):
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #SubMentor2 Attributes
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
     def __init__(self, aName, aSubName):
-        self._subName = None
+        self._subName = aSubName
         super().__init__(aName)
-        self._subName = aSubName
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def setSubName(self, aSubName):
-        wasSet = False
         self._subName = aSubName
-        wasSet = True
-        return wasSet
+        return True
 
     def getSubName(self):
         return self._subName
@@ -32,5 +20,6 @@ class SubMentor2(Mentor):
         super().delete()
 
     def __str__(self):
-        return str(super().__str__()) + "[" + "subName" + ":" + str(self.getSubName()) + "]"
-
+        return (super().__str__() + "["
+                + "subName:" + str(self.getSubName())
+                + "]")

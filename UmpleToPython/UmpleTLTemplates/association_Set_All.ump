@@ -1,0 +1,427 @@
+use association_NumberOfMethods.ump;
+use association_SetUnidirectionalOptionalOne.ump;
+use association_SetUnidirectionalOne.ump;
+use association_SetOptionalOneToOne.ump;
+use association_SetOneToOptionalOne.ump;
+use association_AddMandatoryManyToOne.ump;
+use association_AddMNToOnlyOne.ump;
+use association_AddOptionalNToOne.ump;
+use association_SetOptionalNToMany.ump;
+use association_AddManyToOne.ump;
+use association_SetOptionalOneToOptionalOne.ump;
+use association_AddMNToMany.ump;
+use association_AddMStarToMany.ump;
+use association_SetOptionalOneToOptionalN.ump;
+use association_SetOneToMany.ump;
+use association_SetOneToManyAssociationClass.ump;
+use association_SetOneToAtMostN.ump;
+use association_SetOneToMandatoryMany.ump;
+use association_AddManyToOptionalOne.ump;
+use association_SetOptionalOneToMany.ump;
+use association_AddOptionalNToOptionalOne.ump;
+use association_AddUnidirectionalMN.ump;
+use association_AddMNToOptionalOne.ump;
+use association_SetNToOptionalOne.ump;
+use association_AddUnidirectionalMany.ump;
+use association_AddUnidirectionalOptionalN.ump;
+use association_AddUnidirectionalMStar.ump;
+use association_SetUnidirectionalN.ump;
+use association_SetUnidirectionalMany.ump;
+use association_SetOptionalOneToMandatoryMany.ump;
+use association_SetMNToMany.ump;
+use association_SetMStarToMany.ump;
+use association_SetUnidirectionalMN.ump;
+use association_SetMNToOptionalOne.ump;
+use association_SetUnidirectionalOptionalN.ump;
+use association_SetUnidirectionalMStar.ump;
+use association_AddManyToManyMethod.ump;
+use association_RemoveMany.ump;
+use association_AddIndexControlFunctions.ump;
+
+class UmpleToPython {
+    // Chooses each navigable end's mutators from both ends' multiplicities, as Java's
+    // association_Set_All does (specialization is unsupported). Leaf templates keep the names of
+    // their Java counterparts.
+    association_Set_All <<!<</*association_Set_All*/>><<#
+{
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+    String field = gen.field(av);
+    String parameter = gen.translate("parameterOne", av);
+    String includeFile = null;
+    String includeFile2 = null;
+    String includeFile3 = null;
+    boolean hasIsNumberOfValidMethod = false;
+    boolean hasAddManyToManyTemplateMethod = false;
+    boolean hasMaximumNumberOfMethod = av.isMany() && !av.isStar();
+    boolean hasMinimumNumberOfMethod = av.isMany();
+    boolean hasRequiredNumberOfMethod = av.isN();
+    boolean hasRemoveManyTemplateMethod = false;
+    if (!relatedAssociation.getIsNavigable())
+    {
+      if (av.isOptionalOne())
+      {
+        includeFile = "association_SetUnidirectionalOptionalOne";
+      }
+      else if (av.isOnlyOne())
+      {
+        includeFile = "association_SetUnidirectionalOne";
+      }
+      else if (av.isMStar())
+      {
+        if (!av.isImmutable())
+        {
+          includeFile = "association_AddUnidirectionalMStar";
+        }
+        includeFile2 = "association_SetUnidirectionalMStar";
+      }
+      else if (av.isMN())
+      {
+        if (!av.isImmutable())
+        {
+          includeFile = "association_AddUnidirectionalMN";
+        }
+        includeFile2 = "association_SetUnidirectionalMN";
+      }
+      else if (av.isN())
+      {
+        includeFile = "association_SetUnidirectionalN";
+      }
+      else if (av.isOptionalN())
+      {
+        if (!av.isImmutable())
+        {
+          includeFile = "association_AddUnidirectionalOptionalN";
+        }
+        includeFile2 = "association_SetUnidirectionalOptionalN";
+      }
+      else if (av.isImmutable() && av.isMany())
+      {
+        includeFile = "association_SetUnidirectionalMany";
+      }
+      else if (av.isMany())
+      {
+        includeFile = "association_AddUnidirectionalMany";
+      }
+    }
+    else if (av.isOnlyOne() && relatedAssociation.isOnlyOne())
+    {
+      // one-to-one ends are fixed at construction (constructor_DeclareOneToOne)
+    }
+    else if (av.isN() && relatedAssociation.isOptionalOne())
+    {
+      includeFile = "association_SetNToOptionalOne";
+    }
+    else if (av.isMN() && relatedAssociation.isOptionalOne())
+    {
+      includeFile = "association_AddMNToOptionalOne";
+      includeFile2 = "association_SetMNToOptionalOne";
+    }
+    else if (av.isMandatoryMany() && av.isStar() && relatedAssociation.isMany())
+    {
+      hasIsNumberOfValidMethod = true;
+      hasAddManyToManyTemplateMethod = true;
+      includeFile = "association_AddMStarToMany";
+      includeFile2 = "association_SetMStarToMany";
+    }
+    else if ((av.isMN() || av.isN()) && relatedAssociation.isMandatoryMany())
+    {
+      hasIsNumberOfValidMethod = true;
+      hasAddManyToManyTemplateMethod = true;
+      includeFile = "association_AddMNToMany";
+      includeFile2 = "association_SetMNToMany";
+    }
+    else if ((av.isMN() || av.isN()) && relatedAssociation.isOptionalN())
+    {
+      hasIsNumberOfValidMethod = true;
+      hasAddManyToManyTemplateMethod = true;
+      includeFile = "association_AddMNToMany";
+    }
+    else if ((av.isMN() || av.isN()) && !relatedAssociation.isOne())
+    {
+      hasIsNumberOfValidMethod = true;
+      hasAddManyToManyTemplateMethod = true;
+      includeFile = "association_AddMNToMany";
+      includeFile2 = "association_SetMNToMany";
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
+    {
+      includeFile = "association_SetOptionalOneToOptionalOne";
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOne())
+    {
+      includeFile = "association_SetOptionalOneToOne";
+    }
+    else if (av.isOne() && relatedAssociation.isOptionalOne())
+    {
+      includeFile = "association_SetOneToOptionalOne";
+    }
+    else if (av.isMandatoryMany() && av.isStar() && relatedAssociation.isOne())
+    {
+      hasIsNumberOfValidMethod = true;
+      includeFile = "association_AddMandatoryManyToOne";
+    }
+    else if ((av.isMN() || av.isN()) && relatedAssociation.isOnlyOne())
+    {
+      hasIsNumberOfValidMethod = true;
+      includeFile = "association_AddMNToOnlyOne";
+    }
+    else if (av.isOptionalN() && relatedAssociation.isOnlyOne())
+    {
+      includeFile = "association_AddOptionalNToOne";
+    }
+    else if (av.isOptionalN() && (relatedAssociation.isMN() || relatedAssociation.isOptionalN()))
+    {
+      hasAddManyToManyTemplateMethod = true;
+      hasRemoveManyTemplateMethod = !av.isImmutable();
+    }
+    else if (av.isOptionalN() && relatedAssociation.isOptionalMany())
+    {
+      hasAddManyToManyTemplateMethod = true;
+      hasRemoveManyTemplateMethod = !av.isImmutable();
+      includeFile = "association_SetOptionalNToMany";
+    }
+    else if (av.isMany() && relatedAssociation.isOnlyOne())
+    {
+      includeFile = "association_AddManyToOne";
+    }
+    else if (av.isOptionalN() && (relatedAssociation.isMN() || relatedAssociation.isN()))
+    {
+      hasAddManyToManyTemplateMethod = true;
+      hasRemoveManyTemplateMethod = !av.isImmutable();
+    }
+    else if (av.isMany() && (relatedAssociation.isMN() || relatedAssociation.isN() || relatedAssociation.isMany()))
+    {
+      hasAddManyToManyTemplateMethod = true;
+      hasRemoveManyTemplateMethod = !av.isImmutable();
+    }
+    else if (av.isOptionalN() && relatedAssociation.isOptionalOne())
+    {
+      includeFile = "association_AddOptionalNToOptionalOne";
+    }
+    else if (av.isMany() && relatedAssociation.isOptionalOne())
+    {
+      includeFile = "association_AddManyToOptionalOne";
+    }
+    else if (av.isOnlyOne() && relatedAssociation.isMandatoryMany() && relatedAssociation.isStar())
+    {
+      includeFile = "association_SetOneToMandatoryMany";
+    }
+    else if (av.isOnlyOne() && (relatedAssociation.isMN() || relatedAssociation.isN() || relatedAssociation.isOptionalN()))
+    {
+      includeFile = "association_SetOneToAtMostN";
+    }
+    else if (av.isOnlyOne() && relatedAssociation.isMany() && !(av.isMandatory() && !av.isOne()))
+    {
+      includeFile = uClass instanceof AssociationClass ? "association_SetOneToManyAssociationClass" : "association_SetOneToMany";
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalN())
+    {
+      includeFile = "association_SetOptionalOneToOptionalN";
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
+    {
+      includeFile = "association_SetOptionalOneToMany";
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isMandatoryMany())
+    {
+      // Java leaves an upper-bounded mandatory many end without a setter here (its issue 351)
+      if (!relatedAssociation.isUpperBounded())
+      {
+        includeFile = "association_SetOptionalOneToMandatoryMany";
+      }
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isMandatory())
+    {
+      // no setter, as in Java
+    }
+    else
+    {
+      throw new UmpleCompilerException("Python generator cannot choose the mutators of association end " + av.getName() + " in " + uClass.getName(), null);
+    }
+    // A sorted end keeps its own order, so it has no positions to add or move to
+    if (!av.isSorted() && av.isMany() && !av.isImmutable() && !av.isN())
+    {
+      includeFile3 = "association_AddIndexControlFunctions";
+    }
+    if (hasIsNumberOfValidMethod)
+    {
+      #>><<@ UmpleToPython.association_IsNumberOfValidMethod >><<#
+    }
+    if (hasRequiredNumberOfMethod)
+    {
+      #>><<@ UmpleToPython.association_RequiredNumberOfMethod >><<#
+    }
+    if (hasMinimumNumberOfMethod)
+    {
+      #>><<@ UmpleToPython.association_MinimumNumberOfMethod >><<#
+    }
+    if (hasMaximumNumberOfMethod)
+    {
+      #>><<@ UmpleToPython.association_MaximumNumberOfMethod >><<#
+    }
+    if (hasAddManyToManyTemplateMethod)
+    {
+      #>><<@ UmpleToPython.association_AddManyToManyMethod >><<#
+    }
+    if (hasRemoveManyTemplateMethod)
+    {
+      #>><<@ UmpleToPython.association_RemoveMany >><<#
+    }
+    if ("association_SetUnidirectionalOptionalOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetUnidirectionalOptionalOne >><<#
+    }
+    else if ("association_SetUnidirectionalOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetUnidirectionalOne >><<#
+    }
+    else if ("association_SetOptionalOneToOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetOptionalOneToOne >><<#
+    }
+    else if ("association_SetOneToOptionalOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetOneToOptionalOne >><<#
+    }
+    else if ("association_AddMandatoryManyToOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddMandatoryManyToOne >><<#
+    }
+    else if ("association_AddMNToOnlyOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddMNToOnlyOne >><<#
+    }
+    else if ("association_AddOptionalNToOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddOptionalNToOne >><<#
+    }
+    else if ("association_SetOptionalNToMany".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetOptionalNToMany >><<#
+    }
+    else if ("association_AddManyToOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddManyToOne >><<#
+    }
+    else if ("association_SetOptionalOneToOptionalOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetOptionalOneToOptionalOne >><<#
+    }
+    else if ("association_AddMNToMany".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddMNToMany >><<#
+    }
+    else if ("association_AddMStarToMany".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddMStarToMany >><<#
+    }
+    else if ("association_SetOptionalOneToOptionalN".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetOptionalOneToOptionalN >><<#
+    }
+    else if ("association_SetOneToMany".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetOneToMany >><<#
+    }
+    else if ("association_SetOneToManyAssociationClass".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetOneToManyAssociationClass >><<#
+    }
+    else if ("association_SetOneToAtMostN".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetOneToAtMostN >><<#
+    }
+    else if ("association_SetOneToMandatoryMany".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetOneToMandatoryMany >><<#
+    }
+    else if ("association_AddManyToOptionalOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddManyToOptionalOne >><<#
+    }
+    else if ("association_SetOptionalOneToMany".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetOptionalOneToMany >><<#
+    }
+    else if ("association_AddOptionalNToOptionalOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddOptionalNToOptionalOne >><<#
+    }
+    else if ("association_AddUnidirectionalMN".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddUnidirectionalMN >><<#
+    }
+    else if ("association_AddMNToOptionalOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddMNToOptionalOne >><<#
+    }
+    else if ("association_SetNToOptionalOne".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetNToOptionalOne >><<#
+    }
+    else if ("association_AddUnidirectionalMany".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddUnidirectionalMany >><<#
+    }
+    else if ("association_AddUnidirectionalOptionalN".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddUnidirectionalOptionalN >><<#
+    }
+    else if ("association_AddUnidirectionalMStar".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_AddUnidirectionalMStar >><<#
+    }
+    else if ("association_SetUnidirectionalN".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetUnidirectionalN >><<#
+    }
+    else if ("association_SetUnidirectionalMany".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetUnidirectionalMany >><<#
+    }
+    else if ("association_SetOptionalOneToMandatoryMany".equals(includeFile))
+    {
+      #>><<@ UmpleToPython.association_SetOptionalOneToMandatoryMany >><<#
+    }
+    if ("association_SetMNToMany".equals(includeFile2))
+    {
+      #>><<@ UmpleToPython.association_SetMNToMany >><<#
+    }
+    else if ("association_SetMStarToMany".equals(includeFile2))
+    {
+      #>><<@ UmpleToPython.association_SetMStarToMany >><<#
+    }
+    else if ("association_SetUnidirectionalMN".equals(includeFile2))
+    {
+      #>><<@ UmpleToPython.association_SetUnidirectionalMN >><<#
+    }
+    else if ("association_SetMNToOptionalOne".equals(includeFile2))
+    {
+      #>><<@ UmpleToPython.association_SetMNToOptionalOne >><<#
+    }
+    else if ("association_SetUnidirectionalOptionalN".equals(includeFile2))
+    {
+      #>><<@ UmpleToPython.association_SetUnidirectionalOptionalN >><<#
+    }
+    else if ("association_SetUnidirectionalMStar".equals(includeFile2))
+    {
+      #>><<@ UmpleToPython.association_SetUnidirectionalMStar >><<#
+    }
+    if ("association_AddIndexControlFunctions".equals(includeFile3))
+    {
+      // The add taking the object, which follows the factory where an add template writes one
+      boolean hasFactory = Arrays.asList("association_AddMandatoryManyToOne", "association_AddMNToOnlyOne",
+        "association_AddOptionalNToOne", "association_AddManyToOne").contains(includeFile) && !relatedAssociation.getUmpleClass().getIsAbstract();
+      String objectAdd = hasFactory ? gen.addImplementationNames(uClass, av).get(1) : gen.translate("addMethod", av);
+      #>><<@ UmpleToPython.association_AddIndexControlFunctions >><<#
+    }
+  }
+}
+#>>!>>
+}

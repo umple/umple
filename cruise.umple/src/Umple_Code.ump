@@ -415,6 +415,25 @@ class UmpleElement
     extraCode.appendExtraCode(cb);
   }
 
+  /*
+   * Appends copies of extra code blocks, keeping each one's per-language code and provenance. Every
+   * target gets the same text as appending the blocks' text for its language would give.
+   */
+  public void appendExtraCodeBlocks(List<CodeBlock> blocks)
+  {
+    appendExtraCode("");
+    for (CodeBlock cb : blocks)
+    {
+      extraCode.appendExtraCode(new CodeBlock(cb));
+    }
+  }
+
+  // The extra code in order: markers giving source lines, then the code as written (see CodeBlock)
+  public List<CodeBlock> getExtraCodeBlocks()
+  {
+    return extraCode.getCodeBlocks();
+  }
+
   public boolean hasExtraCode()
   {
     return extraCode.getHasCode();
@@ -951,6 +970,16 @@ class Requirement{
       || hasDisplayText(getWhy());
   }
 
+  public boolean hasStructuredEarsFields()
+  {
+    return hasDisplayText(getEarsWhere())
+      || hasDisplayText(getEarsWhile())
+      || hasDisplayText(getEarsWhen())
+      || hasDisplayText(getEarsIf())
+      || hasDisplayText(getEarsSystem())
+      || hasDisplayText(getEarsShall());
+  }
+
   // format logic moved from cruise.umple/src/generators/Generator_CodePlainRequirementsDoc.ump:generator()
   public String getUserStoryDisplayText(String separator)
   {
@@ -1082,6 +1111,12 @@ class Requirement{
     when = aReq.getWhen();
     what = aReq.getWhat();
     why = aReq.getWhy();
+    earsWhere = aReq.getEarsWhere();
+    earsWhile = aReq.getEarsWhile();
+    earsWhen = aReq.getEarsWhen();
+    earsIf = aReq.getEarsIf();
+    earsSystem = aReq.getEarsSystem();
+    earsShall = aReq.getEarsShall();
     language = aReq.getLanguage();
 
     qualityClasses = new ArrayList<QualityClass>();

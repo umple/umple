@@ -6,25 +6,25 @@ noreferences
 @@description
 <p>Umple is a technology for Model-Oriented Programming.</p>
 
-<p>The Umple home page is <a href="https://www.umple.org">https://www.umple.org</a>. To download Umple for the command line or an IDE, go to <a href="https://umple.org/dl">https://umple.org/dl</a>. To use Umple online as a web app, go to <a href="https://try.umple.org">https://try.umple.org</a></p>
+<p>The Umple home page is <a href="https://umple.org">https://umple.org</a>. To download Umple for the command line or an IDE, go to <a href="https://umple.org/dl">https://umple.org/dl</a>. To use Umple online as a web app, go to <a href="https://try.umple.org">https://try.umple.org for the classic version</a> or to <a href="https://newumpleonline.umple.org">https://newumpleonline.umple.org for version 2.</a>  </p>
 
 <p>Umple allows you to do the following things: </p>
 
 <ol>
 
-<li><b>Create UML models textually</b>. Rather than drawing diagrams, it can often be faster to create UML 
-<a href="ClassDefinition.html">class</a> diagrams and <a href="BasicStateMachines.html">state machines</a> using Umple's textual format that looks 
+<li><b>Create models textually</b>. Rather than drawing diagrams, it tends to be faster to create 
+<a href="ClassDefinition.html">class</a> diagrams, <a href="BasicStateMachines.html">state machines</a> and other types of models using Umple's textual format that looks 
 just like programming-language code. Editing, comparing and many other 
 tasks can often be done faster using this textual form. Umple has <a href="UmpleTools.html">tools</a> that 
-allow you to edit the model textually (and see changes appear in a UML 
-diagram) or to edit a UML diagram (and see changes appear in the textual 
+allow you to edit the model textually (and see changes appear in a 
+diagram) or to edit a diagram (and see changes appear in the textual 
 code)</li>
 
 <br />
 
-<li><b>Add UML modeling constructs directly into your programs, when you 
+<li><b>Add modeling constructs directly into your programs, when you 
 are programming in Java, Python, PHP, C++ or  Ruby</b>. For example, when programming in 
-Java, you can directly add a UML <a href="BasicStateMachines.html">state machine</a> into your code. This can 
+Java, you can directly add a <a href="BasicStateMachines.html">state machine that conforms with UML semantics</a> into your code. This can 
 save you a lot of coding. The Umple compiler acts as a pre-processor, 
 first compiling the state machine to Java, and then compiling the Java 
 into an executable program. Java methods found in the Umple code will be unchanged in the generated output.
@@ -33,9 +33,13 @@ to see how to do this.</li>
 
 <br />
 
+<li><b>Specify requirements and have AI generate models</b>. Umple allows you to specify <a href="Requirements.html">requirements in many ways</a>. You can simply refer to existing external requirements, or embed them directly as files in the same repository with your Umple code. Umple allows you to specify requirements as user stories, use cases and other formats. Then you can use <a href="UmpleOnlineAICapabilities.html">artificial intelligence to generate Umple models</a> such as data models (class diagrams) or state models. They key idea is that rather than getting AI to go from requirements to code, you ask it to go from requirements to Umple (with embedded code for certain capabilities), and then have Umple generate the final system. This results in deterministic code that is more consistent as changes are made.</li> 
 
-<li><b>Generate high quality code from UML models</b>. The Umple 
-compiler creates code in languages like Java, C++ and PHP that is of top 
+<br />
+
+
+<li><b>Generate high quality code from models</b>. The Umple 
+compiler creates code in languages like Java, Python, C++ and PHP that is of top 
 quality. It is a goal of the Umple team to create the best open-source 
 code-generation tool available. The generated code never needs to be 
 edited and never should be edited, since you can always embed native methods  (i.e. 

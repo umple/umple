@@ -1,0 +1,44 @@
+class UmpleToPython {
+    // A plain, key, unique or once-settable (immutable lazy or unique) attribute. A unique value is
+    // registered in the class's registry, and a value already taken by another object is rejected.
+    // Before-injections run first, as in Java: ahead of the key and once-set guards, and of the
+    // invariant checks, so they can adjust the value.
+    attribute_Set <<!<</*attribute_Set*/>><<#
+  String oldValue = gen.translate("parameterOld", av);
+  String registry = "__class__." + gen.uniqueMap(uClass, av);
+  #>>
+
+    def <<=gen.translate("setMethod", av)>>(self, <<=parameter>>):<<=gen.injected(uClass, "before", gen.translate("setMethod", av), setterParameter)>><<#
+  if (isKey || av.isImmutable())
+  {
+    #>>
+        if not <<=canSet>>:
+            return False<<#
+  }
+  #>><<=gen.invariantGuards(uClass, av)>><<#
+  if (av.getIsUnique())
+  {
+    #>>
+        <<=oldValue>> = <<=field>>
+        if <<=oldValue>> is not None and <<=oldValue>> == <<=parameter>>:
+            return True
+        if __class__.<<=gen.translate("hasUniqueMethod", av)>>(<<=parameter>>):
+            return False<<#
+  }
+  if (av.isImmutable())
+  {
+    #>>
+        <<=canSet>> = False<<#
+  }
+  #>>
+        <<=field>> = <<=parameter>><<#
+  if (av.getIsUnique())
+  {
+    #>>
+        if <<=oldValue>> is not None:
+            <<=registry>>.pop(<<=oldValue>>, None)
+        <<=registry>>[<<=parameter>>] = self<<#
+  }
+  #>><<=gen.injected(uClass, "after", gen.translate("setMethod", av), setterParameter)>>
+        return True!>>
+}

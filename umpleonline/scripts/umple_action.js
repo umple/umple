@@ -183,6 +183,10 @@ Action.clicked = function(event)
       }
     }
   }
+  else if (action == "RestoreEarlierVersion")
+  {
+    VersionHistory.openRestoreDialog();
+  }
   else if (action == "CreateTask") 
   {
     jQuery("#taskArea").css("display","block");
@@ -1675,7 +1679,7 @@ Action.deleteState = function(stateCode,className,smName,stateName){
 //Action.drawStateMenu() is triggered by contextmenu event on Graphviz State Diagram "node" elements
 //Draws a div containing the editing options for state GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
-Action.drawStateMenu = function(){
+Action.drawStateMenu = function(event){
   // Debug
   // console.log("Inside drawStateMenu: ")
   if(!Action.diagramInSync){
@@ -3625,7 +3629,7 @@ Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   // Create context menu for attribute
   var menu = document.createElement('customContextMenu');
   var menuHeader = document.createElement('div');
-  menuHeader.textContent = "Attribute: " + attributeName + "Type: " + attributeType;
+  menuHeader.textContent = "Attribute: " + attributeName + " Type: " + attributeType;
   menuHeader.style.padding = "5px";
   menuHeader.style.borderBottom = "1px solid #ccc";
   menuHeader.style.fontWeight = "bold";
@@ -3743,6 +3747,13 @@ Action.renameAttribute = function(classCode, className, attributeName, attribute
   }
 };
 document.addEventListener("mousedown", hider);
+ input.addEventListener('keydown', function(e) {
+   if (e.key === 'Enter') {
+     e.preventDefault();
+     e.stopPropagation();
+     submitButton.click();
+   }
+ });
  // Event listener for the submit action
  submitButton.addEventListener('click', function() {
   if(Action.validateAttributeName(input.value.trim())){
@@ -3812,6 +3823,13 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
     }
   };
   document.addEventListener("mousedown", hider);
+  select.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      submitButton.click();
+    }
+  });
   // Event listener for the submit button action
     submitButton.addEventListener('click', function() {
       var selectedType = select.options[select.selectedIndex].value;
@@ -5904,7 +5922,9 @@ Action.updateUmpleLayoutEditor = function(response)
   //TODO: for some reason in the live version this call isnt being made
   //but oddly the diagram is updated, and that is done in the callback
       
-  Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",umpleJson));  
+  VersionHistory.saveAsLayoutUpdate(function() {
+    Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",umpleJson));
+  });
 }
 
 Action.updateUmpleLayoutEditorCallback = function(response)
@@ -5915,7 +5935,7 @@ Action.updateUmpleLayoutEditorCallback = function(response)
   var positioning = Page.splitUmpleCode(umpleCode)[1];
   Page.setUmplePositioningCode(positioning);
   Page.hideLoading();
-  Action.updateUmpleDiagramForce(true);
+  Action.updateUmpleDiagramForce(true, true);
 }
 
 Action.updateUmpleDiagram = function() {
@@ -6007,7 +6027,9 @@ Action.fetchFeatureModelTreeThen = function(next)
   );
 };
 
-Action.updateUmpleDiagramForce = function(forceUpdate)
+// isLayoutUpdate is true when the diagram is updated with the layout just
+// worked out for an edit that has already been saved
+Action.updateUmpleDiagramForce = function(forceUpdate, isLayoutUpdate)
 {
   // DEBUG
   // console.log("Inside updateUmpleDiagramForce")
@@ -6024,7 +6046,11 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   Page.showCanvasLoading();
 
   Action.fetchFeatureModelTreeThen(function(){
-    Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+    var update = function() {
+      Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+    };
+    if (isLayoutUpdate) VersionHistory.saveAsLayoutUpdate(update);
+    else update();
   });
 
 }

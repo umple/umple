@@ -299,7 +299,7 @@ public class UmpleStatemachineGenerationPolicy{
 
 	private static String getActionCode(Action action, String code) {
 		if(code!= null&& !code.isEmpty()){
-			return code;
+			return action.wrapInGuard(code);
 		}
 		return action.getActionCode();
 	}

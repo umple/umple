@@ -1,0 +1,200 @@
+/*
+Copyright: All contributers to the Umple Project
+This file is made available subject to the open source license found at:
+https://umple.org/license
+*/
+
+namespace cruise.usercode.constraints;
+
+class ContractOverloads
+{
+  int n = 1;
+  String text = "a";
+  int pick(int n) Python { return -3 } Java { return -3; }
+  double pick(String s) Python { return -3.0 } Java { return -3.0; }
+  double arity() Python { return -3.0 } Java { return -3.0; }
+  int arity(int a, int b) Python { return -3 } Java { return -3; }
+  int integral() Python { [pre: (pick(1) / 2) == -1] return 7 }
+    Java { [pre: (pick(1) / 2) == -1] return 7; }
+  int fractional() Python { [pre: (pick("a") / 2) == -1.5] return 7 }
+    Java { [pre: (pick("a") / 2) == -1.5] return 7; }
+  int remainder() Python { [pre: (pick(n) % 2) == -1] return 7 }
+    Java { [pre: (pick(n) % 2) == -1] return 7; }
+  int parameter(String s) Python { [pre: (pick(s) / 2) == -1.5] return 7 }
+    Java { [pre: (pick(s) / 2) == -1.5] return 7; }
+  int getter() Python { [pre: (pick(getText()) / 2) == -1.5] return 7 }
+    Java { [pre: (pick(getText()) / 2) == -1.5] return 7; }
+  int noArguments() Python { [pre: (arity() / 2) == -1.5] return 7 }
+    Java { [pre: (arity() / 2) == -1.5] return 7; }
+  int twoArguments() Python { [pre: (arity(1, 2) / 2) == -1] return 7 }
+    Java { [pre: (arity(1, 2) / 2) == -1] return 7; }
+}
+
+class ContractOverloadsReverse
+{
+  int n = 1;
+  String text = "a";
+  double pick(String s) Python { return -3.0 } Java { return -3.0; }
+  int pick(int n) Python { return -3 } Java { return -3; }
+  double arity() Python { return -3.0 } Java { return -3.0; }
+  int arity(int a, int b) Python { return -3 } Java { return -3; }
+  int integral() Python { [pre: (pick(1) / 2) == -1] return 7 }
+    Java { [pre: (pick(1) / 2) == -1] return 7; }
+  int fractional() Python { [pre: (pick("a") / 2) == -1.5] return 7 }
+    Java { [pre: (pick("a") / 2) == -1.5] return 7; }
+  int remainder() Python { [pre: (pick(n) % 2) == -1] return 7 }
+    Java { [pre: (pick(n) % 2) == -1] return 7; }
+  int parameter(String s) Python { [pre: (pick(s) / 2) == -1.5] return 7 }
+    Java { [pre: (pick(s) / 2) == -1.5] return 7; }
+  int getter() Python { [pre: (pick(getText()) / 2) == -1.5] return 7 }
+    Java { [pre: (pick(getText()) / 2) == -1.5] return 7; }
+  int noArguments() Python { [pre: (arity() / 2) == -1.5] return 7 }
+    Java { [pre: (arity() / 2) == -1.5] return 7; }
+  int twoArguments() Python { [pre: (arity(1, 2) / 2) == -1] return 7 }
+    Java { [pre: (arity(1, 2) / 2) == -1] return 7; }
+}
+
+interface CountSource { int value(); }
+interface PartSource { NumberedPart getPart(); }
+interface PartView { isA CountSource, PartSource; }
+class NumberedPart { Integer id; key { id } }
+class PartHolder
+{
+  isA PartView;
+  NumberedPart part;
+  int value() Python { return -3 } Java { return -3; }
+}
+class InterfaceContracts
+{
+  PartView one;
+  PartView two;
+  int integral() Python { [pre: (one.value() / 2) == -1] return 7 }
+    Java { [pre: (one.value() / 2) == -1] return 7; }
+  int remainder() Python { [pre: (one.value() % 2) == -1] return 7 }
+    Java { [pre: (one.value() % 2) == -1] return 7; }
+  int direct(CountSource count) Python { [pre: (count.value() / 2) == -1] return 7 }
+    Java { [pre: (count.value() / 2) == -1] return 7; }
+  int distinct() Python { [pre: one.getPart() != two.getPart()] return 7 }
+    Java { [pre: one.getPart() != two.getPart()] return 7; }
+  int same(PartSource source) Python { [pre: source.getPart() == one.getPart()] return 7 }
+    Java { [pre: source.getPart() == one.getPart()] return 7; }
+}
+
+interface Measured { double length(); }
+class MeasuredLength
+{
+  isA Measured;
+  double length() Python { return -3.0 } Java { return -3.0; }
+  int length(int n) Python { return -3 } Java { return -3; }
+}
+class LengthContracts
+{
+  MeasuredLength item;
+  int fractional() Python { [pre: (item.length() / 2) == -1.5] return 7 }
+    Java { [pre: (item.length() / 2) == -1.5] return 7; }
+  int integral() Python { [pre: (item.length(1) / 2) == -1] return 7 }
+    Java { [pre: (item.length(1) / 2) == -1] return 7; }
+  int throughInterface(Measured measured) Python { [pre: (measured.length() / 2) == -1.5] return 7 }
+    Java { [pre: (measured.length() / 2) == -1.5] return 7; }
+  int stringLength(String text) Python { [pre: (text.length() / 2) == 1] return 7 }
+    Java { [pre: (text.length() / 2) == 1] return 7; }
+  int arrayLength(String[] values) Python { [pre: (values.length / 2) == 1] return 7 }
+    Java { [pre: (values.length / 2) == 1] return 7; }
+}
+
+// Argument failures precede a call's null check, in statement and expression slots.
+class FailingArguments
+{
+  FailingArguments child = null;
+  FailingArguments other = null;
+  int zero = 0;
+  int trace = 0;
+  int take(int n) Python { return n } Java { return n; }
+  int fail() Python { self._trace = self._trace * 10 + 2; return 1 / self._zero }
+    Java { trace = trace * 10 + 2; return 1 / zero; }
+  FailingArguments receiver() Python { self._trace = self._trace * 10 + 1; return self._child }
+    Java { trace = trace * 10 + 1; return child; }
+  void division() {}
+  before division { child.take(1 / zero); }
+  int divided = { child.take(1 / zero) }
+  void remainder() {}
+  before remainder { child.take(1 % zero); }
+  void field() {}
+  before field { child.take(other.zero); }
+  int fieldValue = { child.take(other.zero) }
+  void call() {}
+  before call { receiver().take(fail()); }
+  int called = { receiver().take(fail()) }
+}
+
+// Guards and contracts naming the states of a state machine, and Java's equals and contains
+class GuardNames
+{
+  code;
+  String note = "";
+  power { Off { toggle -> On; } On { toggle -> Off; } }
+  blade {
+    Still {
+      spin [getPower() == Power.On] -> Spinning;
+      enter(String c) [c.equals(code)] -> Open;
+      check [note.contains("rush")] -> Spinning;
+    }
+    Spinning { stop -> Still; }
+    Open { }
+  }
+  Integer refund() Python { [pre: getBlade() == Blade.Still] return 1 }
+}
+
+// A guard naming its own class's states through the class, a guard following an association of the
+// class to itself, and a guard calling a model's own equals
+class GuardTicket
+{
+  Integer balance = 1;
+  0..1 -> 0..1 GuardTicket partner;
+  status {
+    Open {
+      close [getStatus() == GuardTicket.Status.Open] -> Closed;
+      transfer [getPartner() != null && getPartner().getBalance() > 0] -> Closed;
+    }
+    Closed { }
+  }
+}
+class GuardVersion
+{
+  Integer major;
+  Boolean equals(GuardVersion other) Python { return self.getMajor() == other.getMajor() }
+}
+class GuardDeployment
+{
+  status { Pending { approve(GuardVersion current, GuardVersion required) [current.equals(required)] -> Approved; } Approved { } }
+}
+
+// Guards compute as Java: integer division and remainder through this, a floating remainder, text
+// with a boolean, and a constant of an interface the class implements
+interface GuardLimits { const Integer MAX = 5; }
+class GuardArithmetic
+{
+  isA GuardLimits;
+  Integer n = 3;
+  Integer m = -7;
+  Double x = -3.0;
+  Boolean flag = true;
+  s = "ab";
+  sm {
+    A {
+      half [(this.n / 2) == 1] -> A;
+      rem [(this.m % 3) == -1] -> A;
+      frem [(x % 2.0) == -1.0] -> A;
+      text [s + flag == "abtrue"] -> A;
+      limit [n < MAX] -> A;
+    }
+  }
+}
+
+// A missing object in a guard's text is null, as in Java
+class GuardContact { }
+class GuardDirectory
+{
+  0..1 -> 0..1 GuardContact selected;
+  state { Waiting { resolve ["contact=" + getSelected() == "contact=null"] -> Ready; } Ready { } }
+}

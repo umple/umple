@@ -1,0 +1,6 @@
+// The default value calls the Java library, which cannot be
+// translated to Python, so Python generation reports E9211
+generate Python;
+class Session {
+  String user = System.getProperty("user.name");
+}

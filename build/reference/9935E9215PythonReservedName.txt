@@ -1,0 +1,24 @@
+E9215 Python Reserved Name
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>A name that Python reserves or that generated code uses</h2>
+
+<p>The Python generator reports this error, and does not generate the class, for three kinds of name:</p>
+<ul>
+    <li>A class or interface named like a Python built-in that generated code calls, such as <code>len</code>, <code>id</code>, <code>set</code> or <code>tuple</code>: it would hide the built-in in its module and in every method that imports it.</li>
+    <li>A class, interface, method, event, state, constant, enumeration or enumeration value whose generated name is a Python keyword, such as <code>lambda</code>, <code>async</code>, <code>break</code> or <code>None</code>. Enumeration values are written with a capital first letter, so <code>none</code> becomes <code>None</code>.</li>
+    <li>A parameter named <code>__class__</code>, the name generated methods use for their own class.</li>
+</ul>
+
+<p>Rename the element.</p>
+
+@@example
+@@source manualexamples/E9215PythonReservedName1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E9215PythonReservedName2.ump
+@@endexample

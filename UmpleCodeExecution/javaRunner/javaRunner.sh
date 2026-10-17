@@ -4,14 +4,17 @@ exec  2> "/output/errors"
 
 cd /input/
 
-py=$(echo $@ | cut -d'.' -f2)
-
-if [ $py = "py" ]; then
+case "$1" in
+  -m)
+    # Python: run the main module by its dotted name, so it imports its package
     echo "Python result:"
-    python3 $@
-else
+    shift
+    python3 -m "$@"
+    ;;
+  *)
     echo "Java result:"
     java $@
-fi
+    ;;
+esac
 
 mv /output/logfile.txt /output/completed

@@ -20,6 +20,8 @@ class RubyGenerator
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.compiler.ruby.*;
   
+  // The classes this run prepared; a generated class another generator left does not count
+  private Set<UmpleClass> prepared = new HashSet<UmpleClass>();
   private static Map<String,String> UpperCaseSingularLookupMap;
   private static Map<String,String> UpperCasePluralLookupMap;
   private static Map<String,String> AsIsSingularLookupMap;
@@ -631,6 +633,7 @@ class RubyGenerator
       translate("uniqueMap", av),
       av.getUmpleClass().getName());
     CodeInjection set = new CodeInjection(when, method, code, aClass);
+    set.setIsInternal(true);
     aClass.addCodeInjection(set);
   }
   
@@ -646,7 +649,7 @@ class RubyGenerator
   
   private void prepare(UmpleClass aClass)
   {
-    if (aClass.getGeneratedClass() != null)
+    if (prepared.contains(aClass))
     {
       GeneratedClass genClass = aClass.createGeneratedClass(getModel());
       generateConstructorSignature(genClass);
@@ -665,6 +668,7 @@ class RubyGenerator
       genClass.setParentClass(parent.getGeneratedClass());
       generateConstructorSignature(genClass);
     }
+    prepared.add(aClass);
     
     if (aClass.getIsSingleton())
     {
@@ -760,6 +764,7 @@ class RubyGenerator
         String methods = translate("addMethod",av);
         
         CodeInjection set = new CodeInjection("after", methods,"", aClass);
+        set.setIsInternal(true);
         CodeBlock cb = new CodeBlock();
         cb.setCode("Java",java_code);
         cb.setCode("Php",php_code);
