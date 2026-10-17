@@ -1,0 +1,14 @@
+classDiagram
+  class Person {
+    String name
+    int age
+  }
+  class Student {
+    int studentID
+  }
+  Person <|-- Student
+  class Teacher {
+    String position
+  }
+  Person <|-- Teacher
+  Teacher "1" -- "*" Student : students

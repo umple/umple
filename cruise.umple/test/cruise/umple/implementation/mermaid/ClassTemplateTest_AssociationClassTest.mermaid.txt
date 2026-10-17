@@ -1,0 +1,10 @@
+classDiagram
+  class Student {
+  }
+  class CourseSection {
+  }
+  class Registration {
+    String grade
+  }
+  Registration "*" -- "1..1" Student : student
+  Registration "*" -- "1..1" CourseSection : courseSection

@@ -1,0 +1,3 @@
+req E7 ears {
+  When the power fails, the controller shall close the valve.
+}

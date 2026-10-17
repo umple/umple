@@ -94,9 +94,28 @@ if (isset($_REQUEST["nodiagram"])) {$showDiagram=false;} else {$showDiagram=true
 $diagramType = "GvClass";
 if (isset($_REQUEST["diagramtype"])) {
   $diagramType=$_REQUEST["diagramtype"];
-  if ($diagramType=="state") $diagramType = "GvState";
-  else if ($diagramType=="structure") $diagramType = "structureDiagram";
-  else if ($diagramType !="GvState" && $diagramType !="GvClass" && $diagramType !="structureDiagram" && $diagramType !="GvFeature" && $diagramType !="GvClassTrait" ) $diagramType = "class";
+
+  if ($diagramType=="state") {
+    $diagramType = "GvState";
+  }
+  else if ($diagramType=="structure") {
+    $diagramType = "structureDiagram";
+  }
+  else if (
+    $diagramType !="GvState" &&
+    $diagramType !="GvClass" &&
+    $diagramType !="structureDiagram" &&
+    $diagramType !="GvFeature" &&
+    $diagramType !="GvClassTrait" &&
+    $diagramType != "GvEntityRelationshipDiagram" &&
+    $diagramType != "instanceDiagram" &&
+    $diagramType != "crudUI" &&
+    $diagramType != "stateTables" &&
+    $diagramType != "eventSequence" &&
+    $diagramType != "class"
+  ) {
+    $diagramType = "class";
+    }
 }
 if ($diagramtype=="") $diagramtype = "&diagramtype=".$diagramType;
 
@@ -129,15 +148,46 @@ if (isset($_REQUEST["model"]) && explode("-", $_REQUEST["model"])[0] == "task")
 }
 
 //
-$generateDefault="#genclass";
-if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] != "") {
-  $generateDefault="#gen".strip_tags($_REQUEST['generateDefault']);
+$generateDefault = "#genclass";
+// The following correspond to the options in $generatemenu of compiler_config.php
+$allowedGenerateDefaults = array(
+    "java",
+    "javadoc",
+    "php",
+    "python",
+    "cpp",
+    "ruby",
+    "sql",
+    "metrics",
+    "alloy",
+    "nusmv",
+    "statetables",
+    "eventsequence",
+    "plainrequirementsdoc",
+    "plainrequirementsdocqc",
+    "UmpleAnnotaiveToComposition",
+    "uigu2"
+);
+
+if (isset($_REQUEST['generateDefault']) && $_REQUEST["generateDefault"] !== "") {
+    $requested = trim($_REQUEST["generateDefault"]);
+
+    if (in_array($requested, $allowedGenerateDefaults, true)) {
+        $generateDefault = "#gen" . $requested;
+    }
+}
+
+if (isset($_REQUEST["model"])) {
+  $versionHistory = new VersionHistory($dataHandle->getWorkDir()->getPath());
+  $versionHistory->withLock(function() use ($versionHistory) {
+    $versionHistory->updateMainFileFromOnlyTab();
+  });
 }
 
 $output = $dataHandle->readData('model.ump');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="scripts/_load.js" type="text/javascript"></script>
@@ -174,6 +224,40 @@ $output = $dataHandle->readData('model.ump');
    color: #ccc;
    }
 
+   .button2.mode-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: auto !important;
+  min-width: 26px;
+  height: 26px;
+  padding: 2px 5px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.button2.mode-button svg {
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+  max-width: 12px !important;
+  max-height: 12px !important;
+  display: inline-block !important;
+  flex: 0 0 12px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.button2.mode-button .button-letter {
+  display: inline-block;
+  font-weight: bold;
+  line-height: 1;
+}
   .active {
     background: #B06C5B;
   }
@@ -437,8 +521,8 @@ $output = $dataHandle->readData('model.ump');
             }
           ?>
         </span>
-        <span id="gdprtext" class="pretext">        
-          This tool stores your data in cookies and on a server. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="https://umple.org/privacy" target="privacy">Click to learn about privacy.</a>
+        <span id="gdprtext" class="pretext">
+          This tool stores your data in cookies and on a server. For the AI feature, your API key is never sent to our server backend. <a href="javascript:Action.hidegdpr()">I understand</a>. &nbsp; <a href="https://umple.org/privacy" target="privacy">Click to learn about privacy.</a>
         <br/></span>  
 
         
@@ -474,6 +558,8 @@ $output = $dataHandle->readData('model.ump');
   <input id="filename" type="hidden" value="<?php if (isset($_REQUEST["task"])) { echo '../ump/tasks/'.$dataHandle->getName().'/model.ump'; } else {echo '../ump/'.$dataHandle->getName().'/model.ump'; }?>" />
   <input id="advancedMode" type="hidden" value="0" />
   <input id="model" type="hidden" value="<?php echo $dataHandle->getName()?>" />
+  <?php $versionHistory = new VersionHistory($dataHandle->getWorkDir()->getPath()); ?>
+  <input id="modelVersion" type="hidden" value="<?php echo $versionHistory->getCurrentVersion() ?>" />
 
   <div id="taskArea" style="display: none;">
     
@@ -565,27 +651,140 @@ $output = $dataHandle->readData('model.ump');
    <span id="linetext">Line=<input size=2 style="font-size: 12px;" id="linenum" value=1 onChange="Action.setCaretPosition(value);"></input>&nbsp; &nbsp;</span>   
 
     <span style="font-size: 30%">
-    <a id="ECD_button" class="button2" href="javascript:Page.clickShowEditableClassDiagram()">E</a>&nbsp;
-    <a id="GCD_button" class="button2 active" href="javascript:Page.clickShowGvClassDiagram()">G</a>&nbsp;
-    <a id="SD_button" class="button2" href="javascript:Page.clickShowGvStateDiagram()">S</a>&nbsp;
+    <a id="ECD_button" class="button2 mode-button" href="javascript:Page.clickShowEditableClassDiagram()"
+    title="Editable Class Diagram"
+   aria-label="Editable Class Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="4" width="13" height="16"></rect>
+    <path d="M7 9h5"></path>
+    <path d="M7 13h4"></path>
+    <path d="M14 17l6-6 2 2-6 6-3 1z"></path>
+  </svg>
+
+  <span class="button-letter">E</span>
+  </a>&nbsp;
+    <a id="GCD_button" class="button2 active mode-button" href="javascript:Page.clickShowGvClassDiagram()"
+    title="Graphviz Class Diagram"
+   aria-label="Graphviz Class Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="3" width="6" height="5"></rect>
+    <rect x="15" y="3" width="6" height="5"></rect>
+    <rect x="9" y="16" width="6" height="5"></rect>
+    <path d="M6 8l5 8"></path>
+    <path d="M18 8l-5 8"></path>
+  </svg>
+
+  <span class="button-letter">G</span>
+  </a>&nbsp;
+    <a id="SD_button" class="button2 mode-button" href="javascript:Page.clickShowGvStateDiagram()"
+    title="State Diagram"
+   aria-label="State Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="6" cy="12" r="3"></circle>
+    <circle cx="18" cy="12" r="3"></circle>
+    <path d="M9 12h6"></path>
+    <path d="M13 9l3 3-3 3"></path>
+  </svg>
+
+  <span class="button-letter">S</span>
+  </a>&nbsp;
     </span>
- 
-    &nbsp; 
+    <span style="font-size: 12px; margin-left: 10px; font-weight: bold;">
+  Live View:
+  <select id="liveViewSelector"
+          onchange="Action.setLiveView(this.value)"
+          style="font-size: 11px; border-radius: 4px; padding: 2px;">
+  <optgroup label="Class Views">
+    <option value="gcd" id="menu-set-gcd" >Gv Class Diagram</option>
+    <option value="ecd" id="menu-set-ecd">E Class Diagram</option>
+    <option value="erd" id="buttonShowGvEntityRelationshipDiagram">ERD</option>
+    <option value="crudUI" id="buttonShowCRUDUI">CRUD UI</option>
+  </optgroup>
+
+  <optgroup label="State Views">
+    <option value="sd" id="menu-set-sd">State Diagram</option>
+    <option value="stateTables" id="buttonShowStateTables">State Tables</option>
+  </optgroup>   
+
+  <optgroup label="Special Views">
+    <option value="std" id="menu-set-std">Structure Diagram</option>  
+    <option value="gfd" id="menu-set-gfd">Feature Diagram</option>
+  </optgroup> 
+
+  <optgroup label="Instance Views">
+    <option value="instanceDiagram" id="buttonShowInstanceDiagram">Instance Diagram</option>
+    <option value="eventSequence" id="buttonShowEventSequence">Event Sequence</option>
+  </optgroup> 
+
+  </select>
+</span>
+     &nbsp; 
     <span style="font-size: 30%">
-    <a id="SHT_button" class="button2 active" href="javascript:Page.clickShowHideText()">T</a>&nbsp;
-    <a id="SHD_button" class="button2 active" href="javascript:Page.clickShowHideCanvas()">D</a>&nbsp;
+    <a id="SHT_button" class="button2 active mode-button" href="javascript:Page.clickShowHideText()"
+    title="Show or Hide Text Editor"
+   aria-label="Show or Hide Text Editor">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M4 6h16"></path>
+    <path d="M4 10h12"></path>
+    <path d="M4 14h16"></path>
+    <path d="M4 18h10"></path>
+  </svg>
+
+  <span class="button-letter">T</span>
+  </a>&nbsp;
+    <a id="SHD_button" class="button2 active mode-button" href="javascript:Page.clickShowHideCanvas()"
+    title="Show or Hide Diagram"
+   aria-label="Show or Hide Diagram">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="3" width="7" height="6"></rect>
+    <rect x="14" y="15" width="7" height="6"></rect>
+    <path d="M10 6h4"></path>
+    <path d="M17 9v6"></path>
+  </svg>
+
+  <span class="button-letter">D</span>
+  </a>&nbsp;
     </span>
 
     &nbsp; 
     <span style="font-size: 30%">
-    <a id="SHA_button" class="button2 active" href="javascript:Page.clickToggleAttributes()">A</a>&nbsp;
-    <a id="SHM_button" class="button2" href="javascript:Page.clickToggleMethods()">M</a>&nbsp;
+    <a id="SHA_button" class="button2 active mode-button" href="javascript:Page.clickToggleAttributes()"
+    title="Show or Hide Attributes"
+   aria-label="Show or Hide Attributes">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="3" y="4" width="18" height="16"></rect>
+    <path d="M3 9h18"></path>
+    <path d="M7 13h10"></path>
+    <path d="M7 17h7"></path>
+  </svg>
+
+  <span class="button-letter">A</span>
+  </a>&nbsp;
+    <a id="SHM_button" class="button2 mode-button" href="javascript:Page.clickToggleMethods()"
+    title="Show or Hide Methods"
+   aria-label="Show or Hide Methods">
+
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M7 5L3 12l4 7"></path>
+    <path d="M17 5l4 7-4 7"></path>
+    <path d="M10 12h4"></path>
+  </svg>
+
+  <span class="button-letter">M</span>
+  </a>&nbsp;
     </span>
 
     &nbsp; 
     <span style="font-size: 30%; white-space:nowrap;">
     <a id="GenJavaButton" class="button2" href="javascript:Action.generateCode('java','Java');">Generate Java</a>&nbsp;
     </span>    
+
 
     <!-- disabling the save as URL feature and activating collaboration feature-->
     <!--
@@ -635,6 +834,7 @@ $output = $dataHandle->readData('model.ump');
         </span>  
 
     <span id="restorecode" > &nbsp; <a href="#"> Restore Saved State</a></span>
+    <span id="versionHistoryMessage" class="version-history-message is-hidden" role="status"></span>
 
     &nbsp;<span id=exampleMessage><?php echo $messageURL ?></span> <span id=feedbackMessage></span>
   </div>
@@ -709,6 +909,12 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png"/> 
               Load from Browser
             </li>
+            <?php if (!$readOnly) { ?>
+            <li id="buttonRestoreEarlierVersion" class="restoreEarlierVersion">
+              <img src="scripts/copy.png" alt="Restore Earlier Version icon"/> 
+              Restore Earlier Version
+            </li>
+            <?php } ?>
             <li>Drag and drop a .ump file here to load it, or drag it to any place in the text area.</li>
           </ul>
 
@@ -797,6 +1003,9 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="realestate.ump">Real Estate</option>
                 <option name = "optionExample" value="RoutesAndLocations.ump">Routes And Locations</option>
                 <option name = "optionExample" value="School.ump">School</option>
+                
+                <option name = "optionExample" value="https://raw.githubusercontent.com/Smart-Contract-Modelling-uOttawa/Symboleo-JS-Core/refs/heads/main/ontology/ontology.ump">Symboleo Smart Contracts</option>
+                
                 <option name = "optionExample" value="TelephoneSystem.ump">Telephone System</option>
                 <option name = "optionExample" value="UniversitySystem.ump">University System</option>
                 <option name = "optionExample" value="VendingMachineClassDiagram.ump">Vending Machine</option>
@@ -886,56 +1095,6 @@ $output = $dataHandle->readData('model.ump');
                 ?>
               </select>
             </li>
-
-<!-- The following removed as too many examples were poor
-            <li id="itemLoadExamples6">
-              <select id="inputExample6" name="inputExample6" class="button" size="1" data-diagram-type="class">
-                <option name = "optionExample6" id = "defaultExampleOption5" value="">Select Example</option>
-                <?php
-
-                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsEL.html");
-                if($exampleHtmlOptionLines) {
-                  echo $exampleHtmlOptionLines;
-                }
-                else {
-                   ?><option name = "optionExample" value="invalid.ump">Could not find EL 6 set of extra files </option> <?php
-                }
-                ?>
-              </select>
-            </li>
-
-            <li id="itemLoadExamples7">
-              <select id="inputExample7" name="inputExample7" class="button" size="1" data-diagram-type="class">
-                <option name = "optionExample7" id = "defaultExampleOption7" value="">Select Example</option>
-                <?php
-
-                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsMP.html");
-                if($exampleHtmlOptionLines) {
-                  echo $exampleHtmlOptionLines;
-                }
-                else {
-                   ?><option name = "optionExample" value="invalid.ump">Could not find MP 7 set of extra files </option> <?php
-                }
-                ?>
-              </select>
-            </li>
-
-            <li id="itemLoadExamples8">
-              <select id="inputExample8" name="inputExample6" class="button" size="1" data-diagram-type="class">
-                <option name = "optionExample8" id = "defaultExampleOption8" value="">Select Example</option>
-                <?php
-
-                $exampleHtmlOptionLines=file_get_contents("generatedExtraExample1OptionsQZ.html");
-                if($exampleHtmlOptionLines) {
-                  echo $exampleHtmlOptionLines;
-                }
-                else {
-                   ?><option name = "optionExample" value="invalid.ump">Could not find QZ 8 set of extra files </option> <?php
-                }
-                ?>
-              </select>
-            </li>
--->
           
             <!-- <li class="dropbox-add-chooser"></li> --> 
           </ul>
@@ -952,7 +1111,11 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/assoc.png" alt="Icon to click on to create an association in editable mode"/> 
               Association
             </li>
-            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on a state to draw a transition." tabindex="0">
+            <li id="buttonAddState" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select and click on the canvas to add a state, or inside a composite state to add a substate." tabindex="0">
+              <img src="scripts/class.png" alt="Add a state"/>
+              State
+            </li>
+            <li id="buttonAddTransition" class="toggleToolItem view_opt_state layoutListItem" name="paletteItem" title="Select a source and target state, or drag between states, to draw a transition." tabindex="0">
                <img src="scripts/assoc.png" alt="Icon to click on to create a new transition in certain state modes"/>
                Transition
              </li>            
@@ -1018,13 +1181,20 @@ $output = $dataHandle->readData('model.ump');
               <input id="buttonToggleGuards" class="checkbox" type="checkbox"/> 
               <a id="labelToggleGuards" class="buttonExtend">Guards</a> 
             </li>
-            <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state"> 
-              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/> 
-              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a> 
+            <li id="ttToggleGuardLabels" class="layoutListItem view_opt_state">
+              <input id="buttonToggleGuardLabels" class="checkbox" type="checkbox"/>
+              <a id="labelToggleGuardLabels" class="buttonExtend">Guard Labels</a>
+            </li>
+            <li id="ttToggleNaturalLanguage" class="layoutListItem view_opt_state">
+              <input id="buttonToggleNaturalLanguage" class="checkbox" type="checkbox"/>
+              <a id="labelToggleNaturalLanguage" class="buttonExtend">Natural Language</a>
             </li>
             <li id="ttToggleFeatureDependencyLabels" class="layoutListItem view_opt_feature"> 
               <input id="buttonToggleFeatureDependency" class="checkbox" type="checkbox"/> 
               <a id="labelToggleFeatureDependencyLabels" class="buttonExtend">Feature Dependency</a> 
+            <li id="ttZoomInOut" class="copyMix" >
+            &nbsp;Zoom <button onclick="Page.zoomIn()">In</button>
+<button onclick="Page.zoomOut()">Out</button>
             </li>
             <li id="ttAllowPinch">
               <input id="buttonAllowPinch" class="checkbox" type="checkbox" name="allowPinch" value="allowPinch"/> 
@@ -1034,6 +1204,13 @@ $output = $dataHandle->readData('model.ump');
               <img src="scripts/copy.png" alt="Copy Mixset with Above"/> 
                Make Mixset
             </li>              
+          </ul>
+          <ul id="paletteFeatureSelectReqSection" class="second center-children" style="display:none;">
+            <li id="ttSelectReq" title="Select which features/requirements are active in the model.">
+              <div id="buttonSelectReq"
+                   class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+                   tabindex="0" role="button">Select Features</div>
+            </li>
           </ul>
       </div>
       
@@ -1138,6 +1315,34 @@ $output = $dataHandle->readData('model.ump');
 
       </div>
 
+      <!-- AI SECTION -->
+      <h3><a href="#ai">AI</a></h3>
+      
+      <div class="section">
+        <ul class="first center-children">
+          <li id="ttAiStatus">
+            <div class="ai-status-row" id="buttonAiSettings" role="button" tabindex="0" title="Configure AI Settings">
+              <svg class="ai-settings-icon" xmlns="https://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <span id="aiStatusText" class="ai-status-text">Not configured</span>
+              <span id="aiStatusIndicator" class="ai-status-indicator not-ready" title="AI not configured">●</span>
+            </div>
+          </li>
+        </ul>
+        
+        <ul class="second center-children">
+          <li class="subtitle">Generate</li>
+          <li id="ttGenerateFromReq">
+            <div id="buttonGenerateFromReq" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button" onclick="AiRequirements.showDialog()">By Requirements</div>
+          </li>
+          <li id="ttExplain">
+            <div id="buttonExplain" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button" onclick="AiExplain.showDialog()">Explain</div>
+          </li>
+        </ul>
+      </div>
+
       </div> 
     </div>
    
@@ -1174,6 +1379,38 @@ $output = $dataHandle->readData('model.ump');
 
   <script src="scripts/theme-toggle.js"></script>
 
+  <?php
+  // LSP configuration — reads from umpleonline/config/lsp.ini
+  // Precedence: 1. env var  2. canonical config  3. disabled
+  $lspWsUrl = getenv('UMPLE_LSP_WS_URL');
+  if (!$lspWsUrl) {
+    $lspIniPath = rootDir() . '/config/lsp.ini';
+    $lspCfg = file_exists($lspIniPath) ? parse_ini_file($lspIniPath) : false;
+    if ($lspCfg && !empty($lspCfg['standaloneHostPort']) && !empty($lspCfg['localBrowserHost'])) {
+      $lspWsUrl = 'ws://' . $lspCfg['localBrowserHost'] . ':' . $lspCfg['standaloneHostPort'];
+    } else {
+      $lspWsUrl = '';
+      error_log('LSP disabled: config/lsp.ini not found or missing required values');
+    }
+  }
+  $lspAuthSecret = getenv('LSP_AUTH_SECRET') ?: '';
+  $lspToken = '';
+  $lspModelId = $dataHandle->getName();
+  if ($lspWsUrl && !$readOnly && $lspModelId) {
+    $mode = 'editable';
+    $expiry = (string)(time() * 1000 + 300000); // 5 min from now in ms
+    $payload = $lspModelId . ':' . $mode . ':' . $expiry;
+    $sig = hash_hmac('sha256', $payload, $lspAuthSecret);
+    $lspToken = rtrim(strtr(base64_encode($payload . ':' . $sig), '+/', '-_'), '=');
+  }
+  ?>
+
+  <script>
+  window.UMPLE_LSP_WS_URL = "<?php echo htmlspecialchars($lspWsUrl, ENT_QUOTES) ?>";
+  window.UMPLE_LSP_TOKEN = "<?php echo htmlspecialchars($lspToken, ENT_QUOTES) ?>";
+  window.UMPLE_UMP_BASE = "<?php echo htmlspecialchars(rootDir() . '/ump', ENT_QUOTES) ?>";
+  </script>
+
   <script>
     Page.init(
       <?php if($showDiagram) { ?> true  <?php } else { ?> false <?php } ?>,
@@ -1192,10 +1429,6 @@ $output = $dataHandle->readData('model.ump');
       Page.setExamples("<?php echo $actualExample ?>")
       <?php } ?>
       //
-  </script>
-
-  <script>
-    Collab.connectCollabServer();
   </script>
 
   <script>
@@ -1221,6 +1454,147 @@ $output = $dataHandle->readData('model.ump');
     </div>
   <?php } ?>
 
+  <!-- AI Settings Modal (hidden by default) -->
+  <div id="aiSettingsModal" class="ai-settings-modal is-hidden">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3>AI Settings</h3>
+      <div class="ai-settings-form">
+        <div class="setting-row">
+          <label for="selectAiProvider">Provider:</label>
+          <div class="ai-settings-field ai-provider-field">
+            <select id="selectAiProvider" class="button">
+              <option value="openrouter" selected>OpenRouter</option>
+              <option value="openai">OpenAI</option>
+              <option value="google">Google</option>
+            </select>
+            <a id="aiProviderLink" class="ai-provider-link is-hidden" href="" target="_blank" rel="noopener noreferrer"></a>
+          </div>
+        </div>
+        <div class="setting-row">
+          <label for="inputAiApiKey">API Key:</label>
+          <div class="ai-settings-field">
+            <!-- Hidden dummy field to prevent browser password autofill -->
+            <input type="password" style="position: absolute; left: -9999px; opacity: 0;" tabindex="-1" autocomplete="new-password"/>
+            <div class="api-key-input-wrapper">
+              <input id="inputAiApiKey" type="password" placeholder="Enter API key" autocomplete="new-password" data-form-type="other" class="button api-key-input"/>
+              <button type="button" id="toggleApiKeyVisibility" class="api-key-toggle" tabindex="0" aria-label="Toggle API key visibility">
+                <span class="eye-icon" aria-hidden="true">
+                <svg class="ai-eye-icon" xmlns="https://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                  <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                </span>
+              </button>
+            </div>
+            <div id="buttonVerifyApiKey" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget ai-verify-button" tabindex="0" role="button">Verify</div>
+          </div>
+          <div id="apiKeyStatus" class="ai-key-status-message is-hidden"></div>
+        </div>
+        <div id="ttAiModel" class="setting-row is-hidden">
+          <label for="selectAiModel">Model:</label>
+          <div class="ai-model-dropdown">
+            <div id="aiModelDropdownTrigger" class="ai-model-dropdown-trigger button" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="false">
+              <span id="aiModelDropdownSelected">Select model...</span>
+              <svg class="ai-model-dropdown-arrow" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="https://www.w3.org/2000/svg">
+                <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div id="aiModelDropdownMenu" class="ai-model-dropdown-menu is-hidden" role="listbox">
+              <div class="ai-model-dropdown-search">
+                <input type="text" id="aiModelSearchInput" placeholder="Search models..." autocomplete="off">
+                <svg class="ai-model-search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="https://www.w3.org/2000/svg">
+                  <circle cx="6" cy="6" r="4" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M9.5 9.5L12.5 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div id="aiModelDropdownOptions" class="ai-model-dropdown-options">
+              </div>
+            </div>
+            <select id="selectAiModel" class="is-hidden">
+              <option value="">Select model...</option>
+            </select>
+          </div>
+        </div>
+        <div class="setting-row ai-usage-section">
+          <label>Usage:</label>
+          <div id="aiUsageSummary" class="ai-usage-summary">
+          </div>
+        </div>
+      </div>
+      <div class="dialog-buttons">
+        <div id="buttonResetAiUsage" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Reset Usage</div>
+        <div id="btnCloseAiSettings" class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget" tabindex="0" role="button">Close</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature Tree Modal. Reuses .ai-settings-modal and override some style to reuse the code -->
+  <div id="featureTreeModal" class="ai-settings-modal feature-tree-modal is-hidden">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3>Select Features</h3>
+      <div id="featureTreeModalBody">
+        <div id="featureModelTreeContainer" class="feature-tree-mount"></div>
+        <div id="featureTreeModalLoading" class="is-hidden feature-tree-info">Loading feature model&hellip;</div>
+        <div id="featureTreeModalEmpty" class="is-hidden feature-tree-info">
+          <span id="featureTreeModalEmptyText">EMPTY_TEXT</span>
+          <a href="#" id="featureTreeRetryLink" class="feature-tree-retry-link">Retry</a>
+        </div>
+      </div>
+      <div class="dialog-buttons">
+        <div id="btnCloseFeatureTree"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Done</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Restore Earlier Version dialog (umple_version_history.js). Reuses .ai-settings-modal -->
+  <div id="versionHistoryModal" class="ai-settings-modal version-history-modal is-hidden"
+       role="dialog" aria-modal="true" aria-labelledby="versionHistoryTitle">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3 id="versionHistoryTitle">Restore Earlier Version</h3>
+      <p class="version-history-intro">UmpleOnline saves versions of this model on the
+        server while you edit it. Select a version to see what it contained, then restore
+        it if you want it back.</p>
+      <div class="version-history-body">
+        <ul id="versionHistoryList" class="version-history-list" role="listbox"
+            aria-label="Saved versions, newest first"></ul>
+        <div id="versionHistoryPreview" class="version-history-preview" aria-live="polite"></div>
+      </div>
+      <div id="versionHistoryStatus" class="version-history-status" role="status"></div>
+      <div class="dialog-buttons">
+        <div id="buttonRestoreSelectedVersion"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget disabled"
+             tabindex="0" role="button" aria-disabled="true">Restore this version</div>
+        <div id="buttonCloseVersionHistory"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Close</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shown when another browser tab or window has saved a newer version of the model,
+       or when this tab has saved over one -->
+  <div id="versionConflictModal" class="ai-settings-modal version-history-modal version-conflict-modal is-hidden"
+       role="alertdialog" aria-modal="true" aria-labelledby="versionConflictTitle"
+       aria-describedby="versionConflictMessage">
+    <div class="dialog-overlay"></div>
+    <div class="dialog-content">
+      <h3 id="versionConflictTitle">A newer version of this model exists</h3>
+      <p id="versionConflictMessage"></p>
+      <div class="dialog-buttons">
+        <div id="buttonLoadLatestVersion"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Load latest version</div>
+        <div id="buttonKeepThisVersion"
+             class="jQuery-palette-button unselectable ui-button ui-corner-all ui-widget"
+             tabindex="0" role="button">Keep this tab's version</div>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

@@ -173,6 +173,25 @@
     }
   }
 
+  echo "<h4 style =\"Color: blue\">UmpleOnline LSP server status</h4>";
+
+  // Read LSP config from canonical lsp.ini
+  $lspIniPath = dirname(__DIR__) . '/config/lsp.ini';
+  $lspCfg = file_exists($lspIniPath) ? parse_ini_file($lspIniPath) : false;
+  if ($lspCfg) {
+    if (!empty($lspCfg['standaloneContainerName'])) {
+      $cname = trim($lspCfg['standaloneContainerName']);
+      echo "<p>LSP Docker Container: my".$cname."</p>\n";
+      echo "\n<p>&nbsp;Stats: ";
+      passthru("docker container stats --no-stream --format json my".$cname."  2>&1");
+    }
+    if (!empty($lspCfg['standaloneHostPort'])) {
+      $portToUse = trim($lspCfg['standaloneHostPort']);
+      echo "<p>Port: ".$portToUse."</p>\n";
+    }
+  } else {
+    echo "<p>LSP config not found at config/lsp.ini</p>\n";
+  }
 
   echo "<h4 style =\"Color: blue\">TODO  Umple execution server status</h4>";
 

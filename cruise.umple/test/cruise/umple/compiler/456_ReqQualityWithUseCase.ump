@@ -1,0 +1,9 @@
+req UC1 useCase {
+  userStep 1 { select product }
+  systemResponse 1 { display price }
+}
+
+req UC1 quality {
+  High {}
+  Low {}
+}

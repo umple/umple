@@ -164,7 +164,7 @@ class EventSequencer {
     currentState = wrapState(resolveStartState(sm.getStartState()));
 
     // Add the start state to the output table
-    table.addColumn(currentState, "START");
+    table.addColumn(currentState, "START", "");
 
     // Add the start state to the output list
     list.addFirstRow(currentState, "-");
@@ -190,9 +190,11 @@ class EventSequencer {
 
       // Add state and event to the outputs
       table.addColumn(currentState, 
-                      extractLabel(currentEvent, currentTransition));
+                      extractLabel(currentEvent, currentTransition),
+                      extractTransitionId(currentTransition));
       list.addRow(currentState, 
-                     extractLabel(currentEvent, currentTransition));
+                     extractLabel(currentEvent, currentTransition),
+                     extractTransitionId(currentTransition));
 
       isFinished = tracker.isWalkFinished(currentState);
     }
@@ -316,6 +318,50 @@ class EventSequencer {
   
     gen.setModel(umpClass.getSourceModel());
     return guard.getCondition(gen).replaceAll("\"","&quot;");
+  }
+
+  // Builds the same transition identifier as the Graphviz state diagram, so
+  // UmpleOnline can select the transition taken in the code.
+  // Returns an empty string when no transition was taken.
+  private String extractTransitionId(Transition trans)
+  {
+    if(trans == null)
+    {
+      return "";
+    }
+
+    Event event = trans.getEvent();
+    Guard guard = trans.getGuard();
+    String transitionLabel = "";
+    String guardString = "";
+
+    if(!event.isAutoTransition())
+    {
+      if(event.getIsTimer())
+      {
+        transitionLabel = "after(" + event.getTimerInSeconds() + ")";
+      }
+      else if(event.getArgs() == null || event.getArgs().equals(""))
+      {
+        transitionLabel = event.getName();
+      }
+      else
+      {
+        transitionLabel = event.getName() + "(" + event.getArgs() + ")";
+      }
+    }
+
+    if(guard != null)
+    {
+      if(event.isAutoTransition()) guardString = "[";
+      else guardString = " [";
+      guardString += guard.getExpression().replaceAll("\"","&quot;") + "]";
+    }
+
+    return sm.getUmpleClass().getName() + "*^*" + sm.getName() + "*^*"
+      + transitionLabel + "*^*" + wrapState(trans.getFromState()).getDottedName()
+      + "*^*" + wrapState(trans.getNextState()).getDottedName() + "*^*"
+      + guardString;
   }
 }
 
@@ -520,9 +566,10 @@ class EventSequenceTable
   }
 
   //Adds a column to the table, puts an X in the row with the active state
-  public void addColumn(StateWrapper activeState, String triggeringEvent)
+  public void addColumn(StateWrapper activeState, String triggeringEvent,
+                        String transitionId)
   {
-    addToHeaderRow(triggeringEvent);
+    addToHeaderRow(triggeringEvent, transitionId);
     for(EventSequenceTableRow row : getEventSequenceTableRows())
     {
       row.addCell(activeState.getWrappedState());
@@ -578,15 +625,16 @@ class EventSequenceTable
     return tableSb;
   }
 
-  private void addToHeaderRow(String eventLabel)
+  private void addToHeaderRow(String eventLabel, String transitionId)
   {
     if(nextEventNumber == 0)
     {
-      headerRow.addCell(eventLabel);
+      headerRow.addCell(eventLabel, transitionId);
     }
     else
     {
-      headerRow.addCell(String.valueOf(nextEventNumber) + ". " + eventLabel);
+      headerRow.addCell(String.valueOf(nextEventNumber) + ". " + eventLabel,
+                        transitionId);
     }
     nextEventNumber++;
   }
@@ -597,9 +645,10 @@ class EventSequenceTableHeaderRow
 {
   0..1 -> * EventSequenceHeaderCell;
 
-  public void addCell(String eventLabel)
+  public void addCell(String eventLabel, String transitionId)
   {
-    addEventSequenceHeaderCell(new EventSequenceHeaderCell(eventLabel));
+    addEventSequenceHeaderCell(new EventSequenceHeaderCell(eventLabel,
+                                                           transitionId));
   }
 
   // Outputs the header row
@@ -670,13 +719,23 @@ class EventSequenceTableRow
 class EventSequenceHeaderCell
 {
   label;
+  transitionId;
 
   // Outputs this cell
   public String output(EventSequenceTemplate templater)
   {
     String cellContents = templater.genGridHeaderContent(label);
 
-    return templater.genGridCell(templater.TABLE_HEADER, cellContents);
+    if(transitionId.equals(""))
+    {
+      return templater.genGridCell(templater.TABLE_HEADER, cellContents);
+    }
+    else
+    {
+      return templater.genGridTransitionCell(templater.TABLE_HEADER,
+                                             transitionId,
+                                             cellContents);
+    }
   }
 }
 
@@ -728,15 +787,18 @@ class EventSequenceList
     addEventListRow(new EventListRow("", 
       "START", 
       triggeringEvent, 
-      resultingState.getDottedName()));
+      resultingState.getDottedName(),
+      ""));
   }
 
-  public void addRow(StateWrapper resultingState, String triggeringEvent)
+  public void addRow(StateWrapper resultingState, String triggeringEvent,
+                     String transitionId)
   {
     addEventListRow(new EventListRow("", 
       String.valueOf(eventCount), 
       triggeringEvent, 
-      resultingState.getDottedName()));
+      resultingState.getDottedName(),
+      transitionId));
 
     eventCount++;
   }
@@ -751,7 +813,8 @@ class EventSequenceList
       templater.TABLE_HEADER, 
       "Event<br>Number",
       "Event",
-      "Next State").output(templater));
+      "Next State",
+      "").output(templater));
 
     for(EventListRow row : eventListRows)
     {
@@ -771,6 +834,7 @@ class EventListRow
   number;
   eventName;
   nextStateName;
+  transitionId;
 
   public StringBuilder output(EventSequenceTemplate templater)
   {
@@ -778,7 +842,16 @@ class EventListRow
     outputSb.append(templater.genListRowStart());
 
     outputSb.append(templater.genListCell(cellClassName, number));
-    outputSb.append(templater.genListCell(cellClassName, eventName));
+    if(transitionId.equals(""))
+    {
+      outputSb.append(templater.genListCell(cellClassName, eventName));
+    }
+    else
+    {
+      outputSb.append(templater.genListTransitionCell(cellClassName,
+                                                      transitionId,
+                                                      eventName));
+    }
     outputSb.append(templater.genListCell(cellClassName, nextStateName));
   
     outputSb.append(templater.genListRowEnd());
@@ -1131,6 +1204,7 @@ class EventSequenceTemplate
   rowStart      <<!<tr>!>>
   cell          <<!<td class="<<=cssClass>>"><<=content>></td>!>>
   firstCell     <<!<td class="<<=cssClass>>" data-parent="<<=parentId>>"><<=content>></td>!>>
+  transitionCell <<!<td class="<<=cssClass>>" data-transition="<<=transitionId>>"><<=content>></td>!>>
   rowEnd        <<!</tr>!>>
   tableFooter   <<!</table>!>>
   divFooter     <<!</div>!>>
@@ -1153,6 +1227,8 @@ class EventSequenceTemplate
   emit genFirstGridCell(String cssClass, String parentId, 
                         String content)(tab6, firstCell, cr);
   emit genGridCell(String cssClass, String content)(tab6, cell, cr);
+  emit genGridTransitionCell(String cssClass, String transitionId,
+                             String content)(tab6, transitionCell, cr);
   emit genGridRowEnd()(tab5, rowEnd, cr);
   emit genGridBodyFooter()(tab4, tableFooter, cr, tab3, divFooter, cr, tab2, 
                            divFooter, cr);
@@ -1162,6 +1238,8 @@ class EventSequenceTemplate
   emit genListStart()(listStart, cr);
   emit genListRowStart()(tab, rowStart, cr);
   emit genListCell(String cssClass, String content)(tab2, cell, cr);
+  emit genListTransitionCell(String cssClass, String transitionId,
+                             String content)(tab2, transitionCell, cr);
   emit genListRowEnd()(tab, rowEnd, cr);
   emit genListEnd()(tableFooter, cr2);
 

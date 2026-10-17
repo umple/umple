@@ -434,6 +434,8 @@ class ConstraintVariable
     class Precondition
     {
       * -> 1 Method ; // The method precondition belongs to
+      // The method's bodies ("" for the untagged one) whose block declares this precondition
+      String[] bodyLanguages;
     }
     /*
      * The Preconditions are constraints on methods, throughing an exception if the constraint is not sastisfied after the method has computed.
@@ -443,6 +445,8 @@ class ConstraintVariable
       depend cruise.umple.parser.Position;
       * -> 1 Method ; // The method postcondition belongs to
       lazy Position position;
+      // The method's bodies ("" for the untagged one) whose block declares this postcondition
+      String[] bodyLanguages;
     }
   }
 
@@ -575,6 +579,18 @@ class CodeBlock
   depend java.util.*;
 
   internal HashMap<String,String> codes = new HashMap<String,String>();
+
+  // The languages whose code was written in the model ("" is the untagged body), each mapped to the
+  // indentation of the code's first line in the source and to where the code starts there (see
+  // setAuthoredCode, getFirstLineIndent and getAuthoredPosition)
+  internal HashMap<String,String> authoredIndents = new HashMap<String,String>();
+  internal HashMap<String,Position> authoredPositions = new HashMap<String,Position>();
+  // The guards, as untagged code, of the guarded trait actions composed into the Python code with
+  // superCall, by the placeholder that stands for each condition there (see pythonTraitCode)
+  internal HashMap<String,String> pythonTraitGuards = new HashMap<String,String>();
+  // The trait code without a Python version composed into the Python code with superCall, by the
+  // placeholder line that stands for it there; the generator renders it as any other code slot
+  internal HashMap<String,CodeBlock> pythonTraitBlocks = new HashMap<String,CodeBlock>();
   public static String languageUsed = "";
   lazy String name;
 }
@@ -598,6 +614,8 @@ class CodeInjection
   lazy Position position;
   lazy Position codePosition;
   Boolean isInternal = false;
+  // Written with around; one without code labels has type before, which Java splits at around_proceed:
+  Boolean isAround = false;
 }
 
 class ExtraCode
@@ -1105,6 +1123,8 @@ class Association
 
   before getName { if (!isNamed()) { return this.deriveName(); } }
   after constructor { this.setLeftAndRight(); }
+  // Issue 2098: enable implementsReq to be placed before a top-level association block
+  1 -> * ReqImplementation;
 }
 
 /*
@@ -1307,6 +1327,21 @@ class Requirement{
   
   // The content of the requirement, expressed in the language
   statement;
+
+  // Structured user story elements
+  who;
+  when;
+  what;
+  why;
+
+  // Structured EARS clauses, null when absent: Where <earsWhere>, while <earsWhile>,
+  // when <earsWhen>, if <earsIf>, then the <earsSystem> shall <earsShall>
+  lazy earsWhere;
+  lazy earsWhile;
+  lazy earsWhen;
+  lazy earsIf;
+  lazy earsSystem;
+  lazy earsShall;
   
   // The requirements language used to express this requirement
   // can be blank, then 'text' is assumed
@@ -1317,6 +1352,45 @@ class Requirement{
   // Used when reporting errors regarding missing implementations
   // and when reporting where a requirement is located in the code
   * -> * Token reqToken;
+
+  // Identifiers of other use cases whose steps are incorporated into this one
+  // Corresponds to the UML include relationship between use cases
+  String[] includedUseCases;
+
+  // Identifiers of use cases that this use case specializes
+  // Corresponds to UML generalization between use cases
+  String[] parentUseCases;
+
+  // Ordered structured use case steps such as userStep/systemResponse
+  1 -- * UseCaseStep;
+
+  // Quality classes defined within this requirement
+  // format: `req <req_name> [quality|Quality] {(<quality_name>{...})*}`
+    1 -- * QualityClass;
+}
+
+class QualityClass
+{
+  name;
+  // Reserved for {}; currently expected empty and will do nothing on it. If it is not empty, warning will occur
+  content;
+}
+
+class UseCaseStep
+{
+  enum UseCaseStepType
+  {
+    userStep,
+    systemResponse
+  }
+
+  id;
+  UseCaseStepType stepType;
+  content;
+
+  // Condition under which the step is taken, written like a state machine guard
+  // Null when the step is unconditional
+  lazy condition;
 }
 
 /*
@@ -1334,12 +1408,19 @@ class ReqImplementation {
 
   // unique identifier that should match the identifier of a Requirement
   identifier;
-  
+
+  // Because the QualityClass maybe not accessible in the parse stage, so only store its name first
+  lazy qualityClassName;
+
+  // bound during post-parse if qualityClassName matches a QualityClass in the Requirement
+  * -> 0..1 QualityClass;
+
+
   // After analysis of the code, this will identify the requirement if there is one
   // If there are zero requirements it would indicate a mismatch (warning 402)
   // A requirement can have many implementing features.
   * -- 0..1 Requirement;
-  
+
   // The location in the code where the implementation was found, so we can
   // report warning 402 if we find no matching requirement
   // and so we can output a requirements document that enables the reader to find each implementation

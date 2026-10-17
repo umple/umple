@@ -1,0 +1,26 @@
+#!/bin/bash
+# Start the UmpleLsp Docker container for local development
+# Mirrors the pattern of startexecdocker for UmpleCodeExecution
+if [ -z "$UMPLEROOT" ]; then
+  UMPLEROOT=~/umple
+fi
+
+LSPDIR="$UMPLEROOT/UmpleLsp"
+
+if [ ! -d "$LSPDIR" ]; then
+  echo "ERROR: UmpleLsp directory not found at $LSPDIR"
+  exit 1
+fi
+
+echo "Starting LSP Docker in $LSPDIR"
+cd "$LSPDIR"
+
+if [[ "$HOSTNAME" == "cruise" ]]; then
+  echo About to run LSP setup
+  echo On cruise server so running setup with sudo
+  sudo ./setup.sh bg
+else
+  echo About to run LSP setup on local machine
+  ./setup.sh bg
+fi
+

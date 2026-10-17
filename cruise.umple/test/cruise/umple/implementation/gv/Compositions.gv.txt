@@ -6,7 +6,7 @@ digraph "Compositions" {
   // Class: A
   "A" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    A </td></tr></table>>,
    tooltip="class A
-Example code illustrating various&#13;kinds of compositions&#13;"];
+Example code illustrating various&#13;kinds of compositions"];
 
   // Class: X
   "X" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    X </td></tr></table>>,
@@ -21,12 +21,12 @@ Example code illustrating various&#13;kinds of compositions&#13;"];
   // Class: B
   "B" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    B </td></tr></table>>,
    tooltip="class B
-Class with inline composition having role name&#13;"];
+Class with inline composition having role name"];
 
   // Class: C
   "C" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    C </td></tr></table>>,
    tooltip="class C
-Class with both composition ends having role names&#13;"];
+Class with both composition ends having role names"];
 
   // All associations
   "X" -> "Y" [dir="forward", arrowhead="diamond", taillabel="* x", headlabel="2..3 ", tooltip="X * x -<@> 2..3  Y

@@ -9,6 +9,8 @@ TabControl.showHideKey = "showUmpleTabs";
 TabControl.requestQueue = [];
 TabControl.remoteDelim = "%NAME:CONTENT:DELIM%";
 
+TabControl.renameInProgress = TabControl.renameInProgress || {};
+
 // Regular expressions used to validate names as valid filenames
 TabControl.illegalNameRegxp = /[\/\?<>\\:\*\|":]/g;
 TabControl.controlNameRegxp = /[\x00-\x1f\x80-\x9f]/g;
@@ -220,9 +222,20 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
   // Disable the create button if we've hit the maximum
   if (Object.keys(TabControl.tabs).length == TabControl.maxTabs) createBtn.hide();
 
+  let renameCommitted = false;
+
+  let beginRenamingSession = function() {
+    renameCommitted = false;
+    tabNameDiv.attr('contentEditable', true);
+    tabNameDiv.focus();
+    tabNameDiv.selectText();
+  }
+
   // Add event handlers to handle renaming
   var tabNameDiv = TabControl.getTabNameDiv(newTabId);
-  handleNameEdit = function() {
+  let handleNameEdit = function() {
+    if (renameCommitted) return;
+    renameCommitted = true;
     // Exit edit mode and deselect the text
     tabNameDiv.attr('contentEditable', false);
     if (window.getSelection) window.getSelection().removeAllRanges();
@@ -265,6 +278,7 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
     else
     {
       // Revert the name if the name is invalid and reselect it
+      renameCommitted = false;
       tabNameDiv.text(oldName);
       tabNameDiv.selectText();
       tabNameDiv.attr('contentEditable', true);
@@ -273,15 +287,24 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
 
   // Double-click to begin edit mode
   tabNameDiv.bind('dblclick', function() {
-    tabNameDiv.attr('contentEditable', true);
-    tabNameDiv.focus();
-    tabNameDiv.selectText();
+    beginRenamingSession();
   // Both blur and enter keypress exits edit mode
-  }).blur(handleNameEdit).keypress(function(e) {
+  }).blur(function() {
+    handleNameEdit();
+  }).keypress(function(e) {
     var enterKeyCode = 13;
     var deleteKeyCode = 8;
-    if(e.which == enterKeyCode) tabNameDiv.blur();
-    if(e.which != deleteKeyCode && tabNameDiv.text().length >= TabControl.maxNameLength) e.preventDefault();
+
+    if (e.which == enterKeyCode) {
+      e.preventDefault();
+      handleNameEdit();
+      tabNameDiv.blur();
+      return false;
+    }
+
+    if (e.which != deleteKeyCode && tabNameDiv.text().length >= TabControl.maxNameLength) {
+      e.preventDefault();
+    }
   });
   
   // Don't save active tabs as we populate them from remote
@@ -302,7 +325,9 @@ TabControl.createTab = function(name, code, shouldNotSaveActiveTabs)
  */
 TabControl.saveTab = function(tabId, umpleCode)
 {
-  // console.log("Inside TabControl.saveTab() ...")
+  // The page is being reloaded with a different version of the model
+  if (typeof VersionHistory !== "undefined" && VersionHistory.navigatingAway) return;
+
   var filename = TabControl.getTabFilename(TabControl.tabs[tabId].name);
   var modelname = Page.getModel();
   localStorage[filename] = umpleCode;
@@ -312,10 +337,12 @@ TabControl.saveTab = function(tabId, umpleCode)
     modelname = "tasks/" + modelname;
   }
   var umpleCodeWithoutAmpersand = umpleCode.replace(/&/g, "%26").replace(/\+/g, "%2B");
+  var parameters = format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, modelname);
+  if (typeof VersionHistory !== "undefined") parameters += VersionHistory.layoutUpdateParameter();
   TabControl.addToRequestQueue(
     "scripts/compiler.php",
     TabControl.saveTabCallback(tabId),
-    format("save=1&&lock=1&&model={2}&&umpleCode={0}&&filename={1}", umpleCodeWithoutAmpersand, filename, modelname));
+    TabControl.withBaseVersion(parameters));
 }
 
 TabControl.saveTabCallback = function(tabId)
@@ -354,22 +381,17 @@ TabControl.selectTab = function(tabId)
 
   // Load code from cache
   var filename = TabControl.getTabFilename(TabControl.activeTab.name);
-  Page.setUmpleCode(localStorage[filename]);
+  Page.setUmpleCode(localStorage[filename] ,"", true);
 
   // Reset caret position
   Action.setCaretPosition(0);
   Action.updateLineNumberDisplay();
+  Action.updateUmpleDiagram();
 
-  // update the diagram -- this is a redundent call
-  
-  // console.warn('TabControl.selectTab() ...',Object.keys(TabControl.tabs).length);
-  if(Object.keys(TabControl.tabs).length > 1) {
-  // console.warn('TabControl.selectTab() ...',TabControl.activeTab.name);
-    setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+  // LSP: switch active file URI after text is loaded and diagram refreshed
+  if (typeof cm6 !== "undefined" && cm6.switchLspFile) {
+    cm6.switchLspFile(Page.codeMirrorEditor6, TabControl.activeTab.name);
   }
-
-  // setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
-
 }
 
 /**
@@ -409,12 +431,19 @@ TabControl.loadAllTabsCallback = function(response)
   // If no tabs are found, we should initialize with a single tab
   if (!foundRemoteTabs)
   {
-    TabControl.createTab(null, Page.getUmpleCode());
+    TabControl.createTab(TabControl.defaultTabName, Page.getUmpleCode());
   }
   else
   {
     TabControl.showTabs();
   }
+
+  // LSP: bootstrap for multi-tab sessions (editor has content from selectTab)
+  // Single-tab sessions defer to Action.loadFileCallback where real content loads
+  if (foundRemoteTabs && typeof Page !== "undefined" && Page.initLspAsync) {
+    Page.initLspAsync();
+  }
+  Action.initialLoadFinished();
 }
 
 /**
@@ -431,7 +460,7 @@ TabControl.deleteTab = function(tabId)
   if (Object.keys(TabControl.tabs).length > 1) {
     // Confirm deletion
     var tabName = TabControl.getTabNameDiv(tabId);
-    var result = confirm("Are you sure you want to remove the file " + tabName.text() + ".ump from the model? If you answer OK, the code will be deleted; this cannot be undone, so consider answering Cancel and saving it first.");
+    var result = confirm("Are you sure you want to remove the file " + tabName.text() + ".ump from the model? If you answer OK, the code will be deleted. You can get it back later using Restore Earlier Version in the SAVE & LOAD menu.");
     if (!result) return;
 
     // If we're deleting the currently active tab, we need to navigate away
@@ -446,6 +475,11 @@ TabControl.deleteTab = function(tabId)
     delete TabControl.tabs[tabId];
     delete localStorage[filename];
 
+    // LSP: remove file from workspace
+    if (typeof cm6 !== "undefined" && cm6.lspRemoveFile) {
+      cm6.lspRemoveFile(tabName);
+    }
+
     // The create button should now be re-enabled
     var createBtn = jQuery("#createTabBtn");
     createBtn.show();
@@ -454,7 +488,7 @@ TabControl.deleteTab = function(tabId)
     TabControl.addToRequestQueue(
       "scripts/tab_control.php",
       function(response){},
-      format("delete=1&&model={0}&&name={1}", Page.getModel(), tabName));
+      TabControl.withBaseVersion(format("delete=1&&model={0}&&name={1}", Page.getModel(), tabName)));
     
     // Navigate to the first tab as necessary
     if (shouldUpdateSelection) {
@@ -473,6 +507,17 @@ TabControl.deleteTab = function(tabId)
  */
 TabControl.renameTab = function(tabId, newName, updateUI)
 {
+  const tab = TabControl.tabs[tabId];
+  if (!tab) return;
+
+  const oldName = TabControl.tabs[tabId].name;
+  const key = Page.getModel() + "::" + TabControl.getTabFilename(oldName) + "::" + TabControl.getTabFilename(newName);
+
+  if (TabControl.renameInProgress[key]) {
+    console.warn("Duplicate rename blocked:", key);
+    return;
+  }
+
   if (Page.readOnly)
   {
     return;
@@ -481,14 +526,26 @@ TabControl.renameTab = function(tabId, newName, updateUI)
   if (TabControl.reservedNames.hasOwnProperty(newName)) return;
 
   // If the names are the same, then there's no work to do either
-  var oldname = TabControl.tabs[tabId].name;
-  if (oldname == newName) return;
+  if (oldName == newName) return;
+
+  TabControl.renameInProgress[key] = true;
 
   // Update cached contents
-  var oldfilename = TabControl.getTabFilename(oldname);
+  var oldfilename = TabControl.getTabFilename(oldName);
   var newfilename = TabControl.getTabFilename(newName);
   localStorage[newfilename] = localStorage[oldfilename]
   delete localStorage[oldfilename];
+
+  // True optimistic local rename — all layers update together
+  delete TabControl.reservedNames[oldName];
+  TabControl.reservedNames[newName] = true;
+  TabControl.tabs[tabId].name = newName;
+  TabControl.tabs[tabId].nameIsEphemeral = false;
+
+  // LSP: rename file in workspace (+ reconfigure plugin if active)
+  if (typeof cm6 !== "undefined" && cm6.lspRenameFile) {
+    cm6.lspRenameFile(oldName, newName);
+  }
 
   // Only programmatic calls need to update the GUI text again
   if (updateUI)
@@ -496,23 +553,19 @@ TabControl.renameTab = function(tabId, newName, updateUI)
     TabControl.getTabNameDiv(tabId).text(newName);
   }
 
-  // If a name was renamed, then it is no longer ephemeral
-  TabControl.tabs[tabId].nameIsEphemeral = false;
-
   TabControl.addToRequestQueue(
     "scripts/tab_control.php",
-    TabControl.renameTabCallback(tabId, newName),
-    format("rename=1&&model={0}&&oldname={1}&&newname={2}", Page.getModel(), oldname, newName));
+    TabControl.renameTabCallback(tabId, newName, key),
+    TabControl.withBaseVersion(format("rename=1&&model={0}&&oldname={1}&&newname={2}", Page.getModel(), oldName, newName)));
 
   TabControl.saveActiveTabs();
 }
 
-TabControl.renameTabCallback = function(tabId, newName)
+TabControl.renameTabCallback = function(tabId, newName, key)
 {
   return function(response) {
-    delete TabControl.reservedNames[TabControl.tabs[tabId].name];
-    TabControl.reservedNames[newName] = true;
-    TabControl.tabs[tabId].name = newName;
+    // Name already updated locally in renameTab() — callback only clears in-progress flag
+    delete TabControl.renameInProgress[key];
   }
 }
 
@@ -541,6 +594,22 @@ TabControl.getTabDiv = function(tabId)
 }
 
 /**
+ * Returns parameters for a request that changes the model's files, adding the
+ * version of the model this tab is based on when the request is actually sent,
+ * since earlier requests in the queue may change that version.
+ */
+TabControl.withBaseVersion = function(parameters)
+{
+  if (typeof VersionHistory === "undefined") return parameters;
+  return function() { return parameters + VersionHistory.baseVersionParameter(); };
+}
+
+TabControl.getRequestParameters = function(request)
+{
+  return (typeof request.parameters === "function")? request.parameters() : request.parameters;
+}
+
+/**
  * Add an ajax call to the request queue.
  */
 TabControl.addToRequestQueue = function(endpoint, callback, parameters)
@@ -558,7 +627,7 @@ TabControl.addToRequestQueue = function(endpoint, callback, parameters)
     Ajax.sendRequest(
         requestPayload.endpoint,
         TabControl.getQueuedHeadCallback(requestPayload.callback),
-        requestPayload.parameters);
+        TabControl.getRequestParameters(requestPayload));
   }
 }
 
@@ -569,8 +638,6 @@ TabControl.getQueuedHeadCallback = function(callback)
 {
   return function(response)
   {
-    // Discard an extra item when the callback returns
-    TabControl.requestQueue.shift();
     callback(response);
   }
 }
@@ -582,22 +649,25 @@ TabControl.getQueuedCallback = function(callback)
 {
   return function(response)
   {
+    TabControl.requestQueue.shift();
+
     // TODO: consider retrying the request on failure
     // The runtime of this is O(n), which is presumably okay since it's
     // running on the client and n is the number of concurrent requests
-    var nextRequest = TabControl.requestQueue.shift();
+    var nextRequest = TabControl.requestQueue[0];
+    if (typeof VersionHistory !== "undefined") VersionHistory.noteResponse(response);
     callback(response);
     if (nextRequest) {
       if (nextRequest.hasOwnProperty("endpoint"))
       {
         Ajax.sendRequest(
-            nextRequest.endpoint,
-            nextRequest.callback,
-            nextRequest.parameters);
+          nextRequest.endpoint,
+          TabControl.getQueuedHeadCallback(nextRequest.callback),
+          TabControl.getRequestParameters(nextRequest));
       }
       else
       {
-          nextRequest.callback();
+        TabControl.getQueuedHeadCallback(nextRequest.callback)();
       }
     }
     else
@@ -622,7 +692,7 @@ TabControl.addCallbackToRequestQueue = function(callback)
   if (TabControl.requestQueue.length === 1)
   {
     jQuery(".bookmarkableUrl").addClass("disabled");
-    TabControl.getQueuedHeadCallback(callbackWrapper.callback());
+    TabControl.getQueuedHeadCallback(callbackWrapper.callback)();
   }
 }
 

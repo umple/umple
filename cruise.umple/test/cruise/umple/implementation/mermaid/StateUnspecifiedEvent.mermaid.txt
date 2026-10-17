@@ -1,0 +1,8 @@
+stateDiagram-v2
+  state "Class Door" as Class_Door {
+    state "Closed" as Door_status_Closed
+    state "Open" as Door_status_Open
+    [*] --> Door_status_Closed
+    Door_status_Closed --> Door_status_Open
+    Door_status_Open --> Door_status_Closed : close
+  }

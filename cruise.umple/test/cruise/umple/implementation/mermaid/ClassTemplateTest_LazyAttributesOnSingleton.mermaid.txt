@@ -1,0 +1,6 @@
+classDiagram
+  class Application {
+    String name
+    String version
+    list id
+  }

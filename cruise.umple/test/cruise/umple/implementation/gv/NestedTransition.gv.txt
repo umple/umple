@@ -15,7 +15,7 @@ digraph "NestedTransition" {
     
       // State: s1
 
-      A_sm_s1 [label = s1, tooltip = "Class A, SM sm, State s1", URL="javascript:Action.stateClicked(\"A^*^sm^*^s1\")"];
+      A_sm_s1 [label = s1, tooltip = "Class A, SM sm, State s1&#13;&#13;This is the default initial state and is entered when the object is created.&#13;This state is entered when event e1 occurs while in state s2.&#13;On e1, transitions to s2.&#13;On e2, transitions to s2.s2b.", URL="javascript:Action.stateClicked(\"A^*^sm^*^s1\")"];
       // End State: s1
 
       // State: s2
@@ -23,6 +23,7 @@ digraph "NestedTransition" {
      subgraph clusterA_sm_s2 {
       label = "s2";
       style = rounded;
+      tooltip = "Class A, SM sm, State s2&#13;&#13;This state is entered when event e1 occurs while in state s1.&#13;On e1, transitions to s1.";
       URL="javascript:Action.stateClicked(\"A^*^sm^*^s2\")";
 
       // Bottom Level StateMachine: s2
@@ -37,12 +38,12 @@ digraph "NestedTransition" {
       
         // State: s2a
 
-        A_smS2_s2a [label = s2a, tooltip = "Class A, SM sm, State s2.s2a", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2.s2a\")"];
+        A_smS2_s2a [label = s2a, tooltip = "Class A, SM sm, State s2.s2a&#13;&#13;This is the default initial state when entering state s2.&#13;This state is entered when event e3 occurs while in state s2.s2b.&#13;This state is entered when event e1 occurs while in state s1.&#13;On e3, transitions to s2.s2b.", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2.s2a\")"];
         // End State: s2a
 
         // State: s2b
 
-        A_smS2_s2b [label = s2b, tooltip = "Class A, SM sm, State s2.s2b", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2.s2b\")"];
+        A_smS2_s2b [label = s2b, tooltip = "Class A, SM sm, State s2.s2b&#13;&#13;This state is entered when event e2 occurs while in state s1.&#13;This state is entered when event e3 occurs while in state s2.s2a.&#13;On e3, transitions to s2.s2a.", URL="javascript:Action.stateClicked(\"A^*^sm^*^s2.s2b\")"];
         // End State: s2b
       // End Bottom Level StateMachine: s2
      }
@@ -51,16 +52,16 @@ digraph "NestedTransition" {
 
   // All transitions
     start_A_sm -> A_sm_s1 [  tooltip = "start to s1", URL="javascript:Action.transitionClicked(\"null\")" ] ;
-    A_smS2_s2a -> A_sm_s1 [  ltail=clusterA_sm_s2,  label = "e1", tooltip = "From s2 to s1 on e1", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e1*^*s2*^*s1*^*\")" ] ;
+    A_smS2_s2a -> A_sm_s1 [  ltail=clusterA_sm_s2,  label = "e1", tooltip = "From s2 to s1 on e1&#13;&#13;When e1 occurs in state s2, transitions to s1.", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e1*^*s2*^*s1*^*\")" ] ;
   
-  A_sm_s1 -> A_smS2_s2a [  lhead=clusterA_sm_s2,  label = "e1", tooltip = "From s1 to s2 on e1", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e1*^*s1*^*s2*^*\")" ] ;
+  A_sm_s1 -> A_smS2_s2a [  lhead=clusterA_sm_s2,  label = "e1", tooltip = "From s1 to s2 on e1&#13;&#13;When e1 occurs in state s1, transitions to s2.", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e1*^*s1*^*s2*^*\")" ] ;
   
   start_A_smS2 -> A_smS2_s2a [  tooltip = "start to s2.s2a", URL="javascript:Action.transitionClicked(\"null\")" ] ;
-    A_smS2_s2b -> A_smS2_s2a [  label = "e3", tooltip = "From s2.s2b to s2.s2a on e3", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e3*^*s2.s2b*^*s2.s2a*^*\")" ] ;
+    A_smS2_s2b -> A_smS2_s2a [  label = "e3", tooltip = "From s2.s2b to s2.s2a on e3&#13;&#13;When e3 occurs in state s2.s2b, transitions to s2.s2a.", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e3*^*s2.s2b*^*s2.s2a*^*\")" ] ;
   
-  A_sm_s1 -> A_smS2_s2b [  label = "e2", tooltip = "From s1 to s2.s2b on e2", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e2*^*s1*^*s2.s2b*^*\")" ] ;
+  A_sm_s1 -> A_smS2_s2b [  label = "e2", tooltip = "From s1 to s2.s2b on e2&#13;&#13;When e2 occurs in state s1, transitions to s2.s2b.", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e2*^*s1*^*s2.s2b*^*\")" ] ;
   
-  A_smS2_s2a -> A_smS2_s2b [  label = "e3", tooltip = "From s2.s2a to s2.s2b on e3", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e3*^*s2.s2a*^*s2.s2b*^*\")" ] ;
+  A_smS2_s2a -> A_smS2_s2b [  label = "e3", tooltip = "From s2.s2a to s2.s2b on e3&#13;&#13;When e3 occurs in state s2.s2a, transitions to s2.s2b.", URL="javascript:Action.transitionClicked(\"A*^*sm*^*e3*^*s2.s2a*^*s2.s2b*^*\")" ] ;
   
 
 }

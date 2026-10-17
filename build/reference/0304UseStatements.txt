@@ -18,7 +18,28 @@ of use statements.</p>
 
 <p>Use statements function similarly to 'include' statements in other languages.</p>
 
-<p>A file referred to by a use statement must be in the same directory as the file that has the use statement, or in a parent directory, or in a subdirectory named lib. There are also some builtin Umple files that can be loaded, with the prefix lib:. Finally an https URL may be used to load a file from the Internet</p>
+<p>A file referred to by a use statement must be in the same directory as the file that has the use statement, or in a parent directory, or in a subdirectory named lib.</p>
+
+<p>Umple also ships built-in library files for common modeling patterns. Load one with the <code>lib:</code> prefix. The file is read from inside the Umple compiler, so it does not need to be in your project directory:</p>
+
+<pre>
+use lib:AbstractionOccurrence.ump;
+</pre>
+
+<p>The built-in pattern libraries are:</p>
+<ul>
+<li><a href="AbstractionOccurrence.html">Abstraction Occurrence</a> (<code>use lib:AbstractionOccurrence.ump;</code>)</li>
+<li><a href="PlayerRole.html">Player Role</a> (<code>use lib:PlayerRole.ump;</code>)</li>
+<li><a href="TransportationPatternA.html">Transportation Pattern A</a> (<code>use lib:TransportationPatternA.ump;</code>)</li>
+</ul>
+
+<p>Each of those pages shows the pattern definition and an example of applying it in a model.</p>
+
+<p>A use statement can also load a <code>.ump</code> file from the web. The argument must be an <code>https</code> URL that ends in <code>.ump</code>. A raw file on GitHub is a typical source:</p>
+
+<pre>
+use https://raw.githubusercontent.com/umple/umple/master/umpleonline/umplibrary/reusable/AbstractionOccurrence.ump;
+</pre>
 
 @@syntax
 [[useStatement]]

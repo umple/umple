@@ -141,10 +141,10 @@
         <table>
           <tr>
             <td class="column-header"><div><span>START</span></div></td>
-            <td class="column-header"><div><span>1. after(5) [getGuard()]</span></div></td>
-            <td class="column-header"><div><span>2. ev1</span></div></td>
-            <td class="column-header"><div><span>3. ev1</span></div></td>
-            <td class="column-header"><div><span>4. ev1</span></div></td>
+            <td class="column-header" data-transition="GuardedTimedTransition*^*sm*^*after(5)*^*s1*^*s2*^* [guard]"><div><span>1. after(5) [getGuard()]</span></div></td>
+            <td class="column-header" data-transition="GuardedTimedTransition*^*sm*^*ev1*^*s2*^*s3*^*"><div><span>2. ev1</span></div></td>
+            <td class="column-header" data-transition="GuardedTimedTransition*^*sm*^*ev1*^*s3*^*s4*^*"><div><span>3. ev1</span></div></td>
+            <td class="column-header" data-transition="GuardedTimedTransition*^*sm*^*ev1*^*s4*^*s5*^*"><div><span>4. ev1</span></div></td>
           </tr>
           <tr>
             <td class="content-cell" data-parent="">X</td>
@@ -200,22 +200,22 @@
   </tr>
   <tr>
     <td class="">1</td>
-    <td class="">after(5) [getGuard()]</td>
+    <td class="" data-transition="GuardedTimedTransition*^*sm*^*after(5)*^*s1*^*s2*^* [guard]">after(5) [getGuard()]</td>
     <td class="">s2</td>
   </tr>
   <tr>
     <td class="">2</td>
-    <td class="">ev1</td>
+    <td class="" data-transition="GuardedTimedTransition*^*sm*^*ev1*^*s2*^*s3*^*">ev1</td>
     <td class="">s3</td>
   </tr>
   <tr>
     <td class="">3</td>
-    <td class="">ev1</td>
+    <td class="" data-transition="GuardedTimedTransition*^*sm*^*ev1*^*s3*^*s4*^*">ev1</td>
     <td class="">s4</td>
   </tr>
   <tr>
     <td class="">4</td>
-    <td class="">ev1</td>
+    <td class="" data-transition="GuardedTimedTransition*^*sm*^*ev1*^*s4*^*s5*^*">ev1</td>
     <td class="">s5</td>
   </tr>
 </table>

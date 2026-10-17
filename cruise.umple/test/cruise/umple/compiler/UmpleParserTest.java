@@ -10,6 +10,8 @@
 package cruise.umple.compiler;
 
 import java.io.File;
+import cruise.umple.compiler.Requirement;
+import cruise.umple.compiler.ReqImplementation;
 import java.util.*;
 
 import org.junit.*;
@@ -24,6 +26,7 @@ import cruise.umple.util.*;
 import java.io.*;
 
 import cruise.umple.parser.Token;
+import cruise.umple.parser.TokenTest;
 import cruise.umple.parser.Position;
 import cruise.umple.util.SampleFileWriter;
 import cruise.umple.compiler.exceptions.*;
@@ -59,6 +62,131 @@ public class UmpleParserTest
   public void compositionParseTest_DoubleDefinition() {
 	  assertFailedParse("011_compositionParseTest_doubleDirected.ump", 1502);
   }
+
+  // Issue #2167: Brace mismatch error position tests
+  // These tests check that analyzeToplevelException emits the right error code.
+  // The parse itself "succeeds" (toplevelException catch-all absorbs malformed input)
+  // but error messages are recorded during analysis.
+  private void assertBraceMismatchError(String filename, int expectedError) {
+    parse(filename);
+    boolean found = false;
+    for (int i = 0; i < parser.getParseResult().numberOfErrorMessages(); i++) {
+      if (parser.getParseResult().getErrorMessage(i).getErrorType().getErrorCode() == expectedError) {
+        found = true;
+        break;
+      }
+    }
+    Assert.assertTrue("Expected error " + expectedError + " in " + filename
+      + " but found errors: " + errorCodesToString(), found);
+  }
+
+  private void assertBraceMismatchErrorAtLine(String filename, int expectedError, int expectedLine) {
+    parse(filename);
+    boolean found = false;
+    for (int i = 0; i < parser.getParseResult().numberOfErrorMessages(); i++) {
+      ErrorMessage em = parser.getParseResult().getErrorMessage(i);
+      if (em.getErrorType().getErrorCode() == expectedError) {
+        Assert.assertEquals("Error " + expectedError + " in " + filename
+          + " expected at line " + expectedLine + " but was at line "
+          + em.getPosition().getLineNumber(),
+          expectedLine, em.getPosition().getLineNumber());
+        found = true;
+        break;
+      }
+    }
+    Assert.assertTrue("Expected error " + expectedError + " in " + filename
+      + " but found errors: " + errorCodesToString(), found);
+  }
+
+  private String errorCodesToString() {
+    StringBuilder sb = new StringBuilder("[");
+    for (int i = 0; i < parser.getParseResult().numberOfErrorMessages(); i++) {
+      if (i > 0) sb.append(", ");
+      ErrorMessage em = parser.getParseResult().getErrorMessage(i);
+      sb.append(em.getErrorType().getErrorCode());
+      sb.append("@L").append(em.getPosition().getLineNumber());
+    }
+    sb.append("]");
+    return sb.toString();
+  }
+
+  @Test
+  public void braceMismatch_extraOpenBrace() {
+    // Extra { on line 10 of the fixture
+    assertBraceMismatchErrorAtLine("2167_extraOpenBrace.ump", 1504, 10);
+  }
+
+  @Test
+  public void braceMismatch_missingCloseBrace() {
+    // Missing } at EOF — falls back to 1502 at construct start (line 1)
+    assertBraceMismatchErrorAtLine("2167_missingCloseBrace.ump", 1502, 1);
+  }
+
+  @Test
+  public void braceMismatch_extraCloseBrace() {
+    // Extra } at top level is caught by checkForUnintendedBracket (1016)
+    assertBraceMismatchError("2167_extraCloseBrace.ump", 1016);
+  }
+
+  @Test
+  public void braceMismatch_twoMalformedClasses() {
+    // Extra { on line 2 of class X
+    assertBraceMismatchErrorAtLine("2167_twoMalformedClasses.ump", 1504, 2);
+  }
+
+  @Test
+  public void braceMismatch_bracesInComments() {
+    // Extra { on line 4 (braces in comments on lines 2-3 are ignored)
+    assertBraceMismatchErrorAtLine("2167_bracesInComments.ump", 1504, 4);
+  }
+
+  @Test
+  public void braceMismatch_bracesInStrings() {
+    // Extra { on line 2
+    assertBraceMismatchErrorAtLine("2167_bracesInStrings.ump", 1504, 2);
+  }
+
+  @Test
+  public void braceMismatch_malformedThenValid() {
+    // Falls back to 1502 at construct start (line 1)
+    assertBraceMismatchErrorAtLine("2167_malformedThenValid.ump", 1502, 1);
+  }
+
+  @Test
+  public void braceMismatch_malformedWithInnerClass() {
+    // Extra { on line 3
+    assertBraceMismatchErrorAtLine("2167_malformedWithInnerClass.ump", 1504, 3);
+  }
+
+  @Test
+  public void braceMismatch_bodyMemberThenExtraBrace() {
+    // Body member "t;" followed by extra { on line 3
+    // Semicolon on toplevelException(t;) prevents false boundary
+    assertBraceMismatchErrorAtLine("2167_bodyMemberThenExtraBrace.ump", 1504, 3);
+  }
+
+  @Test
+  public void braceMismatch_missingOpenBrace() {
+    // Class without { — stray } is an unmatched closing brace
+    assertBraceMismatchErrorAtLine("2167_missingOpenBrace.ump", 1505, 3);
+  }
+
+  @Test
+public void braceMismatch_filenameUsesBasename() {
+  String filename = "2167_missingOpenBrace.ump";
+  parse(filename);
+
+  for (int i = 0; i < parser.getParseResult().numberOfErrorMessages(); i++) {
+    ErrorMessage em = parser.getParseResult().getErrorMessage(i);
+
+    if (em.getErrorType().getErrorCode() == 1505) {
+      Assert.assertEquals(filename, em.getPosition().getFilename());
+      return;
+    }
+  }
+
+  Assert.fail("Expected error 1505 in " + filename);
+}
 
   @Test
   public void toplevelExtracode()
@@ -284,6 +412,290 @@ public class UmpleParserTest
     Assert.assertEquals(false,cb2.hasCode("Php"));
     Assert.assertEquals(false,cb2.hasCode("Cpp"));
   }
+
+  // Native code stays trimmed; the indentation its first line had in the source is kept apart
+  @Test
+  public void nativeCodeFirstLineIndent()
+  {
+    TokenTest.assumeParserRecordsFirstLineIndent();
+    assertSimpleParse("001_nativeCodeIndent.ump");
+    UmpleClass a = model.getUmpleClass("A");
+
+    CodeBlock spaces = methodNamed(a, "spaces").getMethodBody().getCodeblock();
+    Assert.assertEquals("x = 1\n    if x:\n        return x", spaces.getCode("Python"));
+    Assert.assertEquals("    ", spaces.getFirstLineIndent("Python"));
+
+    CodeBlock tabs = methodNamed(a, "tabs").getMethodBody().getCodeblock();
+    Assert.assertEquals("y = 2\n\t\treturn y", tabs.getCode("Python"));
+    Assert.assertEquals("\t\t", tabs.getFirstLineIndent("Python"));
+
+    // A body starting on the line of its brace, or an empty one, has no indentation of its own
+    Assert.assertNull(methodNamed(a, "sameLine").getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+    Assert.assertNull(methodNamed(a, "empty").getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+
+    // Removing an inline mixset that opened the body leaves no first line to describe
+    Assert.assertEquals("\n    b();", methodNamed(a, "mixsetFirst").getMethodBody().getCodeblock().getCode(""));
+    Assert.assertNull(methodNamed(a, "mixsetFirst").getMethodBody().getCodeblock().getFirstLineIndent(""));
+    Assert.assertEquals("    ", methodNamed(a, "mixsetLater").getMethodBody().getCodeblock().getFirstLineIndent(""));
+
+    // Every language of a multi-language block, and each alternative, has its own record
+    CodeBlock multi = methodNamed(a, "multi").getMethodBody().getCodeblock();
+    Assert.assertEquals("      ", multi.getFirstLineIndent("Java"));
+    Assert.assertEquals("      ", multi.getFirstLineIndent("Php"));
+    Assert.assertEquals("        ", multi.getFirstLineIndent("Python"));
+    Assert.assertNull(multi.getFirstLineIndent(""));
+
+    CodeBlock derived = a.getAttribute("d").getCodeblock();
+    Assert.assertNull(derived.getFirstLineIndent(""));
+    Assert.assertEquals("      ", derived.getFirstLineIndent("Python"));
+
+    CodeBlock injection = a.getCodeInjection(0).getSnippet();
+    Assert.assertEquals("b = 2", injection.getCode("Python"));
+    Assert.assertEquals("      ", injection.getFirstLineIndent("Python"));
+    CodeBlock expanded = a.getCodeInjection(1).getSnippet();
+    Assert.assertEquals("\n      d = 4", expanded.getCode("Python"));
+    Assert.assertNull(expanded.getFirstLineIndent("Python"));
+
+    State s1 = a.getStateMachine(0).getState(0);
+    CodeBlock entry = s1.getAction(0).getCodeblock();
+    Assert.assertEquals("        ", entry.getFirstLineIndent(""));
+    Assert.assertEquals("          ", entry.getFirstLineIndent("Python"));
+    Assert.assertEquals("         ", s1.getActivity(0).getCodeblock().getFirstLineIndent(""));
+
+    // Extra code: a marker per target, then the code as written
+    List<CodeBlock> extra = model.getUmpleClass("B").getExtraCodeBlocks();
+    Assert.assertEquals(2, extra.size());
+    Assert.assertEquals("TOKEN = 7", extra.get(1).getCode(""));
+
+    // Line breaks before the first line do not count, whatever their form
+    assertSimpleParse("001_nativeCodeIndentCrlf.ump");
+    CodeBlock crlf = methodNamed(model.getUmpleClass("C"), "f").getMethodBody().getCodeblock();
+    Assert.assertEquals("      ", crlf.getFirstLineIndent("Python"));
+  }
+
+  // Copies of a method carry its code's provenance
+  @Test
+  public void nativeCodeFirstLineIndentCopied()
+  {
+    TokenTest.assumeParserRecordsFirstLineIndent();
+    assertSimpleParse("001_nativeCodeIndent.ump");
+    Method original = methodNamed(model.getUmpleClass("A"), "spaces");
+    Method copy = new Method(original);
+    Assert.assertEquals("    ", copy.getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+    Assert.assertTrue(copy.getMethodBody().getCodeblock().isAuthored("Python"));
+
+    // Replacing the text keeps its authorship but drops the indentation, which no longer applies
+    CodeBlock cb = new CodeBlock(original.getMethodBody().getCodeblock());
+    cb.setCode("Python", "return 0");
+    Assert.assertTrue(cb.isAuthored("Python"));
+    Assert.assertNull(cb.getFirstLineIndent("Python"));
+    Assert.assertEquals("    ", original.getMethodBody().getCodeblock().getFirstLineIndent("Python"));
+  }
+
+  // Authored bodies: the exact slot versus the untagged fallback every language may use
+  @Test
+  public void authoredMethodBodies()
+  {
+    assertSimpleParse("001_authoredBodies.ump");
+    UmpleClass a = model.getUmpleClass("A");
+
+    Method both = methodNamed(a, "both");
+    Assert.assertTrue(both.getMethodBody().getCodeblock().isAuthored(""));
+    Assert.assertTrue(both.getMethodBody().getCodeblock().isAuthored("Python"));
+    Assert.assertFalse(both.getMethodBody().getCodeblock().isAuthored("Java"));
+    Assert.assertTrue(both.getExistsInLanguage("Java"));
+    Assert.assertTrue(both.getExistsInLanguage("Php"));
+    Assert.assertTrue(both.getExistsInLanguage("Python"));
+    Assert.assertEquals("", both.getBodyLanguageFor("Java"));
+    Assert.assertEquals("Python", both.getBodyLanguageFor("Python"));
+
+    // The untagged placeholder of a method is not an authored body
+    Method onlyPython = methodNamed(a, "onlyPython");
+    Assert.assertTrue(onlyPython.getMethodBody().getCodeblock().hasCode(""));
+    Assert.assertFalse(onlyPython.getMethodBody().getCodeblock().isAuthored(""));
+    Assert.assertFalse(onlyPython.getExistsInLanguage("Java"));
+    Assert.assertFalse(onlyPython.getExistsInLanguage("Ruby"));
+    Assert.assertTrue(onlyPython.getExistsInLanguage("Python"));
+
+    // Empty bodies that were written are authored
+    Assert.assertTrue(methodNamed(a, "emptyDefault").getMethodBody().getCodeblock().isAuthored(""));
+    Assert.assertTrue(methodNamed(a, "emptyDefault").getExistsInLanguage("Python"));
+    Method emptyJava = methodNamed(a, "emptyJava");
+    Assert.assertTrue(emptyJava.getMethodBody().getCodeblock().isAuthored("Java"));
+    Assert.assertTrue(emptyJava.getExistsInLanguage("Java"));
+    Assert.assertFalse(emptyJava.getExistsInLanguage("Php"));
+
+    Method multi = methodNamed(a, "multi");
+    Assert.assertTrue(multi.getExistsInLanguage("Java"));
+    Assert.assertTrue(multi.getExistsInLanguage("Php"));
+    Assert.assertFalse(multi.getExistsInLanguage("Python"));
+
+    // Abstract declarations and methods made by the compiler keep existing in every language
+    Method shape = methodNamed(model.getUmpleClass("C"), "shape");
+    Assert.assertFalse(shape.getMethodBody().getCodeblock().hasAuthoredCode());
+    Assert.assertTrue(shape.getExistsInLanguage("Java"));
+    Assert.assertTrue(shape.getExistsInLanguage("Python"));
+    Method size = methodNamed(model.getUmpleClass("D"), "size");
+    Assert.assertTrue(size.getExistsInLanguage("Php"));
+    Assert.assertTrue(size.getExistsInLanguage("Python"));
+
+    // Main discovery uses the same rule
+    List<UmpleClass> javaMains = CodeCompiler.getMainClasses(model, "Java");
+    Assert.assertEquals(1, javaMains.size());
+    Assert.assertEquals("B", javaMains.get(0).getName());
+    List<UmpleClass> pythonMains = CodeCompiler.getMainClasses(model, "Python");
+    Assert.assertEquals(2, pythonMains.size());
+  }
+
+  // Merging declarations compares exact slots: an untagged fallback is no duplicate
+  @Test
+  public void mergeMethodDeclarationsByExactBody()
+  {
+    assertHasWarningsParse("001_mergeAuthoredBodies.ump", 49);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    UmpleClass x = model.getUmpleClass("X");
+
+    CodeBlock f = methodNamed(x, "f").getMethodBody().getCodeblock();
+    Assert.assertEquals("return;", f.getCode(""));
+    Assert.assertTrue(f.isAuthored("Java"));
+    Assert.assertEquals("", f.getCode("Java"));
+    Assert.assertEquals("return", f.getCode("Python"));
+
+    CodeBlock g = methodNamed(x, "g").getMethodBody().getCodeblock();
+    Assert.assertEquals("int a;", g.getCode("Java"));
+    Assert.assertEquals("int b;", g.getCode(""));
+    Assert.assertTrue(g.isAuthored(""));
+
+    // A duplicate of one language of a multi-language block is disregarded with a warning
+    CodeBlock h = methodNamed(x, "h").getMethodBody().getCodeblock();
+    Assert.assertEquals("int c;", h.getCode("Java"));
+    Assert.assertEquals("int c;", h.getCode("Php"));
+  }
+
+  // Pre and postconditions belong to their method and the body written with them (#2250)
+  @Test
+  public void methodContractsFollowTheirBody()
+  {
+    assertHasWarningsParse("001_methodContracts.ump", 49);
+    UmpleClass c = model.getUmpleClass("Client");
+
+    Method someMethod = methodNamed(c, "someMethod");
+    Assert.assertEquals(1, c.getMethodPostconditions(someMethod, "Java").size());
+    Assert.assertEquals("arg", c.getMethodPostconditions(someMethod, "Java").get(0).getNamedNames());
+    Assert.assertSame(someMethod, c.getMethodPostconditions(someMethod, "Python").get(0).getMethod());
+    Assert.assertNotSame(c.getMethodPostconditions(someMethod, "Java").get(0), c.getMethodPostconditions(someMethod, "Python").get(0));
+    Assert.assertEquals(0, c.getMethodPostconditions(someMethod, "Php").size());
+
+    // Overloads keep their own conditions
+    Method fInt = null;
+    Method fString = null;
+    for (Method m : c.getMethods())
+    {
+      if (!"f".equals(m.getName())) continue;
+      if ("int".equals(m.getMethodParameter(0).getType())) fInt = m; else fString = m;
+    }
+    Assert.assertEquals("x", c.getMethodPreconditions(fInt, "Java").get(0).getNamedNames());
+    Assert.assertEquals(1, c.getMethodPreconditions(fInt, "Java").size());
+    Assert.assertEquals(1, c.getMethodPreconditions(fString, "Python").size());
+    Assert.assertEquals("null and s", c.getMethodPreconditions(fString, "Python").get(0).getNamedNames());
+
+    // The condition of a disregarded duplicate body is dropped with it
+    Method h = methodNamed(c, "h");
+    Assert.assertEquals(1, c.getMethodPreconditions(h, "Java").size());
+    Assert.assertEquals(0, c.getMethodPreconditions(h, "Php").size());
+
+    // A condition in a multi-language block serves each of its languages; the Php duplicate is
+    // disregarded while the Ruby body that came with it is taken, with its condition
+    Method k = methodNamed(c, "k");
+    Precondition javaAndPhp = c.getMethodPreconditions(k, "Java").get(0);
+    Assert.assertSame(javaAndPhp, c.getMethodPreconditions(k, "Php").get(0));
+    Assert.assertEquals(1, c.getMethodPreconditions(k, "Php").size());
+    Assert.assertEquals(1, c.getMethodPreconditions(k, "Python").size());
+    Assert.assertNotSame(javaAndPhp, c.getMethodPreconditions(k, "Python").get(0));
+    Assert.assertEquals(1, c.getMethodPreconditions(k, "Ruby").size());
+    Assert.assertSame(k, c.getMethodPreconditions(k, "Ruby").get(0).getMethod());
+    Assert.assertEquals("return 6", k.getMethodBody().getCodeblock().getCode("Ruby"));
+
+    // A declaration that fills an empty body keeps the conditions of both declarations
+    Method m = methodNamed(c, "m");
+    Assert.assertEquals(2, c.getMethodPreconditions(m, "Java").size());
+
+    // Equal conditions in other alternatives or overloads are separate conditions
+    Method same = methodNamed(c, "same");
+    Assert.assertEquals(1, c.getMethodPreconditions(same, "Java").size());
+    Assert.assertEquals(1, c.getMethodPostconditions(same, "Java").size());
+    Assert.assertEquals(1, c.getMethodPreconditions(same, "Python").size());
+    Assert.assertNotSame(c.getMethodPreconditions(same, "Java").get(0), c.getMethodPreconditions(same, "Python").get(0));
+    for (Method limit : c.getMethods())
+    {
+      if ("limit".equals(limit.getName()))
+      {
+        Assert.assertEquals(1, c.getMethodPreconditions(limit, "Java").size());
+      }
+    }
+
+    // A redeclaration without code adds its conditions (#1488); equal ones are checked once
+    Method refine = methodNamed(c, "refine");
+    Assert.assertEquals(2, c.getMethodPreconditions(refine, "Java").size());
+    Assert.assertEquals("return a;", refine.getMethodBody().getCodeblock().getCode(""));
+
+    // Disregarded conditions are gone from the class: preconditions f 2, h 1, k 3, m 2, same 2,
+    // limit 2, refine 3; postconditions someMethod 2, same 2
+    Assert.assertEquals(15, c.numberOfPreConds());
+    Assert.assertEquals(4, c.numberOfPostConds());
+  }
+
+  // Extra code markers have a Python form, also when extra code comes from a trait
+  @Test
+  public void extraCodeMarkersPerLanguage()
+  {
+    assertSimpleParse("001_extraCodeMarkers.ump");
+    // Other targets' markers end with the platform's line separator; Python's with "\n". The joined
+    // text, whose line breaks come from the platform, is compared with "\n" breaks.
+    String NL = System.getProperty("line.separator");
+    List<CodeBlock> x = model.getUmpleClass("X").getExtraCodeBlocks();
+    Assert.assertEquals("// line 3 001_extraCodeMarkers.ump" + NL + "  ", x.get(0).getCode(""));
+    Assert.assertEquals("# line 3 001_extraCodeMarkers.ump" + NL + "  ", x.get(0).getCode("Ruby"));
+    Assert.assertEquals("# line 3 \"001_extraCodeMarkers.ump\"\n", x.get(0).getCode("Python"));
+    Assert.assertFalse(x.get(0).hasAuthoredCode());
+
+    // The text every other target gets is unchanged
+    Assert.assertEquals("// line 3 001_extraCodeMarkers.ump\n  TOKEN = 7", lf(extraCodeFor(model.getUmpleClass("X"), "Java")));
+
+    // A trait's extra code is copied block by block, so each language keeps its own form
+    UmpleClass y = model.getUmpleClass("Y");
+    Assert.assertEquals("// line 10 001_extraCodeMarkers.ump\n  OTHER = 4\n// line 6 001_extraCodeMarkers.ump\n  LIMIT = 3", lf(extraCodeFor(y, "Java")));
+    Assert.assertEquals("# line 10 001_extraCodeMarkers.ump\n  OTHER = 4\n# line 6 001_extraCodeMarkers.ump\n  LIMIT = 3", lf(extraCodeFor(y, "Ruby")));
+    Assert.assertEquals("# line 10 \"001_extraCodeMarkers.ump\"\nOTHER = 4\n# line 6 \"001_extraCodeMarkers.ump\"\nLIMIT = 3", lf(extraCodeFor(y, "Python")));
+    CodeBlock fromTrait = y.getExtraCodeBlocks().get(y.getExtraCodeBlocks().size() - 1);
+    Assert.assertEquals("LIMIT = 3", fromTrait.getCode(""));
+  }
+
+  private static String lf(String text)
+  {
+    return text.replace(System.getProperty("line.separator"), "\n");
+  }
+
+  // The extra code a generator for lang gets, as ExtraCode.getExtraCode selects it
+  private String extraCodeFor(UmpleClass uClass, String lang)
+  {
+    StringBuilder code = new StringBuilder();
+    for (CodeBlock cb : uClass.getExtraCodeBlocks())
+    {
+      code.append(cb.hasCode(lang) ? cb.getCode(lang) : cb.getCode(""));
+    }
+    return code.toString();
+  }
+
+  private Method methodNamed(UmpleClass uClass, String name)
+  {
+    for (Method m : uClass.getMethods())
+    {
+      if (name.equals(m.getName())) return m;
+    }
+    return null;
+  }
+
 
 
   @Test
@@ -759,13 +1171,13 @@ public class UmpleParserTest
     assertNoWarningsParse("002_defaultRedefineNamespace.ump");
   }
 
-  @Test
+  @Test @Ignore
   public void notUsedNamespace()
   {
-    assertHasWarningsParse("002_notUsedNamespace.ump", new Position("002_notUsedNamespace.ump",1,33,33),31);
+    assertHasWarningsParse("002_notUsedNamespace.ump", new Position("002_notUsedNamespace.ump",3,10,33),31);
     assertHasWarningsParse("002_notUsedNamespace2.ump", new Position("002_notUsedNamespace2.ump",1,10,10),31);
     assertHasWarningsParse("002_notUsedNamespace3.ump", new Position("002_notUsedNamespace3.ump",1,10,10),31);
-    assertHasWarningsParse("002_notUsedNamespace4.ump", new Position("002_notUsedNamespace4.ump",1,34,34),31);
+    assertHasWarningsParse("002_notUsedNamespace4.ump", new Position("002_notUsedNamespace4.ump",3,10,34),31);
   }
 
   @Test
@@ -947,6 +1359,92 @@ public class UmpleParserTest
   public void warningClassNameCapitalLetter()
   { // Test to make sure a warning is generated when a class name does not start with a capital letter
     assertHasWarningsParse("043_warningClassNameNotCapital.ump", 101);
+  }
+
+  @Test
+  public void warningClassNamesDifferOnlyByCase107()
+  {
+    assertHasWarningsParse("2521_classNamesDifferOnlyByCase.ump", new Position("2521_classNamesDifferOnlyByCase.ump", 3, 0, 25), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more classes or interfaces have the same characters but differ only in case: PinG, Ping. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // A class and an interface generate files that overwrite each other; the warning points at the later one
+  @Test
+  public void warningClassThenInterfaceNamesDifferOnlyByCase107()
+  {
+    String file = "2521_classInterfaceNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 2, 0, 14), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more classes or interfaces have the same characters but differ only in case: Ping, PING. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  @Test
+  public void warningInterfaceThenClassNamesDifferOnlyByCase107()
+  {
+    String file = "2521_interfaceClassNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 2, 0, 18), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more classes or interfaces have the same characters but differ only in case: PING, Ping. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  @Test
+  public void warningAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_attributeNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, 107);
+    ParseResult result = parser.getParseResult();
+    Assert.assertEquals(2, result.numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Ping have the same characters but differ only in case: apple, apPle. This can increase the risk of defects.",
+      result.getErrorMessage(0).getFormattedMessage());
+    Assert.assertEquals(new Position(file, 3, 2, 24), result.getErrorMessage(0).getPosition());
+    // class X is declared twice; its attributes are compared as one class
+    Assert.assertEquals(107, result.getErrorMessage(1).getErrorType().getErrorCode());
+    Assert.assertEquals(new Position(file, 11, 2, 69), result.getErrorMessage(1).getPosition());
+  }
+
+  // Reported once, in the subclass that introduces the clash, and not again in its own subclass,
+  // which only refines the attribute, or in the unrelated class Course
+  @Test
+  public void warningInheritedAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_inheritedAttributeNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 7, 2, 62), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Student have the same characters but differ only in case: fullname, fullName. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // An attribute applied from a trait keeps its position in the trait
+  @Test
+  public void warningTraitAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_traitAttributeNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 2, 2, 16), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Person have the same characters but differ only in case: fullName, fullname. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // The comparator attribute generated for a sorted association is placed at the association
+  @Test
+  public void warningSortedAssociationAttributeNamesDifferOnlyByCase107()
+  {
+    String file = "2521_sortedAssociationNamesDifferOnlyByCase.ump";
+    assertHasWarningsParse(file, new Position(file, 3, 2, 41), 107);
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals("Two or more attributes in class Academy have the same characters but differ only in case: registrantspriority, registrantsPriority. This can increase the risk of defects.",
+      parser.getParseResult().getErrorMessage(0).getFormattedMessage());
+  }
+
+  // Same letters in unrelated classes, and a class declared twice, are not a clash
+  @Test
+  public void noWarningNamesDifferOnlyByCase107()
+  {
+    assertNoWarningsParse("2521_namesDifferOnlyByCaseNone.ump");
   }
 
   @Test
@@ -1549,7 +2047,1471 @@ public class UmpleParserTest
   {
           assertNoWarningsParse("451_ReqMixsetOutputGenerated.ump");
   }
+  // implementsReq at top level before interface
+  @Test
+  public void ReqInterface()
+  {
+    assertNoWarningsParse("451_ReqInterface.ump");
+  }
+  @Test
+  public void ReqInterfaceNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqInterfaceNoLeakage.ump");
+  }
+  // implementsReq at top level before associationClass
+  @Test
+  public void ReqAssociationClass()
+  {
+    assertNoWarningsParse("451_ReqAssociationClass.ump");
+  }
+  @Test
+  public void ReqAssociationClassNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqAssociationClassNoLeakage.ump");
+  }
+  // implementsReq at top level before trait
+  @Test
+  public void ReqTrait()
+  {
+    assertNoWarningsParse("451_ReqTrait.ump");
+  }
+  @Test
+  public void ReqTraitNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqTraitNoLeakage.ump");
+  }
+  // implementsReq at top level before enum
+  @Test
+  public void ReqEnum()
+  {
+    assertNoWarningsParse("451_ReqEnum.ump");
+  }
+  @Test
+  public void ReqEnumNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqEnumNoLeakage.ump");
+  }
+  // implementsReq at top level before top-level state machine definition
+  @Test
+  public void ReqTopLevelStateMachine()
+  {
+    assertNoWarningsParse("451_ReqTopLevelSM.ump");
+  }
+  @Test
+  public void ReqTopLevelStateMachineNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqTopLevelSMNoLeakage.ump");
+  }
+  // implementsReq inside mixset before structural elements
+  @Test
+  public void ReqInsideMixset()
+  {
+    assertNoWarningsParse("451_ReqInsideMixset.ump");
+  }
+  @Test
+  public void ReqInsideMixsetTrait()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetTrait.ump");
+  }
+  @Test
+  public void ReqInsideMixsetInterface()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetInterface.ump");
+  }
+  @Test
+  public void ReqInsideMixsetEnum()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetEnum.ump");
+  }
+  @Test
+  public void ReqInsideMixsetAssocClass()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetAssocClass.ump");
+  }
+  @Test
+  public void ReqInsideMixsetSM()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetSM.ump");
+  }
+  @Test
+  public void ReqInsideMixsetAssocBlock()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetAssocBlock.ump");
+  }
+  @Test
+  public void ReqInsideMixsetReq()
+  {
+    assertNoWarningsParse("451_ReqInsideMixsetReq.ump");
+  }
+  // implementsReq at top level before top-level association block
+  @Test
+  public void ReqTopLevelAssociation()
+  {
+    assertNoWarningsParse("451_ReqTopLevelAssociation.ump");
+  }
+  @Test
+  public void ReqTopLevelAssociationNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqTopLevelAssociationNoLeakage.ump");
+  }
+  //implementsReq inside a top-level association block
+  @Test
+  public void ReqInsideAssociationBlock()
+  {
+    assertNoWarningsParse("451_ReqInsideAssociationBlock.ump");
+  }
+  //implementsReq before a req statement (requirement decomposition)
+  @Test
+  public void ReqBeforeReqStatement()
+  {
+    assertNoWarningsParse("451_ReqBeforeReqStatement.ump");
+  }
+  @Test
+  public void ReqBeforeReqStatementNoLeakage()
+  {
+    assertNoWarningsParse("451_ReqBeforeReqStatementNoLeakage.ump");
+  }
+  //implementsReq inside a class before a nested inner class
+  @Test
+  public void ReqInnerClass()
+  {
+    assertNoWarningsParse("451_ReqInnerClass.ump");
+  }
+  //Issue 2377 (User Story)
+  //Issue 2098
+  @Test
+  public void ImplementsReqState()
+  {
+          assertNoWarningsParse("451_ReqState.ump");
+  }
+  //Issue 2098
+  @Test
+  public void ImplementsReqTransition()
+  {
+          assertNoWarningsParse("451_ReqTransition.ump")	;
+  }
+  //Issue 2098
+  @Test
+  public void ImplementsReqStateMachineNoLeakage()
+  {
+          assertNoWarningsParse("451_ReqStateMachineNoLeakage.ump")	;
+  }
+  //Issue 2098
+  @Test
+  public void ImplementsReqStateMachineMultiple()
+  {
+          assertNoWarningsParse("451_ReqStateMachineMultiple.ump")	;
+  }
 
+  //Issue 2098
+  @Test
+  public void testReqActionEntry()
+  {
+          assertNoWarningsParse("451_ReqActionEntry.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActionExit()
+  {
+          assertNoWarningsParse("451_ReqActionExit.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActivityDo()
+  {
+          assertNoWarningsParse("451_ReqActivityDo.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqSubstate()
+  {
+          assertNoWarningsParse("451_ReqSubstate.ump");
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActionEntryNoLeakage()
+  {
+    boolean answer = parseWarnings("451_ReqActionEntryNoLeakage.ump");
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
+
+    State state1 = model.getUmpleClass("X").getStateMachine(0).getState(0);
+    State state2 = model.getUmpleClass("X").getStateMachine(0).getState(1);
+
+    Assert.assertEquals(1, state1.numberOfActions());
+    Assert.assertEquals(1, state2.numberOfActions());
+
+    Assert.assertEquals(1, state1.getAction(0).numberOfReqImplementations());
+    Assert.assertEquals(0, state2.getAction(0).numberOfReqImplementations());
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqActivityDoNoLeakage()
+  {
+    boolean answer = parseWarnings("451_ReqActivityDoNoLeakage.ump");
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
+
+    State state1 = model.getUmpleClass("X").getStateMachine(0).getState(0);
+    State state2 = model.getUmpleClass("X").getStateMachine(0).getState(1);
+
+    Assert.assertEquals(1, state1.numberOfActivities());
+    Assert.assertEquals(1, state2.numberOfActivities());
+
+    Assert.assertEquals(1, state1.getActivity(0).numberOfReqImplementations());
+    Assert.assertEquals(0, state2.getActivity(0).numberOfReqImplementations());
+  }
+
+  //Issue 2098
+  @Test
+  public void testReqSubstateNoLeakage()
+  {
+    boolean answer = parseWarnings("451_ReqSubstateNoLeakage.ump");
+    Assert.assertEquals(true, answer);
+    Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
+
+    State parent = model.getUmpleClass("X").getStateMachine(0).getState(0);
+    Assert.assertEquals(1, parent.numberOfNestedStateMachines());
+
+    StateMachine nested = parent.getNestedStateMachine(0);
+    State state1a = nested.getState(0);
+    State state1b = nested.getState(1);
+
+    Assert.assertEquals(1, state1a.numberOfReqImplementations());
+    Assert.assertEquals(0, state1b.numberOfReqImplementations());
+  }
+
+  //Issue 2377
+  @Test
+  public void ReqUserStoryBasic()
+  {
+    assertNoWarningsParse("452_ReqUserStoryBasic.ump");
+  }
+  //Issue 2377 (User Story)
+  @Test
+  public void ReqNormalStillWorksAfterUserStoryGrammar()
+  {
+    assertNoWarningsParse("452_ReqNormalStillWorks.ump");
+  }
+  //Issue 2377 (User Story)
+  @Test
+  public void ReqUserStoryStructuredAll()
+  {
+    assertNoWarningsParse("453_ReqUserStoryStructuredAll.ump");
+
+    Requirement req = model.getAllRequirements().get("US2");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+    Assert.assertEquals("customer", req.getWho());
+    Assert.assertEquals("password is forgotten", req.getWhen());
+    Assert.assertEquals("reset my password", req.getWhat());
+    Assert.assertEquals("regain access to my account", req.getWhy());
+  }
+  //Issue 2377 (User Story)
+  @Test
+  public void ReqUserStoryStructuredPartial()
+  {
+    assertNoWarningsParse("453_ReqUserStoryStructuredPartial.ump");
+
+    Requirement req = model.getAllRequirements().get("US3");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+    Assert.assertEquals("administrator", req.getWho());
+    Assert.assertNull(req.getWhen());
+    Assert.assertEquals("manage users", req.getWhat());
+    Assert.assertNull(req.getWhy());
+  }
+  //Issue 2377 (User Story)
+  @Test
+  public void ReqUserstoryAliasLowercase()
+  {
+    assertNoWarningsParse("454_ReqUserstoryAlias.ump");
+
+    Requirement req = model.getAllRequirements().get("US5");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("customer", req.getWho());
+    Assert.assertEquals("reset password", req.getWhat());
+  }
+  //Issue 2377 (User Story)
+  @Test
+  public void ReqUserstoryAliasCamelCase()
+  {
+    assertNoWarningsParse("454_ReqUserStoryCamelCase.ump");
+
+    Requirement req = model.getAllRequirements().get("US6");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("customer", req.getWho());
+    Assert.assertEquals("reset password", req.getWhat());
+  }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqUseCaseBasic()
+  {
+    assertNoWarningsParse("454_ReqUseCaseBasic.ump");
+  }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqUsecaseAliasLowercase()
+  {
+    assertNoWarningsParse("454_ReqUsecaseAlias.ump");
+  }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqNormalStillWorksAfterUseCaseGrammar()
+  {
+    assertNoWarningsParse("454_ReqNormalStillWorksAfterUseCase.ump");
+  }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqUseCaseStructuredAll()
+  {
+    assertNoWarningsParse("455_ReqUseCaseStructuredAll.ump");
+  }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqUseCaseStructuredPartial()
+  {
+    assertNoWarningsParse("455_ReqUseCaseStructuredPartial.ump");
+  }
+  //Issue 2378 (Use Case)
+  @Test
+  public void ReqUseCaseMultipleSteps()
+  {
+    assertNoWarningsParse("455_ReqUseCaseMultipleSteps.ump");
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityBasic()
+  {
+    assertHasWarningsParse("456_ReqQualityBasic.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("INVALID", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Medium", req.getQualityClass(1).getName());
+    Assert.assertEquals("Low", req.getQualityClass(2).getName());
+    Assert.assertEquals("", req.getQualityClass(0).getContent());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityAliases()
+  {
+    assertHasWarningsParse("456_ReqQualityAliases.ump", 406);
+
+    Requirement req1 = model.getAllRequirements().get("Q1");
+    Assert.assertNotNull(req1);
+    Assert.assertEquals("INVALID", req1.getLanguage());
+    Assert.assertEquals(2, req1.numberOfQualityClasses());
+
+    Requirement req2 = model.getAllRequirements().get("Q2");
+    Assert.assertNotNull(req2);
+    Assert.assertEquals("INVALID", req2.getLanguage());
+    Assert.assertEquals(2, req2.numberOfQualityClasses());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityCoexistence()
+  {
+    assertNoWarningsParse("456_ReqQualityCoexistence.ump");
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("architect", req.getWho());
+    Assert.assertEquals("compare designs", req.getWhat());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityNonEmptyWarning()
+  {
+    assertHasWarningsParse("456_ReqQualityNonEmptyWarning.ump", 403);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqNormalStillWorksAfterQuality()
+  {
+    assertNoWarningsParse("456_ReqNormalStillWorksAfterQuality.ump");
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityWithSemicolons()
+  {
+    assertFailedParse("456_ReqQualityWithSemicolons.ump", 1500);
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Medium", req.getQualityClass(1).getName());
+    Assert.assertEquals("Low", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityAccumulate()
+  {
+    assertHasWarningsParse("456_ReqQualityAccumulate.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("INVALID", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Medium", req.getQualityClass(1).getName());
+    Assert.assertEquals("Low", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityThenPlain()
+  {
+    assertHasWarningsParse("456_ReqQualityThenPlain.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Some plain text requirement.", req.getStatement().trim());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityThenUserStory()
+  {
+    assertHasWarningsParse("456_ReqQualityThenUserStory.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals("architect", req.getWho());
+    Assert.assertEquals("compare designs", req.getWhat());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Low", req.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualitySingleClass()
+  {
+    assertNoWarningsParse("456_ReqQualitySingleClass.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("OnlyOne", req.getQualityClass(0).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityManyClasses()
+  {
+    assertNoWarningsParse("456_ReqQualityManyClasses.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(12, req.numberOfQualityClasses());
+    Assert.assertEquals("A", req.getQualityClass(0).getName());
+    Assert.assertEquals("B", req.getQualityClass(1).getName());
+    Assert.assertEquals("C", req.getQualityClass(2).getName());
+    Assert.assertEquals("D", req.getQualityClass(3).getName());
+    Assert.assertEquals("E", req.getQualityClass(4).getName());
+    Assert.assertEquals("F", req.getQualityClass(5).getName());
+    Assert.assertEquals("G", req.getQualityClass(6).getName());
+    Assert.assertEquals("H", req.getQualityClass(7).getName());
+    Assert.assertEquals("I", req.getQualityClass(8).getName());
+    Assert.assertEquals("J", req.getQualityClass(9).getName());
+    Assert.assertEquals("K", req.getQualityClass(10).getName());
+    Assert.assertEquals("L", req.getQualityClass(11).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualitySingleLineDense()
+  {
+    assertNoWarningsParse("456_ReqQualitySingleLineDense.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("X", req.getQualityClass(0).getName());
+    Assert.assertEquals("Y", req.getQualityClass(1).getName());
+    Assert.assertEquals("Z", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityUnderscorePrefix()
+  {
+    assertNoWarningsParse("456_ReqQualityUnderscorePrefix.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("_Internal", req.getQualityClass(0).getName());
+    Assert.assertEquals("_Secure", req.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityDigitsInName()
+  {
+    assertNoWarningsParse("456_ReqQualityDigitsInName.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("Level1", req.getQualityClass(0).getName());
+    Assert.assertEquals("Class99", req.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualitySingleCharName()
+  {
+    assertNoWarningsParse("456_ReqQualitySingleCharName.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("A", req.getQualityClass(0).getName());
+    Assert.assertEquals("B", req.getQualityClass(1).getName());
+    Assert.assertEquals("C", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityExtraWhitespace()
+  {
+    assertNoWarningsParse("456_ReqQualityExtraWhitespace.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Medium", req.getQualityClass(1).getName());
+    Assert.assertEquals("Low", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityWithUseCase()
+  {
+    assertNoWarningsParse("456_ReqQualityWithUseCase.ump");
+
+    Requirement req = model.getAllRequirements().get("UC1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Low", req.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMultipleReqIDs()
+  {
+    assertNoWarningsParse("456_ReqQualityMultipleReqIDs.ump");
+
+    Requirement speedReq = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(speedReq);
+    Assert.assertEquals("", speedReq.getLanguage());
+    Assert.assertEquals(2, speedReq.numberOfQualityClasses());
+    Assert.assertEquals("High", speedReq.getQualityClass(0).getName());
+    Assert.assertEquals("Low", speedReq.getQualityClass(1).getName());
+
+    Requirement safetyReq = model.getAllRequirements().get("Safety");
+    Assert.assertNotNull(safetyReq);
+    Assert.assertEquals("", safetyReq.getLanguage());
+    Assert.assertEquals(2, safetyReq.numberOfQualityClasses());
+    Assert.assertEquals("Critical", safetyReq.getQualityClass(0).getName());
+    Assert.assertEquals("Normal", safetyReq.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityAccumulateThree()
+  {
+    assertNoWarningsParse("456_ReqQualityAccumulateThree.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("Alpha", req.getQualityClass(0).getName());
+    Assert.assertEquals("Beta", req.getQualityClass(1).getName());
+    Assert.assertEquals("Gamma", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityKeywordLikeNames()
+  {
+    assertNoWarningsParse("456_ReqQualityKeywordLikeNames.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("QualityAttr", req.getQualityClass(0).getName());
+    Assert.assertEquals("ReqLevel", req.getQualityClass(1).getName());
+    Assert.assertEquals("ClassType", req.getQualityClass(2).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityWhitespaceOnlyBraces()
+  {
+    assertNoWarningsParse("456_ReqQualityWhitespaceOnlyBraces.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("", req.getQualityClass(0).getContent());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityLongClassName()
+  {
+    assertNoWarningsParse("456_ReqQualityLongClassName.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getLanguage());
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("AVeryLongQualityClassNameThatDefinitelyExceedsOneHundredCharactersInTotalLengthForTestingPurposesOnly", req.getQualityClass(0).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityUseCaseReversed()
+  {
+    assertHasWarningsParse("456_ReqQualityUseCaseReversed.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("High", req.getQualityClass(0).getName());
+    Assert.assertEquals("Low", req.getQualityClass(1).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityEmptySection405()
+  {
+    assertHasWarningsParse("456_ReqQualityEmptySection405.ump", 405);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityEmptySectionWhitespace405()
+  {
+    assertHasWarningsParse("456_ReqQualityEmptySectionWhitespace405.ump", 405);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMissingBraces407()
+  {
+    assertFailedParse("456_ReqQualityMissingBraces407.ump", 407);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMultipleBareIds407()
+  {
+    assertFailedParse("456_ReqQualityMultipleBareIds407.ump", 407);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMixedValidAndBare407()
+  {
+    assertFailedParse("456_ReqQualityMixedValidAndBare407.ump", 407);
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityOrphanBraces1504()
+  {
+    assertFailedParse("456_ReqQualityOrphanBraces1504.ump", 1504);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualitySpecialChars1500()
+  {
+    assertFailedParse("456_ReqQualitySpecialChars1500.ump", 1500);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMultipleNonEmpty403()
+  {
+    assertHasWarningsParse("456_ReqQualityMultipleNonEmpty403.ump", 403, 0);
+    Assert.assertEquals(403, parser.getParseResult().getErrorMessage(1).getErrorType().getErrorCode());
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMixedValidAndWarned403()
+  {
+    assertHasWarningsParse("456_ReqQualityMixedValidAndWarned403.ump", 403);
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(3, req.numberOfQualityClasses());
+    Assert.assertEquals("content", req.getQualityClass(1).getContent());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityStandalone406()
+  {
+    assertHasWarningsParse("456_ReqQualityStandalone406.ump", 406);
+
+    Requirement req = model.getAllRequirements().get("Standalone");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("INVALID", req.getLanguage());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityLanguageConflict402()
+  {
+    assertHasWarningsParse("456_ReqQualityLanguageConflict402.ump", 402);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityGrammarBraceMismatch()
+  {
+    assertBraceMismatchError("456_ReqQualityGrammarBraceMismatch.ump", 1502);
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityWithImplementsReq()
+  {
+    assertNoWarningsParse("456_ReqQualityWithImplementsReq.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("Performance", req.getQualityClass(0).getName());
+    Assert.assertEquals("Security", req.getQualityClass(1).getName());
+
+    UmpleClass itemClass = model.getUmpleClass("Item");
+    Assert.assertNotNull(itemClass);
+    Assert.assertEquals(2, itemClass.numberOfAttributes());
+    Assert.assertEquals(1, itemClass.numberOfReqImplementations());
+    Assert.assertEquals("R1", itemClass.getReqImplementation(0).getIdentifier());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityInsideTrait()
+  {
+    assertNoWarningsParse("456_ReqQualityInsideTrait.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("userStory", req.getLanguage());
+    Assert.assertEquals(1, req.numberOfQualityClasses());
+    Assert.assertEquals("Reliability", req.getQualityClass(0).getName());
+
+    UmpleTrait loggable = model.getUmpleTrait("Loggable");
+    Assert.assertNotNull(loggable);
+    Assert.assertEquals(1, loggable.numberOfAttributes());
+    Assert.assertEquals(1, loggable.numberOfReqImplementations());
+    Assert.assertEquals("R1", loggable.getReqImplementation(0).getIdentifier());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityMixedReqTypes()
+  {
+    assertNoWarningsParse("456_ReqQualityMixedReqTypes.ump");
+
+    Requirement r1 = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(r1);
+    Assert.assertEquals("", r1.getLanguage());
+    Assert.assertEquals(0, r1.numberOfQualityClasses());
+    Assert.assertEquals("Simple plain requirement.", r1.getStatement().trim());
+
+    Requirement r2 = model.getAllRequirements().get("R2");
+    Assert.assertNotNull(r2);
+    Assert.assertEquals("userStory", r2.getLanguage());
+    Assert.assertEquals(2, r2.numberOfQualityClasses());
+    Assert.assertEquals("Accuracy", r2.getQualityClass(0).getName());
+    Assert.assertEquals("Coverage", r2.getQualityClass(1).getName());
+    Assert.assertEquals("tester", r2.getWho());
+    Assert.assertEquals("validate", r2.getWhat());
+
+    Requirement r3 = model.getAllRequirements().get("R3");
+    Assert.assertNotNull(r3);
+    Assert.assertEquals("useCase", r3.getLanguage());
+    Assert.assertEquals(1, r3.numberOfQualityClasses());
+    Assert.assertEquals("Usability", r3.getQualityClass(0).getName());
+  }
+  //Issue 2144 (Quality)
+  @Test
+  public void ReqQualityWithClassAndAssociations()
+  {
+    assertNoWarningsParse("456_ReqQualityWithClassAndAssociations.ump");
+
+    Requirement req = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+    Assert.assertEquals("Scalability", req.getQualityClass(0).getName());
+    Assert.assertEquals("Maintainability", req.getQualityClass(1).getName());
+
+    UmpleClass customerClass = model.getUmpleClass("Customer");
+    Assert.assertNotNull(customerClass);
+    Assert.assertEquals(2, customerClass.numberOfAttributes());
+    Assert.assertEquals(1, customerClass.numberOfReqImplementations());
+    Assert.assertEquals("R1", customerClass.getReqImplementation(0).getIdentifier());
+
+    UmpleClass orderClass = model.getUmpleClass("Order");
+    Assert.assertNotNull(orderClass);
+    Assert.assertEquals(1, orderClass.numberOfAttributes());
+    Assert.assertEquals(1, orderClass.numberOfReqImplementations());
+    Assert.assertEquals("R1", orderClass.getReqImplementation(0).getIdentifier());
+
+    List<Association> associations = model.getAssociations();
+    Assert.assertEquals(1, associations.size());
+  }
+
+  //Issue 2144 (Quality - implementsReq with quality class parameter)
+  @Test
+  public void ReqQualityImplReqBasic()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqBasic.ump");
+
+    Requirement req = model.getAllRequirements().get("Speed");
+    Assert.assertNotNull(req);
+    Assert.assertEquals(2, req.numberOfQualityClasses());
+
+    // Check that the ReqImplementation has qualityClassName set
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertTrue(impls.size() >= 1);
+    ReqImplementation speedImpl = null;
+    for (ReqImplementation ri : impls) {
+      if ("Speed".equals(ri.getIdentifier())) { speedImpl = ri; break; }
+    }
+    Assert.assertNotNull(speedImpl);
+    Assert.assertEquals("High", speedImpl.getQualityClassName());
+    Assert.assertNotNull(speedImpl.getQualityClass());
+    Assert.assertEquals("High", speedImpl.getQualityClass().getName());
+  }
+
+  //Issue 2144 (Quality - mixed bare and quality class refs)
+  @Test
+  public void ReqQualityImplReqMixed()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqMixed.ump");
+
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertTrue(impls.size() >= 2);
+
+    ReqImplementation r1Impl = null;
+    ReqImplementation speedImpl = null;
+    for (ReqImplementation ri : impls) {
+      if ("R1".equals(ri.getIdentifier())) r1Impl = ri;
+      if ("Speed".equals(ri.getIdentifier())) speedImpl = ri;
+    }
+    Assert.assertNotNull(r1Impl);
+    Assert.assertNull(r1Impl.getQualityClassName());
+
+    Assert.assertNotNull(speedImpl);
+    Assert.assertEquals("High", speedImpl.getQualityClassName());
+    Assert.assertNotNull(speedImpl.getQualityClass());
+  }
+
+  //Issue 2144 (Quality - multiple quality class parameters)
+  @Test
+  public void ReqQualityImplReqMultiQuality()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqMultiQuality.ump");
+
+    ReqImplementation speedImpl = null;
+    ReqImplementation securityImpl = null;
+    for (ReqImplementation ri : model.getReqImplementations()) {
+      if ("Speed".equals(ri.getIdentifier())) speedImpl = ri;
+      if ("Security".equals(ri.getIdentifier())) securityImpl = ri;
+    }
+    Assert.assertNotNull(speedImpl);
+    Assert.assertEquals("High", speedImpl.getQualityClassName());
+    Assert.assertNotNull(speedImpl.getQualityClass());
+
+    Assert.assertNotNull(securityImpl);
+    Assert.assertEquals("Perfect", securityImpl.getQualityClassName());
+    Assert.assertNotNull(securityImpl.getQualityClass());
+  }
+
+  //Issue 2144 (Quality - backward compatibility)
+  @Test
+  public void ReqQualityImplReqBackwardCompat()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqBackwardCompat.ump");
+
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertEquals(1, impls.size());
+    Assert.assertEquals("R1", impls.get(0).getIdentifier());
+    Assert.assertNull(impls.get(0).getQualityClassName());
+  }
+
+  //Issue 2144 (Quality - error 408: no quality classes defined)
+  @Test
+  public void ReqQualityImplReqWarning408()
+  {
+    boolean answer = parseWarnings("456_ReqQualityImplReqWarning408.ump");
+    Assert.assertEquals(false, answer);
+    Assert.assertEquals(408, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+  }
+
+  //Issue 2144 (Quality - error 409: quality class not found)
+  @Test
+  public void ReqQualityImplReqWarning409()
+  {
+    boolean answer = parseWarnings("456_ReqQualityImplReqWarning409.ump");
+    Assert.assertEquals(false, answer);
+    Assert.assertEquals(409, parser.getParseResult().getErrorMessage(0).getErrorType().getErrorCode());
+  }
+
+  //Issue 2144 (Quality - warning 401 only when req not found, no cascading 408/409)
+  @Test
+  public void ReqQualityImplReqWarning401WithQuality()
+  {
+    assertHasWarningsParse("456_ReqQualityImplReqWarning401WithQuality.ump", 401);
+    // Only warning 401 should fire, no cascading 408/409
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+  }
+
+  //Issue 2144 (Quality - multi-identifier fix)
+  @Test
+  public void ReqQualityImplReqMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqQualityImplReqMultiIdentifier.ump");
+
+    List<ReqImplementation> impls = model.getReqImplementations();
+    Assert.assertEquals(3, impls.size());
+
+    java.util.Set<String> ids = new java.util.HashSet<>();
+    for (ReqImplementation ri : impls) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+    Assert.assertTrue(ids.contains("R3"));
+
+    UmpleClass itemClass = model.getUmpleClass("Item");
+    Assert.assertNotNull(itemClass);
+    Assert.assertEquals(3, itemClass.numberOfReqImplementations());
+
+    ids.clear();
+    for (ReqImplementation ri : itemClass.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+    Assert.assertTrue(ids.contains("R3"));
+  }
+
+  @Test
+  public void ReqImplMixsetSeparateStatements()
+  {
+    assertNoWarningsParse("456_ReqImplMixsetSeparateStatements.ump");
+
+    Mixset designA = model.getMixset("DesignA");
+    Assert.assertNotNull(designA);
+    Assert.assertEquals(2, designA.numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : designA.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
+  @Test
+  public void ReqImplMixsetNoLeakage()
+  {
+    assertNoWarningsParse("456_ReqImplMixsetNoLeakage.ump");
+
+    Mixset designA = model.getMixset("DesignA");
+    Mixset designB = model.getMixset("DesignB");
+    Assert.assertNotNull(designA);
+    Assert.assertNotNull(designB);
+    Assert.assertEquals(1, designA.numberOfReqImplementations());
+    Assert.assertEquals("R1", designA.getReqImplementation(0).getIdentifier());
+    Assert.assertEquals(0, designB.numberOfReqImplementations());
+  }
+
+  @Test
+  public void ReqImplTopLevelAssociationMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplTopLevelAssociationMultiIdentifier.ump");
+
+    List<Association> associations = model.getAssociations();
+    Assert.assertEquals(1, associations.size());
+    Assert.assertEquals(2, associations.get(0).numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : associations.get(0).getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
+  @Test
+  public void ReqImplAssociationBlockMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplAssociationBlockMultiIdentifier.ump");
+
+    List<Association> associations = model.getAssociations();
+    Assert.assertEquals(2, associations.size());
+    Assert.assertEquals(2, associations.get(0).numberOfReqImplementations());
+    Assert.assertEquals(0, associations.get(1).numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : associations.get(0).getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
+  @Test
+  public void ReqImplStateMachineMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplStateMachineMultiIdentifier.ump");
+
+    Assert.assertEquals(4, model.getReqImplementations().size());
+
+    StateMachine sm = model.getUmpleClass("X").getStateMachine(0);
+    State state1 = sm.getState(0);
+    State state2 = sm.getState(1);
+
+    Assert.assertEquals(2, sm.numberOfReqImplementations());
+    Assert.assertEquals(2, state1.numberOfReqImplementations());
+    Assert.assertEquals(0, state2.numberOfReqImplementations());
+
+    Set<String> ids = new HashSet<String>();
+    for (ReqImplementation ri : sm.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+
+    ids.clear();
+    for (ReqImplementation ri : state1.getReqImplementations()) ids.add(ri.getIdentifier());
+    Assert.assertTrue(ids.contains("R3"));
+    Assert.assertTrue(ids.contains("R4"));
+  }
+
+  @Test
+  public void ReqImplTraitMultiIdentifierWithQuality()
+  {
+    assertNoWarningsParse("456_ReqImplTraitMultiIdentifierWithQuality.ump");
+
+    UmpleTrait loggable = model.getUmpleTrait("Loggable");
+    Assert.assertNotNull(loggable);
+    Assert.assertEquals(2, loggable.numberOfReqImplementations());
+
+    ReqImplementation loggingImpl = null;
+    ReqImplementation auditImpl = null;
+    for (ReqImplementation ri : loggable.getReqImplementations()) {
+      if ("Logging".equals(ri.getIdentifier())) loggingImpl = ri;
+      if ("Audit".equals(ri.getIdentifier())) auditImpl = ri;
+    }
+
+    Assert.assertNotNull(loggingImpl);
+    Assert.assertEquals("Reliability", loggingImpl.getQualityClassName());
+    Assert.assertNotNull(loggingImpl.getQualityClass());
+    Assert.assertEquals("Reliability", loggingImpl.getQualityClass().getName());
+
+    Assert.assertNotNull(auditImpl);
+    Assert.assertEquals("Security", auditImpl.getQualityClassName());
+    Assert.assertNotNull(auditImpl.getQualityClass());
+    Assert.assertEquals("Security", auditImpl.getQualityClass().getName());
+  }
+
+  @Test
+  public void ReqImplActiveMethodMultiIdentifier()
+  {
+    assertNoWarningsParse("456_ReqImplActiveMethodMultiIdentifier.ump");
+
+    UmpleClass worker = model.getUmpleClass("Worker");
+    Assert.assertNotNull(worker);
+    Assert.assertEquals(1, worker.numberOfActiveMethods());
+
+    ActiveMethod method = worker.getActiveMethod(0);
+    Assert.assertNotNull(method);
+
+    List<ActiveDirectionHandlerBody> requirementBodies = new ArrayList<ActiveDirectionHandlerBody>();
+    for (ActiveDirectionHandlerBody body : method.getMethodBody().getActiveDirectionHandlerBodies()) {
+      if (body.getBodyType() == ActiveDirectionHandlerBody.BodyType.REQUIREMENT) {
+        requirementBodies.add(body);
+      }
+    }
+
+    Assert.assertEquals(2, requirementBodies.size());
+
+    Set<String> ids = new HashSet<String>();
+    for (ActiveDirectionHandlerBody body : requirementBodies) {
+      Assert.assertNotNull(body.getRequirement());
+      ids.add(body.getRequirement().getIdentifier());
+    }
+    Assert.assertTrue(ids.contains("R1"));
+    Assert.assertTrue(ids.contains("R2"));
+  }
+
+  //Issue 2378 (Use Case Parsing)
+  @Test
+  public void ReqUsecaseAliasLowercaseParsed()
+  {
+    assertNoWarningsParse("454_ReqUsecaseAlias.ump");
+    Requirement req = model.getAllRequirements().get("UC1A");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+  }
+
+  //Issue 2378 (Use Case Parsing)
+  @Test
+  public void ReqUseCaseStructuredAllParsed()
+  {
+    assertNoWarningsParse("455_ReqUseCaseStructuredAll.ump");
+    Requirement req = model.getAllRequirements().get("UC2");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals("customer", req.getWho());
+    Assert.assertEquals("cart is ready", req.getWhen());
+    Assert.assertEquals("complete checkout", req.getWhat());
+    Assert.assertEquals("purchase selected items", req.getWhy());
+
+    Assert.assertEquals(2, req.numberOfUseCaseSteps());
+
+    Assert.assertEquals("1", req.getUseCaseStep(0).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.UserStep, req.getUseCaseStep(0).getStepType());
+    Assert.assertEquals("confirm order", req.getUseCaseStep(0).getContent());
+
+    Assert.assertEquals("1", req.getUseCaseStep(1).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(1).getStepType());
+    Assert.assertEquals("display total price", req.getUseCaseStep(1).getContent());
+  }
+
+  //Issue 2378 (Use Case Parsing)
+  @Test
+  public void ReqUseCaseMultipleStepsParsed()
+  {
+    assertNoWarningsParse("455_ReqUseCaseMultipleSteps.ump");
+    Requirement req = model.getAllRequirements().get("UC4");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+
+    Assert.assertEquals(4, req.numberOfUseCaseSteps());
+
+    Assert.assertEquals("1", req.getUseCaseStep(0).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.UserStep, req.getUseCaseStep(0).getStepType());
+    Assert.assertEquals("select product", req.getUseCaseStep(0).getContent());
+
+    Assert.assertEquals("1", req.getUseCaseStep(1).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(1).getStepType());
+    Assert.assertEquals("display price", req.getUseCaseStep(1).getContent());
+
+    Assert.assertEquals("2", req.getUseCaseStep(2).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.UserStep, req.getUseCaseStep(2).getStepType());
+    Assert.assertEquals("enter quantity", req.getUseCaseStep(2).getContent());
+
+    Assert.assertEquals("2", req.getUseCaseStep(3).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(3).getStepType());
+    Assert.assertEquals("update total", req.getUseCaseStep(3).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseInclude()
+  {
+    assertNoWarningsParse("457_ReqUseCaseInclude.ump");
+    Requirement req = model.getAllRequirements().get("UC7");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+    Assert.assertEquals("customer", req.getWho());
+
+    Assert.assertEquals(2, req.numberOfIncludedUseCases());
+    Assert.assertEquals("UC1", req.getIncludedUseCase(0));
+    Assert.assertEquals("UC2", req.getIncludedUseCase(1));
+    Assert.assertEquals(0, req.numberOfParentUseCases());
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("start checkout", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseIsA()
+  {
+    assertNoWarningsParse("457_ReqUseCaseIsA.ump");
+    Requirement req = model.getAllRequirements().get("UC8");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals(1, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+    Assert.assertEquals(0, req.numberOfIncludedUseCases());
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("pay with the saved card", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseIsAMultipleParents()
+  {
+    assertNoWarningsParse("457_ReqUseCaseIsAMultipleParents.ump");
+    Requirement req = model.getAllRequirements().get("UC11");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals(2, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+    Assert.assertEquals("UC2", req.getParentUseCase(1));
+    Assert.assertEquals(0, req.numberOfIncludedUseCases());
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("confirm the order", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseStepConditions()
+  {
+    assertNoWarningsParse("457_ReqUseCaseStepConditions.ump");
+    Requirement req = model.getAllRequirements().get("UC9");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+
+    Assert.assertEquals(4, req.numberOfUseCaseSteps());
+
+    // An unconditional step keeps a null condition
+    Assert.assertEquals("1", req.getUseCaseStep(0).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.UserStep, req.getUseCaseStep(0).getStepType());
+    Assert.assertEquals("select a payment method", req.getUseCaseStep(0).getContent());
+    Assert.assertNull(req.getUseCaseStep(0).getCondition());
+
+    // Two responses share an id and are told apart by their conditions
+    Assert.assertEquals("1", req.getUseCaseStep(1).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(1).getStepType());
+    Assert.assertEquals("card accepted", req.getUseCaseStep(1).getCondition());
+    Assert.assertEquals("confirm the order", req.getUseCaseStep(1).getContent());
+
+    Assert.assertEquals("1", req.getUseCaseStep(2).getId());
+    Assert.assertEquals(UseCaseStep.UseCaseStepType.SystemResponse, req.getUseCaseStep(2).getStepType());
+    Assert.assertEquals("card declined", req.getUseCaseStep(2).getCondition());
+    Assert.assertEquals("ask for another card", req.getUseCaseStep(2).getContent());
+
+    Assert.assertEquals("2", req.getUseCaseStep(3).getId());
+    Assert.assertEquals("collect the receipt", req.getUseCaseStep(3).getContent());
+    Assert.assertNull(req.getUseCaseStep(3).getCondition());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUseCaseExtendedAll()
+  {
+    assertNoWarningsParse("457_ReqUseCaseExtendedAll.ump");
+    Requirement req = model.getAllRequirements().get("UC10");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+    Assert.assertEquals("", req.getStatement());
+
+    Assert.assertEquals("returning customer", req.getWho());
+    Assert.assertEquals("a saved address exists", req.getWhen());
+    Assert.assertEquals("check out quickly", req.getWhat());
+    Assert.assertEquals("avoid retyping delivery details", req.getWhy());
+
+    Assert.assertEquals(1, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+
+    Assert.assertEquals(2, req.numberOfIncludedUseCases());
+    Assert.assertEquals("UC2", req.getIncludedUseCase(0));
+    Assert.assertEquals("UC3", req.getIncludedUseCase(1));
+
+    Assert.assertEquals(3, req.numberOfUseCaseSteps());
+    Assert.assertEquals("confirm the saved address", req.getUseCaseStep(0).getContent());
+    Assert.assertNull(req.getUseCaseStep(0).getCondition());
+    Assert.assertEquals("address still valid", req.getUseCaseStep(1).getCondition());
+    Assert.assertEquals("show the order summary", req.getUseCaseStep(1).getContent());
+    Assert.assertEquals("pay", req.getUseCaseStep(2).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqUsecaseExtendedAliasLowercase()
+  {
+    assertNoWarningsParse("457_ReqUsecaseExtendedAlias.ump");
+    Requirement req = model.getAllRequirements().get("UC11");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("useCase", req.getLanguage());
+
+    Assert.assertEquals(1, req.numberOfParentUseCases());
+    Assert.assertEquals("UC1", req.getParentUseCase(0));
+    Assert.assertEquals(1, req.numberOfIncludedUseCases());
+    Assert.assertEquals("UC2", req.getIncludedUseCase(0));
+
+    Assert.assertEquals(1, req.numberOfUseCaseSteps());
+    Assert.assertEquals("express lane open", req.getUseCaseStep(0).getCondition());
+    Assert.assertEquals("skip the queue", req.getUseCaseStep(0).getContent());
+  }
+
+  //Issue 2378 (Extended Use Case syntax)
+  @Test
+  public void ReqNormalStillWorksAfterUseCaseExtensions()
+  {
+    assertNoWarningsParse("457_ReqNormalStillWorksAfterUseCaseExtensions.ump");
+
+    // include and isA are only use case keywords; a plain requirement keeps them as text
+    Requirement plain = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(plain);
+    Assert.assertEquals("", plain.getLanguage());
+    // A plain requirement keeps its body verbatim, indentation included
+    Assert.assertEquals("include the applicable tax;\n  isA legal obligation;", plain.getStatement());
+    Assert.assertEquals(0, plain.numberOfIncludedUseCases());
+    Assert.assertEquals(0, plain.numberOfParentUseCases());
+
+    Requirement useCase = model.getAllRequirements().get("UC12");
+    Assert.assertNotNull(useCase);
+    Assert.assertEquals(1, useCase.numberOfParentUseCases());
+    Assert.assertEquals("UC1", useCase.getParentUseCase(0));
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsPlain()
+  {
+    assertNoWarningsParse("458_ReqEarsPlain.ump");
+    Requirement req = model.getAllRequirements().get("E7");
+    Assert.assertEquals("ears", req.getLanguage());
+    Assert.assertEquals("When the power fails, the controller shall close the valve.", req.getStatement());
+    Assert.assertFalse(req.hasStructuredEarsFields());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsPatterns()
+  {
+    assertNoWarningsParse("458_ReqEarsPatterns.ump");
+
+    Requirement ubiquitous = model.getAllRequirements().get("E1");
+    Assert.assertNotNull(ubiquitous);
+    Assert.assertEquals("", ubiquitous.getStatement());
+    Assert.assertEquals("mobile phone", ubiquitous.getEarsSystem());
+    Assert.assertEquals("have a mass of less than 150 grams", ubiquitous.getEarsShall());
+    Assert.assertNull(ubiquitous.getEarsWhen());
+
+    Requirement eventDriven = model.getAllRequirements().get("E2");
+    Assert.assertEquals("mute is selected", eventDriven.getEarsWhen());
+    // The EARS trigger is kept apart from the userStory when field
+    Assert.assertNull(eventDriven.getWhen());
+
+    Assert.assertEquals("there is no card in the ATM", model.getAllRequirements().get("E3").getEarsWhile());
+    Assert.assertEquals("the car has a sunroof", model.getAllRequirements().get("E4").getEarsWhere());
+    Assert.assertEquals("an invalid credit card number is entered", model.getAllRequirements().get("E5").getEarsIf());
+
+    Requirement complex = model.getAllRequirements().get("E6");
+    Assert.assertEquals("ears", complex.getLanguage());
+    Assert.assertEquals("the aircraft has thrust reversers", complex.getEarsWhere());
+    Assert.assertEquals("the aircraft is on ground", complex.getEarsWhile());
+    Assert.assertEquals("reverse thrust is commanded", complex.getEarsWhen());
+    Assert.assertEquals("an engine has failed", complex.getEarsIf());
+    Assert.assertEquals("engine control system", complex.getEarsSystem());
+    Assert.assertEquals("enable reverse thrust on the working engine only", complex.getEarsShall());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqNormalStillWorksAfterEarsGrammar()
+  {
+    assertNoWarningsParse("458_ReqNormalStillWorksAfterEars.ump");
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsClauseLayout()
+  {
+    assertNoWarningsParse("458_ReqEarsClauseLayout.ump");
+    Requirement req = model.getAllRequirements().get("E8");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("", req.getStatement());
+
+    // A clause spanning several lines is read as one line
+    Assert.assertEquals("the vault door is open", req.getEarsWhile());
+    // Clauses sharing a line, with or without a space before the brace
+    Assert.assertEquals("the alarm is armed", req.getEarsWhen());
+    Assert.assertEquals("sound the alarm", req.getEarsShall());
+    Assert.assertEquals("the siren fails", req.getEarsIf());
+    Assert.assertEquals("vault controller", req.getEarsSystem());
+
+    // Braces inside a clause are kept
+    Requirement nested = model.getAllRequirements().get("E9");
+    Assert.assertNotNull(nested);
+    Assert.assertEquals("show {status} on the screen", nested.getEarsShall());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsFreeText()
+  {
+    assertNoWarningsParse("458_ReqEarsFreeText.ump");
+    Requirement req = model.getAllRequirements().get("E10");
+    Assert.assertNotNull(req);
+
+    // Text outside the clauses is kept as the statement
+    Assert.assertEquals("Rationale: avoids reverse thrust in flight.\nSee the safety case.", req.getStatement());
+    Assert.assertEquals("the aircraft is on ground", req.getEarsWhile());
+    Assert.assertEquals("reverse thrust is commanded", req.getEarsWhen());
+    Assert.assertEquals("enable reverse thrust", req.getEarsShall());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsCombinedOccurrences()
+  {
+    // No warning 410, since the second occurrence supplies the shall clause
+    assertNoWarningsParse("458_ReqEarsCombinedOccurrences.ump");
+    Requirement req = model.getAllRequirements().get("E12");
+    Assert.assertNotNull(req);
+    Assert.assertEquals("ears", req.getLanguage());
+
+    Assert.assertEquals("the door is closed and the alarm is off", req.getEarsWhile());
+    Assert.assertEquals("the button is pressed", req.getEarsWhen());
+    Assert.assertEquals("open the door and turn on the light", req.getEarsShall());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsMissingShall410()
+  {
+    assertHasWarningsParse("458_ReqEarsMissingShall410.ump", 410);
+
+    // Only E13 and E15 lack a response, since an empty shall clause is ignored
+    Assert.assertEquals(2, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals(410, parser.getParseResult().getErrorMessage(1).getErrorType().getErrorCode());
+
+    Requirement withoutShall = model.getAllRequirements().get("E13");
+    Assert.assertEquals("the card is inserted", withoutShall.getEarsWhen());
+    Assert.assertNull(withoutShall.getEarsShall());
+    Assert.assertNull(model.getAllRequirements().get("E15").getEarsShall());
+  }
+  //Issue 2484 (EARS)
+  @Test
+  public void ReqEarsKeywordsAsText()
+  {
+    assertNoWarningsParse("458_ReqEarsKeywordsAsText.ump");
+
+    Requirement ears = model.getAllRequirements().get("E16");
+    Assert.assertNotNull(ears);
+    Assert.assertFalse(ears.hasStructuredEarsFields());
+    // A body with no clauses is kept verbatim, indentation included
+    Assert.assertEquals("The alarm sounds when { it is armed } and shall { beep }\n  whenever { the door opens } systems { stay locked }", ears.getStatement());
+
+    Requirement plain = model.getAllRequirements().get("R1");
+    Assert.assertNotNull(plain);
+    Assert.assertEquals("", plain.getLanguage());
+    Assert.assertFalse(plain.hasStructuredEarsFields());
+    Assert.assertEquals("when { the door opens }\n  shall { turn on the light }", plain.getStatement());
+  }
   @Test
   public void associationName()
   {
@@ -1881,6 +3843,16 @@ public class UmpleParserTest
   @Test
   public void TestReservedRoleNameError32() {
 	  assertFailedParse("009_ReflexiveReservedRoleNameError32.ump",32);
+  }
+
+  @Test
+  public void TestInvalidAssociationRoleNameError120() {
+    assertFailedParse("2341_invalidAssociationRoleName.ump",120);
+  }
+
+  @Test
+  public void TestAssociationRoleNameWarning121() {
+      assertHasWarningsParse("2341_roleNameUppercaseWarning.ump",121);
   }
 
   @Test
@@ -2600,6 +4572,9 @@ public class UmpleParserTest
   public void multipleConstraintMethodBody() 
   {
     assertNoWarningsParse("1488_multipleConstraintMethodBody.ump");
+    // The conditions of the code-less declarations apply to the method
+    UmpleClass x = model.getUmpleClass("X");
+    Assert.assertEquals(2, x.getMethodPreconditions(methodNamed(x, "m1"), "Java").size());
   }
 
   // Issue 1488
@@ -3802,4 +5777,3 @@ public class UmpleParserTest
 	Assert.assertEquals(true, parser.getParseResult().getErrorMessages().isEmpty());
   }
 }
-

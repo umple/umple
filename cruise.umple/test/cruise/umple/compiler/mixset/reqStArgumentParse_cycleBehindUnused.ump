@@ -1,0 +1,11 @@
+// Regression fixture: A <-> B cycle, both used, plus B requires an unused D.
+// B's require statement [D] is the one that fails.
+// Expected: NOT satisfied (false).
+mixset A { require [B]; }
+mixset B { require [A]; }
+mixset B { require [D]; }
+mixset D {}
+mixset Z { require [A]; }
+
+use A;
+use B;

@@ -1,0 +1,6 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqAssociationLeftNav.ump
+</p><p><b>R1: A left-navigable association requirement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;association:&nbsp;  * bs <- 1 A a;
+&nbsp;in class&nbsp;A&nbsp;ReqAssociationLeftNav.ump&nbsp;line&nbsp;8 ; 
+</p></html>

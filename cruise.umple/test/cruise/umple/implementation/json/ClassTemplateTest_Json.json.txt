@@ -6,9 +6,11 @@
  "height": 20},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "NewClass",
  "name": "NewClass",
  "isAbstract": "false",
  "displayColor": "" ,
  "isInterface": "false"}],
- "umpleAssociations":[] }
+ "umpleAssociations":[],
+ "globalEnums":[] }

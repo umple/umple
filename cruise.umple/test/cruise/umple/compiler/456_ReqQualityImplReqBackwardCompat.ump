@@ -1,0 +1,5 @@
+// Test: plain implementsReq still works after grammar change
+req R1 { first requirement }
+
+implementsReq R1;
+class Item { name; }

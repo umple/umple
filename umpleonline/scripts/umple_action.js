@@ -183,6 +183,10 @@ Action.clicked = function(event)
       }
     }
   }
+  else if (action == "RestoreEarlierVersion")
+  {
+    VersionHistory.openRestoreDialog();
+  }
   else if (action == "CreateTask") 
   {
     jQuery("#taskArea").css("display","block");
@@ -284,16 +288,21 @@ Action.clicked = function(event)
     Layout.showHideTextEditor();
     Page.showText = !Page.showText;
     Page.setShowHideIconState('SHT_button');
+    // After toggling Text (T) - doesn't change visibility rule, but keeps things consistent
+    if (typeof Action.updateLiveViewVisibility === 'function') { Action.updateLiveViewVisibility(); }
   }
   else if (action == "ShowHideCanvas")
   {
     Layout.showHideCanvas();
     Page.showCanvas = !Page.showCanvas;
     Page.setShowHideIconState('SHD_button');
+    // After toggling Diagram (D)
+    if (typeof Action.updateLiveViewVisibility === 'function') { Action.updateLiveViewVisibility(); }
   }
   else if (action == "ShowEditableClassDiagram")
   {
     Action.changeDiagramType({type:"editableClass"});
+    Action.syncLiveViewSelector("ecd");
   }
   else if (action == "ShowJointJSClassDiagram")
   {
@@ -302,18 +311,47 @@ Action.clicked = function(event)
   else if (action == "ShowGvClassDiagram")
   {
     Action.changeDiagramType({type:"GvClass"});
+    Action.syncLiveViewSelector("gcd");
   }
   else if (action == "ShowGvFeatureDiagram")
   {
     Action.changeDiagramType({type:"GvFeature"});//buttonShowGvFeatureDiagram
+    Action.syncLiveViewSelector("gfd");
   }
   else if (action == "ShowGvStateDiagram")
   {
     Action.changeDiagramType({type:"GvState"});
+    Action.syncLiveViewSelector("sd");
   }
   else if (action == "ShowStructureDiagram")
   {
     Action.changeDiagramType({type:"structure"});
+    Action.syncLiveViewSelector("std");
+  }
+  else if (action === "ShowGvEntityRelationshipDiagram" || action == "ShowEntityRelationshipDiagram")
+  {
+    Action.changeDiagramType({type:"GvEntityRelationshipDiagram"});
+    Action.syncLiveViewSelector("erd");
+  }
+  else if (action == "ShowInstanceDiagram")
+  {
+    Action.changeDiagramType({type:"instanceDiagram"});
+    Action.syncLiveViewSelector("instanceDiagram");
+  }
+  else if (action == "ShowCRUDUI")
+  {
+    Action.changeDiagramType({type:"crudUI"});
+    Action.syncLiveViewSelector("crudUI");
+  }
+  else if (action == "ShowStateTables")
+  {
+    Action.changeDiagramType({type:"stateTables"});
+    Action.syncLiveViewSelector("stateTables");
+  }
+  else if (action == "ShowEventSequence")
+  {
+    Action.changeDiagramType({type:"eventSequence"});
+    Action.syncLiveViewSelector("eventSequence");
   }
   else if (action == "ShowHideLayoutEditor")
   {
@@ -361,6 +399,10 @@ Action.clicked = function(event)
   else if (action == "ToggleGuardLabels")
   {
     Action.toggleGuardLabels();
+  }
+  else if (action == "ToggleNaturalLanguage")
+  {
+    Action.toggleNaturalLanguage();
   }
   else if (action == "AllowPinch")
   {
@@ -642,16 +684,27 @@ Action.loadFile = function()
     Action.setjustUpdatetoSaveLater(true);
     if (Page.getModel().substring(0, 8) == "taskroot")
     {
-      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename));
+      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&isTask=1&filename={0}",filename),{onFinally: Action.initialLoadFinished});
     } 
     else 
     {
-      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&filename={0}",filename));
+      Ajax.sendRequest("scripts/compiler.php",Action.loadFileCallback,format("load=1&filename={0}",filename),{onFinally: Action.initialLoadFinished});
     }
   }
   else
   {
     Action.saveNewFile();
+  }
+}
+
+// Collaboration needs the loaded text, which is complete once the model file and the tab list are both in
+Action.initialLoadsPending = 2;
+Action.initialLoadFinished = function()
+{
+  Action.initialLoadsPending -= 1;
+  if (Action.initialLoadsPending == 0)
+  {
+    Collab.connectCollabServer();
   }
 }
 
@@ -675,6 +728,11 @@ Action.loadFileCallback = function(response)
   if (!Action.manualSync) {
     Action.updateUmpleDiagram();
     Action.freshLoad = false;
+  }
+
+  // LSP: bootstrap after real content is loaded into editor
+  if (typeof Page !== "undefined" && Page.initLspAsync) {
+    Page.initLspAsync();
   }
 }
 
@@ -895,10 +953,15 @@ Action.saveNewFile = function()
 {
   var umpleCode = Page.getUmpleCode();
   var filename = Page.getFilename();
-  
+
   if (filename == "")
   {
-    Ajax.sendRequest("scripts/compiler.php",Action.saveNewFileCallback,format("save=1&&umpleCode={0}",umpleCode));
+    Ajax.sendRequest("scripts/compiler.php",Action.saveNewFileCallback,format("save=1&&umpleCode={0}",umpleCode),{onFinally: Action.initialLoadFinished});
+  }
+
+  // LSP: bootstrap for new blank sessions (loadFileCallback doesn't fire)
+  if (typeof Page !== "undefined" && Page.initLspAsync) {
+    Page.initLspAsync();
   }
 }
 
@@ -909,10 +972,23 @@ Action.saveNewFileCallback = function(response)
 
 Action.changeDiagramType = function(newDiagramType)
 {
+  // If we’re already in the requested mode, return
+  if (newDiagramType.type === "editableClass" && Page.useEditableClassDiagram) return;
+  if (newDiagramType.type === "JointJSClass"  && Page.useJointJSClassDiagram) return;
+  if (newDiagramType.type === "GvClass"       && Page.useGvClassDiagram) return;
+  if (newDiagramType.type === "GvState"       && Page.useGvStateDiagram) return;
+  if (newDiagramType.type === "GvFeature"     && Page.useGvFeatureDiagram) return;
+  if ((newDiagramType.type === "GvEntity" || newDiagramType.type === "GvEntityRelationshipDiagram") && Page.useGvEntityRelationshipDiagram) return;
+  if (newDiagramType.type === "structure"     && Page.useStructureDiagram) return;
+  if (newDiagramType.type === "stateTables"   && Page.useStateTables) return;
+
+  Page.unselectAllToggleTools();
   var changedType = false;
   jQuery(".layoutListItem").hide();
+  // reset show state
+  FeatureTreeModal.hidePaletteSection();
 
-  if(newDiagramType.type == "editableClass") { 
+  if(newDiagramType.type === "editableClass") {
     if(Page.useEditableClassDiagram) return;
     Page.useEditableClassDiagram = true;
     Page.useJointJSClassDiagram = false;
@@ -920,6 +996,11 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowEditableClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('editableClass');
@@ -927,7 +1008,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery(".view_opt_class_palette").show();
 
   }
-  else if(newDiagramType.type == "JointJSClass") { 
+  else if(newDiagramType.type === "JointJSClass") {
     if(Page.useJointJSClassDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = true;
@@ -935,13 +1016,18 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowJointJSClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('JointJSClass');
     jQuery(".view_opt_class").show();
     jQuery(".view_opt_class_palette").show();
   }  
-  else if(newDiagramType.type == "GvClass") { 
+  else if(newDiagramType.type === "GvClass") {
     if(Page.useGvClassDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -949,13 +1035,40 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useGvFeatureDiagram = false;
     Page.useStructureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowGvClassDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvClass');
     jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
+  }
+
+  else if(newDiagramType.type === "GvEntity" || newDiagramType.type === "GvEntityRelationshipDiagram") {
+    if(Page.useGvEntityRelationshipDiagram) return;
+    Page.useGvClassDiagram = false;
+    Page.useEditableClassDiagram = false;
+    Page.useJointJSClassDiagram = false;
+    Page.useGvStateDiagram = false;
+    Page.useGvFeatureDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = true;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    changedType = true;
+    jQuery("#buttonShowGvEntityRelationshipDiagram").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('none');
+    jQuery(".view_opt_class").show();
+    Page.initExamples();
 
   }
-  else if(newDiagramType.type == "GvState") {
+
+  else if(newDiagramType.type === "GvState") {
     if(Page.useGvStateDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -963,13 +1076,18 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = true;
     Page.useStructureDiagram = false;
     Page.useGvFeatureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowGvStateDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvState');
     jQuery(".view_opt_state").show();
 
   }
-  else if(newDiagramType.type == "GvFeature") {
+  else if(newDiagramType.type === "GvFeature") {
    if(Page.useGvFeatureDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -977,14 +1095,18 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
     Page.useGvFeatureDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowGvFeatureDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('GvFeature');
     jQuery(".view_opt_feature").show();
-
-
+    FeatureTreeModal.showPaletteSection();
   }
-  else if(newDiagramType.type == "structure") { // Structure Diagram
+  else if(newDiagramType.type === "structure") { // Structure Diagram
     if(Page.useGvStructureDiagram) return;
     Page.useEditableClassDiagram = false;
     Page.useJointJSClassDiagram = false;
@@ -992,10 +1114,95 @@ Action.changeDiagramType = function(newDiagramType)
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = true;
     Page.useGvFeatureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     changedType = true;
     jQuery("#buttonShowStructureDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('structure');
   }
+
+  else if(newDiagramType.type === "instanceDiagram") {
+    if(Page.useInstanceDiagram) return;
+     Page.useEditableClassDiagram = false;
+     Page.useJointJSClassDiagram = false;
+     Page.useGvClassDiagram = false;
+     Page.useGvStateDiagram = false;
+     Page.useStructureDiagram = false;
+     Page.useGvFeatureDiagram = false;
+     Page.useGvEntityRelationshipDiagram = false;
+     Page.useInstanceDiagram = true;
+     Page.useCRUDUI = false;
+     Page.useStateTables = false;
+     Page.useEventSequence = false;
+     changedType = true;
+     jQuery("#buttonShowInstanceDiagram").prop('checked', 'checked');
+     Page.setDiagramTypeIconState('none');
+     jQuery(".view_opt_feature").show();
+ 
+ 
+   }
+
+  else if(newDiagramType.type === "crudUI"){
+   if(Page.useCRUDUI) return;
+    Page.useEditableClassDiagram = false;
+    Page.useJointJSClassDiagram = false;
+    Page.useGvClassDiagram = false;
+    Page.useGvStateDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useGvFeatureDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = true;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    changedType = true;
+    jQuery("#buttonShowCRUDUI").prop('checked', 'checked');
+    Page.setDiagramTypeIconState('none');
+    jQuery(".view_opt_feature").show();
+}
+
+   else if(newDiagramType.type === "stateTables"){
+    if(Page.useStateTables) return;
+     Page.useEditableClassDiagram = false;
+     Page.useJointJSClassDiagram = false;
+     Page.useGvClassDiagram = false;
+     Page.useGvStateDiagram = false;
+     Page.useStructureDiagram = false;
+     Page.useGvFeatureDiagram = false;
+     Page.useGvEntityRelationshipDiagram = false;
+     Page.useInstanceDiagram = false;
+     Page.useCRUDUI = false;
+     Page.useStateTables = true;
+     Page.useEventSequence = false;
+     changedType = true;
+     jQuery("#buttonShowStateTables").prop('checked', 'checked');
+     Page.setDiagramTypeIconState('none');
+     jQuery(".view_opt_feature").show();
+     // Only adding states applies to state tables; their empty cells add transitions
+     jQuery("#buttonAddState").show();
+   }
+
+   else if(newDiagramType.type === "eventSequence"){
+    if(Page.useEventSequence) return;
+     Page.useEditableClassDiagram = false;
+     Page.useJointJSClassDiagram = false;
+     Page.useGvClassDiagram = false;
+     Page.useGvStateDiagram = false;
+     Page.useStructureDiagram = false;
+     Page.useGvFeatureDiagram = false;
+     Page.useGvEntityRelationshipDiagram = false;
+     Page.useInstanceDiagram = false;
+     Page.useCRUDUI = false;
+     Page.useStateTables = false;
+     Page.useEventSequence = true;
+     changedType = true;
+     jQuery("#buttonShowEventSequence").prop('checked', 'checked');
+     Page.setDiagramTypeIconState('none');
+     jQuery(".view_opt_feature").show();
+   }
   if (changedType) {
     Action.redrawDiagram();
   }
@@ -1138,7 +1345,7 @@ Action.simulateCodeCallback = function(response)
 //Called by Action.drawStateMenu(), this multiuse function takes any textual input requires for 
 //menu edits on states.
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
-Action.drawInputState = function(inputType,stateCode,stateName){
+Action.drawInputState = function(inputType,stateCode,stateName,eventName){
   // DEBUG
   // console.log("Inside drawInputState: ")
   // console.log("with inputType: ", inputType)
@@ -1280,6 +1487,8 @@ Action.drawInputState = function(inputType,stateCode,stateName){
     }
 
     label.appendChild(document.createTextNode("Condition for new transition?"));
+    // Optional event, e.g. from the column of a state table cell
+    if(eventName && Action.validateAttributeName(eventName)) input.value = eventName;
     input.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') {
         if(Action.validateAttributeName(input.value)){
@@ -1295,7 +1504,7 @@ Action.drawInputState = function(inputType,stateCode,stateName){
 
           var assocState=function (event){
               let targ=event.target;
-              while(targ.parentElement.id!="graph0"){
+              while(targ.parentElement.id!="graph0" && targ.tagName!="TD"){
                 targ=targ.parentNode;
               }
               let elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
@@ -1322,6 +1531,10 @@ Action.drawInputState = function(inputType,stateCode,stateName){
               for(let q=0;q<others.length;q++){
                 others[q].removeEventListener("mousedown",assocState);
               }  
+              others=document.querySelectorAll("#htmlCanvas td.state-header[href]");
+              for(let q=0;q<others.length;q++){
+                others[q].removeEventListener("mousedown",assocState);
+              }
             };
           //add event listener to Graphviz nodes for left click
           var elems=document.getElementsByClassName("node");
@@ -1332,11 +1545,55 @@ Action.drawInputState = function(inputType,stateCode,stateName){
           for(let i=0;i<elems.length;i++){
             elems[i].addEventListener("mousedown", assocState);
           }       
+          elems=document.querySelectorAll("#htmlCanvas td.state-header[href]");
+          for(let i=0;i<elems.length;i++){
+            elems[i].addEventListener("mousedown", assocState);
+          }
         } else if(!document.contains(inputErrorMsg)) {
           prompt.appendChild(inputErrorMsg);
         }
       }
     });
+  } else if(inputType=="colorState") {
+
+    if (clientDebuggerFlag){
+      console.log("Changing State Color ...");
+    }
+
+    // Change the input to a color picker
+    input.type = "color";
+    input.style.width = "30px";
+
+    label.appendChild(document.createTextNode("Color - "));
+
+    // Add a clickable arrow like the class color UI
+    var arrow = document.createElement("span");
+    arrow.innerHTML = "&#8594;";
+    arrow.style.cursor = "pointer";
+    arrow.style.paddingLeft = "5px";
+
+    var applyColor = function(){
+      Action.setColorState(unsanitizedState, stateName, input.value);
+
+      document.removeEventListener("mousedown", hider);
+      prompt.remove();
+      Action.removeContextMenu();
+
+      // Save history (consistent with other menu actions)
+      TabControl.getCurrentHistory().save(Page.codeMirrorEditor6.state.doc.toString(), "menuUpdate");
+    };
+
+    input.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        applyColor();
+      }
+    });
+
+    arrow.addEventListener("click", function(){
+      applyColor();
+    });
+
+    prompt.appendChild(arrow);
   }
   // Add the prompt to the page
   prompt.appendChild(label);
@@ -1344,6 +1601,44 @@ Action.drawInputState = function(inputType,stateCode,stateName){
   document.body.appendChild(prompt);
   input.focus();
 }
+
+Action.setColorState = function(stateCode, stateName, colorValue) {
+  var orig = Page.codeMirrorEditor6.state.doc.toString();
+  var startIndex = orig.indexOf(stateCode);
+
+  if (startIndex === -1) {
+    console.log("State not found in editor.");
+    return;
+  }
+
+  var endIndex = startIndex + stateCode.length;
+  var updatedState = stateCode;
+
+  // Replace existing displayColor if present
+  if (updatedState.includes("displayColor")) {
+    updatedState = updatedState.replace(
+      /displayColor\s+#[0-9a-fA-F]{6}\s*;/,
+      "displayColor " + colorValue + ";"
+    );
+  } 
+  // Otherwise insert a new displayColor line inside the state block
+  else {
+    var braceIndex = updatedState.indexOf("{");
+    if (braceIndex >= 0) {
+      updatedState =
+        updatedState.slice(0, braceIndex + 1) +
+        "\n  displayColor " + colorValue + ";\n" +
+        updatedState.slice(braceIndex + 1);
+    }
+  }
+
+  Page.codeMirrorEditor6.dispatch({
+    changes: { from: startIndex, to: endIndex, insert: updatedState }
+  });
+
+  setTimeout('Action.processTyping("newEditor",' + false + ')', Action.waiting_time);
+};
+
 //Deletes a target state within the specific SM and Class, as well any transitions to/from target state
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
 Action.deleteState = function(stateCode,className,smName,stateName){
@@ -1384,7 +1679,7 @@ Action.deleteState = function(stateCode,className,smName,stateName){
 //Action.drawStateMenu() is triggered by contextmenu event on Graphviz State Diagram "node" elements
 //Draws a div containing the editing options for state GV diagrams, as well as calling the related function when clicked
 //Part of Issue #1898, see wiki for more details: https://github.com/umple/umple/wiki/MenusInGraphviz
-Action.drawStateMenu = function(){
+Action.drawStateMenu = function(event){
   // Debug
   // console.log("Inside drawStateMenu: ")
   if(!Action.diagramInSync){
@@ -1394,12 +1689,20 @@ Action.drawStateMenu = function(){
   Action.removeContextMenu();
   var targ=event.target;
   //iterate up to top of graph elements
-  while(targ.parentElement.id!="graph0"){
-    targ=targ.parentNode;
+  while (targ && targ.parentElement && targ.parentElement.id != "graph0" && targ.tagName != "TD") {
+    targ = targ.parentNode;
   }
   //grabs state name
-  var elemText=targ.outerHTML.substr(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length,targ.outerHTML.indexOf("&quot;)\"")-(targ.outerHTML.indexOf("stateClicked(&quot;")+"stateClicked(&quot;".length));
-  elemText=elemText.split("^*^"); //index 0: class, index 1: base state, index 2: remaining states
+  var match = targ.outerHTML.match(/stateClicked\((?:&quot;|"|')([^"']+)(?:&quot;|"|')\)/);
+  
+  if (!match) {
+    return;
+  }
+  
+  var elemText = match[1].split("^*^");
+  if (!elemText[2]) {
+    return;
+  }
   elemText[2]=elemText[2].split(".");
   var orig = Page.codeMirrorEditor6.state.doc.toString();
   var chosenStateIndices=Action.selectStateInClassCM6(elemText[0],elemText[1],elemText[2][0]);
@@ -1412,10 +1715,16 @@ Action.drawStateMenu = function(){
   }
   //this section generates the context menu, grabbing option names and associated functions from the vars below 
   var menu = document.createElement('customContextMenu');
-  var rowContent = ["Rename State","Delete State","Add Substate","Add Transition"];
+  var rowContent = ["Rename State","Delete State","Add Substate","Add Transition","Change Color"];
   //need to sanitize any linebreaks or quotes that could break the generated HTML
   var jsInput=chosenState.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
-  var rowFuncs = ["Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")","Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")","Action.drawInputState(\"transition\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"];
+  var rowFuncs = [
+    "Action.drawInputState(\"rename\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")",
+    "Action.deleteState(\""+jsInput+"\",\""+elemText[0]+"\",\""+elemText[1]+"\",\""+elemText[2]+"\")",
+    "Action.drawInputState(\"substate\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")",
+    "Action.drawInputState(\"transition\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")",
+    "Action.drawInputState(\"colorState\",\""+jsInput+"\",\""+elemText[2][elemText[2].length-1]+"\")"
+  ]; 
   menu.style.zIndex = "1000";
   menu.style.border = "1px solid #ccc";
   menu.style.backgroundColor = "#f8f8f8";
@@ -1476,7 +1785,7 @@ Action.displayTransitionMenu = function(event) {
   Action.removeContextMenu();
   var targ = event.target;
   //iterate up to top of graph elements
-  while (targ.parentElement.id != "graph0") {
+  while (targ.parentElement.id != "graph0" && targ.tagName != "SPAN") {
       targ = targ.parentNode;
   }
   //grabs state name
@@ -1494,6 +1803,7 @@ Action.displayTransitionMenu = function(event) {
 
   let searchTerm = id[2].replaceAll("+", "\\+").replaceAll("-", "\\-").replaceAll("*", "\\*").replaceAll("?", "\\?").replaceAll("|", "\\|"); //preceed any accidental quantifiers with escape character
   searchTerm = searchTerm.replace("after", "after~`~?:Every`~`?"); //subpar solution, could be improved
+  if (!id[2].startsWith("after(")) searchTerm = searchTerm.replace(/\(.*\)$/, "~`~?:$&`~`?"); //the code may omit the parameters of the event
   if (id[5] != "") {
       let guardStr = id[5].trim().replaceAll("+", "\\+").replaceAll("-", "\\-").replaceAll("*", "\\*").replaceAll("?", "\\?").replaceAll("|", "\\|"); //preceed any accidental quantifiers with escape character
       searchTerm = searchTerm + "\\s*[\\s*" + guardStr.trim().slice(1, guardStr.trim().length - 1) + "\\s*]";
@@ -3319,7 +3629,7 @@ Action.displayAttributeMenu = function(event, attributeName, attributeType) {
   // Create context menu for attribute
   var menu = document.createElement('customContextMenu');
   var menuHeader = document.createElement('div');
-  menuHeader.textContent = "Attribute: " + attributeName + "Type: " + attributeType;
+  menuHeader.textContent = "Attribute: " + attributeName + " Type: " + attributeType;
   menuHeader.style.padding = "5px";
   menuHeader.style.borderBottom = "1px solid #ccc";
   menuHeader.style.fontWeight = "bold";
@@ -3437,6 +3747,13 @@ Action.renameAttribute = function(classCode, className, attributeName, attribute
   }
 };
 document.addEventListener("mousedown", hider);
+ input.addEventListener('keydown', function(e) {
+   if (e.key === 'Enter') {
+     e.preventDefault();
+     e.stopPropagation();
+     submitButton.click();
+   }
+ });
  // Event listener for the submit action
  submitButton.addEventListener('click', function() {
   if(Action.validateAttributeName(input.value.trim())){
@@ -3506,6 +3823,13 @@ Action.changeAttributeType = function(classCode, className, attributeName, curre
     }
   };
   document.addEventListener("mousedown", hider);
+  select.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      e.stopPropagation();
+      submitButton.click();
+    }
+  });
   // Event listener for the submit button action
     submitButton.addEventListener('click', function() {
       var selectedType = select.options[select.selectedIndex].value;
@@ -3714,6 +4038,7 @@ Action.classClicked = function(event)
 Action.stateClicked = function(identifier)
 {
     if (!Action.diagramInSync) return;
+    GvDiagramEdit.selectedState = identifier;
     Action.focusOn("umpleCanvas", true);
     Action.focusOn("umpleModelEditorText", false);
     var idSplit=identifier.split("^*^");
@@ -3759,7 +4084,7 @@ Action.stateClicked = function(identifier)
 
 
 
-   if (Page.selectedItem == "AddTransition")
+   if (Page.selectedItem == "AddTransition" && !Page.useGvStateDiagram)
     {
         if (DiagramEdit.newTransition == null)
         {
@@ -3820,6 +4145,7 @@ Action.transitionClicked = function(identifier)
   }
   let searchTerm=id[2].replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
   searchTerm=searchTerm.replace("after","after~`~?:Every`~`?"); //subpar solution, could be improved
+  if(!id[2].startsWith("after(")) searchTerm=searchTerm.replace(/\(.*\)$/, "~`~?:$&`~`?"); //the code may omit the parameters of the event
   if(id[5]!=""){
 
     let guardStr=id[5].trim().replaceAll("+","\\+").replaceAll("-","\\-").replaceAll("*","\\*").replaceAll("?","\\?").replaceAll("|","\\|"); //preceed any accidental quantifiers with escape character
@@ -4056,6 +4382,18 @@ Action.generateCode = function(languageStyle, languageName)
   {
     actualLanguage = languageName+"."+$("inputGenerateCode").value.split(":")[1];
   }
+  else if (languageName === "Mermaid")
+  {
+    // Keep Mermaid output aligned with the active diagram context in UmpleOnline.
+    if (Page.useGvStateDiagram)
+    {
+      actualLanguage = languageName + ".state";
+    }
+    else if (Page.useEditableClassDiagram || Page.useJointJSClassDiagram || Page.useGvClassDiagram)
+    {
+      actualLanguage = languageName + ".class";
+    }
+  }
   
   jQuery(generateCodeSelector).showLoading();
 
@@ -4230,6 +4568,11 @@ Action.drawGeneralizationLine = function(event, newGeneralization)
 
 Action.umpleCanvasClicked = function(event)
 {
+  if ((Page.useGvStateDiagram || Page.useStateTables) && Page.selectedItem === "AddState") {
+    Action.elementClicked = false;
+    GvDiagramEdit.addState(event);
+    return;
+  }
   if (Action.elementClicked)
   {
     Action.elementClicked = false;
@@ -4358,7 +4701,7 @@ Action.setExampleType = function setExampleType()
 
 Action.loadExample = function loadExample()
 {
-  var diagramType = this.dataset['diagramType'];
+  var requestDiagramType = this.dataset['diagramType'];
   var $option = jQuery(' option:selected', this);
   if ($option.hasClass('openUmprOption')) {
     // user wants to open the umpr repository
@@ -4375,16 +4718,44 @@ Action.loadExample = function loadExample()
   var diagramType="";
   if(Page.useGvStateDiagram) {
     diagramType="&diagramtype=state";
+    Action.setLiveView("sd");
   }
  else if(Page.useGvFeatureDiagram) {
     diagramType="&diagramtype=GvFeature";
+    Action.setLiveView("gfd");
+  }
+
+  else if(Page.useGvEntityRelationshipDiagram) {
+    diagramType="&diagramtype=entityRelationshipDiagram";
+    Action.setLiveView("erd");
+  }
+
+  else if(Page.useInstanceDiagram) {
+    diagramType="&diagramtype=instanceDiagram";
+    Action.setLiveView("instanceDiagram");
+  }
+
+
+  else if(Page.useStateTables) {
+    diagramType="&diagramtype=StateTables";
+    Action.setLiveView("stateTables");
+  }
+
+  else if(Page.useEventSequence) {
+    diagramType="&diagramtype=eventSequence";
+    Action.setLiveView("eventSequence");
   }
   else if(Page.useStructureDiagram) {
     diagramType="&diagramtype=structure&generateDefault=cpp";
+    Action.setLiveView("std");
   }
   else {
     diagramType="&diagramtype=GvClass";
+    if (typeof Action.setLiveView === "function") {
+    // This calls the logic we already have at the bottom of umple_action.js
+    Action.setLiveView("gcd");
     //jQuery("#genjava").prop("selected",true);
+    }
   }
   
   var largerSelector = "#buttonLarger";
@@ -4393,20 +4764,22 @@ Action.loadExample = function loadExample()
   
   umpleCanvasWidth = jQuery(canvasSelector).width();
   umpleCanvasHeight = jQuery(canvasSelector).height();
-  
-  var sel = Page.getSelectedExample();
-  
+
+  var shortExampleName, newURL;
   if (exampleName.startsWith("https")) {
-    var shortExampleName=exampleName.split("/").pop();
-    var newURL="?filename="+exampleName.substr(8)+".ump"+diagramType;
+    shortExampleName=exampleName.split("/").pop();
+    newURL="?filename="+exampleName.substr(8)+".ump"+diagramType;
   }
   else
   {
-    var shortExampleName=exampleName;
-    var newURL="?example="+shortExampleName+diagramType;
+    shortExampleName=exampleName;
+    newURL="?example="+shortExampleName+diagramType;
   }
+    // COMMENTED OUT SUBJECT TO INVESTIGATION
+    // Page.setSelectExample(shortExampleName + ".ump");
+    // window.history.pushState({}, "", newURL);
 
-  setTimeout(function () { // Delay so it doesn't get erased
+    setTimeout(function () { // Delay so it doesn't get erased
     Page.setExampleMessage("<a href=\""+newURL+"\">URL for "+shortExampleName+" example</a>");
   }, 3000);
   
@@ -4418,14 +4791,17 @@ Action.loadExampleCallback = function(response)
 {
   Action.freshLoad = true;
   Action.setjustUpdatetoSaveLater(true);
+  
+  //Update the code editor
   Page.setUmpleCode(response.responseText, function(){
     Page.hideLoading();
-    Action.updateUmpleDiagram()}
-  );
+    Action.updateUmpleDiagram();
+  }, true);
+ 
   Action.setCaretPosition("0");
   Action.updateLineNumberDisplay();
   TabControl.getCurrentHistory().save(response.responseText, "loadExampleCallback");
-}
+};
 
 Action.customSizeTyped = function()
 {
@@ -5055,6 +5431,29 @@ Action.selectClass = function(className)
   Action.highlightByIndexCM6(selectionIndiciesCM6.startIndex, selectionIndiciesCM6.endIndex);
 }
 
+// Highlights the text of the attribute that is currently selected.
+Action.selectAttribute = function(className, attributeName)
+{
+  var searchCursor = new RegExp("(associationClass|class|interface|trait) "+className+"($|\\\s|[{])");
+  var pattern = new RegExp("(^|[;{}])[^\\S\\n]*([\\w<>\\[\\],.]+[^\\S\\n]+)*"+attributeName+"\\s*[=;]", "m");
+
+  if(Page.codeMirrorOn) {
+    var text = Page.codeMirrorEditor6.state.doc.toString();
+    let splitBuffer=Action.splitStates(text);
+    for(let i=0;i<splitBuffer.length;i++){
+      if(splitBuffer[i].search(searchCursor)==0){
+        let matches=splitBuffer[i].match(pattern);
+        if(matches){
+          let startIndex=text.indexOf(splitBuffer[i])+matches.index;
+          Action.highlightByIndexCM6(startIndex, startIndex+matches[0].length);
+          return;
+        }
+      }
+    }
+    Action.selectClass(className);
+  }
+}
+
 // Highlights the text of the state that is currently selected.
 Action.selectState = function(stateName)
 {
@@ -5261,6 +5660,29 @@ Action.updateLineNumberDisplay = function()
   jQuery("#linenum").val(Action.getCaretPosition());
 }
 
+Action.goToCrossFileError = function(filename, line)
+{
+  var base = filename.split('/').pop().replace(/\.ump\s*$/i, '');
+  var tabId = null;
+
+  Object.keys(TabControl.tabs).forEach(function(id) {
+    if (TabControl.tabs[id].name === base) {
+      tabId = id;
+    }
+  });
+
+  if (tabId !== null && String(tabId) !== String(TabControl.activeTab)) {
+    TabControl.selectTab(tabId);
+  }
+
+  setTimeout(function() {
+    Action.setCaretPosition(parseInt(line, 10));
+    Action.updateLineNumberDisplay();
+  }, 100);
+
+  return false;
+};
+
 Action.umpleTyped = function(eventObject)
 {
   // DEBUG
@@ -5388,8 +5810,16 @@ Action.umpleTypingActivity = function(target) {
   {
     clearTimeout(Action.oldTimeout);
   }
-  if(target == "diagramEdit") Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', 500);
-  else Action.oldTimeout = setTimeout('Action.processTyping("' + target + '",' + false + ')', Action.waiting_time);
+
+  const delay = (target === "diagramEdit") ? 500 : Action.waiting_time;
+
+  const thisTimer = setTimeout(() => {
+    if (Action.oldTimeout !== thisTimer) return;
+    Action.oldTimeout = null;
+    Action.processTyping(target, false);
+  }, delay);
+
+  Action.oldTimeout = thisTimer;
 }
 
 // Called after a 3s delay as controlled by umpleTypingActivity when
@@ -5400,6 +5830,14 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
 
   if (clientDebuggerFlag){
     console.log("Inside Action.processTyping ...", target);
+  }
+
+  if (
+    (target == "umpleModelEditorText" || target == "codeMirrorEditor" || target == "newEditor") &&
+    typeof GvDiagramEdit !== "undefined" &&
+    GvDiagramEdit.clearPendingPaletteState
+  ) {
+    GvDiagramEdit.clearPendingPaletteState();
   }
 
   document.getElementById("newEditor").value = Page.codeMirrorEditor6.state.doc.toString();
@@ -5448,7 +5886,7 @@ Action.processTyping = function(target, manuallySynchronized, currentCursorPosit
 
 // Refactoring definitive text location
 // This function stores just the core umple code, NOT the layout
-Action.updateCurrentUmpleTextBeingEdited = function(codeToSave){
+Action.updateCurrentUmpleTextBeingEdited = function(codeToSave, skipDebouncedTyping){
   // console.log("Inside Action.updateCurrentUmpleTextBeingEdited() ...")
   // Back up the data in the main editor
   Page.currentUmpleTextBeingEdited = codeToSave;
@@ -5457,7 +5895,7 @@ Action.updateCurrentUmpleTextBeingEdited = function(codeToSave){
   jQuery("#umpleModelEditorText").val(codeToSave);
   
   // Update the content in CM6 CodeMirror 6
-  Page.setCodeMirror6Text(codeToSave);
+  Page.setCodeMirror6Text(codeToSave, skipDebouncedTyping);
 };
 
 Action.updateLayoutEditorAndDiagram = function(target)
@@ -5484,7 +5922,9 @@ Action.updateUmpleLayoutEditor = function(response)
   //TODO: for some reason in the live version this call isnt being made
   //but oddly the diagram is updated, and that is done in the callback
       
-  Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",umpleJson));  
+  VersionHistory.saveAsLayoutUpdate(function() {
+    Action.ajax(Action.updateUmpleLayoutEditorCallback,format("action=addPositioning&actionCode={0}",umpleJson));
+  });
 }
 
 Action.updateUmpleLayoutEditorCallback = function(response)
@@ -5495,14 +5935,101 @@ Action.updateUmpleLayoutEditorCallback = function(response)
   var positioning = Page.splitUmpleCode(umpleCode)[1];
   Page.setUmplePositioningCode(positioning);
   Page.hideLoading();
-  Action.updateUmpleDiagramForce(true);
+  Action.updateUmpleDiagramForce(true, true);
 }
 
 Action.updateUmpleDiagram = function() {
  return Action.updateUmpleDiagramForce(true)
 }
 
-Action.updateUmpleDiagramForce = function(forceUpdate)
+// To fetch the feature model json from the backend complier
+Action.fetchFeatureModelTreeThen = function(next)
+{
+  let proceed = function() {
+    if (typeof next === "function") next();
+  };
+  // proceedAsync is only used by the early-return branches below — they need the continuation deferred via setTimeout so fetchFeatureModelTreeThen returns before next() fires. The main Ajax onFinally path calls the sync proceed() directly.
+  let proceedAsync = function() {
+    setTimeout(proceed, 0);
+  };
+
+
+  let mount = document.getElementById("featureModelTreeContainer");
+
+  // Additional check to ensure this fetch only happens when in the feature diagram mode
+  if (!Page.useGvFeatureDiagram) {
+    FeatureTree.reset();
+    Page.hasFeatureModelTree = false;
+    FeatureTreeModal._fetchId++;
+    FeatureTreeModal._fetchInFlight = false;
+    FeatureTreeModal._lastFetchFailed = false;
+    FeatureTreeModal._lastFetchStatus = -1;
+    FeatureTreeModal.close();
+    if (mount) {
+      while (mount.firstChild) mount.removeChild(mount.firstChild);
+      mount.style.display = "none";
+    }
+    proceedAsync();
+    return;
+  }
+
+  if (!mount) {
+    Page.hasFeatureModelTree = false;
+    FeatureTreeModal._lastFetchFailed = false;
+    FeatureTreeModal._lastFetchStatus = -1;
+    proceedAsync();
+    return;
+  }
+
+  // async lock to prevent ajax mutex
+  var thisFetchId = ++FeatureTreeModal._fetchId;
+  FeatureTreeModal._fetchInFlight = true;
+  FeatureTreeModal._lastFetchFailed = false;
+  FeatureTreeModal._lastFetchStatus = -1;
+  FeatureTreeModal.refreshBody();
+
+  Ajax.sendRequest(
+    "scripts/compiler.php",
+    function(response) {
+      // Stale callback guard: a newer fetch or a mode switch has made.
+      if (thisFetchId !== FeatureTreeModal._fetchId) return;
+      var featureModelJson = FeatureTree.getModelFromResponse(response.responseText);
+      if (featureModelJson && featureModelJson.featureModel) {
+        FeatureTree.parseModel(featureModelJson.featureModel);
+        Page.hasFeatureModelTree = true;
+      } else {
+        FeatureTree.reset();
+        Page.hasFeatureModelTree = false;
+      }
+    },
+    "language=FeatureModelJson&theme=light&error=true&umpleCode="
+      + encodeURIComponent(Page.getUmpleCode()),
+    {
+      onError: function(http) {
+        // Error-unique: reset feature state and record failure for UI.
+        // Stale callbacks do not mutate state; onFinally drives proceed().
+        if (thisFetchId !== FeatureTreeModal._fetchId) return;
+        FeatureTree.reset();
+        Page.hasFeatureModelTree = false;
+        FeatureTreeModal._lastFetchFailed = true;
+        FeatureTreeModal._lastFetchStatus = http.status;
+      },
+      onFinally: function(http) {
+        if (thisFetchId !== FeatureTreeModal._fetchId) {
+          proceed();
+          return;
+        }
+        FeatureTreeModal._fetchInFlight = false;
+        FeatureTreeModal.refreshBody();
+        proceed();
+      }
+    }
+  );
+};
+
+// isLayoutUpdate is true when the diagram is updated with the layout just
+// worked out for an edit that has already been saved
+Action.updateUmpleDiagramForce = function(forceUpdate, isLayoutUpdate)
 {
   // DEBUG
   // console.log("Inside updateUmpleDiagramForce")
@@ -5518,7 +6045,13 @@ Action.updateUmpleDiagramForce = function(forceUpdate)
   Action.savedCanonical=canonical;
   Page.showCanvasLoading();
 
-  Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+  Action.fetchFeatureModelTreeThen(function(){
+    var update = function() {
+      Action.ajax(Action.updateUmpleDiagramCallback, Action.getLanguage());
+    };
+    if (isLayoutUpdate) VersionHistory.saveAsLayoutUpdate(update);
+    else update();
+  });
 
 }
 
@@ -5560,10 +6093,15 @@ Action.updateUmpleDiagramCallback = function(response)
     // Enable dynamic checkboxes of mixsets and named filters
     // Find any phrases describing
     // named mixsets of filters not commented out
-    var dynamicCheckboxItems = Page.getUmpleCode()
-      .match(/(((?<!(\/\/.*))(mixset))|((?<!(\/\/.*))(filter)))\s+[a-zA-Z1-9-_]+/g);
+    var dynamicCheckboxItems = new Array();
+    var umpleCodeForScan = Page.getUmpleCode();
+    var mixsetMatches = umpleCodeForScan
+      .match(/(?<!(\/\/.*))mixset\s+[a-zA-Z1-9-_]+/g);
+    var filterMatches = umpleCodeForScan
+      .match(/(?<!(\/\/.*))filter\s+[a-zA-Z1-9-_]+/g);
+    if (mixsetMatches != null&&!Page.hasFeatureModelTree) dynamicCheckboxItems = dynamicCheckboxItems.concat(mixsetMatches);
+    if (filterMatches != null) dynamicCheckboxItems = dynamicCheckboxItems.concat(filterMatches);
     // Add special suboptions
-    if(dynamicCheckboxItems == null) dynamicCheckboxItems = new Array();
     dynamicCheckboxItems.push("gvmanual","gvdot","gvsfdp","gvcirco","gvortho");
     
     // Clear out previous
@@ -5593,11 +6131,20 @@ Action.updateUmpleDiagramCallback = function(response)
         boxesToActivate.push(idPart);
       });
 
-      // If there are any items active that are not in the new set because
-      // deleted or commented out, then remove them from being active
-      Page.mixsetsActive = Page.mixsetsActive.filter(function(aMixset){
-        return boxesToActivate.includes("mixset"+aMixset);
-      });
+      /*
+       * Reconcile Page.mixsetsActive against the mixsets that still exist in
+       * source. boxesToActivate was built from the regex scan above, so any
+       * entry absent from it means that mixset was deleted or commented out
+       * and should be dropped from the active set.
+       *
+       * Skip this reconciliation when the feature tree owns mixset state
+       * to prevent the selection being cleared by this code
+       */
+      if (!Page.hasFeatureModelTree) {
+        Page.mixsetsActive = Page.mixsetsActive.filter(function(aMixset){
+          return boxesToActivate.includes("mixset"+aMixset);
+        });
+      }
       Page.filtersActive = Page.filtersActive.filter(function(aFilter){
         return boxesToActivate.includes("filter"+aFilter);
       });
@@ -5684,10 +6231,11 @@ Action.updateUmpleDiagramCallback = function(response)
 
     }
     // Display static svg diagram
-    else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram )
+    else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram || Page.useInstanceDiagram)
     {
       theCanvas.html(format('{0}', diagramCode));
       theCanvas.children().first().attr("id", "svgCanvas");
+      Page.zoomToCurrentZoom();
 
       // If gv class mode is gvmanual then we need to update all the umple 
       // positioning information given the diagram locations
@@ -5861,6 +6409,27 @@ Action.updateUmpleDiagramCallback = function(response)
 
       Action.setupPinch();
     }
+    // Display generated HTML output in the right-hand canvas area
+    else if(Page.useEventSequence || Page.useStateTables)
+{
+  theCanvas.html("<div id='htmlCanvas' class='generatedDiagram'></div>");
+  jQuery("#htmlCanvas").html(diagramCode);
+
+  // Apply the same coloring used by the Generate It path
+  if (Page.useStateTables && typeof StateTree !== "undefined" && StateTree.colourStateTables) {
+    StateTree.colourStateTables();
+  }
+
+  if (Page.useEventSequence && typeof StateTree !== "undefined" && StateTree.colourEventSequences) {
+    StateTree.colourEventSequences();
+  }
+}
+
+    else if(Page.useCRUDUI)
+    {
+      theCanvas.html("<div id='htmlCanvas' class='generatedDiagram'></div>");
+      Page.showCrudFromJson(diagramCode, "", "#htmlCanvas");
+    }
     //Display structure diagram
     else if(Page.useStructureDiagram)
     {
@@ -5876,126 +6445,13 @@ Action.updateUmpleDiagramCallback = function(response)
   }
   
   Page.hideLoading();
-  if(Page.useGvClassDiagram){
 
-    // If we are in gvmanual mode, then allow node movement, otherwise do not
-    allowNodeMovement = true;
-    if(!Page.isGvManual()) {
-      allowNodeMovement = false;
-    }
-    var elems=document.getElementsByClassName("node");
-
-    // Add event listener to Graphviz Class nodes for right click
-    for(let i=0;i<elems.length;i++){
-      let theNode = elems[i];
-      theNode.addEventListener("contextmenu", function(event){
-        event.preventDefault();
-        Action.displayMenu(event);
-      });
-      // Add event listener for double click, calling the same function as right-click
-      theNode.addEventListener("dblclick", function(event){
-        event.preventDefault(); // Prevent the default double-click behavior
-        Action.displayMenu(event); // Call the same function to display the menu
-      });
-      // Add event listener for mousedown to  initiate a move (drag)
-      theNode.addEventListener("mousedown", function(event){
-        event.preventDefault();
-
-        // Total amount moved
-        let deltaXSum=0;
-        let deltaYSum=0;
-        let didAMove=false;
-
-        Page.selectedGvClass=Action.getGvClassName(event);
-        Page.initialMouseDownX = event.clientX;
-        Page.initialMouseDownY = event.clientY;
-        let prevX = Page.initialMouseDownX;
-        let prevY = Page.initialMouseDownY;
-        let classRect = Action.getRectFromSvgNode(theNode, canvasX, canvasY);
-        let currentTop = classRect.top;
-        let currentLeft = classRect.left;        
-//Debug
-//        Page.setFeedbackMessage("!! down!! "+Page.selectedGvClass + " X="+currentLeft +  " Y="+currentTop);
-
-        function moveClass(moveEvent) {
-          moveEvent.preventDefault();
-          let currentX = moveEvent.clientX;
-          let currentY = moveEvent.clientY;
-          classRect = Action.getRectFromSvgNode(theNode, canvasX, canvasY);
-          currentTop = classRect.top;
-          currentLeft = classRect.left;
-
-          let deltaX = currentX - prevX;
-          let deltaY = currentY - prevY;
-          deltaXSum+=deltaX;
-          deltaYSum+=deltaY;
-
-          if(allowNodeMovement  && (didAMove || Math.abs(deltaXSum+deltaYSum)>10)) {
-            theNode.setAttribute('transform', ' translate(' + deltaXSum + ',' + deltaYSum + ')');
-            didAMove=true;
-          }
-
-          prevX = currentX;
-          prevY = currentY;
-          if(!allowNodeMovement) {
-            Page.setFeedbackMessage("To enable moving of classes in G mode, set gvmanual in the Show and Hide menu");
-          }
-          else {
-//DebugPosition
-//Page.setFeedbackMessage("Moving "+Page.selectedGvClass + "to "+currentLeft+", "+currentTop+" dx="+deltaXSum+" dy="+deltaYSum);
-          }
-        }
-
-        function stopMovingClass(stopEvent) {
-          if(allowNodeMovement && (didAMove && (deltaXSum != 0 || deltaXSum != 0)) ) {
-//DebugPosition
-//Page.setFeedbackMessage("!!moved!! "+Page.selectedGvClass + " dx="+deltaXSum+" dy="+deltaYSum);
-            // Update the text and get thebackend to refresh
-            Action.updateGvPosition(Page.selectedGvClass,deltaXSum,deltaYSum);
-          }
-        
-          document.removeEventListener('mousemove', moveClass);
-          document.removeEventListener('mouseup', stopMovingClass);
-        }
-
-        document.addEventListener('mousemove', moveClass);
-        document.addEventListener('mouseup', stopMovingClass);
-      });
-
-      var attributeAnchors = elems[i].getElementsByTagName("a");
-      // Start from 1 to skip the first <a> element which is for the class name
-      for (let j = 1; j < attributeAnchors.length; j++) {
-        let titleText = attributeAnchors[j].getAttribute("xlink:title");
-        let [attributeType, attributeName] = titleText.split(' ');
-        attributeAnchors[j].addEventListener("dblclick", function (event) {
-          event.preventDefault();
-          Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
-        });
-        attributeAnchors[j].addEventListener("contextmenu", function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          Action.displayAttributeMenu(event, attributeName, attributeType); // Calls the testing function
-        });
-      }
-    }
-      var associationElems = document.getElementsByClassName("edge");
-    for (let i = 0; i < associationElems.length; i++) {
-      var associationAnchors = associationElems[i].getElementsByTagName("a");
-      for (let j = 0; j < associationAnchors.length; j++) {
-        let associationLink = associationAnchors[j].getAttribute("xlink:href");
-        associationAnchors[j].addEventListener("dblclick", function(event) {
-            event.preventDefault(); // Prevent the default click behavior
-            Action.displayAssociMenu(event,associationLink);
-        });
-        associationAnchors[j].addEventListener("contextmenu", function(event) {
-          event.preventDefault(); // Prevent the default click behavior
-          Action.displayAssociMenu(event,associationLink);
-        });
-      }
-    }
+  if (Page.useGvClassDiagram) {
+    GvDiagramEdit.bindClassDiagram(canvasX, canvasY);
   }
 
   if(Page.useGvStateDiagram){
+    GvDiagramEdit.bindStateDiagram();
     //add double click to display menu, issue#2081
     var elems=document.getElementsByClassName("node");
     // Add event listener to Graphviz state nodes for right click
@@ -6036,7 +6492,103 @@ Action.updateUmpleDiagramCallback = function(response)
     });
     }
   }  
+
+  if(Page.useEventSequence){
+    // Give event sequence states and transitions the same code selection as Graphviz state diagram elements
+    jQuery("#htmlCanvas .event-sequence-grid").each(function() {
+      var heading = jQuery(this).prevAll("h2").first().text().split(" ");
+      var rows = jQuery(this).find(".floating-col td");
+      var names = [];
+      for(var i = 1; i < rows.length; i++) {
+        var parentId = parseInt(jQuery(rows[i]).attr("data-parent"));
+        names.push((isNaN(parentId) ? "" : names[parentId] + ".") + jQuery(rows[i]).text().replace(/^(- )*/, ""));
+        rows[i].setAttribute("onclick", "javascript:Action.stateClicked(\"" + heading[1] + "^*^" + heading[4] + "^*^" + names[i-1] + "\")");
+      }
+      rows = jQuery(this).next(".event-sequence-list").find("tr");
+      for(var i = 1; i < rows.length; i++) {
+        var entry = jQuery(rows[i]).find("td")[2];
+        entry.setAttribute("onclick", "javascript:Action.stateClicked(\"" + heading[1] + "^*^" + heading[4] + "^*^" + jQuery(entry).text() + "\")");
+      }
+    });
+    jQuery("#htmlCanvas [data-transition]").click(function() {
+      Action.transitionClicked(jQuery(this).attr("data-transition"));
+    });
+  }
+
+  if(Page.useStateTables){
+    // Give state table rows the same state identifier and menu as Graphviz state nodes
+    jQuery("#htmlCanvas .statetable").each(function() {
+      // Composite tables list combinations of concurrent states, not individual states
+      if(jQuery(this).parent().prevAll("h3").first().text().indexOf("Composite") == 0) return;
+      var heading = jQuery(this).parent().prevAll("h2").first().text().split(" ");
+      var rows = jQuery(this).find("tr");
+      // In state-state tables the column headings list the same states, in the same order as the rows
+      var isStateStateTable = jQuery(this).hasClass("state-statetable");
+      var columnHeadings = jQuery(rows[0]).find("td");
+      var names = [];
+      for(var i = 1; i < rows.length; i++) {
+        var entry = jQuery(rows[i]).find("td")[0];
+        var parentId = parseInt(jQuery(entry).attr("data-parent"));
+        names.push((isNaN(parentId) ? "" : names[parentId] + ".") + jQuery(entry).text().replace(/^(- )*/, ""));
+        var stateLink = "javascript:Action.stateClicked(\"" + heading[1] + "^*^" + heading[4] + "^*^" + names[i-1] + "\")";
+        var stateEntries = isStateStateTable ? [entry, columnHeadings[i]] : [entry];
+        for(var j = 0; j < stateEntries.length; j++) {
+          stateEntries[j].setAttribute("href", stateLink);
+          stateEntries[j].setAttribute("onclick", stateLink);
+          stateEntries[j].addEventListener("contextmenu", function(event){
+            event.preventDefault();
+            Action.drawStateMenu(event);
+          });
+          stateEntries[j].addEventListener("dblclick", function(event){
+            event.preventDefault();
+            Action.drawStateMenu(event);
+          });
+        }
+      }
+      // Give transitions the same selection and menu as Graphviz state diagram edges
+      jQuery(this).find("[data-transition]").each(function() {
+        this.setAttribute("href", "javascript:Action.transitionClicked(\"" + jQuery(this).attr("data-transition") + "\")");
+        jQuery(this).click(function() {
+          Action.transitionClicked(jQuery(this).attr("data-transition"));
+        });
+        // Event headings only select because they may represent several transitions.
+        if(jQuery(this).hasClass("event-header")) return;
+        this.addEventListener("contextmenu", function(event){
+          event.preventDefault();
+          Action.displayTransitionMenu(event);
+        });
+        this.addEventListener("dblclick", function(event){
+          event.preventDefault();
+          Action.displayTransitionMenu(event);
+        });
+      });
+      // Grey (empty) cells add a transition from the state of their row, as in the state diagram
+      rows.slice(1).each(function(r) {
+        jQuery(this).find("td").slice(1).each(function(c) {
+          if(!jQuery(this).text().match(/^\s$/)) return;
+          var fromState = heading[1] + "^*^" + heading[4] + "^*^" + names[r];
+          var addTransition = function(event){
+            event.preventDefault();
+            if(!Action.diagramInSync) return;
+            if(isStateStateTable) {
+              // The column is the destination state: same as the Add Transition palette tool
+              GvDiagramEdit.commitTransition(fromState, heading[1] + "^*^" + heading[4] + "^*^" + names[c]);
+            } else {
+              // The column is the event: same as Add Transition in the state menu, with the event filled in
+              var range = GvDiagramEdit.findStateRange(GvDiagramEdit.getFullText(), fromState);
+              if(!range) return;
+              Action.drawInputState("transition", GvDiagramEdit.getFullText().substring(range.start, range.end),
+                names[r].split(".").pop(), jQuery(columnHeadings[c+1]).text());
+            }
+          };
+          this.addEventListener("contextmenu", addTransition);
+          this.addEventListener("dblclick", addTransition);
+        });
+      });
+    });
+  }
 }
+
 
 // Called when a layout algorithm is clicked, in order to unselect the others
 // Can also be used to unselect all of them when gvmanual is active and
@@ -6101,8 +6653,13 @@ Action.updateFromDiagramCallback = function(response)
   //Show the error message
   if(errorMessage != "")
   {
+    Action.lastCompilerErrorHtml = errorMessage;
     Page.showGeneratedCode(errorMessage, "diagramUpdate");
   }  
+  else
+  {
+    Action.lastCompilerErrorHtml = "";
+  }
 }
 
 // Gets the code to display from the AJAX response
@@ -6118,7 +6675,7 @@ Action.getDiagramCode = function(responseText)
     if(output == "null") output = "";
     
   }
-  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram)
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram || Page.useInstanceDiagram)
   {
     // The graphviz diagrams are taken from the inner svg tag only. 
     // This allows the website to have a dynamic canvas size around the diagram
@@ -6130,6 +6687,14 @@ Action.getDiagramCode = function(responseText)
       //remove the redundant svg closing tag
       output = output.replace(/<\/svg>$/, "");
     }
+  }
+  else if(Page.useCRUDUI || Page.useEventSequence || Page.useStateTables)
+  {
+    var language = Page.useCRUDUI ? "crudJson" :
+                   Page.useEventSequence ? "eventSequence" :
+                   "stateTables";
+
+    output = Page.getGeneratedMarkup(responseText, language);
   }
   else if(Page.useStructureDiagram)
   {
@@ -6152,7 +6717,7 @@ Action.getErrorCode = function(responseText)
     
     if(output == "<p>") output = "";
   }
-  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram)
+  else if(Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram || Page.useInstanceDiagram)
   {
     var miscStuffAndErrorMessages = responseText.split('<svg width=')[0];
     var prelimparts = miscStuffAndErrorMessages.split('errorRow');
@@ -6160,7 +6725,13 @@ Action.getErrorCode = function(responseText)
       output = miscStuffAndErrorMessages.split("</script>&nbsp;")[0];
     }
   }
-
+  else if(Page.useCRUDUI || Page.useEventSequence || Page.useStateTables)
+  {
+    var language = Page.useCRUDUI ? "crudJson" :
+                   Page.useEventSequence ? "eventSequence" :
+                   "stateTables";
+    output = Page.getErrorMarkup(responseText, language);
+  }
   return output;
 }
 
@@ -6268,9 +6839,18 @@ Action.toggleGuardLabels = function()
   Page.showGuardLabels = !Page.showGuardLabels;
   Action.redrawDiagram();
 }
+Action.toggleNaturalLanguage = function()
+{
+  Page.showNaturalLanguage = !Page.showNaturalLanguage;
+  Action.redrawDiagram();
+}
 Action.allowPinch = function()
 {
   Page.allowPinch = !Page.allowPinch;
+  if (Page.allowPinch == false) {
+     // has been turned off
+     Action.removePinch();
+  }
   Action.redrawDiagram();
 }
 Action.toggleFeatureDependency = function()
@@ -6287,6 +6867,7 @@ Action.toggleTraits = function()
 
 Action.redrawDiagram = function()
 {
+    if (typeof GvDiagramEdit !== "undefined") GvDiagramEdit.clearPendingPaletteState();
     UmpleSystem.merge(null);    // Clear the diagram
     var canvas = jQuery("#umpleCanvas");
     canvas.html("");
@@ -6303,12 +6884,14 @@ Action.redrawDiagram = function()
       Page.enableCheckBoxItem("buttonManualSync", "ttManualSync", true);
 
       Page.enablePaletteItem('buttonAddClass', true);
+      Page.enablePaletteItem('buttonAddState', true);
       Page.enablePaletteItem('buttonAddAssociation', true);
       Page.enablePaletteItem('buttonAddTransition', true);
       Page.enablePaletteItem('buttonAddGeneralization', true);
       Page.enablePaletteItem('buttonDeleteEntity', true);
     
       Page.initToggleTool('buttonAddClass');
+      Page.initToggleTool('buttonAddState');
       Page.initToggleTool('buttonAddAssociation');
       Page.initToggleTool('buttonAddTransition');
       Page.initToggleTool('buttonAddGeneralization');
@@ -6535,6 +7118,31 @@ Mousetrap.bind(['ctrl+g'], function(e){
   return false; //equivalent to e.preventDefault();
 });
 
+Mousetrap.bind(['ctrl+shift+v'], function(e){
+  Page.clickShowGvEntityRelationshipDiagram();
+  return false; //equivalent to e.preventDefault();
+});
+
+Mousetrap.bind(['ctrl+shift+c'], function(e){
+  Page.clickShowInstanceDiagram();
+  return false; //equivalent to e.preventDefault();
+});
+
+// Mousetrap.bind(['ctrl+shift+f'], function(e){
+//   Page.clickShowCRUDUI();
+//   return false; //equivalent to e.preventDefault();
+// });
+
+Mousetrap.bind(['ctrl+shift+t'], function(e){
+  Page.clickShowStateTables();
+  return false; //equivalent to e.preventDefault();
+});
+
+Mousetrap.bind(['ctrl+shift+r'], function(e){
+  Page.clickShowEventSequence();
+  return false; //equivalent to e.preventDefault();
+});
+
 Mousetrap.bind(['ctrl+s'], function(e){
   Page.clickShowGvStateDiagram();
   return false; //equivalent to e.preventDefault();
@@ -6615,7 +7223,7 @@ Mousetrap.bind(['a'], function(e){
   {
     if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
     {
-      jQuery('#buttonAddAssociation').click();
+      jQuery(Page.useGvStateDiagram ? '#buttonAddTransition' : '#buttonAddAssociation').click();
     }
   }
 });
@@ -6626,7 +7234,7 @@ Mousetrap.bind(['c'], function(e){
   {
     if(Page.selectedClass == null || (Page.selectedClass && jQuery('#' + Page.selectedClass.id).find("input").length == 0))
     {        
-      jQuery('#buttonAddClass').click();
+      jQuery(Page.useGvStateDiagram ? '#buttonAddState' : '#buttonAddClass').click();
     }        
   }
 });
@@ -6742,7 +7350,13 @@ Action.getLanguage = function()
     }
   }
   else if(Page.useGvStateDiagram) {language="language=stateDiagram"}
+  else if(Page.useGvEntityRelationshipDiagram) {language="language=entityRelationshipDiagram"}
   else if(Page.useStructureDiagram) {language="language=StructureDiagram"}
+  else if(Page.useInstanceDiagram) {language="language=instanceDiagram"}
+  else if(Page.useCRUDUI) {language="language=Json&languageStyle=crudJson"}
+  else if(Page.useStateTables) {language="language=StateTables"}
+  else if(Page.useEventSequence) {language="language=eventSequence"}
+ 
  
 
   // append any suboptions needed for GvStateDiagram
@@ -6751,6 +7365,7 @@ Action.getLanguage = function()
     if(Page.showTransitionLabels) language=language+".showtransitionlabels";
     if(!Page.showGuards) language=language+".hideguards";    
     if(Page.showGuardLabels) language=language+".showguardlabels";
+    if(!Page.showNaturalLanguage) language=language+".hidenaturallanguage";
     language=language+"."+$("inputGenerateCode").value.split(":")[1];
   }
   // append any suboptions needed for GvClassDiagram
@@ -7081,3 +7696,78 @@ Action.reindent = function(lines, cursorPos)
 
   Page.codeMirrorEditor6.focus();
 }
+
+Action.setLiveView = function(viewNameToSet)
+{
+  Page.catFeedbackMessage("DEBUG:"+viewNameToSet);
+  if (viewNameToSet=="ecd") { Page.clickShowEditableClassDiagram(); }
+  else if (viewNameToSet=="gcd") { Page.clickShowGvClassDiagram(); }
+  else if (viewNameToSet=="sd") { Page.clickShowGvStateDiagram(); }
+  else if (viewNameToSet=="std") { Page.clickShowStructureDiagram();}
+  else if (viewNameToSet=="erd") { Page.clickShowGvEntityRelationshipDiagram();}
+  else if (viewNameToSet=="gfd") { Page.clickShowGvFeatureDiagram();}
+  else if (viewNameToSet=="instanceDiagram") {Page.clickShowInstanceDiagram();}
+  else if (viewNameToSet == "crudUI") { Page.clickShowCRUDUI();}
+  else if (viewNameToSet == "stateTables") { Page.clickShowStateTables();}
+  else if (viewNameToSet == "eventSequence") { Page.clickShowEventSequence();}
+  else Page.catFeedbackMessage("DEBUG bad selection!!!");
+}
+
+
+
+Action.syncLiveViewSelector = function(viewCode) {
+  var selector = document.getElementById("liveViewSelector");
+  if (selector) {
+    selector.value = viewCode;
+  }
+};
+
+// --- Live View visibility helpers ---
+// Requirement: if Diagram (D) is off, Live View control disappears;
+// it reappears when D is on again.
+Action.setLiveViewMenuVisible = function(isVisible) {
+  try {
+    var $selector = jQuery("#liveViewSelector");
+    if ($selector.length === 0) return;
+
+    //Prefer an explicit wrapper if present.
+    var $wrapper = jQuery("#liveViewWrapper, #liveViewContainer, .liveViewContainer").filter(function() {
+      return jQuery(this).find("#liveViewSelector").length > 0;
+    }).first();
+
+    //Otherwise, use the smallest nearby container that looks like the Live View control.
+    if ($wrapper.length === 0) {
+      $wrapper = $selector.parents("span,div").filter(function() {
+        var txt = (jQuery(this).text() || "").toLowerCase();
+        return txt.indexOf("live view") !== -1 && jQuery(this).find("#liveViewSelector").length > 0;
+      }).first();
+    }
+
+    // If we found a safe wrapper, hide/show it (label + select together).
+    if ($wrapper.length > 0) {
+      $wrapper.toggle(!!isVisible);
+      return;
+    }
+
+    // Fallback: hide/show the selector + any associated label.
+    $selector.toggle(!!isVisible);
+    var $label = jQuery("label[for='liveViewSelector'], #liveViewLabel");
+    if ($label.length) $label.toggle(!!isVisible);
+  } catch (e) {
+    // Fail silently; do not break the UI if DOM differs.
+  }
+};
+
+Action.updateLiveViewVisibility = function() {
+  // Diagram visibility is tracked by Page.showCanvas in UmpleOnline.
+  // When D is toggled, Page.showCanvas flips true/false.
+  var diagramVisible = !!Page.showCanvas;
+  Action.setLiveViewMenuVisible(diagramVisible);
+};
+
+// Ensure Live View visibility is correct on initial page load.
+jQuery(function() {
+  if (typeof Action.updateLiveViewVisibility === "function") {
+    Action.updateLiveViewVisibility();
+  }
+});

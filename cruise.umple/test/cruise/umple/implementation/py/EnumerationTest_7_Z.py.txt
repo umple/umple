@@ -1,36 +1,23 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
-from enum import Enum, auto
+from enum import Enum
 
-class Z():
-    #------------------------
-    # ENUMERATIONS
-    #------------------------
+
+class Z:
     class Month(Enum):
-        def _generate_next_value_(name, start, count, last_values):
-            return name
-        def __str__(self):
-            return str(self.value)
-        Jan = auto()
-        Feb = auto()
-        Mar = auto()
+        Jan = "Jan"
+        Feb = "Feb"
+        Mar = "Mar"
 
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+        def __str__(self):
+            return self.value
+
     def __init__(self):
         pass
 
-    #------------------------
-    # INTERFACE
-    #------------------------
     def delete(self):
         pass
 
-    # line 19 "../mydoc.ump"
     def getBirthMonth(self):
         return self.Month.Jan

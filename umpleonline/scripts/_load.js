@@ -59,13 +59,15 @@ document.write('<script type="text/javascript" src="scripts/CodeMirror/addon/edi
 // socket io to connect to UmpleCollabServer using sockets
 document.write('<script type="text/javascript" src="scripts/socket.io/socket.io.js"></script>');
 
+// OpenAI SDK
+document.write('<script type="text/javascript" src="scripts/openai-sdk/openai.bundle.js"></script>');
+
 // ====== The following minified version of the subsequent group can be commented out when testing
 // Regenerate this using the allumple-minifyscript unix script (relies on esbuild, formerly yuicompressor)
 // regenerated in the build using ant -f build.umple.xml compressAllScripts
 document.write('<script type="text/javascript" src="scripts/allumple-min.js"></script>');
 
-
-// ------ The following should be commented out, and the above min version used, except when testing 
+// ------ The following should be commented out, and the above min version used, except when testing
 // If you change any constituent file, regenerate allumple-min.js as above
 /*
 
@@ -90,6 +92,7 @@ document.write('<script type="text/javascript" src="scripts/shBrushCpp.js"></scr
 document.write('<script type="text/javascript" src="scripts/shBrushAlloy.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushNuSMV.js"></script>');
 document.write('<script type="text/javascript" src="scripts/shBrushXml.js"></script>');
+document.write('<script type="text/javascript" src="scripts/shBrushMermaid.js"></script>');
 
 //INLINE EDITING
 document.write('<script type="text/javascript" src="scripts/inlineeditor.js"></script>');
@@ -100,10 +103,38 @@ document.write('<script type="text/javascript" src="scripts/dropbox/dropbox.js">
 document.write('<script type="text/javascript" src="scripts/dropbox/chooser.js"></script>');
 document.write('<script type="text/javascript" src="scripts/dropbox/saver.js"></script>');
 
+// AI modules
+document.write('<script type="text/javascript" src="scripts/ai/config/umple_ai_config.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_errors.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_storage.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_chat_context.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_constants.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_provider_utils.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_prompt_utils.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_text_utils.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_markdown_utils.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/utils/umple_ai_stream_utils.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_config_validation.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_compiler_service.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_providers.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/core/umple_ai_controller.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/prompts/umple_ai_base_prompt.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/settings/umple_ai_settings_view.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/settings/umple_ai_settings.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements-prompt_builder.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements_dialog.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements_self_correction.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/requirements/umple_ai_requirements.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/explain/umple_ai_explain-prompt_builder.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/explain/umple_ai_explain.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/fix/umple_ai_fix-prompt_builder.js"></script>');
+document.write('<script type="text/javascript" src="scripts/ai/features/fix/umple_ai_fix.js"></script>');
+
 //Umple System
 document.write('<script type="text/javascript" src="scripts/umple_page.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_layout.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_action.js"></script>');
+document.write('<script type="text/javascript" src="scripts/umple_action_gvdiagram.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_position.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_line.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_system.js"></script>');
@@ -117,7 +148,12 @@ document.write('<script type="text/javascript" src="scripts/umple_history.js"></
 document.write('<script type="text/javascript" src="scripts/umple_restore.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_action_diagram.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tooltips.js"></script>');
+document.write('<script type="text/javascript" src="scripts/umple_feature_tree.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tab_control.js"></script>');
+document.write('<script type="text/javascript" src="scripts/umple_version_history.js"></script>');
+//CRUD UI
+document.write('<script type="text/javascript" src="scripts/crud/umple_crudui.js"></script>');
+document.write('<script type="text/javascript" src="scripts/crud/umple_crud_json_persistence.js"></script>');
 // The following script includes configuration file for collab_server
 // where serverURL and path have to be set to connect specific instance of a collaboration server
 document.write('<script type="text/javascript" src="scripts/collab-server-config.js"></script>')
@@ -163,5 +199,3 @@ document.write('<script type="text/javascript" src="scripts/jjs/jjs_parse.js"></
 
 // OBSOLETE
 //document.write('<script type="text/javascript" src="scripts/scriptaculous.js"></script>');
-
-

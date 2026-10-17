@@ -815,4 +815,63 @@ mixset Trait {
     return false;
   }
 
+  /*
+   * The preconditions of aMethod that apply when generating lang: those declared in the block of the
+   * body that lang uses (Method.getBodyLanguageFor). They belong to the method object and to their
+   * body, not to the method name, so overloads and other languages' bodies never share them (#2250).
+   * Equal conditions written in several declarations of the method are checked once.
+   */
+  public List<Precondition> getMethodPreconditions(Method aMethod, String lang)
+  {
+    String body = aMethod.getBodyLanguageFor(lang);
+    List<Precondition> conditions = new ArrayList<Precondition>();
+    for (Precondition condition : getPreConds())
+    {
+      if (condition.getMethod() == aMethod && condition.indexOfBodyLanguage(body) != -1 && !conditions.contains(condition))
+      {
+        conditions.add(condition);
+      }
+    }
+    return conditions;
+  }
+
+  // The postconditions of aMethod that apply when generating lang; see getMethodPreconditions
+  public List<Postcondition> getMethodPostconditions(Method aMethod, String lang)
+  {
+    String body = aMethod.getBodyLanguageFor(lang);
+    List<Postcondition> conditions = new ArrayList<Postcondition>();
+    for (Postcondition condition : getPostConds())
+    {
+      if (condition.getMethod() == aMethod && condition.indexOfBodyLanguage(body) != -1 && !conditions.contains(condition))
+      {
+        conditions.add(condition);
+      }
+    }
+    return conditions;
+  }
+
+  /*
+   * Adds a method's pre- or postcondition even when an equal one is already there: equal conditions
+   * of other bodies or overloads are separate conditions, whereas addPreCond and addPostCond keep
+   * only one of a set of equal constraints (ConstraintTree has key { root }).
+   */
+  public void addMethodContract(ConstraintTree condition)
+  {
+    if (condition instanceof Precondition)
+    {
+      preConds.add((Precondition) condition);
+    }
+    else if (condition instanceof Postcondition)
+    {
+      postConds.add((Postcondition) condition);
+    }
+  }
+
+  // Removes exactly this condition object; removePreCond and removePostCond match equal constraints
+  public void removeMethodContract(ConstraintTree condition)
+  {
+    preConds.removeIf(existing -> existing == condition);
+    postConds.removeIf(existing -> existing == condition);
+  }
+
 }

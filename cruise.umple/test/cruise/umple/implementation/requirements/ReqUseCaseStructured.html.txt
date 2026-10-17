@@ -1,0 +1,4 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqUseCaseStructured.ump
+</p><p><b>UC2: As customer<br/>When cart is ready<br/>I want complete checkout<br/>So that purchase selected items<br/>User step 1: confirm order<br/>System response 1: display total price</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>

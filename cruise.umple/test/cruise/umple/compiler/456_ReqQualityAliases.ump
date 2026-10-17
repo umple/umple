@@ -1,0 +1,9 @@
+req Q1 Quality {
+  Fast {}
+  Slow {}
+}
+
+req Q2 quality {
+  Reliable {}
+  Unreliable {}
+}

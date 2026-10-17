@@ -6,6 +6,7 @@
  "height": 0},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "Mentor",
  "name": "Mentor",
  "displayColor": "" ,
@@ -17,7 +18,9 @@
  "height": 0},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "Student",
  "name": "Student" ,
  "isInterface": "false"}],
- "umpleAssociations":[] }
+ "umpleAssociations":[],
+ "globalEnums":[] }

@@ -19,6 +19,7 @@ class PlainRequirementsDocGenerator
   depend cruise.umple.util.*;
   depend cruise.umple.compiler.exceptions.*;
   depend cruise.umple.parser.Token;
+	depend java.util.regex.*;
   
   
   UmpleModel model = null;
@@ -35,8 +36,8 @@ class PlainRequirementsDocGenerator
     // This applies to default case including "PlainRequirementsDoc", "reqSortID" 
     Comparator<Requirement> defaultComparator = (r1, r2) -> r1.getIdentifier().compareTo(r2.getIdentifier());
     if (model.modelHasSuboption("PlainRequirementsDoc", "reqSortStat")) {
-      // If -s reqSortStat is present the comparator is changed to be assigned to statement
-      defaultComparator = (r1, r2) -> r1.getStatement().compareTo(r2.getStatement());
+      // If -s reqSortStat is present the comparator is changed to visible requirement text
+      defaultComparator = (r1, r2) -> (r1.getBodyDisplayText("\n") + r1.getIdentifier()).compareTo(r2.getBodyDisplayText("\n") + r2.getIdentifier());
     } 
     // The TreeSet is created based on the chosen comparator
     ReqTreeSet = new TreeSet<>(defaultComparator);
@@ -44,18 +45,129 @@ class PlainRequirementsDocGenerator
     ReqTreeSet.addAll(model.getAllRequirements().values());
     // Assigning the suboption to a variable 
     boolean hasreqHideNotImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqHideNotImpl");
+	boolean hasreqHideImpl = model.modelHasSuboption("PlainRequirementsDoc", "reqHideImpl");
+    boolean hasreqHideStatements = model.modelHasSuboption("PlainRequirementsDoc", "reqHideStatements");
     // Assigning a variable to hold the filename so it can be output in the implemented by section
     String fileName = model.getUmpleFile().getSimpleFileName()+".ump";
     // Loop through the sorted reqs in the TreeSet and check if they have an implementation
     List<ReqImplementation> ReqImp = new ArrayList<ReqImplementation>(); 
     ReqImp = model.getReqImplementations();
     for (Requirement req : ReqTreeSet){
+		if (req.hasReqImplementations() && hasreqHideImpl) continue;
     	if (req.hasReqImplementations() || !hasreqHideNotImpl) {
     	  // Below string stores the requirement statement and language and translates to html
-    	  String mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
-    	  doc.createParagraphElement("<b>"+"" + req.getIdentifier() + ": " + mainReqText+"</b>", false);
-    	  // Check if the requirement is implemented
+				String mainReqText = "";
+				if ("userStory".equals(req.getLanguage())) {
+					StringBuilder userStoryText = new StringBuilder();
+					if (req.getWho() != null && !req.getWho().equals("")) {
+						userStoryText.append("As ").append(req.getWho());
+					}
+					if (req.getWhen() != null && !req.getWhen().equals("")) {
+						if (userStoryText.length() > 0) {
+							userStoryText.append("<br/>");
+						}
+						userStoryText.append("When ").append(req.getWhen());
+					}
+					if (req.getWhat() != null && !req.getWhat().equals("")) {
+						if (userStoryText.length() > 0) {
+							userStoryText.append("<br/>");
+						}
+						userStoryText.append("I want ").append(req.getWhat());
+					}
+					if (req.getWhy() != null && !req.getWhy().equals("")) {
+						if (userStoryText.length() > 0) {
+							userStoryText.append("<br/>");
+						}
+						userStoryText.append("So that ").append(req.getWhy());
+					}
+					if (userStoryText.length() > 0) {
+						mainReqText = Requirement.translateToHTML(userStoryText.toString(), req.getLanguage());
+					}
+					else {
+						mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+					}
+				}
+				else if ("useCase".equals(req.getLanguage())) {
+					StringBuilder useCaseText = new StringBuilder();
+					if (req.getWho() != null && !req.getWho().equals("")) {
+						useCaseText.append("As ").append(req.getWho());
+					}
+					if (req.getWhen() != null && !req.getWhen().equals("")) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append("When ").append(req.getWhen());
+					}
+					if (req.getWhat() != null && !req.getWhat().equals("")) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append("I want ").append(req.getWhat());
+					}
+					if (req.getWhy() != null && !req.getWhy().equals("")) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append("So that ").append(req.getWhy());
+					}
+					if (req.getStatement() != null && !req.getStatement().equals("")) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append(req.getStatement());
+					}
+					if (req.hasParentUseCases()) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append("Specializes ").append(String.join(", ", req.getParentUseCases()));
+					}
+					if (req.hasIncludedUseCases()) {
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						useCaseText.append("Includes ").append(String.join(", ", req.getIncludedUseCases()));
+					}
+					for (int i = 0; i < req.numberOfUseCaseSteps(); i++) {
+						UseCaseStep step = req.getUseCaseStep(i);
+						if (useCaseText.length() > 0) {
+							useCaseText.append("<br/>");
+						}
+						if (step.getStepType() == UseCaseStep.UseCaseStepType.UserStep) {
+							useCaseText.append("User step ");
+						}
+						else {
+							useCaseText.append("System response ");
+						}
+						useCaseText.append(step.getId());
+						if (step.getCondition() != null && !step.getCondition().equals("")) {
+							useCaseText.append(" [").append(step.getCondition()).append("]");
+						}
+						useCaseText.append(": ").append(step.getContent());
+					}
+					if (useCaseText.length() > 0) {
+						mainReqText = Requirement.translateToHTML(useCaseText.toString(), req.getLanguage());
+					}
+					else {
+						mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+					}
+				}
+				else {
+					mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
+				}
+
+				mainReqText = linkifyHttpUrls(mainReqText);
+				if (hasreqHideStatements) {
+                    doc.createParagraphElement("<b>" + req.getIdentifier() + "</b>", false);
+                } else {
+				doc.createParagraphElement("<b>" + req.getIdentifier() + ": " + mainReqText + "</b>", false);
+				}
+				if (req.hasQualityClasses()) {
+					doc.createParagraphElement("&nbsp;Quality: " + req.getQualityClassNamesSummary(), false);
+				}
+		  // Check if the requirement is implemented
           if(req.hasReqImplementations()) {
+			HashSet<String> uniquePrints = new HashSet<String>();
             // Append the text with this prompt
             doc.createParagraphElement("&nbsp;"+" IMPLEMENTED BY: ", false);
             // Loop through classes to check for attributes that have implementations
@@ -65,7 +177,7 @@ class PlainRequirementsDocGenerator
    	      {
    	        for(ReqImplementation reqimps : req.getReqImplementations())
    	        {
-   	          if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	          if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	          {
 		     String classText= ""; 
 		     int classLine=0;
@@ -98,12 +210,12 @@ class PlainRequirementsDocGenerator
 		           String assoStruct = StringFormatter.format("  {0} {1} {5} {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(),theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName(),arrowDirection);
 		           //assoLine = ass.getTokenPosition().getLineNumber();
 			   classText = "&nbsp;"+"&nbsp;"+"association class:"+"&nbsp;"+assoStruct+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+classLine+ " ; ";
-	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false);
+	              if(uniquePrints.add(classText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false); }
 	             }
 	            }
 	            else{
 	              classText = "&nbsp;"+"&nbsp;"+"class:"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+"&nbsp;"+ classLine+ " ; ";
-	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false);
+	              if(uniquePrints.add(classText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+classText, false); }
 	            }
 		  }
    	        }
@@ -115,7 +227,7 @@ class PlainRequirementsDocGenerator
    	        {
    	        for(ReqImplementation reqimps : req.getReqImplementations())
    	        {
-   	          if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	          if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	          {
 	             String attrText= ""; 
 	             int attLine=0;
@@ -127,7 +239,7 @@ class PlainRequirementsDocGenerator
                         }
 	              }
 	             attrText = "&nbsp;"+"&nbsp;"+"attribute:"+"&nbsp;"+att.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+ attLine+ " ; ";
-	             doc.createParagraphElement("&nbsp;"+"&nbsp;"+attrText, false);
+	             if(uniquePrints.add(attrText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+attrText, false); }
 	              }
 	           }
 	         }
@@ -140,7 +252,7 @@ class PlainRequirementsDocGenerator
    	        {
    	          for(ReqImplementation reqimps : req.getReqImplementations())
    	          {
-   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	            {
 	              String smText= ""; 
 	              int smLine=0;
@@ -151,7 +263,7 @@ class PlainRequirementsDocGenerator
                           }
 	                }
 	               smText = "&nbsp;"+"&nbsp;"+"state machine:"+"&nbsp;"+sm.getName()+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+"&nbsp;"+smLine+ " ; ";
-	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+smText, false);
+	               if(uniquePrints.add(smText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+smText, false); }
 	            }
 	          }
 	        }
@@ -163,7 +275,7 @@ class PlainRequirementsDocGenerator
    	        {
    	          for(ReqImplementation reqimps : req.getReqImplementations())
    	          {
-   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	            {
 	              String assoText= ""; 
 	              int assoLine=0;
@@ -187,7 +299,7 @@ class PlainRequirementsDocGenerator
 		           String assoStruct = StringFormatter.format("  {0} {1} {5} {3} {4} {2};\n", myEnd.getMultiplicity().getParserable(), myEnd.getRoleName(),theirEnd.getRoleName(), theirEnd.getMultiplicity().getParserable(), theirEnd.getClassName(),arrowDirection);
 		           assoLine = ass.getTokenPosition().getLineNumber();
 			   assoText = "&nbsp;"+"&nbsp;"+"association:"+"&nbsp;"+assoStruct+"&nbsp;"+"in class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+assoLine+ " ; ";
-	              doc.createParagraphElement("&nbsp;"+"&nbsp;"+assoText, false);
+	              if(uniquePrints.add(assoText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+assoText, false); }
 	             }
 	           }
 	         }
@@ -200,7 +312,7 @@ class PlainRequirementsDocGenerator
    	         {
    	          for(ReqImplementation reqimps : req.getReqImplementations())
    	          {
-   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	            {
 	              String meText= ""; 
 	              int meLine=0;
@@ -211,7 +323,7 @@ class PlainRequirementsDocGenerator
                        }
 	              }
 	           meText = "&nbsp;"+"&nbsp;"+"method:"+"&nbsp;"+me.getName()+"&nbsp;"+"class"+"&nbsp;"+aClass.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+meLine+ " ; ";
-	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+meText, false);
+	           if(uniquePrints.add(meText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+meText, false); }
                      }
                    }
                  }
@@ -224,7 +336,7 @@ class PlainRequirementsDocGenerator
    	         {
    	            for(ReqImplementation reqimps : req.getReqImplementations())
    	            {
-   	              if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	              if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	              {
 	                String trText= ""; 
 	                int traitLine=0;
@@ -235,7 +347,7 @@ class PlainRequirementsDocGenerator
                           }
 	                }
 	           trText = "&nbsp;"+"&nbsp;"+"trait:"+"&nbsp;"+tr.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+traitLine+ " ; ";
-	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+trText, false);
+	           if(uniquePrints.add(trText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+trText, false); }
                    }
                  }
                }
@@ -247,7 +359,7 @@ class PlainRequirementsDocGenerator
    	        {
    	          for(ReqImplementation reqimps : req.getReqImplementations())
    	          {
-   	            if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	            if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	            {
 	               String uiText= ""; 
 	               int uiLine=0;
@@ -258,7 +370,7 @@ class PlainRequirementsDocGenerator
                          }
 	               }
 	           uiText = "&nbsp;"+"&nbsp;"+"interface:"+"&nbsp;"+ui.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+uiLine+ " ; ";
-	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+uiText, false);
+	           if(uniquePrints.add(uiText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+uiText, false); }
                   }
                  }
                }
@@ -272,7 +384,7 @@ class PlainRequirementsDocGenerator
    	            {
    	               for(ReqImplementation reqimps : req.getReqImplementations())
    	               {
-   	                 if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	                 if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	                 {
 	                    String metText= ""; 
 	                    int metLine=0;
@@ -283,7 +395,7 @@ class PlainRequirementsDocGenerator
                               }
 	                    }
 	           metText = "&nbsp;"+"&nbsp;"+"method:"+"&nbsp;"+aMeth.getName()+"&nbsp;"+"trait"+"&nbsp;"+tr.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+metLine+ " ; ";
-	           doc.createParagraphElement("&nbsp;"+"&nbsp;"+metText, false);
+	           if(uniquePrints.add(metText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+metText, false); }
                      }
                    }
                  }
@@ -296,7 +408,7 @@ class PlainRequirementsDocGenerator
    	            {
    	               for(ReqImplementation reqimps : req.getReqImplementations())
    	               {
-   	                 if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	                 if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	                 {
 	                    String ueText= ""; 
 	                    int ueLine=0;
@@ -307,7 +419,7 @@ class PlainRequirementsDocGenerator
                               }
 	                    }
 	               ueText = "&nbsp;"+"&nbsp;"+"enum:"+"&nbsp;"+ue.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+ueLine+ " ; ";
-	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+ueText, false);
+	               if(uniquePrints.add(ueText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+ueText, false); }
                        }
                      }
                   }
@@ -319,7 +431,7 @@ class PlainRequirementsDocGenerator
    	            {
    	               for(ReqImplementation reqimps : req.getReqImplementations())
    	               {
-   	                 if(classimps.getIdentifier() == reqimps.getIdentifier())
+   	                 if(classimps.getIdentifier().equals(reqimps.getIdentifier()))
    	                 {
 	                    String mixText= ""; 
 	                    int mixLine=0;
@@ -330,7 +442,7 @@ class PlainRequirementsDocGenerator
                               }
 	                    }
 	               mixText = "&nbsp;"+"&nbsp;"+"mixset:"+"&nbsp;"+mix.getName()+"&nbsp;"+fileName+"&nbsp;"+"line"+ "&nbsp;"+mixLine+ " ; ";
-	               doc.createParagraphElement("&nbsp;"+"&nbsp;"+mixText, false);
+	               if(uniquePrints.add(mixText)) { doc.createParagraphElement("&nbsp;"+"&nbsp;"+mixText, false); }
                        }
                      }
                   }
@@ -343,11 +455,111 @@ class PlainRequirementsDocGenerator
             }
           }
         }
+    // reqQC suboption: generate for quality comparison table
+    if (model.modelHasSuboption("PlainRequirementsDoc", "reqQC")) {
+      generateQualityCompareTable();
+    }
+
     model.setCode(doc.toString());
     writeModel();
     return;
   }
-  
+
+  void generateQualityCompareTable() {
+    List<MixsetOrFile> qualityMixsets = new ArrayList<>();
+    for (MixsetOrFile mix : model.getMixsetOrFiles()) {
+      // Only mixset is comparable
+      if (!mix.getIsMixset()) continue;
+      for (ReqImplementation ri : mix.getReqImplementations()) {
+        if (ri.getQualityClassName() != null && !ri.getQualityClassName().isEmpty()) {
+          qualityMixsets.add(mix);
+          break;
+        }
+      }
+    }
+    if (qualityMixsets.isEmpty()) return;
+
+    // get the requirement list
+    List<Requirement> qualityReqs = new ArrayList<>();
+    for (Requirement req : model.getAllRequirements().values()) {
+      if (req.hasQualityClasses()) {
+        qualityReqs.add(req);
+      }
+    }
+    if (qualityReqs.isEmpty()) return;
+    // keep list sorted so the generator can return same result for the test cases
+    qualityReqs.sort(Comparator.comparing(Requirement::getIdentifier));
+
+    // Check if any use statement exist
+    boolean hasUseStatements = false;
+    for (MixsetOrFile mix : qualityMixsets) {
+      if (mix.getUseUmpleFile() != null) {
+        hasUseStatements = true;
+        break;
+      }
+    }
+
+    // Build the HTML table
+    StringBuilder table = new StringBuilder();
+    table.append("<table border='1' cellpadding='4' cellspacing='0'>");
+
+    // Header row: empty corner cell + one column per mixset
+    table.append("<tr><th>Requirement</th>");
+    for (MixsetOrFile mix : qualityMixsets) {
+      String header = mix.getName();
+      if (hasUseStatements && mix.getUseUmpleFile() != null) {
+        header = "*" + header;
+      }
+      table.append("<th>").append(header).append("</th>");
+    }
+    table.append("</tr>");
+
+    // One row per quality requirement
+    for (Requirement req : qualityReqs) {
+      table.append("<tr><td>").append(req.getIdentifier()).append("</td>");
+      for (MixsetOrFile mix : qualityMixsets) {
+        String cellValue = "";
+        for (ReqImplementation ri : mix.getReqImplementations()) {
+          if (ri.getIdentifier().equals(req.getIdentifier())
+              && ri.getQualityClassName() != null
+              && !ri.getQualityClassName().isEmpty()) {
+            cellValue = ri.getQualityClassName();
+            break;
+          }
+        }
+        table.append("<td>").append(cellValue).append("</td>");
+      }
+      table.append("</tr>");
+    }
+
+    table.append("</table>");
+    doc.createParagraphElement(table.toString(), false);
+
+    if (hasUseStatements) {
+      doc.createParagraphElement("* selected mixset", false);
+    }
+  }
+	String linkifyHttpUrls(String htmlish){
+		if (htmlish == null || htmlish.length() == 0) { return ""; }
+
+		// Match either normal "https://" OR entity-encoded "https:&#47;&#47;"
+		Pattern p = Pattern.compile("\\b(https?:\\/\\/[^\\s<>\"]+|https?:&#47;&#47;[^\\s<>\"]+)");
+		Matcher m = p.matcher(htmlish);
+
+		StringBuffer out = new StringBuffer();
+		while (m.find()){
+			String shown = m.group(1);
+
+			// Build a real href by decoding the encoded slashes (minimum needed for GitHub URLs)
+			String href = shown.replace("&#47;", "/").replace("\"","%22");
+
+			String a = "<a href=\"" + href + "\" target=\"_blank\" rel=\"noopener noreferrer\">" + shown + "</a>";
+			m.appendReplacement(out, Matcher.quoteReplacement(a));
+		}
+		m.appendTail(out);
+		return out.toString();
+	}
+
   void writeModel(){
     try {
       String path = model.getUmpleFile().getPath();
@@ -364,4 +576,3 @@ class PlainRequirementsDocGenerator
     }
   }
 }
-

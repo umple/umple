@@ -1,0 +1,14 @@
+// implementsReq inside a mixset before a top-level association block
+// Should not produce a 401 warning
+class Student {}
+class Course {}
+mixset M {
+  implementsReq A;
+  association {
+    * Student -- * Course;
+  }
+}
+req A text {
+  Students are associated with courses.
+}
+use M;

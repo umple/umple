@@ -275,28 +275,30 @@ if(collabServerDebugFlag){
 
 
         let doc: Text = currentCollabDoc.doc;
-        for (let update of docUpdates) {
-          // Convert the JSON representation to an actual ChangeSet
-          // instance
-
-          try {
+        let applied: Update[] = [];
+        try {
+          for (let update of docUpdates) {
+            // Convert the JSON representation to an actual ChangeSet
+            // instance
             let changes = ChangeSet.fromJSON(update.changes)
-            updates.push({changes, clientID: update.clientID})
             doc = changes.apply(doc)
-  
-          } catch (error) {
-            console.error(error); 
-            socket.emit('pushUpdateResponse', false);
-          }
+            applied.push({changes, clientID: update.clientID})
 
-          if(collabServerDebugFlag)
-            {
-              console.log("=====================================");
-              console.warn(`update.changes: ${update.changes}`);
-              console.log(`doc: ${doc}`);
-              console.log(`doc.length: ${doc.length}`);
-            }
+            if(collabServerDebugFlag)
+              {
+                console.log("=====================================");
+                console.warn(`update.changes: ${update.changes}`);
+                console.log(`doc: ${doc}`);
+                console.log(`doc.length: ${doc.length}`);
+              }
+          }
+        } catch (error) {
+          // refuse the whole push so the client rebases; peers never get a change they cannot apply
+          console.error(error);
+          socket.emit('pushUpdateResponse', false);
+          return;
         }
+        updates.push(...applied)
         socket.emit('pushUpdateResponse', true);
 
         if(collabServerDebugFlag){
@@ -331,8 +333,9 @@ if(collabServerDebugFlag){
       let currentCollabDoc: collabDoc = getOrCreate(fileKey)
       let updates: Update[] = currentCollabDoc.updates
       let doc: Text = currentCollabDoc.doc
-      if(doc.length == 0){
-        doc = Text.of([initText])
+      // a session nobody has edited yet takes its text from the first client
+      if(updates.length == 0 && doc.length == 0){
+        doc = Text.of(String(initText ?? "").split("\n"))
         currentCollabDoc.doc = doc
 
       if(collabServerDebugFlag){

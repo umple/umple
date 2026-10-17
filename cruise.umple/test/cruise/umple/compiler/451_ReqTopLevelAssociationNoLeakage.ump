@@ -1,0 +1,13 @@
+// implementsReq at top level before a top-level association block
+// Req should attach to the association only, not to class Admin
+// Should not produce a 401 warning
+class Student {}
+class Course {}
+implementsReq A;
+association {
+  * Student -- * Course;
+}
+class Admin {}
+req A text {
+  Students are associated with courses.
+}

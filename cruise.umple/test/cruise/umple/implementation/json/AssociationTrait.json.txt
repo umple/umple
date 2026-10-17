@@ -6,6 +6,7 @@
  "height": 45},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "B",
  "name": "B",
  "isAbstract": "false",
@@ -18,6 +19,7 @@
  "height": 45},
  "attributes": [],
 "methods": [],
+ "enums": [],
  "id": "A",
  "name": "A",
  "isAbstract": "false",
@@ -47,4 +49,5 @@
  "isLeftComposition":"false",
  "isRightComposition":"false",
  "isSymmetricReflexive":"false",
- "isTraced":"black"}] }
+ "isTraced":"black"}],
+ "globalEnums":[] }

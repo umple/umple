@@ -1,0 +1,321 @@
+/*
+Copyright: All contributers to the Umple Project
+This file is made available subject to the open source license found at:
+https://umple.org/license
+*/
+
+namespace cruise.umple.compiler;
+
+class MermaidGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  UmpleModel model = null;
+  String output = "";
+
+  public void generate()
+  {
+    boolean generateClassDiagram = shouldGenerateClassDiagram();
+    boolean generateStateDiagram = shouldGenerateStateDiagram();
+    boolean hasStateMachines = hasStateMachines();
+
+    // In combined mode, suppress empty state output when model has no state machines.
+    if (generateClassDiagram && generateStateDiagram && !hasStateMachines) {
+      generateStateDiagram = false;
+    }
+
+    String classDiagram = null;
+    String stateDiagram = null;
+
+    if (generateClassDiagram) {
+      classDiagram = generateClassDiagramCode();
+      writeModel(classDiagram, "_classDiagram.mermaid", "class");
+    }
+
+    if (generateStateDiagram) {
+      stateDiagram = generateStateDiagramCode();
+      writeModel(stateDiagram, "_stateDiagram.mermaid", "state");
+    }
+
+    if (generateClassDiagram && generateStateDiagram) {
+      StringBuilder mermaid = new StringBuilder();
+      mermaid.append("%% Mermaid Class Diagram\n");
+      mermaid.append(classDiagram);
+      if (!classDiagram.endsWith("\n")) {
+        mermaid.append("\n");
+      }
+      mermaid.append("\n%% Mermaid State Diagram\n");
+      mermaid.append(stateDiagram);
+      model.setCode(mermaid.toString());
+    } else if (generateClassDiagram) {
+      model.setCode(classDiagram);
+    } else {
+      model.setCode(stateDiagram);
+    }
+  }
+
+  private boolean shouldGenerateClassDiagram()
+  {
+    boolean classSelected = hasSuboptionIgnoreCase("class");
+    boolean stateSelected = hasSuboptionIgnoreCase("state");
+
+    if (classSelected && !stateSelected) {
+      return true;
+    }
+    if (stateSelected && !classSelected) {
+      return false;
+    }
+    return true;
+  }
+
+  private boolean shouldGenerateStateDiagram()
+  {
+    boolean classSelected = hasSuboptionIgnoreCase("class");
+    boolean stateSelected = hasSuboptionIgnoreCase("state");
+
+    if (stateSelected && !classSelected) {
+      return true;
+    }
+    if (classSelected && !stateSelected) {
+      return false;
+    }
+    return true;
+  }
+
+  private boolean hasSuboptionIgnoreCase(String option)
+  {
+    for (String currentOption : getSuboptions()) {
+      if (currentOption.equalsIgnoreCase(option)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private boolean hasStateMachines()
+  {
+    for (UmpleClass uClass : model.getUmpleClasses()) {
+      if (uClass.getStateMachines().size() > 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private String generateClassDiagramCode()
+  {
+    StringBuilder mermaid = new StringBuilder();
+    mermaid.append("classDiagram\n");
+
+    // Add Classes and Attributes/Methods
+    for (UmpleClass aClass : model.getUmpleClasses()) {
+      mermaid.append("  class " + aClass.getName() + " {\n");
+
+      // Attributes
+      for (Attribute aAttribute : aClass.getAttributes()) {
+        String type = aAttribute.getType() == null ? "String" : aAttribute.getType();
+        mermaid.append("    " + type + " " + aAttribute.getName() + "\n");
+      }
+
+      // Methods
+      for (Method aMethod : aClass.getMethods()) {
+        if (aMethod.getSource() == Method.Source.fAutoAPI) {
+          continue;
+        }
+        String type = aMethod.getType() == null ? "void" : aMethod.getType();
+        mermaid.append("    " + type + " " + aMethod.getName() + "()\n");
+      }
+      mermaid.append("  }\n");
+
+      // Inheritance
+      if (aClass.getExtendsClass() != null) {
+        mermaid.append("  " + aClass.getExtendsClass().getName() + " <|-- " + aClass.getName() + "\n");
+      }
+
+      // Interfaces
+      for (UmpleInterface uInterface : aClass.getParentInterface()) {
+        mermaid.append("  " + uInterface.getName() + " <|.. " + aClass.getName() + "\n");
+      }
+    }
+
+    // Add Interfaces
+    for (UmpleInterface uInterface : model.getUmpleInterfaces()) {
+      mermaid.append("  class " + uInterface.getName() + " {\n");
+      mermaid.append("    <<interface>>\n");
+      for (Method aMethod : uInterface.getMethods()) {
+        if (aMethod.getSource() == Method.Source.fAutoAPI) {
+          continue;
+        }
+        String type = aMethod.getType() == null ? "void" : aMethod.getType();
+        mermaid.append("    " + type + " " + aMethod.getName() + "()\n");
+      }
+      mermaid.append("  }\n");
+      // Interface inheritance
+      for (UmpleInterface parentInterface : uInterface.getExtendsInterface()) {
+        mermaid.append("  " + parentInterface.getName() + " <|-- " + uInterface.getName() + "\n");
+      }
+    }
+
+    // Add Associations
+    for (Association association : model.getAssociations()) {
+      AssociationEnd end1 = association.getEnd(0);
+      AssociationEnd end2 = association.getEnd(1);
+
+      String mult1 = "\"" + end1.getMultiplicity().getParserable() + "\"";
+      String mult2 = "\"" + end2.getMultiplicity().getParserable() + "\"";
+
+      String className1 = end1.getClassName();
+      String className2 = end2.getClassName();
+
+      String arrow = "--";
+      if (association.getIsLeftNavigable() && !association.getIsRightNavigable()) {
+         arrow = "<--";
+      } else if (!association.getIsLeftNavigable() && association.getIsRightNavigable()) {
+         arrow = "-->";
+      }
+
+      String role = "";
+      if (end2.getRoleName() != null && !end2.getRoleName().equals("")) {
+        role = " : " + end2.getRoleName();
+      } else if (end1.getRoleName() != null && !end1.getRoleName().equals("")) {
+        role = " : " + end1.getRoleName();
+      }
+
+      mermaid.append(StringFormatter.format("  {0} {1} {2} {3} {4}{5}\n",
+          className1, mult1, arrow, mult2, className2, role));
+    }
+
+    return mermaid.toString();
+  }
+
+  private String generateStateDiagramCode()
+  {
+    StringBuilder mermaid = new StringBuilder();
+    mermaid.append("stateDiagram-v2\n");
+
+    int smCount = 0;
+    for (UmpleClass uClass : model.getUmpleClasses()) {
+      for (StateMachine sm : uClass.getStateMachines()) {
+        smCount++;
+      }
+    }
+
+    if (smCount == 0) {
+      mermaid.append("  %% No state machines found\n");
+    } else {
+      for (UmpleClass uClass : model.getUmpleClasses()) {
+        if (uClass.getStateMachines().size() > 0) {
+          mermaid.append("  state \"Class " + uClass.getName() + "\" as Class_" + uClass.getName() + " {\n");
+          for (StateMachine sm : uClass.getStateMachines()) {
+            generateStateMachine(sm, mermaid, "    ");
+          }
+          mermaid.append("  }\n");
+        }
+      }
+    }
+    return mermaid.toString();
+  }
+
+  private void generateStateMachine(StateMachine sm, StringBuilder mermaid, String indent)
+  {
+    // Generate states and nested state machines
+    for (State state : sm.getStates()) {
+      String stateId = getSafeStateName(state);
+      if (state.getNestedStateMachines().size() > 0) {
+        mermaid.append(indent + "state \"" + state.getName() + "\" as " + stateId + " {\n");
+        for (StateMachine nestedSm : state.getNestedStateMachines()) {
+          generateStateMachine(nestedSm, mermaid, indent + "  ");
+        }
+        mermaid.append(indent + "}\n");
+      } else {
+        mermaid.append(indent + "state \"" + state.getName() + "\" as " + stateId + "\n");
+      }
+    }
+
+    // Add Start State
+    State startState = sm.getStartState();
+    if (startState != null) {
+      mermaid.append(indent + "[*] --> " + getSafeStateName(startState) + "\n");
+    }
+
+    // Generate transitions
+    for (State state : sm.getStates()) {
+      String fromId = getSafeStateName(state);
+      for (Transition transition : state.getTransitions()) {
+        State toState = transition.getNextState();
+        if (toState != null) {
+          String toId = getSafeStateName(toState);
+          Event event = transition.getEvent();
+          String eventName = (event != null && event.getName() != null) ? event.getName() : "";
+          if (eventName.equals("unspecified")) {
+            eventName = "";
+          }
+          if (!eventName.isEmpty()) {
+            mermaid.append(indent + fromId + " --> " + toId + " : " + eventName + "\n");
+          } else {
+            mermaid.append(indent + fromId + " --> " + toId + "\n");
+          }
+        }
+      }
+    }
+  }
+
+  private String getSafeStateName(State state)
+  {
+    // Include state-machine scope so same state names in different machines do not collide.
+    // Keep parent-state context so nested states remain distinct.
+    StringBuilder statePath = new StringBuilder();
+    State currentState = state;
+    while (currentState != null) {
+      statePath.insert(0, currentState.getName() + "_");
+      StateMachine sm = currentState.getStateMachine();
+      if (sm != null && sm.getParentState() != null) {
+        currentState = sm.getParentState();
+      } else {
+        break;
+      }
+    }
+
+    StringBuilder name = new StringBuilder();
+    StateMachine stateMachine = state.getStateMachine();
+    if (stateMachine != null) {
+      StateMachine rootStateMachine = stateMachine.getRootStateMachine();
+      if (rootStateMachine != null && rootStateMachine.getUmpleClass() != null) {
+        name.append(rootStateMachine.getUmpleClass().getName()).append("_");
+      }
+      name.append(stateMachine.getFullName()).append("_");
+    }
+    name.append(statePath);
+
+    String result = name.toString().replaceAll("[^a-zA-Z0-9_]", "_");
+    if (result.endsWith("_")) {
+      result = result.substring(0, result.length() - 1);
+    }
+    return result;
+  }
+
+  private void writeModel(String code, String suffix, String diagramType)
+  {
+    try
+    {
+      String path = StringFormatter.addPathOrAbsolute(
+          model.getUmpleFile().getPath(),
+          getOutput());
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + model.getUmpleFile().getSimpleFileName() + suffix;
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(code);
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating Mermaid " + diagramType + " diagram code." + e, e);
+    }
+  }
+}

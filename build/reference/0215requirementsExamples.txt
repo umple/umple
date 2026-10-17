@@ -1,0 +1,69 @@
+Requirements Examples
+Comments and Requirements
+noreferences
+@@tooltip Examples of requirements you can load into UmpleOnline.
+
+@@description Examples of requirements documents in Umple that can be used to generate code
+
+<p>This page provides examples of Umple requirements using plain-text, structured userStory and structured useCase styles. They show possible ways of specifying requirements. They can be used to guide you before manually creating a model, or to use UmpleOnline AI capabilities to generate actual Umple code.</p>
+<br />
+
+@@example  @@caption Hotel booking requirements for creating class diagrams or state machines @@endcaption
+@@source manualexamples/ReqHotelBooking.ump
+@@endexample
+
+@@example @@caption Drivers license system requirements for creating class diagrams or state machines @@endcaption
+@@source manualexamples/ReqDriversLicence.ump
+@@endexample
+
+@@example @@caption Blackjack game requirements for state machine generation @@endcaption
+@@source manualexamples/ReqBlackjack.ump
+@@endexample
+
+@@example @@caption Very simple credit card approval partial requirements @@endcaption
+@@source manualexamples/ReqCreditCardApproval.ump
+@@endexample
+
+@@example @@caption Agent loop system requirements for state machine generation @@endcaption
+@@source manualexamples/ReqAgentLoop.ump
+@@endexample
+
+@@example @@caption Plain-text userStory requirement example @@endcaption
+@@source manualexamples/ReqUserStoryPlain.ump
+@@endexample
+
+@@example @@caption Structured userStory requirement example using who, when, what, and why @@endcaption
+@@source manualexamples/ReqUserStoryStructured.ump
+@@endexample
+
+@@example @@caption Partial structured userStory requirement example @@endcaption
+@@source manualexamples/ReqUserStoryStructuredPartial.ump
+@@endexample
+
+@@example @@caption Plain-text useCase requirement example @@endcaption
+@@source manualexamples/ReqUseCasePlain.ump
+@@endexample
+
+@@example @@caption Structured useCase requirement using who, when, what, why, userStep and systemResponse @@endcaption
+@@source manualexamples/ReqUseCaseStructured.ump
+@@endexample
+
+@@example @@caption Partial structured useCase requirement example @@endcaption
+@@source manualexamples/ReqUseCaseStructuredPartial.ump
+@@endexample
+
+@@example @@caption Use cases related by isA and include, with conditional steps @@endcaption
+@@source manualexamples/ReqUseCaseExtended.ump
+@@endexample
+
+@@example @@caption Quality requirement with named quality classes @@endcaption
+@@source manualexamples/ReqQuality.ump
+@@endexample
+
+@@example @@caption Binding quality classes to alternative mixsets via implementsReq @@endcaption
+@@source manualexamples/ReqImplementsQuality.ump
+@@endexample
+
+@@example @@caption Full model producing an alternative-design comparison table @@endcaption
+@@source manualexamples/ReqQualityCompareTable.ump
+@@endexample

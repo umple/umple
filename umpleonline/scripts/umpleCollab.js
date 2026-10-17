@@ -22,6 +22,10 @@ const defaultInactivitywarningTime = 540000; // 9 minutes
 const defaultInactivityTimeTest = 10000; // 10 seconds
 const defaultInactivitywarningTimeTest = 6000; // 6 seconds
 
+// defaults for collab server connection
+const defaultServerURL = "https://cruise.umple.org"; 
+const defaultServerPath = "/collabapi";
+
 let inactivityTime = defaultInactivityTime; // 10 minutes
 let inactivitywarningTime = defaultInactivitywarningTime; // 9 minutes
 let diff = (inactivityTime - inactivitywarningTime)/1000; // 60 seconds
@@ -46,10 +50,15 @@ function updateConnectionStatus() {
 // Listen for changes
 window.addEventListener('offline', updateConnectionStatus);
 
-// this method is called in umple.php when it is verified that current URL is Bookmarked/Collaborative URL
-// connect to UmpleCollabServer which takes URL parameters umpdir, filename and inittext
+// True while this page is connected to the collaboration server and so is
+// sharing the text being edited with every other page open on the same model
+Collab.isConnected = function() {
+  return isConnected;
+};
+
+// called from Action.initialLoadFinished() once the model text is in the editor; connects to
+// UmpleCollabServer if the current URL is a Bookmarked/Collaborative URL
 // umpdir represents the current model
-// filename represents the currently active tab
 // inittext represents the current contents of the codemirror6 editor
 Collab.connectCollabServer = async function() {
 
@@ -79,15 +88,19 @@ updateConnectionStatus();
   document.getElementById('inputExampleType').disabled = true;
   document.getElementById('inputExample').disabled = true;
 
+  const collabServerConfigExists = typeof CollabServerConfig !== 'undefined';
+
     // DEBUG
     if(collabClientDebugFlag){
       console.log("Current Page is Bookmark URL --- connecting to Collab Server!");
+      console.log("CollabServerConfig: ", collabServerConfigExists ? CollabServerConfig : "CollabServerConfig is not defined");
     }
 
-    // setup default values CollabServerConfig is not set by creating collab-server-config.js
-    // The client will try to connect to serverURL: https://cruise.umple.org and serverPath: /collabapi
-    const serverURL = typeof CollabServerConfig !== 'undefined' ? CollabServerConfig.serverURL : "https://cruise.umple.org"
-    const serverPath = typeof CollabServerConfig !== 'undefined' ? CollabServerConfig.serverPath : "/collabapi" 
+    // To change from the default serverURL and serverPath, create a collab-server-config.js 
+    // file based on the collab-server-config.js.template file and update the serverURL and 
+    // serverPath to connect to your desired collab server instance
+    const serverURL = collabServerConfigExists ? CollabServerConfig.serverURL : defaultServerURL;
+    const serverPath = collabServerConfigExists ? CollabServerConfig.serverPath : defaultServerPath;
     
     // DEBUG
     if(collabClientDebugFlag){
@@ -292,7 +305,8 @@ updateConnectionStatus();
 
 
     const umpdir = Page.getModel();
-    const filename = TabControl.activeTab != null ? TabControl.activeTab.name : "Untitled";
+    // one shared document per model; tabs are not synchronised separately
+    const filename = "Untitled";
 
     const inittext = Page.codeMirrorEditor6.state.doc.toString();
 
@@ -305,10 +319,9 @@ updateConnectionStatus();
     if(collabClientDebugFlag){
       console.log("Version: ", getDocumentResponse.version, "Doc: ", getDocumentResponse.doc);
     }
-    // when response document coming from collaboration server has some content,
-    // then only update the code editor
+    // the shared document wins, even when it is empty
 
-    if(getDocumentResponse.doc.length != 0){
+    if(!getDocumentResponse.doc.eq(Page.codeMirrorEditor6.state.doc)){
       Page.setCodeMirror6Text(getDocumentResponse.doc);
       if(collabClientDebugFlag){
         console.warn("Document content received from Collab Server: ");

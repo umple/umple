@@ -1,0 +1,8 @@
+req R1 {
+  plain requirement text
+}
+
+req R1 quality {
+  Level1 {}
+  Class99 {}
+}

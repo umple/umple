@@ -1,0 +1,15 @@
+classDiagram
+  class Foo {
+  }
+  class Bar1 {
+  }
+  class Bar2 {
+  }
+  class Bar3 {
+  }
+  class Bar4 {
+  }
+  Foo "1" -- "*" Bar1 : bar1s
+  Foo "1" -- "*" Bar2 : bar2s
+  Foo "1" -- "*" Bar3 : bar3s
+  Foo "1" -- "*" Bar4 : bar4s

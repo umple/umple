@@ -1,0 +1,68 @@
+// The following is a set of requirements for an agent loop
+// system that can be used to experiment with generating
+// state machines in Umple using AI, or merely as an example
+// of how requirements can be specified in Umple.
+
+req AL01-IdleEntry {
+  The agent loop waits in an idle mode until a run is started or continued,
+  then it enters the assistant turn.
+}
+
+req AL02-AssistantTurnToolRequest {
+  During the assistant turn, if the assistant requests tool execution,
+  the agent loop enters the tool turn.
+}
+
+req AL03-AssistantTurnCompletion {
+  During the assistant turn, if the assistant completes its response,
+  the agent loop proceeds to a queue check step.
+}
+
+req AL04-AssistantTurnFailureOrAbort {
+  During the assistant turn, if the assistant fails or aborts,
+  the agent loop ends the run.
+}
+
+req AL05-ToolTurnPermissionGate {
+  During the tool turn, if a requested tool requires permission,
+  the agent loop pauses to await a permission decision.
+}
+
+req AL06-ToolTurnReturnToAssistant {
+  During the tool turn, when tool execution completes,
+  the agent loop returns to the assistant turn.
+}
+
+req AL07-ToolTurnSteeringInterrupt {
+  During the tool turn, a steering interrupt can immediately return the loop
+  to the assistant turn.
+}
+
+req AL08-PermissionGranted {
+  When awaiting tool permission, granting permission allows the agent loop
+  to resume tool execution.
+}
+
+req AL09-PermissionDenied {
+  When awaiting tool permission, denying permission returns the agent loop
+  to the assistant turn without continuing tool execution.
+}
+
+req AL10-QueueCheckContinue {
+  After the assistant completes, if a queued message is available,
+  the agent loop continues with another assistant turn.
+}
+
+req AL11-QueueCheckEnd {
+  After the assistant completes, if no queued message is available,
+  the agent loop ends the run.
+}
+
+req AL12-ResetToIdle {
+  After the run ends, the agent loop can be reset back to idle.
+}
+
+req AL13-QueuedProcessing {
+  The agent loop processes queued messages in order, and queue checking only
+  occurs after an assistant completion.
+}

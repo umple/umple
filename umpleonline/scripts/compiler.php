@@ -23,6 +23,7 @@
 
 require_once("compiler_config.php");
 require_once("Parsedown.php");
+require_once("python_traceback.php");
 
 // Allow CORS so that any site may use the Umple compiler.
 header("Access-Control-Allow-Origin: *");
@@ -32,21 +33,15 @@ if (isset($_REQUEST["save"]))
   if(isset($_REQUEST["svgContent"]))
   {
     $input = $_REQUEST["svgContent"];
-
-    if(isset($_REQUEST["filename"]))
-    {
-      $filename = basename($_REQUEST['filename']);
-      $modelId = dirname($_REQUEST['filename']);
-      $dataHandle = dataStore()->openData($modelId);
-      $dataHandle->writeData($filename, $input);
+    list($filename, $dataHandle) = getOrCreateDataHandle();
+    $allowedExtensions = array('ump', 'svg');
+    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    if (!in_array($extension, $allowedExtensions, true)) {
+      http_response_code(400);
+      echo "Invalid file type.";
+      exit;
     }
-    else
-    {
-      // this makes no sense, but mimic old behaviour for now
-      $filename = 'model.ump';
-      $dataHandle = dataStore()->createData();
-      $dataHandle->writeData($filename, $input);
-    }
+    $dataHandle->writeData($filename, $input);
     $workDir = $dataHandle->getWorkDir();
     // it will inserted into an href, so we should actually permalink
     // the resulting file
@@ -57,15 +52,14 @@ if (isset($_REQUEST["save"]))
     $input = $_REQUEST["umpleCode"];
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     if (isset($_REQUEST["lock"]) && isset($_REQUEST["model"])){
-      $model = $_REQUEST["model"];
-  //file_put_contents("/home/jpan/test.html", ' ' . $model, FILE_APPEND);
-
-  //file_put_contents("/home/jpan/test.html", "111 " . $dataHandle->getWorkDir()->getPath(), FILE_APPEND);
-      $lock_file = "../ump/".$model."/.lockfile";
+      $lock_file = $dataHandle->getWorkDir()->getPath()."/.lockfile";
       $fp = fopen($lock_file, "w");
       if (flock($fp, LOCK_EX)) {
         try {
-          $dataHandle->writeData($dataname, $input);
+          $history = new VersionHistory($dataHandle->getWorkDir()->getPath());
+          $saved = $history->writeFile($dataname, $input, VersionHistory::requestedBaseVersion(),
+            VersionHistory::requestedLayoutUpdate());
+          VersionHistory::sendVersionHeaders($saved["version"], $saved["changed"], $history->getReplacedBackup());
         } catch (Exception $e) {
           // Do nothing for now here
         } finally {
@@ -85,19 +79,19 @@ if (isset($_REQUEST["save"]))
 }
 else if (isset($_REQUEST["load"]))
 {
-  // extract the model ID and filename from the old-style path
-  $filename = basename($_REQUEST["filename"]);
-  $modelId = basename(dirname($_REQUEST["filename"]));
-  // echo $filename;
-  // echo $modelId;
-  if (isset($_REQUEST["isTask"]))
+  // The model directory, including the tasks/ of a task root, comes from
+  // the path, so the isTask argument that the page still sends is not needed
+  $modelId = getModelIdFromFilename($_REQUEST["filename"] ?? NULL);
+  if ($modelId === NULL)
   {
-    $modelId = "tasks/" . $modelId;
+    rejectInvalidFilename();
   }
-  //file_put_contents("/home/jpan/test.html", $modelId . "///", FILE_APPEND);
   $dataHandle = dataStore()->openData($modelId);
-  $outputUmple = $dataHandle->readData($filename);
-  echo $outputUmple;
+  // A model directory removed by the cleanup of old models loads as empty
+  if ($dataHandle)
+  {
+    echo $dataHandle->readData(basename($_REQUEST["filename"]));
+  }
 }
 else if (isset($_REQUEST["loadTask"])) //load the task in the tasks dir
 {
@@ -323,13 +317,20 @@ else if (isset($_REQUEST["umpleCode"]))
     $htmlContents = True;
   }
 
-  $graphvizDarkMode = false;
-  // Handle dark theme for Graphviz generators (class, state, feature, entityRelationship diagrams)
-  // If theme parameter is 'dark' and it's a Graphviz generator (starts with "Gv"), add gvdark suboption
-  if (isset($_REQUEST['theme']) && $_REQUEST['theme'] === 'dark' && strpos($language, 'Gv') === 0)
+  $graphvizTheme = null;
+
+  // Handle explicit theme for Graphviz generators
+  if (isset($_REQUEST['theme']) && (strpos($language, 'Gv') === 0 || $instanceDiagram))
   {
-    $suboptions = $suboptions . " -s gvdark";
-    $graphvizDarkMode = true;
+    if ($_REQUEST['theme'] === 'dark')
+    {
+      $suboptions = $suboptions . " -s gvdark";
+      $graphvizTheme = 'dark';
+    }
+    else if ($_REQUEST['theme'] === 'light')
+    {
+      $graphvizTheme = 'light';
+    }
   }
 
   if ($languageStyle == "html")
@@ -375,7 +376,7 @@ else if (isset($_REQUEST["umpleCode"]))
     $filename = $workDir->getPath().'/'.$dataname;
     // note: this does not create the error output in the working directory, and likely never did
     $errorFilename = "{$filename}.erroroutput";
-    $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
+    $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename}{$suboptions} 2> {$errorFilename}");
     $errors = getErrorHtml($errorFilename, 0);
     if($outputErr == "true")
       echo $errors . "<p>URL_SPLIT";
@@ -419,12 +420,18 @@ else if (isset($_REQUEST["umpleCode"]))
       $archivelink = $workDir->makePermalink($language.'FromUmple.zip');
       echo "<a href=\"$archivelink\" class=\"zipDownloadLink\" title=\"Download the generated code as a zip file. You can then unzip the result, compile it and run it on your own computer.\">Download the following Papyrus project as a zip file</a >";
     }
+    elseif ($language == "Mermaid") {
+      $sourceCode = executeCommand("java -jar umplesync.jar -generate Mermaid {$filename}{$suboptions} 2> {$errorFilename}");
+      if (trim($sourceCode) == "") {
+        $sourceCode = "Error generating Mermaid diagrams.";
+      }
+    }
     else {
       $sourceCode = executeCommand("java -jar umplesync.jar -generate {$language} {$filename} 2> {$errorFilename}");
     }
     $errors = getErrorHtml($errorFilename, 0);
     
-    if ($language != "Json" && $language != "JsonMixed")
+    if ($language != "Json" && $language != "JsonMixed" && $language != "FeatureModelJson")
     {
       $sourceCode = htmlspecialchars($sourceCode);
     }
@@ -437,15 +444,15 @@ else if (isset($_REQUEST["umpleCode"]))
     return;
   }
 
-  if ($language == "Python")
-  {
-    echo "Generated Python has a few limitations. For more information please <a target='pythoninfo' href='https://cruise.umple.org/umple/Python.html'>click here</a>.<br>";
-  }
-
   if (!$uigu)
   { // NOTuigu
   // Generate the Java, PHP, RTCpp, Ruby, Python, Cpp or Sql and put it into the right directory
   list($dataname, $dataHandle) = getOrCreateDataHandle();
+  // Only now, so that a rejected filename gets nothing but its 400 message
+  if ($language == "Python")
+  {
+    echo "Generated Python has a few limitations. For more information please <a target='pythoninfo' href='https://cruise.umple.org/umple/Python.html'>click here</a>.<br>";
+  }
   $dataHandle->writeData($dataname, "generate {$language} \"./{$language}/\" --override-all;\n" . $input);
   $workDir = $dataHandle->getWorkDir();
   $filename = $workDir->getPath().'/'.$dataname;
@@ -479,7 +486,11 @@ else if (isset($_REQUEST["umpleCode"]))
     if (json_last_error() === JSON_ERROR_NONE) {
       if($output->output || $output->errors) {
         echo "<p><strong class='executionHeader'>Execution Output</strong></p>";
-        echo translateToLineNums($output->output.$output->errors);
+        $executionText = $output->output.$output->errors;
+        if ($language == "Python") {
+          $executionText = mapPythonTraceback($executionText, $workDir->getPath());
+        }
+        echo translateToLineNums($executionText);
       }
     } else {
       echo $content;
@@ -498,9 +509,13 @@ else if (isset($_REQUEST["umpleCode"]))
   // Took off 1> {$outputFilename}  in two commands above
   $resultFromCommand = executeCommand($command);
 
-  if ($graphvizDarkMode && ($stateDiagram || $classDiagram || $featureDiagram || $entityRelationshipDiagram))
+  if ($graphvizTheme === 'dark' && ($stateDiagram || $classDiagram || $featureDiagram || $entityRelationshipDiagram || $instanceDiagram))
   {
-    applyGraphvizDarkThemeFiles($thedir, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram);
+    applyGraphvizDarkThemeFiles($thedir, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram);
+  }
+  else if ($graphvizTheme === 'light' && ($stateDiagram || $classDiagram || $featureDiagram || $entityRelationshipDiagram || $instanceDiagram))
+  {
+    applyGraphvizLightThemeFiles($thedir, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram);
   }
 
   $dataHandle->writeData(basename($outputFilename), $resultFromCommand);
@@ -646,6 +661,14 @@ else if (isset($_REQUEST["umpleCode"]))
     else if ($stateDiagram) {
       $thedir = dirname($outputFilename);
       exec("rm -rf " . $thedir . "/stateDiagram.svg");
+      // Graphviz versions may emit escaped DOT quotes as raw quotes in SVG hrefs.
+      // Encode the state/transition callback arguments before generating the SVG.
+      $stateGraphPath = $thedir . "/model.gv";
+      $stateGraph = file_get_contents($stateGraphPath);
+      if ($stateGraph !== false)
+      {
+        file_put_contents($stateGraphPath, encodeGraphvizStateLinks($stateGraph));
+      }
       $command = "dot -Tsvg " . $thedir . "/model.gv -o " . $thedir .  "/stateDiagram.svg"; 
       exec($command);
             if (!file_exists($thedir . "/stateDiagram.svg") && file_exists("doterr.svg"))
@@ -722,8 +745,20 @@ else if (isset($_REQUEST["umpleCode"]))
       $svgcode = readTemporaryFile("{$thedir}/instanceDiagram.svg");
       $gvlink = $workDir->makePermalink('model'.$generatorType.'.gv');
       $svglink = $workDir->makePermalink('instanceDiagram.svg');
-      $html = "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
-      <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
+      // Read the CRUD-style JSON sidecar written by the InstanceDiagram
+      // generator in the same pass that produced the GraphViz file.
+      $jsonSidecarPath = $thedir . "/model" . $generatorType . ".instance.json";
+      $instanceJson = '';
+      if (file_exists($jsonSidecarPath)) {
+        $instanceJson = readTemporaryFile($jsonSidecarPath);
+      }
+
+      $html = "<button type=\"button\" id=\"instance-load-into-crud\" class=\"jQuery-palette-button ui-button ui-corner-all ui-widget\" style=\"margin-right:6px;\">Load data into CRUD</button>&nbsp;" .
+        // Embed the JSON as a hidden script tag so the client can
+        // reuse it when \"Load data into CRUD\" is clicked.
+        "<script id=\"instance-diagram-crud-json\" type=\"application/json\">" . $instanceJson . "</script>" .
+        "<a href=\"$gvlink\">Download the GraphViz file for the following</a>&nbsp;<a target=\"_GraphVizOutput\" href=\"$svglink\">Download the SVG file for the following</a>&nbsp;<br/>{$errhtml}&nbsp;
+                <svg xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\" height=\"2000\" width=\"2000\">";
       echo $html;
       $changesToMake = 1;
       $shrunksvgcode = preg_replace($svg_regex,$svg_scale,$svgcode,$changesToMake);
@@ -847,7 +882,17 @@ else
   echo "Invalid use of compiler";
 }
 
-function applyGraphvizDarkThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram)
+function encodeGraphvizStateLinks($content)
+{
+  return preg_replace_callback(
+    '/URL="javascript:Action\.(?:stateClicked|transitionClicked)\(.*?\)"/',
+    function($match) {
+      return str_replace('\"', '&quot;', $match[0]);
+    },
+    $content
+  );
+}
+function applyGraphvizLightThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram)
 {
   $targets = array();
   if ($stateDiagram)
@@ -858,7 +903,34 @@ function applyGraphvizDarkThemeFiles($directory, $generatorType, $stateDiagram, 
   {
     $targets[] = $directory . "/modelGvFeatureDiagram.gv";
   }
-  if ($classDiagram || $entityRelationshipDiagram)
+  if ($classDiagram || $entityRelationshipDiagram || $instanceDiagram)
+  {
+    $suffix = $generatorType;
+    if ($suffix === null)
+    {
+      $suffix = "";
+    }
+    $targets[] = $directory . "/model" . $suffix . ".gv";
+  }
+
+  foreach ($targets as $file)
+  {
+    applyGraphvizLightThemeToFile($file);
+  }
+}
+
+function applyGraphvizDarkThemeFiles($directory, $generatorType, $stateDiagram, $classDiagram, $featureDiagram, $entityRelationshipDiagram, $instanceDiagram)
+{
+  $targets = array();
+  if ($stateDiagram)
+  {
+    $targets[] = $directory . "/model.gv";
+  }
+  if ($featureDiagram)
+  {
+    $targets[] = $directory . "/modelGvFeatureDiagram.gv";
+  }
+  if ($classDiagram || $entityRelationshipDiagram || $instanceDiagram)
   {
     $suffix = $generatorType;
     if ($suffix === null)
@@ -871,6 +943,31 @@ function applyGraphvizDarkThemeFiles($directory, $generatorType, $stateDiagram, 
   foreach ($targets as $file)
   {
     applyGraphvizDarkThemeToFile($file);
+  }
+}
+
+function applyGraphvizLightThemeToFile($path)
+{
+  if (!file_exists($path))
+  {
+    return;
+  }
+
+  $content = file_get_contents($path);
+  if ($content === false || trim($content) === "")
+  {
+    return;
+  }
+
+  if (strpos($content, 'bgcolor="#ffffff"') !== false && strpos($content, 'fillcolor="#FFFFFF"') !== false)
+  {
+    return;
+  }
+
+  $themed = transformGraphvizContentToLight($content);
+  if ($themed !== null && $themed !== "")
+  {
+    file_put_contents($path, $themed);
   }
 }
 
@@ -897,6 +994,74 @@ function applyGraphvizDarkThemeToFile($path)
   {
     file_put_contents($path, $themed);
   }
+}
+
+function transformGraphvizContentToLight($content)
+{
+  $lines = preg_split("/\r\n|\n|\r/", $content);
+  $result = array();
+  $count = count($lines);
+  $lightThemeAdded = false;
+
+  for ($i = 0; $i < $count; $i++)
+  {
+    $line = $lines[$i];
+    $trimmed = trim($line);
+
+    if (!$lightThemeAdded && preg_match('/^digraph\s+.*\{?\s*$/', $trimmed))
+    {
+      $result[] = $line;
+      $result[] = '  bgcolor="#ffffff";';
+      $result[] = '  node [ fontcolor="#000000", style=filled, color="#000000", fillcolor="#FFFFFF" ];';
+      $result[] = '  edge [ color="#000000", fontcolor="#000000" ];';
+      $lightThemeAdded = true;
+      continue;
+    }
+
+    if (strpos($trimmed, 'subgraph ') === 0 && strpos($line, '{') !== false)
+    {
+      $result[] = $line;
+      if ($i + 1 < $count)
+      {
+        $i++;
+        $result[] = $lines[$i];
+      }
+      $result[] = '    fontcolor="#000000";';
+      $result[] = '    color="#000000";';
+      continue;
+    }
+
+    $processedLine = $line;
+    // State diagrams override the filled node default with style=rounded.
+    // Restore the fill (and reset the black start-state fill) for normal and
+    // nested states so their entire interior is clickable in the SVG.
+    // Explicitly coloured states already use "filled, rounded" and are preserved.
+    if (preg_match('/^(?:node\s*\[|style\s*=)/', $trimmed))
+    {
+      $processedLine = preg_replace('/\bstyle\s*=\s*rounded\b/', 'style="rounded,filled" fillcolor="#FFFFFF"', $processedLine);
+    }
+
+    if (stripos($processedLine, '<table') !== false || stripos($processedLine, '<td') !== false)
+    {
+      $processedLine = preg_replace('/ bgcolor="#[0-9a-fA-F]+"/i', ' bgcolor="#FFFFFF"', $processedLine);
+      $processedLine = preg_replace('/ color="#[0-9a-fA-F]+"/i', ' color="#000000"', $processedLine);
+
+      if (stripos($processedLine, '<font') === false)
+      {
+        $processedLine = preg_replace('/(<td[^>]*>)([^<]+)(<\/td>)/i', '$1<font color="#000000">$2</font>$3', $processedLine);
+      }
+    }
+
+    if (stripos($processedLine, '<font') !== false)
+    {
+      $processedLine = preg_replace('/<font([^>]*)color="[^"]+"([^>]*)>/i', '<font$1color="#000000"$2>', $processedLine);
+      $processedLine = preg_replace('/<font((?![^>]*color=)[^>]*)>/i', '<font$1 color="#000000">', $processedLine);
+    }
+
+    $result[] = $processedLine;
+  }
+
+  return implode(PHP_EOL, $result);
 }
 
 function transformGraphvizContentToDark($content)
@@ -936,6 +1101,12 @@ function transformGraphvizContentToDark($content)
     }
 
     $processedLine = $line;
+    // Keep normal and nested states filled after their rounded-style override.
+    // Reset the start-state fill without changing explicit state colours.
+    if (preg_match('/^(?:node\s*\[|style\s*=)/', $trimmed))
+    {
+      $processedLine = preg_replace('/\bstyle\s*=\s*rounded\b/', 'style="rounded,filled" fillcolor="#333333"', $processedLine);
+    }
 
     if (stripos($processedLine, '<table') !== false || stripos($processedLine, '<td') !== false)
     {
@@ -1014,7 +1185,6 @@ function getErrorHtml($errorFilename, $offset = 1)
         foreach($results as $result)
         {
             $url = $result["url"];
-            $line = intval($result["line"]) - $offset; 
             $errorCode = $result["errorCode"];
             $severityInt = intval($result["severity"]);
             if($severityInt > 2) {
@@ -1027,14 +1197,61 @@ function getErrorHtml($errorFilename, $offset = 1)
               $textcolor = "<span class=\"umple-message-error\">";
             }
             $msg = htmlspecialchars($result["message"]);
-                        
-            $errhtml .= $textcolor." {$severity} on <a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a> : {$msg}.</span> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
+            $filename = "";
+            if (array_key_exists("filename", $result) && $result["filename"] != null && $result["filename"] !== "") {
+              $filename = htmlspecialchars($result["filename"], ENT_QUOTES);
+            }
+            $lowerFn = strtolower($filename);
+            $showFilename = ($filename !== "" && $lowerFn !== "model.ump");
+            $line = intval($result["line"]) - ($showFilename ? 0 : 1);
+            $filePrefix = ($showFilename)
+              ? " <span class=\"umple-err-file\" data-filename=\"{$filename}\">in <strong>{$filename}</strong> </span>"
+              : "";
+            
+            $safeFilenameJs = addslashes($filename);
+            if ($showFilename) {
+              $errorAnchor = "<a href=\"javascript:Action.goToCrossFileError('{$safeFilenameJs}',{$line});\">{$filename} on line {$line}</a>";
+            } else {
+              $errorAnchor = "<a href=\"javascript:Action.setCaretPosition({$line});Action.updateLineNumberDisplay();\">line {$line}</a>";
+            }
+            $errhtml .= $textcolor." {$severity}".($showFilename ? " in " : " on ")." {$errorAnchor} : {$msg}.</span> <i><a href=\"{$url}\" target=\"helppage\">More information ({$errorCode})</a></i></br>";
         }
      }
     
      $errhtml .= "</div>";
         
-     $errhtml .= "<script type=\"text/javascript\">jQuery(\"#errorClick\").click(function(a){a.preventDefault();jQuery(\"#errorRow\").toggle();});</script>";
+     $errhtml .= "<script type=\"text/javascript\">
+      jQuery(\"#errorClick\").click(function(a){
+        a.preventDefault();
+        jQuery(\"#errorRow\").toggle();
+      });
+
+      (function(){
+        function norm(name){
+          if(!name) return \"\";
+          name = String(name).trim();
+          name = name.split('/').pop();
+          name = name.replace(/\\.ump\\s*$/i, '');
+          return name;
+        }
+
+        var tabLis = document.querySelectorAll('li[id^=\"tab\"]');
+        var tabCount = tabLis.length;
+
+        var activeEl = document.querySelector('li[id^=\"tab\"].selected a.tabname');
+        var active = activeEl ? norm(activeEl.textContent || '') : \"\";
+        
+        document.querySelectorAll('.umple-err-file').forEach(function(node){
+          var file = norm(node.getAttribute('data-filename') || '');
+
+          if (tabCount <= 1 || (active && file && active === file)) {
+            node.style.display = 'none';
+          } else {
+            node.style.display = '';
+          }
+        });
+      })();
+    </script>";
      return $errhtml;
   }
   return "";
@@ -1052,7 +1269,7 @@ function executeCode($modelName, $error)
   if (curl_errno($ch)) {
       $error_msg = curl_error($ch);
   }
-  curl_close($ch);
+
 
   if (isset($error_msg)) {
     return "The docker service to execute code is not working. Please contact the system administrator for help.\n".$error_msg;

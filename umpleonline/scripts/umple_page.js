@@ -43,6 +43,11 @@ Page.useGvFeatureDiagram = false;
 Page.showFeatureDependency = false;
 Page.useStructureDiagram = false;
 Page.useFeatureDiagram = false;
+Page.useGvEntityRelationshipDiagram = false;
+Page.useInstanceDiagram = false;
+Page.useCRUDUI = false;
+Page.useStateTables = false;
+Page.useEventSequence = false;
 Page.showAttributes = true;
 Page.showMethods = false;
 Page.filterWordsOutput = "";
@@ -50,6 +55,7 @@ Page.mixsetsActive = new Array();
 Page.filtersActive = new Array();
 Page.copyableMixset="";
 Page.specialSuboptionsActive = new Array();
+Page.hasFeatureModelTree = false;
 Page.showActions = true;
 Page.showText = true;
 Page.showCanvas = true;
@@ -57,6 +63,7 @@ Page.showTraits = false;
 Page.showTransitionLabels = false;
 Page.showGuardLabels = false;
 Page.showGuards = true;
+Page.showNaturalLanguage = true;
 Page.modifiedDiagrams = false;
 Page.allowPinch = false;
 
@@ -91,6 +98,7 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Layout.isLayoutVisible = doShowLayout;
   Page.readOnly = doReadOnly;
 
+  VersionHistory.init(doReadOnly);
   TabControl.init();
   jQuery(".layoutListItem").hide();
 
@@ -98,51 +106,152 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   if(diagramType.toLowerCase() == "gvstate" || diagramType.toLowerCase() == "state")   
   { 
     Page.useGvStateDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     Page.useEditableClassDiagram = false; 
     Page.setDiagramTypeIconState('GvState');
     Page.useGvFeatureDiagram = false;
     jQuery(".view_opt_state").show();
+    Action.syncLiveViewSelector("sd");
 
   }
   else if(diagramType.toLowerCase() == "gvclass")
   {
     Page.useGvClassDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     Page.useEditableClassDiagram = false;
     Page.setDiagramTypeIconState('GvClass');
     Page.useGvFeatureDiagram = false;
     jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
+    Action.syncLiveViewSelector("gcd");
 
   }
   else if(diagramType.toLowerCase() == "gvclasstrait")
   {
     Page.useGvClassDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     Page.useEditableClassDiagram = false;
     Page.setDiagramTypeIconState('GvClass');
     Page.useGvFeatureDiagram = false;
     Page.showTraits=true;
     jQuery(".view_opt_class").show();
+    Action.syncLiveViewSelector("gcd");
   } 
   else if(diagramType.toLowerCase() == "gvfeature")
   {
     Page.useGvFeatureDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     Page.useEditableClassDiagram = false;
     Page.useGvStateDiagram = false;
     Page.useStructureDiagram = false;
     Page.setDiagramTypeIconState('GvFeature');
     jQuery(".view_opt_feature").show();
+    Action.syncLiveViewSelector("gfd");
 
   }
   else if(diagramType.toLowerCase() == "structurediagram")
   {
     Page.useStructureDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    // Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('structureDiagram');
     Page.useGvFeatureDiagram = false;
+    Action.syncLiveViewSelector("std");
+  }
+  else if(diagramType.toLowerCase() == "gventityrelationshipdiagram")
+  {
+    Page.useGvEntityRelationshipDiagram = true;
+    Page.useInstanceDiagram = false;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
+    Page.useGvFeatureDiagram = false;
+    Action.syncLiveViewSelector("erd");
+  }
+  else if(diagramType.toLowerCase() == "instancediagram")
+  {
+    Page.useInstanceDiagram = true;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
+    Page.useGvFeatureDiagram = false;
+    Action.syncLiveViewSelector("instanceDiagram");
+  }
+  else if(diagramType.toLowerCase() == "crudui" || diagramType.toLowerCase() == "crudjson")
+  {
+    Page.useCRUDUI = true;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    Page.useInstanceDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
+    Page.useGvFeatureDiagram = false;
+    Action.syncLiveViewSelector("crudUI");
+  }
+  else if(diagramType.toLowerCase() == "eventsequence")
+  {
+    Page.useEventSequence = true;
+    Page.useCRUDUI = false;
+    Page.useStateTables = false;
+    Page.useInstanceDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
+    Page.useGvFeatureDiagram = false;
+    Action.syncLiveViewSelector("eventSequence");
+  }
+  else if(diagramType.toLowerCase() == "statetables")
+  {
+    Page.useStateTables = true;
+    Page.useEventSequence = false;
+    Page.useCRUDUI = false;
+    Page.useInstanceDiagram = false;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useEditableClassDiagram = false;  
+    Page.setDiagramTypeIconState('none');
+    Page.useGvFeatureDiagram = false;
+    jQuery("#buttonAddState").show();
+    Action.syncLiveViewSelector("stateTables");
   }
   else
   {
     jQuery(".view_opt_class").show();
     jQuery(".view_opt_class_palette").show();
+    Page.useEditableClassDiagram = true;
+    Page.useGvClassDiagram = false;
+    Page.setDiagramTypeIconState('editableClass');
+    Action.syncLiveViewSelector("ecd");
   }
 
   // Set the default displayoptions if there are any
@@ -179,8 +288,21 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
   Page.initSourceCodeArea();
   Page.initCodeExecutionArea();
   jQuery(document).ready(function() {
-    DropboxInitializer.initializeDropbox();
+    // DropboxInitializer.initializeDropbox();
     ToolTips.initTooltips();
+    // Initialize AI controller after DOM is ready so modal elements exist
+    if (window.AiSettings && window.AiSettings.init) {
+      window.AiSettings.init();
+    }
+    // Initialize feature tree modal after DOM is ready so its dialog elements (declared after the inline Page.init script in umple.php) are present.
+    Page.initHighlighter("btnCloseFeatureTree");
+    FeatureTreeModal.init();
+    if (Page.useGvFeatureDiagram) {
+      FeatureTreeModal.showPaletteSection();
+    } else {
+      FeatureTreeModal.hidePaletteSection();
+    }
+
   });
 
   if(Page.readOnly) {jQuery("#" + Page.umpleCanvasId()).addClass("photoReady");}
@@ -210,6 +332,7 @@ Page.initPaletteArea = function()
   Page.initJQueryButton("buttonLoadBlankModel");
   
   Page.initHighlighter("buttonAddClass");
+  Page.initHighlighter("buttonAddState");
   Page.initHighlighter("buttonAddAssociation");
   Page.initHighlighter("buttonAddTransition");
   Page.initHighlighter("buttonAddGeneralization");
@@ -226,6 +349,7 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonCopyCommandLine");
   Page.initHighlighter("buttonCopyLocalBrowser");
   Page.initHighlighter("buttonLoadLocalBrowser");
+  Page.initHighlighter("buttonRestoreEarlierVersion");
   if (Page.canEditTask)
   {
     //Page.initHighlighter("buttonEditTask");
@@ -250,12 +374,15 @@ Page.initPaletteArea = function()
   Page.initHighlighter("buttonToggleTransitionLabels");
   Page.initHighlighter("buttonToggleGuards");
   Page.initHighlighter("buttonToggleGuardLabels");
+  Page.initHighlighter("buttonToggleNaturalLanguage");
   Page.initHighlighter("buttonToggleTraits");
   Page.initHighlighter("buttonToggleFeatureDependency");
-  Page.initHighlighter("buttonallowPinch");
+  Page.initHighlighter("buttonAllowPinch");
   Page.initHighlighter("buttonReindent");
-  
+  Page.initHighlighter("buttonSelectReq");
+
   Page.initToggleTool("buttonAddClass");
+  Page.initToggleTool("buttonAddState");
   Page.initToggleTool("buttonAddAssociation");
   Page.initToggleTool("buttonAddTransition");
   Page.initToggleTool("buttonAddGeneralization");
@@ -284,6 +411,11 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowGvStateDiagram");
   Page.initAction("buttonShowGvFeatureDiagram");//buttonShowGvFeatureDiagram
   Page.initAction("buttonShowStructureDiagram");
+  Page.initAction("buttonShowGvEntityRelationshipDiagram");
+  Page.initAction("buttonShowInstanceDiagram");
+  Page.initAction("buttonShowCRUDUI");
+  Page.initAction("buttonShowStateTables");
+  Page.initAction("buttonShowEventSequence");
   Page.initAction("buttonShowHideLayoutEditor");
   Page.initAction("buttonManualSync");
   Page.initAction("buttonCopyClip");
@@ -294,6 +426,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonCopyCommandLine");
   Page.initAction("buttonCopyLocalBrowser");
   Page.initAction("buttonLoadLocalBrowser");
+  Page.initAction("buttonRestoreEarlierVersion");
   if (Page.canEditTask)
   {
     //Page.initAction("buttonEditTask");
@@ -330,6 +463,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonToggleTransitionLabels");
   Page.initAction("buttonToggleGuards");
   Page.initAction("buttonToggleGuardLabels");
+  Page.initAction("buttonToggleNaturalLanguage");
   Page.initAction("buttonAllowPinch");
     
   Page.initLabels();
@@ -337,7 +471,7 @@ Page.initPaletteArea = function()
   Page.enablePaletteItem("buttonUndo", false);
   Page.enablePaletteItem("buttonRedo", false);
   Page.enablePaletteItem("buttonSyncDiagram", false);
-  Page.enablePaletteItem("buttonAddTransition", false);
+  Page.enablePaletteItem("buttonAddTransition", Page.useGvStateDiagram);
 
   jQuery("#genstatus").hide();
   jQuery("#buttonViewComplete").hide();
@@ -368,7 +502,7 @@ Page.initPaletteArea = function()
     }
   }
 
-  // Only show execute code button for the Java language
+  // Only show the execute code button for languages the execution service runs
   jQuery("#inputGenerateCode").on('change', function() {
     if(this.value.split(":")[1] === 'Java' || this.value.split(":")[1] === 'Python') {
       jQuery("#buttonExecuteCode").show();
@@ -391,6 +525,7 @@ Page.initOptions = function()
   jQuery("#buttonToggleTransitionLabels").prop('checked',false);
   jQuery("#buttonToggleGuards").prop('checked',true);  
   jQuery("#buttonToggleGuardLabels").prop('checked',false);
+  jQuery("#buttonToggleNaturalLanguage").prop('checked',true);
   jQuery("#buttonToggleTraits").prop('checked',Page.showTraits);
   jQuery("#buttonToggleFeatureDependency").prop('checked',false);
   jQuery("#buttonAllowPinch").prop('checked',false);
@@ -406,6 +541,22 @@ Page.initOptions = function()
 
   if(Page.useGvStateDiagram)
     jQuery("#buttonShowGvStateDiagram").prop('checked', true);
+
+  if(Page.useGvEntityRelationshipDiagram)
+    jQuery("#buttonShowGvEntityRelationshipDiagram").prop('checked', true);
+  
+  if(Page.useInstanceDiagram)
+    jQuery("#buttonShowInstanceDiagram").prop('checked', true);
+
+  if(Page.useCRUDUI)
+    jQuery("#buttonShowCRUDUI").prop('checked', true);
+ 
+  if(Page.useStateTables)
+    jQuery("#buttonShowStateTables").prop('checked', true);
+
+  if(Page.useEventSequence)
+    jQuery("#buttonShowEventSequence").prop('checked', true);
+
   if(Page.useStructureDiagram)
     jQuery("#buttonShowStructureDiagram").prop('checked', true);
 
@@ -462,13 +613,12 @@ Page.enablePaletteItem = function(id, doEnable)
   
   if (doEnable)
   {
-    item.removeClass();
+    item.removeClass("disabled");
     item.prop('disabled', true);
     Page.initHighlighter(id);
   }
   else
   {
-    item.removeClass();
     item.addClass("disabled");
     item.prop('disabled', false);
     Page.removeHighlighter(id);
@@ -560,14 +710,19 @@ Page.initCodeMirrorEditor = function() {
     { key: "Ctrl-E", run: function() { Page.clickShowEditableClassDiagram() } },
     { key: "Ctrl-J", run: function() { Page.clickShowJointJSClassDiagram() } },
     { key: "Ctrl-G", run: function() { Page.clickShowGvClassDiagram() } },
+    { key: "Ctrl-Shift-V", run: function() { Page.clickShowGvEntityRelationshipDiagram() } },
+    { key: "Ctrl-Shift-C", run: function() { Page.clickShowInstanceDiagram() } },
+    // { key: "Ctrl-Shift-f", run: function() { Page.clickShowCRUDUI() } },
+    { key: "Ctrl-Shift-t", run: function() { Page.clickShowStateTables() } },
+    { key: "Ctrl-Shift-r", run: function() { Page.clickShowEventSequence() } },
     { key: "Ctrl-S", run: function() { Page.clickShowGvStateDiagram() } },
     { key: "Ctrl-L", run: function() { Page.clickShowStructureDiagram() } },
     { key: "Ctrl-T", run: function() { Page.clickShowHideText() } },
     { key: "Shift-Ctrl-Alt-T", run: function() { Page.clickShowHideText() } },
     { key: "Ctrl-D", run: function() { Page.clickShowHideCanvas() } },
     { key: "Ctrl-N", run: function() { Page.clickShowHideMenu() } },
-    { key: "trl-Alt-N", run: function() { Page.clickShowHideMenu() } },
-    { key: "Ctrl-Shift-=", run: function() { Page.clickButtonlarger() } },
+    { key: "Ctrl-Alt-N", run: function() { Page.clickShowHideMenu() } },
+    { key: "Ctrl-Shift-=", run: function() { Page.clickButtonLarger() } },
     { key: "Ctrl-Shift--", run: function() { Page.clickButtonSmaller() } },
     { key: "Shift-Ctrl-A", run: function() { Page.clickToggleAttributes() } },
     { key: "Ctrl-M", run: function() { Page.clickToggleMethods() } },
@@ -603,40 +758,83 @@ Page.initCodeMirrorEditor = function() {
           effects: cm6.editableCompartment.reconfigure(cm6.EditorView.editable.of(false))
       });
   }
-      
-  // Sets the codemirror 6 text without any change trigger (hopefully)
-  Page.setCodeMirror6Text = function (textToSet) {
-    Page.codeMirrorEditor6.dispatch({ 
+
+  // LSP initialization — called from TabControl.loadAllTabsCallback after tabs are settled
+  Page.initLspAsync = function() {
+    if (!window.UMPLE_LSP_WS_URL || Page.readOnly) return;
+
+    var modelId = Page.getModel();
+    var activeTabName = (TabControl.activeTab && TabControl.activeTab.name) || "model";
+    var umpBasePath = window.UMPLE_UMP_BASE || "/var/www/ump";
+
+    cm6.initLsp(Page.codeMirrorEditor6, {
+      wsUrl: window.UMPLE_LSP_WS_URL,
+      token: window.UMPLE_LSP_TOKEN || "",
+      modelId: modelId,
+      umpBasePath: umpBasePath,
+      activeTabName: activeTabName
+    }).then(function(success) {
+      if (!success) return;
+      // Seed all inactive tabs as passive files for cross-file rename/refs
+      for (var tabId in TabControl.tabs) {
+        var tab = TabControl.tabs[tabId];
+        if (tab !== TabControl.activeTab) {
+          var filename = TabControl.getTabFilename(tab.name);
+          var content = localStorage[filename] || "";
+          cm6.lspAddPassiveFile(tab.name, content);
+        }
+      }
+    }).catch(function(err) {
+      console.warn("[lsp] Init failed:", err);
+    });
+  };
+
+  // Reconnect hook — called by editor.mjs on WebSocket drop
+  window.umpleLspReconnect = function() {
+    if (!window.UMPLE_LSP_WS_URL || Page.readOnly) return;
+    cm6.disconnectLsp();
+    Page.initLspAsync();
+  };
+
+  // Sets CodeMirror 6 text; optionally skip debounced typing processing.
+  Page.setCodeMirror6Text = function (textToSet, skipDebouncedTyping) {
+    var dispatchPayload = { 
       changes: { 
         from: 0, 
         to: Page.codeMirrorEditor6.state.doc.length, 
         insert: textToSet
         }
-    } )
+    };
+    if (skipDebouncedTyping
+      && cm6.skipDebouncedTypingAnnotation
+      && typeof cm6.skipDebouncedTypingAnnotation.of === "function") {
+      dispatchPayload.annotations = cm6.skipDebouncedTypingAnnotation.of(true);
+    }
+    Page.codeMirrorEditor6.dispatch(dispatchPayload);
   }
 
    Page.codeMirrorEditor6.dom.addEventListener('mousedown', function () {
     Action.umpleCodeMirrorCursorActivity();
    });
 
-  Page.codeMirrorOn = true;  
+  Page.codeMirrorOn = true;
 }
 
 // Function to make the E G S icons in UmpleOnline context senstive (#1400)
 Page.setDiagramTypeIconState = function(diagramType){
   buttonList = ['ECD_button','GCD_button','SD_button'];
   for (i = 0, l = buttonList.length; i<l;++i){
-    document.getElementById(buttonList[i]).className = "button2";
+    document.getElementById(buttonList[i]).className = "button2 mode-button";
   }
   switch(diagramType){
     case 'editableClass':
-    document.getElementById('ECD_button').className = "button2 active";
+    document.getElementById('ECD_button').className = "button2 mode-button active";
     break;
     case 'GvClass':
-    document.getElementById('GCD_button').className = "button2 active";
+    document.getElementById('GCD_button').className = "button2 mode-button active";
     break;
     case 'GvState':
-    document.getElementById('SD_button').className = "button2 active";
+    document.getElementById('SD_button').className = "button2 mode-button active";
     break;
   }
 }
@@ -646,30 +844,30 @@ Page.setShowHideIconState = function(selectedButton){
   switch(selectedButton){
     case 'SHT_button':
       if(Page.showText){
-        document.getElementById(selectedButton).className = "button2 active";
+        document.getElementById(selectedButton).className = "button2 mode-button active";
       } else {
-        document.getElementById(selectedButton).className = "button2";
+        document.getElementById(selectedButton).className = "button2 mode-button";
       }
       break;
     case 'SHD_button':
       if(Page.showCanvas){
-        document.getElementById(selectedButton).className = "button2 active";
+        document.getElementById(selectedButton).className = "button2 mode-button active";
       } else {
-        document.getElementById(selectedButton).className = "button2";
+        document.getElementById(selectedButton).className = "button2 mode-button";
       }
       break;
     case 'SHA_button':
       if(Page.showAttributes){
-        document.getElementById(selectedButton).className = "button2 active";
+        document.getElementById(selectedButton).className = "button2 mode-button active";
       } else {
-        document.getElementById(selectedButton).className = "button2";
+        document.getElementById(selectedButton).className = "button2 mode-button";
       }
       break;
     case 'SHM_button':
       if(Page.showMethods){
-        document.getElementById(selectedButton).className = "button2 active";
+        document.getElementById(selectedButton).className = "button2 mode-button active";
       } else {
-        document.getElementById(selectedButton).className = "button2";
+        document.getElementById(selectedButton).className = "button2 mode-button";
       }
       break;
   }
@@ -684,6 +882,21 @@ Page.clickShowJointJSClassDiagram = function() {
 }
 Page.clickShowGvClassDiagram = function() {
   jQuery('#buttonShowGvClassDiagram').trigger('click');
+}
+Page.clickShowGvEntityRelationshipDiagram = function() {
+  jQuery('#buttonShowGvEntityRelationshipDiagram').trigger('click');
+}
+Page.clickShowInstanceDiagram = function() {
+  jQuery('#buttonShowInstanceDiagram').trigger('click');
+}
+Page.clickShowCRUDUI = function() {
+  jQuery('#buttonShowCRUDUI').trigger('click');
+}
+Page.clickShowStateTables = function() {
+  jQuery('#buttonShowStateTables').trigger('click');
+}
+Page.clickShowEventSequence = function() {
+  jQuery('#buttonShowEventSequence').trigger('click');
 }
 Page.clickShowGvStateDiagram = function() {
   jQuery('#buttonShowGvStateDiagram').trigger('click');
@@ -725,7 +938,7 @@ Page.clickToggleFeatureDependency= function() {
 Page.clickToggleTransitionLabels = function() {
   jQuery('#buttonToggleTransitionLabels').trigger('click');
 }
-Page.clickToggleGuardLabels = function() {
+Page.clickToggleGuards = function() {
   jQuery('#buttonToggleGuards').trigger('click');
 }
 Page.clickToggleGuardLabels = function() {
@@ -736,6 +949,30 @@ Page.clickAllowPinch = function() {
   jQuery('#buttonAllowPinch').trigger('click');
 }
 
+Page.currentZoom = 0.4; // default start zoom see also pinchtozoom
+
+Page.zoomToCurrentZoom = function() {
+  zoomDiv=document.getElementById('svgCanvas');
+  theBBox=zoomDiv.getBBox();
+  newWidth=theBBox.width*(1+Page.currentZoom);
+  newHeight=theBBox.height*(1+Page.currentZoom);
+  zoomDiv.setAttribute('viewBox', `0 0 ${newWidth} ${newHeight}`);
+}
+
+Page.zoomIn = function() {
+  // If further zooming was allowed, then cropping would occur
+  // If the default start zoom and this was to be changed, then the
+  // generators would need to be adjusted
+  if(Page.currentZoom > 0.01) {
+    Page.currentZoom -= 0.1;
+    Page.zoomToCurrentZoom();
+  }
+}
+
+Page.zoomOut = function() {
+  Page.currentZoom += 0.1;
+  Page.zoomToCurrentZoom();
+}
 
 Page.isPhotoReady = function()
 {
@@ -794,7 +1031,7 @@ Page.initCanvasArea = function()
   canvas.mousemove(Action.mouseMove);
   canvas.focus(function(){Action.focusOn(Page.umpleCanvasId(), true);});
   canvas.blur(function(){Action.focusOn(Page.umpleCanvasId(), false);});
-  canvas.delegate("[class$='editableDoubleClick']", 'dblclick', InlineEditor.handleOnClick);
+  canvas.delegate(".editableDoubleClick, .editableSingleClick", 'dblclick contextmenu', InlineEditor.handleOnClick);
   canvas.delegate("[class$='editableSingleClick']", 'click', InlineEditor.handleOnClick);
 
   if (!Layout.isDiagramVisible) {Layout.showHideCanvas(false);}
@@ -895,7 +1132,7 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples5").hide();   
     jQuery("#itemLoadExamples6").hide();   
     jQuery("#itemLoadExamples7").hide();   
-    jQuery("#itemLoadExamples8").hide();   
+    jQuery("#itemLoadExamples8").hide();  
 
   }
   else if (Page.useGvStateDiagram) {
@@ -906,7 +1143,7 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples5").hide();
     jQuery("#itemLoadExamples6").hide();   
     jQuery("#itemLoadExamples7").hide();   
-    jQuery("#itemLoadExamples8").hide();   
+    jQuery("#itemLoadExamples8").hide();
 
   }
  else if (Page.useGvFeatureDiagram) {
@@ -914,10 +1151,74 @@ Page.initExamples = function()
     jQuery("#itemLoadExamples").hide();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").show();
     jQuery("#itemLoadExamples5").hide();
     jQuery("#itemLoadExamples6").hide();   
     jQuery("#itemLoadExamples7").hide();   
-    jQuery("#itemLoadExamples8").hide();   
+    jQuery("#itemLoadExamples8").hide();
+  }
+
+  else if (Page.useGvEntityRelationshipDiagram) {
+    jQuery("#cdModels").prop("selected",true);
+    jQuery("#itemLoadExamples").show();
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();
+
+  }
+
+  else if (Page.useInstanceDiagram) {
+    jQuery("#cdModels").prop("selected",true);
+    jQuery("#itemLoadExamples").show();
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();
+
+  }
+
+  // else if (Page.useCRUDUI) {
+  //   jQuery("#cdModels").prop("selected",true);
+  //   jQuery("#itemLoadExamples").show();
+  //   jQuery("#itemLoadExamples2").hide();
+  //   jQuery("#itemLoadExamples3").hide();
+  //   jQuery("#itemLoadExamples5").hide();
+  //   jQuery("#itemLoadExamples6").hide();   
+  //   jQuery("#itemLoadExamples7").hide();   
+  //   jQuery("#itemLoadExamples8").hide();
+
+  // }
+
+  else if (Page.useStateTables) {
+    jQuery("#cdModels").prop("selected",true);
+    jQuery("#itemLoadExamples").show();
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();
+
+  }
+
+  else if (Page.useEventSequence) {
+    jQuery("#cdModels").prop("selected",true);
+    jQuery("#itemLoadExamples").show();
+    jQuery("#itemLoadExamples2").hide();
+    jQuery("#itemLoadExamples3").hide();
+    jQuery("#itemLoadExamples4").hide();
+    jQuery("#itemLoadExamples5").hide();
+    jQuery("#itemLoadExamples6").hide();   
+    jQuery("#itemLoadExamples7").hide();   
+    jQuery("#itemLoadExamples8").hide();
 
   }
   else {
@@ -926,6 +1227,7 @@ Page.initExamples = function()
     // Therefore for new example sets 5-8, we will need to change this logic
     // to determine which set to hide
     jQuery("#cdModels").prop("selected",true); 
+    jQuery("#itemLoadExamples").show();
     jQuery("#itemLoadExamples2").hide();
     jQuery("#itemLoadExamples3").hide(); 
     jQuery("#itemLoadExamples4").hide();
@@ -954,6 +1256,8 @@ Page.enableDiagram = function(doEnable)
 {
   Page.enableEditDragAndResize(doEnable);
   Page.enablePaletteItem("buttonAddClass", doEnable);
+  Page.enablePaletteItem("buttonAddState", doEnable);
+  Page.enablePaletteItem("buttonAddTransition", doEnable);
   Page.enablePaletteItem("buttonAddAssociation", doEnable);
   Page.enablePaletteItem("buttonAddGeneralization", doEnable);
   Page.enablePaletteItem("buttonDeleteEntity", doEnable);
@@ -1003,6 +1307,7 @@ Page.toggleToolItem = function(id, doubleClicked)
 
 Page.unselectAllToggleTools = function()
 {
+  if (typeof GvDiagramEdit !== "undefined") GvDiagramEdit.clearPendingPaletteState();
   var unselected = false;
   var temp = false;
 
@@ -1022,11 +1327,14 @@ Page.unselectAllToggleTools = function()
   Page.selectedItem = null;
   Page.repeatToolItem = false;
 
+  Page.updateCanvasCursor();
+
   return unselected;
 }
 
 Page.selectToggleTool = function(toolSelected)
 {
+  if (typeof GvDiagramEdit !== "undefined") GvDiagramEdit.clearPendingPaletteState();
   if (Page.selectedItem != null)
   {
     DiagramEdit.removeNewClass();
@@ -1043,7 +1351,59 @@ Page.selectToggleTool = function(toolSelected)
   var newSelectedItem = "#button" + toolSelected;
   jQuery(allSelectedItems).removeClass("selected highlight");
   jQuery(newSelectedItem).addClass("selected");
+
+  Page.updateCanvasCursor();
 }
+
+Page.updateCanvasCursor = function()
+{
+  var canvas = document.getElementById("umpleCanvas");
+  if (!canvas) return;
+
+  var isDark =
+    document.body.dataset.theme === "dark" ||
+    (!document.body.dataset.theme &&
+     window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+  var cursorValue = "default";
+
+  switch (Page.selectedItem)
+  {
+    case "AddAssociation":
+      cursorValue = isDark
+        ? "url('scripts/assoc_white.png') 8 8, auto"
+        : "url('scripts/assoc.png') 8 8, auto";
+      break;
+
+    case "AddGeneralization":
+      cursorValue = isDark
+        ? "url('scripts/generalization_white.png') 8 8, auto"
+        : "url('scripts/generalization.png') 8 8, auto";
+      break;
+
+    case "AddState":
+    case "AddClass":
+      cursorValue = "url('scripts/class.png') 8 8, auto";
+      break;
+
+    case "DeleteEntity":
+      cursorValue = "url('scripts/delete.png') 8 8, auto";
+      break;
+
+    case "AddTransition":
+      cursorValue = isDark
+        ? "url('scripts/assoc_white.png') 8 8, auto"
+        : "url('scripts/assoc.png') 8 8, auto";
+      break;
+
+    default:
+      cursorValue = "default";
+      break;
+  }
+
+  canvas.style.cursor = cursorValue;
+  canvas.classList.toggle("draw-tool-active", cursorValue !== "default");
+};
 
 Page.canShowHovers = function()
 {
@@ -1071,17 +1431,53 @@ Page.getUmpleCode = function()
    // prepend namespace cancellation to prevent namespace redefinition errors
     positioning = "\n\nnamespace -;\n"+positioning;
   }
-  var umpleCode = modelCleaned + Page.modelDelimiter + positioning;
+  var umpleCode = modelCleaned + "\n" + Page.modelDelimiter + positioning;
   return umpleCode;
 }
 
+Page.getCurrentDiagramType = function()
+{
+  if (Page.useGvClassDiagram && Page.showTraits) {
+    return "GvClassTrait";
+  }
+  if (Page.useGvClassDiagram) {
+    return "GvClass";
+  }
+  if (Page.useGvStateDiagram) {
+    return "GvState";
+  }
+  if (Page.useGvFeatureDiagram) {
+    return "GvFeature";
+  }
+  if (Page.useStructureDiagram) {
+    return "structureDiagram";
+  }
+  if (Page.useGvEntityRelationshipDiagram) {
+    return "GvEntityRelationshipDiagram";
+  }
+  if (Page.useInstanceDiagram) {
+    return "instanceDiagram";
+  }
+  if (Page.useCRUDUI) {
+    return "crudUI";
+  }
+  if (Page.useStateTables) {
+    return "stateTables";
+  }
+  if (Page.useEventSequence) {
+    return "eventSequence";
+  }
+
+  return "class";
+}
 Page.getEncodedURL = function()
 {
   var server=window.location.href.split("?")[0];
   if(server.substr(0,37)=="https://cruise.umple.org/umpleonline/") {
-    server = "http://try.umple.org/";
+    server = "https://try.umple.org/";
   }
-  return server+"?text=" + encodeURIComponent(Page.getUmpleCode());
+  return server+"?text=" + encodeURIComponent(Page.getUmpleCode())+
+  "&diagramtype=" + encodeURIComponent(Page.getCurrentDiagramType());
 }
 
 Page.splitUmpleCode = function(umpleCode)
@@ -1110,7 +1506,7 @@ Page.splitUmpleCode = function(umpleCode)
 // Called by fuunctions such as loadExampeCallback and loadFileCallback
 // Also called by updateUmpleTextCallback which is triggered by diagram edit by directUpdateCommandCallback  
 // Updates all text editors, and then can call a function called reason
-Page.setUmpleCode = function(umpleCode, reason)
+Page.setUmpleCode = function(umpleCode, reason, skipDebouncedTyping)
 {
   // DEBUG
   // console.log("Inside Page.setUmpleCode() ...")
@@ -1124,13 +1520,13 @@ Page.setUmpleCode = function(umpleCode, reason)
     // issue#1409  Do not Set the umple code if codeChange is false(i.e. reason is false)
     if (!((typeof reason === 'boolean') && reason == false))
     {
-      Page.setCodeMirror6Text(modelAndPositioning[0]);
+      Page.setCodeMirror6Text(modelAndPositioning[0], skipDebouncedTyping);
     }
   }
   // Refactoring definitive text location
   // Update Codemirror 6 and the backup variable
   // console.log("Setting modelCode to codeMirror 6 ...")
-  Action.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0]);
+  Action.updateCurrentUmpleTextBeingEdited(modelAndPositioning[0], skipDebouncedTyping);
 
   if (typeof reason === 'function'){
     reason();
@@ -1444,6 +1840,61 @@ Page.getSelectedExample = function()
       }
     
     }
+
+    else if (theExampleType == "entityModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useGvEntityRelationshipDiagram) {
+         jQuery("#buttonShowGvEntityRelationshipDiagram").prop('checked', true); 
+         Action.changeDiagramType({type: "GvEntityRelationshipDiagram"});
+         
+      }
+    
+    } 
+
+    else if (theExampleType == "instanceModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useInstanceDiagram) {
+         jQuery("#buttonShowInstanceDiagram").prop('checked', true); 
+         Action.changeDiagramType({type: "InstanceDiagram"});
+         
+      }
+    
+    } 
+
+    else if (theExampleType == "crudModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useCRUDUI) {
+         jQuery("#buttonShowCRUDUI").prop('checked', true); 
+         Action.changeDiagramType({type: "crudUI"});
+         
+      }
+    
+    } 
+
+    else if (theExampleType == "stateModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useStateTables) {
+         jQuery("#buttonShowStateTables").prop('checked', true); 
+         Action.changeDiagramType({type: "StateTables"});
+         
+      }
+    
+    } 
+
+    else if (theExampleType == "eventModels")
+    {
+       inputExample = jQuery("#inputExample4 option:selected").val(); 
+       if( !Page.useEventSequence) {
+         jQuery("#buttonShowEventSequence").prop('checked', true); 
+         Action.changeDiagramType({type: "eventSequence"});
+         
+      }
+    
+    } 
   else {
 
     if(theExampleType == "smModels") {
@@ -1468,8 +1919,8 @@ Page.getSelectedExample = function()
 
 Page.getExampleType = function()
 {
-  var exampleType = jQuery("#exampleType option:selected").val();
-  return exampleType;
+  var inputExampleType = jQuery("#inputExampleType option:selected").val();
+  return inputExampleType;
 }
 
 Page.showCodeDone = function()
@@ -1510,9 +1961,24 @@ Page.showGeneratedCode = function(code,language,tabnumber)
     jQuery("#messageArea").html(errorMarkup);
   }
 
+  // Add AI fix actions to compiler errors.
+  if (language == "diagramUpdate")
+  {
+    const container = (tabnumber == "") ? jQuery("#downloadArea") : jQuery("#messageArea");
+    if (typeof AiFix !== "undefined" && AiFix.decorateErrorOutput)
+    {
+      // Only add AI fix buttons if the API key is verified
+      const isVerified = (typeof AiApi !== "undefined" && AiApi.isVerified) ? AiApi.isVerified() : false;
+      if (isVerified)
+      {
+        AiFix.decorateErrorOutput(container.get(0), errorMarkup);
+      }
+    }
+  }
+
   //Set the generated content
   if(language == "java" || language == "php" || language == "cpp" 
-    || language == "ruby" || language == "python" || language == "xml" || language == "sql" || language == "alloy" || language == "nusmv")
+    || language == "ruby" || language == "python" || language == "xml" || language == "sql" || language == "alloy" || language == "nusmv" || language == "mermaid")
   {
 		jQuery("#innerGeneratedCodeRow" + tabnumber).html(
 			formatOnce('<pre class="brush: {1};">{0}</pre>',generatedMarkup,language)
@@ -1544,6 +2010,10 @@ Page.showGeneratedCode = function(code,language,tabnumber)
 		}
     Page.toggleStructureDiagramLink(false);
   }
+  else if (language === "crudJson")
+  {
+    Page.showCrudFromJson(generatedMarkup, tabnumber);
+  }
   else
   {
     jQuery("#innerGeneratedCodeRow" + tabnumber).html(generatedMarkup);
@@ -1564,7 +2034,7 @@ Page.applyGeneratedCodeAreaStyles = function(language)
     generatedArea.removeClass('generatedDiagram');
   }
   //One of the svg diagram types
-  else if(language == "stateDiagram" || language == "classDiagram" || language == "structureDiagram")
+  else if(language == "stateDiagram" || language == "classDiagram" || language == "structureDiagram" || language == "entityRelationshipDiagram" || language =="instanceDiagram" || /*language == "crudJson" ||*/ language == "eventSequence" || language == "stateTables")
   {
     generatedArea.removeClass('generatedCode');
     generatedArea.addClass('generatedDiagram');
@@ -1588,7 +2058,7 @@ Page.getErrorMarkup = function(code, language)
 {
   var output = "";
   
-  if(language == "classDiagram" || language == "stateDiagram")
+  if(language == "classDiagram" || language == "stateDiagram" || language == "GvEntityRelationshipDiagram" || language == "instanceDiagram")
   { // Covers Graphviz class and state diagrams
     output = code.split("<svg xmlns=")[0];
     output = output.replace(/&nbsp;\s*$/, "");
@@ -1600,6 +2070,14 @@ Page.getErrorMarkup = function(code, language)
   else if(language == "diagramUpdate")
   { // Covers simple right-hand side canvas updates
     output = code.replace(/<p>[\s\S]*/, "");
+  }
+  else if(language == "eventSequence" || language == "stateTables")
+  {
+    // These use URL_SPLIT output, not SVG parsing
+    var split = code.split("URL_SPLIT");
+    if (split.length > 1) {
+      output = split[0];
+    }
   }
   else
   {
@@ -1619,8 +2097,8 @@ Page.getGeneratedMarkup = function(code, language)
 {
   var output = "";
   
-  if(language == "classDiagram" || language == "stateDiagram")
-  { // Covers Graphviz class and state diagrams
+  if(language == "classDiagram" || language == "stateDiagram" || language == "instanceDiagram")
+  { // Covers Graphviz class, state, and instance diagrams
     output = code.split("<svg width=")[1];
     output = "<svg width=" + output;
     output = output.replace(/<\/svg>$/, "");
@@ -1641,6 +2119,14 @@ Page.getGeneratedMarkup = function(code, language)
     output = output.replace(/##CANVAS_ID##/g, "generatedSVGCanvas");
     // Converts html encoded special characters to plaintext
     output = jQuery("<div/>").html(output).text();
+  }
+  else if(language == "eventSequence" || language == "stateTables")
+  {
+  var split = code.split("URL_SPLIT");
+  output = (split.length > 1) ? split[1] : code;
+
+  // Decode escaped HTML so it renders in the right pane
+  output = jQuery("<div/>").html(output).text();
   }
   else
   {
@@ -1712,6 +2198,65 @@ Page.getModel = function()
 {
   return jQuery("#model").val();
 }
+
+// Load instance diagram data back into the CRUD UI.
+//
+// This relies on the backend InstanceDiagram generator to produce
+// CRUD-compatible JSON for the current model/diagram, and then uses
+// the existing CRUD JSON import logic to materialize instances.
+Page.loadCrudFromInstanceDiagram = function() {
+  if (typeof Page.getUmpleCode !== "function") {
+    console.warn("Umple code accessor is unavailable; cannot load CRUD from instance diagram.");
+    return;
+  }
+
+  var code = Page.getUmpleCode() || "";
+  if (!code) {
+    Page.setFeedbackMessage && Page.setFeedbackMessage("No Umple code available to load into CRUD.");
+    return;
+  }
+
+  // Preferred path: if the current instance diagram response already
+  // embedded CRUD-style JSON (via a hidden script tag), reuse that so
+  // we don't need to re-run the generator.
+  var $embedded = jQuery("#instance-diagram-crud-json");
+  if ($embedded.length) {
+    var jsonText = $embedded.text() || "";
+    jsonText = ("" + jsonText).trim();
+    if (jsonText) {
+      Page._pendingCrudInstanceJson = jsonText;
+
+      if (typeof Action !== "undefined" && typeof Action.generateCode === "function") {
+        Action.generateCode("crudJson", "Json");
+      } else {
+        console.warn("Action.generateCode is unavailable; attempting direct CRUD import using embedded JSON.");
+        if (Page.crudData && Page.crudData.classes && typeof Page.crudJsonImportFromText === "function") {
+          try {
+            Page.crudJsonImportFromText(jsonText);
+          } catch (e) {
+            console.error("Failed to import embedded CRUD JSON from instance diagram:", e);
+            Page.setFeedbackMessage && Page.setFeedbackMessage("Unable to load instance diagram data into CRUD.");
+          }
+        }
+      }
+      return;
+    }
+  }
+
+  // If we reach here, no embedded instance JSON is available. Older
+  // diagrams that were generated before JSON embedding was added
+  // cannot be loaded into CRUD.
+  Page.setFeedbackMessage && Page.setFeedbackMessage("This instance diagram does not contain embedded instance data for CRUD.");
+};
+
+// Delegate clicks on the Instance Diagram toolbar button so it works
+// even though the button is injected dynamically by the backend.
+jQuery(document).on("click", "#instance-load-into-crud", function(evt) {
+  evt.preventDefault();
+  if (typeof Page.loadCrudFromInstanceDiagram === "function") {
+    Page.loadCrudFromInstanceDiagram();
+  }
+});
 
 jQuery.fn.selectRange = function(start, end) {
   return this.each(function() 

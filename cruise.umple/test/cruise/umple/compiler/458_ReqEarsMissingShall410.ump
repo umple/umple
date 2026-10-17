@@ -1,0 +1,13 @@
+req E13 ears {
+  when { the card is inserted }
+  system { ATM }
+}
+
+req E14 ears {
+  shall { log every transaction }
+}
+
+req E15 ears {
+  while { the ATM is idle }
+  shall { }
+}

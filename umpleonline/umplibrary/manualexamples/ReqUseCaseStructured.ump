@@ -1,0 +1,13 @@
+req UC2 useCase {
+  who { registered customer }
+  when { the cart holds at least one item }
+  what { place an order }
+  why { receive the goods at home }
+
+  userStep 1 { review the cart }
+  systemResponse 1 { show the order total including delivery }
+  userStep 2 { confirm the delivery address }
+  systemResponse 2 { reserve the stock }
+  userStep 3 { choose a payment method }
+  systemResponse 3 { email a receipt }
+}

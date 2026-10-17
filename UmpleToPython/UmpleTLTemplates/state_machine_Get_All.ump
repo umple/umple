@@ -1,0 +1,17 @@
+use state_machine_GetFull.ump;
+use state_machine_Get.ump;
+
+class UmpleToPython {
+    state_machine_Get_All <<!<</*state_machine_Get_All*/>><<#
+{
+  for (StateMachine sm : uClass.getStateMachines())
+  {
+    #>><<@ UmpleToPython.state_machine_GetFull >><<#
+  }
+  for (StateMachine sm : uClass.getAllStateMachines())
+  {
+    #>><<@ UmpleToPython.state_machine_Get >><<#
+  }
+}
+#>>!>>
+}

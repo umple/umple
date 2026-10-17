@@ -1,0 +1,6 @@
+req US2 userStory {
+  who { customer }
+  when { password is forgotten }
+  what { reset my password }
+  why { regain access to my account }
+}

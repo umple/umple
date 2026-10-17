@@ -18,6 +18,12 @@ if ( $?OSTYPE ) then
     set buildenv="wlocal"
   endif
 endif
+setenv HOSTNAME `hostname`
+if ( $?HOSTNAME ) then
+  if ( $HOSTNAME == 'cruise' ) then
+    set buildenv="cc"
+  endif
+endif
 echo Doing FULL build of Umple at $UMPLEROOT using ant -Dmyenv=$buildenv
 echo Building repo at $UMPLEROOT
 # If you are running on Windows the above should run as myenv=wlocal

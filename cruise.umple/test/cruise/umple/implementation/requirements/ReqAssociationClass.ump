@@ -1,0 +1,17 @@
+req R1 {
+  An association class requirement.
+}
+
+class P {
+  p;
+}
+
+class Q {
+  q;
+}
+
+implementsReq R1;
+associationClass AC {
+  * P p1;
+  * Q q1;
+}

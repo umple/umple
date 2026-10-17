@@ -1,112 +1,102 @@
 #PLEASE DO NOT EDIT THIS CODE
-#This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!
+#This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!
 
 
-class Bar():
-    #------------------------
-    # MEMBER VARIABLES
-    #------------------------
-    #Bar Associations
-    #------------------------
-    # CONSTRUCTOR
-    #------------------------
+class Bar:
     def __init__(self):
-        self._foos = None
         self._foos = []
 
-    #------------------------
-    # INTERFACE
-    #------------------------
-    # Code from template association_GetMany 
     def getFoo(self, index):
-        aFoo = self._foos[index]
-        return aFoo
+        return self._foos[index]
 
     def getFoos(self):
-        newFoos = tuple(self._foos)
-        return newFoos
+        return tuple(self._foos)
 
     def numberOfFoos(self):
-        number = len(self._foos)
-        return number
+        return len(self._foos)
 
     def hasFoos(self):
-        has = len(self._foos) > 0
-        return has
+        return len(self._foos) > 0
 
     def indexOfFoo(self, aFoo):
-        index = (-1 if not aFoo in self._foos else self._foos.index(aFoo))
-        return index
+        return next((i for i, x in enumerate(self._foos) if x is aFoo), -1)
 
-    # Code from template association_MinimumNumberOfMethod 
     @staticmethod
     def minimumNumberOfFoos():
         return 0
 
-    # Code from template association_AddManyToOne 
     def addFoo1(self, aMyBaz, aMyStr):
         from Foo import Foo
         return Foo(aMyBaz, aMyStr, self)
 
     def addFoo2(self, aFoo):
-        wasAdded = False
-        if (aFoo) in self._foos :
+        if any(x is aFoo for x in self._foos):
             return False
         existingBar = aFoo.getBar()
-        isNewBar = not (existingBar is None) and not self == existingBar
-        if isNewBar :
-            aFoo.setBar(self)
-        else :
+        isNewBar = existingBar is not None and existingBar is not self
+        if isNewBar:
+            if not aFoo.setBar(self):
+                return False
+        else:
             self._foos.append(aFoo)
-        wasAdded = True
-        return wasAdded
+        return True
+
+    def addFoo(self, *args, **kwargs):
+        from Foo import Foo
+        bound = __class__._bindArguments(("aFoo",), False, args, kwargs)
+        if bound is not None and (bound[0] is None or isinstance(bound[0], Foo)):
+            return __class__.addFoo2(self, *bound)
+        bound = __class__._bindArguments(("aMyBaz", "aMyStr"), False, args, kwargs)
+        if bound is not None and (bound[1] is None or isinstance(bound[1], str)):
+            return __class__.addFoo1(self, *bound)
+        raise TypeError("No method matches provided parameters")
 
     def removeFoo(self, aFoo):
-        wasRemoved = False
-        #Unable to remove aFoo, as it must always have a bar
-        if not self == aFoo.getBar() :
-            self._foos.remove(aFoo)
-            wasRemoved = True
-        return wasRemoved
+        if aFoo.getBar() is self:
+            return False
+        index = next((i for i, x in enumerate(self._foos) if x is aFoo), -1)
+        if index >= 0:
+            del self._foos[index]
+        return True
 
-    # Code from template association_AddIndexControlFunctions 
     def addFooAt(self, aFoo, index):
-        wasAdded = False
-        if self.addFoo(aFoo) :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfFoos() :
-                index = self.numberOfFoos() - 1
-            self._foos.remove(aFoo)
-            self._foos.insert(index, aFoo)
-            wasAdded = True
-        return wasAdded
+        if not self.addFoo2(aFoo):
+            return False
+        if index < 0:
+            index = 0
+        if index > self.numberOfFoos():
+            index = self.numberOfFoos() - 1
+        del self._foos[next((i for i, x in enumerate(self._foos) if x is aFoo), -1)]
+        self._foos.insert(index, aFoo)
+        return True
 
     def addOrMoveFooAt(self, aFoo, index):
-        wasAdded = False
-        if (aFoo) in self._foos :
-            if index < 0 :
-                index = 0
-            if index > self.numberOfFoos() :
-                index = self.numberOfFoos() - 1
-            self._foos.remove(aFoo)
-            self._foos.insert(index, aFoo)
-            wasAdded = True
-        else :
-            wasAdded = self.addFooAt(aFoo, index)
-        return wasAdded
+        if not any(x is aFoo for x in self._foos):
+            return self.addFooAt(aFoo, index)
+        if index < 0:
+            index = 0
+        if index > self.numberOfFoos():
+            index = self.numberOfFoos() - 1
+        del self._foos[next((i for i, x in enumerate(self._foos) if x is aFoo), -1)]
+        self._foos.insert(index, aFoo)
+        return True
 
     def delete(self):
-        i = len(self._foos)
-        while i > 0 :
+        for i in range(len(self._foos), 0, -1):
             aFoo = self._foos[i - 1]
             aFoo.delete()
-            i -= 1
 
-    def addFoo(self, *argv):
-        from Foo import Foo
-        if len(argv) == 2 and isinstance(argv[0], Foo.Baz) and isinstance(argv[1], str) :
-            return self.addFoo1(argv[0], argv[1])
-        if len(argv) == 1 and isinstance(argv[0], Foo) :
-            return self.addFoo2(argv[0])
-        raise TypeError("No method matches provided parameters")
+    @staticmethod
+    def _bindArguments(names, varargs, args, kwargs):
+        if len(args) > len(names) and not varargs:
+            return None
+        bound = list(args[:len(names)])
+        for name in names[len(bound):]:
+            if name not in kwargs:
+                return None
+            bound.append(kwargs[name])
+        if len(kwargs) != len(names) - min(len(args), len(names)):
+            return None
+        if varargs:
+            bound.append(args[len(names):])
+        return bound

@@ -11,6 +11,8 @@ require 'options_panel_helper.rb'
 require 'dynamic_layout_helper.rb'
 require 'save_and_load_helper.rb'
 require 'tasks_panel_helper.rb'
+require 'lsp_helper.rb'
+require 'version_history_helper.rb'
 
 # DO NOT RUN THESE TESTS USING THE 'NO-HEADLESS' OPTION 
 # UNLESS FOR DEBUGGING PURPOSES 
@@ -38,5 +40,7 @@ RSpec.configure do |config|
   config.include OptionsPanelTestHelper, :helper => :optionsMenu
   config.include DynamicResizingHelper, :helper => :dynamicResizing
   config.include SaveAndLoadTestHelper, :helper => :saveAndLoad
-  config.include TaskHelper, :helper => :taskEdit 
+  config.include TaskHelper, :helper => :taskEdit
+  config.include LspTestHelper, :helper => :lsp
+  config.include VersionHistoryTestHelper, :helper => :versionHistory
 end

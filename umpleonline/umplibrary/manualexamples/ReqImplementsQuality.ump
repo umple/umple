@@ -1,0 +1,25 @@
+// implementsReq binds a requirement (and optionally a specific
+// quality class) to the following entity. Each mixset below is
+// an alternative design tagged with its own quality levels.
+
+req Speed quality {
+  High {}
+  Low {}
+}
+
+req Security quality {
+  Perfect {}
+  Basic {}
+}
+
+implementsReq Speed(High), Security(Perfect);
+mixset DesignA {
+  class FastSecureCar {}
+}
+
+implementsReq Speed(Low), Security(Basic);
+mixset DesignB {
+  class SlowCar {}
+}
+
+use DesignA;

@@ -1,0 +1,24 @@
+generate GvStateDiagram;
+namespace example;
+
+class X {
+  sm1 {
+    // Comment on outer state s1
+    s1 {
+      // Comment on nested state s1a
+      s1a {
+        // Comment on nested transition e1
+        e1 -> s1b;
+      }
+      // Comment on nested state s1b
+      s1b {
+        e2 -> s1a;
+        e3 -> s2;
+      }
+    }
+    // Comment on outer state s2
+    s2 {
+      e4 -> s1;
+    }
+  }
+}

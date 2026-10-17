@@ -1,0 +1,13 @@
+// Clauses may span several lines, share a line, omit the space before the brace and contain braces
+req E8 ears {
+  while {
+    the vault door
+    is open
+  }
+  when { the alarm is armed } shall { sound the alarm }
+  if{ the siren fails }system{ vault controller }
+}
+
+req E9 ears {
+  shall { show {status} on the screen }
+}

@@ -1,0 +1,6 @@
+class Light {
+  status {
+    On { turnOff -> Off; }
+    Off { turnOn -> On; }
+  }
+}

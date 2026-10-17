@@ -1,0 +1,16 @@
+// Multiple identifiers before a top-level association block should attach to the association.
+req R1 text {
+  First association requirement.
+}
+
+req R2 text {
+  Second association requirement.
+}
+
+class Student {}
+class Course {}
+
+implementsReq R1, R2;
+association {
+  * Student -- * Course;
+}

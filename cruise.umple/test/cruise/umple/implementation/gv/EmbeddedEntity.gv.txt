@@ -9,7 +9,7 @@ digraph "EmbeddedEntity" {
 "];
 
   // Attributes for Person
-  "namePerson" [shape=ellipse, label="   name\ :\ String   ", tooltip="String name&#13;"];
+  "namePerson" [shape=ellipse, label="   name\ :\ String   ", tooltip="String name&#13;", href="javascript:Action.selectAttribute(&quot;Person&quot;,&quot;name&quot;);"];
   "Person" -> "namePerson" [arrowhead="none"];
 
   // Class: Student
@@ -18,10 +18,10 @@ digraph "EmbeddedEntity" {
 "];
 
   // Attributes for Student
-  "numberStudent" [shape=ellipse, label="   number\ :\ Integer   ", tooltip="Integer number&#13;"];
+  "numberStudent" [shape=ellipse, label="   number\ :\ Integer   ", tooltip="Integer number&#13;", href="javascript:Action.selectAttribute(&quot;Student&quot;,&quot;number&quot;);"];
   "Student" -> "numberStudent" [arrowhead="none"];
 
-  "StudentIsA" [shape=triangle, label="IsA"];
+  "StudentIsA" [shape=triangle, label="IsA", href="javascript:Action.selectClass(&quot;Student&quot;);"];
   "Student" -> "StudentIsA" [arrowhead="none"];
   "StudentIsA" -> "Person" [arrowhead="none"];
 

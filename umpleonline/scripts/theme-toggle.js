@@ -85,6 +85,10 @@
       } catch (err) {
         console.warn("Unable to persist theme preference", err);
       }
+
+      if (window.Page && typeof Page.updateCanvasCursor === "function") {
+        Page.updateCanvasCursor();
+      }
     }
   }
 
@@ -110,7 +114,7 @@
     // Refresh in-canvas Graphviz diagram using requestAnimationFrame for smoother rendering
     try {
       if (window.Page && window.Action) {
-        if (Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram) {
+        if (Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram) {
           requestAnimationFrame(function(){ Action.redrawDiagram(); });
         }
       }

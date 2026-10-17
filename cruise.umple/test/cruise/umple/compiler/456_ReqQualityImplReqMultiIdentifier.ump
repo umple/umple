@@ -1,0 +1,7 @@
+// Test: implementsReq with multiple bare identifiers creates multiple ReqImplementations
+req R1 { first }
+req R2 { second }
+req R3 { third }
+
+implementsReq R1, R2, R3;
+class Item {}

@@ -138,20 +138,20 @@
         <table>
           <tr>
             <td class="column-header"><div><span>START</span></div></td>
-            <td class="column-header"><div><span>1. ev3</span></div></td>
-            <td class="column-header"><div><span>2. ev2</span></div></td>
-            <td class="column-header"><div><span>3. ev2</span></div></td>
-            <td class="column-header"><div><span>4. ev3</span></div></td>
-            <td class="column-header"><div><span>5. ev1</span></div></td>
-            <td class="column-header"><div><span>6. ev2</span></div></td>
-            <td class="column-header"><div><span>7. ev2</span></div></td>
-            <td class="column-header"><div><span>8. ev1</span></div></td>
-            <td class="column-header"><div><span>9. ev2</span></div></td>
-            <td class="column-header"><div><span>10. ev1</span></div></td>
-            <td class="column-header"><div><span>11. ev2</span></div></td>
-            <td class="column-header"><div><span>12. ev3</span></div></td>
-            <td class="column-header"><div><span>13. ev2</span></div></td>
-            <td class="column-header"><div><span>14. ev2</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev3*^*s1*^*s3*^*"><div><span>1. ev3</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev2*^*s3*^*s2*^*"><div><span>2. ev2</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev2*^*s2*^*s2*^*"><div><span>3. ev2</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev3*^*s2*^*s3*^*"><div><span>4. ev3</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev1*^*s3*^*s1*^*"><div><span>5. ev1</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev2*^*s1*^*s2*^*"><div><span>6. ev2</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev2*^*s2*^*s2*^*"><div><span>7. ev2</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev1*^*s2*^*s1*^*"><div><span>8. ev1</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev2*^*s1*^*s2*^*"><div><span>9. ev2</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev1*^*s2*^*s1*^*"><div><span>10. ev1</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev2*^*s1*^*s2*^*"><div><span>11. ev2</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev3*^*s2*^*s3*^*"><div><span>12. ev3</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev2*^*s3*^*s2*^*"><div><span>13. ev2</span></div></td>
+            <td class="column-header" data-transition="HitCounter*^*sm*^*ev2*^*s2*^*s2*^*"><div><span>14. ev2</span></div></td>
           </tr>
           <tr>
             <td class="content-cell" data-parent="">X</td>
@@ -240,72 +240,72 @@
   </tr>
   <tr>
     <td class="">1</td>
-    <td class="">ev3</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev3*^*s1*^*s3*^*">ev3</td>
     <td class="">s3</td>
   </tr>
   <tr>
     <td class="">2</td>
-    <td class="">ev2</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev2*^*s3*^*s2*^*">ev2</td>
     <td class="">s2</td>
   </tr>
   <tr>
     <td class="">3</td>
-    <td class="">ev2</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev2*^*s2*^*s2*^*">ev2</td>
     <td class="">s2</td>
   </tr>
   <tr>
     <td class="">4</td>
-    <td class="">ev3</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev3*^*s2*^*s3*^*">ev3</td>
     <td class="">s3</td>
   </tr>
   <tr>
     <td class="">5</td>
-    <td class="">ev1</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev1*^*s3*^*s1*^*">ev1</td>
     <td class="">s1</td>
   </tr>
   <tr>
     <td class="">6</td>
-    <td class="">ev2</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev2*^*s1*^*s2*^*">ev2</td>
     <td class="">s2</td>
   </tr>
   <tr>
     <td class="">7</td>
-    <td class="">ev2</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev2*^*s2*^*s2*^*">ev2</td>
     <td class="">s2</td>
   </tr>
   <tr>
     <td class="">8</td>
-    <td class="">ev1</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev1*^*s2*^*s1*^*">ev1</td>
     <td class="">s1</td>
   </tr>
   <tr>
     <td class="">9</td>
-    <td class="">ev2</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev2*^*s1*^*s2*^*">ev2</td>
     <td class="">s2</td>
   </tr>
   <tr>
     <td class="">10</td>
-    <td class="">ev1</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev1*^*s2*^*s1*^*">ev1</td>
     <td class="">s1</td>
   </tr>
   <tr>
     <td class="">11</td>
-    <td class="">ev2</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev2*^*s1*^*s2*^*">ev2</td>
     <td class="">s2</td>
   </tr>
   <tr>
     <td class="">12</td>
-    <td class="">ev3</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev3*^*s2*^*s3*^*">ev3</td>
     <td class="">s3</td>
   </tr>
   <tr>
     <td class="">13</td>
-    <td class="">ev2</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev2*^*s3*^*s2*^*">ev2</td>
     <td class="">s2</td>
   </tr>
   <tr>
     <td class="">14</td>
-    <td class="">ev2</td>
+    <td class="" data-transition="HitCounter*^*sm*^*ev2*^*s2*^*s2*^*">ev2</td>
     <td class="">s2</td>
   </tr>
 </table>

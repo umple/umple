@@ -1,0 +1,3 @@
+class Student {
+  * mentees <- 0..1 Student mentor;
+}

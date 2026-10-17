@@ -1,0 +1,9 @@
+req R1 {
+  Plain requirement text.
+}
+
+req R1 quality {
+  High { p=1 }
+  Medium { p=2 }
+  Low {}
+}

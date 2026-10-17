@@ -1,0 +1,11 @@
+// A clause must start a line or follow another clause, so these ears bodies stay free text
+req E16 ears {
+  The alarm sounds when { it is armed } and shall { beep }
+  whenever { the door opens } systems { stay locked }
+}
+
+// EARS clauses are only recognized in ears requirements
+req R1 {
+  when { the door opens }
+  shall { turn on the light }
+}

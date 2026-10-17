@@ -214,6 +214,8 @@ noreferences
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">implements:</span> Placed in the class header, indicates an interface which the class implements. </li>
 -->
 
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">implementsReq:</span> <span style="background-color:lime">[top]</span> <span style="background-color:aqua">[class]</span> Binds one or more previously-defined requirements (optionally a specific quality class) to the surrounding entity &mdash; a top-level mixset, a class, a trait, an attribute, an association, a state machine, a transition, or a method. <a href="Requirements.html"><i>See Requirements</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">include:</span> Within a filter directive, it indicates the classes that are to be included. <a href="Filters.html"><i>See Filters</i></a></li>
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">includeFilter:</span> Within a filter directive, it indicates named filters to be included. <a href="Filters.html"><i>See Filters</i></a></li>
@@ -342,6 +344,8 @@ noreferences
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">public:</span> <span style="background-color:plum">[method]</span> Sets the accessibility level of a class or its members to public. Can be omitted in Umple if the default is to be accepted (public methods, private attributes) <a href="MethodDefinition.html"><i>See Method Definition</i></a></li>
 
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">quality:</span> Requirement language tag (used inside a <i>req</i> definition) that introduces a set of named quality classes such as <i>High</i>, <i>Medium</i>, <i>Low</i> for a non-functional property. Quality classes can be bound to alternative designs via <i>implementsReq</i> and compared side-by-side in the generated requirements document. <a href="RequirementQualityClasses.html"><i>See Requirement Quality Classes</i></a></li>
+
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">queued:</span> <span style="background-color:yellow">[state machine]</span> Placed before the state machine declaration, this allows for the processing of events received by a state machine in a separate thread (to prevent deadlocks) and in the order they appear. See also pooled./ <a href="QueuedStateMachines.html"><i>See Queued State Machines</i></a></li>
 
 <!--TRACE RECORD FEATURE TO BE DOCUMENTED BEFORE UNCOMMENTING
@@ -353,6 +357,8 @@ noreferences
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">regex:</span> <span style="background-color:burlywood">[testing]</span> Defines an element that matches the pattern specified. <a href="GenericTesting.html"><i>See Generic Testing</i></a></li>
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">remove:</span> <span style="background-color:silver">[tracing]</span> Indicates that the tracing should occur when an association is deleted. <a href="TracingAssociations.html"><i>See Tracing Associations</i></a></li>
+
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">req:</span> <span style="background-color:lime">[top]</span> Defines a requirement with an identifier and an optional language tag (<i>plain</i> text, <i>userStory</i>, <i>useCase</i>, or <i>quality</i>). Requirements can then be attached to model elements via <i>implementsReq</i>. <a href="Requirements.html"><i>See Requirements</i></a></li>
 
 <!--MIXSET FEATURE TO BE DOCUMENTED BEFORE UNCOMMENTING
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">require:</span> <span style="background-color:aqua">[class]</span> Create a dependency on another mixset.</li>

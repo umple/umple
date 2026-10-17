@@ -1,0 +1,6 @@
+// Regression fixture: A requires itself and is used.
+// Expected: satisfied (true) — tautology.
+mixset A { require [A]; }
+mixset Z { require [A]; }
+
+use A;

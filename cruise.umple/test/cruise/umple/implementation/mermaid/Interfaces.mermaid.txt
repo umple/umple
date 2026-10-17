@@ -1,0 +1,9 @@
+classDiagram
+  class Document {
+    void print()
+  }
+  Printable <|.. Document
+  class Printable {
+    <<interface>>
+    void print()
+  }

@@ -1,0 +1,43 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+
+
+
+/**
+ * An untagged body is every language's fallback; a method with bodies only for other languages is left out
+ */
+// line 2 "LanguageAlternativesBodies.ump"
+public abstract class Shape
+{
+
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+
+  public Shape()
+  {}
+
+  //------------------------
+  // INTERFACE
+  //------------------------
+
+  public void delete()
+  {}
+
+  // line 3 "LanguageAlternativesBodies.ump"
+  public int area(){
+    return 1;
+  }
+
+  // line 5 "LanguageAlternativesBodies.ump"
+  public void resize(){
+    int y = 2;
+  }
+
+  public abstract int perimeter();
+
+}

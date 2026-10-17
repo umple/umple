@@ -1,0 +1,8 @@
+trait Named {
+  fullname;
+}
+
+class Person {
+  isA Named;
+  fullName;
+}

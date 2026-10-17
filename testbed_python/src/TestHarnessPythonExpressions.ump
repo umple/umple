@@ -1,0 +1,248 @@
+/*
+Copyright: All contributers to the Umple Project
+This file is made available subject to the open source license found at:
+https://umple.org/license
+*/
+
+namespace cruise.usercode.expressions;
+
+class LengthSource
+{
+  String[] values;
+  int own() Python { [pre: getValues().length == 3] return 7 }
+    Java { [pre: getValues().length == 3] return 7; }
+}
+class InheritedLength
+{
+  isA LengthSource;
+  int inherited() Python { [pre: getValues().length == 3] return 7 }
+    Java { [pre: getValues().length == 3] return 7; }
+  int receiver(LengthSource other) Python { [pre: other.getValues().length == 3] return 7 }
+    Java { [pre: other.getValues().length == 3] return 7; }
+}
+class LengthArguments
+{
+  isA LengthSource;
+  int pick(int n) Python { return -3 } Java { return -3; }
+  double pick(String text) Python { return -3.0 } Java { return -3.0; }
+  int text(String text) Python { [pre: (pick(text.length()) / 2) == -1] return 7 }
+    Java { [pre: (pick(text.length()) / 2) == -1] return 7; }
+  int array(String[] values) Python { [pre: (pick(values.length) / 2) == -1] return 7 }
+    Java { [pre: (pick(values.length) / 2) == -1] return 7; }
+  int getter() Python { [pre: (pick(getValues().length) / 2) == -1] return 7 }
+    Java { [pre: (pick(getValues().length) / 2) == -1] return 7; }
+}
+class ChoiceA {}
+class ChoiceB {}
+class CommonReturns
+{
+  int pick(ChoiceA a) Python { return -3 } Java { return -3; }
+  int pick(ChoiceB b) Python { return -3 } Java { return -3; }
+  double pick(int n) Python { return -3.0 } Java { return -3.0; }
+  int run(ChoiceB b) Python { [pre: (pick(b) / 2) == -1] return 7 }
+    Java { [pre: (pick(b) / 2) == -1] return 7; }
+}
+class CommonReturnsReverse
+{
+  int pick(ChoiceB b) Python { return -3 } Java { return -3; }
+  int pick(ChoiceA a) Python { return -3 } Java { return -3; }
+  double pick(int n) Python { return -3.0 } Java { return -3.0; }
+  int run(ChoiceB b) Python { [pre: (pick(b) / 2) == -1] return 7 }
+    Java { [pre: (pick(b) / 2) == -1] return 7; }
+}
+class ShiftChecks
+{
+  int value = 8;
+  long wide = 8L;
+  int distance = -1;
+  int result = 0;
+  long wideResult = 0L;
+  int trace = 0;
+  ShiftChecks child = null;
+  int left = { value << distance }
+  int right = { value >> distance }
+  long wideLeft = { wide << distance }
+  long wideRight = { wide >> distance }
+  int failedLeft = { child.take(1 << distance) }
+  int failedRight = { child.take(1 >> distance) }
+  int ordered = { receiver().take(leftOperand() >> nextDistance()) }
+  int take(int n) Python { return n } Java { return n; }
+  void shiftLeft() {}
+  before shiftLeft { result = value << distance; }
+  void shiftRight() {}
+  before shiftRight { result = value >> distance; }
+  void shiftWideLeft() {}
+  before shiftWideLeft { wideResult = wide << distance; }
+  void shiftWideRight() {}
+  before shiftWideRight { wideResult = wide >> distance; }
+  void failLeft() {}
+  before failLeft { child.take(1 << distance); }
+  void failRight() {}
+  before failRight { child.take(1 >> distance); }
+  void orderedCall() {}
+  before orderedCall { receiver().take(leftOperand() >> nextDistance()); }
+  ShiftChecks receiver() Python { self.setTrace(self.getTrace() * 10 + 1); return self.getChild() }
+    Java { setTrace(getTrace() * 10 + 1); return getChild(); }
+  int leftOperand() Python { self.setTrace(self.getTrace() * 10 + 2); return self.getValue() }
+    Java { setTrace(getTrace() * 10 + 2); return getValue(); }
+  int nextDistance() Python { self.setTrace(self.getTrace() * 10 + 3); return self.getDistance() }
+    Java { setTrace(getTrace() * 10 + 3); return getDistance(); }
+}
+
+class OverloadShiftChecks
+{
+  ChoiceA a;
+  ChoiceB b;
+  int distance = 32;
+  long result = 0L;
+  long pick(ChoiceA value) Python { return 1099511627776 } Java { return 1099511627776L; }
+  int pick(ChoiceB value) Python { return 8 } Java { return 8; }
+  int reverse(ChoiceB value) Python { return 8 } Java { return 8; }
+  long reverse(ChoiceA value) Python { return 1099511627776 } Java { return 1099511627776L; }
+  int negative(ChoiceB value) Python { return -3 } Java { return -3; }
+  long negative(ChoiceA value) Python { return -3 } Java { return -3L; }
+  long known = { pick(a) >> distance }
+  long unknown = { reverse(a) >> 31 }
+  int narrow = { reverse(b) >> distance }
+  long quotient = { negative(a) / 2 }
+  void shiftKnown() {}
+  before shiftKnown { result = pick(a) >> distance; }
+  void shiftUnknown() {}
+  before shiftUnknown { result = reverse(a) >> 31; }
+  void shiftNarrow() {}
+  before shiftNarrow { result = reverse(b) >> distance; }
+  void divide() {}
+  before divide { result = negative(a) / 2; }
+  int knownContract(int step, long expected) Python { [pre: (pick(a) >> step) == expected] return 7 }
+    Java { [pre: (pick(a) >> step) == expected] return 7; }
+  int unknownContract(int step, long expected) Python { [pre: (reverse(a) >> step) == expected] return 7 }
+    Java { [pre: (reverse(a) >> step) == expected] return 7; }
+  int narrowContract(int step, int expected) Python { [pre: (reverse(b) >> step) == expected] return 7 }
+    Java { [pre: (reverse(b) >> step) == expected] return 7; }
+}
+
+class ConstraintShiftChecks
+{
+  long wide = 1099511627776L;
+  int distance = 32;
+  int trace = 0;
+  int intRight(int value, int step, int expected) Python { [pre: (value >> step) == expected] return 7 }
+    Java { [pre: (value >> step) == expected] return 7; }
+  int intLeft(int value, long step, int expected) Python { [pre: (value << step) == expected] return 7 }
+    Java { [pre: (value << step) == expected] return 7; }
+  int longRight(long value, int step, long expected) Python { [pre: (value >> step) == expected] return 7 }
+    Java { [pre: (value >> step) == expected] return 7; }
+  int longLeft(long value, int step, long expected) Python { [pre: (value << step) == expected] return 7 }
+    Java { [pre: (value << step) == expected] return 7; }
+  int promoted(int value, int step, long expected) Python { [pre: (wide * value >> step) == expected] return 7 }
+    Java { [pre: (wide * value >> step) == expected] return 7; }
+  int divided(int step, long expected) Python { [pre: (wide / 2 >> step) == expected] return 7 }
+    Java { [pre: (wide / 2 >> step) == expected] return 7; }
+  int ordered(long expected) Python { [pre: (nextValue() >> nextDistance()) == expected] return 7 }
+    Java { [pre: (nextValue() >> nextDistance()) == expected] return 7; }
+  long nextValue() Python { self.setTrace(self.getTrace() * 10 + 1); return self.getWide() }
+    Java { setTrace(getTrace() * 10 + 1); return getWide(); }
+  int nextDistance() Python { self.setTrace(self.getTrace() * 10 + 2); return self.getDistance() }
+    Java { setTrace(getTrace() * 10 + 2); return getDistance(); }
+}
+
+class NonNullOverloads
+{
+  String text = "x";
+  boolean flag = true;
+  int result = 0;
+  double pick(ChoiceA value) Python { return 2.0 } Java { return 2.0; }
+  int pick(String value) Python { return -3 } Java { return -3; }
+  double number(ChoiceA value) Python { return 2.0 } Java { return 2.0; }
+  int number(int value) Python { return -3 } Java { return -3; }
+  double truth(ChoiceA value) Python { return 2.0 } Java { return 2.0; }
+  int truth(boolean value) Python { return -3 } Java { return -3; }
+  double literal = { pick("x") / 2 }
+  double concatenated = { pick("x" + "y") / 2 }
+  double conditional = { pick(flag ? "x" : "y") / 2 }
+  double numeric = { number(1 + 2) / 2 }
+  double booleanValue = { truth(true) / 2 }
+  void run() {}
+  before run { result = pick(text + "y") / 2; }
+  int contract() Python {
+    [pre: (pick("x") / 2) == -1]
+    return 7
+  } Java {
+    [pre: (pick("x") / 2) == -1]
+    return 7;
+  }
+}
+
+class UncertainIntShifts
+{
+  ChoiceB b;
+  long result = 0L;
+  long pick(ChoiceA value) Python { return -3 } Java { return -3; }
+  int pick(ChoiceB value) Python { return 8 } Java { return 8; }
+  long zero = { pick(b) >> 0 }
+  long one = { pick(b) >> 1 }
+  long boundary = { pick(b) >> 31 }
+  long left = { pick(b) << 1 }
+  long quotient = { pick(b) / 2 }
+  void run() {}
+  before run { result = pick(b) >> 31; }
+  void divide() {}
+  before divide { result = pick(b) / 2; }
+}
+
+class UncertainLongShifts
+{
+  ChoiceB b;
+  long result = 0L;
+  int pick(ChoiceA value) Python { return -3 } Java { return -3; }
+  long pick(ChoiceB value) Python { return 1099511627776 } Java { return 1099511627776L; }
+  long zero = { pick(b) >> 0 }
+  long one = { pick(b) >> 1 }
+  long boundary = { pick(b) >> 31 }
+  long left = { pick(b) << 1 }
+  long quotient = { pick(b) / 2 }
+  void run() {}
+  before run { result = pick(b) >> 31; }
+  void divide() {}
+  before divide { result = pick(b) / 2; }
+}
+
+class UncertainPromotion
+{
+  ChoiceB b;
+  long unit = 1L;
+  int distance = 64;
+  int trace = 0;
+  int pick(ChoiceA value) Python { self.setTrace(self.getTrace() * 10 + 1); return 8 }
+    Java { setTrace(getTrace() * 10 + 1); return 8; }
+  long pick(ChoiceB value) Python { self.setTrace(self.getTrace() * 10 + 1); return 8 }
+    Java { setTrace(getTrace() * 10 + 1); return 8L; }
+  long negative(ChoiceA value) Python { return -3 } Java { return -3L; }
+  int negative(ChoiceB value) Python { return -3 } Java { return -3; }
+  long nextUnit() Python { self.setTrace(self.getTrace() * 10 + 2); return self.getUnit() }
+    Java { setTrace(getTrace() * 10 + 2); return getUnit(); }
+  int nextDistance() Python { self.setTrace(self.getTrace() * 10 + 3); return self.getDistance() }
+    Java { setTrace(getTrace() * 10 + 3); return getDistance(); }
+  int productRight(int count, long expected) Python { [pre: (pick(b) * unit >> count) == expected] return 7 }
+    Java { [pre: (pick(b) * unit >> count) == expected] return 7; }
+  int productLeft(int count, long expected) Python { [pre: (pick(b) * unit << count) == expected] return 7 }
+    Java { [pre: (pick(b) * unit << count) == expected] return 7; }
+  int reversedRight(int count, long expected) Python { [pre: (unit * pick(b) >> count) == expected] return 7 }
+    Java { [pre: (unit * pick(b) >> count) == expected] return 7; }
+  int reversedLeft(int count, long expected) Python { [pre: (unit * pick(b) << count) == expected] return 7 }
+    Java { [pre: (unit * pick(b) << count) == expected] return 7; }
+  int parameterRight(int count, long expected, long scale) Python { [pre: (pick(b) * scale >> count) == expected] return 7 }
+    Java { [pre: (pick(b) * scale >> count) == expected] return 7; }
+  int parameterLeft(int count, long expected, long scale) Python { [pre: (pick(b) * scale << count) == expected] return 7 }
+    Java { [pre: (pick(b) * scale << count) == expected] return 7; }
+  int dividedRight(int count, long expected) Python { [pre: (negative(b) / unit >> count) == expected] return 7 }
+    Java { [pre: (negative(b) / unit >> count) == expected] return 7; }
+  int dividedLeft(int count, long expected) Python { [pre: (negative(b) / unit << count) == expected] return 7 }
+    Java { [pre: (negative(b) / unit << count) == expected] return 7; }
+  int remainderRight(int count, long expected) Python { [pre: (negative(b) % unit >> count) == expected] return 7 }
+    Java { [pre: (negative(b) % unit >> count) == expected] return 7; }
+  int remainderLeft(int count, long expected) Python { [pre: (negative(b) % unit << count) == expected] return 7 }
+    Java { [pre: (negative(b) % unit << count) == expected] return 7; }
+  int ordered(long expected) Python { [pre: (pick(b) * nextUnit() >> nextDistance()) == expected] return 7 }
+    Java { [pre: (pick(b) * nextUnit() >> nextDistance()) == expected] return 7; }
+}

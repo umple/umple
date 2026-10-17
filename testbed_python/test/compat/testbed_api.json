@@ -1,0 +1,4108 @@
+{
+ "about": "Public API of the Python that the previous generator (Umple 1.37.1) produced for the testbed models, recorded when this generator replaced it. An intentional API change edits the entry by hand or adds the member to the \"excluded\" list with its reason, and adds a test to ledger_test.py. Signatures list parameter names without self or cls; * is a variable positional parameter.",
+ "modules": {
+  "cruise.associations.AssociatedClassWithKey": {
+   "AssociatedClassWithKey": {
+    "bases": [],
+    "methods": {
+     "alternateConstructor": "@classmethod (aId, aAssociationClass)",
+     "__init__": "(aId)",
+     "setId": "(aId)",
+     "getId": "()",
+     "getAssociationClass": "()",
+     "getAssociationClassManyKey": "(index)",
+     "getAssociationClassManyKeys": "()",
+     "numberOfAssociationClassManyKeys": "()",
+     "hasAssociationClassManyKeys": "()",
+     "indexOfAssociationClassManyKey": "(aAssociationClassManyKey)",
+     "minimumNumberOfAssociationClassManyKeys": "@staticmethod ()",
+     "addAssociationClassManyKey": "(aAssociationClassManyKey)",
+     "removeAssociationClassManyKey": "(aAssociationClassManyKey)",
+     "addAssociationClassManyKeyAt": "(aAssociationClassManyKey, index)",
+     "addOrMoveAssociationClassManyKeyAt": "(aAssociationClassManyKey, index)",
+     "equals": "(obj)",
+     "__hash__": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.AssociationClass": {
+   "AssociationClass": {
+    "bases": [],
+    "methods": {
+     "alternateConstructor": "@classmethod (aAssociatedClassWithKey)",
+     "__init__": "(aIdForAssociatedClassWithKey)",
+     "getAssociatedClassWithKey": "()",
+     "equals": "(obj)",
+     "__hash__": "()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.AssociationClassManyKeys": {
+   "AssociationClassManyKeys": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getAssociatedClass": "(index)",
+     "getAssociatedClasses": "()",
+     "numberOfAssociatedClasses": "()",
+     "hasAssociatedClasses": "()",
+     "indexOfAssociatedClass": "(aAssociatedClass)",
+     "minimumNumberOfAssociatedClasses": "@staticmethod ()",
+     "addAssociatedClass": "(aAssociatedClass)",
+     "removeAssociatedClass": "(aAssociatedClass)",
+     "addAssociatedClassAt": "(aAssociatedClass, index)",
+     "addOrMoveAssociatedClassAt": "(aAssociatedClass, index)",
+     "equals": "(obj)",
+     "__hash__": "()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.Bus": {
+   "Bus": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getSeating": "(index)",
+     "getSeatings": "()",
+     "numberOfSeatings": "()",
+     "hasSeatings": "()",
+     "indexOfSeating": "(aSeating)",
+     "minimumNumberOfSeatings": "@staticmethod ()",
+     "addSeating1": "(aCommuter)",
+     "addSeating2": "(aSeating)",
+     "removeSeating": "(aSeating)",
+     "addSeatingAt": "(aSeating, index)",
+     "addOrMoveSeatingAt": "(aSeating, index)",
+     "delete": "()",
+     "__str__": "()",
+     "addSeating": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ClassMStarAssociation": {
+   "ClassMStarAssociation": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getOtherclass": "(index)",
+     "getOtherclasses": "()",
+     "numberOfOtherclasses": "()",
+     "hasOtherclasses": "()",
+     "indexOfOtherclass": "(aOtherclass)",
+     "minimumNumberOfOtherclasses": "@staticmethod ()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ClassMToNAssociation": {
+   "ClassMToNAssociation": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getOtherclass": "(index)",
+     "getOtherclasses": "()",
+     "numberOfOtherclasses": "()",
+     "hasOtherclasses": "()",
+     "indexOfOtherclass": "(aOtherclass)",
+     "minimumNumberOfOtherclasses": "@staticmethod ()",
+     "maximumNumberOfOtherclasses": "@staticmethod ()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ClassManyAssociation": {
+   "ClassManyAssociation": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getOtherclass": "(index)",
+     "getOtherclasses": "()",
+     "numberOfOtherclasses": "()",
+     "hasOtherclasses": "()",
+     "indexOfOtherclass": "(aOtherclass)",
+     "minimumNumberOfOtherclasses": "@staticmethod ()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ClassNAssociation": {
+   "ClassNAssociation": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getOtherclass": "(index)",
+     "getOtherclasses": "()",
+     "numberOfOtherclasses": "()",
+     "hasOtherclasses": "()",
+     "indexOfOtherclass": "(aOtherclass)",
+     "requiredNumberOfOtherclasses": "@staticmethod ()",
+     "minimumNumberOfOtherclasses": "@staticmethod ()",
+     "maximumNumberOfOtherclasses": "@staticmethod ()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ClassOneAssociation": {
+   "ClassOneAssociation": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aOtherclass)",
+     "getOtherclass": "()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ClassOptionalNAssociation": {
+   "ClassOptionalNAssociation": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getOtherclass": "(index)",
+     "getOtherclasses": "()",
+     "numberOfOtherclasses": "()",
+     "hasOtherclasses": "()",
+     "indexOfOtherclass": "(aOtherclass)",
+     "minimumNumberOfOtherclasses": "@staticmethod ()",
+     "maximumNumberOfOtherclasses": "@staticmethod ()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ClassOptionalOneAssociation": {
+   "ClassOptionalOneAssociation": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aOtherclass)",
+     "getOtherclass": "()",
+     "hasOtherclass": "()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ClassThatWillHaveSortedAssociationOne": {
+   "ClassThatWillHaveSortedAssociationOne": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ClassThatWillHaveSortedAssociationTwo": {
+   "ClassThatWillHaveSortedAssociationTwo": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMass1": "(index)",
+     "getMass2": "()",
+     "numberOfMass": "()",
+     "hasMass": "()",
+     "indexOfMass": "(aMass)",
+     "minimumNumberOfMass": "@staticmethod ()",
+     "addMass": "(aMass)",
+     "removeMass": "(aMass)",
+     "delete": "()",
+     "__str__": "()",
+     "getMass": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ClassWithManySortedAssociations": {
+   "ClassWithManySortedAssociations": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getStudentC": "(index)",
+     "getStudentCs": "()",
+     "numberOfStudentCs": "()",
+     "hasStudentCs": "()",
+     "indexOfStudentC": "(aStudentC)",
+     "getStudentAL": "(index)",
+     "getStudentALs": "()",
+     "numberOfStudentALs": "()",
+     "hasStudentALs": "()",
+     "indexOfStudentAL": "(aStudentAL)",
+     "minimumNumberOfStudentCs": "@staticmethod ()",
+     "addStudentC": "(aStudentC)",
+     "removeStudentC": "(aStudentC)",
+     "minimumNumberOfStudentALs": "@staticmethod ()",
+     "addStudentAL": "(aStudentAL)",
+     "removeStudentAL": "(aStudentAL)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ClassWithOneSortedAssociations": {
+   "ClassWithOneSortedAssociations": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getStudentC": "(index)",
+     "getStudentCs": "()",
+     "numberOfStudentCs": "()",
+     "hasStudentCs": "()",
+     "indexOfStudentC": "(aStudentC)",
+     "minimumNumberOfStudentCs": "@staticmethod ()",
+     "addStudentC": "(aStudentC)",
+     "removeStudentC": "(aStudentC)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.Commuter": {
+   "Commuter": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getSeating": "(index)",
+     "getSeatings": "()",
+     "numberOfSeatings": "()",
+     "hasSeatings": "()",
+     "indexOfSeating": "(aSeating)",
+     "minimumNumberOfSeatings": "@staticmethod ()",
+     "addSeating1": "(aBus)",
+     "addSeating2": "(aSeating)",
+     "removeSeating": "(aSeating)",
+     "addSeatingAt": "(aSeating, index)",
+     "addOrMoveSeatingAt": "(aSeating, index)",
+     "delete": "()",
+     "__str__": "()",
+     "addSeating": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorA": {
+   "MentorA": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAA": {
+   "MentorAA": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAB": {
+   "MentorAB": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAC": {
+   "MentorAC": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAD": {
+   "MentorAD": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAE": {
+   "MentorAE": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAF": {
+   "MentorAF": {
+    "bases": [],
+    "methods": {
+     "alternateConstructor": "@classmethod (aName, aFriend)",
+     "__init__": "(aName, aNameForFriend)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getFriend": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAG": {
+   "MentorAG": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getFriend1": "(index)",
+     "getFriend2": "()",
+     "numberOfFriend": "()",
+     "hasFriend": "()",
+     "indexOfFriend": "(aFriend)",
+     "minimumNumberOfFriend": "@staticmethod ()",
+     "addFriend": "(aFriend)",
+     "removeFriend": "(aFriend)",
+     "addFriendAt": "(aFriend, index)",
+     "addOrMoveFriendAt": "(aFriend, index)",
+     "delete": "()",
+     "__str__": "()",
+     "getFriend": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAH": {
+   "MentorAH": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName, aStudent)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "setStudent": "(aNewStudent)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAI": {
+   "MentorAI": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "setStudent": "(aNewStudent)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAJ": {
+   "MentorAJ": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName, *)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "requiredNumberOfStudents": "@staticmethod ()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "setStudents": "(*)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAK": {
+   "MentorAK": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAL": {
+   "MentorAL": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName, *)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAM": {
+   "MentorAM": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorAR": {
+   "MentorAR": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getStudentAR": "(index)",
+     "getStudentARs": "()",
+     "numberOfStudentARs": "()",
+     "hasStudentARs": "()",
+     "indexOfStudentAR": "(aStudentAR)",
+     "minimumNumberOfStudentARs": "@staticmethod ()",
+     "addStudentAR": "(aStudentAR)",
+     "removeStudentAR": "(aStudentAR)",
+     "setStudentARs": "(*)",
+     "addStudentARAt": "(aStudentAR, index)",
+     "addOrMoveStudentARAt": "(aStudentAR, index)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorB": {
+   "MentorB": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aStudent)",
+     "getY": "()",
+     "getStudent": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "setStudent": "(aNewStudent)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": [
+     "nextY"
+    ]
+   }
+  },
+  "cruise.associations.MentorC": {
+   "MentorC": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorCSub": {
+   "MentorCSub": {
+    "bases": [
+     "MentorC"
+    ],
+    "methods": {
+     "__init__": "(aName)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorD": {
+   "MentorD": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getY": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "requiredNumberOfStudents": "@staticmethod ()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "setStudents": "(*)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": [
+     "nextY"
+    ]
+   }
+  },
+  "cruise.associations.MentorE": {
+   "MentorE": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getY": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": [
+     "nextY"
+    ]
+   }
+  },
+  "cruise.associations.MentorF": {
+   "MentorF": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getY": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": [
+     "nextY"
+    ]
+   }
+  },
+  "cruise.associations.MentorG": {
+   "MentorG": {
+    "bases": [],
+    "methods": {
+     "alternateConstructor": "@classmethod (aName, aStudent)",
+     "__init__": "(aName, aNumberForStudent)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorH": {
+   "MentorH": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getSuperMentor": "()",
+     "hasSuperMentor": "()",
+     "setSuperMentor": "(aNewSuperMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorI": {
+   "MentorI": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName, *)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorJ": {
+   "MentorJ": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent1": "(aNumber)",
+     "addStudent2": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()",
+     "addStudent": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorK": {
+   "MentorK": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent1": "(aNumber)",
+     "addStudent2": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()",
+     "addStudent": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorL": {
+   "MentorL": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "requiredNumberOfStudents": "@staticmethod ()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent1": "(aNumber)",
+     "addStudent2": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()",
+     "addStudent": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorM": {
+   "MentorM": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent1": "(aNumber)",
+     "addStudent2": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()",
+     "addStudent": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorN": {
+   "MentorN": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorO": {
+   "MentorO": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName, *)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorP": {
+   "MentorP": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorQ": {
+   "MentorQ": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName, *)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "requiredNumberOfStudents": "@staticmethod ()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorR": {
+   "MentorR": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName, *)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorS": {
+   "MentorS": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorT": {
+   "MentorT": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "requiredNumberOfStudents": "@staticmethod ()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorU": {
+   "MentorU": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorV": {
+   "MentorV": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "requiredNumberOfStudents": "@staticmethod ()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorW": {
+   "MentorW": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorX": {
+   "MentorX": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "isNumberOfStudentsValid": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "setStudents": "(*)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorY": {
+   "MentorY": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MentorZ": {
+   "MentorZ": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "setName": "(aName)",
+     "getName": "()",
+     "getStudent": "(index)",
+     "getStudents": "()",
+     "numberOfStudents": "()",
+     "hasStudents": "()",
+     "indexOfStudent": "(aStudent)",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "minimumNumberOfStudents": "@staticmethod ()",
+     "maximumNumberOfStudents": "@staticmethod ()",
+     "addStudent1": "(aNumber)",
+     "addStudent2": "(aStudent)",
+     "removeStudent": "(aStudent)",
+     "addStudentAt": "(aStudent, index)",
+     "addOrMoveStudentAt": "(aStudent, index)",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()",
+     "addStudent": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MultipleSortedCourse": {
+   "MultipleSortedCourse": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aCode, aMultipleSortedAcademy)",
+     "setCode": "(aCode)",
+     "getCode": "()",
+     "getMultipleSortedAcademy": "()",
+     "getMultipleSortedRegistration": "(index)",
+     "getMultipleSortedRegistrations": "()",
+     "numberOfMultipleSortedRegistrations": "()",
+     "hasMultipleSortedRegistrations": "()",
+     "indexOfMultipleSortedRegistration": "(aMultipleSortedRegistration)",
+     "setMultipleSortedAcademy": "(aMultipleSortedAcademy)",
+     "minimumNumberOfMultipleSortedRegistrations": "@staticmethod ()",
+     "addMultipleSortedRegistration1": "(aMultipleSortedStudent)",
+     "addMultipleSortedRegistration2": "(aMultipleSortedRegistration)",
+     "removeMultipleSortedRegistration": "(aMultipleSortedRegistration)",
+     "delete": "()",
+     "__str__": "()",
+     "addMultipleSortedRegistration": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MultipleSortedRegistration": {
+   "MultipleSortedRegistration": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aMultipleSortedCourse, aMultipleSortedStudent)",
+     "getName": "()",
+     "getCode": "()",
+     "getMultipleSortedCourse": "()",
+     "getMultipleSortedStudent": "()",
+     "setMultipleSortedCourse": "(aMultipleSortedCourse)",
+     "setMultipleSortedStudent": "(aMultipleSortedStudent)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.MultipleSortedStudent": {
+   "MultipleSortedStudent": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aId, aName, aMultipleSortedAcademy)",
+     "setId": "(aId)",
+     "setName": "(aName)",
+     "getId": "()",
+     "getName": "()",
+     "getMultipleSortedAcademy": "()",
+     "getMultipleSortedRegistration": "(index)",
+     "getMultipleSortedRegistrations": "()",
+     "numberOfMultipleSortedRegistrations": "()",
+     "hasMultipleSortedRegistrations": "()",
+     "indexOfMultipleSortedRegistration": "(aMultipleSortedRegistration)",
+     "setMultipleSortedAcademy": "(aMultipleSortedAcademy)",
+     "minimumNumberOfMultipleSortedRegistrations": "@staticmethod ()",
+     "addMultipleSortedRegistration1": "(aMultipleSortedCourse)",
+     "addMultipleSortedRegistration2": "(aMultipleSortedRegistration)",
+     "removeMultipleSortedRegistration": "(aMultipleSortedRegistration)",
+     "delete": "()",
+     "__str__": "()",
+     "addMultipleSortedRegistration": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.Otherclass": {
+   "Otherclass": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "getName": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramAA": {
+   "ProgramAA": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramAB": {
+   "ProgramAB": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramAC": {
+   "ProgramAC": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramAD": {
+   "ProgramAD": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramAE": {
+   "ProgramAE": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramAH": {
+   "ProgramAH": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramAI": {
+   "ProgramAI": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramAJ": {
+   "ProgramAJ": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramAK": {
+   "ProgramAK": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramAL": {
+   "ProgramAL": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramB": {
+   "ProgramB": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramC": {
+   "ProgramC": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramD": {
+   "ProgramD": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramE": {
+   "ProgramE": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramF": {
+   "ProgramF": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramG": {
+   "ProgramG": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramI": {
+   "ProgramI": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentorI": "()",
+     "hasMentorI": "()",
+     "getStudentI": "()",
+     "hasStudentI": "()",
+     "setMentorI": "(aNewMentorI)",
+     "setStudentI": "(aNewStudentI)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramJ": {
+   "ProgramJ": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramK": {
+   "ProgramK": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramL": {
+   "ProgramL": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramM": {
+   "ProgramM": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramN": {
+   "ProgramN": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramO": {
+   "ProgramO": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramP": {
+   "ProgramP": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramQ": {
+   "ProgramQ": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramR": {
+   "ProgramR": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramS": {
+   "ProgramS": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramT": {
+   "ProgramT": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramU": {
+   "ProgramU": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramV": {
+   "ProgramV": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramW": {
+   "ProgramW": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramX": {
+   "ProgramX": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramY": {
+   "ProgramY": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.ProgramZ": {
+   "ProgramZ": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "getStudent": "()",
+     "hasStudent": "()",
+     "setMentor": "(aNewMentor)",
+     "setStudent": "(aNewStudent)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.Seating": {
+   "Seating": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aBus, aCommuter)",
+     "setSeat": "(aSeat)",
+     "getSeat": "()",
+     "getBus": "()",
+     "getCommuter": "()",
+     "setBus": "(aBus)",
+     "setCommuter": "(aCommuter)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.SortedSerializableCourse": {
+   "SortedSerializableCourse": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aCode, aSortedSerializableAcademy)",
+     "setCode": "(aCode)",
+     "getCode": "()",
+     "getSortedSerializableAcademy": "()",
+     "getSortedSerializableRegistration": "(index)",
+     "getSortedSerializableRegistrations": "()",
+     "numberOfSortedSerializableRegistrations": "()",
+     "hasSortedSerializableRegistrations": "()",
+     "indexOfSortedSerializableRegistration": "(aSortedSerializableRegistration)",
+     "setSortedSerializableAcademy": "(aSortedSerializableAcademy)",
+     "minimumNumberOfSortedSerializableRegistrations": "@staticmethod ()",
+     "addSortedSerializableRegistration1": "(aSortedSerializableStudent)",
+     "addSortedSerializableRegistration2": "(aSortedSerializableRegistration)",
+     "removeSortedSerializableRegistration": "(aSortedSerializableRegistration)",
+     "delete": "()",
+     "__str__": "()",
+     "addSortedSerializableRegistration": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.SortedSerializableRegistration": {
+   "SortedSerializableRegistration": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aSortedSerializableStudent, aSortedSerializableCourse)",
+     "getName": "()",
+     "getCode": "()",
+     "getSortedSerializableStudent": "()",
+     "getSortedSerializableCourse": "()",
+     "setSortedSerializableStudent": "(aSortedSerializableStudent)",
+     "setSortedSerializableCourse": "(aSortedSerializableCourse)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.SortedSerializableStudent": {
+   "SortedSerializableStudent": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aId, aName, aSortedSerializableAcademy)",
+     "setId": "(aId)",
+     "setName": "(aName)",
+     "getId": "()",
+     "getName": "()",
+     "getSortedSerializableAcademy": "()",
+     "getSortedSerializableRegistration": "(index)",
+     "getSortedSerializableRegistrations": "()",
+     "numberOfSortedSerializableRegistrations": "()",
+     "hasSortedSerializableRegistrations": "()",
+     "indexOfSortedSerializableRegistration": "(aSortedSerializableRegistration)",
+     "setSortedSerializableAcademy": "(aSortedSerializableAcademy)",
+     "minimumNumberOfSortedSerializableRegistrations": "@staticmethod ()",
+     "addSortedSerializableRegistration1": "(aSortedSerializableCourse)",
+     "addSortedSerializableRegistration2": "(aSortedSerializableRegistration)",
+     "removeSortedSerializableRegistration": "(aSortedSerializableRegistration)",
+     "addSortedSerializableRegistrationAt": "(aSortedSerializableRegistration, index)",
+     "addOrMoveSortedSerializableRegistrationAt": "(aSortedSerializableRegistration, index)",
+     "delete": "()",
+     "__str__": "()",
+     "addSortedSerializableRegistration": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentA": {
+   "StudentA": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "setMentor": "(aNewMentor)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAA": {
+   "StudentAA": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAB": {
+   "StudentAB": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "isNumberOfMentorsValid": "()",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "maximumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAC": {
+   "StudentAC": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "isNumberOfMentorsValid": "()",
+     "requiredNumberOfMentors": "@staticmethod ()",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "maximumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAD": {
+   "StudentAD": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "isNumberOfMentorsValid": "()",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "setMentors": "(*)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAE": {
+   "StudentAE": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "maximumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAH": {
+   "StudentAH": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAI": {
+   "StudentAI": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAJ": {
+   "StudentAJ": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAK": {
+   "StudentAK": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAL": {
+   "StudentAL": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAM": {
+   "StudentAM": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aId)",
+     "setId": "(aId)",
+     "getId": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "setMentor": "(aMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentAR": {
+   "StudentAR": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getMentorAR": "()",
+     "hasMentorAR": "()",
+     "setMentorAR": "(aMentorAR)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentB": {
+   "StudentB": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getX": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "setMentor": "(aNewMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": [
+     "nextX"
+    ]
+   }
+  },
+  "cruise.associations.StudentC": {
+   "StudentC": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aId)",
+     "setId": "(aId)",
+     "getId": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "setMentor": "(aMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentD": {
+   "StudentD": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getX": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": [
+     "nextX"
+    ]
+   }
+  },
+  "cruise.associations.StudentE": {
+   "StudentE": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getX": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": [
+     "nextX"
+    ]
+   }
+  },
+  "cruise.associations.StudentF": {
+   "StudentF": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getX": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "setMentor": "(aMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": [
+     "nextX"
+    ]
+   }
+  },
+  "cruise.associations.StudentG": {
+   "StudentG": {
+    "bases": [],
+    "methods": {
+     "alternateConstructor": "@classmethod (aNumber, aMentor)",
+     "__init__": "(aNumber, aNameForMentor)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentI": {
+   "StudentI": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentJ": {
+   "StudentJ": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber, aMentor)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "setMentor": "(aMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentK": {
+   "StudentK": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber, aMentor)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "setMentor": "(aMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentL": {
+   "StudentL": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber, aMentor)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "setMentor": "(aMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentM": {
+   "StudentM": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber, aMentor)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "setMentor": "(aMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentN": {
+   "StudentN": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentO": {
+   "StudentO": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentP": {
+   "StudentP": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "setProgram": "(aNewProgram)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentQ": {
+   "StudentQ": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentR": {
+   "StudentR": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentS": {
+   "StudentS": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "isNumberOfMentorsValid": "()",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "maximumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "setMentors": "(*)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentT": {
+   "StudentT": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "isNumberOfMentorsValid": "()",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "maximumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "setMentors": "(*)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentU": {
+   "StudentU": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "isNumberOfMentorsValid": "()",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "maximumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "setMentors": "(*)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentV": {
+   "StudentV": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "isNumberOfMentorsValid": "()",
+     "requiredNumberOfMentors": "@staticmethod ()",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "maximumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "setMentors": "(*)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentW": {
+   "StudentW": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "isNumberOfMentorsValid": "()",
+     "requiredNumberOfMentors": "@staticmethod ()",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "maximumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "setMentors": "(*)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentX": {
+   "StudentX": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "(index)",
+     "getMentors": "()",
+     "numberOfMentors": "()",
+     "hasMentors": "()",
+     "indexOfMentor": "(aMentor)",
+     "setProgram": "(aNewProgram)",
+     "isNumberOfMentorsValid": "()",
+     "minimumNumberOfMentors": "@staticmethod ()",
+     "addMentor": "(aMentor)",
+     "removeMentor": "(aMentor)",
+     "setMentors": "(*)",
+     "addMentorAt": "(aMentor, index)",
+     "addOrMoveMentorAt": "(aMentor, index)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentY": {
+   "StudentY": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "hasMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "setMentor": "(aMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.associations.StudentZ": {
+   "StudentZ": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aNumber, aMentor)",
+     "setNumber": "(aNumber)",
+     "getNumber": "()",
+     "getProgram": "()",
+     "hasProgram": "()",
+     "getMentor": "()",
+     "setProgram": "(aNewProgram)",
+     "setMentor": "(aMentor)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.BoatA": {
+   "BoatA": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aAge)",
+     "setAge": "(aAge)",
+     "getAge": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.BoatB": {
+   "BoatB": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aAge)",
+     "setAge": "(aAge)",
+     "getAge": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.ConstDefault": {
+   "ConstDefault": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": [
+     "I1",
+     "I2",
+     "D1",
+     "D2",
+     "F1",
+     "F2",
+     "B1",
+     "B2",
+     "STR",
+     "DATE",
+     "TIME"
+    ]
+   }
+  },
+  "cruise.attributes.test.ConstDefaultInterface": {
+   "ConstDefaultInterface": {
+    "bases": [],
+    "methods": {},
+    "constants": [
+     "I1",
+     "I2",
+     "D1",
+     "D2",
+     "F1",
+     "F2",
+     "B1",
+     "B2",
+     "STR",
+     "DATE",
+     "TIME"
+    ]
+   }
+  },
+  "cruise.attributes.test.ConstDefaultInterfaceObject": {
+   "ConstDefaultInterfaceObject": {
+    "bases": [
+     "ConstDefaultInterface"
+    ],
+    "methods": {
+     "__init__": "()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.ConstDefaultInterfaceObjectPHP": {
+   "ConstDefaultInterfaceObjectPHP": {
+    "bases": [
+     "ConstDefaultInterfacePHP"
+    ],
+    "methods": {
+     "__init__": "()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.ConstDefaultInterfacePHP": {
+   "ConstDefaultInterfacePHP": {
+    "bases": [],
+    "methods": {},
+    "constants": [
+     "I1",
+     "I2",
+     "D1",
+     "D2",
+     "F1",
+     "F2",
+     "B1",
+     "B2",
+     "STR"
+    ]
+   }
+  },
+  "cruise.attributes.test.DoorA": {
+   "DoorA": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getId": "()",
+     "getIntId": "()",
+     "getDoubleId": "()",
+     "getBooleanId": "()",
+     "getDoorId": "()",
+     "getDateId": "()",
+     "getTimeId": "()",
+     "isBooleanId": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.DoorB": {
+   "DoorB": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aId)",
+     "setId": "(aId)",
+     "getId": "()",
+     "equals": "(obj)",
+     "__hash__": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.DoorC": {
+   "DoorC": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aId, aIntId, aDoubleId, aDateId, aTimeId, aBooleanId, aDoorId)",
+     "getId": "()",
+     "getIntId": "()",
+     "getDoubleId": "()",
+     "getDateId": "()",
+     "getTimeId": "()",
+     "getBooleanId": "()",
+     "getDoorId": "()",
+     "isBooleanId": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.DoorD": {
+   "DoorD": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "setId": "(aId)",
+     "resetId": "()",
+     "setIntId": "(aIntId)",
+     "resetIntId": "()",
+     "setDoubleId": "(aDoubleId)",
+     "resetDoubleId": "()",
+     "setBooleanId": "(aBooleanId)",
+     "resetBooleanId": "()",
+     "setDoorId": "(aDoorId)",
+     "resetDoorId": "()",
+     "setDateId": "(aDateId)",
+     "resetDateId": "()",
+     "setTimeId": "(aTimeId)",
+     "resetTimeId": "()",
+     "getId": "()",
+     "getDefaultId": "()",
+     "getIntId": "()",
+     "getDefaultIntId": "()",
+     "getDoubleId": "()",
+     "getDefaultDoubleId": "()",
+     "getBooleanId": "()",
+     "getDefaultBooleanId": "()",
+     "getDoorId": "()",
+     "getDefaultDoorId": "()",
+     "getDateId": "()",
+     "getDefaultDateId": "()",
+     "getTimeId": "()",
+     "getDefaultTimeId": "()",
+     "isBooleanId": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.DoorE": {
+   "DoorE": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "setD1": "(aD1)",
+     "setD3": "(aD3)",
+     "resetD3": "()",
+     "setD4": "(aD4)",
+     "getD1": "()",
+     "getD2": "()",
+     "getD3": "()",
+     "getDefaultD3": "()",
+     "getD4": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.DoorF": {
+   "DoorF": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "setD1": "(aD1)",
+     "setD3": "(aD3)",
+     "resetD3": "()",
+     "setD4": "(aD4)",
+     "getD1": "()",
+     "getD2": "()",
+     "getD3": "()",
+     "getDefaultD3": "()",
+     "getD4": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.DoorG": {
+   "DoorG": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "setFloatNoF": "(aFloatNoF)",
+     "setFloatWithF": "(aFloatWithF)",
+     "setDoubleNoF": "(aDoubleNoF)",
+     "setDoubleWithF": "(aDoubleWithF)",
+     "setDoorId": "(aDoorId)",
+     "setDateId": "(aDateId)",
+     "setTimeId": "(aTimeId)",
+     "getFloatNoF": "()",
+     "getFloatWithF": "()",
+     "getDoubleNoF": "()",
+     "getDoubleWithF": "()",
+     "getDoorId": "()",
+     "getDateId": "()",
+     "getTimeId": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.DoorH": {
+   "DoorH": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aId)",
+     "setId": "(aId)",
+     "getId": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.DoorI": {
+   "DoorI": {
+    "bases": [
+     "DoorH"
+    ],
+    "methods": {
+     "__init__": "(aId)",
+     "equals": "(obj)",
+     "__hash__": "()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.ExtraCodeTest": {
+   "ExtraCodeTest": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.ManyAttribute": {
+   "ManyAttribute": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "addWork": "(aWork)",
+     "removeWork": "(aWork)",
+     "getWork": "(index)",
+     "getWorks": "()",
+     "numberOfWorks": "()",
+     "hasWorks": "()",
+     "indexOfWork": "(aWork)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.ManyStringAttributes": {
+   "ManyStringAttributes": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "addWorksString": "(aWorksString)",
+     "removeWorksString": "(aWorksString)",
+     "getWorksString1": "(index)",
+     "getWorksString2": "()",
+     "numberOfWorksString": "()",
+     "hasWorksString": "()",
+     "indexOfWorksString": "(aWorksString)",
+     "delete": "()",
+     "__str__": "()",
+     "getWorksString": "(*)"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.MoreTypeInference": {
+   "MoreTypeInference": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aB, aH)",
+     "setA": "(aA)",
+     "setB": "(aB)",
+     "setC": "(aC)",
+     "setD": "(aD)",
+     "setE": "(aE)",
+     "setF": "(aF)",
+     "setG": "(aG)",
+     "setH": "(aH)",
+     "setI": "(aI)",
+     "setJ": "(aJ)",
+     "setK": "(aK)",
+     "getA": "()",
+     "getB": "()",
+     "getC": "()",
+     "getD": "()",
+     "getE": "()",
+     "getF": "()",
+     "getG": "()",
+     "getH": "()",
+     "getI": "()",
+     "getJ": "()",
+     "getK": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.TypeInference": {
+   "TypeInference": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aE, aF, aI, aP, aQ)",
+     "setA": "(aA)",
+     "setB": "(aB)",
+     "setC": "(aC)",
+     "setD": "(aD)",
+     "setE": "(aE)",
+     "setF": "(aF)",
+     "setG": "(aG)",
+     "setH": "(aH)",
+     "setI": "(aI)",
+     "setJ": "(aJ)",
+     "setK": "(aK)",
+     "setL": "(aL)",
+     "setM": "(aM)",
+     "setN": "(aN)",
+     "setO": "(aO)",
+     "setP": "(aP)",
+     "setQ": "(aQ)",
+     "setR": "(aR)",
+     "getA": "()",
+     "getB": "()",
+     "getC": "()",
+     "getD": "()",
+     "getE": "()",
+     "getF": "()",
+     "getG": "()",
+     "getH": "()",
+     "getI": "()",
+     "getJ": "()",
+     "getK": "()",
+     "getL": "()",
+     "getM": "()",
+     "getN": "()",
+     "getO": "()",
+     "getP": "()",
+     "getQ": "()",
+     "getR": "()",
+     "isC": "()",
+     "isO": "()",
+     "isP": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.attributes.test.TypeInferenceInterface": {
+   "TypeInferenceInterface": {
+    "bases": [],
+    "methods": {},
+    "constants": [
+     "A",
+     "B",
+     "C",
+     "D",
+     "E",
+     "F",
+     "G",
+     "H",
+     "I",
+     "J",
+     "K",
+     "L",
+     "M",
+     "N",
+     "O",
+     "P",
+     "Q",
+     "R",
+     "AA",
+     "AC",
+     "AD",
+     "AE",
+     "AF",
+     "AG",
+     "AI",
+     "AJ",
+     "AK"
+    ]
+   }
+  },
+  "cruise.attributes.test.TypeInferenceInterfaceObject": {
+   "TypeInferenceInterfaceObject": {
+    "bases": [
+     "TypeInferenceInterface"
+    ],
+    "methods": {
+     "__init__": "()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.ClassMStar": {
+   "ClassMStar": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getClassOtherclass": "(index)",
+     "getClassOtherclasses": "()",
+     "numberOfClassOtherclasses": "()",
+     "hasClassOtherclasses": "()",
+     "indexOfClassOtherclass": "(aClassOtherclass)",
+     "minimumNumberOfClassOtherclasses": "@staticmethod ()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.ClassMToN": {
+   "ClassMToN": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getClassOtherclass": "(index)",
+     "getClassOtherclasses": "()",
+     "numberOfClassOtherclasses": "()",
+     "hasClassOtherclasses": "()",
+     "indexOfClassOtherclass": "(aClassOtherclass)",
+     "minimumNumberOfClassOtherclasses": "@staticmethod ()",
+     "maximumNumberOfClassOtherclasses": "@staticmethod ()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.ClassMany": {
+   "ClassMany": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getClassOtherclass": "(index)",
+     "getClassOtherclasses": "()",
+     "numberOfClassOtherclasses": "()",
+     "hasClassOtherclasses": "()",
+     "indexOfClassOtherclass": "(aClassOtherclass)",
+     "minimumNumberOfClassOtherclasses": "@staticmethod ()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.ClassN": {
+   "ClassN": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getClassOtherclass": "(index)",
+     "getClassOtherclasses": "()",
+     "numberOfClassOtherclasses": "()",
+     "hasClassOtherclasses": "()",
+     "indexOfClassOtherclass": "(aClassOtherclass)",
+     "requiredNumberOfClassOtherclasses": "@staticmethod ()",
+     "minimumNumberOfClassOtherclasses": "@staticmethod ()",
+     "maximumNumberOfClassOtherclasses": "@staticmethod ()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.ClassOne": {
+   "ClassOne": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aClassOtherclass)",
+     "getClassOtherclass": "()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.ClassOptionalN": {
+   "ClassOptionalN": {
+    "bases": [],
+    "methods": {
+     "__init__": "(*)",
+     "getClassOtherclass": "(index)",
+     "getClassOtherclasses": "()",
+     "numberOfClassOtherclasses": "()",
+     "hasClassOtherclasses": "()",
+     "indexOfClassOtherclass": "(aClassOtherclass)",
+     "minimumNumberOfClassOtherclasses": "@staticmethod ()",
+     "maximumNumberOfClassOtherclasses": "@staticmethod ()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.ClassOptionalOne": {
+   "ClassOptionalOne": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aClassOtherclass)",
+     "getClassOtherclass": "()",
+     "hasClassOtherclass": "()",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.ClassOtherclass": {
+   "ClassOtherclass": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "getName": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.WidgetImmutableA": {
+   "WidgetImmutableA": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName, aWidgetImmutableB)",
+     "getName": "()",
+     "getWidgetImmutableB": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.WidgetImmutableB": {
+   "WidgetImmutableB": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aName)",
+     "getName": "()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.WidgetMutableB": {
+   "WidgetMutableB": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getWidgetImmutableB": "(index)",
+     "getWidgetImmutableBs": "()",
+     "numberOfWidgetImmutableBs": "()",
+     "hasWidgetImmutableBs": "()",
+     "indexOfWidgetImmutableB": "(aWidgetImmutableB)",
+     "minimumNumberOfWidgetImmutableBs": "@staticmethod ()",
+     "maximumNumberOfWidgetImmutableBs": "@staticmethod ()",
+     "addWidgetImmutableB": "(aWidgetImmutableB)",
+     "removeWidgetImmutableB": "(aWidgetImmutableB)",
+     "setWidgetImmutableBs": "(*)",
+     "addWidgetImmutableBAt": "(aWidgetImmutableB, index)",
+     "addOrMoveWidgetImmutableBAt": "(aWidgetImmutableB, index)",
+     "delete": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.patterns.test.WidgetSubclass": {
+   "WidgetSubclass": {
+    "bases": [
+     "WidgetImmutableB"
+    ],
+    "methods": {
+     "__init__": "(aName, aType, *)",
+     "getType": "()",
+     "getWidgetImmutableB": "(index)",
+     "getWidgetImmutableBs": "()",
+     "numberOfWidgetImmutableBs": "()",
+     "hasWidgetImmutableBs": "()",
+     "indexOfWidgetImmutableB": "(aWidgetImmutableB)",
+     "minimumNumberOfWidgetImmutableBs": "@staticmethod ()",
+     "maximumNumberOfWidgetImmutableBs": "@staticmethod ()",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   }
+  },
+  "cruise.statemachine.test.CourseA": {
+   "CourseA": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getStatusFullName": "()",
+     "getStatus": "()",
+     "delete": "()"
+    },
+    "constants": []
+   },
+   "CourseA.Status": {
+    "enum": []
+   }
+  },
+  "cruise.statemachine.test.CourseB": {
+   "CourseB": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "setLog": "(aLog)",
+     "getLog": "()",
+     "getStatusFullName": "()",
+     "getStatus": "()",
+     "anEvent": "()",
+     "exitStatus": "()",
+     "setStatus": "(aStatus)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   },
+   "CourseB.Status": {
+    "enum": [
+     "Open",
+     "Closed"
+    ]
+   }
+  },
+  "cruise.statemachine.test.CourseE": {
+   "CourseE": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "addLog": "(aLog)",
+     "removeLog": "(aLog)",
+     "getLog": "(index)",
+     "getLogs": "()",
+     "numberOfLogs": "()",
+     "hasLogs": "()",
+     "indexOfLog": "(aLog)",
+     "getStatusFullName": "()",
+     "getStatus": "()",
+     "getStatusOn": "()",
+     "turnOn": "()",
+     "turnSleep": "()",
+     "wake": "()",
+     "turnOff": "()",
+     "push": "()",
+     "standby": "()",
+     "exitStatus": "()",
+     "setStatus": "(aStatus)",
+     "exitStatusOn": "()",
+     "setStatusOn": "(aStatusOn)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   },
+   "CourseE.Status": {
+    "enum": [
+     "Off",
+     "Sleep",
+     "On"
+    ]
+   },
+   "CourseE.StatusOn": {
+    "enum": [
+     "Null",
+     "Play",
+     "Pause"
+    ]
+   }
+  },
+  "cruise.statemachine.test.CourseK": {
+   "CourseK": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "addLog": "(aLog)",
+     "removeLog": "(aLog)",
+     "getLog": "(index)",
+     "getLogs": "()",
+     "numberOfLogs": "()",
+     "hasLogs": "()",
+     "indexOfLog": "(aLog)",
+     "getStatusFullName": "()",
+     "getStatus": "()",
+     "flip": "()",
+     "setStatus": "(aStatus)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   },
+   "CourseK.Status": {
+    "enum": [
+     "On",
+     "Final"
+    ]
+   }
+  },
+  "cruise.statemachine.test.CourseL": {
+   "CourseL": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "addLog": "(aLog)",
+     "removeLog": "(aLog)",
+     "getLog": "(index)",
+     "getLogs": "()",
+     "numberOfLogs": "()",
+     "hasLogs": "()",
+     "indexOfLog": "(aLog)",
+     "getStatusFullName": "()",
+     "getStatus": "()",
+     "getStatusOnMotorIdle": "()",
+     "getStatusOnFanIdle": "()",
+     "flip": "()",
+     "flop": "()",
+     "exitStatus": "()",
+     "setStatus": "(aStatus)",
+     "exitStatusOnMotorIdle": "()",
+     "setStatusOnMotorIdle": "(aStatusOnMotorIdle)",
+     "exitStatusOnFanIdle": "()",
+     "setStatusOnFanIdle": "(aStatusOnFanIdle)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   },
+   "CourseL.Status": {
+    "enum": [
+     "On",
+     "Final"
+    ]
+   },
+   "CourseL.StatusOnMotorIdle": {
+    "enum": [
+     "Null",
+     "MotorIdle"
+    ]
+   },
+   "CourseL.StatusOnFanIdle": {
+    "enum": [
+     "Null",
+     "FanIdle"
+    ]
+   }
+  },
+  "cruise.statemachine.test.CourseR": {
+   "CourseR": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "addLog": "(aLog)",
+     "removeLog": "(aLog)",
+     "getLog": "(index)",
+     "getLogs": "()",
+     "numberOfLogs": "()",
+     "hasLogs": "()",
+     "indexOfLog": "(aLog)",
+     "getOneFullName": "()",
+     "getOne": "()",
+     "exitOne": "()",
+     "setOne": "(aOne)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   },
+   "CourseR.One": {
+    "enum": [
+     "Off",
+     "On"
+    ]
+   }
+  },
+  "cruise.statemachine.test.CourseS": {
+   "CourseS": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "addLog": "(aLog)",
+     "removeLog": "(aLog)",
+     "getLog": "(index)",
+     "getLogs": "()",
+     "numberOfLogs": "()",
+     "hasLogs": "()",
+     "indexOfLog": "(aLog)",
+     "getOneFullName": "()",
+     "getOne": "()",
+     "flip": "()",
+     "exitOne": "()",
+     "setOne": "(aOne)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   },
+   "CourseS.One": {
+    "enum": [
+     "Off",
+     "On"
+    ]
+   }
+  },
+  "cruise.statemachine.test.CourseT": {
+   "CourseT": {
+    "bases": [],
+    "methods": {
+     "__init__": "(aCount)",
+     "setCount": "(aCount)",
+     "getCount": "()",
+     "getOneFullName": "()",
+     "getOne": "()",
+     "setOne": "(aOne)",
+     "delete": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   },
+   "CourseT.One": {
+    "enum": [
+     "Off",
+     "On",
+     "Wait"
+    ]
+   }
+  },
+  "cruise.statemachine.test.ExitActionSelfTransition": {
+   "ExitActionSelfTransition": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "setB": "(aB)",
+     "setExitCodeCalled": "(aExitCodeCalled)",
+     "getB": "()",
+     "getExitCodeCalled": "()",
+     "getSmFullName": "()",
+     "getSm": "()",
+     "init": "()",
+     "getback": "()",
+     "exitSm": "()",
+     "setSm": "(aSm)",
+     "delete": "()",
+     "execute_exit_code": "()",
+     "__str__": "()"
+    },
+    "constants": []
+   },
+   "ExitActionSelfTransition.Sm": {
+    "enum": [
+     "created",
+     "initialized"
+    ]
+   }
+  },
+  "cruise.statemachine.test.StateMachineWithNegativeNumberGuard": {
+   "StateMachineWithNegativeNumberGuard": {
+    "bases": [],
+    "methods": {
+     "__init__": "()",
+     "getStatusFullName": "()",
+     "getStatus": "()",
+     "turnOff": "(pn)",
+     "turnOn": "()",
+     "setStatus": "(aStatus)",
+     "delete": "()"
+    },
+    "constants": []
+   },
+   "StateMachineWithNegativeNumberGuard.Status": {
+    "enum": [
+     "On",
+     "Off"
+    ]
+   }
+  }
+ },
+ "excluded": [
+  {
+   "module": "cruise.associations.ClassMStarAssociation",
+   "class": "ClassMStarAssociation",
+   "member": "setOtherclasses",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.associations.ClassMToNAssociation",
+   "class": "ClassMToNAssociation",
+   "member": "setOtherclasses",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.associations.ClassManyAssociation",
+   "class": "ClassManyAssociation",
+   "member": "setOtherclasses",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.associations.ClassNAssociation",
+   "class": "ClassNAssociation",
+   "member": "setOtherclasses",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.associations.ClassOneAssociation",
+   "class": "ClassOneAssociation",
+   "member": "setOtherclass",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.associations.ClassOptionalNAssociation",
+   "class": "ClassOptionalNAssociation",
+   "member": "setOtherclasses",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.associations.ClassOptionalOneAssociation",
+   "class": "ClassOptionalOneAssociation",
+   "member": "setOtherclass",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.associations.ClassThatWillHaveSortedAssociationTwo",
+   "class": "ClassThatWillHaveSortedAssociationTwo",
+   "member": "__init__",
+   "reason": "comparator parameters removed (a sorted association sorts by its key): (aMassPriority)"
+  },
+  {
+   "module": "cruise.associations.ClassThatWillHaveSortedAssociationTwo",
+   "class": "ClassThatWillHaveSortedAssociationTwo",
+   "member": "setMassPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.ClassThatWillHaveSortedAssociationTwo",
+   "class": "ClassThatWillHaveSortedAssociationTwo",
+   "member": "getMassPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.ClassThatWillHaveSortedAssociationTwo",
+   "class": "ClassThatWillHaveSortedAssociationTwo",
+   "member": "readObject",
+   "reason": "Java serialization or transient support, which generated Python does not carry over"
+  },
+  {
+   "module": "cruise.associations.ClassWithManySortedAssociations",
+   "class": "ClassWithManySortedAssociations",
+   "member": "__init__",
+   "reason": "comparator parameters removed (a sorted association sorts by its key): (aStudentCsPriority, aStudentALsPriority)"
+  },
+  {
+   "module": "cruise.associations.ClassWithManySortedAssociations",
+   "class": "ClassWithManySortedAssociations",
+   "member": "setStudentCsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.ClassWithManySortedAssociations",
+   "class": "ClassWithManySortedAssociations",
+   "member": "setStudentALsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.ClassWithManySortedAssociations",
+   "class": "ClassWithManySortedAssociations",
+   "member": "getStudentCsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.ClassWithManySortedAssociations",
+   "class": "ClassWithManySortedAssociations",
+   "member": "getStudentALsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.ClassWithManySortedAssociations",
+   "class": "ClassWithManySortedAssociations",
+   "member": "readObject",
+   "reason": "Java serialization or transient support, which generated Python does not carry over"
+  },
+  {
+   "module": "cruise.associations.ClassWithOneSortedAssociations",
+   "class": "ClassWithOneSortedAssociations",
+   "member": "__init__",
+   "reason": "comparator parameters removed (a sorted association sorts by its key): (aStudentCsPriority)"
+  },
+  {
+   "module": "cruise.associations.ClassWithOneSortedAssociations",
+   "class": "ClassWithOneSortedAssociations",
+   "member": "setStudentCsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.ClassWithOneSortedAssociations",
+   "class": "ClassWithOneSortedAssociations",
+   "member": "getStudentCsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.ClassWithOneSortedAssociations",
+   "class": "ClassWithOneSortedAssociations",
+   "member": "readObject",
+   "reason": "Java serialization or transient support, which generated Python does not carry over"
+  },
+  {
+   "module": "cruise.associations.MentorAR",
+   "class": "MentorAR",
+   "member": "setMentorAR",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.associations.MentorD",
+   "class": "MentorD",
+   "member": "setMentor",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.associations.MentorE",
+   "class": "MentorE",
+   "member": "setMentor",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.associations.MentorF",
+   "class": "MentorF",
+   "member": "setMentor",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.associations.MultipleSortedAcademy",
+   "class": null,
+   "member": null,
+   "reason": "the previous generator's output does not compile, so it has no working API"
+  },
+  {
+   "module": "cruise.associations.MultipleSortedCourse",
+   "class": "MultipleSortedCourse",
+   "member": "__init__",
+   "reason": "comparator parameters removed (a sorted association sorts by its key): (aCode, aMultipleSortedRegistrationsPriority, aMultipleSortedAcademy)"
+  },
+  {
+   "module": "cruise.associations.MultipleSortedCourse",
+   "class": "MultipleSortedCourse",
+   "member": "setMultipleSortedRegistrationsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.MultipleSortedCourse",
+   "class": "MultipleSortedCourse",
+   "member": "getMultipleSortedRegistrationsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.MultipleSortedCourse",
+   "class": "MultipleSortedCourse",
+   "member": "readObject",
+   "reason": "Java serialization or transient support, which generated Python does not carry over"
+  },
+  {
+   "module": "cruise.associations.MultipleSortedStudent",
+   "class": "MultipleSortedStudent",
+   "member": "__init__",
+   "reason": "comparator parameters removed (a sorted association sorts by its key): (aId, aName, aMultipleSortedRegistrationsPriority, aMultipleSortedAcademy)"
+  },
+  {
+   "module": "cruise.associations.MultipleSortedStudent",
+   "class": "MultipleSortedStudent",
+   "member": "setMultipleSortedRegistrationsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.MultipleSortedStudent",
+   "class": "MultipleSortedStudent",
+   "member": "getMultipleSortedRegistrationsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.MultipleSortedStudent",
+   "class": "MultipleSortedStudent",
+   "member": "readObject",
+   "reason": "Java serialization or transient support, which generated Python does not carry over"
+  },
+  {
+   "module": "cruise.associations.SortedSerializableAcademy",
+   "class": null,
+   "member": null,
+   "reason": "the previous generator's output does not compile, so it has no working API"
+  },
+  {
+   "module": "cruise.associations.SortedSerializableCourse",
+   "class": "SortedSerializableCourse",
+   "member": "__init__",
+   "reason": "comparator parameters removed (a sorted association sorts by its key): (aCode, aSortedSerializableRegistrationsPriority, aSortedSerializableAcademy)"
+  },
+  {
+   "module": "cruise.associations.SortedSerializableCourse",
+   "class": "SortedSerializableCourse",
+   "member": "setSortedSerializableRegistrationsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.SortedSerializableCourse",
+   "class": "SortedSerializableCourse",
+   "member": "getSortedSerializableRegistrationsPriority",
+   "reason": "sorted-association comparator exposed by accident; a sorted association sorts by its key"
+  },
+  {
+   "module": "cruise.associations.SortedSerializableCourse",
+   "class": "SortedSerializableCourse",
+   "member": "readObject",
+   "reason": "Java serialization or transient support, which generated Python does not carry over"
+  },
+  {
+   "module": "cruise.attributes.test.ConstDefaultInterface",
+   "class": "ConstDefaultInterface",
+   "member": "__init__",
+   "reason": "interfaces are not instantiated; they are generated as ABC classes"
+  },
+  {
+   "module": "cruise.attributes.test.ConstDefaultInterfacePHP",
+   "class": "ConstDefaultInterfacePHP",
+   "member": "__init__",
+   "reason": "interfaces are not instantiated; they are generated as ABC classes"
+  },
+  {
+   "module": "cruise.attributes.test.MoreTypeInference",
+   "class": "MoreTypeInference",
+   "member": "setL",
+   "reason": "not in the Python testbed model any more (new Object() default)"
+  },
+  {
+   "module": "cruise.attributes.test.MoreTypeInference",
+   "class": "MoreTypeInference",
+   "member": "getL",
+   "reason": "not in the Python testbed model any more (new Object() default)"
+  },
+  {
+   "module": "cruise.attributes.test.TypeInferenceInterface",
+   "class": "TypeInferenceInterface",
+   "member": "__init__",
+   "reason": "interfaces are not instantiated; they are generated as ABC classes"
+  },
+  {
+   "module": "cruise.attributes.test.TypeInferenceInterface",
+   "class": "TypeInferenceInterface",
+   "member": "AL",
+   "reason": "not in the Python testbed model any more (new Object() default)"
+  },
+  {
+   "module": "cruise.patterns.test.ClassMStar",
+   "class": "ClassMStar",
+   "member": "setClassOtherclasses",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.patterns.test.ClassMToN",
+   "class": "ClassMToN",
+   "member": "setClassOtherclasses",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.patterns.test.ClassMany",
+   "class": "ClassMany",
+   "member": "setClassOtherclasses",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.patterns.test.ClassN",
+   "class": "ClassN",
+   "member": "setClassOtherclasses",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.patterns.test.ClassOne",
+   "class": "ClassOne",
+   "member": "setClassOtherclass",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.patterns.test.ClassOptionalN",
+   "class": "ClassOptionalN",
+   "member": "setClassOtherclasses",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.patterns.test.ClassOptionalOne",
+   "class": "ClassOptionalOne",
+   "member": "setClassOtherclass",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.patterns.test.WidgetImmutableA",
+   "class": "WidgetImmutableA",
+   "member": "setWidgetImmutableB",
+   "reason": "private in Java: an implementation helper Python exposed"
+  },
+  {
+   "module": "cruise.patterns.test.WidgetSubclass",
+   "class": "WidgetSubclass",
+   "member": "setWidgetImmutableBs",
+   "reason": "private in Java: an implementation helper Python exposed"
+  }
+ ]
+}

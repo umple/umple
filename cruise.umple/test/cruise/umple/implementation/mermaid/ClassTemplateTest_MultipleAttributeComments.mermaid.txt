@@ -1,0 +1,7 @@
+classDiagram
+  class Foo {
+    String testAttribute1
+    String testAttribute2
+    String testAttribute3
+    String testAttribute4
+  }

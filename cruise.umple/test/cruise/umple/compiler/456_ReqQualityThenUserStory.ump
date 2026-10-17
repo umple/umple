@@ -1,0 +1,9 @@
+req Speed quality {
+  High {}
+  Low {}
+}
+
+req Speed userStory {
+  who { architect }
+  what { compare designs }
+}

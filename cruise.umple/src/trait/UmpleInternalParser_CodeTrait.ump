@@ -49,8 +49,12 @@ class UmpleInternalParser
     if (t.is("traitDefinition"))
     {
       analyzeTrait(t);
+      // Issue 2098: analyzeClassToken was asked not to clear lastRequirementsImpl for traitDefinition
+      // (to avoid the ordering bug where it cleared before we could use it here).
+      // So we clear it here after analyzeTrait has consumed the implementations.
+      lastRequirementsImpl.clear();
     }
-    
+
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -252,7 +256,7 @@ class UmpleInternalParser
     else if (token.is("reqImplementation"))
     {
       analyazeTraitImpl(aTrait);
-      
+
       analyzeImplementReq(token);
       shouldConsumeRequirementImpl = isReqAddedToLast(token);
     }
@@ -328,61 +332,209 @@ class UmpleInternalParser
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
- private void analyzeRequirement(Token t) {
-    // extract new requirement identifier 
-    String reqID = t.getSubToken("reqIdentifier").getValue(); 
-    String newContent = t.getSubToken("reqContent").getValue();// extract content 
-    // Initialize language
+  private void analyzeRequirement(Token t) {
+    String reqID = t.getSubToken("reqIdentifier").getValue();
+    final String INVALID_LANG = "INVALID";
+    final String QUALITY_LANG = "quality";
+
+    String newContent = "";
+    if (!(t.getSubToken("reqContent") == null || t.getSubToken("reqContent").getValue() == null)) {
+      newContent = t.getSubToken("reqContent").getValue();
+    }
+
     String newLanguage = "";
     if (!(t.getSubToken("reqLanguage") == null || t.getSubToken("reqLanguage").getValue() == null)) {
-        // get the language of the sub token
-        newLanguage = t.getSubToken("reqLanguage").getValue();
+      newLanguage = t.getSubToken("reqLanguage").getValue();
     }
-     // Retrieves any existing requirement with the same identifier from the model
-     Requirement existingRequirement = model.getAllRequirements().get(reqID); 
-    // Checks if a requirement with the same identifier already exists in the model.
-    if (existingRequirement != null) { 
-        // get the language of the existing requirement
-        String existingLanguage = existingRequirement.getLanguage();
-	// return if different languages are encountered
-        if (!(existingLanguage.equals("") || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
-            setFailedPosition(t.getPosition(), 402, reqID,existingLanguage,newLanguage);
-            return;
+    if ("userstory".equals(newLanguage)) {
+      newLanguage = "userStory";
+    }
+    if ("Quality".equals(newLanguage)) {
+      newLanguage = QUALITY_LANG;
+    }
+    if ("usecase".equals(newLanguage)) {
+      newLanguage = "useCase";
+    }
+
+    newLanguage=newLanguage.trim();
+    newContent=newContent.trim();
+
+
+    String whoContent = null;
+    String whenContent = null;
+    String whatContent = null;
+    String whyContent = null;
+    List<String[]> parsedUseCaseSteps = new ArrayList<String[]>();
+    List<String> parsedIncludedUseCases = new ArrayList<String>();
+    List<String> parsedParentUseCases = new ArrayList<String>();
+
+    if (("userStory".equals(newLanguage) || "useCase".equals(newLanguage)) && !newContent.equals("")) {
+      String[] lines = newContent.split("\\r?\\n");
+      StringBuilder remainingContent = new StringBuilder();
+
+      for (String line : lines) {
+        String trimmed = line.trim();
+
+        if (trimmed.startsWith("who {") && trimmed.endsWith("}")) {
+          whoContent = trimmed.substring(5, trimmed.length() - 1).trim();
         }
-        // retrieve the content of the existing requirement
-        String existingContent = existingRequirement.getStatement();
+        else if (trimmed.startsWith("when {") && trimmed.endsWith("}")) {
+          whenContent = trimmed.substring(6, trimmed.length() - 1).trim();
+        }
+        else if (trimmed.startsWith("what {") && trimmed.endsWith("}")) {
+          whatContent = trimmed.substring(6, trimmed.length() - 1).trim();
+        }
+        else if (trimmed.startsWith("why {") && trimmed.endsWith("}")) {
+          whyContent = trimmed.substring(5, trimmed.length() - 1).trim();
+        }
+        else if ("useCase".equals(newLanguage) && isUseCaseRelationship(trimmed, "include")) {
+          addUseCaseReferences(trimmed, "include", parsedIncludedUseCases);
+        }
+        else if ("useCase".equals(newLanguage) && isUseCaseRelationship(trimmed, "isA")) {
+          addUseCaseReferences(trimmed, "isA", parsedParentUseCases);
+        }
+        else if ("useCase".equals(newLanguage) && isUseCaseStep(trimmed, "userStep")) {
+          parsedUseCaseSteps.add(parseUseCaseStep(trimmed, "userStep"));
+        }
+        else if ("useCase".equals(newLanguage) && isUseCaseStep(trimmed, "systemResponse")) {
+          parsedUseCaseSteps.add(parseUseCaseStep(trimmed, "systemResponse"));
+        }
+        else {
+          if (remainingContent.length() > 0) {
+            remainingContent.append("\n");
+          }
+          remainingContent.append(line.trim());
+        }
+      }
 
+      if (!(whoContent == null && whenContent == null && whatContent == null && whyContent == null
+            && parsedUseCaseSteps.isEmpty() && parsedIncludedUseCases.isEmpty() && parsedParentUseCases.isEmpty())) {
+        newContent = remainingContent.toString().trim();
+      }
+    }
 
-        // Requirement with the same identifier already exists, combine them
-        // Concatenate the content of the existing requirement with the new content
+    // EARS clauses such as "shall { open the door }", as { keyword, content }
+    List<String[]> parsedEarsClauses = new ArrayList<String[]>();
+    if ("ears".equals(newLanguage) && !newContent.equals("")) {
+      newContent = parseEarsClauses(newContent, parsedEarsClauses);
+    }
+
+    // Validate quality section content and extract quality class data
+    List<String[]> qualityClassData = new ArrayList<String[]>();
+    if (QUALITY_LANG.equals(newLanguage)) {
+      if (newContent.equals("")) {
+        setFailedPosition(t.getPosition(), 405, reqID);
+      } else {
+        Pattern p = Pattern.compile("([A-Za-z_][A-Za-z0-9_]*)\\s*\\{([^}]*)\\}");
+        Matcher m = p.matcher(newContent);
+        while (m.find()) {
+          String className = m.group(1).trim();
+          String classContent = m.group(2).trim();
+          if (!classContent.isEmpty()) {
+            setFailedPosition(t.getPosition(), 403, className, reqID);
+          }
+          qualityClassData.add(new String[]{className, classContent});
+        }
+        // Check for unmatched leftover content after extracting all valid matches
+        String leftover = p.matcher(newContent).replaceAll("").trim();
+        if (!leftover.isEmpty()) {
+          if (leftover.contains("{")) {
+            setFailedPosition(t.getPosition(), 1504, reqID);
+          } else if (leftover.matches("[A-Za-z0-9_\\s]+")) {
+            setFailedPosition(t.getPosition(), 407, reqID, leftover);
+          } else {
+            setFailedPosition(t.getPosition(), 1500, leftover);
+          }
+        }
+        newContent = "";
+      }
+    }
+
+    Requirement existingRequirement = model.getAllRequirements().get(reqID);
+
+    if (existingRequirement != null) {
+      String existingLanguage = existingRequirement.getLanguage();
+
+      if (existingLanguage.equals(INVALID_LANG) && !newLanguage.equals(QUALITY_LANG)) {
+        // Reset to the first concrete requirement language encountered
+        existingLanguage = newLanguage;
+        existingRequirement.setLanguage(newLanguage);
+      }
+
+      if (!(existingLanguage.equals(INVALID_LANG) || newLanguage.equals(QUALITY_LANG) || newLanguage.equals("") || existingLanguage.equals(newLanguage))) {
+        setFailedPosition(t.getPosition(), 402, reqID, existingLanguage, newLanguage);
+        return;
+      }
+
+      String existingContent = existingRequirement.getStatement();
+      if (existingContent == null) {
+        existingContent = "";
+      }
+
+      if (newLanguage.equals("")) {
+        newLanguage = existingLanguage;
+      }
+
+      if (existingContent.equals("")) {
+        // keep newContent as is
+      }
+      else if (newContent.equals("")) {
+        newContent = existingContent;
+      }
+      else {
         newContent = existingContent + " " + newContent;
-        if (newLanguage.equals("")) {
-            newLanguage = existingLanguage;
-        }
-        existingRequirement.addReqToken(t);// new addition
-        existingRequirement.setStatement(newContent);
-    }
-    else
-    {
-    // If existing requirement is null
-    // create new requirement
-      Requirement req = new Requirement(reqID, newContent, newLanguage);// Create new requirement 
-    // Add the new requirement
-      req.addReqToken(t);// new addition
-      model.getAllRequirements().put(reqID, req);
-    }
+      }
 
+      existingRequirement.addReqToken(t);
+      existingRequirement.setStatement(newContent);
+
+      if (whoContent != null && !whoContent.equals("")) {
+        existingRequirement.setWho(whoContent);
+      }
+      if (whenContent != null && !whenContent.equals("")) {
+        existingRequirement.setWhen(whenContent);
+      }
+      if (whatContent != null && !whatContent.equals("")) {
+        existingRequirement.setWhat(whatContent);
+      }
+      if (whyContent != null && !whyContent.equals("")) {
+        existingRequirement.setWhy(whyContent);
+      }
+      for (String[] qcData : qualityClassData) {
+        // QualityClass constructor auto-appends to the requirement
+        new QualityClass(qcData[0], qcData[1], existingRequirement);
+      }
+
+      addUseCaseElements(existingRequirement, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
+      addEarsClauses(existingRequirement, parsedEarsClauses);
+    }
+    else {
+      if (QUALITY_LANG.equals(newLanguage)) {
+        // Quality section appears before any requirement type definition;
+        // use an invalid language placeholder so it can be resolved later
+        setFailedPosition(t.getPosition(), 406, reqID);
+        newLanguage = INVALID_LANG;
+      }
+      Requirement req = new Requirement(reqID, newContent, whoContent, whenContent, whatContent, whyContent, newLanguage);
+      req.addReqToken(t);
+      for (String[] qcData : qualityClassData) {
+        // QualityClass constructor auto-appends to the requirement
+        new QualityClass(qcData[0], qcData[1], req);
+      }
+      model.getAllRequirements().put(reqID, req);
+
+      addUseCaseElements(req, parsedUseCaseSteps, parsedIncludedUseCases, parsedParentUseCases);
+      addEarsClauses(req, parsedEarsClauses);
+    }
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
    private void analyzeImplementReq(Token t) {
-     // Identifier that has been identified 
-     String reqImpID = t.getSubToken("reqIdentifier").getValue();
-     // Instantiate the requirement implementation
-     ReqImplementation reqImplementation = new ReqImplementation(reqImpID,t);
-     model.addReqImplementation(reqImplementation);
-     lastRequirementsImpl.add(reqImplementation);
+     for (ReqImplementation reqImpl : parseReqRefTokens(t)) {
+       model.addReqImplementation(reqImpl);
+       lastRequirementsImpl.add(reqImpl);
+     }
   }
 //---------------------------------end----------------------------------------
 //----------------------------------------------------------------------------   
@@ -473,11 +625,11 @@ class UmpleInternalParser
       } else if(tkn.is("code")) {
         if(codelangs.isEmpty())
         {
-          languageSpecificCode.setCode(tkn.getValue());
+          languageSpecificCode.setAuthoredCode("", tkn.getValue(), tkn.getFirstLineIndent(), tkn.getPosition());
         } else {
           for(String lang: codelangs)
           {
-            languageSpecificCode.setCode(lang, tkn.getValue());
+            languageSpecificCode.setAuthoredCode(lang, tkn.getValue(), tkn.getFirstLineIndent(), tkn.getPosition());
           }
           codelangs.clear();
         }
@@ -593,16 +745,15 @@ class UmpleInternalParser
       String extraCodeLineNumberComment = " line " + token.getPosition().getLineNumber() + " " + aTrait.getRelativePath(token.getPosition().getFilename(),"Java");
 	  String rubyComment = "#" + extraCodeLineNumberComment;
 	  String otherComment = "//" + extraCodeLineNumberComment;
+	  String pythonComment = pythonLineComment(aTrait, token.getPosition());
  	  if(aTrait.hasExtraCode())
 	  {
 	    rubyComment = System.getProperty("line.separator") + rubyComment;
 	    otherComment = System.getProperty("line.separator") + otherComment;
+	    pythonComment = System.getProperty("line.separator") + pythonComment;
 	  }
-      CodeBlock cb = new CodeBlock();
-      cb.setCode(otherComment);
-      cb.setCode("Ruby", rubyComment);
-      aTrait.appendExtraCode(true,cb);
-      aTrait.appendExtraCode("  " + token.getValue());
+      aTrait.appendExtraCode(true,newExtraCodeMarker(otherComment, rubyComment, pythonComment));
+      aTrait.appendExtraCode(true,newExtraCodeBlock(token));
       // Issue 516 Fix : Michael Kmicik
       setFailedPosition(token.getPosition(), 1007, token.getValue("name"));
     }
@@ -780,6 +931,7 @@ mixset Association {
 
       cb.setCode(otherComment);
       cb.setCode("Ruby", rubyComment);
+      cb.setCode("Python", pythonLineComment(aTrait, exception.getPosition()));
 
       aTrait.appendExtraCode(true,cb);
       aTrait.appendExtraCode("  "+extraCode+"\n");
@@ -905,8 +1057,8 @@ mixset Association {
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------    
 private void copyMethodsFromTraitToClass(UmpleClass inClass){
-    Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>();
-	Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+    Map<UmpleTrait, List<Method>> traitMethods = new LinkedHashMap<UmpleTrait, List<Method>>();
+	Map<UmpleTrait, List<Method>> tempTraitMethods = new LinkedHashMap<UmpleTrait, List<Method>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 		checkClassSupportTraitsInterfaces(inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
 		if ( ! getParseResult().getWasSuccess() ) return;
@@ -1001,8 +1153,8 @@ private void checkClassSupportTraitsInterfaces(	GeneralTPApplied inGeneralTPAppl
 //---------------------------------Start--------------------------------------     
    private Map<UmpleTrait, List<Method>> gatherConcreteMethods (UmpleTrait inTrait, GeneralTPApplied inGTPApplied) 
   {
-	 Map<UmpleTrait, List<Method>> traitMethods = new HashMap<UmpleTrait, List<Method>>(); 
- 	 Map<UmpleTrait, List<Method>> tempTraitMethods = new HashMap<UmpleTrait, List<Method>>();
+	 Map<UmpleTrait, List<Method>> traitMethods = new LinkedHashMap<UmpleTrait, List<Method>>(); 
+ 	 Map<UmpleTrait, List<Method>> tempTraitMethods = new LinkedHashMap<UmpleTrait, List<Method>>();
  	 //----------------------------------------------------------------------------------------
   	 if (inGTPApplied!=null){
 	 	 for (MethodTemplateSignature mTSignature : inGTPApplied.getMethodTemplateSignatures()) {
@@ -1256,8 +1408,8 @@ mixset Association {
                inClass.addCodeInjection(cj);
        }
     }
-       // copy Extra code
-       inClass.appendExtraCode(inTrait.getExtraCode());
+       // copy Extra code block by block, so that each target keeps its own form of it
+       inClass.appendExtraCodeBlocks(inTrait.getExtraCodeBlocks());
        
        // copy associations
        /*
@@ -1751,8 +1903,8 @@ mixset StateMachine {
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 private void copyAttributesFromTraitsToClass(UmpleClass inClass){
-	Map<UmpleTrait, List<Attribute>> traitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
-	Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	Map<UmpleTrait, List<Attribute>> traitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>();
+	Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 		tempTraitAttributes = gatherAttributes(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()));
 		if ( ! getParseResult().getWasSuccess() ) return;
@@ -1778,8 +1930,8 @@ private void copyAttributesFromTraitsToClass(UmpleClass inClass){
 //---------------------------------Start--------------------------------------
 mixset Association {
   private void copyAssociationsFromTraitToClass(UmpleClass inClass) {
-    Map<UmpleTrait, List<AssociationVariable>> traiAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
-	Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+    Map<UmpleTrait, List<AssociationVariable>> traiAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>();
+	Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>();
 	for (UmpleTrait uTrait : inClass.getExtendsTraits()) {
 		tempTraitAssociationVariables = gatherAssociations(uTrait,inClass.getGeneralTPAppliedByName(uTrait.getName()),inClass);
 		if ( ! getParseResult().getWasSuccess() ) return;
@@ -1823,8 +1975,8 @@ mixset Association {
 //----------------------------------------------------------------------------   
 //---------------------------------Start--------------------------------------
 private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, GeneralTPApplied inGTPApplied) {
-	 Map<UmpleTrait, List<Attribute>> traitAttributes = new HashMap<UmpleTrait, List<Attribute>>(); 
-	 Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new HashMap<UmpleTrait, List<Attribute>>();
+	 Map<UmpleTrait, List<Attribute>> traitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>(); 
+	 Map<UmpleTrait, List<Attribute>> tempTraitAttributes = new LinkedHashMap<UmpleTrait, List<Attribute>>();
 	 //----------------------------------------------------------------------------------------
 	 List<Attribute> attributes = new ArrayList<Attribute>();	  
 	 for (Attribute attribute : inTrait.getAttributes()) {
@@ -1853,8 +2005,8 @@ private Map<UmpleTrait, List<Attribute>> gatherAttributes(UmpleTrait inTrait, Ge
 //---------------------------------Start--------------------------------------
 mixset Association {
 private Map<UmpleTrait, List<AssociationVariable>> gatherAssociations(UmpleTrait inTrait, GeneralTPApplied inGTPApplied, UmpleClass inClass) {
-     Map<UmpleTrait, List<AssociationVariable>> traitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>(); 
- 	 Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new HashMap<UmpleTrait, List<AssociationVariable>>();
+     Map<UmpleTrait, List<AssociationVariable>> traitAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>(); 
+ 	 Map<UmpleTrait, List<AssociationVariable>> tempTraitAssociationVariables = new LinkedHashMap<UmpleTrait, List<AssociationVariable>>();
  	 //----------------------------------------------------------------------------------------
  	 List<AssociationVariable> associationVariables = new ArrayList<AssociationVariable>();	  
  	 for (AssociationVariable associationVariable : inTrait.getAssociationVariables()) {

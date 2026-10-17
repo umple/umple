@@ -1,0 +1,5 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqInterface.ump
+</p><p><b>R1: An interface requirement.</b>
+</p><p>&nbsp; IMPLEMENTED BY: 
+</p><p>&nbsp;&nbsp;&nbsp;&nbsp;interface:&nbsp;IFoo&nbsp;ReqInterface.ump&nbsp;line&nbsp;6 ; 
+</p></html>

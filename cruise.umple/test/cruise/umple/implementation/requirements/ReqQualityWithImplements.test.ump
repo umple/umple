@@ -1,0 +1,13 @@
+req R1 {
+  track quality items
+}
+
+req R1 quality {
+  Performance {}
+  Security {}
+}
+
+implementsReq R1;
+class Item {
+  name;
+}

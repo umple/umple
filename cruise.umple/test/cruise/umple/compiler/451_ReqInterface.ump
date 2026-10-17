@@ -1,0 +1,9 @@
+// implementsReq at top level before interface definition
+// Should not produce a 401 warning
+implementsReq A;
+interface IX {
+  void doSomething();
+}
+req A text {
+  Interface must declare a doSomething method.
+}

@@ -1,0 +1,8 @@
+req R1 {
+  A method requirement.
+}
+
+class A {
+  implementsReq R1;
+  Integer compute() { return 0; }
+}

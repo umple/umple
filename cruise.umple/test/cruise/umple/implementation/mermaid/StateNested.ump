@@ -1,0 +1,12 @@
+class Microwave {
+  mode {
+    Idle { turnOn -> Cooking; }
+    Cooking {
+      power {
+        High { toLow -> Low; }
+        Low { toHigh -> High; }
+      }
+      turnOff -> Idle;
+    }
+  }
+}

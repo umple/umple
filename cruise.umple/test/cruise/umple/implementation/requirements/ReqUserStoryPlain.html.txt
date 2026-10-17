@@ -1,0 +1,4 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqUserStoryPlain.ump
+</p><p><b>US1: As a customer, I want to reset my password so that I can regain access to my account.</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>

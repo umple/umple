@@ -1,0 +1,13 @@
+Mixset Feature Tree Selector
+Mixsets and Filters
+noreferences
+@@tooltip UmpleOnline shows a hierarchical feature-tree panel that lets you activate or deactivate mixsets interactively, replacing the previous checkbox-based selector.
+
+@@description
+<p>UmpleOnline includes a feature-tree panel (opened from the <i>Show and Hide</i> toolbar) that renders every mixset in the current model as a node in a hierarchical tree. The tree also visualises feature-model constraints (<code>and</code> / <code>or</code> / <code>xor</code> / multiplicity) defined by <code>isFeature</code> and <code>require</code> statements, so parent-child relationships and mutually-exclusive alternatives are shown graphically.</p>
+
+<p>Clicking a node toggles the corresponding <code>use</code> statement and instantly re-generates the diagram for the resulting configuration, giving a single-click way to switch between alternative designs. Nodes whose activation would violate a feature-model constraint are highlighted.</p>
+
+<p>The panel is backed by the <a href="FeatureModelJson.html">FeatureModelJson</a> generator, which exposes the model&apos;s feature structure &mdash; including a top-level <code>requirements</code> array and per-mixset <code>reqImplementations</code> &mdash; as JSON consumed by the browser.</p>
+
+<p>Combined with <a href="RequirementQualityClasses.html">quality requirements</a> and the <a href="RequirementQualityComparisonTable.html">quality comparison table</a>, the selector supports design-decision workflows in which several mixsets represent alternative designs and can be switched, compared, and benchmarked without leaving UmpleOnline.</p>

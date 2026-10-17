@@ -44,11 +44,6 @@ code-reviews of PRs.
   * Dr. Lethbridge or one of the project leaders will constantly monitor pull requests and ensure that they are reviewed within
   two weeks, and merged if they benefit the project and are free of new issues or defects.
 
-## Meetings
-
- * Dr. Lethbridge's research team meets every few weeks. Skype meetings are held regularly when undergraduates from outside UOttawa
- are working on the projet.
-
 ## Decision Making
 
   * This follows the consensus building approach. If more than a small minority are unhappy with something, we will keep 

@@ -1,0 +1,11 @@
+req R1 {
+  A state machine requirement.
+}
+
+class A {
+  implementsReq R1;
+  sm {
+    s1 {}
+    s2 {}
+  }
+}

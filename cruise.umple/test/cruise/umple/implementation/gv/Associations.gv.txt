@@ -6,22 +6,22 @@ digraph "Associations" {
   // Class: A
   "A" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    A </td></tr></table>>,
    tooltip="class A
-Example code illustrating various&#13;kinds of associations&#13;"];
+Example code illustrating various&#13;kinds of associations"];
 
   // Class: B
   "B" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    B </td></tr></table>>,
    tooltip="class B
-Class with inline association having role name&#13;"];
+Class with inline association having role name"];
 
   // Class: C
   "C" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="20"><tr><td>    C </td></tr></table>>,
    tooltip="class C
-Class with reflexive association&#13;"];
+Class with reflexive association"];
 
   // Class: D
   "D" [shape=plaintext margin=0 label=<<table border="1" cellspacing="2" cellborder="0" cellpadding="10"><tr><td>    D </td></tr></table>>,
    tooltip="class D
-Reference to a class defined elsewhere&#13;"];
+Reference to a class defined elsewhere"];
 
   // All associations
   "A" -> "C" [dir="forward", arrowhead="open", taillabel="0..1 ", headlabel="* ", tooltip="A 0..1  -> *  C

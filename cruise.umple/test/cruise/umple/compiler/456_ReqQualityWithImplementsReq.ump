@@ -1,0 +1,15 @@
+req R1 userStory {
+  who { developer }
+  what { track items }
+}
+
+req R1 quality {
+  Performance {}
+  Security {}
+}
+
+implementsReq R1;
+class Item {
+  name;
+  priority;
+}

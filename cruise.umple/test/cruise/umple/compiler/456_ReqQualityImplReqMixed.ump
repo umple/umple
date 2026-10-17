@@ -1,0 +1,14 @@
+// Test: implementsReq with mix of bare and quality class references
+req R1 { first requirement }
+req Speed userStory {
+  who { architect }
+  what { compare designs }
+}
+
+req Speed quality {
+  High {}
+  Low {}
+}
+
+implementsReq R1, Speed(High);
+class FastCar {}

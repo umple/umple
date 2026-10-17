@@ -18,6 +18,8 @@ $GLOBALS["JAVA_HOME"] = "/usr/bin/";
 $GLOBALS["ANT_EXEC"] = "/h/ralph/cruise/dev/apps/apache-ant-1.8.1/bin/ant";
 $GLOBALS["OS"] = "Linux";
 
+require_once(__DIR__."/version_history.php");
+
 // Trick to find the root directory of this copy of UmpleOnline
 // Assumes this script lives in /scripts; if you move this file it
 // will need to change.
@@ -310,37 +312,60 @@ function generateMenu($buttonSuffix)
         <li class=\"subtitle\"> Generate".$buttonSuffix."</li>
         <li id=\"ttGeneratedCodeType\">
           <select id=\"inputGenerateCode".$buttonSuffix."\" name=\"inputLanguage\" class=\"button\">
+   
+          <optgroup label=\"Programming Language Code\">
             <option id=\"genjava\" value=\"java:Java\">Java Code</option>
             <option id=\"genjavadoc\" value=\"javadoc:javadoc\">Java API Doc</option>
             <option id=\"genphp\" value=\"php:Php\">PHP Code</option>
             <option id=\"genpython\" value=\"python:Python\">Python Code</option>
             <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code (Beta)</option>
             <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
+          </optgroup>
+
+          <optgroup label=\"Data Model Views\">
+            <option value=\"classDiagram:classDiagram\">GraphViz Class Diagram (SVG)</option>
+            <option value=\"entityRelationship:entityRelationshipDiagram\">Entity Relationship Diagram (GraphViz SVG)</option>
+            <option id=\"genuigu2\" value=\"crudJson:Json\">CRUD User Interface</option>            
+            <option id=\"gensql\" value=\"sql:Sql\">Sql</option>
+          </optgroup>
+
+          <optgroup label=\"State Model Views\">
+           <option value=\"stateDiagram:stateDiagram\">State Diagram (GraphViz SVG)</option>
+           <option id=\"genstatetables\" value=\"html:StateTables\">State Tables</option>
+          </optgroup>
+
+          <optgroup label=\"Random Instance Views\">
+            <option value=\"instanceDiagram:instanceDiagram\">Instance Diagram</option>
+            <option id=\"geneventsequence\" value=\"html:EventSequence\">Event Sequence</option>
+          </optgroup>
+
+          <optgroup label=\"Formal Methods\">
             <option id=\"genalloy\" value=\"alloy:Alloy\">Alloy Model</option>
-        <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
+            <option id=\"gennusmv\" value=\"nusmv:NuSMV\">NuSMV Model</option>
+          </optgroup>
+
+          <optgroup label=\"Other Modeling Notations\">
             <option value=\"xml:Ecore\">Ecore</option>
             <option value=\"java:TextUml\">TextUml</option>
-            <option value=\"xml:Scxml\">Scxml (Experimental)</option>
             <option value=\"xml:Papyrus\">Papyrus XMI</option>
             <option value=\"yumlDiagram:yumlDiagram\">Yuml Class Diagram</option>
-            <option value=\"classDiagram:classDiagram\">GraphViz Class Diagram (SVG)</option>
-            <option value=\"instanceDiagram:instanceDiagram\">Instance Diagram</option>
-            <option value=\"stateDiagram:stateDiagram\">State Diagram (GraphViz SVG)</option>
-            <option value=\"featureDiagram:featureDiagram\">Feature Diagram (GraphViz SVG)</option>
-            <option value=\"entityRelationship:entityRelationshipDiagram\">Entity Relationship Diagram (GraphViz SVG)</option>
-            <option id=\"genstatetables\" value=\"html:StateTables\">State Tables</option>
-            <option id=\"geneventsequence\" value=\"html:EventSequence\">Event Sequence</option>
-            <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>
-            <option id=\"genuigu2\" value=\"Uigu2:Uigu2\">CRUD User Interface</option>            
-            <option value=\"java:Json\">Json</option>
-            <option id=\"gensql\" value=\"sql:Sql\">Sql</option>
-            <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple Metrics</option>
-            <option id=\"genplainrequirementsdoc\" value=\"html:PlainRequirementsDoc\">Plain Requirements Doc</option>
-            <option value=\"html:CodeAnalysis\">Code Analysis</option>
+            <option value=\"mermaid:Mermaid\">Mermaid</option>
+            <option value=\"xml:Scxml\">Scxml (Experimental)</option>
             <option value=\"java:USE\">USE Model</option>
+            <option value=\"java:Json\">Json</option>
+          </optgroup>
+
+          <optgroup label=\"Special Views\">
+            <option id=\"genplainrequirementsdoc\" value=\"html:PlainRequirementsDoc\">Plain Requirements Doc</option>
+            <option id=\"genplainrequirementsdocqc\" value=\"html:PlainRequirementsDoc.reqQC\">Requirements Doc with Comparison Table</option>
+            <option value=\"featureDiagram:featureDiagram\">Feature Diagram (GraphViz SVG)</option>
+            <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>
+            <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple Metrics</option>
+            <option value=\"html:CodeAnalysis\">Code Analysis</option>
             <option value=\"java:UmpleSelf\">Internal Umple Representation</option>
             <option id=\"genUmpleAnnotaiveToComposition\" value=\"java:UmpleAnnotaiveToComposition\" >Compositional Mixsets from Inline Mixsets </option>
-
+          </optgroup>
+          
           </select>
         </li>
         <li id=\"ttGenerateCode\">
@@ -393,7 +418,6 @@ function readTemporaryFile($filename)
   }
 
   $handle = fopen($filename, "r");
-  //$contents = fread($handle, filesize($filename));
   $contents = fread($handle, filesize($filename));
   fclose($handle);
   return $contents;
@@ -470,14 +494,46 @@ function ensureFullPath($relativeFilename)
   return $filename;
 }
 
+/**
+Returns the model directory named by the directory part of the given
+filename, e.g. tmpXXXX, 261006XXXX, task-XXXX or tasks/taskroot-XXXX.
+Returns NULL for anything else, such as a bare model.ump, whose directory
+would be the ump/ root that is shared by all users.
+Only the name is checked, not whether the directory still exists.
+*/
+function getModelIdFromFilename($filename){
+    if(!is_string($filename)){
+        return NULL;
+    }
+    $modelId = preg_replace('#^\.\./ump/#', '', dirname($filename));
+    if(!preg_match('#^(tmp|\d{6}|task-|tasks/taskroot-)[\w.-]*$#D', $modelId)){
+        return NULL;
+    }
+    return $modelId;
+}
+
+/**
+Ends a request whose filename names no model directory with a 400 error.
+*/
+function rejectInvalidFilename(){
+    http_response_code(400);
+    echo "Invalid filename: it must be in a model directory such as tmpXXXX/model.ump, or be omitted to use a new temporary directory.";
+    exit;
+}
+
 function getOrCreateDataHandle(){
-    if(isset($_REQUEST['filename'])){
-        $modelId = dirname($_REQUEST['filename']);
+    if(isset($_REQUEST['filename']) && $_REQUEST['filename'] !== ''){
+        $modelId = getModelIdFromFilename($_REQUEST['filename']);
+        if($modelId === NULL){
+            rejectInvalidFilename();
+        }
         $filename= basename($_REQUEST['filename']);
         $dataHandle = dataStore()->openData($modelId);
         if($dataHandle){
             return array($filename, $dataHandle);
         }
+        // The directory no longer exists (old models are cleaned up),
+        // so carry on in a new temporary one
     }else{
         $filename = 'model.ump';
     }

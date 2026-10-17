@@ -1,0 +1,5 @@
+req R1 {
+  Plain requirement text.
+}
+
+req R1 quality { Fast Slow }

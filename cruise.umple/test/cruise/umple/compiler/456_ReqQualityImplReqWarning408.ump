@@ -1,0 +1,7 @@
+// Test: implementsReq Speed(High) where Speed has no quality classes -> warning 408
+req Speed {
+  plain text requirement without quality classes
+}
+
+implementsReq Speed(High);
+class Item {}

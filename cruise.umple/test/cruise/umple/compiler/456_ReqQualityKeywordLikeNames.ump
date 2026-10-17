@@ -1,0 +1,9 @@
+req R1 {
+  plain requirement text
+}
+
+req R1 quality {
+  QualityAttr {}
+  ReqLevel {}
+  ClassType {}
+}

@@ -1,0 +1,11 @@
+// implementsReq inside a class before a nested inner class definition
+// Should not produce a 401 warning
+class Outer {
+  implementsReq A;
+  inner class Inner {
+    name;
+  }
+}
+req A text {
+  The outer class must have an inner class.
+}

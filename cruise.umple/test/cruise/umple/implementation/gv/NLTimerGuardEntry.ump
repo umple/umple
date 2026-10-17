@@ -1,0 +1,13 @@
+generate GvStateDiagram;
+namespace example;
+
+class A {
+  sm {
+    s1 {
+      entry / {doEntry();}
+      after(5) [isReady()] -> s2;
+    }
+    s2 {
+    }
+  }
+}

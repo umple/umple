@@ -379,7 +379,7 @@ class UmpleConsoleMain
         for (String key : model. getHashMap().keySet()) {
           System.out.println("  Finished generating "+key);
           if(key.compareTo("Java")==0) {
-            for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) {
+            for (UmpleClass mainClass: CodeCompiler.getMainClasses(model, "Java")) {
               System.out.println("  Main method found. Run java "+mainClass.getName());
             }
           }
@@ -740,6 +740,8 @@ class PlaygroundMain
   depend java.text.SimpleDateFormat;
 
   Boolean isServer=false;
+  // Set when the last command asked for compilation and it failed, so a standalone run can exit nonzero
+  internal Boolean compilationFailed = false;
   int commandsRun = 0;
   int commandsEverRun = 0;
   int checkpointCommandsRun = 0;
@@ -793,6 +795,9 @@ class PlaygroundMain
   public static void main(String[] args) {
     theInstance = new PlaygroundMain(0);
     theInstance.processCommand(args, null);
+    if (theInstance.compilationFailed) {
+      System.exit(1);
+    }
   }
     
   // A command arriving when this is a server
@@ -1201,6 +1206,7 @@ class PlaygroundMain
           successPreviousStep = CodeCompiler.compile(model, generatorCodeToCompile,false, false, "-", errorFileName);
         }
       }
+      compilationFailed = !successPreviousStep;
     }
 
     // Delete main file if any existing
@@ -1276,7 +1282,7 @@ class PlaygroundMain
       {
         // Get all main file names and make a single string
         StringBuilder builder = new StringBuilder();
-        for (UmpleClass mainClass: CodeCompiler.getMainClasses(model)) 
+        for (UmpleClass mainClass: CodeCompiler.getMainClasses(model, key)) 
         {
           builder = builder.append(mainClass.getName() + " ");
         }

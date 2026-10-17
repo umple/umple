@@ -1,0 +1,11 @@
+// implementsReq at top level before enum
+// Req should attach to Color only, not to class Vehicle
+// Should not produce a 401 warning
+implementsReq A;
+enum Color { RED, GREEN, BLUE }
+class Vehicle {
+  speed;
+}
+req A text {
+  System must support color values.
+}

@@ -167,6 +167,10 @@ mixset Logging {
   mixset  LoggingFinest  { } 
 				
 }
+
+// One valid product of the line: every mandatory feature, OldIO for the NewIO xor OldIO choice, and none of the optional ones.
+use Base, Ops, BTree, Persistance, IICLeaner, Cleaner, Checkpointer, IIO, OldIO, IO, ConcurrTrans;
+
 //$?[End_of_model]$?
 // @@@skipjavacompile - Generates no language code
 // @@@skipphpcompile - Contains no language code
