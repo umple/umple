@@ -7,6 +7,11 @@ noreferences
 startup in a certain state. These are preceded by an ampersand, except the first
 in a list which would be preceded by a question mark.</p>
 
+<p>The options below are for classic UmpleOnline at try.umple.org. <a href="UsingUmpleOnlineV2.html">UmpleOnline V2</a>
+accepts ?example= to load an example (for example
+<a href="https://newumpleonline.umple.org/?example=2DShapes">https://newumpleonline.umple.org/?example=2DShapes</a>)
+and ?model= to load a shared model; the other options are not yet all supported in V2.</p>
+
 <ul>
 
 <li>?nochrome: Hide the header of the UmpleOnline page (sometimes called the chrome) so only the model is visible.<p>
