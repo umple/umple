@@ -558,6 +558,27 @@ public class RequirementTest
   }
 
   @Test
+  public void getDisplayStatement_earsSystemStartingWithThe()
+  {
+    Requirement req = new Requirement("E7", "", null, null, null, null, "ears");
+    req.setEarsWhen("a card is inserted");
+    req.setEarsSystem("the ATM");
+    req.setEarsShall("ask for the PIN");
+
+    Requirement capitalized = new Requirement("E8", "", null, null, null, null, "ears");
+    capitalized.setEarsSystem("The ATM");
+    capitalized.setEarsShall("show the balance");
+
+    Requirement theInName = new Requirement("E9", "", null, null, null, null, "ears");
+    theInName.setEarsSystem("theatre lights");
+    theInName.setEarsShall("dim");
+
+    Assert.assertEquals("When a card is inserted, the ATM shall ask for the PIN", req.getDisplayStatement());
+    Assert.assertEquals("The ATM shall show the balance", capitalized.getDisplayStatement());
+    Assert.assertEquals("The theatre lights shall dim", theInName.getDisplayStatement());
+  }
+
+  @Test
   public void getDisplayStatement_earsWithFreeTextAndQuality()
   {
     Requirement req = new Requirement("E5", "Agreed with the safety team.", null, null, null, null, "ears");

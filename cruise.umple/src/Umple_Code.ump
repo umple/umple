@@ -1051,16 +1051,21 @@ class Requirement{
       }
     }
 
-    // The main clause names the responding system, which EARS templates call 'the system' when unnamed
+    // The main clause names the responding system, which EARS templates call 'the system' when unnamed;
+    // 'the' is not added again when the name already starts with it, e.g. system { the ATM }
+    String system = hasDisplayText(getEarsSystem()) ? getEarsSystem() : "system";
+    if (!system.toLowerCase().startsWith("the "))
+    {
+      system = "the " + system;
+    }
     String mainClause = "";
     if (hasDisplayText(getEarsShall()))
     {
-      String system = hasDisplayText(getEarsSystem()) ? getEarsSystem() : "system";
-      mainClause = "the " + system + " shall " + getEarsShall();
+      mainClause = system + " shall " + getEarsShall();
     }
     else if (hasDisplayText(getEarsSystem()))
     {
-      mainClause = "the " + getEarsSystem();
+      mainClause = system;
     }
 
     if (hasDisplayText(mainClause))
