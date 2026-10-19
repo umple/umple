@@ -3601,21 +3601,30 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 }
 
-Action.displayAttributeMenu = function(event, attributeName, attributeType) {
+Action.displayAttributeMenu = function(event, attributeName, attributeType, className) {
   if(!Action.diagramInSync){
     return;
   }
   // Remove old menu, if any
   Action.removeContextMenu();
-  var elemText=event.target;
+  var elemText;
   attributeName = attributeName.trim();
+
+  if (className) {
+    // ERD attributes are separate Graphiviz nodes, so the owing class
+    // is supplied from the selectAttribute link
+    elemText = className;
+  }
+  else {
+    // Gv class Diadram: determine the class from the containing node
+    elemText = event.target;
   //iterate up to top of class table
-  while(elemText.parentElement.id!="graph0"){
-    elemText=elemText.parentNode;
+    while(elemText.parentElement.id!="graph0"){
+      elemText=elemText.parentNode;
   }
   //unstable - grabs class name
   elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
-  
+}
   var orig=Page.codeMirrorEditor6.state.doc.toString();
   var chosenClass=Action.splitStates(orig);
   for(let i=0;i<chosenClass.length;i++){
