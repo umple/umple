@@ -152,6 +152,10 @@ class PlainRequirementsDocGenerator
 						mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
 					}
 				}
+				else if ("ears".equals(req.getLanguage())) {
+					// The EARS clauses read as one sentence, followed by any free text
+					mainReqText = Requirement.translateToHTML(req.getBodyDisplayText("<br/>"), req.getLanguage());
+				}
 				else {
 					mainReqText = Requirement.translateToHTML(req.getStatement(), req.getLanguage());
 				}
