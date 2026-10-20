@@ -189,6 +189,8 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     Page.useEditableClassDiagram = false;  
     Page.setDiagramTypeIconState('none');
     Page.useGvFeatureDiagram = false;
+    jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
     Action.syncLiveViewSelector("erd");
   }
   else if(diagramType.toLowerCase() == "instancediagram")
