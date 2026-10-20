@@ -1028,6 +1028,67 @@ class Requirement{
     return userStoryText.toString();
   }
 
+  // Renders the EARS clauses as one sentence, with the clauses in the order EARS prescribes, e.g.
+  // "While the aircraft is on ground, when reverse thrust is commanded, the engine control system shall enable reverse thrust"
+  public String getEarsDisplayText()
+  {
+    StringBuilder earsText = new StringBuilder();
+    String[][] conditions = {
+      { "where ", getEarsWhere() },
+      { "while ", getEarsWhile() },
+      { "when ", getEarsWhen() },
+      { "if ", getEarsIf() }
+    };
+    for (String[] condition : conditions)
+    {
+      if (hasDisplayText(condition[1]))
+      {
+        if (earsText.length() > 0)
+        {
+          earsText.append(", ");
+        }
+        earsText.append(condition[0]).append(condition[1]);
+      }
+    }
+
+    // The main clause names the responding system, which EARS templates call 'the system' when unnamed;
+    // 'the' is not added again when the name already starts with it, e.g. system { the ATM }
+    String system = hasDisplayText(getEarsSystem()) ? getEarsSystem() : "system";
+    if (!system.toLowerCase().startsWith("the "))
+    {
+      system = "the " + system;
+    }
+    String mainClause = "";
+    if (hasDisplayText(getEarsShall()))
+    {
+      mainClause = system + " shall " + getEarsShall();
+    }
+    else if (hasDisplayText(getEarsSystem()))
+    {
+      mainClause = system;
+    }
+
+    if (hasDisplayText(mainClause))
+    {
+      if (earsText.length() > 0)
+      {
+        earsText.append(", ");
+        // An unwanted behaviour requirement reads "If <trigger>, then the <system> shall <response>"
+        if (hasDisplayText(getEarsIf()))
+        {
+          earsText.append("then ");
+        }
+      }
+      earsText.append(mainClause);
+    }
+
+    if (earsText.length() > 0)
+    {
+      earsText.setCharAt(0, Character.toUpperCase(earsText.charAt(0)));
+    }
+    return earsText.toString();
+  }
+
   // Returns the requirement body text so renderers can output body and quality separately.
   public String getBodyDisplayText(String separator)
   {
@@ -1097,6 +1158,21 @@ class Requirement{
       }
 
       return useCaseText.toString();
+    }
+    else if ("ears".equals(reqLanguage))
+    {
+      if (!hasStructuredEarsFields())
+      {
+        return statement;
+      }
+
+      // Free text written alongside the clauses follows the EARS sentence
+      StringBuilder earsText = new StringBuilder(getEarsDisplayText());
+      if (hasDisplayText(statement))
+      {
+        earsText.append(separator).append(statement);
+      }
+      return earsText.toString();
     }
 
     return statement;

@@ -3370,6 +3370,8 @@ public void braceMismatch_filenameUsesBasename() {
     Assert.assertEquals("ears", req.getLanguage());
     Assert.assertEquals("When the power fails, the controller shall close the valve.", req.getStatement());
     Assert.assertFalse(req.hasStructuredEarsFields());
+    // A free-text ears requirement is shown as written
+    Assert.assertEquals("When the power fails, the controller shall close the valve.", req.getDisplayStatement());
   }
   //Issue 2484 (EARS)
   @Test

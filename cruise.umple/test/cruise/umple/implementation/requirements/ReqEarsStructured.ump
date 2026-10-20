@@ -1,0 +1,14 @@
+req E1 ears {
+  while { the aircraft is on ground }
+  when { reverse thrust is commanded }
+  system { engine control system }
+  shall { enable reverse thrust }
+}
+
+class EngineControl {
+  implementsReq E1;
+  thrust {
+    Forward {}
+    Reverse {}
+  }
+}
