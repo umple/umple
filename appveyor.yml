@@ -1,4 +1,4 @@
-version: 1.30.2-{build}-{branch}
+version: 1.38.0-{build}-{branch}
 
 skip_branch_with_pr: true
 
