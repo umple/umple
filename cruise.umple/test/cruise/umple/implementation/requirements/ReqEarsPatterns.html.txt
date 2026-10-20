@@ -1,0 +1,12 @@
+<html xmlns="https://www.w3.org/1999/xhtml"><p>Plain Requirements Doc from ReqEarsPatterns.ump
+</p><p><b>E1: The system shall log every transaction</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p><p><b>E2: When mute is selected, the laptop shall suppress all audio output</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p><p><b>E3: While there is no card in the ATM, the ATM shall display 'insert card to begin'</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p><p><b>E4: Where the car has a sunroof, the car shall have a sunroof control panel on the driver door</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p><p><b>E5: If an invalid credit card number is entered, then the website shall display 'please re-enter credit card details'</b>
+</p><p>&nbsp;NOT IMPLEMENTED.
+</p></html>

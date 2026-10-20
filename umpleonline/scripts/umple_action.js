@@ -1064,6 +1064,7 @@ Action.changeDiagramType = function(newDiagramType)
     jQuery("#buttonShowGvEntityRelationshipDiagram").prop('checked', 'checked');
     Page.setDiagramTypeIconState('none');
     jQuery(".view_opt_class").show();
+    jQuery(".view_opt_class_palette").show();
     Page.initExamples();
 
   }
@@ -3600,21 +3601,30 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
   TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
 }
 
-Action.displayAttributeMenu = function(event, attributeName, attributeType) {
+Action.displayAttributeMenu = function(event, attributeName, attributeType, className) {
   if(!Action.diagramInSync){
     return;
   }
   // Remove old menu, if any
   Action.removeContextMenu();
-  var elemText=event.target;
+  var elemText;
   attributeName = attributeName.trim();
+
+  if (className) {
+    // ERD attributes are separate Graphiviz nodes, so the owing class
+    // is supplied from the selectAttribute link
+    elemText = className;
+  }
+  else {
+    // Gv class Diadram: determine the class from the containing node
+    elemText = event.target;
   //iterate up to top of class table
-  while(elemText.parentElement.id!="graph0"){
-    elemText=elemText.parentNode;
+    while(elemText.parentElement.id!="graph0"){
+      elemText=elemText.parentNode;
   }
   //unstable - grabs class name
   elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
-  
+}
   var orig=Page.codeMirrorEditor6.state.doc.toString();
   var chosenClass=Action.splitStates(orig);
   for(let i=0;i<chosenClass.length;i++){
@@ -6239,7 +6249,7 @@ Action.updateUmpleDiagramCallback = function(response)
 
       // If gv class mode is gvmanual then we need to update all the umple 
       // positioning information given the diagram locations
-      if(Page.useGvClassDiagram && Page.isGvManual()) {
+      if((Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram) && Page.isGvManual()) {
 
         // First, in case we have used a special algorithm to reformulate we first turn them all off
         // This will not have effect if the algorithm is specified in the code.
@@ -6446,7 +6456,7 @@ Action.updateUmpleDiagramCallback = function(response)
   
   Page.hideLoading();
 
-  if (Page.useGvClassDiagram) {
+  if (Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram) {
     GvDiagramEdit.bindClassDiagram(canvasX, canvasY);
   }
 

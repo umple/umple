@@ -541,4 +541,70 @@ public class RequirementTest
     Assert.assertEquals("close the sunroof", copy.getEarsShall());
     Assert.assertEquals("notes", copy.getStatement());
   }
+
+  @Test
+  public void getDisplayStatement_earsWithoutShall()
+  {
+    Requirement triggerOnly = new Requirement("E3", "", null, null, null, null, "ears");
+    triggerOnly.setEarsWhen("the card is inserted");
+
+    Requirement unwantedWithSystem = new Requirement("E4", "", null, null, null, null, "ears");
+    unwantedWithSystem.setEarsIf("the card is rejected");
+    unwantedWithSystem.setEarsSystem("ATM");
+
+    // Only what was written is shown; nothing is invented for the missing response
+    Assert.assertEquals("When the card is inserted", triggerOnly.getDisplayStatement());
+    Assert.assertEquals("If the card is rejected, then the ATM", unwantedWithSystem.getDisplayStatement());
+  }
+
+  @Test
+  public void getDisplayStatement_earsSystemStartingWithThe()
+  {
+    Requirement req = new Requirement("E7", "", null, null, null, null, "ears");
+    req.setEarsWhen("a card is inserted");
+    req.setEarsSystem("the ATM");
+    req.setEarsShall("ask for the PIN");
+
+    Requirement capitalized = new Requirement("E8", "", null, null, null, null, "ears");
+    capitalized.setEarsSystem("The ATM");
+    capitalized.setEarsShall("show the balance");
+
+    Requirement theInName = new Requirement("E9", "", null, null, null, null, "ears");
+    theInName.setEarsSystem("theatre lights");
+    theInName.setEarsShall("dim");
+
+    Assert.assertEquals("When a card is inserted, the ATM shall ask for the PIN", req.getDisplayStatement());
+    Assert.assertEquals("The ATM shall show the balance", capitalized.getDisplayStatement());
+    Assert.assertEquals("The theatre lights shall dim", theInName.getDisplayStatement());
+  }
+
+  @Test
+  public void getDisplayStatement_earsWithFreeTextAndQuality()
+  {
+    Requirement req = new Requirement("E5", "Agreed with the safety team.", null, null, null, null, "ears");
+    req.setEarsWhen("a search is submitted");
+    req.setEarsShall("list the matching books");
+    new QualityClass("Fast", "", req);
+
+    Assert.assertEquals(
+      "When a search is submitted, the system shall list the matching books\nAgreed with the safety team.\n[Quality: Fast]",
+      req.getDisplayStatement());
+    Assert.assertEquals(
+      "When a search is submitted, the system shall list the matching books<br/>Agreed with the safety team.",
+      req.getBodyDisplayText("<br/>"));
+  }
+
+  @Test
+  public void format_earsRequirement()
+  {
+    Requirement req = new Requirement("E6", "", null, null, null, null, "ears");
+    req.setEarsWhile("the door is open");
+    req.setEarsShall("keep the light on");
+    model.getAllRequirements().put("E6", req);
+    allTestRequirementsImpl.add(new ReqImplementation("E6", reqTok));
+
+    String output = Requirement.format("Slashes", allTestRequirementsImpl, model);
+
+    Assert.assertEquals("// E6: While the door is open, the system shall keep the light on", output);
+  }
 }
