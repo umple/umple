@@ -1,0 +1,81 @@
+use constructor_AssociationAssignImmutableOptionalOne.ump;
+use constructor_AssociationAssignOptionalMany.ump;
+use constructor_AttributeAssign.ump;
+use constructor_AttributeAssignDefaulted.ump;
+use constructor_AttributeAssignLazy.ump;
+use constructor_AttributeUnassignedImmutable.ump;
+
+class UmpleToJavaScript {
+    constructor_Declare_All <<!<</*constructor_Declare_All*/>>
+  constructor(<<=gClass.getLookup("constructorSignature_caller")>>)
+  {<<#
+  if (!uClass.isRoot() && !"interface".equals(uClass.getExtendsClass().getModifier()))
+  {
+    #>>
+    super(<<=gClass.getParentClass().getLookup("constructorSignature_caller")>>);<<#
+  }
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.getIsAutounique() || av.getIsUnique() && !av.isImmutable() || av.isConstant() || "theInstance".equals(gen.translate("attributeOne",av)) || av.getIsDerived())
+    {
+      continue;
+    }
+
+    if ("defaulted".equals(av.getModifier()))
+    {
+      #>><<@ UmpleToJavaScript.constructor_AttributeAssignDefaulted >><<#
+    }
+    else if (av.isImmutable() && (av.getIsLazy() || av.getIsUnique()))
+    {
+      #>><<@ UmpleToJavaScript.constructor_AttributeUnassignedImmutable >><<#
+    }
+    else if (av.isImmutable() || !av.getIsLazy())
+    {
+      #>><<@ UmpleToJavaScript.constructor_AttributeAssign >><<#
+    }
+    else
+    {
+      #>><<@ UmpleToJavaScript.constructor_AttributeAssignLazy >><<#
+    }
+  }
+
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable() || !av.isImmutable())
+    {
+      continue;
+    }
+    #>>
+    this._<<=gen.translate("associationCanSet",av)>> = true;<<#
+  }
+
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+
+    if (!relatedAssociation.getIsNavigable())
+    {
+      if (av.isOptionalOne() && av.isImmutable())
+      {
+        #>><<@ UmpleToJavaScript.constructor_AssociationAssignImmutableOptionalOne >><<#
+      }
+      else if (av.isMany())
+      {
+        #>><<@ UmpleToJavaScript.constructor_AssociationAssignOptionalMany >><<#
+      }
+      continue;
+    }
+
+    if (av.isOptionalMany())
+    {
+      #>><<@ UmpleToJavaScript.constructor_AssociationAssignOptionalMany >><<#
+    }
+  }
+#>>
+  }!>>
+}

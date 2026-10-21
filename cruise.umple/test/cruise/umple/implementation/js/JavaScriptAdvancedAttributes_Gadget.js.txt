@@ -1,0 +1,271 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 1 "JavaScriptAdvancedAttributes.ump"
+class Gadget
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Gadget Attributes
+  //Helper Variables
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor(aName, aPrice, aCode)
+  {
+    this._name = aName;
+    this._price = aPrice;
+    this._weight = 1.5;
+    this.resetStock();
+    this._note = null;
+    this._sold = false;
+    this._code = aCode;
+    this._canSetSerial = true;
+    this._serial = null;
+    this._canSetBatch = true;
+    this._batch = 0;
+    this._canSetRatio = true;
+    this._ratio = 0;
+    this._canSetSealed = true;
+    this._sealed = false;
+    this._year = 2026;
+    this._offset = -1;
+    this._depth = -0.5;
+    this._visible = true;
+    this._label = "say \"hi\"\n";
+    this._tag = null;
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  setName(aName)
+  {
+    let wasSet = false;
+    this._name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+  setPrice(aPrice)
+  {
+    let wasSet = false;
+    this._price = aPrice;
+    wasSet = true;
+    return wasSet;
+  }
+  setWeight(aWeight)
+  {
+    let wasSet = false;
+    this._weight = aWeight;
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template attribute_SetDefaulted */
+  setStock(aStock)
+  {
+    let wasSet = false;
+    this._stock = aStock;
+    wasSet = true;
+    return wasSet;
+  }
+  resetStock()
+  {
+    let wasReset = false;
+    this._stock = this.getDefaultStock();
+    wasReset = true;
+    return wasReset;
+  }
+  setNote(aNote)
+  {
+    let wasSet = false;
+    this._note = aNote;
+    wasSet = true;
+    return wasSet;
+  }
+  setSold(aSold)
+  {
+    let wasSet = false;
+    this._sold = aSold;
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template attribute_SetImmutable */
+  setSerial(aSerial)
+  {
+    let wasSet = false;
+    if (! this._canSetSerial)
+    {
+      return false;
+    }
+    this._canSetSerial = false;
+    this._serial = aSerial;
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template attribute_SetImmutable */
+  setBatch(aBatch)
+  {
+    let wasSet = false;
+    if (! this._canSetBatch)
+    {
+      return false;
+    }
+    this._canSetBatch = false;
+    this._batch = aBatch;
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template attribute_SetImmutable */
+  setRatio(aRatio)
+  {
+    let wasSet = false;
+    if (! this._canSetRatio)
+    {
+      return false;
+    }
+    this._canSetRatio = false;
+    this._ratio = aRatio;
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template attribute_SetImmutable */
+  setSealed(aSealed)
+  {
+    let wasSet = false;
+    if (! this._canSetSealed)
+    {
+      return false;
+    }
+    this._canSetSealed = false;
+    this._sealed = aSealed;
+    wasSet = true;
+    return wasSet;
+  }
+  setOffset(aOffset)
+  {
+    let wasSet = false;
+    this._offset = aOffset;
+    wasSet = true;
+    return wasSet;
+  }
+  setDepth(aDepth)
+  {
+    let wasSet = false;
+    this._depth = aDepth;
+    wasSet = true;
+    return wasSet;
+  }
+  setVisible(aVisible)
+  {
+    let wasSet = false;
+    this._visible = aVisible;
+    wasSet = true;
+    return wasSet;
+  }
+  setLabel(aLabel)
+  {
+    let wasSet = false;
+    this._label = aLabel;
+    wasSet = true;
+    return wasSet;
+  }
+  setTag(aTag)
+  {
+    let wasSet = false;
+    this._tag = aTag;
+    wasSet = true;
+    return wasSet;
+  }
+  getName()
+  {
+    return this._name;
+  }
+  getPrice()
+  {
+    return this._price;
+  }
+  getWeight()
+  {
+    return this._weight;
+  }
+  getStock()
+  {
+    return this._stock;
+  }
+  /* Code from template attribute_GetDefaulted */
+  getDefaultStock()
+  {
+    return 10;
+  }
+  getNote()
+  {
+    return this._note;
+  }
+  getSold()
+  {
+    return this._sold;
+  }
+  getCode()
+  {
+    return this._code;
+  }
+  getSerial()
+  {
+    return this._serial;
+  }
+  getBatch()
+  {
+    return this._batch;
+  }
+  getRatio()
+  {
+    return this._ratio;
+  }
+  getSealed()
+  {
+    return this._sealed;
+  }
+  getYear()
+  {
+    return this._year;
+  }
+  getOffset()
+  {
+    return this._offset;
+  }
+  getDepth()
+  {
+    return this._depth;
+  }
+  getVisible()
+  {
+    return this._visible;
+  }
+  getLabel()
+  {
+    return this._label;
+  }
+  getTag()
+  {
+    return this._tag;
+  }
+  /* Code from template attribute_IsBoolean */
+  isSold()
+  {
+    return this._sold;
+  }
+  /* Code from template attribute_IsBoolean */
+  isSealed()
+  {
+    return this._sealed;
+  }
+  /* Code from template attribute_IsBoolean */
+  isVisible()
+  {
+    return this._visible;
+  }
+  delete()
+  {
+  }
+}
+
+module.exports = Gadget;

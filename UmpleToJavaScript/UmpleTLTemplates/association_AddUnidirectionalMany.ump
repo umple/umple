@@ -1,0 +1,28 @@
+class UmpleToJavaScript {
+    association_AddUnidirectionalMany <<!<</*association_AddUnidirectionalMany*/>>
+  /* Code from template association_AddUnidirectionalMany */
+  <<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    let wasAdded = false;
+    if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+    {
+      return false;
+    }
+    this._<<=gen.translate("associationMany",av)>>.push(<<=gen.translate("parameterOne",av)>>);
+    wasAdded = true;
+    return wasAdded;
+  }
+  <<=gen.translate("removeMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    let wasRemoved = false;
+    if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+    {
+      if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+      {
+        this._<<=gen.translate("associationMany",av)>>.splice(this._<<=gen.translate("associationMany",av)>>.indexOf(<<=gen.translate("parameterOne",av)>>), 1);
+      }
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }!>>
+}

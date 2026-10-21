@@ -1,0 +1,8 @@
+class Lamp
+{
+  status
+  {
+    Off { flip -> On; }
+    On { flip -> Off; }
+  }
+}

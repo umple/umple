@@ -1,0 +1,153 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 1 "JavaScriptComposition.ump"
+class House
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //House Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._rooms = [];
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  getRoom(index)
+  {
+    let aRoom = this._rooms[index];
+    return aRoom;
+  }
+  getRooms()
+  {
+    let newRooms = this._rooms.slice();
+    return newRooms;
+  }
+  numberOfRooms()
+  {
+    let number = this._rooms.length;
+    return number;
+  }
+  hasRooms()
+  {
+    let has = this._rooms.length > 0;
+    return has;
+  }
+  indexOfRoom(aRoom)
+  {
+    let index = this._rooms.indexOf(aRoom);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfRooms()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOptionalOne */
+  addRoom(aRoom)
+  {
+    let wasAdded = false;
+    if (this._rooms.includes(aRoom))
+    {
+      return false;
+    }
+    let existingHouse = aRoom.getHouse();
+    if (existingHouse == null)
+    {
+      aRoom.setHouse(this);
+    }
+    else if (! (this == existingHouse))
+    {
+      existingHouse.removeRoom(aRoom);
+      this.addRoom(aRoom);
+    }
+    else
+    {
+      this._rooms.push(aRoom);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+  removeRoom(aRoom)
+  {
+    let wasRemoved = false;
+    if (this._rooms.includes(aRoom))
+    {
+      if (this._rooms.includes(aRoom))
+      {
+        this._rooms.splice(this._rooms.indexOf(aRoom), 1);
+      }
+      aRoom.setHouse(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addRoomAt(aRoom, index)
+  {
+    let wasAdded = false;
+    if (this.addRoom(aRoom))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfRooms())
+      {
+        index = this.numberOfRooms() - 1;
+      }
+      if (this._rooms.includes(aRoom))
+      {
+        this._rooms.splice(this._rooms.indexOf(aRoom), 1);
+      }
+      this._rooms.splice(index, 0, aRoom);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMoveRoomAt(aRoom, index)
+  {
+    let wasAdded = false;
+    if (this._rooms.includes(aRoom))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfRooms())
+      {
+        index = this.numberOfRooms() - 1;
+      }
+      if (this._rooms.includes(aRoom))
+      {
+        this._rooms.splice(this._rooms.indexOf(aRoom), 1);
+      }
+      this._rooms.splice(index, 0, aRoom);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addRoomAt(aRoom, index);
+    }
+    return wasAdded;
+  }
+  delete()
+  {
+    while (this._rooms.length > 0)
+    {
+      let aRoom = this._rooms[this._rooms.length - 1];
+      aRoom.delete();
+      if (this._rooms.includes(aRoom))
+      {
+        this._rooms.splice(this._rooms.indexOf(aRoom), 1);
+      }
+    }
+  }
+}
+
+module.exports = House;

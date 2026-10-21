@@ -1,0 +1,20 @@
+class UmpleToJavaScript {
+    association_SetOptionalOneToMany <<!<</*association_SetOptionalOneToMany*/>>
+  /* Code from template association_SetOptionalOneToMany */
+  <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    let wasSet = false;
+    let <<=gen.translate("parameterExisting",av)>> = this._<<=gen.translate("associationOne",av)>>;
+    this._<<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterOne",av)>>;
+    if (<<=gen.translate("parameterExisting",av)>> != null && ! (<<=gen.translate("parameterExisting",av)>> == <<=gen.translate("parameterOne",av)>>))
+    {
+      <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+    }
+    if (<<=gen.translate("parameterOne",av)>> != null)
+    {
+      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }!>>
+}

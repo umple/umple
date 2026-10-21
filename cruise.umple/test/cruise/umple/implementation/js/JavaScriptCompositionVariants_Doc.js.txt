@@ -1,0 +1,160 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 12 "JavaScriptCompositionVariants.ump"
+class Doc
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Doc Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._folders = [];
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  getFolder(index)
+  {
+    let aFolder = this._folders[index];
+    return aFolder;
+  }
+  getFolders()
+  {
+    let newFolders = this._folders.slice();
+    return newFolders;
+  }
+  numberOfFolders()
+  {
+    let number = this._folders.length;
+    return number;
+  }
+  hasFolders()
+  {
+    let has = this._folders.length > 0;
+    return has;
+  }
+  indexOfFolder(aFolder)
+  {
+    let index = this._folders.indexOf(aFolder);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfFolders()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToManyMethod */
+  addFolder(aFolder)
+  {
+    let wasAdded = false;
+    if (this._folders.includes(aFolder))
+    {
+      return false;
+    }
+    this._folders.push(aFolder);
+    if (aFolder.indexOfDoc(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aFolder.addDoc(this);
+      if (! wasAdded)
+      {
+        if (this._folders.includes(aFolder))
+        {
+          this._folders.splice(this._folders.indexOf(aFolder), 1);
+        }
+      }
+    }
+    return wasAdded;
+  }
+  /* Code from template association_RemoveMany */
+  removeFolder(aFolder)
+  {
+    let wasRemoved = false;
+    if (! this._folders.includes(aFolder))
+    {
+      return wasRemoved;
+    }
+    let oldIndex = this._folders.indexOf(aFolder);
+    this._folders.splice(oldIndex, 1);
+    if (aFolder.indexOfDoc(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aFolder.removeDoc(this);
+      if (! wasRemoved)
+      {
+        this._folders.splice(oldIndex, 0, aFolder);
+      }
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addFolderAt(aFolder, index)
+  {
+    let wasAdded = false;
+    if (this.addFolder(aFolder))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfFolders())
+      {
+        index = this.numberOfFolders() - 1;
+      }
+      if (this._folders.includes(aFolder))
+      {
+        this._folders.splice(this._folders.indexOf(aFolder), 1);
+      }
+      this._folders.splice(index, 0, aFolder);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMoveFolderAt(aFolder, index)
+  {
+    let wasAdded = false;
+    if (this._folders.includes(aFolder))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfFolders())
+      {
+        index = this.numberOfFolders() - 1;
+      }
+      if (this._folders.includes(aFolder))
+      {
+        this._folders.splice(this._folders.indexOf(aFolder), 1);
+      }
+      this._folders.splice(index, 0, aFolder);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addFolderAt(aFolder, index);
+    }
+    return wasAdded;
+  }
+  delete()
+  {
+    let copyOfFolders = this._folders.slice();
+    this._folders.splice(0);
+    for (let aFolder of copyOfFolders) {
+      aFolder.removeDoc(this);
+    }
+  }
+}
+
+module.exports = Doc;

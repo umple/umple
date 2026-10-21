@@ -1,0 +1,9 @@
+class Team
+{
+  0..1 -- * Player;
+}
+
+class Player
+{
+  name;
+}

@@ -1,0 +1,29 @@
+class UmpleToJavaScript {
+    constructor_AttributeAssignLazy <<!<</*constructor_AttributeAssignLazy*/>><<#
+  String defaultValue = null;
+
+  if(av.getValue() == null)
+  {
+     if(av.getType().equals("String"))
+     {
+       defaultValue = "null";
+     }
+     else if(av.getType().equals("Double") || av.getType().equals("Integer"))
+     {
+       defaultValue = "0";
+     }
+     else if(av.getType().equals("Boolean"))
+     {
+       defaultValue = "false";
+     }
+   }
+   else
+   {
+       defaultValue = gen.translate("parameterValue",av);
+   }
+
+  // Only assign a value if we could find a default
+  if(defaultValue != null)
+  { #>>
+    this._<<=gen.translate("attributeOne",av)>> = <<=defaultValue>>;<<#} #>>!>>
+}
