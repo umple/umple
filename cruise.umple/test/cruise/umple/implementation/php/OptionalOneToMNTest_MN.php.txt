@@ -54,7 +54,7 @@ class Student
 
   public function equals($compareTo)
   {
-    return $this == $compareTo;
+    return $this === $compareTo;
   }
 
   public function delete()
@@ -63,7 +63,9 @@ class Student
     {
       if ($this->mentor->numberOfStudents() <= 3)
       {
-        $this->mentor->delete();
+        $placeholderMentor = $this->mentor;
+        $this->mentor = null;
+        $placeholderMentor->delete();
       }
       else
       {
