@@ -1,0 +1,10 @@
+// Error 202: trait T uses trait T1, which is not defined anywhere.
+class A
+{
+  isA T;
+}
+
+trait T
+{
+  isA T1;
+}

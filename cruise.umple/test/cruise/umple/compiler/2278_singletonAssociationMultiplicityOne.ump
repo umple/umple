@@ -1,0 +1,11 @@
+// Warning 2: X is a singleton, so an association requiring exactly one Y
+// per X cannot be guaranteed.
+class X
+{
+  singleton;
+  0..1 -- 1 Y;
+}
+
+class Y
+{
+}
