@@ -1150,7 +1150,7 @@ public void braceMismatch_filenameUsesBasename() {
     assertNoWarningsParse("002_defaultRedefineNamespace.ump");
   }
 
-  @Test @Ignore
+  @Test
   public void notUsedNamespace()
   {
     assertHasWarningsParse("002_notUsedNamespace.ump", new Position("002_notUsedNamespace.ump",3,10,33),31);
