@@ -1,0 +1,10 @@
+// Error 25: the sort key names 'nom', which class Y does not declare.
+class X
+{
+  * -- 1 Y sorted {nom};
+}
+
+class Y
+{
+  name;
+}

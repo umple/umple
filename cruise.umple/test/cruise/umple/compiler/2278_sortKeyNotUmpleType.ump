@@ -1,0 +1,11 @@
+// Error 24: a sort key must be of a comparable type; Date is not one of
+// the types the generated comparison supports.
+class X
+{
+  1 -- * Y sorted {endDate};
+}
+
+class Y
+{
+  Date endDate;
+}

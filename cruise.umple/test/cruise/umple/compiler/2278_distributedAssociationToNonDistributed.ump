@@ -1,0 +1,11 @@
+// Warning 7002: a distributable class is associated with a class that is
+// not distributable.
+class Supplier
+{
+  distributable;
+  0..1 -> * Product;
+}
+
+class Product
+{
+}

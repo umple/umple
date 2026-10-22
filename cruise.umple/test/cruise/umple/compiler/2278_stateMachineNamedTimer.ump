@@ -1,0 +1,13 @@
+// Error 75: 'timer' is reserved for internal use and may not be used as
+// the name of a user-defined state machine.
+class X
+{
+  timer
+  {
+    s1
+    {
+      after(1) -> s2;
+    }
+    s2 {}
+  }
+}
