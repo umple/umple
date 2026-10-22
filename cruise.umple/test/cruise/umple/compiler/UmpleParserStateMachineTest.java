@@ -1653,7 +1653,7 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals("cout << \"hello\";", doLevel.getActivity(0).getCodeblock().getCode("Cpp"));
   }
 
-  @Test @Ignore
+  @Test
   public void activeBlock_ActivityPositions()
   {
     // Single active block (no languages specified)
