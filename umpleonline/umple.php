@@ -147,6 +147,10 @@ if (isset($_REQUEST["model"]) && explode("-", $_REQUEST["model"])[0] == "task")
   }
 }
 
+// Temporary models are scratch space that users sometimes share, so search
+// engines should not index them; bookmarks and examples remain indexable
+$noIndex = isset($_REQUEST["model"]) && substr($_REQUEST["model"], 0, 3) == "tmp";
+
 //
 $generateDefault = "#genclass";
 // The following correspond to the options in $generatemenu of compiler_config.php
@@ -190,6 +194,7 @@ $output = $dataHandle->readData('model.ump');
 <html xmlns="https://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <?php if ($noIndex) { ?><meta name="robots" content="noindex" /><?php } ?>
   <script src="scripts/_load.js" type="text/javascript"></script>
   <?php ?>
   <title>UmpleOnline: Generate Java, C++, PHP, Alloy, NuSMV or Ruby code from Umple</title>
