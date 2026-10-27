@@ -615,6 +615,7 @@ if (Page.useGvEntityRelationshipDiagram) {
 
     // ---- Drag/move classes in GV manual mode ----
     theNode.addEventListener("mousedown", function(event) {
+      if (Page.readOnly) return;
       if (Page.selectedItem === "AddAssociation" || Page.selectedItem === "AddGeneralization") return;
       event.preventDefault();
 

@@ -1683,7 +1683,7 @@ Action.deleteState = function(stateCode,className,smName,stateName){
 Action.drawStateMenu = function(event){
   // Debug
   // console.log("Inside drawStateMenu: ")
-  if(!Action.diagramInSync){
+  if(!Action.diagramInSync || Page.readOnly){
     return;
   }
   // Remove old menu, if any
@@ -1779,7 +1779,7 @@ Action.drawStateMenu = function(event){
   document.body.appendChild(menu);
 }
 Action.displayTransitionMenu = function(event) {
-  if (!Action.diagramInSync) {
+  if (!Action.diagramInSync || Page.readOnly) {
       return;
   }
   // Remove old menu, if any
@@ -2992,6 +2992,12 @@ Action.displayMenu = function(event) {
   var rowContent = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color", "Focus on this class", "Do not show this class"];
   var jsInput=chosenClass.replaceAll("\n","&#10").replaceAll("\"","&#$quot");
   var rowFuncs = ["Action.drawInput(\"attri\",\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"rename\",\""+jsInput+"\",\""+elemText+"\")","Action.deleteClass(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"subclass\",\""+jsInput+"\",\""+elemText+"\")","Action.addAssociationGv(\""+jsInput+"\",\""+elemText+"\")","Action.drawInput(\"color\",\""+jsInput+"\",\""+elemText+"\")", "Action.filterOnOneClass(\""+elemText+"\")", "Action.hideClass(\""+elemText+"\")"];
+  // A read-only model keeps only the items that change what is shown, not the model
+  if(Page.readOnly){
+    var editingItems = ["Add Attribute","Rename Class","Delete Class","Add Subclass","Add Association","Change Color"];
+    rowFuncs = rowFuncs.filter((funcItem, i) => !editingItems.includes(rowContent[i]));
+    rowContent = rowContent.filter(menuItem => !editingItems.includes(menuItem));
+  }
 
 
   var positioningCode = jQuery("#umpleLayoutEditorText").val();
@@ -3132,6 +3138,7 @@ Action.isWithinRadarZone=function(positioningCode,target, other, Threshold=100){
 
 
 Action.displayAssociMenu = function(event, associationLink) {
+  if (Page.readOnly) return;
   const regex = /Action\.selectAssociation\('([^']+)'\)/;
 
   // Use the regex to extract the content
@@ -3602,7 +3609,7 @@ Action.modifyRoleName = function(classCode,selectedText, roleName,mult,isStart){
 }
 
 Action.displayAttributeMenu = function(event, attributeName, attributeType, className) {
-  if(!Action.diagramInSync){
+  if(!Action.diagramInSync || Page.readOnly){
     return;
   }
   // Remove old menu, if any
@@ -6579,7 +6586,7 @@ Action.updateUmpleDiagramCallback = function(response)
           var fromState = heading[1] + "^*^" + heading[4] + "^*^" + names[r];
           var addTransition = function(event){
             event.preventDefault();
-            if(!Action.diagramInSync) return;
+            if(!Action.diagramInSync || Page.readOnly) return;
             if(isStateStateTable) {
               // The column is the destination state: same as the Add Transition palette tool
               GvDiagramEdit.commitTransition(fromState, heading[1] + "^*^" + heading[4] + "^*^" + names[c]);
