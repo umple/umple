@@ -1157,7 +1157,8 @@ class PythonGenerator
     {
       return python;
     }
-    python = translateSnippetAt(code, uClass, new ArrayList<MethodParameter>(), isStatic, true, position, slot);
+    boolean toFloat = type != null && "float".equals(pythonType(type));
+    python = translateSnippetAt(code, uClass, new ArrayList<MethodParameter>(), isStatic, true, toFloat, position, slot);
     for (String line : getSnippetImports())
     {
       if (isStatic)
