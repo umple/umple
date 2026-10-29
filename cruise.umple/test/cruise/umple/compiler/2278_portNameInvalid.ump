@@ -1,0 +1,6 @@
+// Error 3601: a port name must be alphanumeric and start with a letter;
+// 'a-b' is not a valid identifier.
+class A
+{
+  in Integer a-b;
+}
