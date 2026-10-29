@@ -1,0 +1,8 @@
+req UC1 useCase {
+  what { place an order }
+}
+
+req UC2 useCase {
+  isA UC1, UC98;
+  include UC99;
+}
