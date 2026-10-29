@@ -1,0 +1,4 @@
+// Warning 201: a trait name should start with a capital letter.
+trait color
+{
+}

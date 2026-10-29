@@ -1,0 +1,6 @@
+// Error 3607: an association was intended, but the destination class name
+// after the asterisk is missing, so the line is read as a port binding.
+class X
+{
+  1 -> *;
+}

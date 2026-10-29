@@ -1,0 +1,6 @@
+// Error 9: a reflexive association may not have a lower bound greater
+// than zero.
+class Person
+{
+  * -- 2 Person parents;
+}

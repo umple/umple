@@ -4,6 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import cruise.umple.implementation.TemplateTest;
 import cruise.umple.util.SampleFileWriter;
@@ -38,6 +39,7 @@ public class GvCdGeneratorTest extends TemplateTest
 
     SampleFileWriter.destroy(pathToInput + "/gv/IncreaseClassSepcd.gv");
     SampleFileWriter.destroy(pathToInput + "/gv/Enumerationcd.gv");
+    SampleFileWriter.destroy(pathToInput + "/gv/AssociationClassescd.gv");
   }
 
   @Test
@@ -73,6 +75,31 @@ public class GvCdGeneratorTest extends TemplateTest
   {
     language = null;
     assertUmplePartialTemplateFor("gv/Associations.ump","gv/Associations.gv.txt");
+  }
+
+  @Test
+  public void display_association_classes()
+  {
+    String code = createUmpleSystem(pathToInput, "gv/AssociationClasses.ump").getCode();
+    assertTrue(code.contains("\"Ticket association\" [shape=point"));
+    assertTrue(code.contains("\"Ticket\" -> \"Ticket association\" [dir=\"none\", style=dashed"));
+    assertTrue(code.contains("\"Ticket association\" -> \"Performance\" [dir=\"none\", headlabel=\"* \""));
+    assertTrue(code.contains("\"Ticket association\" -> \"TicketHolder\" [dir=\"none\", headlabel=\"* \""));
+    assertTrue(code.contains("seatNumber : String"));
+    assertFalse(code.contains("\"Ticket\" -> \"Performance\""));
+    assertFalse(code.contains("\"Ticket\" -> \"TicketHolder\""));
+    assertTrue(code.contains("\"Ticket\" -> \"Receipt\""));
+    assertFalse(code.contains("\"Ticket association\" -> \"Receipt\""));
+    assertTrue(code.contains("\"Assignment association\" -> \"Member\" [dir=\"none\", headlabel=\"1..* mentor\""));
+    assertTrue(code.contains("\"Assignment association\" -> \"Member\" [dir=\"none\", headlabel=\"0..2 mentee\""));
+    assertTrue(code.contains("\"Booking association\" -> \"Performance\" [dir=\"none\", headlabel=\"* shows\""));
+    assertTrue(code.contains("\"Booking association\" -> \"TicketHolder\" [dir=\"none\", headlabel=\"1..* holders\""));
+    assertTrue(code.contains("\"Subscription association\" -> \"Performance\" [dir=\"none\", headlabel=\"* \""));
+    assertTrue(code.contains("\"Subscription association\" -> \"TicketHolder\" [dir=\"none\", headlabel=\"* \""));
+    assertTrue(code.contains("\"Subscription association\" -> \"Season\" [dir=\"none\", headlabel=\"* \""));
+    assertFalse(code.contains("\"Subscription\" -> \"Season\""));
+    assertFalse(code.contains("Action.selectClass(&quot;Ticket association&quot;)"));
+    assertFalse(code.contains("Action.selectAssociation('Ticket association"));
   }
 
   @Test
