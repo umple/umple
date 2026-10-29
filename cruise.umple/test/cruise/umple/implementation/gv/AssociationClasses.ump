@@ -1,0 +1,33 @@
+generate GvClassDiagram;
+
+class Performance {
+  date;
+  title;
+}
+class TicketHolder {
+  name;
+}
+associationClass Ticket {
+  0..1 -- * Receipt;
+  * Performance;
+  * TicketHolder;
+  seatNumber;
+}
+class Receipt {}
+
+class Member {}
+associationClass Assignment {
+  1..* menteeAssignments Member mentor;
+  0..2 mentorAssignments Member mentee;
+}
+
+associationClass Booking {
+  * Performance shows -- 1..* TicketHolder holders;
+}
+
+class Season {}
+associationClass Subscription {
+  * Performance;
+  * TicketHolder;
+  * Season;
+}
