@@ -1,0 +1,19 @@
+// Error 3607: class C declares port p2, but the binding refers to pX,
+// which is not a port of that component.
+class B
+{
+  in Integer p1;
+}
+
+class C
+{
+  out Integer p2;
+}
+
+class Top
+{
+  B b;
+  C c;
+
+  b.p1 -> c.pX;
+}

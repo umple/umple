@@ -1,0 +1,9 @@
+// Error 8: an association class needs two ends, but C declares only one.
+class A {}
+
+class B {}
+
+associationClass C
+{
+  * A;
+}

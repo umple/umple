@@ -1,0 +1,8 @@
+// Error 4500: the FIXML tags are not nested correctly, so 'tag' is not
+// closed by a matching end tag.
+<FIXML>
+  <tag>
+    <othertag>
+      </tag>
+  </othertag>
+ </FIXML>

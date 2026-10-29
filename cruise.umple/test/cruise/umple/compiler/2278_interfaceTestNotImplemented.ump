@@ -1,0 +1,12 @@
+// Warning 6001: interface I declares a test, but class A, which implements
+// I, provides no tests.
+interface I
+{
+  test checkName;
+}
+
+class A
+{
+  isA I;
+  Integer x;
+}
