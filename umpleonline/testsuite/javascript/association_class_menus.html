@@ -1,0 +1,138 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>GraphViz association-class menu regression tests</title>
+<!-- Serve the repository root with python3 -m http.server, then open this page.
+     It exercises the production menu code without requiring PHP or CodeMirror. -->
+<script src="../../scripts/jquery/jquery-3.6.3.min.js"></script>
+<script src="../../scripts/mousetrap.min.js"></script>
+<script src="../../scripts/inlineeditor.js"></script>
+<script src="../../scripts/umple_action.js"></script>
+<script src="../../scripts/umple_action_gvdiagram.js"></script>
+<h1>GraphViz association-class menus</h1>
+<pre id="results"></pre>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="graph0">
+    <g class="node"><title>Ticket</title>
+      <g><a xlink:href='javascript:Action.selectClass("Ticket");' xlink:title="class Ticket">
+        <polygon id="class-box" points="0,0 100,0 100,80 0,80"/>
+        <text id="class-name">Ticket</text>
+      </a></g>
+      <g><a xlink:href="" xlink:title="String seatNumber&#13;">
+        <text id="attribute">seatNumber : String</text>
+      </a></g>
+    </g>
+    <g class="node"><title>Ticket association</title>
+      <g><a xlink:href='javascript:Action.selectClass("Ticket");'>
+        <ellipse id="junction" cx="120" cy="40" rx="2" ry="2"/>
+      </a></g>
+    </g>
+    <g class="edge"><title>Ticket association-&gt;Performance</title>
+      <g><a xlink:href='javascript:Action.selectClass("Ticket");'>
+        <path id="participating-edge" d="M120,40 L160,40"/>
+      </a></g>
+      <g><a xlink:href='javascript:Action.selectClass("Ticket");'>
+        <text id="multiplicity">*</text>
+      </a></g>
+    </g>
+    <g class="edge"><title>Ticket-&gt;Ticket association</title>
+      <g><a href='javascript:Action.selectClass("Ticket");'>
+        <path id="attachment" d="M100,40 L120,40"/>
+      </a></g>
+    </g>
+    <g class="node"><title>Performance</title>
+      <g><a xlink:href='javascript:Action.selectClass("Performance");'>
+        <text id="ordinary-class">Performance</text>
+      </a></g>
+      <g><a xlink:href="" xlink:title="String date&#13;">
+        <text id="ordinary-attribute">date : String</text>
+      </a></g>
+    </g>
+    <g class="edge"><title>Performance-&gt;Receipt</title>
+      <g><a xlink:href="javascript:Action.selectAssociation('Performance,Receipt,* ,1 ')">
+        <text id="ordinary-association">*</text>
+      </a></g>
+    </g>
+  </g>
+</svg>
+<script>
+const source = `class Performance { date; }
+class TicketHolder { name; }
+associationClass Ticket {
+  * Performance;
+  * TicketHolder;
+  seatNumber;
+}`;
+window.Page = {
+  useGvClassDiagram: true,
+  useGvEntityRelationshipDiagram: false,
+  filterWordsOutput: "",
+  isGvManual: () => false,
+  codeMirrorEditor6: {state: {doc: {toString: () => source}}}
+};
+Action.neighbors = {Performance: [], TicketHolder: []}; // Ticket may not have a JSON neighbor entry.
+GvDiagramEdit.bindClassDiagram(0, 0);
+window.testResults = [];
+function check(name, callback) {
+  try {
+    callback();
+    testResults.push({name, passed: true});
+  } catch (error) {
+    testResults.push({name, passed: false, error: error.message});
+  } finally {
+    Action.removeContextMenu();
+  }
+}
+function assert(condition, message) {
+  if (!condition) throw new Error(message);
+}
+function openMenu(id, type) {
+  document.getElementById(id).dispatchEvent(new MouseEvent(type, {
+    bubbles: true, cancelable: true, clientX: 20, clientY: 20
+  }));
+  const menu = document.querySelector('customContextMenu');
+  assert(menu, 'No context menu for ' + id);
+  return menu;
+}
+for (const type of ['dblclick', 'contextmenu']) {
+  for (const id of ['class-name', 'class-box', 'junction', 'multiplicity', 'participating-edge', 'attachment', 'ordinary-class']) {
+    check(type + ' ' + id, () => {
+      const menu = openMenu(id, type);
+      for (const option of ['Add Attribute', 'Rename Class', 'Delete Class']) {
+        assert(menu.textContent.includes(option), 'Missing ' + option);
+      }
+      const owner = id === 'ordinary-class' ? 'Performance' : 'Ticket';
+      assert(menu.firstElementChild.getAttribute('onclick').includes('"' + owner + '"'), 'Incorrect model class');
+      assert(!menu.innerHTML.includes('Ticket association'), 'Synthetic junction name leaked into an action');
+    });
+  }
+  for (const [id, name, owner] of [['attribute', 'seatNumber', 'Ticket'], ['ordinary-attribute', 'date', 'Performance']]) {
+    check(type + ' ' + id, () => {
+      const menu = openMenu(id, type);
+      for (const option of ['Rename Attribute', 'Change Type', 'Delete Attribute']) {
+        assert(menu.textContent.includes(option), 'Missing ' + option);
+      }
+      assert(menu.textContent.includes('Attribute: ' + name + ' Type: String'), 'Incorrect attribute');
+      assert(menu.children[1].getAttribute('onclick').includes('"' + owner + '"'), 'Incorrect owner');
+      assert(!menu.textContent.includes('Rename Class'), 'Attribute event bubbled to class menu');
+    });
+  }
+  check(type + ' ordinary association', () => {
+    const original = Action.displayAssociMenu;
+    let received;
+    Action.displayAssociMenu = (event, link) => { received = link; };
+    try {
+      document.getElementById('ordinary-association').dispatchEvent(new MouseEvent(type, {bubbles: true, cancelable: true}));
+      assert(received && received.includes("Performance,Receipt"), 'Ordinary association menu was not called');
+    } finally {
+      Action.displayAssociMenu = original;
+    }
+  });
+}
+check('declaration matching', () => {
+  assert(Action.getGvClassCode('Ticket').startsWith('associationClass Ticket'), 'Association class not found');
+  assert(!Action.getGvClassCode('Tick'), 'Class name matched only a prefix');
+});
+document.getElementById('results').textContent = testResults.map(r =>
+  (r.passed ? 'PASS ' : 'FAIL ') + r.name + (r.error ? ': ' + r.error : '')).join('\n');
+document.title = testResults.every(r => r.passed) ? 'PASS: association-class menus' : 'FAIL: association-class menus';
+</script>

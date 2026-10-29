@@ -1,0 +1,6 @@
+// Warning 1008: the method declaration has an unclosed parameter list, so
+// it cannot be parsed and is kept as extra code.
+class X
+{
+  void m(  {}
+}
