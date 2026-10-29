@@ -85,6 +85,8 @@
       <exclude name="WE1xxIdentifierInvalid6.ump" />
       <exclude name="WE1xxIdentifierInvalid7.ump" />
       <exclude name="W142TypeIsAccessSpecifierAmbiguous.ump" />
+      <!-- The following fails to compile due to missing symbols such as setRemoteObject -->
+      <exclude name="W7002DistributedAssociationToNon-DistributedClass2.ump" />
       <!-- This fails to compile because they are incomplete examples of umple -->
       <exclude name="UseStatements1.ump" />
       <!-- Temporary exclusion .. challenges compiling in ant only to fix -->
