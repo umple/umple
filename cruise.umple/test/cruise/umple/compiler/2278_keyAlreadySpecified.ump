@@ -1,0 +1,9 @@
+// Warning 7: a class may only declare one key; the second key statement
+// is reported.
+class X
+{
+  name;
+  id;
+  key { name }
+  key { id }
+}

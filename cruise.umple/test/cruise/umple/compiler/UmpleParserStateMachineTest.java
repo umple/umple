@@ -418,9 +418,14 @@ public class UmpleParserStateMachineTest
   public void invalidHistoryStateTransition()
   {
     assertFailedParse("239_deepHistory_nonExistantState.ump", new Position("239_deepHistory_nonExistantState.ump", 2, 2, 11), 64);
-    // assertFailedParse("239_deepHistory_noSubstates.ump", new
-    // Position("239_deepHistory_nonExistantState.ump", 2,2, 11), 65);
     assertFailedParse("239_deepHistory_declaredHistoryState.ump", new Position("239_deepHistory_declaredHistoryState.ump", 24, 4, 259), 63);
+  }
+
+  //Issue 2278
+  @Test
+  public void historyStateWithoutSubstates()
+  {
+    assertFailedParse("239_deepHistory_noSubstates.ump", new Position("239_deepHistory_noSubstates.ump", 2, 2, 11), 65);
   }
 
   @Test
@@ -1653,7 +1658,7 @@ public class UmpleParserStateMachineTest
     Assert.assertEquals("cout << \"hello\";", doLevel.getActivity(0).getCodeblock().getCode("Cpp"));
   }
 
-  @Test @Ignore
+  @Test
   public void activeBlock_ActivityPositions()
   {
     // Single active block (no languages specified)

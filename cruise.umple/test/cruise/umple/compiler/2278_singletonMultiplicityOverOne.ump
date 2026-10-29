@@ -1,0 +1,11 @@
+// Warning 10: X is a singleton, so an association end referring to it
+// cannot have a multiplicity greater than one.
+class X
+{
+  singleton;
+}
+
+class Y
+{
+  0..1 -- * X;
+}
