@@ -1,0 +1,14 @@
+// Error 3603: the 'from' side of the port binding names b, which is an
+// Integer rather than a component class, so the component cannot be resolved.
+class C
+{
+  out Integer p2;
+}
+
+class Top
+{
+  Integer b;
+  C c;
+
+  b.p1 -> c.p2;
+}

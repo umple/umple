@@ -117,6 +117,17 @@ class GvClassDiagramGenerator
 
     // Terminate the class as a whole
     code.append("];\n");
+
+    if (uClass instanceof AssociationClass)
+    {
+      // The dot joins the participating classes; the dashed line attaches their association class.
+      // A space in the ID keeps it distinct from every legal Umple class name.
+      String junction = className + " association";
+      String action = "javascript:Action.selectClass(&quot;" + className + "&quot;);";
+      code.append("  \"" + junction + "\" [shape=point, width=0.05, label=\"\", href=\"" + action + "\"];\n");
+      code.append("  \"" + className + "\" -> \"" + junction
+        + "\" [dir=\"none\", style=dashed, URL=\"" + action + "\"];\n");
+    }
 	}
 
   // Create each attribute for each class - called by classCreation
@@ -254,6 +265,17 @@ class GvClassDiagramGenerator
     String leftClass= leftEnd.getClassName();
     // Only output them when visiting one class
     if(leftClass.equals(className)) {
+      if (uClass instanceof AssociationClass && uAssoc.getIsAssociationClassEnd())
+      {
+        // Parsing expands each declared end into a class-to-participant association,
+        // moving its declared multiplicity to the association-class end.
+        String endpointLabel = leftEnd.toSimpleString() + " " + rightEnd.getDisplayRoleName();
+        associations.append("  \"" + className + " association\" -> \"" + rightEnd.getClassName()
+          + "\" [" + retArrows(uAssoc)[0] + ", headlabel=\"" + endpointLabel
+          + "\", tooltip=\"associationClass " + className
+          + "\", URL=\"javascript:Action.selectClass(&quot;" + className + "&quot;);\" ];\n");
+        return;
+      }
       String[] arrows = retArrows(uAssoc);
       String leftMult= leftEnd.toSimpleString();      
       String rightMult= rightEnd.toSimpleString();

@@ -1,0 +1,6 @@
+// Warning 170: a method named after its class is a hand-written
+// constructor, which Umple discourages.
+class A
+{
+  A() { }
+}

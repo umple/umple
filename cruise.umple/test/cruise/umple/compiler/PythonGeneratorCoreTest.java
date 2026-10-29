@@ -197,6 +197,20 @@ public class PythonGeneratorCoreTest
     Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("namespace app.sys;\nclass Main { }\n")));
   }
 
+  //Issue 2278
+  // A Python package name is an identifier, so a namespace segment that is a number,
+  // is not ASCII, or is a Python keyword cannot be imported
+  @Test
+  public void aNamespaceThatIsNotAPythonPackageNameIsReported() throws Exception
+  {
+    UmpleModel model = generate("namespace releases.2024;\nclass Release { name; }\n");
+    Assert.assertEquals(Arrays.asList(9217), errorCodes(model));
+    Assert.assertTrue(messageOf(model, 9217), messageOf(model, 9217).startsWith(
+      "The namespace releases.2024 of class Release is not a valid Python package name"));
+    Assert.assertEquals(Arrays.asList(9217), errorCodes(generate("namespace import;\nclass A { }\n")));
+    Assert.assertEquals(new ArrayList<Integer>(), errorCodes(generate("namespace releases.y2024;\nclass Release { name; }\n")));
+  }
+
   // Python matches the case of module names even where file names ignore case, as on Windows and macOS,
   // and imports a module rather than a namespace of the same name
   @Test
