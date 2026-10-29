@@ -106,6 +106,7 @@ if (isset($_REQUEST["diagramtype"])) {
     $diagramType !="GvClass" &&
     $diagramType !="structureDiagram" &&
     $diagramType !="GvFeature" &&
+    $diagramType !="GvUseCase" &&
     $diagramType !="GvClassTrait" &&
     $diagramType != "GvEntityRelationshipDiagram" &&
     $diagramType != "instanceDiagram" &&
@@ -712,6 +713,7 @@ $output = $dataHandle->readData('model.ump');
   <optgroup label="Special Views">
     <option value="std" id="menu-set-std">Structure Diagram</option>  
     <option value="gfd" id="menu-set-gfd">Feature Diagram</option>
+    <option value="gucd" id="menu-set-gucd">Use Case Diagram</option>
   </optgroup> 
 
   <optgroup label="Instance Views">
@@ -1238,6 +1240,10 @@ $output = $dataHandle->readData('model.ump');
 	    <li id="ttShowGvFeatureDiagram"> 
               <input id="buttonShowGvFeatureDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVFeatureDiagram"/> 
               <a id="labelShowGvFeatureDiagram" class="buttonExtend">GraphViz Feature</a> 
+            </li>
+            <li id="ttShowGvUseCaseDiagram"> 
+              <input id="buttonShowGvUseCaseDiagram" class="radio" type="radio"  name="buttonCanvasType" value="buttonCanvasTypeGVUseCaseDiagram"/> 
+              <a id="labelShowGvUseCaseDiagram" class="buttonExtend">GraphViz Use Case</a> 
             </li>
             <li id="ttShowStructureDiagram"> 
               <input id="buttonShowStructureDiagram" class="radio" type="radio" name="buttonCanvasType" value="buttonCanvasTypeStructureDiagram"/> 
