@@ -5249,6 +5249,7 @@ private Boolean checkIsDistributed(UmpleInterface uInterface)
     }  
   
     Association association = createAssociation(navigation,firstEnd,secondEnd);
+    association.setIsAssociationClassEnd(isAssociationClass && !isInlineAssociation);
     if (isAssociationClass)
     {
       AssociationClass assocClass;

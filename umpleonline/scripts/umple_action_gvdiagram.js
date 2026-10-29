@@ -697,17 +697,22 @@ if (Page.useGvEntityRelationshipDiagram) {
   for (let i = 0; i < associationElems.length; i++) {
     const associationAnchors = associationElems[i].getElementsByTagName("a");
     for (let j = 0; j < associationAnchors.length; j++) {
-      const associationLink = associationAnchors[j].getAttribute("xlink:href");
+      const associationLink = associationAnchors[j].getAttribute("xlink:href") ||
+        associationAnchors[j].getAttribute("href") || "";
+      const className = Action.getGvClassNameFromLink(associationLink);
+      if (!className && !associationLink.includes("Action.selectAssociation(")) continue;
 
-      associationAnchors[j].addEventListener("dblclick", function(event) {
+      const showMenu = function(event) {
         event.preventDefault();
-        Action.displayAssociMenu(event, associationLink);
-      });
-
-      associationAnchors[j].addEventListener("contextmenu", function(event) {
-        event.preventDefault();
-        Action.displayAssociMenu(event, associationLink);
-      });
+        event.stopPropagation();
+        if (className) {
+          Action.displayMenu(event);
+        } else {
+          Action.displayAssociMenu(event, associationLink);
+        }
+      };
+      associationAnchors[j].addEventListener("dblclick", showMenu);
+      associationAnchors[j].addEventListener("contextmenu", showMenu);
     }
   }
 };

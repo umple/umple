@@ -2955,15 +2955,31 @@ Action.getGvClassName = function(event) {
   return Action.getGvClassNameFromNode(event.target);
 }
 
-// Get the class name from a selection event
-Action.getGvClassNameFromNode = function(elemText) {
-  //iterate up to top of class table
-  while(elemText.parentElement.id!="graph0"){
-    elemText=elemText.parentNode;
+// Resolve the model class from the generated link, including association-class
+// junctions and edges whose SVG titles are not class names.
+Action.getGvClassNameFromLink = function(link) {
+  const match = (link || "").match(/Action\.selectClass\((["'])([^"']+)\1\)/);
+  return match ? match[2] : null;
+}
+
+Action.getGvClassNameFromNode = function(element) {
+  const group = element.closest(".node, .edge");
+  if (!group) return "";
+  const anchors = group.getElementsByTagName("a");
+  for (let i = 0; i < anchors.length; i++) {
+    const className = Action.getGvClassNameFromLink(
+      anchors[i].getAttribute("xlink:href") || anchors[i].getAttribute("href"));
+    if (className) return className;
   }
-  //unstable - grabs class name
-  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
-  return(elemText);
+  const title = group.querySelector("title");
+  return title ? title.textContent : "";
+}
+
+Action.getGvClassCode = function(className) {
+  return Action.splitStates(Page.codeMirrorEditor6.state.doc.toString()).find(function(block) {
+    const declaration = block.match(/^(?:class|associationClass)\s+([^\s{]+)/);
+    return declaration && declaration[1] === className;
+  });
 }
 
 //Action.displayMenu() is triggered by contextmenu event on Graphviz Class "node" elements
@@ -2977,14 +2993,7 @@ Action.displayMenu = function(event) {
   Action.removeContextMenu();
   var elemText=Action.getGvClassName(event);
 
- var orig=Page.codeMirrorEditor6.state.doc.toString();
-
- var chosenClass=Action.splitStates(orig);
-  for(let i=0;i<chosenClass.length;i++){
-    if(chosenClass[i].startsWith("class "+elemText+"{")||chosenClass[i].startsWith("class "+elemText+" ")||chosenClass[i].startsWith("class "+elemText+"\n")){
-      chosenClass=chosenClass[i];
-    }
-  }
+  var chosenClass = Action.getGvClassCode(elemText);
   if(typeof chosenClass != 'string'){
     return;
   }
@@ -3012,7 +3021,7 @@ Action.displayMenu = function(event) {
   // console.log('chosen', Action.neighbors[elemText]);
   // console.log('all', Action.neighbors)
   // console.log('current', currentClasses);
-  var selectedClassNeighbors= Action.neighbors[elemText];
+  var selectedClassNeighbors= Action.neighbors[elemText] || [];
   showNeighbors=selectedClassNeighbors.filter(cls=>!currentClasses.includes(cls));
   // console.log(showNeighbors);
   if(showNeighbors.length>0){
@@ -3614,31 +3623,10 @@ Action.displayAttributeMenu = function(event, attributeName, attributeType, clas
   }
   // Remove old menu, if any
   Action.removeContextMenu();
-  var elemText;
   attributeName = attributeName.trim();
-
-  if (className) {
-    // ERD attributes are separate Graphiviz nodes, so the owing class
-    // is supplied from the selectAttribute link
-    elemText = className;
-  }
-  else {
-    // Gv class Diadram: determine the class from the containing node
-    elemText = event.target;
-  //iterate up to top of class table
-    while(elemText.parentElement.id!="graph0"){
-      elemText=elemText.parentNode;
-  }
-  //unstable - grabs class name
-  elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
-}
-  var orig=Page.codeMirrorEditor6.state.doc.toString();
-  var chosenClass=Action.splitStates(orig);
-  for(let i=0;i<chosenClass.length;i++){
-    if(chosenClass[i].startsWith("class "+elemText+"{")||chosenClass[i].startsWith("class "+elemText+" ")||chosenClass[i].startsWith("class "+elemText+"\n")){
-      chosenClass=chosenClass[i];
-    }
-  }
+  // ERD supplies the owner explicitly; class diagrams use the enclosing SVG node.
+  var elemText = className || Action.getGvClassName(event);
+  var chosenClass = Action.getGvClassCode(elemText);
   if(typeof chosenClass != 'string'){
     return;
   }
