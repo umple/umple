@@ -917,7 +917,7 @@ class PlaygroundMain
       
       returnCommandResult("-generate "+
         "<Java|Cpp|Ruby|Python|Ecore|Papyrus|TextUml|GvStateDiagram|"+
-        "GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|GvFeatureDiagram|"+
+        "GvClassDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|GvFeatureDiagram|GvUseCaseDiagram|"+
         "Alloy|NuSMV|NuSMVOptimizer|Violet|Umlet> <filename>\n", client); // Compile filename and generate output
       returnCommandResult("<action> <deltaCode> <filename>\n", client);  
       return;
@@ -1114,7 +1114,7 @@ class PlaygroundMain
     String errorFileName = null;
 
     // Valid values include Java, Cpp, PhP, Ruby, Json, Yuml, Xmi, Ecore, Papyrus, TextUml,
-    // GvStateDiagram, GvStructureDiagram, GvClassDiagram,GvClassTraitDiagram, GvEntityRelationshipDiagram, Alloy, NuSMV, NuSMVOptimizer, GvFeatureDiagram
+    // GvStateDiagram, GvStructureDiagram, GvClassDiagram,GvClassTraitDiagram, GvEntityRelationshipDiagram, Alloy, NuSMV, NuSMVOptimizer, GvFeatureDiagram, GvUseCaseDiagram
     if ("-generate".equals(args[0]) && args.length >= 2)
     {
       String filename = args[2];

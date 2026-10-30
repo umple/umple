@@ -1,0 +1,8 @@
+digraph "UseCaseFreeText" {
+  rankdir="LR"
+  node [shape=ellipse];
+  edge [fontsize=10];
+
+  // Use case: UC9
+  "UC9" [label="UC9"];
+}
