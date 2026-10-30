@@ -1,0 +1,4 @@
+// An ears requirement can also be written as free text
+req EARS7 ears {
+  When the power fails, the valve controller shall close the valve.
+}
