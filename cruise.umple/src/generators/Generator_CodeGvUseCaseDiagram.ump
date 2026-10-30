@@ -1,0 +1,142 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+This file generates .gv files for use by Graphviz, representing the UML use case diagram
+of the useCase requirements in the Umple model. To generate for this format, use
+  generate GvUseCaseDiagram;
+in your umple file, or the command line option
+  -g GvUseCaseDiagram
+
+*/
+
+namespace cruise.umple.compiler;
+
+class GvUseCaseDiagramGenerator
+{
+  isA CodeGeneratorWithSubptions;
+  depend java.io.*;
+  depend java.util.*;
+  depend cruise.umple.util.*;
+  depend cruise.umple.compiler.exceptions.*;
+
+  UmpleModel model = null;
+  String output = "";
+
+  // Draws each useCase requirement as an ellipse, its who as an actor associated with it,
+  // include as a dashed arrow labelled «include» and isA as a generalization arrow
+  public void generate()
+  {
+    List<Requirement> useCases = new ArrayList<Requirement>();
+    for (Requirement req : getModel().getAllRequirements().values())
+    {
+      if ("useCase".equals(req.getLanguage()))
+      {
+        useCases.add(req);
+      }
+    }
+    Collections.sort(useCases, new Comparator<Requirement>() {
+      public int compare(Requirement a, Requirement b)
+      {
+        return a.getIdentifier().compareTo(b.getIdentifier());
+      }
+    });
+
+    StringBuilder code = new StringBuilder();
+    code.append("digraph \"" + getModel().getUmpleFile().getSimpleFileName() + "\" {\n");
+    code.append("  rankdir=\"LR\"\n");
+    code.append("  node [shape=ellipse];\n");
+    code.append("  edge [fontsize=10];\n");
+
+    if (useCases.isEmpty())
+    {
+      code.append("\n  message [shape=plaintext, label=\"No useCase requirement found in the Umple file.\"];\n");
+    }
+
+    StringBuilder actors = new StringBuilder();
+    StringBuilder associations = new StringBuilder();
+    StringBuilder relationships = new StringBuilder();
+    Set<String> actorNames = new LinkedHashSet<String>();
+    for (Requirement useCase : useCases)
+    {
+      String id = escape(useCase.getIdentifier());
+      String label = id;
+      if (hasText(useCase.getWhat()))
+      {
+        label += "\\n" + escape(useCase.getWhat().trim());
+      }
+      code.append("\n  // Use case: " + useCase.getIdentifier() + "\n");
+      code.append("  \"" + id + "\" [label=\"" + label + "\"];\n");
+
+      if (hasText(useCase.getWho()))
+      {
+        String actor = escape(useCase.getWho().trim());
+        if (actorNames.add(actor))
+        {
+          actors.append("    \"actor " + actor + "\" [shape=box, label=\"&laquo;actor&raquo;\\n" + actor + "\"];\n");
+        }
+        associations.append("  \"actor " + actor + "\" -> \"" + id + "\" [dir=none];\n");
+      }
+      for (String included : useCase.getIncludedUseCases())
+      {
+        relationships.append("  \"" + id + "\" -> \"" + escape(included)
+          + "\" [style=dashed, arrowhead=vee, label=\"&laquo;include&raquo;\"];\n");
+      }
+      for (String parent : useCase.getParentUseCases())
+      {
+        relationships.append("  \"" + id + "\" -> \"" + escape(parent) + "\" [arrowhead=empty];\n");
+      }
+    }
+
+    if (actors.length() > 0)
+    {
+      // Actors are kept together on the left of the diagram
+      code.append("\n  // Actors\n  {\n    rank=min;\n").append(actors).append("  }\n");
+      code.append("\n  // Associations between actors and use cases\n").append(associations);
+    }
+    if (relationships.length() > 0)
+    {
+      code.append("\n  // Include and generalization relationships\n").append(relationships);
+    }
+    code.append("}\n");
+
+    getModel().setCode(code.toString());
+    writeModel();
+  }
+
+  private static boolean hasText(String text)
+  {
+    return text != null && !text.trim().isEmpty();
+  }
+
+  // Escapes text for use inside a quoted Graphviz string
+  private static String escape(String text)
+  {
+    return text.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ");
+  }
+
+  // Output the graphviz file to a file with the .gv suffix
+  private void writeModel()
+  {
+    try
+    {
+      String path = StringFormatter.addPathOrAbsolute(
+          getModel().getUmpleFile().getPath(),
+          getOutput());
+      File file = new File(path);
+      file.mkdirs();
+      String modelFilename = path + File.separator + getModel().getUmpleFile().getSimpleFileName() + "ucd.gv";
+      BufferedWriter bw = new BufferedWriter(new FileWriter(modelFilename));
+      bw.write(getModel().getCode());
+      bw.flush();
+      bw.close();
+    }
+    catch (Exception e)
+    {
+      throw new UmpleCompilerException("There was a problem with generating GraphViz use case diagram code." + e, e);
+    }
+  }
+}

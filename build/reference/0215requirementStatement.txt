@@ -52,6 +52,8 @@ structured with any combination of the sub-blocks below, written one per line an
       named use cases, as with the UML include relationship.</li>
 </ul>
 
+<p>Warning 401 is issued when <code>include</code> or <code>isA</code> names a requirement that is not defined.</p>
+
 <p>A step may carry a condition in square brackets, written like a state machine guard. The step applies only when the condition
 holds, so several steps can share one identifier to describe alternative outcomes of the same point in the scenario:</p>
 

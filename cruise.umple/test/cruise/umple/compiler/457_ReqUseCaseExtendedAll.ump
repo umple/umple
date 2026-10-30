@@ -9,3 +9,15 @@ req UC10 useCase {
   systemResponse 1 [address still valid] { show the order summary }
   userStep 2 { pay }
 }
+
+req UC1 useCase {
+  what { check out }
+}
+
+req UC2 useCase {
+  what { sign in }
+}
+
+req UC3 useCase {
+  what { pay }
+}

@@ -3,3 +3,11 @@ req UC7 useCase {
   include UC1, UC2;
   userStep 1 { start checkout }
 }
+
+req UC1 useCase {
+  what { sign in }
+}
+
+req UC2 useCase {
+  what { enter a delivery address }
+}
