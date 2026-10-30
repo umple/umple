@@ -5,7 +5,7 @@ noreferences
 
 @@description Examples of requirements documents in Umple that can be used to generate code
 
-<p>This page provides examples of Umple requirements using plain-text, structured userStory and structured useCase styles. They show possible ways of specifying requirements. They can be used to guide you before manually creating a model, or to use UmpleOnline AI capabilities to generate actual Umple code.</p>
+<p>This page provides examples of Umple requirements using plain-text, structured userStory, structured useCase and ears styles. They show possible ways of specifying requirements. They can be used to guide you before manually creating a model, or to use UmpleOnline AI capabilities to generate actual Umple code.</p>
 <br />
 
 @@example  @@caption Hotel booking requirements for creating class diagrams or state machines @@endcaption
@@ -54,6 +54,18 @@ noreferences
 
 @@example @@caption Use cases related by isA and include, with conditional steps @@endcaption
 @@source manualexamples/ReqUseCaseExtended.ump
+@@endexample
+
+@@example @@caption An ears requirement for each EARS pattern, using where, while, when, if, system and shall @@endcaption
+@@source manualexamples/ReqEarsPatterns.ump
+@@endexample
+
+@@example @@caption Plain-text ears requirement example @@endcaption
+@@source manualexamples/ReqEarsPlain.ump
+@@endexample
+
+@@example @@caption Ears requirements implemented by a state machine, with an optional feature in a mixset @@endcaption
+@@source manualexamples/ReqEarsModel.ump
 @@endexample
 
 @@example @@caption Quality requirement with named quality classes @@endcaption
