@@ -503,7 +503,6 @@ public class PythonGeneratorCoreTest
     Assert.assertTrue(tracebackOf("Runner().getBroken()"), tracebackOf("Runner().getBroken()").contains("[model.ump:12]"));
   }
 
-  //Issue 2576
   // The generated code gives the values Java gives: null text for a None String or Date, and a
   // float for a Double initialized from an integer expression
   @Test

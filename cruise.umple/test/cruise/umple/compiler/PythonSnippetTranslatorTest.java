@@ -120,7 +120,6 @@ public class PythonSnippetTranslatorTest
     return gen.translateSnippetAt(code, model.getUmpleClass(className), null, true, true, null, "the constant X");
   }
 
-  //Issue 2576
   // A String or Date that may be None prints as null in a concatenation, as in Java; a literal or
   // the result of another concatenation cannot be None and is left alone
   @Test
@@ -132,7 +131,6 @@ public class PythonSnippetTranslatorTest
     Assert.assertEquals("\"born \" + (\"null\" if self._born is None else str(self._born))", expression("Person", "\"born \" + born"));
   }
 
-  //Issue 2576
   // An integer expression stored in a Double becomes a float, as Java's assignment conversion does
   @Test
   public void integerExpressionStoredInAFloatIsConverted()
