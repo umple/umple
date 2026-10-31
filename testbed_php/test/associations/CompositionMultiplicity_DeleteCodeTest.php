@@ -669,6 +669,87 @@ class CompositionMultiplicity_DeleteCodeTests extends UnitTestCase
     $this->assertEqual(null, $z->getY_0_1__0_1());
   }
 
+  // A 0..1 whole that needs at least one part, declared in the whole (A) and in the part (B):
+  // a part that takes its whole down with it must let go of the whole first
+  private $wholeToPart = array('CompWholeA' => 'CompPartA', 'CompWholeB' => 'CompPartB');
+
+  public function test__0OneTo1Star_DeleteWhole()
+  {
+    foreach ($this->wholeToPart as $wholeClass => $partClass)
+    {
+      $part1 = new $partClass(1);
+      $part2 = new $partClass(2);
+      $whole = new $wholeClass(array($part1, $part2));
+      $this->assertTrue($whole === $part1->getWhole());
+
+      $whole->delete();
+
+      $this->assertEqual(0, $whole->numberOfParts());
+      $this->assertEqual(null, $part1->getWhole());
+      $this->assertEqual(null, $part2->getWhole());
+    }
+  }
+
+  public function test__0OneTo1Star_DeleteLastPart()
+  {
+    foreach ($this->wholeToPart as $wholeClass => $partClass)
+    {
+      $part = new $partClass(1);
+      $whole = new $wholeClass(array($part));
+      $this->assertTrue($whole === $part->getWhole());
+
+      $part->delete();
+
+      $this->assertEqual(0, $whole->numberOfParts());
+      $this->assertEqual(null, $part->getWhole());
+    }
+  }
+
+  public function test__0OneTo1Star_DeletePartAboveMinimum()
+  {
+    foreach ($this->wholeToPart as $wholeClass => $partClass)
+    {
+      $part1 = new $partClass(1);
+      $part2 = new $partClass(2);
+      $whole = new $wholeClass(array($part1, $part2));
+      $this->assertTrue($whole === $part1->getWhole());
+
+      $part1->delete();
+
+      $this->assertEqual(1, $whole->numberOfParts());
+      $this->assertTrue($part2 === $whole->getPart_index(0));
+      $this->assertTrue($whole === $part2->getWhole());
+      $this->assertEqual(null, $part1->getWhole());
+    }
+  }
+
+  public function test__0OneTo0One_ReflexiveCycle()
+  {
+    $a = new CompNode("a");
+    $b = new CompNode("b");
+    $a->setChild($b);
+    $b->setChild($a);
+
+    $a->delete();
+
+    $this->assertEqual(null, $a->getChild());
+    $this->assertEqual(null, $b->getChild());
+    $this->assertEqual(null, $a->getParent());
+    $this->assertEqual(null, $b->getParent());
+  }
+
+  public function test__0OneTo0One_ReflexiveChain()
+  {
+    $a = new CompNode("a");
+    $b = new CompNode("b");
+    $a->setChild($b);
+
+    $a->delete();
+
+    $this->assertEqual(null, $a->getChild());
+    $this->assertEqual(null, $b->getParent());
+  }
+
 
 }
 

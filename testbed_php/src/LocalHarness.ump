@@ -25,3 +25,181 @@ class DoorF
 {
   Time d4 = date("12:53:54");
 }
+
+// Value-equal objects that differ only through associations leading back to each other
+class EqCourse
+{
+  code;
+  1 -- 0..1 EqInstructor instructor;
+}
+
+class EqDepartment
+{
+  1 -- * EqCourse courses;
+  1 -- * EqInstructor instructors;
+}
+
+class EqInstructor
+{
+  name;
+}
+
+class EqMentor
+{
+  name;
+  1 -- * EqStudent students;
+}
+
+class EqStudent
+{
+  name;
+}
+
+// Value-equal objects in each kind of association whose generated code compares linked objects
+class EqOwner
+{
+  name;
+  0..1 owner -- 0..1 EqPet pet;
+}
+
+class EqPet
+{
+  name;
+}
+
+class EqProject
+{
+  name;
+  * projects -- 0..3 EqWorker workers;
+  * projects -- 0..3 EqSkill skills;
+}
+
+class EqWorker
+{
+  name;
+}
+
+class EqSkill
+{
+  name;
+  Integer level;
+  key { name }
+}
+
+class EqBag
+{
+  * -> 0..3 EqSkill skills;
+  key { skills }
+}
+
+class EqGarage
+{
+  1 garage -- * EqCar cars;
+}
+
+class EqPerson
+{
+  name;
+}
+
+class EqCar
+{
+  plate;
+  * cars -- 1 EqPerson owner;
+  key { plate, owner }
+}
+
+class EqShelf
+{
+  0..1 shelf -- * EqBook books;
+  key { books }
+}
+
+class EqBook
+{
+  title;
+}
+
+// Set-all methods that write the other object's back-pointer through the private setter
+class EqClub
+{
+  name;
+  0..1 club -- 1..* EqMember members;
+}
+
+class EqMember
+{
+  name;
+}
+
+class EqTeam
+{
+  name;
+  0..1 team -- 2 EqPlayer players;
+}
+
+class EqPlayer
+{
+  name;
+}
+
+// A composition whose 0..1 whole needs at least one part, declared in the whole and in the part
+class CompWholeA
+{
+  0..1 whole <@>- 1..* CompPartA parts;
+}
+
+class CompPartA
+{
+  Integer num;
+}
+
+class CompPartB
+{
+  Integer num;
+  1..* parts -<@> 0..1 CompWholeB whole;
+}
+
+class CompWholeB
+{
+}
+
+// Owners with equal keys but different other values: a link belongs to one instance
+class EqKeyedOwner
+{
+  id;
+  note;
+  key { id }
+  1 owner -- * EqKeyedMember members;
+}
+
+class EqKeyedMember
+{
+  name;
+}
+
+class EqKeyedPartner
+{
+  id;
+  note;
+  key { id }
+  0..1 partner -- 0..1 EqKeyedPet pet;
+}
+
+class EqKeyedPet
+{
+  name;
+}
+
+class EqLoop
+{
+  0..1 -> 0..1 EqLoop next;
+  key { next }
+}
+
+// A reflexive composition whose parts can form a cycle
+class CompNode
+{
+  name;
+  0..1 parent <@>- 0..1 CompNode child;
+}

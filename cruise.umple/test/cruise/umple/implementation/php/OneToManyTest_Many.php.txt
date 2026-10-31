@@ -61,7 +61,7 @@ class Student
     
     $existingMentor = $this->mentor;
     $this->mentor = $aMentor;
-    if ($existingMentor != null && $existingMentor != $aMentor)
+    if ($existingMentor != null && $existingMentor !== $aMentor)
     {
       $existingMentor->removeStudent($this);
     }
@@ -72,7 +72,7 @@ class Student
 
   public function equals($compareTo)
   {
-    return $this == $compareTo;
+    return $this === $compareTo;
   }
 
   public function delete()
