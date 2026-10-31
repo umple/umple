@@ -1,0 +1,14 @@
+// Error 3604: the 'to' side of the port binding names c, which is an
+// Integer rather than a component class, so the component cannot be resolved.
+class B
+{
+  in Integer p1;
+}
+
+class Top
+{
+  B b;
+  Integer c;
+
+  b.p1 -> c.p2;
+}

@@ -2,3 +2,11 @@ req UC11 useCase {
   isA UC1, UC2;
   userStep 1 { confirm the order }
 }
+
+req UC1 useCase {
+  what { place an order }
+}
+
+req UC2 useCase {
+  what { confirm a booking }
+}

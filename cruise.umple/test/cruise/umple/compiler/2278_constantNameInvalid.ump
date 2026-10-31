@@ -1,0 +1,5 @@
+// Error 160: a constant name must be alphanumeric; 'A-B' is not.
+class A
+{
+  const Integer A-B = 1;
+}

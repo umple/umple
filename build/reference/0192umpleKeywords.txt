@@ -135,6 +135,8 @@ noreferences
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">during:</span> <span style="background-color:silver">[tracing]</span> Defines the tracing duration. </li>
 -->
 
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">ears:</span> Requirement language tag (used inside a <i>req</i> definition) for the Easy Approach to Requirements Syntax. The body may use the clauses <i>where</i>, <i>while</i>, <i>when</i>, <i>if</i>, <i>system</i> and <i>shall</i>, which are combined into a single sentence such as <i>While ..., when ..., the ... shall ...</i>. <a href="Requirements.html"><i>See Requirements</i></a></li>
+
 <!-- Too basic; understand special context before uncommenting
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">else:</span> Flow control statement that executes subsequent instructions in case the if condition is not satisfied. <a href=""><i></i></a></li>
 -->
@@ -358,7 +360,7 @@ noreferences
 
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">remove:</span> <span style="background-color:silver">[tracing]</span> Indicates that the tracing should occur when an association is deleted. <a href="TracingAssociations.html"><i>See Tracing Associations</i></a></li>
 
-<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">req:</span> <span style="background-color:lime">[top]</span> Defines a requirement with an identifier and an optional language tag (<i>plain</i> text, <i>userStory</i>, <i>useCase</i>, or <i>quality</i>). Requirements can then be attached to model elements via <i>implementsReq</i>. <a href="Requirements.html"><i>See Requirements</i></a></li>
+<li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">req:</span> <span style="background-color:lime">[top]</span> Defines a requirement with an identifier and an optional language tag (<i>plain</i> text, <i>userStory</i>, <i>useCase</i>, <i>ears</i>, or <i>quality</i>). Requirements can then be attached to model elements via <i>implementsReq</i>. <a href="Requirements.html"><i>See Requirements</i></a></li>
 
 <!--MIXSET FEATURE TO BE DOCUMENTED BEFORE UNCOMMENTING
 <li style="margin-bottom: 12px"><span style="color:red; font-weight: bold">require:</span> <span style="background-color:aqua">[class]</span> Create a dependency on another mixset.</li>

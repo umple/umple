@@ -1,0 +1,8 @@
+req UC9 useCase {
+  A clerk refunds a returned item and the system updates the stock.
+}
+
+req US1 userStory {
+  who { clerk }
+  what { print a receipt }
+}

@@ -27,6 +27,8 @@ always has two or more 1..many associations to other classes. Each of these is w
 
 <p>The third example below shows that it is possible to have more than two classes participate in an association class.</p>
 
+<p>In GraphViz class diagrams (including the GraphViz view in UmpleOnline and its SVG output), an association class is attached by a dashed line to a small junction between the participating classes. The solid lines show the declared multiplicities and participating class role names. Additional ordinary associations remain connected directly to the association class.</p>
+
 <p>The fourth and fifth examples show the use of the role name for the association class itself. The use of such role names is mandatory when the association class on a reflexive many-many association, i.e. the associated classes are the same. In this example there are Members (e.g. people in a club) and some are assigned to be mentors of others. We want to record the date of each assignment, and we do that using an association class. But since both associated classes are the same (Member), we need to use role names on both ends to ensure all links can be navigated unambiguously. At the Assignment end we have menteeAssignments and mentorAssignments (note the plural) and at the Member end we have roles mentor and mentee.</p>
 
 <p>If we do not use the role names in the 5th example, then <a href="E019DuplicateAssociation.html">error 19</a> will occur because it will not be possible to refer unambiguously to either side of the association.</p>

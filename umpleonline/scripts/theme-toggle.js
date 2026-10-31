@@ -114,7 +114,7 @@
     // Refresh in-canvas Graphviz diagram using requestAnimationFrame for smoother rendering
     try {
       if (window.Page && window.Action) {
-        if (Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvEntityRelationshipDiagram) {
+        if (Page.useGvClassDiagram || Page.useGvStateDiagram || Page.useGvFeatureDiagram || Page.useGvUseCaseDiagram || Page.useGvEntityRelationshipDiagram) {
           requestAnimationFrame(function(){ Action.redrawDiagram(); });
         }
       }

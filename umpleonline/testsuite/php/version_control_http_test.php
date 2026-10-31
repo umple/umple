@@ -497,3 +497,29 @@ UmpleTest::add("loading a model with one tab shows its latest text, even if it h
   $load = httpRequest("POST", "scripts/compiler.php", array("load" => "1", "filename" => "../ump/".$modelId."/model.ump"));
   assertContains("class A { latest; }", $load["body"]);
 });
+
+UmpleTest::add("search engines are asked not to index temporary models, but may index bookmarks", function() {
+  $noIndex = '<meta name="robots" content="noindex" />';
+  $exampleMenu = umpleOnlineDir()."/generatedExtraExample1OptionsAD.html";
+  if (is_file($exampleMenu)) touch($exampleMenu);
+
+  $modelId = createModel(httpModelText("class A {}"));
+  $tmpPage = httpRequest("GET", "umple.php", array("model" => $modelId));
+  assertSame(200, $tmpPage["status"]);
+  assertContains($noIndex, $tmpPage["body"]);
+
+  $bookmark = httpRequest("GET", "bookmark.php", array("model" => $modelId));
+  assertTrue((bool) preg_match('/^umple\.php\?model=(\d{6}[a-z0-9]+)$/', $bookmark["headers"]["location"], $match),
+    "unexpected redirect ".$bookmark["headers"]["location"]);
+  deleteModelAfterTest($match[1]);
+  $bookmarkPage = httpRequest("GET", "umple.php", array("model" => $match[1]));
+  assertSame(200, $bookmarkPage["status"]);
+  assertNotContains($noIndex, $bookmarkPage["body"]);
+
+  $newPage = httpRequest("GET", "umple.php");
+  assertSame(200, $newPage["status"]);
+  assertNotContains($noIndex, $newPage["body"]);
+  if (preg_match('/<input id="model" type="hidden" value="(tmp[a-z0-9]+)"/', $newPage["body"], $match)) {
+    deleteModelAfterTest($match[1]);
+  }
+});
