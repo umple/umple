@@ -40,6 +40,7 @@ Page.useEditableClassDiagram = true;
 Page.useGvClassDiagram = false;
 Page.useGvStateDiagram = false;
 Page.useGvFeatureDiagram = false;
+Page.useGvUseCaseDiagram = false;
 Page.showFeatureDependency = false;
 Page.useStructureDiagram = false;
 Page.useFeatureDiagram = false;
@@ -164,6 +165,20 @@ Page.init = function(doShowDiagram, doShowText, doShowMenu, doReadOnly, doShowLa
     jQuery(".view_opt_feature").show();
     Action.syncLiveViewSelector("gfd");
 
+  }
+  else if(diagramType.toLowerCase() == "gvusecase")
+  {
+    Page.useGvUseCaseDiagram = true;
+    Page.useGvEntityRelationshipDiagram = false;
+    Page.useInstanceDiagram = false;
+    Page.useStateTables = false;
+    Page.useEventSequence = false;
+    Page.useEditableClassDiagram = false;
+    Page.useGvStateDiagram = false;
+    Page.useStructureDiagram = false;
+    Page.useGvFeatureDiagram = false;
+    Page.setDiagramTypeIconState('none');
+    Action.syncLiveViewSelector("gucd");
   }
   else if(diagramType.toLowerCase() == "structurediagram")
   {
@@ -412,6 +427,7 @@ Page.initPaletteArea = function()
   Page.initAction("buttonShowGvClassDiagram");
   Page.initAction("buttonShowGvStateDiagram");
   Page.initAction("buttonShowGvFeatureDiagram");//buttonShowGvFeatureDiagram
+  Page.initAction("buttonShowGvUseCaseDiagram");
   Page.initAction("buttonShowStructureDiagram");
   Page.initAction("buttonShowGvEntityRelationshipDiagram");
   Page.initAction("buttonShowInstanceDiagram");
@@ -540,6 +556,8 @@ Page.initOptions = function()
     jQuery("#buttonShowGvClassDiagram").prop('checked', true);
   if(Page.useGvFeatureDiagram)
     jQuery("#buttonShowGvFeatureDiagram").prop('checked', true);
+  if(Page.useGvUseCaseDiagram)
+    jQuery("#buttonShowGvUseCaseDiagram").prop('checked', true);
 
   if(Page.useGvStateDiagram)
     jQuery("#buttonShowGvStateDiagram").prop('checked', true);
@@ -905,6 +923,9 @@ Page.clickShowGvStateDiagram = function() {
 }
 Page.clickShowGvFeatureDiagram = function() {
   jQuery('#buttonShowGvFeatureDiagram').trigger('click');
+}
+Page.clickShowGvUseCaseDiagram = function() {
+  jQuery('#buttonShowGvUseCaseDiagram').trigger('click');
 }
 Page.clickShowStructureDiagram = function() {
   jQuery('#buttonShowStructureDiagram').trigger('click');
@@ -1450,6 +1471,9 @@ Page.getCurrentDiagramType = function()
   }
   if (Page.useGvFeatureDiagram) {
     return "GvFeature";
+  }
+  if (Page.useGvUseCaseDiagram) {
+    return "GvUseCase";
   }
   if (Page.useStructureDiagram) {
     return "structureDiagram";
@@ -2036,7 +2060,7 @@ Page.applyGeneratedCodeAreaStyles = function(language)
     generatedArea.removeClass('generatedDiagram');
   }
   //One of the svg diagram types
-  else if(language == "stateDiagram" || language == "classDiagram" || language == "structureDiagram" || language == "entityRelationshipDiagram" || language =="instanceDiagram" || /*language == "crudJson" ||*/ language == "eventSequence" || language == "stateTables")
+  else if(language == "stateDiagram" || language == "classDiagram" || language == "structureDiagram" || language == "entityRelationshipDiagram" || language =="instanceDiagram" || language == "useCaseDiagram" || /*language == "crudJson" ||*/ language == "eventSequence" || language == "stateTables")
   {
     generatedArea.removeClass('generatedCode');
     generatedArea.addClass('generatedDiagram');
@@ -2060,7 +2084,7 @@ Page.getErrorMarkup = function(code, language)
 {
   var output = "";
   
-  if(language == "classDiagram" || language == "stateDiagram" || language == "GvEntityRelationshipDiagram" || language == "instanceDiagram")
+  if(language == "classDiagram" || language == "stateDiagram" || language == "GvEntityRelationshipDiagram" || language == "instanceDiagram" || language == "useCaseDiagram")
   { // Covers Graphviz class and state diagrams
     output = code.split("<svg xmlns=")[0];
     output = output.replace(/&nbsp;\s*$/, "");
@@ -2099,8 +2123,8 @@ Page.getGeneratedMarkup = function(code, language)
 {
   var output = "";
   
-  if(language == "classDiagram" || language == "stateDiagram" || language == "instanceDiagram")
-  { // Covers Graphviz class, state, and instance diagrams
+  if(language == "classDiagram" || language == "stateDiagram" || language == "instanceDiagram" || language == "useCaseDiagram")
+  { // Covers Graphviz class, state, instance and use case diagrams
     output = code.split("<svg width=")[1];
     output = "<svg width=" + output;
     output = output.replace(/<\/svg>$/, "");

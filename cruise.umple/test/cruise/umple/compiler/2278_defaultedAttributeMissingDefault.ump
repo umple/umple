@@ -1,0 +1,5 @@
+// Error 6: an attribute marked 'defaulted' must be given a default value.
+class X
+{
+  defaulted Integer a;
+}

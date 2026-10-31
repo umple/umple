@@ -102,6 +102,7 @@ ToolTips.tooltipEntries = {
   ttShowGvStateDiagram: ["li", "Display a state diagram rendered using GraphViz</br><b>Shortcut: [ctrl+s]</b>"],
   ttShowStructureDiagram: ["li", "Display a graphically editable composite structure diagram </br><b>Shortcut: [ctrl+l]</b>"],
   ttShowGvFeatureDiagram: ["li", "Display a feature diagram rendered using GraphViz </br>"],
+  ttShowGvUseCaseDiagram: ["li", "Display a use case diagram of the useCase requirements, rendered using GraphViz </br>"],
 
     // Live View tooltip
   liveViewSelector: ["Select", "Select the diagram type to display</br><br>"],

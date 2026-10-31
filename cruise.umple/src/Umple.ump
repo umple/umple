@@ -1104,6 +1104,8 @@ class Association
   Position tokenPosition = null;
   Position tokenEndPosition = null;
   internal Boolean immutable = false;
+  // True for an expanded participating end declared in an association class.
+  Boolean isAssociationClassEnd = false;
   Boolean named = { name != null && !"".equals(name) }
 
   // code for specialized associations

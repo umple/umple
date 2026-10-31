@@ -425,6 +425,20 @@ class UmpleInternalParser
       {
         setFailedPosition(req.getReqToken(0).getPosition(), 410, req.getIdentifier());
       }
+
+      // The use cases named by include and isA must be defined
+      if ("useCase".equals(req.getLanguage()) && req.hasReqToken())
+      {
+        List<String> references = new ArrayList<String>(Arrays.asList(req.getIncludedUseCases()));
+        references.addAll(Arrays.asList(req.getParentUseCases()));
+        for (String reference : references)
+        {
+          if (model.getAllRequirements().get(reference) == null)
+          {
+            setFailedPosition(req.getReqToken(0).getPosition(), 401, reference);
+          }
+        }
+      }
     }
   }
   private void postTokenAnalysis()

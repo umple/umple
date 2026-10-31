@@ -1,0 +1,6 @@
+// Error 3501: an emit method may not be named main.
+class A
+{
+  template <<!output!>>
+  emit main()(template);
+}

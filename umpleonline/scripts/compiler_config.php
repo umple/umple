@@ -359,6 +359,7 @@ function generateMenu($buttonSuffix)
             <option id=\"genplainrequirementsdoc\" value=\"html:PlainRequirementsDoc\">Plain Requirements Doc</option>
             <option id=\"genplainrequirementsdocqc\" value=\"html:PlainRequirementsDoc.reqQC\">Requirements Doc with Comparison Table</option>
             <option value=\"featureDiagram:featureDiagram\">Feature Diagram (GraphViz SVG)</option>
+            <option value=\"useCaseDiagram:useCaseDiagram\">Use Case Diagram (GraphViz SVG)</option>
             <option value=\"structureDiagram:StructureDiagram\">Structure Diagram</option>
             <option id=\"genmetrics\" value=\"html:SimpleMetrics\">Simple Metrics</option>
             <option value=\"html:CodeAnalysis\">Code Analysis</option>

@@ -295,6 +295,12 @@ else if (isset($_REQUEST["umpleCode"]))
      $generatorType = "cdt";
      $classDiagram = True;
   }
+  else if ($language == "useCaseDiagram")
+  {
+     $language = "GvUseCaseDiagram";
+     $generatorType = "ucd";
+     $classDiagram = True;
+  }
   else if ($language == "entityRelationshipDiagram")
   {
      $language = "GvEntityRelationshipDiagram";
@@ -402,7 +408,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;      
   } // end html content      
 
-  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","InstanceDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","InstanceDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","GvUseCaseDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     $dataHandle->writeData($dataname, $input);
@@ -503,7 +509,7 @@ else if (isset($_REQUEST["umpleCode"]))
   else {
       // The following is used for outputting diagrams only
       $thedir = dirname($outputFilename);
-      exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/model.gv " . $thedir . "modelcdt.gv " . $thedir . "/modelerd.gv");
+      exec("rm -rf " . $thedir . "/modelcd.gv " . $thedir . "/model.gv " . $thedir . "modelcdt.gv " . $thedir . "/modelerd.gv " . $thedir . "/modelucd.gv");
       $command = "java -jar umplesync.jar -generate " . $language . " {$filename} " . $suboptions . " 2> {$errorFilename}";
   }
   // Took off 1> {$outputFilename}  in two commands above

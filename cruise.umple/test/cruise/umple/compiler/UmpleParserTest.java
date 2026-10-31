@@ -1150,7 +1150,7 @@ public void braceMismatch_filenameUsesBasename() {
     assertNoWarningsParse("002_defaultRedefineNamespace.ump");
   }
 
-  @Test @Ignore
+  @Test
   public void notUsedNamespace()
   {
     assertHasWarningsParse("002_notUsedNamespace.ump", new Position("002_notUsedNamespace.ump",3,10,33),31);
@@ -3361,6 +3361,20 @@ public void braceMismatch_filenameUsesBasename() {
     Assert.assertEquals(1, useCase.numberOfParentUseCases());
     Assert.assertEquals("UC1", useCase.getParentUseCase(0));
   }
+  //Issue 2523
+  @Test
+  public void ReqUseCaseUnknownReference401()
+  {
+    assertHasWarningsParse("457_ReqUseCaseUnknownReference401.ump", 401);
+
+    // UC1 is defined, so only UC98 from isA and UC99 from include are reported
+    Assert.assertEquals(2, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals(401, parser.getParseResult().getErrorMessage(1).getErrorType().getErrorCode());
+    String messages = parser.getParseResult().getErrorMessage(0).getFormattedMessage()
+      + parser.getParseResult().getErrorMessage(1).getFormattedMessage();
+    Assert.assertTrue(messages.contains("UC98"));
+    Assert.assertTrue(messages.contains("UC99"));
+  }
   //Issue 2484 (EARS)
   @Test
   public void ReqEarsPlain()
@@ -5519,6 +5533,186 @@ public void braceMismatch_filenameUsesBasename() {
   public void validCodeInjection() {
     assertHasNoWarningsParse("702_validCodeInjection.ump");
   }
+
+  //Issue 2278
+  @Test
+  public void portNameInvalid()
+  {
+    assertFailedParse("2278_portNameInvalid.ump", 3601);
+  }
+
+  //Issue 2278
+  @Test
+  public void portBindingComponentCannotBeResolved()
+  {
+    assertFailedParse("2278_portBindingFromComponentUnresolved.ump", 3603);
+    assertFailedParse("2278_portBindingToComponentUnresolved.ump", 3604);
+  }
+
+  //Issue 2278
+  @Test
+  public void portNameCannotBeResolved()
+  {
+    assertFailedParse("2278_portNameCannotBeResolved.ump", 3607);
+    assertFailedParse("2278_noDestinationClassName.ump", 3607);
+  }
+
+  //Issue 2278
+  @Test
+  public void defaultedAttributeMissingDefault()
+  {
+    assertFailedParse("2278_defaultedAttributeMissingDefault.ump", 6);
+  }
+
+  //Issue 2278
+  @Test
+  public void keyAlreadySpecified()
+  {
+    assertHasWarningsParse("2278_keyAlreadySpecified.ump", 7);
+  }
+
+  //Issue 2278
+  @Test
+  public void associationClassMissingEnd()
+  {
+    assertFailedParse("2278_associationClassMissingEnd.ump", 8);
+  }
+
+  //Issue 2278
+  @Test
+  public void reflexiveAssociationLowerBound()
+  {
+    assertFailedParse("2278_reflexiveLowerBound.ump", 9);
+  }
+
+  //Issue 2278
+  @Test
+  public void singletonMultiplicityOverOne()
+  {
+    assertHasWarningsParse("2278_singletonMultiplicityOverOne.ump", 10);
+  }
+
+  //Issue 2278
+  @Test
+  public void sortKeyNotOfUmpleType()
+  {
+    assertFailedParse("2278_sortKeyNotUmpleType.ump", 24);
+  }
+
+  //Issue 2278
+  @Test
+  public void sortKeyNotFound()
+  {
+    assertFailedParse("2278_sortKeyNotFound.ump", 25);
+  }
+
+  //Issue 2278
+  @Test
+  public void emptyKeyStatement()
+  {
+    assertHasWarningsParse("2278_emptyKeyStatement.ump", 47);
+  }
+
+  //Issue 2278
+  @Test
+  public void singletonAssociationMultiplicityOne()
+  {
+    assertHasWarningsParse("2278_singletonAssociationMultiplicityOne.ump", 2);
+  }
+
+  //Issue 2278
+  @Test
+  public void stateMachineCannotBeNamedTimer()
+  {
+    assertFailedParse("2278_stateMachineNamedTimer.ump", 75);
+  }
+
+  //Issue 2278
+  @Test
+  public void constantNameInvalid()
+  {
+    assertFailedParse("2278_constantNameInvalid.ump", 160);
+  }
+
+  //Issue 2278
+  @Test
+  public void constantNameNotUpperCase()
+  {
+    assertHasWarningsParse("2278_constantNameNotUpperCase.ump", 161);
+  }
+
+  //Issue 2278
+  @Test
+  public void customConstructorDiscouraged()
+  {
+    assertHasWarningsParse("2278_customConstructor.ump", 170);
+  }
+
+  //Issue 2278
+  @Test
+  public void traitNameNotCapitalized()
+  {
+    assertHasWarningsParse("2278_traitNameNotCapitalized.ump", 201);
+  }
+
+  //Issue 2278
+  @Test
+  public void traitNotAvailable()
+  {
+    assertFailedParse("2278_traitNotAvailable.ump", 202);
+  }
+
+  //Issue 2278
+  @Test
+  public void standaloneStateMachineMethod()
+  {
+    assertHasWarningsParse("2278_standaloneStateMachineMethod.ump", 1015);
+  }
+
+  //Issue 2278
+  @Test
+  public void methodSyntaxNotParsed()
+  {
+    assertHasWarningsParse("2278_methodSyntaxNotParsed.ump", 1008);
+  }
+
+  //Issue 2278
+  @Test
+  public void constraintSyntaxNotParsed()
+  {
+    assertHasWarningsParse("2278_constraintSyntaxNotParsed.ump", 1010);
+    // The fixture has a single malformed constraint, so 1010 is the only message
+    Assert.assertEquals(1, parser.getParseResult().numberOfErrorMessages());
+  }
+
+  //Issue 2278
+  @Test
+  public void emitMethodCannotBeMain()
+  {
+    assertFailedParse("2278_emitMethodCannotBeMain.ump", 3501);
+  }
+
+  //Issue 2278
+  @Test
+  public void fixmlTagNotClosedCorrectly()
+  {
+    assertFailedParse("2278_fixmlTagNotClosed.ump", 4500);
+  }
+
+  //Issue 2278
+  @Test
+  public void interfaceTestNotImplemented()
+  {
+    assertHasWarningsParse("2278_interfaceTestNotImplemented.ump", 6001);
+  }
+
+  //Issue 2278
+  @Test
+  public void distributedAssociationToNonDistributedClass()
+  {
+    assertHasWarningsParse("2278_distributedAssociationToNonDistributed.ump", 7002);
+  }
+
   @Test
   public void testSemicolonUnicode()
   {

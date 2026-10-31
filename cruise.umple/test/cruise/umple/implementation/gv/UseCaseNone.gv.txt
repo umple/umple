@@ -1,0 +1,7 @@
+digraph "UseCaseNone" {
+  rankdir="LR"
+  node [shape=ellipse];
+  edge [fontsize=10];
+
+  message [shape=plaintext, label="No useCase requirement found in the Umple file."];
+}

@@ -1,0 +1,69 @@
+// EARS requirements for a garage door opener, followed by
+// a model that implements them. Each while clause became a
+// state, each when or if clause an event, and each shall
+// clause a transition or an action. The where clause names
+// an optional feature, so it became a mixset.
+
+req GD1 ears {
+  while { the door is closed }
+  when { the button is pressed }
+  system { opener }
+  shall { open the door }
+}
+
+req GD2 ears {
+  while { the door is opening }
+  when { the door is fully open }
+  system { opener }
+  shall { stop the motor }
+}
+
+req GD3 ears {
+  while { the door is closing }
+  if { an obstacle is detected }
+  system { opener }
+  shall { open the door again }
+}
+
+req GD4 ears {
+  where { a courtesy light is fitted }
+  when { the door starts to move }
+  system { opener }
+  shall { switch on the light }
+}
+
+class GarageDoor {
+  implementsReq GD1, GD2, GD3;
+  status {
+    Closed {
+      buttonPressed -> Opening;
+    }
+    Opening {
+      fullyOpen -> Open;
+    }
+    Open {
+      buttonPressed -> Closing;
+    }
+    Closing {
+      obstacleDetected -> Opening;
+      fullyClosed -> Closed;
+    }
+  }
+}
+
+implementsReq GD4;
+mixset CourtesyLight {
+  class GarageDoor {
+    Boolean lightOn = false;
+    status {
+      Opening {
+        entry / { setLightOn(true); }
+      }
+      Closing {
+        entry / { setLightOn(true); }
+      }
+    }
+  }
+}
+
+use CourtesyLight;

@@ -1,0 +1,9 @@
+// Warning 1015: methods declared inside a standalone state machine may
+// not be generated correctly.
+statemachine sm
+{
+  s1
+  {
+    void bar() { }
+  }
+}

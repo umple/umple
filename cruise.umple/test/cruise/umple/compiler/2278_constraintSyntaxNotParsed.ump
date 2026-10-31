@@ -1,0 +1,11 @@
+// Warning 1010: the constraint has an unbalanced parenthesis, so it cannot
+// be parsed and is kept as extra code. Only one malformed constraint is
+// used here so that the reported message is unambiguous.
+class A
+{
+  Integer a;
+  Integer b;
+  Integer c;
+
+  [(a > b)) && a < c]
+}

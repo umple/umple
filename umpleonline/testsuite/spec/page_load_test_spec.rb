@@ -91,6 +91,28 @@ describe "Page load options", :feature => :pageLoad, :helper => :pageLoad do
     expect(find(:css, "#umpleCanvasColumn")).to have_css("div.photoReady")
   end
 
+  it "only offers menu items that do not edit the model in a read-only Graphviz class diagram" do
+    load_umple_with_option("example=OhHellWhist&readOnly&diagramtype=GvClass")
+    find(:css, "#umpleCanvas g.node", match: :first).right_click
+
+    menu = find("customContextMenu")
+    expect(menu).to have_text("Focus on this class")
+    expect(menu).to have_text("Do not show this class")
+    ["Add Attribute", "Rename Class", "Delete Class", "Add Subclass", "Add Association", "Change Color"].each do |item|
+      expect(menu).to have_no_text(item)
+    end
+  end
+
+  it "offers no editing menus in a read-only Graphviz state diagram" do
+    load_umple_with_option("example=GarageDoor&readOnly&diagramtype=GvState")
+
+    find(:css, "#umpleCanvas g.node", exact_text: "Open").right_click
+    expect(page).to have_no_selector("customContextMenu")
+
+    find(:css, "#umpleCanvas g.edge", text: "buttonOrObstacle", match: :first).right_click
+    expect(page).to have_no_selector("customContextMenu")
+  end
+
   describe "Loading UmpleOnline with each diagram type url option" do
     it "loads UmpleOnline with the diagramtype url option to editable class diagram" do
       load_umple_with_option("diagramtype=default")
