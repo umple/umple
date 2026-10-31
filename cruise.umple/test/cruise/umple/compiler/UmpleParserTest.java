@@ -3361,6 +3361,20 @@ public void braceMismatch_filenameUsesBasename() {
     Assert.assertEquals(1, useCase.numberOfParentUseCases());
     Assert.assertEquals("UC1", useCase.getParentUseCase(0));
   }
+  //Issue 2523
+  @Test
+  public void ReqUseCaseUnknownReference401()
+  {
+    assertHasWarningsParse("457_ReqUseCaseUnknownReference401.ump", 401);
+
+    // UC1 is defined, so only UC98 from isA and UC99 from include are reported
+    Assert.assertEquals(2, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals(401, parser.getParseResult().getErrorMessage(1).getErrorType().getErrorCode());
+    String messages = parser.getParseResult().getErrorMessage(0).getFormattedMessage()
+      + parser.getParseResult().getErrorMessage(1).getFormattedMessage();
+    Assert.assertTrue(messages.contains("UC98"));
+    Assert.assertTrue(messages.contains("UC99"));
+  }
   //Issue 2484 (EARS)
   @Test
   public void ReqEarsPlain()

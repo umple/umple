@@ -120,6 +120,26 @@ public class PythonSnippetTranslatorTest
     return gen.translateSnippetAt(code, model.getUmpleClass(className), null, true, true, null, "the constant X");
   }
 
+  // A String or Date that may be None prints as null in a concatenation, as in Java; a literal or
+  // the result of another concatenation cannot be None and is left alone
+  @Test
+  public void concatenationShowsNullForNoneValues()
+  {
+    Assert.assertEquals("\"Hi \" + (\"null\" if self._name is None else self._name)", expression("Child", "\"Hi \" + name"));
+    Assert.assertEquals("\"a\" + \"b\" + \"c\"", expression("Child", "\"a\" + \"b\" + \"c\""));
+    load("class Person { lazy Date born; }");
+    Assert.assertEquals("\"born \" + (\"null\" if self._born is None else str(self._born))", expression("Person", "\"born \" + born"));
+  }
+
+  // An integer expression stored in a Double becomes a float, as Java's assignment conversion does
+  @Test
+  public void integerExpressionStoredInAFloatIsConverted()
+  {
+    Assert.assertEquals("float(self._n)", gen.translateSnippetAt("n", model.getUmpleClass("Child"), null, false, true, true, null, "the default value of attribute x"));
+    Assert.assertEquals("self._n", expression("Child", "n"));
+    Assert.assertEquals("self._ratio", gen.translateSnippetAt("ratio", model.getUmpleClass("Child"), null, false, true, true, null, "the default value of attribute x"));
+  }
+
   private static String lines(String... lines)
   {
     return String.join("\n", lines);
@@ -386,7 +406,8 @@ public class PythonSnippetTranslatorTest
   public void parametersAndLocalsGetPythonNames()
   {
     // Generated Python calls a parameter named in "input" and adds _ to other keywords.
-    Assert.assertEquals("self._name = input + from_", statements("Child", "name = in + from;", "in:String", "from:String"));
+    Assert.assertEquals("self._name = (\"null\" if input is None else input) + (\"null\" if from_ is None else from_)",
+        statements("Child", "name = in + from;", "in:String", "from:String"));
     // Locals may not hide the names the translation uses or Python keywords.
     Assert.assertEquals(lines("str_ = 1", "is_ = True", "print(\"\" + str(str_) + (\"true\" if is_ else \"false\"))"),
       statements("Child", "int str = 1; boolean is = true; System.out.println(\"\" + str + is);"));
@@ -513,7 +534,7 @@ public class PythonSnippetTranslatorTest
   @Test
   public void stringConcatenationConvertsTheOtherOperand()
   {
-    Assert.assertEquals(lines("s = \"n=\" + str(self._n) + (\"true\" if self._flag else \"false\") + \"c\" + self._name", "t = str(1 + 2) + \"a\"",
+    Assert.assertEquals(lines("s = \"n=\" + str(self._n) + (\"true\" if self._flag else \"false\") + \"c\" + (\"null\" if self._name is None else self._name)", "t = str(1 + 2) + \"a\"",
         "self._name += str(self._n)", "self._name += \"x\""),
       statements("Child", "String s = \"n=\" + n + flag + 'c' + name; String t = 1 + 2 + \"a\"; name += n; name += \"x\";"));
   }

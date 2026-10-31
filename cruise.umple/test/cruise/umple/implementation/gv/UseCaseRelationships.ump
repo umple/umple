@@ -1,0 +1,21 @@
+req UC1 useCase {
+  who { customer }
+  what { place an order }
+  include UC3;
+}
+
+req UC2 useCase {
+  who { returning customer }
+  what { place an order using a saved address }
+  isA UC1;
+  include UC3, UC4;
+}
+
+req UC3 useCase {
+  what { authenticate the customer }
+}
+
+req UC4 useCase {
+  who { customer }
+  what { choose a "saved" address }
+}

@@ -2,3 +2,7 @@ req UC8 useCase {
   isA UC1;
   userStep 1 { pay with the saved card }
 }
+
+req UC1 useCase {
+  what { pay for the order }
+}

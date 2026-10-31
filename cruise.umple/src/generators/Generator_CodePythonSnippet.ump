@@ -24,12 +24,20 @@ class PythonGenerator
   public String translateSnippetAt(String code, UmpleClass uClass, List<MethodParameter> parameters,
     boolean isStatic, boolean isExpression, Position position, String slot)
   {
+    return translateSnippetAt(code, uClass, parameters, isStatic, isExpression, false, position, slot);
+  }
+
+  // As above; toFloat means the expression is stored in a Double or Float, so an integer result
+  // becomes a float as Java's assignment conversion does.
+  public String translateSnippetAt(String code, UmpleClass uClass, List<MethodParameter> parameters,
+    boolean isStatic, boolean isExpression, boolean toFloat, Position position, String slot)
+  {
     snippetImports.clear();
     PythonSnippetTranslator translator = PythonSnippetTranslator.forClass(this, uClass, parameters, isStatic);
     translator.setInActivity(slot.startsWith("the do activity"));
     try
     {
-      String python = isExpression ? translator.translateExpression(code) : translator.translateStatements(code);
+      String python = isExpression ? translator.translateExpression(code, toFloat) : translator.translateStatements(code);
       useImports(translator);
       return python;
     }
@@ -287,11 +295,18 @@ class PythonSnippetTranslator
 
   public String translateExpression(String code)
   {
+    return translateExpression(code, false);
+  }
+
+  // toFloat: the value is stored in a float, so an integer result is converted as Java does
+  public String translateExpression(String code, boolean toFloat)
+  {
     begin(code, true);
     PythonSnippetNode node = expression();
     accept(";"); // Java places the expression in "return <code>;", so a closing semicolon is harmless
     expectEnd();
-    return value(emit(node)).code;
+    PythonSnippetNode result = value(emit(node));
+    return (toFloat && isInteger(result.kind) ? convert(result, "float") : result).code;
   }
 
   public String translateList(String code)
@@ -2384,7 +2399,7 @@ class PythonSnippetTranslator
   // constant) is evaluated once.
   private PythonSnippetNode text(PythonSnippetNode operand)
   {
-    if (operand.kind.equals("str") || operand.kind.equals("char"))
+    if (operand.kind.equals("char") || operand.kind.equals("str") && !mayBeNone(operand))
     {
       return operand;
     }
@@ -2397,13 +2412,25 @@ class PythonSnippetTranslator
       return set(node("value", "", operand), "\"true\" if " + wrap(operand, OR) + " else \"false\"", "str", COND, operand.pure, false);
     }
     requireBuiltin("str");
-    if ((operand.kind.startsWith("object:") || operand.kind.startsWith("enum:")) && !operand.stable)
+    if (mayBeNone(operand))
     {
-      String code = operand.pure ? "\"null\" if " + wrap(operand, COMPARE + 1) + " is None else str(" + operand.code + ")"
-        : "(lambda x: \"null\" if x is None else str(x))(" + operand.code + ")";
+      // A string that is not None needs no str() call
+      String shown = operand.kind.equals("str") ? "x" : "str(x)";
+      String code = operand.pure ? "\"null\" if " + wrap(operand, COMPARE + 1) + " is None else " + shown.replace("x", operand.code)
+        : "(lambda x: \"null\" if x is None else " + shown + ")(" + operand.code + ")";
       return set(node("value", "", operand), code, "str", operand.pure ? COND : ATOM, operand.pure, false);
     }
     return set(node("value", "", operand), "str(" + operand.code + ")", "str", ATOM, operand.pure, false);
+  }
+
+  // Whether a value can be None at run time: a model object, an enumeration value, a Date or Time,
+  // or a String, unless it is self, a constant, a literal or the result of a concatenation.
+  private static boolean mayBeNone(PythonSnippetNode operand)
+  {
+    boolean nullable = operand.kind.startsWith("object:") || operand.kind.startsWith("enum:")
+      || operand.kind.equals("unknown") || operand.kind.equals("str");
+    return nullable && !operand.stable && !operand.getType().equals("literal") && !operand.getType().equals("value")
+      && !(operand.getType().equals("binary") && operand.kind.equals("str"));
   }
 
   private static PythonSnippetNode plain(PythonSnippetNode n, String op, int precedence, PythonSnippetNode left, PythonSnippetNode right, String kind)

@@ -503,6 +503,42 @@ public class PythonGeneratorCoreTest
     Assert.assertTrue(tracebackOf("Runner().getBroken()"), tracebackOf("Runner().getBroken()").contains("[model.ump:12]"));
   }
 
+  // The generated code gives the values Java gives: null text for a None String or Date, and a
+  // float for a Double initialized from an integer expression
+  @Test
+  public void nullTextAndIntegerToDoubleMatchJava() throws Exception
+  {
+    UmpleModel model = generate("class Person {\n"
+      + "  lazy name;\n"
+      + "  lazy Date born;\n"
+      + "  String greeting = {\"Hi \" + name};\n"
+      + "  String bornText = {\"born \" + born};\n"
+      + "}\n"
+      + "class Measure {\n"
+      + "  Integer count = 4;\n"
+      + "  Double half = count / 2;\n"
+      + "  Double avg = {count / 2};\n"
+      + "  Double same = count;\n"
+      + "}\n");
+    Assert.assertEquals(new ArrayList<Integer>(), errorCodes(model));
+    Assert.assertEquals("Hi null|born null|2.0|2.0|4.0", pythonOutput("from Person import Person\n"
+      + "from Measure import Measure\n"
+      + "p = Person()\n"
+      + "m = Measure()\n"
+      + "print(\"|\".join([p.getGreeting(), p.getBornText(), repr(m.getHalf()), repr(m.getAvg()), repr(m.getSame())]))\n").trim());
+  }
+
+  // What a script run on the generated classes prints
+  private String pythonOutput(String script) throws Exception
+  {
+    File file = new File(dir.getCanonicalPath() + File.separator + "run.py");
+    Files.write(file.toPath(), script.getBytes("UTF-8"));
+    Process process = new ProcessBuilder(CodeCompiler.getPythonInterpreter(), file.getPath()).redirectErrorStream(true).start();
+    String output = new String(process.getInputStream().readAllBytes(), "UTF-8");
+    Assert.assertTrue(process.waitFor(30, java.util.concurrent.TimeUnit.SECONDS));
+    return output;
+  }
+
   // The traceback of a statement run on the generated classes, mapped to the model
   private String tracebackOf(String statement) throws Exception
   {
