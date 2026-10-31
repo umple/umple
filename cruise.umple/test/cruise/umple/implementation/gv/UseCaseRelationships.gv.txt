@@ -1,0 +1,35 @@
+digraph "UseCaseRelationships" {
+  rankdir="LR"
+  node [shape=ellipse];
+  edge [fontsize=10];
+
+  // Use case: UC1
+  "UC1" [label="UC1\nplace an order"];
+
+  // Use case: UC2
+  "UC2" [label="UC2\nplace an order using a saved address"];
+
+  // Use case: UC3
+  "UC3" [label="UC3\nauthenticate the customer"];
+
+  // Use case: UC4
+  "UC4" [label="UC4\nchoose a \"saved\" address"];
+
+  // Actors
+  {
+    rank=min;
+    "actor customer" [shape=box, label="&laquo;actor&raquo;\ncustomer"];
+    "actor returning customer" [shape=box, label="&laquo;actor&raquo;\nreturning customer"];
+  }
+
+  // Associations between actors and use cases
+  "actor customer" -> "UC1" [dir=none];
+  "actor returning customer" -> "UC2" [dir=none];
+  "actor customer" -> "UC4" [dir=none];
+
+  // Include and generalization relationships
+  "UC1" -> "UC3" [style=dashed, arrowhead=vee, label="&laquo;include&raquo;"];
+  "UC2" -> "UC3" [style=dashed, arrowhead=vee, label="&laquo;include&raquo;"];
+  "UC2" -> "UC4" [style=dashed, arrowhead=vee, label="&laquo;include&raquo;"];
+  "UC2" -> "UC1" [arrowhead=empty];
+}

@@ -5,8 +5,11 @@ noreferences
 @@description
 
 <p>The following describes how to use the <a
-href="https://try.umple.org">UmpleOnline tool accessible online at
-try.umple.org</a></p>
+href="https://try.umple.org">classic UmpleOnline tool accessible online at
+try.umple.org</a>. A new version, UmpleOnline V2, is available at
+<a href="https://newumpleonline.umple.org">newumpleonline.umple.org</a>, with almost the same capabilities and
+a different user experience; <a href="UsingUmpleOnlineV2.html">see Using UmpleOnline V2</a>. Every example in this
+manual has a link to load it into either version.</p>
 
 <p>For information about writing Umple models or code in UmpleOnline, look at the <a href="GettingStarted.html">Getting
 Started section of this user manual</a>, or any other topic in the left
@@ -21,7 +24,8 @@ column of this page, including information about defining <a href="ClassDefiniti
 
 <li><b>To explore examples of Umple</b>, In the centre pane, select a pre-prepared example from the 'TOOLS' menu. You can also directly access these examples using a
 URL whose last component is the name of the example. For example <a href="https://try.umple.org/?example=2DShapes">click
-here to jump to the 2DShapes example: https://try.umple.org/?example=2DShapes</a></li>
+here to jump to the 2DShapes example: https://try.umple.org/?example=2DShapes</a>. In UmpleOnline V2, use
+<a href="https://newumpleonline.umple.org/?example=2DShapes">https://newumpleonline.umple.org/?example=2DShapes</a>.</li>
 
 <br />
 
@@ -47,7 +51,7 @@ saved), click 'Start Over' under the 'SAVE &amp; LOAD' menu.</li>
 
 <ul>
 
-<li><b>To save your work</b>, there are several approaches:
+<li><b>To save your work</b> (in UmpleOnline V2, see <a href="UsingUmpleOnlineV2.html">saving, sharing and collaborating in V2</a>), there are several approaches:
 
 <ol>
 <li><b>Create a bookmarkable URL</b>. To do this, click 'Create Bookmarkable URL'

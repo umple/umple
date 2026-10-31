@@ -3,3 +3,11 @@ req UC11 usecase {
   include UC2;
   userStep 1 [express lane open] { skip the queue }
 }
+
+req UC1 useCase {
+  what { join the queue }
+}
+
+req UC2 useCase {
+  what { scan the items }
+}

@@ -1,0 +1,45 @@
+// One requirement for each pattern of the Easy Approach
+// to Requirements Syntax (EARS). The system clause may be
+// omitted, in which case 'the system' is assumed.
+
+// Ubiquitous: always applies
+req EARS1 ears {
+  system { mobile phone }
+  shall { have a mass of less than 150 grams }
+}
+
+// State-driven: applies while a precondition holds
+req EARS2 ears {
+  while { there is no card in the ATM }
+  system { ATM }
+  shall { display 'insert card to begin' }
+}
+
+// Event-driven: responds to a triggering event
+req EARS3 ears {
+  when { mute is selected }
+  system { laptop }
+  shall { suppress all audio output }
+}
+
+// Optional feature: applies only where a feature is included
+req EARS4 ears {
+  where { the car has a sunroof }
+  system { car }
+  shall { have a sunroof control panel on the driver door }
+}
+
+// Unwanted behaviour: responds to an undesired event
+req EARS5 ears {
+  if { an invalid credit card number is entered }
+  system { website }
+  shall { display 'please re-enter credit card details' }
+}
+
+// Complex: combines several of the above
+req EARS6 ears {
+  while { the aircraft is on ground }
+  when { reverse thrust is commanded }
+  system { engine control system }
+  shall { enable reverse thrust }
+}

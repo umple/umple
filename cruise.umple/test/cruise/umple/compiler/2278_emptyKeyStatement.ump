@@ -1,0 +1,6 @@
+// Warning 47: an empty key statement is treated as a default key.
+class A
+{
+  id;
+  key { }
+}

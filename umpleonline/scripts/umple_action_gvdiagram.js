@@ -65,7 +65,7 @@ GvDiagramEdit.cancelDragCreate = function() {
 };
 
 GvDiagramEdit.beginPossibleDragCreate = function(domEvent, nodeEl, mode) {
-  if (Page.readOnly || (mode === "transition" ? !Page.useGvStateDiagram : !Page.useGvClassDiagram)) return false;
+  if (Page.readOnly || (mode === "transition" ? !Page.useGvStateDiagram : !(Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram))) return false;
   if (!Action.diagramInSync) return false;
   if (mode === "transition" && Page.selectedItem !== "AddTransition") return false;
   if (mode === "association" && Page.selectedItem !== "AddAssociation") return false;
@@ -318,7 +318,7 @@ GvDiagramEdit.insertGeneralizationIntoChildClass = function(fullText, childClass
 };
 
 GvDiagramEdit.deleteIfToolActive = function(domEvent, nodeEl) {
-  if (!Page.useGvClassDiagram) return false;
+  if (!(Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram)) return false;
   if (!Action.diagramInSync) return false;
   if (Page.selectedItem !== "DeleteEntity") return false;
 
@@ -346,7 +346,7 @@ GvDiagramEdit.deleteIfToolActive = function(domEvent, nodeEl) {
 };
 
 GvDiagramEdit.handlePaletteAssociation = function(domEvent, nodeEl) {
-  if (!Page.useGvClassDiagram) return false;
+  if (!(Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram)) return false;
   if (!Action.diagramInSync) return false;
   if (Page.selectedItem !== "AddAssociation") return false;
 
@@ -394,7 +394,7 @@ GvDiagramEdit.handlePaletteAssociation = function(domEvent, nodeEl) {
 };
 
 GvDiagramEdit.handlePaletteGeneralization = function(domEvent, nodeEl) {
-  if (!Page.useGvClassDiagram) return false;
+  if (!(Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram)) return false;
   if (!Action.diagramInSync) return false;
   if (Page.selectedItem !== "AddGeneralization") return false;
 
@@ -461,6 +461,62 @@ GvDiagramEdit.bindClassDiagram = function(canvasX, canvasY) {
   for (let i = 0; i < elems.length; i++) {
     const theNode = elems[i];
 
+// ERD attributes and associations are separate Graphviz nodes.
+// Bind them to the existing attribute/association menus before
+// treating ordinary nodes as classes.
+if (Page.useGvEntityRelationshipDiagram) {
+  const anchor = theNode.querySelector("a");
+
+  if (anchor) {
+    const href = anchor.getAttribute("xlink:href") || "";
+    const titleText = (anchor.getAttribute("xlink:title") || "").trim();
+
+    // ERD attribute node
+    const attributeMatch =
+      href.match(/Action\.selectAttribute\("([^"]+)","([^"]+)"\)/);
+
+    if (attributeMatch) {
+      const className = attributeMatch[1];
+      const attributeName = attributeMatch[2];
+
+      // The ERD title is formatted as: "Type attributeName"
+      const attributeType = titleText.endsWith(attributeName)
+        ? titleText.substring(0, titleText.length - attributeName.length).trim()
+        : titleText.split(/\s+/)[0];
+
+      const showAttributeMenu = function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        Action.displayAttributeMenu(
+          event,
+          attributeName,
+          attributeType,
+          className
+        );
+      };
+
+      anchor.addEventListener("dblclick", showAttributeMenu);
+      anchor.addEventListener("contextmenu", showAttributeMenu);
+
+      continue;
+    }
+
+    // ERD association diamond
+    if (href.includes("Action.selectAssociation(")) {
+      const showAssociationMenu = function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        Action.displayAssociMenu(event, href);
+      };
+
+      anchor.addEventListener("dblclick", showAssociationMenu);
+      anchor.addEventListener("contextmenu", showAssociationMenu);
+
+      continue;
+    }
+  }
+}
+
     // ---- context menu + double click menu (keep as-is) ----
     theNode.addEventListener("contextmenu", function(event) {
       event.preventDefault();
@@ -486,7 +542,7 @@ GvDiagramEdit.bindClassDiagram = function(canvasX, canvasY) {
       theNode.removeEventListener("mousedown", theNode.__gvAssocDown, true);
     }
     theNode.__gvAssocDown = function(e) {
-      if (!Page.useGvClassDiagram) return;
+      if (!(Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram)) return;
       if (!Action.diagramInSync) return;
       if (Page.selectedItem !== "AddAssociation") return;
 
@@ -503,7 +559,7 @@ GvDiagramEdit.bindClassDiagram = function(canvasX, canvasY) {
       theNode.removeEventListener("mousedown", theNode.__gvGenDown, true);
     }
     theNode.__gvGenDown = function(e) {
-      if (!Page.useGvClassDiagram) return;
+      if (!(Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram)) return;
       if (!Action.diagramInSync) return;
       if (Page.selectedItem !== "AddGeneralization") return;
 
@@ -520,7 +576,7 @@ GvDiagramEdit.bindClassDiagram = function(canvasX, canvasY) {
       theNode.removeEventListener("mouseup", theNode.__gvAssocUp, true);
     }
     theNode.__gvAssocUp = function(e) {
-      if (!Page.useGvClassDiagram) return;
+      if (!(Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram)) return;
       if (!Action.diagramInSync) return;
       if (Page.selectedItem !== "AddAssociation") return;
 
@@ -541,7 +597,7 @@ GvDiagramEdit.bindClassDiagram = function(canvasX, canvasY) {
       theNode.removeEventListener("mouseup", theNode.__gvGenUp, true);
     }
     theNode.__gvGenUp = function(e) {
-      if (!Page.useGvClassDiagram) return;
+      if (!(Page.useGvClassDiagram || Page.useGvEntityRelationshipDiagram)) return;
       if (!Action.diagramInSync) return;
       if (Page.selectedItem !== "AddGeneralization") return;
 
@@ -559,6 +615,7 @@ GvDiagramEdit.bindClassDiagram = function(canvasX, canvasY) {
 
     // ---- Drag/move classes in GV manual mode ----
     theNode.addEventListener("mousedown", function(event) {
+      if (Page.readOnly) return;
       if (Page.selectedItem === "AddAssociation" || Page.selectedItem === "AddGeneralization") return;
       event.preventDefault();
 
@@ -640,17 +697,22 @@ GvDiagramEdit.bindClassDiagram = function(canvasX, canvasY) {
   for (let i = 0; i < associationElems.length; i++) {
     const associationAnchors = associationElems[i].getElementsByTagName("a");
     for (let j = 0; j < associationAnchors.length; j++) {
-      const associationLink = associationAnchors[j].getAttribute("xlink:href");
+      const associationLink = associationAnchors[j].getAttribute("xlink:href") ||
+        associationAnchors[j].getAttribute("href") || "";
+      const className = Action.getGvClassNameFromLink(associationLink);
+      if (!className && !associationLink.includes("Action.selectAssociation(")) continue;
 
-      associationAnchors[j].addEventListener("dblclick", function(event) {
+      const showMenu = function(event) {
         event.preventDefault();
-        Action.displayAssociMenu(event, associationLink);
-      });
-
-      associationAnchors[j].addEventListener("contextmenu", function(event) {
-        event.preventDefault();
-        Action.displayAssociMenu(event, associationLink);
-      });
+        event.stopPropagation();
+        if (className) {
+          Action.displayMenu(event);
+        } else {
+          Action.displayAssociMenu(event, associationLink);
+        }
+      };
+      associationAnchors[j].addEventListener("dblclick", showMenu);
+      associationAnchors[j].addEventListener("contextmenu", showMenu);
     }
   }
 };
