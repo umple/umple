@@ -1,0 +1,20 @@
+use attribute_Get.ump;
+use attribute_GetDefaulted.ump;
+
+class UmpleToJavaScript {
+    attribute_Get_All <<!<</*attribute_Get_All*/>><<#
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.getIsAutounique() || av.isConstant() || "internal".equals(av.getModifier()))
+    {
+      continue;
+    }
+    #>><<@ UmpleToJavaScript.attribute_Get >><<#
+
+    if (av.getModifier().equals("defaulted"))
+    {
+      #>><<@ UmpleToJavaScript.attribute_GetDefaulted >><<#
+    }
+  }
+#>>!>>
+}

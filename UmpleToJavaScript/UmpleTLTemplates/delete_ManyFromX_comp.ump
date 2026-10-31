@@ -1,0 +1,12 @@
+class UmpleToJavaScript {
+    delete_ManyFromX_comp <<!<</*delete_ManyFromX_comp*/>>
+    while (this._<<=gen.translate("associationMany",av)>>.length > 0)
+    {
+      let <<=gen.translate("parameterOne",av)>> = this._<<=gen.translate("associationMany",av)>>[this._<<=gen.translate("associationMany",av)>>.length - 1];
+      <<=gen.translate("parameterOne",av)>>.delete();
+      if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+      {
+        this._<<=gen.translate("associationMany",av)>>.splice(this._<<=gen.translate("associationMany",av)>>.indexOf(<<=gen.translate("parameterOne",av)>>), 1);
+      }
+    }!>>
+}

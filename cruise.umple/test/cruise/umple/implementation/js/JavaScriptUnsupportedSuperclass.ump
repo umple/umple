@@ -1,0 +1,28 @@
+class Vehicle
+{
+  status
+  {
+    Parked { drive -> Moving; }
+    Moving { stop -> Parked; }
+  }
+}
+
+class Truck
+{
+  isA Vehicle;
+  Integer load;
+}
+
+class Pickup
+{
+  isA Truck;
+  name;
+}
+
+external Thread { void start() { } }
+
+class Worker
+{
+  isA Thread;
+  name;
+}

@@ -1,0 +1,6 @@
+class UmpleToJavaScript {
+    constructor_AttributeAssign <<!<</*constructor_AttributeAssign*/>><<#
+  String parameterLookup = av.getValue() == null || av.getModifier().equals("fixml") ? "parameterOne" : "parameterValue";
+#>>
+    this._<<=gen.translate("attributeOne",av)>> = <<=gen.translate(parameterLookup,av)>>;!>>
+}

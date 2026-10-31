@@ -1,0 +1,36 @@
+JavaScript
+Generators
+noreferences
+@@description
+<p>
+The JavaScript generator provides basic support for generating JavaScript from Umple class models. Use <code>generate JavaScript;</code> in your Umple file, or <code>-g JavaScript</code> on the command line. One file is generated for each class.</p>
+
+<p>The following features are supported: classes, attributes of type String, Integer, Double and Boolean (including lazy, defaulted and immutable attributes), constructors, the generated get and set methods, inheritance using isA, and associations whose ends are optional (0..1 or *), including directed associations, compositions and reflexive associations.</p>
+
+<p>The generated code uses CommonJS modules: each class is exported with <code>module.exports</code>, and a subclass uses <code>require</code> to obtain its superclass. The generated files can be run with Node.js without any other library.</p>
+
+<p>JavaScript is generated directly by the Umple compiler, so no other tool needs to be installed.</p>
+
+<p>The initial value of an attribute must be a literal, such as <code>3</code>, <code>-1.5</code>, <code>true</code>, <code>"text"</code> or <code>null</code> for a String, because it is copied to the generated code as it is written. Expressions are not translated from Java, so even a constant expression such as <code>2*3</code> is unsupported: write its value instead. Numbers must also be valid in Java: an Integer value must fit in an int, and a number cannot have a leading zero (as in 010) or a suffix (as in 10L).</p>
+
+<p>
+Currently unsupported features:
+<ul>
+    <li>State machines</li>
+    <li>Methods written in Umple classes, and code injection (before and after)</li>
+    <li>Associations with a mandatory end (such as 1 or 1..*) or with a bounded multiplicity (such as 0..3), sorted associations, specialized associations, and immutable associations with a many end</li>
+    <li>Interfaces, singletons, keys, constraints and constants</li>
+    <li>Enumerations and tracing</li>
+    <li>Inner classes, and classes that contain them</li>
+    <li>A superclass in another namespace</li>
+    <li>A subclass of a class that is not generated because it uses an unsupported feature</li>
+    <li>Attributes of other types, such as Date, Time or lists, and fixml attributes</li>
+    <li>Unique and autounique attributes</li>
+    <li>Initial values that are not literals, such as <code>7/2</code>, <code>start + 1</code> or a method call</li>
+    <li>Derived attributes</li>
+    <li>Code in a class that Umple could not interpret (extra code)</li>
+    <li>Distributed classes</li>
+    <li>The generated toString method</li>
+</ul>
+A class that uses an unsupported feature is not generated: a message is displayed and the file contains only a comment.
+</p>

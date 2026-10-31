@@ -1,0 +1,6 @@
+class Person
+{
+  name;
+  Integer age = 0;
+  Boolean active;
+}

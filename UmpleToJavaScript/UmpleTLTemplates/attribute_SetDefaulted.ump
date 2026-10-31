@@ -1,0 +1,18 @@
+class UmpleToJavaScript {
+    attribute_SetDefaulted <<!<</*attribute_SetDefaulted*/>>
+  /* Code from template attribute_SetDefaulted */
+  <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    let wasSet = false;
+    this._<<=gen.translate("attributeOne",av)>> = <<=gen.translate("parameterOne",av)>>;
+    wasSet = true;
+    return wasSet;
+  }
+  <<=gen.translate("resetMethod",av)>>()
+  {
+    let wasReset = false;
+    this._<<=gen.translate("attributeOne",av)>> = this.<<=gen.translate("getDefaultMethod",av)>>();
+    wasReset = true;
+    return wasReset;
+  }!>>
+}

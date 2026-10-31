@@ -1,0 +1,17 @@
+class Employee
+{
+  name;
+  0..1 boss -- * Employee reports;
+}
+class Friend
+{
+  * -- * Friend buddies;
+}
+class Node
+{
+  0..1 -> 0..1 Node next;
+}
+class Spouse
+{
+  0..1 -- 0..1 Spouse partner;
+}
