@@ -992,6 +992,9 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="ElectionSystem.ump">Election System</option>
                 <option name = "optionExample" value="ElevatorSystemA.ump">Elevator System A</option>
                 <option name = "optionExample" value="ElevatorSystemB.ump">Elevator System B</option>
+
+                <option name = "optionExample" value="https://raw.githubusercontent.com/umple/gamefulReview/refs/heads/main/src/CoreGamefulReviewModel.ump">Gameful Review</option>
+
                 <option name = "optionExample" value="GenealogyA.ump">Genealogy A</option>
                 <option name = "optionExample" value="GenealogyB.ump">Genealogy B</option>
                 <option name = "optionExample" value="GenealogyC.ump">Genealogy C</option>
@@ -1040,6 +1043,9 @@ $output = $dataHandle->readData('model.ump');
                 <option name = "optionExample" value="DigitalWatchFlat.ump">Digital Watch (Flat) *</option>
                 <option name = "optionExample" value="Dishwasher.ump">Dishwasher</option>                
                 <option name = "optionExample" value="Elevator_State_Machine.ump">Elevator</option>
+
+                <option name = "optionExample" value="https://raw.githubusercontent.com/umple/gamefulReview/refs/heads/main/src/CoreGamefulReviewModel.ump">Gameful Review States</option>
+
                 <option name = "optionExample" value="GarageDoor.ump">Garage Door</option>
                 <option name = "optionExample" value="HomeHeater.ump">Home Heating System</option>
                 <option name = "optionExample" value="LibraryLoanStateMachine.ump">Library Loan</option>
