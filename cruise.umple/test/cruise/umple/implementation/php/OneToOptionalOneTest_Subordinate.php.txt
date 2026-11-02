@@ -61,7 +61,7 @@ class MySubordinate
     }
     
     $existingMySubordinate = $aNewMyDriver->getMySubordinate();
-    if ($existingMySubordinate != null && $this != $existingMySubordinate)
+    if ($existingMySubordinate != null && $this !== $existingMySubordinate)
     {
       //Unable to setMyDriver, the current myDriver already has a mySubordinate, which would be orphaned if it were re-assigned
       return $wasSet;
@@ -81,7 +81,7 @@ class MySubordinate
 
   public function equals($compareTo)
   {
-    return $this == $compareTo;
+    return $this === $compareTo;
   }
 
   public function delete()

@@ -51,7 +51,7 @@ class Mentor
     }
     
     $currentStudent = $this->getStudent();
-    if ($currentStudent != null && $currentStudent != $aNewStudent)
+    if ($currentStudent != null && $currentStudent !== $aNewStudent)
     {
       $currentStudent->setMentor(null);
     }
@@ -59,7 +59,7 @@ class Mentor
     $this->student = $aNewStudent;
     $existingMentor = $aNewStudent->getMentor();
     
-    if ($this != $existingMentor)
+    if ($this !== $existingMentor)
     {
       $aNewStudent->setMentor($this);
     }
@@ -69,7 +69,7 @@ class Mentor
 
   public function equals($compareTo)
   {
-    return $this == $compareTo;
+    return $this === $compareTo;
   }
 
   public function delete()

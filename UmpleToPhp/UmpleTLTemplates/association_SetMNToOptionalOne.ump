@@ -17,29 +17,31 @@ class UmpleToPhp {
     }
 
     $<<=gen.translate("parameterCheckNewMany",av)>> = array();
-    $<<=existingToNewMap>> = array();
+    $<<=existingToNewMap>> = new SplObjectStorage();
     foreach ($<<=gen.translate("parameterMany",av)>> as $<<=gen.translate("parameterOne",av)>>)
     {
-      if (array_search($<<=gen.translate("parameterOne",av)>>,$<<=gen.translate("parameterCheckNewMany",av)>>) !== false)
+      foreach ($<<=gen.translate("parameterCheckNewMany",av)>> as $checked)
       {
-        <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } #>>
-        return $wasSet;
+        if ($<<=gen.translate("parameterOne",av)>> === null ? $checked === null : $<<=gen.translate("parameterOne",av)>>->equals($checked))
+        {
+          <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "          ")); } #>>
+          return $wasSet;
+        }
       }
-      else if ($<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>() != null && $this !== $<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>())
+      if ($<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>() != null && $this !== $<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>())
       {
         $<<=gen.relatedTranslate("parameterExisting",av)>> = $<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>();
-        $<<=gen.relatedTranslate("parameterExistingSerialized",av)>> = serialize($<<=gen.relatedTranslate("parameterExisting",av)>>);
-        if (!array_key_exists($<<=gen.relatedTranslate("parameterExistingSerialized",av)>>, $<<=existingToNewMap>>))
+        if (!isset($<<=existingToNewMap>>[$<<=gen.relatedTranslate("parameterExisting",av)>>]))
         {
-          $<<=existingToNewMap>>[$<<=gen.relatedTranslate("parameterExistingSerialized",av)>>] = $<<=gen.relatedTranslate("parameterExisting",av)>>-><<=gen.translate("numberOfMethod",av)>>();
+          $<<=existingToNewMap>>[$<<=gen.relatedTranslate("parameterExisting",av)>>] = $<<=gen.relatedTranslate("parameterExisting",av)>>-><<=gen.translate("numberOfMethod",av)>>();
         }
-        $nextCount = $<<=existingToNewMap>>[$<<=gen.relatedTranslate("parameterExistingSerialized",av)>>] - 1;
+        $nextCount = $<<=existingToNewMap>>[$<<=gen.relatedTranslate("parameterExisting",av)>>] - 1;
         if ($nextCount < self::minimum<<=gen.translate("numberOfMethod",av)>>())
         {
           <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } #>>
           return $wasSet;
         }
-        $<<=existingToNewMap>>[$<<=gen.relatedTranslate("parameterExistingSerialized",av)>>] = $nextCount;
+        $<<=existingToNewMap>>[$<<=gen.relatedTranslate("parameterExisting",av)>>] = $nextCount;
       }
       $<<=gen.translate("parameterCheckNewMany",av)>>[] = $<<=gen.translate("parameterOne",av)>>;
     }
@@ -49,7 +51,7 @@ class UmpleToPhp {
       $wasFound = false;
       foreach ($<<=gen.translate("parameterCheckNewMany",av)>> as $fosterCare)
       {
-        if ($orphan == $fosterCare)
+        if ($orphan->equals($fosterCare))
         {
           $wasFound = true;
           break;

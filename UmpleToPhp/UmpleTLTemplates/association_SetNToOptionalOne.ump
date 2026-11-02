@@ -10,12 +10,15 @@ class UmpleToPhp {
     $<<=gen.translate("parameterCheckNewMany",av)>> = array();
     foreach ($<<=gen.translate("parameterMany",av)>> as $<<=gen.translate("parameterOne",av)>>)
     {
-      if (array_search($<<=gen.translate("parameterOne",av)>>,$<<=gen.translate("parameterCheckNewMany",av)>>) !== false)
+      foreach ($<<=gen.translate("parameterCheckNewMany",av)>> as $checked)
       {
-        <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } #>>
-        return $wasSet;
+        if ($<<=gen.translate("parameterOne",av)>> === null ? $checked === null : $<<=gen.translate("parameterOne",av)>>->equals($checked))
+        {
+          <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "          ")); } #>>
+          return $wasSet;
+        }
       }
-      else if ($<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>() != null && $this !== $<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>())
+      if ($<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>() != null && $this !== $<<=gen.translate("parameterOne",av)>>-><<=gen.relatedTranslate("getMethod",av)>>())
       {
         <<# if (customSetManyPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetManyPostfixCode, "        ")); } #>>
         return $wasSet;
@@ -34,7 +37,7 @@ class UmpleToPhp {
       $wasFound = false;
       foreach ($<<=gen.translate("parameterCheckNewMany",av)>> as $fosterCare)
       {
-        if ($orphan == $fosterCare)
+        if ($orphan->equals($fosterCare))
         {
           $wasFound = true;
           break;

@@ -160,6 +160,7 @@ class Student
 
   public function equals($compareTo)
   {
+    if ($this === $compareTo) { return true; }
     if ($compareTo == null) { return false; }
     if (get_class($this) != get_class($compareTo)) { return false; }
 
