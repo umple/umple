@@ -1,0 +1,10 @@
+class Animal
+{
+  name;
+}
+
+class Dog
+{
+  isA Animal;
+  Integer legs = 4;
+}

@@ -1,0 +1,70 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 6 "JavaScriptOptionalAssociation.ump"
+class Player
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Player Attributes
+  //Player Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor(aName)
+  {
+    this._name = aName;
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  setName(aName)
+  {
+    let wasSet = false;
+    this._name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+  getName()
+  {
+    return this._name;
+  }
+  /* Code from template association_GetOne */
+  getTeam()
+  {
+    return this._team;
+  }
+  hasTeam()
+  {
+    let has = this._team != null;
+    return has;
+  }
+  /* Code from template association_SetOptionalOneToMany */
+  setTeam(aTeam)
+  {
+    let wasSet = false;
+    let existingTeam = this._team;
+    this._team = aTeam;
+    if (existingTeam != null && ! (existingTeam == aTeam))
+    {
+      existingTeam.removePlayer(this);
+    }
+    if (aTeam != null)
+    {
+      aTeam.addPlayer(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+  delete()
+  {
+    if (this._team != null)
+    {
+      let placeholderTeam = this._team;
+      this._team = null;
+      placeholderTeam.removePlayer(this);
+    }
+  }
+}
+
+module.exports = Player;

@@ -1,0 +1,8 @@
+class House
+{
+  0..1 <@>- * Room;
+}
+
+class Room
+{
+}

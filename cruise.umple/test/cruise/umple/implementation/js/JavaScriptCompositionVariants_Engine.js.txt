@@ -1,0 +1,67 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 5 "JavaScriptCompositionVariants.ump"
+class Engine
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Engine Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetOne */
+  getCar2()
+  {
+    return this._car2;
+  }
+  hasCar2()
+  {
+    let has = this._car2 != null;
+    return has;
+  }
+  /* Code from template association_SetOptionalOneToOptionalOne */
+  setCar2(aNewCar2)
+  {
+    let wasSet = false;
+    if (aNewCar2 == null)
+    {
+      let existingCar2 = this._car2;
+      this._car2 = null;
+      if (existingCar2 != null && existingCar2.getEngine() != null)
+      {
+        existingCar2.setEngine(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+    let currentCar2 = this.getCar2();
+    if (currentCar2 != null && ! (currentCar2 == aNewCar2))
+    {
+      currentCar2.setEngine(null);
+    }
+    this._car2 = aNewCar2;
+    let existingEngine = aNewCar2.getEngine();
+    if (! (this == existingEngine))
+    {
+      aNewCar2.setEngine(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+  delete()
+  {
+    if (this._car2 != null)
+    {
+      this._car2.setEngine(null);
+    }
+  }
+}
+
+module.exports = Engine;

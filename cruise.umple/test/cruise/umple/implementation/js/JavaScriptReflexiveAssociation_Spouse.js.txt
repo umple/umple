@@ -1,0 +1,110 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 14 "JavaScriptReflexiveAssociation.ump"
+class Spouse
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Spouse Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetOne */
+  getPartner()
+  {
+    return this._partner;
+  }
+  hasPartner()
+  {
+    let has = this._partner != null;
+    return has;
+  }
+  /* Code from template association_GetOne */
+  getSpouse()
+  {
+    return this._spouse;
+  }
+  hasSpouse()
+  {
+    let has = this._spouse != null;
+    return has;
+  }
+  /* Code from template association_SetOptionalOneToOptionalOne */
+  setPartner(aNewPartner)
+  {
+    let wasSet = false;
+    if (aNewPartner == null)
+    {
+      let existingPartner = this._partner;
+      this._partner = null;
+      if (existingPartner != null && existingPartner.getSpouse() != null)
+      {
+        existingPartner.setSpouse(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+    let currentPartner = this.getPartner();
+    if (currentPartner != null && ! (currentPartner == aNewPartner))
+    {
+      currentPartner.setSpouse(null);
+    }
+    this._partner = aNewPartner;
+    let existingSpouse = aNewPartner.getSpouse();
+    if (! (this == existingSpouse))
+    {
+      aNewPartner.setSpouse(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+  /* Code from template association_SetOptionalOneToOptionalOne */
+  setSpouse(aNewSpouse)
+  {
+    let wasSet = false;
+    if (aNewSpouse == null)
+    {
+      let existingSpouse = this._spouse;
+      this._spouse = null;
+      if (existingSpouse != null && existingSpouse.getPartner() != null)
+      {
+        existingSpouse.setPartner(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+    let currentSpouse = this.getSpouse();
+    if (currentSpouse != null && ! (currentSpouse == aNewSpouse))
+    {
+      currentSpouse.setPartner(null);
+    }
+    this._spouse = aNewSpouse;
+    let existingPartner = aNewSpouse.getPartner();
+    if (! (this == existingPartner))
+    {
+      aNewSpouse.setPartner(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+  delete()
+  {
+    if (this._partner != null)
+    {
+      this._partner.setSpouse(null);
+    }
+    if (this._spouse != null)
+    {
+      this._spouse.setPartner(null);
+    }
+  }
+}
+
+module.exports = Spouse;

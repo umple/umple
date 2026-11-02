@@ -1,0 +1,160 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 1 "JavaScriptManyToManyAssociation.ump"
+class Course
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Course Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._students = [];
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  getStudent(index)
+  {
+    let aStudent = this._students[index];
+    return aStudent;
+  }
+  getStudents()
+  {
+    let newStudents = this._students.slice();
+    return newStudents;
+  }
+  numberOfStudents()
+  {
+    let number = this._students.length;
+    return number;
+  }
+  hasStudents()
+  {
+    let has = this._students.length > 0;
+    return has;
+  }
+  indexOfStudent(aStudent)
+  {
+    let index = this._students.indexOf(aStudent);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfStudents()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToManyMethod */
+  addStudent(aStudent)
+  {
+    let wasAdded = false;
+    if (this._students.includes(aStudent))
+    {
+      return false;
+    }
+    this._students.push(aStudent);
+    if (aStudent.indexOfCourse(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = aStudent.addCourse(this);
+      if (! wasAdded)
+      {
+        if (this._students.includes(aStudent))
+        {
+          this._students.splice(this._students.indexOf(aStudent), 1);
+        }
+      }
+    }
+    return wasAdded;
+  }
+  /* Code from template association_RemoveMany */
+  removeStudent(aStudent)
+  {
+    let wasRemoved = false;
+    if (! this._students.includes(aStudent))
+    {
+      return wasRemoved;
+    }
+    let oldIndex = this._students.indexOf(aStudent);
+    this._students.splice(oldIndex, 1);
+    if (aStudent.indexOfCourse(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = aStudent.removeCourse(this);
+      if (! wasRemoved)
+      {
+        this._students.splice(oldIndex, 0, aStudent);
+      }
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addStudentAt(aStudent, index)
+  {
+    let wasAdded = false;
+    if (this.addStudent(aStudent))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfStudents())
+      {
+        index = this.numberOfStudents() - 1;
+      }
+      if (this._students.includes(aStudent))
+      {
+        this._students.splice(this._students.indexOf(aStudent), 1);
+      }
+      this._students.splice(index, 0, aStudent);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMoveStudentAt(aStudent, index)
+  {
+    let wasAdded = false;
+    if (this._students.includes(aStudent))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfStudents())
+      {
+        index = this.numberOfStudents() - 1;
+      }
+      if (this._students.includes(aStudent))
+      {
+        this._students.splice(this._students.indexOf(aStudent), 1);
+      }
+      this._students.splice(index, 0, aStudent);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addStudentAt(aStudent, index);
+    }
+    return wasAdded;
+  }
+  delete()
+  {
+    let copyOfStudents = this._students.slice();
+    this._students.splice(0);
+    for (let aStudent of copyOfStudents) {
+      aStudent.removeCourse(this);
+    }
+  }
+}
+
+module.exports = Course;

@@ -1,0 +1,62 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 23 "JavaScriptUnsupportedFeatures.ump"
+class Item
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Item Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetOne */
+  getShelf()
+  {
+    return this._shelf;
+  }
+  hasShelf()
+  {
+    let has = this._shelf != null;
+    return has;
+  }
+  /* Code from template association_GetOne_clear */
+  clear_shelf()
+  {
+    this._shelf = null;
+  }
+  /* Code from template association_SetOptionalOneToMany */
+  setShelf(aShelf)
+  {
+    let wasSet = false;
+    let existingShelf = this._shelf;
+    this._shelf = aShelf;
+    if (existingShelf != null && ! (existingShelf == aShelf))
+    {
+      existingShelf.removeItem(this);
+    }
+    if (aShelf != null)
+    {
+      aShelf.addItem(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+  delete()
+  {
+    if (this._shelf != null)
+    {
+      let placeholderShelf = this._shelf;
+      this._shelf = null;
+      placeholderShelf.removeItem(this);
+    }
+  }
+}
+
+module.exports = Item;

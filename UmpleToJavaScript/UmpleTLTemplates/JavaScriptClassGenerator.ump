@@ -1,0 +1,66 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+*/
+
+use UmpleNotice.ump;
+use association_Get_All.ump;
+use association_Set_All.ump;
+use attribute_Get_All.ump;
+use attribute_IsBoolean_All.ump;
+use attribute_Set_All.ump;
+use constructor_Declare_All.ump;
+use delete_All.ump;
+use members_AllAssociations.ump;
+use members_AllAttributes.ump;
+use members_AllHelpers.ump;
+
+namespace cruise.umple.compiler.javascript;
+
+external interface ILang{}
+
+class JavaScriptClassGenerator {
+    depend cruise.umple.compiler.*;
+    depend cruise.umple.util.*;
+    depend java.util.*;
+    depend cruise.umple.parser.Position;
+
+    isA ILang;
+
+    emit getCode(UmpleModel model, UmpleElement uElement)(JavaScriptClassGenerator);
+
+    JavaScriptClassGenerator <<!<</*JavaScriptClassGenerator*/>><<@ UmpleToJavaScript.UmpleNotice >><<#
+  UmpleClass uClass = (UmpleClass) uElement;
+  GeneratedClass gClass = uClass.getGeneratedClass();
+  JavaGenerator gen = new JavaGenerator();
+  gen.setModel(model);
+  if (uClass.numberOfComments() > 0 && uClass.numberOfReqImplementations() > 0 && uClass.getReqImplementations() != null) { List<Comment> toComment = new ArrayList<Comment>(uClass.getComments()); toComment.addAll(Requirement.convertToComment(uClass.getReqImplementations(),model)); realSb.append(NL + Comment.format("Javadoc",toComment)); }
+  else if (uClass.numberOfComments() > 0) { realSb.append(NL + Comment.format("Javadoc",uClass.getComments())); }
+  else if (uClass.numberOfReqImplementations() > 0 && uClass.getReqImplementations() != null) { realSb.append(NL + Requirement.format("Javadoc",uClass.getReqImplementations(),model)); }
+  for (Position p : uClass.getPositions()) { #>>
+// line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"JavaScript") >>"<<# }
+  // CommonJS: the superclass is the only other generated class needed when the class is defined
+  if (!uClass.isRoot()) { #>>
+const <<=uClass.getExtendsClass().getName()>> = require("./<<=uClass.getExtendsClass().getName()>>.js");<<#
+    realSb.append(NL);
+  } #>>
+class <<=uClass.getName()>><<# if (!uClass.isRoot()) { #>> extends <<=uClass.getExtendsClass().getName()>><<# } #>>
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------<<@ UmpleToJavaScript.members_AllAttributes >><<@ UmpleToJavaScript.members_AllAssociations >><<@ UmpleToJavaScript.members_AllHelpers >>
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------<<@ UmpleToJavaScript.constructor_Declare_All >>
+  //------------------------
+  // INTERFACE
+  //------------------------<<@ UmpleToJavaScript.attribute_Set_All >><<@ UmpleToJavaScript.attribute_Get_All >><<@ UmpleToJavaScript.attribute_IsBoolean_All >><<@ UmpleToJavaScript.association_Get_All >><<@ UmpleToJavaScript.association_Set_All >><<@ UmpleToJavaScript.delete_All >>
+}
+
+module.exports = <<=uClass.getName()>>;
+!>>
+}

@@ -1,0 +1,148 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+// line 1 "JavaScriptOptionalAssociation.ump"
+class Team
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Team Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._players = [];
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetMany */
+  getPlayer(index)
+  {
+    let aPlayer = this._players[index];
+    return aPlayer;
+  }
+  getPlayers()
+  {
+    let newPlayers = this._players.slice();
+    return newPlayers;
+  }
+  numberOfPlayers()
+  {
+    let number = this._players.length;
+    return number;
+  }
+  hasPlayers()
+  {
+    let has = this._players.length > 0;
+    return has;
+  }
+  indexOfPlayer(aPlayer)
+  {
+    let index = this._players.indexOf(aPlayer);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfPlayers()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOptionalOne */
+  addPlayer(aPlayer)
+  {
+    let wasAdded = false;
+    if (this._players.includes(aPlayer))
+    {
+      return false;
+    }
+    let existingTeam = aPlayer.getTeam();
+    if (existingTeam == null)
+    {
+      aPlayer.setTeam(this);
+    }
+    else if (! (this == existingTeam))
+    {
+      existingTeam.removePlayer(aPlayer);
+      this.addPlayer(aPlayer);
+    }
+    else
+    {
+      this._players.push(aPlayer);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+  removePlayer(aPlayer)
+  {
+    let wasRemoved = false;
+    if (this._players.includes(aPlayer))
+    {
+      if (this._players.includes(aPlayer))
+      {
+        this._players.splice(this._players.indexOf(aPlayer), 1);
+      }
+      aPlayer.setTeam(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addPlayerAt(aPlayer, index)
+  {
+    let wasAdded = false;
+    if (this.addPlayer(aPlayer))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfPlayers())
+      {
+        index = this.numberOfPlayers() - 1;
+      }
+      if (this._players.includes(aPlayer))
+      {
+        this._players.splice(this._players.indexOf(aPlayer), 1);
+      }
+      this._players.splice(index, 0, aPlayer);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMovePlayerAt(aPlayer, index)
+  {
+    let wasAdded = false;
+    if (this._players.includes(aPlayer))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfPlayers())
+      {
+        index = this.numberOfPlayers() - 1;
+      }
+      if (this._players.includes(aPlayer))
+      {
+        this._players.splice(this._players.indexOf(aPlayer), 1);
+      }
+      this._players.splice(index, 0, aPlayer);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addPlayerAt(aPlayer, index);
+    }
+    return wasAdded;
+  }
+  delete()
+  {
+    while (! (this._players.length == 0))
+    {
+      this._players[0].setTeam(null);
+    }
+  }
+}
+
+module.exports = Team;

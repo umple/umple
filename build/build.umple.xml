@@ -197,6 +197,9 @@
         <arg value="UmpleToRuby/UmpleTLTemplates/Master.ump"/>
       </java>
       <java jar="${umplejar.touse}" fork="true" failonerror="true">
+        <arg value="UmpleToJavaScript/UmpleTLTemplates/Master.ump"/>
+      </java>
+      <java jar="${umplejar.touse}" fork="true" failonerror="true">
         <arg value="UmpleToSql/UmpleTLTemplates/Master.ump"/>
       </java>
       <java jar="${umplejar.touse}" fork="true" failonerror="true">
@@ -218,6 +221,9 @@
     </copy>
     <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/ruby" overwrite="true">
       <fileset dir="UmpleToRuby/src-gen-UmpleTL/cruise/umple/compiler/ruby" excludes=".git* UmpleToRuby.java" />
+    </copy>
+    <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/javascript" overwrite="true">
+      <fileset dir="UmpleToJavaScript/src-gen-UmpleTL/cruise/umple/compiler/javascript" excludes=".git* UmpleToJavaScript.java" />
     </copy>
     <copy todir="cruise.umple/src-gen-umpletl/cruise/umple/compiler/sql" overwrite="true">
       <fileset dir="UmpleToSql/src-gen-UmpleTL/cruise/umple/compiler/sql" excludes=".git* UmpleToSql.java" />
