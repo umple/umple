@@ -57,6 +57,14 @@ public class PythonStateMachineTest extends StateMachineTest
 
   @Override
   @Test
+  public void stateMachineWithStringComparisonGuard()
+  {
+    // The shared model calls isCommandValid(), which it never defines.
+    assertPythonDiagnostic("stateMachineWithStringComparisonGuard.ump", 9211);
+  }
+
+  @Override
+  @Test
   public void guardNameBothAttributeAndMethod()
   {
 	// Reset autotransition counter so isn't carried over to the next test (it's passed from the java test to the php test)

@@ -971,6 +971,20 @@ public class PythonSnippetTranslatorTest
   //------------------------
 
   @Test
+  public void unsupportedStringMethodsReportTheLimitationBeforeArgumentTypes()
+  {
+    for (String call : Arrays.asList("substring(1)", "substring(1, 2)", "indexOf(1)", "indexOf(1, 2)", "indexOf(\"a\")"))
+    {
+      String method = call.substring(0, call.indexOf('('));
+      assertRejected("such as " + method + "(), are not supported", "Child", "name." + call + ";");
+    }
+    for (String method : Arrays.asList("contains", "startsWith", "endsWith"))
+    {
+      assertRejected(method + "() takes a string", "Child", "name." + method + "(1);");
+    }
+  }
+
+  @Test
   public void rejectedConstructsNameTheReason()
   {
     String[][] cases = {

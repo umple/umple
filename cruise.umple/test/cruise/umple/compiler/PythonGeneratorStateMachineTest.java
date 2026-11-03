@@ -200,12 +200,45 @@ public class PythonGeneratorStateMachineTest
   }
 
   @Test
+  public void undefinedGuardMethodsAreReported() throws Exception
+  {
+    for (String guard : Arrays.asList("isUnlocked()", "this.isUnlocked()", "Door.isUnlocked()", "getPeer().isUnlocked()", "peer.isUnlocked()"))
+    {
+      UmpleModel model = generate("class Peer {}\nclass Door { 0..1 -> 0..1 Peer peer;\n"
+        + "sm { Closed { open [" + guard + "] -> Open; } Open {} } }\nclass Panel {}\n");
+      Assert.assertEquals(guard + model.getLastResult(), Arrays.asList(9211), errorCodes(model));
+      Assert.assertFalse(model.getGeneratedCode().containsKey("Door"));
+      Assert.assertFalse(new File(dir, "Door.py").exists());
+      Assert.assertTrue(model.getGeneratedCode().containsKey("Panel"));
+      Assert.assertTrue(model.getLastResult().toString(), model.getLastResult().toString().contains("isUnlocked"));
+    }
+  }
+
+  @Test
+  public void guardCannotCallAnAssociationQueryThatIsNotGenerated() throws Exception
+  {
+    UmpleModel model = generate("class Friend {}\nclass Lamp { 0..1 -> 0..3 Friend friends;\n"
+      + "sm { A { go [isNumberOfFriendsValid()] -> B; } B {} } }\n");
+    Assert.assertEquals(model.getLastResult().toString(), Arrays.asList(9211), errorCodes(model));
+    Assert.assertFalse(model.getGeneratedCode().containsKey("Lamp"));
+  }
+
+  @Test
+  public void inheritedGuardMethodsRemainSupported() throws Exception
+  {
+    UmpleModel model = generate("class Base { Boolean isUnlocked() Python { return True } }\n"
+      + "class Door { isA Base; sm { Closed { open [isUnlocked()] -> Open; } Open {} } }\n");
+    Assert.assertEquals(model.getLastResult().toString(), Collections.emptyList(), errorCodes(model));
+    Assert.assertTrue(model.getGeneratedCode().containsKey("Door"));
+  }
+
+  @Test
   public void effectFreeGuardsKeepPlainBranches() throws Exception
   {
     for (String guard : Arrays.asList("brightness < 1", "getBrightness() < 1", "n < LIMIT",
       "enabled", "isEnabled()", "peer != null", "getPeer() != null", "peer.getBrightness() < 1",
       "getPeer().getBrightness() < 1", "numberOfFriends() > 0", "hasFriends()", "indexOfFriend(null) >= 0",
-      "minimumNumberOfFriends() == 0", "maximumNumberOfFriends() > 0", "isNumberOfFriendsValid()"))
+      "minimumNumberOfFriends() == 0", "maximumNumberOfFriends() > 0"))
     {
       UmpleModel model = generate("class Peer { Integer brightness = 0; }\nclass Friend {}\n"
         + "class Lamp { Integer brightness = 0; Boolean enabled = true; const Integer LIMIT = 1;\n"
