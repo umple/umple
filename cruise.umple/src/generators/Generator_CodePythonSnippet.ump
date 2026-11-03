@@ -130,6 +130,10 @@ class PythonGenerator
     {
       return kind.replaceFirst(" .*", "") + " setN Python { print(aN) }";
     }
+    if (kind.startsWith("guard") || kind.startsWith("constraint"))
+    {
+      return "Boolean ready() Python { return True } and call ready() in the constraint";
+    }
     if (kind.startsWith("derived"))
     {
       return "Integer total = { a + b } Python { self.getA() + self.getB() }";
@@ -1943,7 +1947,8 @@ class PythonSnippetTranslator
   {
     String receiver = target.code;
     String argument = values.size() == 1 ? values.get(0).code : null;
-    if (values.size() == 1 && !name.equals("equals") && !Arrays.asList("str", "unknown", "null").contains(values.get(0).kind))
+    if (values.size() == 1 && Arrays.asList("contains", "startsWith", "endsWith").contains(name)
+      && !Arrays.asList("str", "unknown", "null").contains(values.get(0).kind))
     {
       throw fail(name + "() takes a string");
     }
@@ -3031,6 +3036,25 @@ class PythonSnippetTranslator
       }
     }
     return null;
+  }
+
+  // Constraints have their own renderer, but must resolve calls against the same authored and
+  // generated API as snippets. Unknown argument types stay permissive.
+  public void checkConstraintCall(UmpleClassifier owner, String name, List<String> argumentTypes)
+  {
+    List<PythonSnippetNode> arguments = new ArrayList<PythonSnippetNode>();
+    for (String type : argumentTypes)
+    {
+      PythonSnippetNode argument = new PythonSnippetNode("name", "", 0);
+      boolean list = type != null && type.endsWith("[]");
+      argument.kind = type == null ? "unknown" : list
+        ? "list:" + known(kindOf(type.substring(0, type.length() - 2), uClass)) : known(kindOf(type, uClass));
+      arguments.add(argument);
+    }
+    if (findMethod(owner, name, arguments) == null)
+    {
+      throw fail("'" + name + "(...)' is not a method of class " + owner.getName());
+    }
   }
 
   // The method of c or its ancestors, user or generated, that a call with these arguments reaches, as

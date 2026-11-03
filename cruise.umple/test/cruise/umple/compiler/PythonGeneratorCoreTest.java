@@ -161,6 +161,30 @@ public class PythonGeneratorCoreTest
   }
 
   @Test
+  public void subclassesOfRejectedClassesAreSkipped() throws Exception
+  {
+    for (String rejected : Arrays.asList(
+      "Integer level; trace level;",
+      "Sensor() { }",
+      "Integer value = { missing() }"))
+    {
+      for (boolean childFirst : Arrays.asList(false, true))
+      {
+        String parent = "class Sensor { " + rejected + " }\n";
+        String children = "class SmartSensor { isA Sensor; }\nclass SmartestSensor { isA SmartSensor; }\n";
+        UmpleModel model = generate((childFirst ? children + parent : parent + children) + "class Panel { name; }\n");
+        Assert.assertEquals(model.getLastResult().toString(), Arrays.asList("Panel"), sortedNames(model));
+        Assert.assertFalse(new File(dir, "Sensor.py").exists());
+        Assert.assertFalse(new File(dir, "SmartSensor.py").exists());
+        Assert.assertFalse(new File(dir, "SmartestSensor.py").exists());
+        Assert.assertTrue(new File(dir, "Panel.py").exists());
+        Assert.assertEquals(3, errorCodes(model).size());
+        Assert.assertTrue(messageOf(model, 9210), messageOf(model, 9210).contains("Sensor"));
+      }
+    }
+  }
+
+  @Test
   public void tracingIsReportedAsUnsupported() throws Exception
   {
     UmpleModel model = generate("class Lamp { Integer level; trace level; }\nclass Other { }\n");
