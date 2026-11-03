@@ -98,10 +98,10 @@ public class GvCdGeneratorTest extends TemplateTest
     assertTrue(code.contains("\"Subscription association\" -> \"TicketHolder\" [dir=\"none\", headlabel=\"1 \""));
     assertTrue(code.contains("\"Subscription association\" -> \"Season\" [dir=\"none\", headlabel=\"1 \""));
     assertFalse(code.contains("\"Subscription\" -> \"Season\""));
-    assertTrue(code.contains("taillabel=\"1..* menteeAssignments\""));
-    assertTrue(code.contains("taillabel=\"0..2 mentorAssignments\""));
-    assertTrue(code.contains("\"Enrollment association\" -> \"Student\" [dir=\"none\", headlabel=\"1 \", taillabel=\"* \""));
-    assertTrue(code.contains("\"Enrollment association\" -> \"Course\" [dir=\"none\", headlabel=\"1 \", taillabel=\"1..* \""));
+    assertTrue(code.contains("taillabel=\"1..*\", label=\"menteeAssignments\""));
+    assertTrue(code.contains("taillabel=\"0..2\", label=\"mentorAssignments\""));
+    assertTrue(code.contains("\"Enrollment association\" -> \"Student\" [dir=\"none\", headlabel=\"1 \", taillabel=\"*\""));
+    assertTrue(code.contains("\"Enrollment association\" -> \"Course\" [dir=\"none\", headlabel=\"1 \", taillabel=\"1..*\""));
     assertFalse(code.contains("Action.selectClass(&quot;Ticket association&quot;)"));
     assertFalse(code.contains("Action.selectAssociation('Ticket association"));
   }

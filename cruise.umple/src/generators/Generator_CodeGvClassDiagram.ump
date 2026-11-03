@@ -280,11 +280,15 @@ class GvClassDiagramGenerator
         // Parsing expands each declared end into a class-to-participant association,
         // moving its declared multiplicity to the association-class end.
         String endpointLabel = rightEnd.toSimpleString() + " " + rightEnd.getDisplayRoleName();
-        String junctionLabel = leftEnd.toSimpleString() + " " + leftEnd.getDisplayRoleName();
+        String junctionLabel = leftEnd.toSimpleString();
+        // Tail labels share a tiny junction and long role names can overlap.
+        // Edge labels reserve layout space; keep only the multiplicity at the tail.
+        String roleLabel = leftEnd.getDisplayRoleName().isEmpty() ? "" :
+          ", label=\"" + leftEnd.getDisplayRoleName() + "\", labeldistance=2, minlen=2";
         associations.append("  \"" + className + " association\" -> \"" + rightEnd.getClassName()
           + "\" [" + retArrows(uAssoc)[0] + ", headlabel=\"" + endpointLabel
           + "\", taillabel=\"" + junctionLabel
-          + "\", tooltip=\"associationClass " + className
+          + "\"" + roleLabel + ", tooltip=\"associationClass " + className
           + "\", URL=\"javascript:Action.selectClass(&quot;" + className + "&quot;);\" ];\n");
         return;
       }
