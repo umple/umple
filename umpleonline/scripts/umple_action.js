@@ -2962,26 +2962,22 @@ Action.addAssociationGv = function(classCode, className){
   var elems=document.getElementsByClassName("node");
   var orig=classCode.replaceAll("&#10","\n").replaceAll("&#$quot","\"");
   Action.removeContextMenu();
-  //add event listener to Graphviz nodes for left click
+  // Share one listener so completing the operation removes it from every node.
+  function assocClass(event){
+    const elemText = Action.getGvClassName(event);
+    if (!elemText || !Action.getGvClassCode(elemText)) return;
+    let subtext="  * -> 1 "+elemText+";\n}\n";
+    let newClass=orig.substr(0,orig.length-1)+subtext;
+
+    Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(orig,newClass) } });
+
+    TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
+    for(let i=0;i<elems.length;i++){
+      elems[i].removeEventListener("mousedown",assocClass);
+    }
+  }
   for(let i=0;i<elems.length;i++){
-    elems[i].addEventListener("mousedown", function assocClass(event){
-      var elemText=event.target;
-      //iterate up to find class node
-      while(elemText.parentElement.id!="graph0"){
-        elemText=elemText.parentNode;
-      }
-      elemText=elemText.outerHTML.substr(elemText.outerHTML.indexOf("&nbsp;"),elemText.outerHTML.indexOf("</text>")-elemText.outerHTML.indexOf("&nbsp;")).replaceAll("&nbsp;","").trim();
-      let subtext="  * -> 1 "+elemText+";\n}\n";
-      let newClass=orig.substr(0,orig.length-1)+subtext;
-
-      Page.codeMirrorEditor6.dispatch({ changes: { from: 0, to: Page.codeMirrorEditor6.state.doc.length, insert: Page.codeMirrorEditor6.state.doc.toString().replace(orig,newClass) } });
-
-      TabControl.getCurrentHistory().save(Page.getUmpleCode(), "menuUpdate");
-      let others=document.getElementsByClassName("node");
-      for(let q=0;q<others.length;q++){
-        others[q].removeEventListener("mousedown",assocClass);
-      }
-    });
+    elems[i].addEventListener("mousedown", assocClass);
   }
 }
 

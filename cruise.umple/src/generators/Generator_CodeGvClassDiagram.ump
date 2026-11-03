@@ -118,7 +118,7 @@ class GvClassDiagramGenerator
     // Terminate the class as a whole
     code.append("];\n");
 
-    if (uClass instanceof AssociationClass)
+    if (uClass instanceof AssociationClass && hasParticipatingAssociation(uClass))
     {
       // The dot joins the participating classes; the dashed line attaches their association class.
       // A space in the ID keeps it distinct from every legal Umple class name.
@@ -129,6 +129,16 @@ class GvClassDiagramGenerator
         + "\" [dir=\"none\", style=dashed, URL=\"" + action + "\"];\n");
     }
 	}
+
+  // Filters remove hidden participants and their associations before generation.
+  private boolean hasParticipatingAssociation(UmpleClass uClass)
+  {
+    for (Association association : uClass.getAssociations())
+    {
+      if (association.getIsAssociationClassEnd()) return true;
+    }
+    return false;
+  }
 
   // Create each attribute for each class - called by classCreation
   private void attributeCreation(UmpleClass uClass, StringBuilder code, boolean manyClass)
@@ -269,10 +279,16 @@ class GvClassDiagramGenerator
       {
         // Parsing expands each declared end into a class-to-participant association,
         // moving its declared multiplicity to the association-class end.
-        String endpointLabel = leftEnd.toSimpleString() + " " + rightEnd.getDisplayRoleName();
+        String endpointLabel = rightEnd.toSimpleString() + " " + rightEnd.getDisplayRoleName();
+        String junctionLabel = leftEnd.toSimpleString();
+        // Tail labels share a tiny junction and long role names can overlap.
+        // Edge labels reserve layout space; keep only the multiplicity at the tail.
+        String roleLabel = leftEnd.getDisplayRoleName().isEmpty() ? "" :
+          ", label=\"" + leftEnd.getDisplayRoleName() + "\", labeldistance=2, minlen=2";
         associations.append("  \"" + className + " association\" -> \"" + rightEnd.getClassName()
           + "\" [" + retArrows(uAssoc)[0] + ", headlabel=\"" + endpointLabel
-          + "\", tooltip=\"associationClass " + className
+          + "\", taillabel=\"" + junctionLabel
+          + "\"" + roleLabel + ", tooltip=\"associationClass " + className
           + "\", URL=\"javascript:Action.selectClass(&quot;" + className + "&quot;);\" ];\n");
         return;
       }

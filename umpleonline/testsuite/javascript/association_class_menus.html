@@ -132,6 +132,30 @@ check('declaration matching', () => {
   assert(Action.getGvClassCode('Ticket').startsWith('associationClass Ticket'), 'Association class not found');
   assert(!Action.getGvClassCode('Tick'), 'Class name matched only a prefix');
 });
+// Exercise actual insertion, including all SVG node shapes and listener cleanup.
+for (const target of ['junction', 'class-box', 'class-name', 'ordinary-class']) {
+  check('add association to ' + target, () => {
+    let text = source;
+    let saves = 0;
+    Page.codeMirrorEditor6 = {
+      state: {doc: {toString: () => text, get length() { return text.length; }}},
+      dispatch: ({changes}) => { text = changes.insert; }
+    };
+    Page.getUmpleCode = () => text;
+    window.TabControl = {getCurrentHistory: () => ({save: () => { saves++; }})};
+    const block = Action.getGvClassCode('Performance');
+    Action.addAssociationGv(block, 'Performance');
+    document.getElementById(target).dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+    const owner = target === 'ordinary-class' ? 'Performance' : 'Ticket';
+    assert(text.includes('* -> 1 ' + owner + ';'), 'Missing target class name');
+    assert(!text.includes('Ticket association;'), 'Synthetic name inserted');
+    assert(saves === 1, 'Expected one edit');
+    // A different node must not retain a listener from the completed operation.
+    document.getElementById(target === 'ordinary-class' ? 'junction' : 'ordinary-class')
+      .dispatchEvent(new MouseEvent('mousedown', {bubbles: true}));
+    assert(saves === 1, 'Stale association listener performed another edit');
+  });
+}
 document.getElementById('results').textContent = testResults.map(r =>
   (r.passed ? 'PASS ' : 'FAIL ') + r.name + (r.error ? ': ' + r.error : '')).join('\n');
 document.title = testResults.every(r => r.passed) ? 'PASS: association-class menus' : 'FAIL: association-class menus';

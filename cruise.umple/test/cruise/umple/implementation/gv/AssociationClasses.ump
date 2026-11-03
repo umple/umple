@@ -31,3 +31,13 @@ associationClass Subscription {
   * TicketHolder;
   * Season;
 }
+
+class Student {}
+class Course {}
+associationClass Enrollment {
+  * Student;
+  1..* Course;
+}
+
+filter ticketOnly { include Ticket, Receipt; }
+filter ticketPerformance { include Ticket, Performance; }
