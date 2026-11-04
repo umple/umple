@@ -925,6 +925,53 @@ public class UmpleParserStateMachineTest
   }
 
   @Test
+  public void referencedStateMachinesDoNotShareUndeclaredStates()
+  {
+    assertHasWarning("200_stateMachineDefinition_reference_isolation.ump", 0, 50);
+    assertReferencedStateMachineIsolation();
+  }
+
+  @Test
+  public void referencedStateMachineIsolationIsIndependentOfClassOrder()
+  {
+    assertHasWarning("200_stateMachineDefinition_reference_isolationReverse.ump", 0, 50);
+    assertReferencedStateMachineIsolation();
+  }
+
+  private void assertReferencedStateMachineIsolation()
+  {
+    Assert.assertEquals(2, parser.getParseResult().numberOfErrorMessages());
+    Assert.assertEquals(50, parser.getParseResult().getErrorMessage(1).getErrorType().getErrorCode());
+
+    StateMachine first = model.getUmpleClass("A").getStateMachine(0);
+    StateMachine second = model.getUmpleClass("B").getStateMachine(0);
+    State warm = second.findState("warm");
+    Assert.assertSame(second, warm.getStateMachine());
+    Assert.assertNotSame(warm, first.findState("booting").getTransition(1).getNextState());
+    Assert.assertNotSame(warm, first.findState("active").getTransition(1).getNextState());
+    Assert.assertNull(model.getStateMachineDefinition(0).findState("warm"));
+  }
+
+  @Test
+  public void referencedStateMachinesCanDeclareTheirOwnExtensionStates()
+  {
+    assertNoWarnings("200_stateMachineDefinition_reference_localExtensions.ump");
+
+    StateMachine first = model.getUmpleClass("A").getStateMachine(0);
+    StateMachine second = model.getUmpleClass("B").getStateMachine(0);
+    State firstWarm = first.findState("warm");
+    State secondWarm = second.findState("warm");
+    Assert.assertNotSame(firstWarm, secondWarm);
+    Assert.assertSame(first, firstWarm.getStateMachine());
+    Assert.assertSame(second, secondWarm.getStateMachine());
+    Assert.assertSame(firstWarm, first.findState("booting").getTransition(1).getNextState());
+    Assert.assertSame(secondWarm, second.findState("booting").getTransition(1).getNextState());
+    Assert.assertSame(first.findState("active"), firstWarm.getTransition(0).getNextState());
+    Assert.assertSame(second.findState("active"), secondWarm.getTransition(0).getNextState());
+    Assert.assertNull(model.getStateMachineDefinition(0).findState("warm"));
+  }
+
+  @Test
   public void reusingEventsInNestedStateMachines()
   {
     assertParse("200_reusingEventsInNestedStateMachines.ump", "[classDefinition][name:OnOffSwitch][stateMachine][inlineStateMachine][name:status][state][stateName:S1][transition][event:e1][stateName:S1A][state][stateName:S1A][transition][event:e1][stateName:S1]");
