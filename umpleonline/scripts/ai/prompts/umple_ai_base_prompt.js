@@ -28,7 +28,7 @@ Rules:
 - Advanced SM: \`queued sm { ... }\`  \`pooled sm { ... }\`  regions: \`A { ... } || B { ... }\`  history: \`Parent.H\` / \`Parent.HStar\`
 - Final states: \`-> Final;\` or \`final Done {}\`
 - Reuse SM: \`statemachine M { ... }\`  \`class C { x as M; }\`
-- Requirements: \`req R1 { text }\`  \`implementsReq R1, R2;\`
+- Requirements: \`req R1 { text }\` or typed \`req US1 userStory { ... }\` (also useCase, ears)  \`implementsReq R1, R2;\`
 - External type: \`external Type {}\`
 `;
 

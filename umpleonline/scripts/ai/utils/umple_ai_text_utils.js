@@ -156,16 +156,19 @@ const AiTextUtils = {
   },
 
   /**
-   * Find active `req ID { ... }` blocks in Umple code, skipping any that are inside
+   * Find active `req ID [language] { ... }` blocks in Umple code, skipping any that are inside
    * // or /* *\/ comments or string literals. The body of a req is taken verbatim up
-   * to its closing brace, so text such as URLs containing // is preserved.
+   * to its matching closing brace, so nested clauses such as `who { ... }` and text such as
+   * URLs containing // are preserved.
    * @param {string} umpleCode - Umple source text
-   * @returns {Array<{id: string, text: string, start: number, end: number}>} Blocks with offsets into umpleCode
+   * @returns {Array<{id: string, language: string, text: string, start: number, end: number}>} Blocks with offsets into umpleCode
    */
   findRequirementBlocks(umpleCode) {
     const source = String(umpleCode || "");
     const blocks = [];
-    const reqPattern = /req\s+(\w+(?:[-_]\w+)*)\s*\{([^}]*)\}/y;
+    const reqPattern = /req\s+(\w+(?:[-_]\w+)*)(?:\s+(\w+))?\s*\{/y;
+    // Other spellings the compiler accepts, mapped to its names
+    const languageAliases = { userstory: "userStory", usecase: "useCase", quality: "quality" };
     let i = 0;
 
     while (i < source.length) {
@@ -190,9 +193,17 @@ const AiTextUtils = {
       if (source.startsWith("req", i) && (i === 0 || !/\w/.test(source[i - 1]))) {
         reqPattern.lastIndex = i;
         const match = reqPattern.exec(source);
-        if (match) {
-          blocks.push({ id: match[1].trim(), text: match[2].trim(), start: i, end: reqPattern.lastIndex });
-          i = reqPattern.lastIndex;
+        const bodyEnd = match ? this.findClosingBrace(source, reqPattern.lastIndex) : -1;
+        if (bodyEnd >= 0) {
+          const language = match[2] || "";
+          blocks.push({
+            id: match[1].trim(),
+            language: languageAliases[language.toLowerCase()] || language,
+            text: source.slice(reqPattern.lastIndex, bodyEnd).trim(),
+            start: i,
+            end: bodyEnd + 1
+          });
+          i = bodyEnd + 1;
           continue;
         }
       }
@@ -200,5 +211,23 @@ const AiTextUtils = {
     }
 
     return blocks;
+  },
+
+  /**
+   * Find the brace that closes a block whose body starts at bodyStart, counting nested braces
+   * @param {string} source - Umple source text
+   * @param {number} bodyStart - Index just after the opening brace
+   * @returns {number} Index of the closing brace, or -1 if the block is never closed
+   */
+  findClosingBrace(source, bodyStart) {
+    let depth = 1;
+    for (let j = bodyStart; j < source.length; j++) {
+      if (source[j] === "{") {
+        depth++;
+      } else if (source[j] === "}" && --depth === 0) {
+        return j;
+      }
+    }
+    return -1;
   }
 };

@@ -7,6 +7,12 @@ Core syntax
 - Requirement tagging: `implementsReq ID1, ID2;`
 - `implementsReq` applies to the next model element.
 
+Requirement types
+- A requirement may name its type after the ID: `req US1 userStory { ... }`. Without a type, the body is free text.
+- `userStory`: `who` is the role (often a class), `what` the capability (an operation, attribute or event), `when` a condition (a guard or a state), `why` the reason (not modelled).
+- `useCase`: `who` is the actor; each `userStep` is an actor action (usually an event) and each `systemResponse` what the system then does (an action or a change of state); steps happen in the order written; `[condition]` on a step is a guard; `include` reuses another use case's steps and `isA` specializes another use case.
+- `ears`: `while` is a precondition (usually a state), `when` a trigger (an event), `if` an unwanted trigger (an event leading to error handling), `where` an optional feature (a mixset), `system` the responding class, and `shall` the response (a transition or an action).
+
 Tagging rules
 - Do not generate or repeat `req { ... }` blocks in generated output.
 - Never treat commented-out requirements (`// req ...` or `/* req ... */`) as active; only implement IDs provided for generation.

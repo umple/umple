@@ -5,6 +5,11 @@
 // AI Requirements Dialog - Dialog UI for requirements generation
 
 const RequirementsDialog = {
+  // Shows the requirement type after its ID, e.g. "US1 (userStory)"
+  formatRequirementLabel(requirement) {
+    return requirement.language ? `${requirement.id} (${requirement.language})` : requirement.id;
+  },
+
   getRequirementsOutputArea(dialog = null) {
     if (dialog && typeof dialog.querySelector === "function") {
       return dialog.querySelector("#requirementsOutputArea");
@@ -53,7 +58,7 @@ const RequirementsDialog = {
     display.className = "requirement-display";
 
     const strong = document.createElement("strong");
-    strong.textContent = requirement.id;
+    strong.textContent = this.formatRequirementLabel(requirement);
     display.appendChild(strong);
 
     const textDiv = document.createElement("div");
@@ -115,7 +120,7 @@ const RequirementsDialog = {
       const span = document.createElement("span");
       span.className = "requirement-summary";
       const strong = document.createElement("strong");
-      strong.textContent = req.id;
+      strong.textContent = this.formatRequirementLabel(req);
       span.appendChild(strong);
       const summaryText = req.text.substring(0, 100) + (req.text.length > 100 ? "..." : "");
       const linkifiedNode = document.createElement("span");
@@ -198,7 +203,7 @@ const RequirementsDialog = {
       this.renderTextWithLinks(displayDiv, "No requirements selected");
     } else {
       const selectedReqs = requirements.filter(r => selectedIds.includes(r.id));
-      const content = selectedReqs.map(r => `${r.id}: ${r.text}`).join("\n\n");
+      const content = selectedReqs.map(r => `${this.formatRequirementLabel(r)}: ${r.text}`).join("\n\n");
       this.renderTextWithLinks(displayDiv, content);
     }
   },

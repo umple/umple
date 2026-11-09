@@ -114,7 +114,7 @@ const RequirementsPromptBuilder = (() => {
 
   function formatRequirements(requirements) {
     return (requirements || [])
-      .map(r => `Requirement ${r.id}:\n${(r.text || "").trim()}`)
+      .map(r => `Requirement ${r.id}${r.language ? ` (${r.language})` : ""}:\n${(r.text || "").trim()}`)
       .join("\n\n");
   }
 
