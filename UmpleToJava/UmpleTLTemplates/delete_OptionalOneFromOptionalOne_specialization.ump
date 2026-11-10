@@ -3,5 +3,8 @@ class UmpleToJava {
     if (<<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>() != null)
     {
       <<=gen.translate("getMethod",av)>><<# if (mulChangedToOne) { #>>_One<<=gen.translate("type",av)>><<# } #>>().clear_<<=gen.relatedTranslate("associationOne",av)>>();
-    }!>>
+    }
+    <<# if (mulChangedToOne) { #>>
+    clear_<<=gen.translate("associationMany",gen.inheritedAssociation(av))>>();
+    <<# } #>>!>>
 }
