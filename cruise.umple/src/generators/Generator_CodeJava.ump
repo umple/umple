@@ -1466,6 +1466,34 @@ the if(parent.getHasProxyPattern()) is neccessary to check if the parent's real 
     return translate(keyName,av,av.isMany());
   }
 
+  // Specializations can narrow a collection to one without changing its inherited API.
+  public AssociationVariable inheritedAssociation(AssociationVariable av)
+  {
+    AssociationVariable inherited = av;
+    while (inherited.getSpecializedFromVariable() != null)
+    {
+      inherited = inherited.getSpecializedFromVariable();
+    }
+    String getter = translate("getMethod", inherited);
+    UmpleClass parent = inherited.getUmpleClass().getExtendsClass();
+    while (parent != null)
+    {
+      for (AssociationVariable candidate : parent.getAssociationVariables())
+      {
+        if (getter.equals(translate("getMethod", candidate)))
+        {
+          inherited = candidate;
+          while (inherited.getSpecializedFromVariable() != null)
+          {
+            inherited = inherited.getSpecializedFromVariable();
+          }
+        }
+      }
+      parent = parent.getExtendsClass();
+    }
+    return inherited;
+  }
+
   // Translates Date and Time values, has to be used for interfaces as they do not use attributes. 
   public String translateInterfaceValue(String value, String type)
   {
