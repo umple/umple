@@ -62,7 +62,25 @@ const RequirementsDialog = {
     display.appendChild(textDiv);
 
     container.appendChild(display);
+    if (requirement.implemented) {
+      const note = document.createElement("div");
+      note.className = "requirement-implemented-note";
+      note.textContent = "This requirement already has an implementsReq in the model.";
+      container.appendChild(note);
+    }
     return container;
+  },
+
+  // Requirements that no active implementsReq names yet (issue #2485)
+  getUnimplementedRequirements(requirements) {
+    return requirements.filter(r => !r.implemented);
+  },
+
+  describeMode(mode, requirements) {
+    if (mode === "unimplemented") {
+      return `Not yet implemented (${this.getUnimplementedRequirements(requirements).length} of ${requirements.length})`;
+    }
+    return `All requirements (${requirements.length})`;
   },
 
   createMultipleRequirementUI(requirements) {
@@ -76,15 +94,31 @@ const RequirementsDialog = {
     const modeDiv = document.createElement("div");
     modeDiv.className = "requirement-mode";
 
+    const unimplementedCount = this.getUnimplementedRequirements(requirements).length;
+    const someImplemented = unimplementedCount > 0 && unimplementedCount < requirements.length;
+
     const labelAll = document.createElement("label");
     const radioAll = document.createElement("input");
     radioAll.type = "radio";
     radioAll.name = "reqMode";
     radioAll.value = "all";
-    radioAll.checked = true;
+    radioAll.checked = !someImplemented;
     labelAll.appendChild(radioAll);
     labelAll.appendChild(document.createTextNode(" All Requirements (recommended for comprehensive generation)"));
     modeDiv.appendChild(labelAll);
+
+    if (someImplemented) {
+      const labelUnimplemented = document.createElement("label");
+      const radioUnimplemented = document.createElement("input");
+      radioUnimplemented.type = "radio";
+      radioUnimplemented.name = "reqMode";
+      radioUnimplemented.value = "unimplemented";
+      radioUnimplemented.checked = true;
+      labelUnimplemented.appendChild(radioUnimplemented);
+      labelUnimplemented.appendChild(document.createTextNode(
+        ` Only Requirements Not Yet Implemented (${unimplementedCount}, no implementsReq in the model)`));
+      modeDiv.appendChild(labelUnimplemented);
+    }
 
     const labelMultiple = document.createElement("label");
     const radioMultiple = document.createElement("input");
@@ -126,6 +160,12 @@ const RequirementsDialog = {
       else {
         linkifiedNode.appendChild(document.createTextNode(`: ${summaryText}`));
       }
+      if (req.implemented) {
+        const tag = document.createElement("em");
+        tag.className = "requirement-implemented-tag";
+        tag.textContent = " (implemented)";
+        span.appendChild(tag);
+      }
       label.appendChild(span);
 
       multipleDiv.appendChild(label);
@@ -143,7 +183,7 @@ const RequirementsDialog = {
 
     const selectedText = document.createElement("div");
     selectedText.id = "selectedReqText";
-    selectedText.textContent = `All requirements (${requirements.length})`;
+    selectedText.textContent = this.describeMode(someImplemented ? "unimplemented" : "all", requirements);
     displayDiv.appendChild(selectedText);
 
     container.appendChild(displayDiv);
@@ -208,6 +248,8 @@ const RequirementsDialog = {
 
     if (mode === "all") {
       return requirements;
+    } else if (mode === "unimplemented") {
+      return this.getUnimplementedRequirements(requirements);
     } else {
       const checkboxes = dialog.querySelectorAll(".req-checkbox:checked");
       const selectedIds = Array.from(checkboxes).map(cb => cb.value);
@@ -359,9 +401,9 @@ const RequirementsDialog = {
 
         if (!multipleDiv || !displayDiv) return;
 
-        if (mode === "all") {
+        if (mode === "all" || mode === "unimplemented") {
           multipleDiv.style.display = "none";
-          this.renderTextWithLinks(displayDiv, `All requirements (${requirements.length})`);
+          this.renderTextWithLinks(displayDiv, this.describeMode(mode, requirements));
         } else if (mode === "multiple") {
           multipleDiv.style.display = "block";
           this.updateSelectedDisplay(dialog, requirements);

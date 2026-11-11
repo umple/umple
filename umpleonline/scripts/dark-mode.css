@@ -637,6 +637,11 @@ select {
   color: var(--ai-text) !important;
 }
 
+.ai-requirements-dialog .requirement-implemented-tag,
+.ai-requirements-dialog .requirement-implemented-note {
+  color: var(--ai-muted) !important;
+}
+
 .ai-requirements-dialog .requirement-text,
 .ai-requirements-dialog #selectedReqText,
 .ai-requirements-dialog .requirement-mode label,
