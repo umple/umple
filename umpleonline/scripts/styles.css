@@ -1597,6 +1597,18 @@ textarea#umpleLayoutEditorText {
   color: #000000;
 }
 
+/* Requirements that already have an implementsReq (issue #2485) */
+.ai-requirements-dialog .requirement-implemented-tag,
+.ai-requirements-dialog .requirement-implemented-note {
+  color: #666666;
+  font-style: italic;
+}
+
+.ai-requirements-dialog .requirement-implemented-note {
+  margin-top: 6px;
+  font-size: 9pt;
+}
+
 .ai-requirements-dialog #selectedReqText {
   white-space: pre-wrap;
   font-size: 9pt;

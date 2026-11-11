@@ -9,10 +9,12 @@ const AiRequirements = {
   activeStream: null,
 
   // Only active reqs are returned; commented-out ones are ignored (issue #2541).
+  // implemented: an active implementsReq already names the requirement (issue #2485).
   parseRequirements(umpleCode) {
-    return AiTextUtils.findRequirementBlocks(umpleCode)
+    const { blocks, implementedIds } = AiTextUtils.scanRequirements(umpleCode);
+    return blocks
       .filter(block => block.id && block.text)
-      .map(({ id, text }) => ({ id, text }));
+      .map(({ id, text }) => ({ id, text, implemented: implementedIds.has(id) }));
   },
 
   abortActiveStream() {

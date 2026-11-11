@@ -163,9 +163,33 @@ const AiTextUtils = {
    * @returns {Array<{id: string, text: string, start: number, end: number}>} Blocks with offsets into umpleCode
    */
   findRequirementBlocks(umpleCode) {
+    return this.scanRequirements(umpleCode).blocks;
+  },
+
+  /**
+   * Find the requirement IDs named by active `implementsReq` statements, e.g.
+   * `implementsReq R1, R2;` or `implementsReq Speed(High);`, ignoring comments,
+   * string literals and requirement bodies.
+   * @param {string} umpleCode - Umple source text
+   * @returns {Set<string>} Implemented requirement IDs
+   */
+  findImplementedRequirementIds(umpleCode) {
+    return this.scanRequirements(umpleCode).implementedIds;
+  },
+
+  /**
+   * Walk Umple code outside comments and string literals, collecting req blocks and
+   * the IDs named by implementsReq statements.
+   * @param {string} umpleCode - Umple source text
+   * @returns {{blocks: Array<{id: string, text: string, start: number, end: number}>, implementedIds: Set<string>}}
+   */
+  scanRequirements(umpleCode) {
     const source = String(umpleCode || "");
     const blocks = [];
+    const implementedIds = new Set();
     const reqPattern = /req\s+(\w+(?:[-_]\w+)*)\s*\{([^}]*)\}/y;
+    const implementsPattern = /implementsReq\s+([^;{}]*);/y;
+    const atWordStart = i => i === 0 || !/\w/.test(source[i - 1]);
     let i = 0;
 
     while (i < source.length) {
@@ -187,7 +211,20 @@ const AiTextUtils = {
         i = j + 1;
         continue;
       }
-      if (source.startsWith("req", i) && (i === 0 || !/\w/.test(source[i - 1]))) {
+      if (source.startsWith("implementsReq", i) && atWordStart(i)) {
+        implementsPattern.lastIndex = i;
+        const match = implementsPattern.exec(source);
+        if (match) {
+          // Drop quality qualifiers such as Speed(High) before splitting the list
+          match[1].replace(/\([^)]*\)/g, "").split(",")
+            .map(id => id.trim())
+            .filter(Boolean)
+            .forEach(id => implementedIds.add(id));
+          i = implementsPattern.lastIndex;
+          continue;
+        }
+      }
+      if (source.startsWith("req", i) && atWordStart(i)) {
         reqPattern.lastIndex = i;
         const match = reqPattern.exec(source);
         if (match) {
@@ -199,6 +236,6 @@ const AiTextUtils = {
       i++;
     }
 
-    return blocks;
+    return { blocks, implementedIds };
   }
 };
