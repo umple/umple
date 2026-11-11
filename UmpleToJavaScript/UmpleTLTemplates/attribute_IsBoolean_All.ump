@@ -1,0 +1,14 @@
+use attribute_IsBoolean.ump;
+
+class UmpleToJavaScript {
+    attribute_IsBoolean_All <<!<</*attribute_IsBoolean_All*/>><<#
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (!av.getType().equals("Boolean") || av.getIsAutounique() || av.isConstant() || "internal".equals(av.getModifier()))
+    {
+      continue;
+    }
+    #>><<@ UmpleToJavaScript.attribute_IsBoolean >><<#
+  }
+#>>!>>
+}

@@ -1,0 +1,44 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+// line 10 "JavaScriptReflexiveAssociation.ump"
+class Node
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Node Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._next = null;
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetOne */
+  getNext()
+  {
+    return this._next;
+  }
+  hasNext()
+  {
+    let has = this._next != null;
+    return has;
+  }
+  /* Code from template association_SetUnidirectionalOptionalOne */
+  setNext(aNewNext)
+  {
+    let wasSet = false;
+    this._next = aNewNext;
+    wasSet = true;
+    return wasSet;
+  }
+  delete()
+  {
+    this._next = null;
+  }
+}
+
+module.exports = Node;

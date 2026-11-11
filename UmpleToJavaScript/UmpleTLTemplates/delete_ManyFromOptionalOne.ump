@@ -1,0 +1,7 @@
+class UmpleToJavaScript {
+    delete_ManyFromOptionalOne <<!<</*delete_ManyFromOptionalOne*/>>
+    while (! (this._<<=gen.translate("associationMany",av)>>.length == 0))
+    {
+      this._<<=gen.translate("associationMany",av)>>[0].<<=gen.relatedTranslate("setMethod",av)>>(null);
+    }!>>
+}

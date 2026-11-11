@@ -1,0 +1,34 @@
+// Methods written in JavaScript. A method can call the generated
+// getters and the generated association methods, and it can use
+// another generated class
+generate JavaScript;
+
+class Order {
+  reference;
+  0..1 -- * Line;
+
+  String label() JavaScript {
+    return "order " + this.getReference();
+  }
+
+  Boolean addItem(String aName, Integer aQuantity) JavaScript {
+    return this.addLine(new Line(aName, aQuantity));
+  }
+
+  Integer total() JavaScript {
+    let sum = 0;
+    for (const line of this.getLines()) {
+      sum += line.getQuantity();
+    }
+    return sum;
+  }
+
+  static String currency() JavaScript {
+    return "CAD";
+  }
+}
+
+class Line {
+  name;
+  Integer quantity;
+}

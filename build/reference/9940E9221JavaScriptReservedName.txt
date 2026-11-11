@@ -1,0 +1,24 @@
+E9221 JavaScript Reserved Name
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>A name that JavaScript reserves or that generated code uses</h2>
+
+<p>The JavaScript generator reports this error, and does not generate the class, for a name it would have to bind:</p>
+<ul>
+    <li>A class named with a word JavaScript reserves, such as <code>class</code>, <code>function</code>, <code>delete</code>, <code>new</code> or <code>static</code>: the generated <code>class</code> declaration would not parse. A class body is strict code, so the words reserved only in strict mode, such as <code>interface</code>, <code>package</code>, <code>private</code>, <code>arguments</code> and <code>eval</code>, are rejected as well. The same applies to a class whose superclass has such a name, since the generated module binds the superclass with <code>const</code>.</li>
+    <li>A class named like one of the variables Node gives a CommonJS module: <code>module</code>, <code>exports</code>, <code>require</code>, <code>__dirname</code> or <code>__filename</code>. Such a class would be bound in place of the variable the module itself uses, so <code>module.exports</code> would never receive the class and <code>require</code> would return an empty object.</li>
+    <li>A parameter of a method written in the model whose name JavaScript reserves, or that repeats the name of another parameter of that method, which strict code does not allow.</li>
+</ul>
+
+<p>Rename the element. Attributes, association role names, states and events are not concerned: generated code reaches them as properties and as method names, where any word is allowed.</p>
+
+@@example
+@@source manualexamples/E9221JavaScriptReservedName1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E9221JavaScriptReservedName2.ump
+@@endexample

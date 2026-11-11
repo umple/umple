@@ -1,0 +1,29 @@
+class UmpleToJavaScript {
+    association_AddManyToManyMethod <<!<</*association_AddManyToManyMethod*/>>
+  /* Code from template association_AddManyToManyMethod */
+  <<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    let wasAdded = false;
+    if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+    {
+      return false;
+    }
+    this._<<=gen.translate("associationMany",av)>>.push(<<=gen.translate("parameterOne",av)>>);
+    if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("indexOfMethod",av)>>(this) != -1)
+    {
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("addMethod",av)>>(this);
+      if (! wasAdded)
+      {
+        if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+        {
+          this._<<=gen.translate("associationMany",av)>>.splice(this._<<=gen.translate("associationMany",av)>>.indexOf(<<=gen.translate("parameterOne",av)>>), 1);
+        }
+      }
+    }
+    return wasAdded;
+  }!>>
+}

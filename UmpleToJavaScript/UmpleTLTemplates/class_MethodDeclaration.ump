@@ -1,0 +1,36 @@
+class UmpleToJavaScript {
+    // Methods written in the model, in model order. A method is declared when a JavaScript body was
+    // written for it, or an untagged body was, which every language falls back to; a method written
+    // only for other languages is left out with warning W9222. An abstract method is declared with a
+    // body that reports a call to it, as only a subclass is meant to answer it.
+    class_MethodDeclaration <<!<</*class_MethodDeclaration*/>><<#
+  for (Method aMethod : uClass.getMethods())
+  {
+    if (!JavaScriptGenerator.isUserMethod(aMethod) || !JavaScriptGenerator.isDeclared(aMethod))
+    {
+      continue;
+    }
+    List<String> parameters = new ArrayList<String>();
+    for (MethodParameter aParameter : aMethod.getMethodParameters())
+    {
+      parameters.add(aParameter.getName());
+    }
+    String signature = (JavaScriptGenerator.isStatic(aMethod) ? "static " : "") + aMethod.getName()
+      + "(" + String.join(", ", parameters) + ")";
+    if (aMethod.numberOfComments() > 0 && aMethod.numberOfReqImplementations() > 0) { List<Comment> toComment = new ArrayList<Comment>(aMethod.getComments()); toComment.addAll(Requirement.convertToComment(aMethod.getReqImplementations(),model)); realSb.append(NL + "  " + Comment.format("Method Javadoc",toComment)); }
+    else if (aMethod.numberOfComments() > 0) { realSb.append(NL + "  " + Comment.format("Method Javadoc",aMethod.getComments())); }
+    else if (aMethod.numberOfReqImplementations() > 0) { realSb.append(NL + "  " + Requirement.format("Method Javadoc",aMethod.getReqImplementations(),model)); }
+    Position p = aMethod.getCodePosition() != null ? aMethod.getCodePosition() : aMethod.getPosition();
+    if (p != null && p.getFilename() != null)
+    {
+      #>>
+  // line <<= p.getLineNumber() >> "<<= uClass.getRelativePath(p.getFilename(),"JavaScript") >>"<<#
+    }
+    #>>
+  <<=signature>>
+  {
+<<= JavaScriptGenerator.methodBody(aMethod, uClass) >>
+  }<<#
+  }
+#>>!>>
+}

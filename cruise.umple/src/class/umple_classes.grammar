@@ -54,7 +54,7 @@ constantDeclaration : [=internal]? const [[typedName]] (= [**value])? ;
 distributable- : [=distributable:distributable] [=distributeTech:RMI|WS]? ;
 proxyPattern- : [=proxyPattern:proxyPattern] ;
 moreCode- : [[codeLangs]] { [**code] }
-codeLangs- : ([=codeLang:Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|Python|Alloy|UmpleSelf] ( , [=codeLang:Java|Alloy|RTCpp|SimpleCpp|Cpp|Php|Ruby|Python|UmpleSelf] )* )?
+codeLangs- : ([=codeLang:JavaScript|Java|RTCpp|SimpleCpp|Cpp|Php|Ruby|Python|Alloy|UmpleSelf] ( , [=codeLang:JavaScript|Java|Alloy|RTCpp|SimpleCpp|Cpp|Php|Ruby|Python|UmpleSelf] )* )?
 
 // Methods: The code in concrete methods is passed to the base language
 // See user manual page [*MethodDefinition*]

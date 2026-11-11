@@ -1,0 +1,10 @@
+class UmpleToJavaScript {
+    attribute_Set <<!<</*attribute_Set*/>>
+  <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    let wasSet = false;
+    this._<<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterOne",av)>>;
+    wasSet = true;
+    return wasSet;
+  }!>>
+}

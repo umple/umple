@@ -1,0 +1,58 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+// line 15 "JavaScriptCompositionVariants.ump"
+class Fleet
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Fleet Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._flag = null;
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetOne */
+  getFlag()
+  {
+    return this._flag;
+  }
+  hasFlag()
+  {
+    let has = this._flag != null;
+    return has;
+  }
+  /* Code from template association_SetOptionalOneToMany */
+  setFlag(aFlag)
+  {
+    let wasSet = false;
+    let existingFlag = this._flag;
+    this._flag = aFlag;
+    if (existingFlag != null && ! (existingFlag == aFlag))
+    {
+      existingFlag.removeFleet(this);
+    }
+    if (aFlag != null)
+    {
+      aFlag.addFleet(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }
+  delete()
+  {
+    let existingFlag = this._flag;
+    this._flag = null;
+    if (existingFlag != null)
+    {
+      existingFlag.delete();
+    }
+  }
+}
+
+module.exports = Fleet;

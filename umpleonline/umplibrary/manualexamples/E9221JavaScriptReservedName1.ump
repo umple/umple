@@ -1,0 +1,6 @@
+// JavaScript cannot name a class delete, so generating JavaScript
+// from this model reports E9221 and writes no file for the class
+generate JavaScript;
+class delete {
+  reason;
+}

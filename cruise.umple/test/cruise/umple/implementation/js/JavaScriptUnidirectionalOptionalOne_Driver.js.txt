@@ -1,0 +1,44 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+// line 1 "JavaScriptUnidirectionalOptionalOne.ump"
+class Driver
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Driver Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor()
+  {
+    this._car = null;
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  /* Code from template association_GetOne */
+  getCar()
+  {
+    return this._car;
+  }
+  hasCar()
+  {
+    let has = this._car != null;
+    return has;
+  }
+  /* Code from template association_SetUnidirectionalOptionalOne */
+  setCar(aNewCar)
+  {
+    let wasSet = false;
+    this._car = aNewCar;
+    wasSet = true;
+    return wasSet;
+  }
+  delete()
+  {
+    this._car = null;
+  }
+}
+
+module.exports = Driver;

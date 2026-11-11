@@ -7291,7 +7291,7 @@ Action.toggleTabsCheckbox = function(language)
   }
 
   if(language == "java" || language == "php" || language == "cpp" ||
-    language == "python" || language == "ruby" || language == "sql") {
+    language == "python" || language == "ruby" || language == "javascript" || language == "sql") {
     jQuery("#ttTabsCheckbox").show();
     jQuery("#tabRow").show();
 

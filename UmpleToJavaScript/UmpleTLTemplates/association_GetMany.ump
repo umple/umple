@@ -1,0 +1,29 @@
+class UmpleToJavaScript {
+    association_GetMany <<!<</*association_GetMany*/>>
+  /* Code from template association_GetMany */
+  <<=gen.translate("getMethod",av)>>(index)
+  {
+    let <<=gen.translate("parameterOne",av)>> = this._<<=gen.translate("associationMany",av)>>[index];
+    return <<=gen.translate("parameterOne",av)>>;
+  }
+  <<=gen.translate("getManyMethod",av)>>()
+  {
+    let <<=gen.translate("parameterMany",av)>> = this._<<=gen.translate("associationMany",av)>>.slice();
+    return <<=gen.translate("parameterMany",av)>>;
+  }
+  <<=gen.translate("numberOfMethod",av)>>()
+  {
+    let number = this._<<=gen.translate("associationMany",av)>>.length;
+    return number;
+  }
+  <<=gen.translate("hasManyMethod",av)>>()
+  {
+    let has = this._<<=gen.translate("associationMany",av)>>.length > 0;
+    return has;
+  }
+  <<=gen.translate("indexOfMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    let index = this._<<=gen.translate("associationMany",av)>>.indexOf(<<=gen.translate("parameterOne",av)>>);
+    return index;
+  }!>>
+}

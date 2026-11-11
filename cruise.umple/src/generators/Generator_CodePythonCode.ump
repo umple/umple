@@ -35,8 +35,8 @@ class PythonGenerator
   //------------------------
 
   // The languages a body can be tagged with (umple_classes.grammar, codeLang).
-  private static final List<String> CODE_LANGUAGES = Arrays.asList("Alloy", "Cpp", "Java", "Php", "Python", "RTCpp",
-    "Ruby", "SimpleCpp", "UmpleSelf");
+  private static final List<String> CODE_LANGUAGES = Arrays.asList("Alloy", "Cpp", "Java", "JavaScript", "Php",
+    "Python", "RTCpp", "Ruby", "SimpleCpp", "UmpleSelf");
 
   // The body Python uses for a code slot: "Python" when a Python body was written, else "" when an
   // untagged body was written, else null.

@@ -509,6 +509,10 @@ public class TemplateTest
     {
       assertGeneratedPythonCompiles(model);
     }
+    if ("JavaScript".equals(language))
+    {
+      assertGeneratedJavaScriptParses(model);
+    }
 
     if (isFullMatch && isPython)
     {
@@ -837,6 +841,137 @@ public class TemplateTest
       return null;
     }
     return files.isEmpty() ? null : CodeCompiler.checkPythonSyntax(files);
+  }
+
+  //------------------------
+  // JavaScript
+  //------------------------
+
+  private static final int NODE_TIMEOUT_SECONDS = 60;
+  private static String nodeRuntime = null;
+  private static boolean nodeRuntimeSearched = false;
+
+  // The Node to run generated JavaScript with: UMPLE_NODE if set, else node, or null when it does
+  // not run. Looked up once, as CodeCompiler.getPythonInterpreter does for Python.
+  public static String nodeRuntime()
+  {
+    synchronized (TemplateTest.class)
+    {
+      if (!nodeRuntimeSearched)
+      {
+        String configured = System.getenv("UMPLE_NODE");
+        String candidate = configured != null && !configured.isEmpty() ? configured : "node";
+        if (runNode(Arrays.asList(candidate, "--version"), null, new StringBuilder()) == 0)
+        {
+          nodeRuntime = candidate;
+        }
+        nodeRuntimeSearched = true;
+      }
+      return nodeRuntime;
+    }
+  }
+
+  // Runs a command with stdout and stderr merged into a temporary file, so a chatty child can never
+  // block on a full pipe, and kills it if it outlives the timeout, as CodeCompiler.runProcess does.
+  // Appends what it printed to output and returns its exit code, or -1 if it could not be run.
+  public static int runNode(List<String> command, File directory, StringBuilder output)
+  {
+    File log = null;
+    try
+    {
+      log = File.createTempFile("umple-node", ".log");
+      Process process = new ProcessBuilder(command).directory(directory).redirectErrorStream(true)
+        .redirectOutput(log).start();
+      if (!process.waitFor(NODE_TIMEOUT_SECONDS, java.util.concurrent.TimeUnit.SECONDS))
+      {
+        process.destroyForcibly().waitFor();
+        output.append("Gave up after " + NODE_TIMEOUT_SECONDS + " seconds: " + command);
+        return -1;
+      }
+      output.append(new String(java.nio.file.Files.readAllBytes(log.toPath()), "UTF-8"));
+      return process.exitValue();
+    }
+    catch (Exception e)
+    {
+      output.append(e.toString());
+      return -1;
+    }
+    finally
+    {
+      if (log != null)
+      {
+        log.delete();
+      }
+    }
+  }
+
+  // Skips a test that needs Node when none is available, unless UMPLE_REQUIRE_NODE is set, which
+  // makes the missing runtime a failure.
+  public static void assumeNode()
+  {
+    if (nodeRuntime() == null)
+    {
+      Assert.assertNull("Node is required (UMPLE_REQUIRE_NODE is set) but was not found", System.getenv("UMPLE_REQUIRE_NODE"));
+      Assume.assumeTrue("Skipping: no Node found", false);
+    }
+  }
+
+  // Node's syntax errors in files, or null when there are none. The check is skipped when no Node is
+  // available, unless UMPLE_REQUIRE_NODE is set.
+  public static String javaScriptSyntaxErrors(List<File> files)
+  {
+    String node = nodeRuntime();
+    if (node == null)
+    {
+      if (System.getenv("UMPLE_REQUIRE_NODE") != null)
+      {
+        Assert.fail("Node is required (UMPLE_REQUIRE_NODE is set) but was not found");
+      }
+      System.out.println("Skipping JavaScript syntax check: no Node found");
+      return null;
+    }
+    StringBuilder errors = new StringBuilder();
+    for (File file : files)
+    {
+      StringBuilder output = new StringBuilder();
+      // node --check takes one file at a time
+      if (runNode(Arrays.asList(node, "--check", file.getPath()), null, output) != 0)
+      {
+        errors.append(output);
+      }
+    }
+    return errors.length() == 0 ? null : errors.toString();
+  }
+
+  // Parses every module the model generated, so expected output that is not valid JavaScript cannot
+  // pass.
+  public void assertGeneratedJavaScriptParses(UmpleModel model)
+  {
+    File dir = null;
+    try
+    {
+      dir = java.nio.file.Files.createTempDirectory("umple-javascript-check").toFile();
+      List<File> files = new ArrayList<File>();
+      for (Map.Entry<String, String> generated : model.getGeneratedCode().entrySet())
+      {
+        File file = new File(dir, generated.getKey() + ".js");
+        java.nio.file.Files.write(file.toPath(), generated.getValue().getBytes("UTF-8"));
+        files.add(file);
+      }
+      String errors = javaScriptSyntaxErrors(files);
+      Assert.assertNull("Generated JavaScript does not parse:\n" + errors, errors);
+    }
+    catch (java.io.IOException e)
+    {
+      throw new AssertionError("Unable to check generated JavaScript", e);
+    }
+    finally
+    {
+      if (dir != null)
+      {
+        SampleFileWriter.destroy(dir.getPath());
+      }
+    }
   }
 
   // Compiles every Python module the model generated, so expected output that is not valid Python

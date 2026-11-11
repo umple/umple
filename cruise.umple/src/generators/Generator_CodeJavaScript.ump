@@ -1,0 +1,502 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+*/
+
+namespace cruise.umple.compiler;
+
+class JavaScriptGenerator
+{
+  isA JavaGenerator;
+  depend java.io.*;
+  depend java.util.*;
+  depend java.util.regex.*;
+  depend cruise.umple.compiler.exceptions.*;
+  depend cruise.umple.compiler.javascript.*;
+  depend cruise.umple.util.StringFormatter;
+  depend cruise.umple.parser.Position;
+  depend cruise.umple.parser.ErrorMessage;
+
+  // The tag a body written in JavaScript carries (umple_classes.grammar, codeLang)
+  public static final String LANGUAGE = "JavaScript";
+
+  // Words JavaScript cannot bind a name to. A generated file binds its class with a class
+  // declaration, binds the superclass with const and reads both; a class body is strict code, where
+  // the future reserved words and arguments and eval are rejected as well.
+  private static final List<String> RESERVED_WORDS = Arrays.asList("arguments", "await", "break", "case",
+    "catch", "class", "const", "continue", "debugger", "default", "delete", "do", "else", "enum", "eval",
+    "export", "extends", "false", "finally", "for", "function", "if", "implements", "import", "in",
+    "instanceof", "interface", "let", "new", "null", "package", "private", "protected", "public", "return",
+    "static", "super", "switch", "this", "throw", "true", "try", "typeof", "var", "void", "while", "with",
+    "yield");
+
+  // The names Node gives a CommonJS module. A class with one of these names would be bound in place
+  // of the module's own name, so module.exports would never receive the class (require then returns
+  // an empty object), or require would no longer be the function that loads the superclass.
+  private static final List<String> MODULE_NAMES = Arrays.asList("module", "exports", "require",
+    "__dirname", "__filename");
+
+  @Override
+  public ILang getLanguageFor(UmpleElement aElement)
+  {
+    if (aElement instanceof UmpleClass)
+    {
+      return new JavaScriptClassGenerator();
+    }
+    return null;
+  }
+
+  @Override
+  public void writeFile(UmpleElement aClass) throws IOException
+  {
+    String className = aClass.getName();
+    if (aClass instanceof UmpleClass && ((UmpleClass) aClass).hasOuterClass())
+    {
+      return; // an inner class is not written to a file of its own
+    }
+
+    List<ErrorMessage> problems = aClass instanceof UmpleClass ? problems((UmpleClass) aClass, this)
+      : Arrays.asList(new ErrorMessage(9220, positionOf(aClass), "Interfaces", className));
+    if (!problems.isEmpty())
+    {
+      // A class the compiler added for a model element, such as the tracer of a trace directive, has
+      // no position to report and is not what the user wrote: the element itself is reported instead
+      if (aClass.numberOfPositions() > 0)
+      {
+        for (ErrorMessage problem : problems)
+        {
+          getModel().getLastResult().addErrorMessage(problem);
+        }
+      }
+      // Nothing is written, so no misleading file is left in the output
+      return;
+    }
+    for (ErrorMessage warning : omissions((UmpleClass) aClass))
+    {
+      getModel().getLastResult().addErrorMessage(warning);
+    }
+
+    String contents;
+    try
+    {
+      contents = getLanguageFor(aClass).getCode(getModel(), aClass);
+    }
+    catch (UmpleCompilerException e)
+    {
+      throw e;
+    }
+    catch (RuntimeException e)
+    {
+      // One class failing must not stop the others; the run is still reported as failed, and the
+      // stack trace of the real cause is kept
+      getModel().getLastResult().addErrorMessage(new ErrorMessage(9200, positionOf(aClass),
+        "Could not generate " + className + " in JavaScript: " + cruise.umple.util.ExceptionDumper.dumpCompilerError(e)));
+      return;
+    }
+
+    String path = StringFormatter.addPathOrAbsolute(
+                  getModel().getUmpleFile().getPath(),
+                            getOutput()) +
+                            aClass.getPackageName().replace(".", File.separator);
+    File file = new File(path);
+    file.mkdirs();
+    String javascriptFilename = path + File.separator + className + ".js";
+
+    BufferedWriter bw = new BufferedWriter(new FileWriter(javascriptFilename));
+
+    try
+    {
+      bw.write(contents);
+      bw.flush();
+    }
+    finally
+    {
+      bw.close();
+    }
+
+    getModel().getGeneratedCode().put(aClass.getName(), contents);
+  }
+
+  //Distributed classes are not generated, so the Java runtime that JavaGenerator writes for them is not needed
+  @Override
+  public void writeObjectFactoryClass() throws IOException
+  {
+    return;
+  }
+
+  @Override
+  public void writeObjectFactoryInterface() throws IOException
+  {
+    return;
+  }
+
+  //------------------------
+  // Diagnostics
+  //------------------------
+
+  private static Position positionOf(UmpleElement element)
+  {
+    return element != null && element.numberOfPositions() > 0 ? element.getPosition(0) : new Position("", 0, 0, 0);
+  }
+
+  private static Position positionOf(Method aMethod, UmpleElement owner)
+  {
+    return aMethod.getPosition() != null ? aMethod.getPosition() : positionOf(owner);
+  }
+
+  //------------------------
+  // Validation
+  //------------------------
+
+  // Everything that stops the class being generated, in reporting order, or an empty list. It
+  // collects the diagnostics rather than adding them, so that a subclass can ask the same question
+  // about its superclass, whose module it would load. names translates the model names into the
+  // names the generated code uses, as Umple's own duplicate check does (error 48).
+  public static List<ErrorMessage> problems(UmpleClass uClass, CodeTranslator names)
+  {
+    List<ErrorMessage> found = new ArrayList<ErrorMessage>();
+    String feature = unsupportedFeature(uClass);
+    if (feature != null)
+    {
+      found.add(new ErrorMessage(9220, positionOf(uClass), feature, uClass.getName()));
+      return found; // the class is already out, so its other declarations are not reported
+    }
+    if (uClass.getExtendsClass() != null && !problems(uClass.getExtendsClass(), names).isEmpty())
+    {
+      // The superclass has no module, so require could not load the one the subclass needs
+      found.add(new ErrorMessage(9220, positionOf(uClass), "The superclass " + uClass.getExtendsClass().getName(), uClass.getName()));
+      return found;
+    }
+    if (!isUsableName(uClass.getName()))
+    {
+      found.add(new ErrorMessage(9221, positionOf(uClass), "Class " + uClass.getName()));
+    }
+    String duplicate = duplicateMethod(uClass, names);
+    if (duplicate != null)
+    {
+      found.add(new ErrorMessage(9220, positionOf(uClass), "A second method named " + duplicate, uClass.getName()));
+    }
+    Set<String> methodNames = new HashSet<String>();
+    for (Method aMethod : uClass.getMethods())
+    {
+      if (!isUserMethod(aMethod))
+      {
+        continue;
+      }
+      Position at = positionOf(aMethod, uClass);
+      if (aMethod.getName().equals(uClass.getName()) && "".equals(aMethod.getType()))
+      {
+        found.add(new ErrorMessage(9220, at, "The constructor " + aMethod.getName() + " written in the model", uClass.getName()));
+        continue;
+      }
+      if (aMethod.getIsQueued())
+      {
+        found.add(new ErrorMessage(9220, at, "The queued method " + aMethod.getName(), uClass.getName()));
+        continue;
+      }
+      if (!isDeclared(aMethod))
+      {
+        continue; // left out with a warning, see omissions
+      }
+      if (!methodNames.add(aMethod.getName()))
+      {
+        // JavaScript has no overloading, so one of the methods would replace the other
+        found.add(new ErrorMessage(9220, at, "Overloads of method " + aMethod.getName(), uClass.getName()));
+      }
+      Set<String> parameterNames = new HashSet<String>();
+      for (MethodParameter parameter : aMethod.getMethodParameters())
+      {
+        if (!parameterNames.add(parameter.getName()))
+        {
+          // A strict-mode parameter list cannot repeat a name
+          found.add(new ErrorMessage(9221, at, "The second parameter named " + parameter.getName() + " of method " + aMethod.getName()));
+        }
+        else if (!isUsableName(parameter.getName()))
+        {
+          found.add(new ErrorMessage(9221, at, "The parameter " + parameter.getName() + " of method " + aMethod.getName()));
+        }
+      }
+    }
+    return found;
+  }
+
+  // Warnings about the parts of a generated class that are left out of it
+  private static List<ErrorMessage> omissions(UmpleClass uClass)
+  {
+    List<ErrorMessage> found = new ArrayList<ErrorMessage>();
+    for (Method aMethod : uClass.getMethods())
+    {
+      if (isUserMethod(aMethod) && !isDeclared(aMethod))
+      {
+        List<String> languages = authoredLanguages(aMethod);
+        found.add(new ErrorMessage(9222, positionOf(aMethod, uClass), "Method " + aMethod.getName(),
+          languages.isEmpty() ? "languages other than JavaScript" : String.join(", ", languages)));
+      }
+    }
+    return found;
+  }
+
+  // A name the generated code can bind and read: a plain JavaScript identifier that is neither
+  // reserved nor one of the names Node gives a CommonJS module.
+  public static boolean isUsableName(String name)
+  {
+    return name != null && name.matches("[A-Za-z_$][A-Za-z0-9_$]*")
+      && !RESERVED_WORDS.contains(name) && !MODULE_NAMES.contains(name);
+  }
+
+  // A method written in the model rather than generated by Umple
+  public static boolean isUserMethod(Method aMethod)
+  {
+    return aMethod.getSource() != Method.Source.fAutoAPI;
+  }
+
+  // Whether the generated class declares this method: a JavaScript body was written for it, or an
+  // untagged one, which every language falls back to, or it is abstract, and the generated method
+  // then reports a call to it.
+  public static boolean isDeclared(Method aMethod)
+  {
+    return aMethod.getIsAbstract() || aMethod.getExistsInLanguage(LANGUAGE);
+  }
+
+  public static boolean isStatic(Method aMethod)
+  {
+    return aMethod.getModifier() != null && aMethod.getModifier().contains("static");
+  }
+
+  // The body of a generated method: its JavaScript body, else its untagged one, else, for an
+  // abstract method, a statement that reports the call as a programming error.
+  public static String methodBody(Method aMethod, UmpleClass uClass)
+  {
+    if (aMethod.getIsAbstract() || !aMethod.getExistsInLanguage(LANGUAGE))
+    {
+      return "    throw new TypeError(\"" + aMethod.getName() + " is abstract in " + uClass.getName() + "\");";
+    }
+    return "    " + aMethod.getMethodBody().getExtraCode(aMethod.getBodyLanguageFor(LANGUAGE));
+  }
+
+  // The languages a method has a body for, in a steady order; the untagged body is not one of them
+  private static List<String> authoredLanguages(Method aMethod)
+  {
+    List<String> languages = new ArrayList<String>();
+    if (!aMethod.hasMethodBody())
+    {
+      return languages;
+    }
+    CodeBlock code = aMethod.getMethodBody().getCodeblock();
+    for (String language : code.getLanguages())
+    {
+      if (!"".equals(language) && (!code.hasAuthoredCode() || code.isAuthored(language)))
+      {
+        languages.add(language);
+      }
+    }
+    Collections.sort(languages);
+    return languages;
+  }
+
+  // The other generated classes of the same folder that bodies written in the model name. The
+  // generated module requires them after its own module.exports, so two classes that use each other
+  // still each receive the other's class: by then the module being loaded has exported its own, and
+  // the methods that read the binding only run once loading has finished.
+  public static List<String> usedClasses(UmpleModel model, UmpleClass uClass, CodeTranslator names)
+  {
+    List<String> used = new ArrayList<String>();
+    StringBuilder bodies = new StringBuilder();
+    for (Method aMethod : uClass.getMethods())
+    {
+      if (isUserMethod(aMethod) && !aMethod.getIsAbstract() && aMethod.getExistsInLanguage(LANGUAGE))
+      {
+        bodies.append(aMethod.getMethodBody().getExtraCode(aMethod.getBodyLanguageFor(LANGUAGE))).append("\n");
+      }
+    }
+    if (bodies.length() == 0)
+    {
+      return used;
+    }
+    for (UmpleClass other : model.getUmpleClasses())
+    {
+      if (other == uClass || other == uClass.getExtendsClass() || other.hasOuterClass()
+        || "external".equals(other.getModifier())
+        || !other.getPackageName().equals(uClass.getPackageName())
+        || !problems(other, names).isEmpty())
+      {
+        continue;
+      }
+      // The name on its own, not a property of something else
+      if (Pattern.compile("(?<![\\w$.])" + Pattern.quote(other.getName()) + "(?![\\w$])").matcher(bodies).find())
+      {
+        used.add(other.getName());
+      }
+    }
+    return used;
+  }
+
+  // The method a generated class would declare twice, or null. JavaScript has no overloading, so the
+  // last declaration would replace the earlier ones. The names are collected as the templates named
+  // beside them declare them, so that two members, or a method written in the model, that reach one
+  // name are reported before anything is written. Umple reports two attributes that reach one name
+  // itself (error 48) and rejects an attribute and an association end of the same name (error 23).
+  private static String duplicateMethod(UmpleClass uClass, CodeTranslator names)
+  {
+    List<String> declared = new ArrayList<String>();
+    for (Attribute av : uClass.getAttributes())
+    {
+      if (av.isConstant() || av.getIsAutounique() || "internal".equals(av.getModifier()))
+      {
+        continue;
+      }
+      declared.add(names.translate("getMethod", av)); // attribute_Get_All
+      if ("defaulted".equals(av.getModifier()))
+      {
+        declared.add(names.translate("getDefaultMethod", av));
+      }
+      if ("Boolean".equals(av.getType()))
+      {
+        declared.add(names.translate("isMethod", av)); // attribute_IsBoolean_All
+      }
+      if (!av.getIsDerived() && (!av.isImmutable() || av.getIsLazy() || av.getIsUnique())) // attribute_Set_All
+      {
+        declared.add(names.translate("setMethod", av));
+        if (!av.isImmutable() && "defaulted".equals(av.getModifier()))
+        {
+          declared.add(names.translate("resetMethod", av));
+        }
+      }
+    }
+    for (AssociationVariable av : uClass.getAssociationVariables())
+    {
+      if (!av.getIsNavigable())
+      {
+        continue;
+      }
+      declared.add(names.translate("getMethod", av)); // association_Get_All
+      if (av.isMany())
+      {
+        declared.addAll(Arrays.asList(names.translate("getManyMethod", av), names.translate("numberOfMethod", av),
+          names.translate("hasManyMethod", av), names.translate("indexOfMethod", av),
+          names.translate("minimumNumberOfMethod", av), names.translate("addMethod", av), // association_Set_All
+          names.translate("removeMethod", av), names.translate("addAtMethod", av),
+          names.translate("addOrMoveAtMethod", av)));
+      }
+      else
+      {
+        declared.addAll(Arrays.asList(names.translate("hasMethod", av), names.translate("setMethod", av)));
+      }
+    }
+    declared.add("delete"); // delete_All
+    Set<String> modelled = new LinkedHashSet<String>();
+    for (Method aMethod : uClass.getMethods())
+    {
+      if (isUserMethod(aMethod) && isDeclared(aMethod))
+      {
+        modelled.add(aMethod.getName()); // class_MethodDeclaration, reported once for an overload group
+      }
+    }
+    declared.addAll(modelled);
+    Set<String> seen = new HashSet<String>();
+    for (String name : declared)
+    {
+      if (!seen.add(name))
+      {
+        return name;
+      }
+    }
+    return null;
+  }
+
+  // The feature of the class that basic JavaScript generation does not cover, or null
+  private static String unsupportedFeature(UmpleClass uClass) {
+    if (uClass.numberOfStateMachines() > 0) {
+      return "State machines";
+    }
+    else if (uClass.numberOfParentInterface() > 0 || uClass.getIsSingleton() || uClass.getKey().isProvided() || uClass.numberOfConstraintTrees() > 0 || uClass.numberOfEnums() > 0 || uClass.numberOfTraceDirectives() > 0) {
+      return "Interfaces, singletons, keys, constraints, enumerations and tracing";
+    }
+    else if (uClass.hasOuterClass() || uClass.numberOfInnerClasses() > 0) {
+      //An inner class is not written to a file of its own, and its outer class does not contain it
+      return "Inner classes";
+    }
+    else if (uClass.getExtendsClass() != null && "external".equals(uClass.getExtendsClass().getModifier())) {
+      //An external class is never generated, so require could not load the module the subclass needs
+      return "The external superclass " + uClass.getExtendsClass().getName();
+    }
+    else if (uClass.getExtendsClass() != null && !uClass.getExtendsClass().getPackageName().equals(uClass.getPackageName())) {
+      //The superclass is required from the same folder
+      return "A superclass in another namespace";
+    }
+    else if (uClass.getIsDistributed()) {
+      return "Distributed classes";
+    }
+    else if (uClass.getExtraCode() != null && uClass.getExtraCode().length() > 0) {
+      //Lines that Umple could not interpret are passed to the generated code as they are, and they are not JavaScript
+      return "Code that Umple could not interpret (extra code)";
+    }
+    for (CodeInjection inject : uClass.getCodeInjections()) {
+      //Code injections added by the generator are internal, the ones written by the user are not
+      if (!inject.getIsInternal()) {
+        return "Code injections";
+      }
+    }
+    for (Attribute attribute : uClass.getAttributes()) {
+      if (attribute.getIsDerived()) {
+        //The expression of a derived attribute is written in Java
+        return "The derived attribute " + attribute.getName();
+      }
+      if (attribute.getIsList()) {
+        return "The list attribute " + attribute.getName();
+      }
+      if (attribute.getIsAutounique() || attribute.getIsUnique()) {
+        return "The unique attribute " + attribute.getName();
+      }
+      if ("const".equals(attribute.getModifier()) || "fixml".equals(attribute.getModifier())) {
+        return "The " + attribute.getModifier() + " attribute " + attribute.getName();
+      }
+      if (!("String".equals(attribute.getType()) || "Integer".equals(attribute.getType()) || "Double".equals(attribute.getType()) || "Boolean".equals(attribute.getType()))) {
+        return "The attribute " + attribute.getName() + " of type " + attribute.getType();
+      }
+      //The initial value is copied as it is written, so only a literal that Java accepts means the same in JavaScript
+      String value = attribute.getValue();
+      String literal = "Boolean".equals(attribute.getType()) ? "true|false" :
+                       "String".equals(attribute.getType()) ? "null|\"([^\"\\\\]|\\\\[btnfr\"'\\\\])*\"" :
+                       "-?(0|[1-9][0-9]*)" + ("Double".equals(attribute.getType()) ? "(\\.[0-9]+)?" : "");
+      //Java reads -0 as the int 0, but JavaScript keeps the negative zero
+      boolean isSupportedValue = value == null || value.matches(literal) && !"-0".equals(value);
+      if (isSupportedValue && value != null && value.matches("-?[0-9.]+")) {
+        //Java rejects a whole number outside the int range, and a decimal number that becomes infinite or zero
+        try {
+          double number = value.contains(".") ? Double.parseDouble(value) : Integer.parseInt(value);
+          isSupportedValue = !Double.isInfinite(number) && (number != 0 || !value.matches(".*[1-9].*"));
+        }
+        catch (NumberFormatException e) {
+          isSupportedValue = false;
+        }
+      }
+      if (!isSupportedValue) {
+        return "The initial value of attribute " + attribute.getName();
+      }
+    }
+    for (AssociationVariable av : uClass.getAssociationVariables()) {
+      AssociationVariable relatedAssociation = av.getRelatedAssociation();
+      //Mandatory ends need overloaded methods, and bounded ends call static methods of the other class
+      if (av.getIsNavigable() && av.isSorted()) {
+        return "The sorted association " + av.getName();
+      }
+      if (av.getIsNavigable() && av.getIsSpecialization()) {
+        return "The specialized association " + av.getName();
+      }
+      if (av.getIsNavigable() && av.isImmutable() && av.isMany()) {
+        return "The immutable association " + av.getName() + ", which has a many end";
+      }
+      if ((av.getIsNavigable() && (av.getMultiplicity().getLowerBound() > 0 || av.getMultiplicity().getUpperBound() > 1)) ||
+          (relatedAssociation != null && relatedAssociation.getIsNavigable() &&
+           (relatedAssociation.getMultiplicity().getLowerBound() > 0 || relatedAssociation.getMultiplicity().getUpperBound() > 1))) {
+        return "The mandatory or bounded end of association " + av.getName();
+      }
+    }
+    return null;
+  }
+}

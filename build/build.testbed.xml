@@ -16,6 +16,7 @@
   <property name="test.output.path.php" value="${dist.dir}/qa/testbed_php"/>
   <property name="test.output.path.python" value="${dist.dir}/qa/testbed_python"/>
   <property name="test.output.path.ruby" value="${dist.dir}/qa/testbed_ruby"/>
+  <property name="test.output.path.javascript" value="${dist.dir}/qa/testbed_js"/>
   <property name="test.output.path.cpp" value="${dist.dir}/qa/testbed_cpp"/>
 
   <property name="examplepattern" value="*" />
@@ -52,6 +53,7 @@
   <target name="clean">
 	  <delete dir="${project.path}/src-gen-umple" failonerror="false"/>
     <delete dir="${project.path}/test/cruise/compiler/src-gen-umple" failonerror="false"/>
+    <delete dir="testbed_js/src-gen-umple" failonerror="false"/>
   </target>
 
 
@@ -61,6 +63,7 @@
     <mkdir dir="${test.output.path.php}"/>
     <mkdir dir="${test.output.path.python}"/>
     <mkdir dir="${test.output.path.ruby}"/>
+    <mkdir dir="${test.output.path.javascript}"/>
     <mkdir dir="${test.output.path.cpp}"/>
   </target>
 
@@ -74,6 +77,7 @@
     <antcall target="compilePhp" />
     <antcall target="compilePython" />
     <antcall target="compileRuby" />
+    <antcall target="compileJavaScript" />
     <antcall target="compileRTCpp" />
   </target>
 
@@ -169,6 +173,16 @@
       <arg value="testbed_ruby/src/TestHarnessRuby.ump"/>
     </java>
   </target>
+
+  <target name="compileJavaScript">
+    <deps-load-path conf="core" pathid="core.ivy.classpath" />
+
+    <!-- Generated afresh, so a module of a class the harness no longer declares cannot be loaded -->
+    <delete dir="testbed_js/src-gen-umple" failonerror="false"/>
+    <java jar="${dist.dir}/${dist.umple.jar}" fork="true" failonerror="true">
+      <arg value="testbed_js/src/TestHarnessJavaScript.ump"/>
+    </java>
+  </target>
   
   <target name="compileRTCpp">
     <deps-load-path conf="core" pathid="core.ivy.classpath" />
@@ -188,6 +202,7 @@
     <antcall target="testPhp" />
     <antcall target="testPython" />
     <antcall target="testRuby" />
+    <antcall target="testJavaScript" />
     <antcall target="testRTCpp" />
     <!--
     <antcall target="allUserManualAndExampleTests" />
@@ -277,6 +292,19 @@
     </fail>
 
     <echo message="RUBY tests completed!"/>
+  </target>
+
+  <target name="testJavaScript">
+    <echo message="Running JAVASCRIPT tests with Node"/>
+    <fail unless="node.found" message="No Node 18 or later found (tried ${node.candidate}); set UMPLE_NODE to one"/>
+    <mkdir dir="${test.output.path.javascript}"/>
+    <exec executable="${node.exe}" dir="testbed_js/test/" output="${test.output.path.javascript}/index.html"
+          error="${test.output.path.javascript}/errors.txt" failonerror="true" timeout="1800000">
+      <arg value="AllTests.js"/>
+      <arg file="${dist.dir}/${dist.umple.jar}"/>
+    </exec>
+
+    <echo message="JAVASCRIPT tests completed!"/>
   </target>
   
   <target name="testRTCpp">
