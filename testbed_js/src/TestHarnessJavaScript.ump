@@ -1,0 +1,9 @@
+// The models the JavaScript testbed runs. Generating this file writes one module per class into
+// testbed_js/src-gen-umple, which the tests under testbed_js/test load with require.
+
+generate JavaScript "../src-gen-umple";
+
+use TestHarnessJavaScriptAttributes.ump;
+use TestHarnessJavaScriptAssociations.ump;
+use TestHarnessJavaScriptInheritance.ump;
+use TestHarnessJavaScriptMethods.ump;

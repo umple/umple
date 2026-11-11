@@ -320,6 +320,7 @@ function generateMenu($buttonSuffix)
             <option id=\"genpython\" value=\"python:Python\">Python Code</option>
             <option id=\"gencpp\" value=\"cpp:RTCpp\">C++ Code (Beta)</option>
             <option id=\"genruby\" value=\"ruby:Ruby\">Ruby Code</option>
+            <option id=\"genjavascript\" value=\"javascript:JavaScript\">JavaScript Code (Beta)</option>
           </optgroup>
 
           <optgroup label=\"Data Model Views\">

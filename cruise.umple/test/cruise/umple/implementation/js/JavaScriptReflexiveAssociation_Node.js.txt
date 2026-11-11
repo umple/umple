@@ -1,5 +1,5 @@
 /*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.37.1.8672.ffc0b7ae3 modeling language!*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
 // line 10 "JavaScriptReflexiveAssociation.ump"
 class Node
 {
@@ -12,6 +12,7 @@ class Node
   //------------------------
   constructor()
   {
+    this._next = null;
   }
   //------------------------
   // INTERFACE

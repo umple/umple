@@ -13,6 +13,7 @@ use association_Set_All.ump;
 use attribute_Get_All.ump;
 use attribute_IsBoolean_All.ump;
 use attribute_Set_All.ump;
+use class_MethodDeclaration.ump;
 use constructor_Declare_All.ump;
 use delete_All.ump;
 use members_AllAssociations.ump;
@@ -58,9 +59,15 @@ class <<=uClass.getName()>><<# if (!uClass.isRoot()) { #>> extends <<=uClass.get
   //------------------------<<@ UmpleToJavaScript.constructor_Declare_All >>
   //------------------------
   // INTERFACE
-  //------------------------<<@ UmpleToJavaScript.attribute_Set_All >><<@ UmpleToJavaScript.attribute_Get_All >><<@ UmpleToJavaScript.attribute_IsBoolean_All >><<@ UmpleToJavaScript.association_Get_All >><<@ UmpleToJavaScript.association_Set_All >><<@ UmpleToJavaScript.delete_All >>
+  //------------------------<<@ UmpleToJavaScript.attribute_Set_All >><<@ UmpleToJavaScript.attribute_Get_All >><<@ UmpleToJavaScript.attribute_IsBoolean_All >><<@ UmpleToJavaScript.association_Get_All >><<@ UmpleToJavaScript.association_Set_All >><<@ UmpleToJavaScript.delete_All >><<@ UmpleToJavaScript.class_MethodDeclaration >>
 }
 
-module.exports = <<=uClass.getName()>>;
+module.exports = <<=uClass.getName()>>;<<#
+  // The classes the methods written in the model use, required once this module has exported its own
+  for (String used : JavaScriptGenerator.usedClasses(model, uClass, gen)) { #>>
+
+const <<=used>> = require("./<<=used>>.js");<<#
+  }
+#>>
 !>>
 }

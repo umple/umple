@@ -9,6 +9,16 @@ class UmpleToJavaScript {
     constructor_Declare_All <<!<</*constructor_Declare_All*/>>
   constructor(<<=gClass.getLookup("constructorSignature_caller")>>)
   {<<#
+  // An abstract class has no instances of its own, so only a subclass may run its constructor.
+  // new.target is the class the new expression named, and it is readable before the super call.
+  if (uClass.getIsAbstract())
+  {
+    #>>
+    if (new.target === <<=uClass.getName()>>)
+    {
+      throw new TypeError("Can't instantiate abstract class <<=uClass.getName()>>");
+    }<<#
+  }
   if (!uClass.isRoot() && !"interface".equals(uClass.getExtendsClass().getModifier()))
   {
     #>>
@@ -47,6 +57,20 @@ class UmpleToJavaScript {
     }
     #>>
     this._<<=gen.translate("associationCanSet",av)>> = true;<<#
+  }
+
+  // An end that holds one object starts empty, as a field of a Java object does, so a getter
+  // returns null before the association is set rather than undefined. The ends the constructor
+  // goes on to assign are left to it.
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable() || !av.isOptionalOne()
+      || (!av.getRelatedAssociation().getIsNavigable() && av.isImmutable()))
+    {
+      continue;
+    }
+    #>>
+    this._<<=gen.translate("associationOne",av)>> = null;<<#
   }
 
   for (AssociationVariable av : uClass.getAssociationVariables())

@@ -1,13 +1,19 @@
 package cruise.umple.implementation.js;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.*;
 
+import cruise.umple.compiler.UmpleFile;
+import cruise.umple.compiler.UmpleInternalParser;
 import cruise.umple.compiler.UmpleModel;
+import cruise.umple.compiler.UmpleParser;
 import cruise.umple.implementation.*;
+import cruise.umple.parser.ErrorMessage;
+import cruise.umple.parser.ParseResult;
+import cruise.umple.parser.analysis.RuleBasedParser;
 import cruise.umple.util.SampleFileWriter;
 
 public class JavaScriptClassTemplateTest extends TemplateTest
@@ -43,6 +49,7 @@ public class JavaScriptClassTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/js/Palette.js");
     SampleFileWriter.destroy(pathToInput + "/js/Reading.js");
     SampleFileWriter.destroy(pathToInput + "/js/Sensor.js");
+    SampleFileWriter.destroy(pathToInput + "/js/ConsoleTracer.js");
     SampleFileWriter.destroy(pathToInput + "/js/cruise");
     SampleFileWriter.destroy(pathToInput + "/js/Shelf.js");
     SampleFileWriter.destroy(pathToInput + "/js/Item.js");
@@ -75,6 +82,7 @@ public class JavaScriptClassTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/js/Truck.js");
     SampleFileWriter.destroy(pathToInput + "/js/Pickup.js");
     SampleFileWriter.destroy(pathToInput + "/js/Worker.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Thread.js");
     SampleFileWriter.destroy(pathToInput + "/js/Ratio.js");
     SampleFileWriter.destroy(pathToInput + "/js/Area.js");
     SampleFileWriter.destroy(pathToInput + "/js/Counter.js");
@@ -90,7 +98,16 @@ public class JavaScriptClassTemplateTest extends TemplateTest
     SampleFileWriter.destroy(pathToInput + "/js/Panel.js");
     SampleFileWriter.destroy(pathToInput + "/js/Button.js");
     SampleFileWriter.destroy(pathToInput + "/js/IconButton.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Greeter.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Shape.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Circle.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Square.js");
+    SampleFileWriter.destroy(pathToInput + "/js/Note.js");
   }
+
+  //------------------------
+  // Generated code
+  //------------------------
 
   @Test
   public void EmptyClass()
@@ -176,48 +193,67 @@ public class JavaScriptClassTemplateTest extends TemplateTest
   }
 
   @Test
-  public void SpecializedAssociationBaseClasses()
-  {
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedFeatures.ump","js/JavaScriptUnsupportedFeatures_Shelf.js.txt","Shelf");
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedFeatures.ump","js/JavaScriptUnsupportedFeatures_Item.js.txt","Item");
-  }
-
-  @Test
   public void Comments()
   {
     assertUmpleTemplateFor("js/JavaScriptComments.ump","js/JavaScriptComments_Doc1.js.txt","Doc1");
   }
 
   @Test
+  public void Methods()
+  {
+    assertUmpleTemplateFor("js/JavaScriptMethods.ump","js/JavaScriptMethods_Greeter.js.txt","Greeter");
+    assertUmpleTemplateFor("js/JavaScriptMethods.ump","js/JavaScriptMethods_Shape.js.txt","Shape");
+    assertUmpleTemplateFor("js/JavaScriptMethods.ump","js/JavaScriptMethods_Square.js.txt","Square");
+  }
+
+  // The base classes of a specialized association are generated although the subclasses are not
+  @Test
+  public void SpecializedAssociationBaseClasses()
+  {
+    UmpleModel model = generateWithDiagnostics("js/JavaScriptUnsupportedFeatures.ump");
+    assertGeneratedEquals(model, "js/JavaScriptUnsupportedFeatures_Shelf.js.txt", "Shelf");
+    assertGeneratedEquals(model, "js/JavaScriptUnsupportedFeatures_Item.js.txt", "Item");
+  }
+
+  //------------------------
+  // Unsupported features
+  //------------------------
+
+  @Test
   public void UnsupportedStateMachine()
   {
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedStateMachine.ump","js/JavaScriptUnsupportedStateMachine_Lamp.js.txt","Lamp");
+    UmpleModel model = generateWithDiagnostics("js/JavaScriptUnsupportedStateMachine.ump");
+    assertUnsupported(model, "Lamp", "State machines");
   }
 
   @Test
   public void UnsupportedFeatures()
   {
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedFeatures.ump","js/JavaScriptUnsupportedFeatures_Palette.js.txt","Palette");
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedFeatures.ump","js/JavaScriptUnsupportedFeatures_Reading.js.txt","Reading");
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedFeatures.ump","js/JavaScriptUnsupportedFeatures_Sensor.js.txt","Sensor");
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedFeatures.ump","js/JavaScriptUnsupportedFeatures_BookShelf.js.txt","BookShelf");
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedFeatures.ump","js/JavaScriptUnsupportedFeatures_Novel.js.txt","Novel");
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedFeatures.ump","js/JavaScriptUnsupportedFeatures_Catalog.js.txt","Catalog");
+    UmpleModel model = generateWithDiagnostics("js/JavaScriptUnsupportedFeatures.ump");
+    assertUnsupported(model, "Palette", "Interfaces, singletons, keys, constraints, enumerations and tracing");
+    assertUnsupported(model, "Reading", "The fixml attribute x");
+    assertUnsupported(model, "Sensor", "Interfaces, singletons, keys, constraints, enumerations and tracing");
+    assertUnsupported(model, "BookShelf", "The specialized association items");
+    assertUnsupported(model, "Novel", "The specialized association bookShelf");
+    assertUnsupported(model, "Catalog", "The immutable association entries, which has a many end");
+    // A class the compiler added for the trace directive has no position of its own to report
+    assertNotGenerated(model, "ConsoleTracer");
+    Assert.assertNull(messageFor(model, 9220, "ConsoleTracer"));
   }
 
   @Test
   public void UnsupportedOther()
   {
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedOther.ump","js/JavaScriptUnsupportedOther_Rect.js.txt","Rect");
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedOther.ump","js/JavaScriptUnsupportedOther_Remote.js.txt","Remote");
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedOther.ump","js/JavaScriptUnsupportedOther_Loose.js.txt","Loose");
+    UmpleModel model = generateWithDiagnostics("js/JavaScriptUnsupportedOther.ump");
+    assertUnsupported(model, "Rect", "The derived attribute area");
+    assertUnsupported(model, "Remote", "Distributed classes");
+    assertUnsupported(model, "Loose", "Code that Umple could not interpret (extra code)");
   }
 
   @Test
   public void UnsupportedDistributedRuntime()
   {
-    UmpleModel model = createUmpleSystem(pathToInput, "js/JavaScriptUnsupportedOther.ump");
-    Assert.assertNotNull(model.getGeneratedCode().get("Remote"));
+    UmpleModel model = generateWithDiagnostics("js/JavaScriptUnsupportedOther.ump");
     Assert.assertNull(model.getGeneratedCode().get("UmpleRuntime"));
     Assert.assertNull(model.getGeneratedCode().get("IUmpleRuntime"));
     Assert.assertFalse(new File(pathToInput + "/js/UmpleRuntime.java").exists());
@@ -227,58 +263,117 @@ public class JavaScriptClassTemplateTest extends TemplateTest
   @Test
   public void UnsupportedSuperclass()
   {
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedSuperclass.ump","js/JavaScriptUnsupportedSuperclass_Truck.js.txt","Truck");
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedSuperclass.ump","js/JavaScriptUnsupportedSuperclass_Pickup.js.txt","Pickup");
-    assertUmpleTemplateFor("js/JavaScriptUnsupportedSuperclass.ump","js/JavaScriptUnsupportedSuperclass_Worker.js.txt","Worker");
+    UmpleModel model = generateWithDiagnostics("js/JavaScriptUnsupportedSuperclass.ump");
+    assertUnsupported(model, "Vehicle", "State machines");
+    assertUnsupported(model, "Truck", "The superclass Vehicle");
+    assertUnsupported(model, "Pickup", "The superclass Truck");
+  }
+
+  // An external class is never generated, so a subclass of one must not require a module that is
+  // missing from the output
+  @Test
+  public void UnsupportedExternalSuperclass()
+  {
+    UmpleModel model = generateWithDiagnostics("js/JavaScriptUnsupportedSuperclass.ump");
+    assertUnsupported(model, "Worker", "The external superclass Thread");
+    Assert.assertFalse(new File(pathToInput + "/js/Thread.js").exists());
   }
 
   @Test
   public void UnsupportedInitialValue()
   {
-    String errors = generateAndReadErrors("js/JavaScriptUnsupportedInitialValue.ump");
+    UmpleModel model = generateWithDiagnostics("js/JavaScriptUnsupportedInitialValue.ump");
     String[][] classAndAttribute = {{"Ratio", "half"}, {"Area", "side"}, {"Counter", "next"}, {"Ledger", "total"}, {"Mask", "bits"},
       {"Census", "people"}, {"Distance", "meters"}, {"Letter", "code"}, {"Session", "user"}, {"Shift", "steps"}, {"Sign", "level"}};
     for (String[] expected : classAndAttribute)
     {
-      assertUnsupported(errors, expected[0], "The initial value of attribute '" + expected[1] + "' is currently unsupported for JavaScript generation.");
+      assertUnsupported(model, expected[0], "The initial value of attribute " + expected[1]);
     }
     //-0.0 is a negative zero in both Java and JavaScript
-    Assert.assertTrue(lastModel.getGeneratedCode().get("Floor").contains("this._height = -0.0;"));
+    Assert.assertTrue(model.getGeneratedCode().get("Floor").contains("this._height = -0.0;"));
   }
 
   @Test
   public void UnsupportedInnerClass()
   {
-    String errors = generateAndReadErrors("js/JavaScriptUnsupportedInnerClass.ump");
-    assertUnsupported(errors, "Panel", "Inner classes are currently unsupported for JavaScript generation.");
-    assertUnsupported(errors, "IconButton", "The superclass 'Button' uses a feature that is currently unsupported for JavaScript generation.");
+    UmpleModel model = generateWithDiagnostics("js/JavaScriptUnsupportedInnerClass.ump");
+    assertUnsupported(model, "Panel", "Inner classes");
+    assertUnsupported(model, "IconButton", "The superclass Button");
     Assert.assertFalse(new File(pathToInput + "/js/Button.js").exists());
   }
 
-  private UmpleModel lastModel;
+  //------------------------
+  // Helpers
+  //------------------------
 
-  // Generates the model and returns what the generator printed about unsupported features
-  private String generateAndReadErrors(String umpleFile)
+  // Generates the model although some of its classes report diagnostics, which createUmpleSystem
+  // treats as a failure, and keeps the messages for the assertions.
+  private UmpleModel generateWithDiagnostics(String umpleFile)
   {
-    PrintStream originalErr = System.err;
-    ByteArrayOutputStream errors = new ByteArrayOutputStream();
-    System.setErr(new PrintStream(errors, true));
-    try
-    {
-      lastModel = createUmpleSystem(pathToInput, umpleFile);
-    }
-    finally
-    {
-      System.setErr(originalErr);
-    }
-    return errors.toString();
+    File file = new File(pathToInput, umpleFile);
+    UmpleModel model = new UmpleModel(new UmpleFile(pathToInput, umpleFile));
+    model.setShouldGenerate(false);
+    RuleBasedParser rbp = new RuleBasedParser();
+    UmpleParser parser = new UmpleInternalParser(umpleParserName, model, rbp);
+    ParseResult result = rbp.parse(file);
+    model.extractAnalyzersFromParser(rbp);
+    model.setLastResult(result);
+    Assert.assertTrue("Syntax failed at:" + result.getPosition(), result.getWasSuccess());
+    model.setUmpleFile(new UmpleFile(new File(pathToInput, umpleFile)));
+    model.addGenerate(language);
+    parser.analyze(true);
+    return model;
   }
 
-  // The class is not generated: its file holds only the comment, and the reason is reported for it
-  private void assertUnsupported(String errors, String className, String reason)
+  // The class is not generated: E9220 names the feature and the class, no code is kept for it, no
+  // file is written for it, and the command line reports the run as failed.
+  private void assertUnsupported(UmpleModel model, String className, String feature)
   {
-    Assert.assertEquals("//An Unsupported feature for JavaScript generation was used. File could not be generated.", lastModel.getGeneratedCode().get(className));
-    Assert.assertTrue(new File(pathToInput + "/js/" + className + ".js").exists());
-    Assert.assertTrue(errors, errors.contains("Could not Generate file '" + className + ".js'. This file will be missing from the output." + System.lineSeparator() + "\t" + reason));
+    ErrorMessage message = messageFor(model, 9220, className);
+    Assert.assertNotNull("No message 9220 for " + className + " in " + messages(model), message);
+    Assert.assertTrue(message.getFormattedMessage(), message.getFormattedMessage().startsWith(feature));
+    Assert.assertEquals("E9220 for " + className + " points at its declaration",
+      model.getUmpleClass(className).getPosition(0).getLineNumber(), message.getPosition().getLineNumber());
+    assertNotGenerated(model, className);
+    Assert.assertFalse("The run must fail so the command line exits with a non-zero status",
+      model.getLastResult().getWasSuccess());
+  }
+
+  private void assertNotGenerated(UmpleModel model, String className)
+  {
+    Assert.assertNull("No code may be kept for " + className, model.getGeneratedCode().get(className));
+    Assert.assertFalse("No file may be written for " + className,
+      new File(pathToInput + "/js/" + className + ".js").exists());
+  }
+
+  private void assertGeneratedEquals(UmpleModel model, String codeFile, String className)
+  {
+    String actual = model.getGeneratedCode().get(className);
+    Assert.assertNotNull("No generated code: " + className, actual);
+    assertGeneratedJavaScriptParses(model);
+    SampleFileWriter.assertFileContent(new File(pathToInput, codeFile), actual, true);
+  }
+
+  // The first message with this code that names the class, or null
+  private ErrorMessage messageFor(UmpleModel model, int code, String className)
+  {
+    for (ErrorMessage m : model.getLastResult().getErrorMessages())
+    {
+      if (m.getErrorType().getErrorCode() == code && m.getFormattedMessage().contains("class " + className + " "))
+      {
+        return m;
+      }
+    }
+    return null;
+  }
+
+  private List<String> messages(UmpleModel model)
+  {
+    List<String> all = new ArrayList<String>();
+    for (ErrorMessage m : model.getLastResult().getErrorMessages())
+    {
+      all.add(m.getErrorType().getErrorCode() + ": " + m.getFormattedMessage());
+    }
+    return all;
   }
 }

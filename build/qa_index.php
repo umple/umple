@@ -5,6 +5,7 @@
   $allProjects["Java+Umple Tests"] = "testbed_java/index.html";
   $allProjects["PHP+Umple Tests"] = "testbed_php/index.html";
   $allProjects["Ruby+Umple Tests"] = "testbed_ruby/index.html";
+  $allProjects["JavaScript+Umple Tests"] = "testbed_js/index.html";
   $allProjects["Sample Project Tests"] = "sandbox/index.html";
 
 ?>

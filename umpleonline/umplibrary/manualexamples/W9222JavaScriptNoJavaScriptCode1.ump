@@ -1,0 +1,7 @@
+// describe has a Java body only, so the generated JavaScript
+// leaves it out and W9222 names it
+generate JavaScript;
+class Book {
+  title;
+  String describe() Java { return "Book " + getTitle(); }
+}

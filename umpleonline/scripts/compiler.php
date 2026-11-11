@@ -408,7 +408,7 @@ else if (isset($_REQUEST["umpleCode"]))
     return;      
   } // end html content      
 
-  elseif (!in_array($language,array("Php","Java","Ruby","Python","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","InstanceDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","GvUseCaseDiagram","Yuml")))
+  elseif (!in_array($language,array("Php","Java","Ruby","Python","JavaScript","RTCpp","Cpp","Sql","GvFeatureDiagram","GvStateDiagram","GvClassDiagram","InstanceDiagram","GvEntityRelationshipDiagram","GvClassTraitDiagram","GvUseCaseDiagram","Yuml")))
   {  // If NOT one of the basic languages, then use umplesync.jar
     list($dataname, $dataHandle) = getOrCreateDataHandle();
     $dataHandle->writeData($dataname, $input);
@@ -452,12 +452,16 @@ else if (isset($_REQUEST["umpleCode"]))
 
   if (!$uigu)
   { // NOTuigu
-  // Generate the Java, PHP, RTCpp, Ruby, Python, Cpp or Sql and put it into the right directory
+  // Generate the Java, PHP, RTCpp, Ruby, Python, JavaScript, Cpp or Sql and put it into the right directory
   list($dataname, $dataHandle) = getOrCreateDataHandle();
   // Only now, so that a rejected filename gets nothing but its 400 message
   if ($language == "Python")
   {
     echo "Generated Python has a few limitations. For more information please <a target='pythoninfo' href='https://cruise.umple.org/umple/Python.html'>click here</a>.<br>";
+  }
+  if ($language == "JavaScript")
+  {
+    echo "Generated JavaScript is basic and has several limitations. For more information please <a target='javascriptinfo' href='https://cruise.umple.org/umple/JavaScript.html'>click here</a>.<br>";
   }
   $dataHandle->writeData($dataname, "generate {$language} \"./{$language}/\" --override-all;\n" . $input);
   $workDir = $dataHandle->getWorkDir();
@@ -467,7 +471,7 @@ else if (isset($_REQUEST["umpleCode"]))
   $errorFilename = "{$filename}.erroroutput";
   $executionErrorFilename = "{$filename}.executionerror";
   
-  // Clean up any pre-existing java. php, RTCpp, ruby, python or cpp files
+  // Clean up any pre-existing java. php, RTCpp, ruby, python, javascript or cpp files
   $thedir = dirname($outputFilename);
   $toRemove = False;
   $rmcommand = "rm -rf ";
