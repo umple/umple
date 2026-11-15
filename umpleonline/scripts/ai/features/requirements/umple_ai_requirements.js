@@ -17,6 +17,38 @@ const AiRequirements = {
       .map(({ id, text }) => ({ id, text, implemented: implementedIds.has(id) }));
   },
 
+  // The model part of the editor text, before UmpleOnline's layout section
+  getModelEnd(docText) {
+    const delimiter = (typeof Page !== "undefined" && Page.modelDelimiter) ? Page.modelDelimiter : null;
+    const index = delimiter ? docText.indexOf(delimiter) : -1;
+    return index >= 0 ? index : docText.length;
+  },
+
+  replaceEditorText(from, to, text) {
+    const editor = Page.codeMirrorEditor6;
+    editor.dispatch({ changes: { from, to, insert: text } });
+    TabControl.getCurrentHistory().save(editor.state.doc.toString(), "aiGeneration");
+  },
+
+  formatRequirementBlock(requirement) {
+    return `req ${requirement.id} {\n  ${requirement.text}\n}`;
+  },
+
+  // "New": the requirement goes at the top of the model (issue #2485)
+  insertRequirementAtTop(requirement) {
+    this.replaceEditorText(0, 0, `${this.formatRequirementBlock(requirement)}\n\n`);
+  },
+
+  // "Modify": the req block gets the new wording; false if it can no longer be found
+  updateRequirementText(requirement) {
+    const docText = Page.codeMirrorEditor6.state.doc.toString();
+    const block = AiTextUtils.findRequirementBlocks(docText.slice(0, this.getModelEnd(docText)))
+      .find(b => b.id === requirement.id);
+    if (!block) return false;
+    this.replaceEditorText(block.start, block.end, this.formatRequirementBlock(requirement));
+    return true;
+  },
+
   abortActiveStream() {
     AiStreamUtils?.abort?.(this.activeStream);
     this.activeStream = null;
@@ -33,11 +65,6 @@ const AiRequirements = {
   showDialog() {
     const umpleCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
     const requirements = this.parseRequirements(umpleCode);
-
-    if (requirements.length === 0) {
-      alert("No requirements found in your Umple code.\n\nSee https://cruise.umple.org/umple/Requirements.html for more information.");
-      return;
-    }
 
     const apiConfig = this.checkApiConfig();
     if (!apiConfig.configured) {
@@ -73,10 +100,11 @@ const AiRequirements = {
       return;
     }
 
-    const selectedReqs = RequirementsDialog.getSelectedRequirements(dialog, requirements);
+    const action = RequirementsDialog.getRequestedAction(dialog, requirements);
+    const actionError = RequirementsDialog.validateRequestedAction(action, requirements);
 
-    if (selectedReqs.length === 0) {
-      RequirementsDialog.setStatusMessage(statusDiv, "Error", "Please select at least one requirement", "#DD0033");
+    if (actionError) {
+      RequirementsDialog.setStatusMessage(statusDiv, "Error", actionError, "#DD0033");
       return;
     }
 
@@ -88,6 +116,26 @@ const AiRequirements = {
       return;
     }
 
+    // New and Modify change the req blocks in the editor first (issue #2485)
+    let selectedReqs = action.requirements;
+    let mode = "insert";
+    if (action.mode === "new") {
+      this.insertRequirementAtTop(action.requirement);
+      selectedReqs = [action.requirement];
+    } else if (action.mode === "modify") {
+      if (!this.updateRequirementText(action.requirement)) {
+        RequirementsDialog.setStatusMessage(statusDiv, "Error", `Requirement ${action.requirement.id} is no longer in the editor`, "#DD0033");
+        return;
+      }
+      selectedReqs = [action.requirement];
+      mode = action.previous?.implemented ? "replace" : "insert";
+    }
+
+    const editorText = Page.codeMirrorEditor6?.state.doc.toString() || "";
+    const modelText = editorText.slice(0, this.getModelEnd(editorText));
+    const options = { ...RequirementsDialog.getGenerationOptions(dialog), modelText };
+    dialog.insertMode = mode;
+
     btnGenerate.classList.add("disabled");
     btnGenerate.textContent = "Generating...";
     btnStop.style.display = "inline-block";
@@ -97,7 +145,7 @@ const AiRequirements = {
     RequirementsDialog.clearRequirementsOutput(dialog);
     RequirementsDialog.appendRequirementsOutput(`Generation type: ${genType}`, dialog);
 
-    dialog.generationContext = { selectedReqs, genType, generation: null, umpleCode: "", chatContext: null };
+    dialog.generationContext = { selectedReqs, genType, mode, generation: null, umpleCode: "", chatContext: null };
     let tokenLimitTruncated = false;
 
     try {
@@ -107,7 +155,18 @@ const AiRequirements = {
         await RequirementsPromptBuilder.preloadGuidance(genType);
       }
 
-      const generation = RequirementsPromptBuilder.buildGeneration(selectedReqs, genType);
+      const generation = mode === "replace"
+        ? RequirementsPromptBuilder.buildUpdate({
+          requirement: action.requirement,
+          previousText: action.previous?.text,
+          generationType: genType,
+          modelText,
+          options
+        })
+        : RequirementsPromptBuilder.buildGeneration(selectedReqs, genType, options);
+      if (mode === "replace") {
+        RequirementsDialog.appendRequirementsOutput(`${action.requirement.id} is already implemented: asking the AI for the updated model.`, dialog);
+      }
       const chatContext = AiChatContext.create(generation.systemPrompt);
 
       dialog.generationContext.generation = generation;
@@ -167,7 +226,7 @@ const AiRequirements = {
         RequirementsDialog.appendRequirementsOutput("Running self-correction (compiler + validation)...", dialog);
         codeArea.value = "";
         codeArea.placeholder = "Self-correction in progress...";
-        const originalEditorCode = Page.codeMirrorEditor6?.state.doc.toString() || "";
+        const originalEditorCode = mode === "replace" ? modelText : (Page.codeMirrorEditor6?.state.doc.toString() || "");
           try {
             const corrected = await RequirementsSelfCorrection.run({
               originalCode: originalEditorCode,
@@ -176,6 +235,9 @@ const AiRequirements = {
               generationType: genType,
               chatContext,
               expectedRequirementIds: generation.expectedRequirementIds,
+              mode,
+              options,
+              keptRequirementIds: mode === "replace" ? AiTextUtils.findRequirementBlocks(modelText).map(b => b.id) : [],
               log: line => RequirementsDialog.appendRequirementsOutput(line, dialog),
               setStatus: (label, message, color) => RequirementsDialog.setStatusMessage(statusDiv, label, message, color),
               shouldStop: () => !!dialog.stopped,
@@ -206,9 +268,11 @@ const AiRequirements = {
       btnInsert.style.display = "inline-block";
 
       if (statusDiv.style.color !== "#DD0033") {
-        const successMsg = dialog.stopped
-          ? "Generation stopped. Partial code generated! Review and click 'Insert to Editor' to add it to your model."
-          : "Code generated successfully! Review and click 'Insert to Editor' to add it to your model.";
+        const successMsg = dialog.insertMode === "replace"
+          ? "Updated model generated! Review it and click 'Insert to Editor' to replace your model with it (Undo restores the previous one)."
+          : dialog.stopped
+            ? "Generation stopped. Partial code generated! Review and click 'Insert to Editor' to add it to your model."
+            : "Code generated successfully! Review and click 'Insert to Editor' to add it to your model.";
         RequirementsDialog.setStatusMessage(statusDiv, "LLM", successMsg);
       }
     } catch (error) {
@@ -294,11 +358,18 @@ const AiRequirements = {
 
       const genType = dialog?.querySelector('input[name="genType"]:checked')?.value || "statemachine";
       const currentDoc = Page.codeMirrorEditor6.state.doc.toString();
-      const insertion = RequirementsSelfCorrection.buildMergedCode(currentDoc, code);
+      // "replace": the AI returned the whole updated model; the layout section is kept (issue #2485)
+      const insertion = dialog.insertMode === "replace"
+        ? (() => {
+          const modelEnd = this.getModelEnd(currentDoc);
+          const insertText = code.trim() + (modelEnd < currentDoc.length ? "\n" : "");
+          return { insertPos: 0, replaceTo: modelEnd, insertText, highlightFrom: 0, highlightTo: code.trim().length };
+        })()
+        : RequirementsSelfCorrection.buildMergedCode(currentDoc, code);
       const highlightDurationMs = 3000;
 
       Page.codeMirrorEditor6.dispatch({
-        changes: { from: insertion.insertPos, to: insertion.insertPos, insert: insertion.insertText },
+        changes: { from: insertion.insertPos, to: insertion.replaceTo ?? insertion.insertPos, insert: insertion.insertText },
         selection: insertion.highlightTo > insertion.highlightFrom
           ? { anchor: insertion.highlightFrom, head: insertion.highlightTo }
           : { anchor: insertion.insertPos + insertion.insertText.length },

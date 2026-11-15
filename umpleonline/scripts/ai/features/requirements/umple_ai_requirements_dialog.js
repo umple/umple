@@ -68,7 +68,175 @@ const RequirementsDialog = {
       note.textContent = "This requirement already has an implementsReq in the model.";
       container.appendChild(note);
     }
+
+    const modeDiv = document.createElement("div");
+    modeDiv.className = "requirement-mode";
+    modeDiv.appendChild(this.createModeRadio("all", " Implement This Requirement", true));
+    container.appendChild(modeDiv);
+    this.appendNewAndModifyModes(container, modeDiv, [requirement]);
     return container;
+  },
+
+  // No requirement yet: only a new one can be written (issue #2485)
+  createNewOnlyUI(requirements) {
+    const container = document.createElement("div");
+    container.className = "requirement-selection";
+
+    const heading = document.createElement("h4");
+    heading.textContent = "New Requirement:";
+    container.appendChild(heading);
+
+    const modeDiv = document.createElement("div");
+    modeDiv.className = "requirement-mode";
+    modeDiv.style.display = "none";
+    modeDiv.appendChild(this.createModeRadio("new", " New Requirement", true));
+    container.appendChild(modeDiv);
+
+    const form = this.createNewRequirementForm(requirements);
+    form.style.display = "block";
+    container.appendChild(form);
+    return container;
+  },
+
+  createModeRadio(value, labelText, checked = false) {
+    const label = document.createElement("label");
+    const radio = document.createElement("input");
+    radio.type = "radio";
+    radio.name = "reqMode";
+    radio.value = value;
+    radio.checked = checked;
+    label.appendChild(radio);
+    label.appendChild(document.createTextNode(labelText));
+    return label;
+  },
+
+  // "New" adds a requirement at the top of the model and implements it; "Modify" changes the
+  // wording of an existing one and updates or creates its implementation (issue #2485)
+  appendNewAndModifyModes(container, modeDiv, requirements) {
+    modeDiv.appendChild(this.createModeRadio("new", " New Requirement (type it, it is added to the model and implemented)"));
+    modeDiv.appendChild(this.createModeRadio("modify", " Modify a Requirement (change its wording, the AI updates the model)"));
+    container.appendChild(this.createNewRequirementForm(requirements));
+    container.appendChild(this.createModifyRequirementForm(requirements));
+  },
+
+  // The next free ID following the existing ones: R01, R02 -> R03; none -> R1
+  nextRequirementId(requirements) {
+    let prefix = null;
+    let width = 1;
+    let max = 0;
+    requirements.forEach(r => {
+      const match = /^(.*?)(\d+)$/.exec(r.id);
+      if (!match || (prefix !== null && match[1] !== prefix)) return;
+      prefix = match[1];
+      width = Math.max(width, match[2].length);
+      max = Math.max(max, parseInt(match[2], 10));
+    });
+    const ids = new Set(requirements.map(r => r.id));
+    let n = max + 1;
+    let id;
+    do {
+      id = (prefix === null ? "R" : prefix) + String(n).padStart(width, "0");
+      n++;
+    } while (ids.has(id));
+    return id;
+  },
+
+  createNewRequirementForm(requirements) {
+    const form = document.createElement("div");
+    form.id = "newReqForm";
+    form.className = "requirement-edit-form";
+    form.style.display = "none";
+
+    const idLabel = document.createElement("label");
+    idLabel.textContent = "ID: ";
+    const idInput = document.createElement("input");
+    idInput.type = "text";
+    idInput.id = "newReqId";
+    idInput.value = this.nextRequirementId(requirements);
+    idLabel.appendChild(idInput);
+    form.appendChild(idLabel);
+
+    const text = document.createElement("textarea");
+    text.id = "newReqText";
+    text.placeholder = "Describe the new requirement...";
+    form.appendChild(text);
+
+    const note = document.createElement("div");
+    note.className = "requirement-implemented-note";
+    note.textContent = "The requirement is added at the top of your model, then the AI implements it.";
+    form.appendChild(note);
+    return form;
+  },
+
+  createModifyRequirementForm(requirements) {
+    const form = document.createElement("div");
+    form.id = "modifyReqForm";
+    form.className = "requirement-edit-form";
+    form.style.display = "none";
+
+    const select = document.createElement("select");
+    select.id = "modifyReqId";
+    requirements.forEach(req => {
+      const option = document.createElement("option");
+      option.value = req.id;
+      option.textContent = req.implemented ? `${req.id} (implemented)` : req.id;
+      select.appendChild(option);
+    });
+    form.appendChild(select);
+
+    const text = document.createElement("textarea");
+    text.id = "modifyReqText";
+    text.value = requirements[0]?.text || "";
+    form.appendChild(text);
+
+    const note = document.createElement("div");
+    note.id = "modifyReqNote";
+    note.className = "requirement-implemented-note";
+    note.textContent = this.describeModify(requirements[0]);
+    form.appendChild(note);
+    return form;
+  },
+
+  describeModify(requirement) {
+    if (!requirement) return "";
+    return requirement.implemented
+      ? "Already implemented: the AI updates the model to match the new wording."
+      : "Not implemented yet: the AI implements the new wording.";
+  },
+
+  // What the user asked for: {mode, requirements} for the selection modes, {mode, requirement,
+  // previous} for "new" and "modify"
+  getRequestedAction(dialog, requirements) {
+    const mode = dialog.querySelector('input[name="reqMode"]:checked')?.value || "all";
+    if (mode === "new") {
+      const id = (dialog.querySelector("#newReqId")?.value || "").trim();
+      const text = (dialog.querySelector("#newReqText")?.value || "").trim();
+      return { mode, requirement: { id, text, implemented: false } };
+    }
+    if (mode === "modify") {
+      const id = dialog.querySelector("#modifyReqId")?.value || "";
+      const text = (dialog.querySelector("#modifyReqText")?.value || "").trim();
+      const previous = requirements.find(r => r.id === id) || null;
+      return { mode, requirement: { id, text, implemented: !!previous?.implemented }, previous };
+    }
+    return { mode, requirements: this.getSelectedRequirements(dialog, requirements) };
+  },
+
+  // An error message, or null when the requested action can run
+  validateRequestedAction(action, requirements) {
+    if (action.mode !== "new" && action.mode !== "modify") {
+      return action.requirements.length === 0 ? "Please select at least one requirement" : null;
+    }
+    const { id, text } = action.requirement;
+    if (!text) return "Please type the requirement";
+    if (/[{}]/.test(text)) return "The requirement text cannot contain { or }";
+    if (action.mode === "new") {
+      if (!/^\w+(?:[-_]\w+)*$/.test(id)) return "Please give an ID made of letters, digits, - or _ (for example R4)";
+      if (requirements.some(r => r.id === id)) return `A requirement with ID ${id} already exists`;
+    } else if (action.previous && action.previous.text.trim() === text) {
+      return "The wording has not changed";
+    }
+    return null;
   },
 
   // Requirements that no active implementsReq names yet (issue #2485)
@@ -130,6 +298,7 @@ const RequirementsDialog = {
     modeDiv.appendChild(labelMultiple);
 
     container.appendChild(modeDiv);
+    this.appendNewAndModifyModes(container, modeDiv, requirements);
 
     const multipleDiv = document.createElement("div");
     multipleDiv.id = "multipleReqSelection";
@@ -250,6 +419,9 @@ const RequirementsDialog = {
       return requirements;
     } else if (mode === "unimplemented") {
       return this.getUnimplementedRequirements(requirements);
+    } else if (mode === "new" || mode === "modify") {
+      const action = this.getRequestedAction(dialog, requirements);
+      return action.requirement.text ? [action.requirement] : [];
     } else {
       const checkboxes = dialog.querySelectorAll(".req-checkbox:checked");
       const selectedIds = Array.from(checkboxes).map(cb => cb.value);
@@ -278,9 +450,11 @@ const RequirementsDialog = {
     title.textContent = "Generate from Requirements";
     content.appendChild(title);
 
-    const requirementSelection = requirements.length === 1
-      ? this.createSingleRequirementUI(requirements[0])
-      : this.createMultipleRequirementUI(requirements);
+    const requirementSelection = requirements.length === 0
+      ? this.createNewOnlyUI(requirements)
+      : requirements.length === 1
+        ? this.createSingleRequirementUI(requirements[0])
+        : this.createMultipleRequirementUI(requirements);
     content.appendChild(requirementSelection);
 
     const genTypeDiv = document.createElement("div");
@@ -308,6 +482,20 @@ const RequirementsDialog = {
     labelClassDiagram.appendChild(radioClassDiagram);
     labelClassDiagram.appendChild(document.createTextNode(" Class Diagram"));
     genTypeDiv.appendChild(labelClassDiagram);
+
+    // Further Umple features the AI may generate (issue #2485)
+    const optionsHeading = document.createElement("h4");
+    optionsHeading.textContent = "Also Generate:";
+    genTypeDiv.appendChild(optionsHeading);
+    [["optMethods", " Methods implied by the requirements"], ["optMain", " A main method that demonstrates the model"]].forEach(([id, text]) => {
+      const label = document.createElement("label");
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.id = id;
+      label.appendChild(checkbox);
+      label.appendChild(document.createTextNode(text));
+      genTypeDiv.appendChild(label);
+    });
 
     content.appendChild(genTypeDiv);
 
@@ -391,6 +579,13 @@ const RequirementsDialog = {
     return dialog;
   },
 
+  getGenerationOptions(dialog) {
+    return {
+      includeMethods: !!dialog.querySelector("#optMethods")?.checked,
+      includeMain: !!dialog.querySelector("#optMain")?.checked
+    };
+  },
+
   setupDialogEvents(dialog, requirements, callbacks) {
     const modeRadios = dialog.querySelectorAll('input[name="reqMode"]');
     modeRadios.forEach(radio => {
@@ -398,6 +593,17 @@ const RequirementsDialog = {
         const mode = e.target.value;
         const multipleDiv = dialog.querySelector("#multipleReqSelection");
         const displayDiv = dialog.querySelector("#selectedReqText");
+        const newForm = dialog.querySelector("#newReqForm");
+        const modifyForm = dialog.querySelector("#modifyReqForm");
+        const selectedDisplay = dialog.querySelector("#selectedReqDisplay");
+
+        if (newForm) newForm.style.display = mode === "new" ? "block" : "none";
+        if (modifyForm) modifyForm.style.display = mode === "modify" ? "block" : "none";
+        if (selectedDisplay) selectedDisplay.style.display = mode === "new" || mode === "modify" ? "none" : "block";
+        if (mode === "new" || mode === "modify") {
+          if (multipleDiv) multipleDiv.style.display = "none";
+          return;
+        }
 
         if (!multipleDiv || !displayDiv) return;
 
@@ -410,6 +616,17 @@ const RequirementsDialog = {
         }
       });
     });
+
+    const modifySelect = dialog.querySelector("#modifyReqId");
+    if (modifySelect) {
+      modifySelect.addEventListener("change", () => {
+        const req = requirements.find(r => r.id === modifySelect.value);
+        const text = dialog.querySelector("#modifyReqText");
+        const note = dialog.querySelector("#modifyReqNote");
+        if (text) text.value = req?.text || "";
+        if (note) note.textContent = this.describeModify(req);
+      });
+    }
 
     const checkboxes = dialog.querySelectorAll(".req-checkbox");
     checkboxes.forEach(checkbox => {

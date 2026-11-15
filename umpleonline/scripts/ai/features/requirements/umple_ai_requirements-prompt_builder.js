@@ -170,6 +170,44 @@ const RequirementsPromptBuilder = (() => {
     ];
   }
 
+  // Extra Umple features the user asked for (issue #2485)
+  function buildOptionRules(options = {}) {
+    const rules = [];
+    if (options.includeMethods) {
+      rules.push("- Also write the methods the requirements imply, with bodies in simple Java, e.g. Integer total() { ... }; only call generated methods (getX(), setX(...), addY(...), numberOfYs()) or methods you define.");
+    }
+    if (options.includeMain) {
+      rules.push("- Add a demo method public static void main(String [ ] args) Java { ... } in one class that creates objects (or fires events) and prints them.");
+    }
+    return rules;
+  }
+
+  // The user's model without its req blocks, so the AI reuses existing classes (issue #2485)
+  const MAX_EXISTING_MODEL_CHARS = 12000;
+  function existingModelText(modelText) {
+    const source = String(modelText || "");
+    if (!source.trim()) return "";
+    const blocks = (typeof AiTextUtils !== "undefined" && AiTextUtils.findRequirementBlocks)
+      ? AiTextUtils.findRequirementBlocks(source)
+      : [];
+    let withoutReqs = source;
+    for (let i = blocks.length - 1; i >= 0; i--) {
+      withoutReqs = withoutReqs.slice(0, blocks[i].start) + withoutReqs.slice(blocks[i].end);
+    }
+    withoutReqs = withoutReqs.replace(/\n{3,}/g, "\n\n").trim();
+    return withoutReqs.length > MAX_EXISTING_MODEL_CHARS
+      ? withoutReqs.slice(0, MAX_EXISTING_MODEL_CHARS) + "\n// ... (model truncated)"
+      : withoutReqs;
+  }
+
+  function buildExistingModelRules(modelText) {
+    if (!existingModelText(modelText)) return [];
+    return [
+      "- The existing_model block shows the user's current model. Reuse its classes; do not declare a duplicate association or attribute.",
+      "- To add members to an existing class, declare the class again with only the new members (Umple merges declarations of the same class)."
+    ];
+  }
+
   function buildCommonConstraintRules() {
     return [
       "- Do NOT re-output any req { ... } blocks.",
@@ -179,13 +217,39 @@ const RequirementsPromptBuilder = (() => {
     ];
   }
 
-  function buildOutputContract({ generationType, expectedRequirementIds }) {
+  function buildOutputContract({ generationType, expectedRequirementIds, options = {} }) {
     return [
       ...buildCommonOutputRules(),
       getRequirementRule(expectedRequirementIds),
       getTypeRule(generationType),
+      ...buildOptionRules(options),
+      ...buildExistingModelRules(options.modelText),
       ...buildCommonConstraintRules()
     ].filter(Boolean).join("\n");
+  }
+
+  // Updating an already implemented requirement: the AI returns the whole updated model (issue #2485)
+  function buildUpdateOutputContract({ generationType, expectedRequirementIds, options = {} }) {
+    return [
+      ...buildCommonOutputRules(),
+      "- Output the COMPLETE updated model: every req block and every model element of the current_model, changed only where the new wording requires it.",
+      "- Keep every req block, with its ID unchanged.",
+      getRequirementRule(expectedRequirementIds),
+      ...buildOptionRules(options),
+      "- Do NOT output position blocks, diagram layout, or @@@skip* directives.",
+      "- If you must assume something, add a single-line comment inside the code: // Assumption: ..."
+    ].filter(Boolean).join("\n");
+  }
+
+  function buildUpdateRepairTaskBlock() {
+    return [
+      "You are debugging Umple code. Follow this workflow:",
+      "",
+      "1. Read the compiler_issues_errors_warnings",
+      "2. Review the previous conversation for the updated model that needs fixing",
+      "3. Read the requirements and output_contract",
+      "4. Output the corrected COMPLETE updated model that satisfies all constraints"
+    ].join("\n");
   }
 
   function buildRepairTaskBlock() {
@@ -255,6 +319,20 @@ const RequirementsPromptBuilder = (() => {
     return errors;
   }
 
+  function validateOptions(code, options = {}) {
+    const errors = [];
+    if (options.includeMain && !/\bstatic\s+void\s+main\s*\(/.test(code)) {
+      errors.push("No main method found (expected public static void main(String [ ] args) Java { ... })");
+    }
+    return errors;
+  }
+
+  function validateKeptRequirements(code, requirementIds = []) {
+    if (requirementIds.length === 0 || typeof AiTextUtils === "undefined" || !AiTextUtils.findRequirementBlocks) return [];
+    const kept = new Set(AiTextUtils.findRequirementBlocks(code).map(b => b.id));
+    return requirementIds.filter(id => !kept.has(id)).map(id => `The updated model dropped the req block for ${id}`);
+  }
+
   function validateGenerationShape(code, generationType) {
     const errors = [];
     const hasClassOrAssoc = /\b(class|association)\b/.test(code);
@@ -285,7 +363,7 @@ const RequirementsPromptBuilder = (() => {
      * @param {Object} params - {code, expectedRequirementIds, generationType}
      * @returns {Object} {valid: boolean, errors: Array<string>}
      */
-    validateGeneratedUmple({ code, expectedRequirementIds = [], generationType } = {}) {
+    validateGeneratedUmple({ code, expectedRequirementIds = [], generationType, options = {}, keptRequirementIds = [] } = {}) {
       const errors = [];
       const text = (code || "").trim();
       if (!text) return { valid: false, errors: ["Generated code is empty"] };
@@ -293,6 +371,8 @@ const RequirementsPromptBuilder = (() => {
       if (!validateBalancedBraces(text)) errors.push("Unbalanced braces in generated code");
       errors.push(...validateGenerationShape(text, generationType));
       errors.push(...validateImplementsReq(text, expectedRequirementIds));
+      errors.push(...validateOptions(text, options));
+      errors.push(...validateKeptRequirements(text, keptRequirementIds));
 
       return { valid: errors.length === 0, errors };
     },
@@ -313,8 +393,8 @@ const RequirementsPromptBuilder = (() => {
      * @param {Object} params - {code, expectedRequirementIds, generationType}
      * @returns {Array<{severity: string, errorCode: string, message: string, line: number, isPseudoError: boolean}>} Array of pseudo-compiler error objects
      */
-    getValidationAsCompilerErrors({ code, expectedRequirementIds = [], generationType } = {}) {
-      const validation = this.validateGeneratedUmple({ code, expectedRequirementIds, generationType });
+    getValidationAsCompilerErrors({ code, expectedRequirementIds = [], generationType, options = {}, keptRequirementIds = [] } = {}) {
+      const validation = this.validateGeneratedUmple({ code, expectedRequirementIds, generationType, options, keptRequirementIds });
       if (validation.valid) return [];
 
       return validation.errors.map(err => ({
@@ -326,19 +406,42 @@ const RequirementsPromptBuilder = (() => {
       }));
     },
 
-    buildGeneration(requirements, generationType) {
+    // options: { modelText, includeMethods, includeMain } (issue #2485)
+    buildGeneration(requirements, generationType, options = {}) {
       const expectedRequirementIds = (requirements || []).map(r => r.id).filter(Boolean);
       const reqText = formatRequirements(requirements);
+      const existing = existingModelText(options.modelText);
 
       const prompt = joinBlocks([
         block("task", getTaskLine(generationType)),
-        block("output_contract", buildOutputContract({ generationType, expectedRequirementIds }))
+        block("existing_model", existing),
+        block("output_contract", buildOutputContract({ generationType, expectedRequirementIds, options }))
       ]);
 
       return { prompt, systemPrompt: getSystemPrompt(generationType, reqText), expectedRequirementIds };
     },
 
-    repair_buildGeneration({ generationType, requirements, compilerIssuesText } = {}) {
+    // A requirement that is already implemented changed wording: ask for the whole updated model.
+    buildUpdate({ requirement, previousText, generationType, modelText, options = {} } = {}) {
+      const expectedRequirementIds = requirement?.id ? [requirement.id] : [];
+      const reqText = formatRequirements(requirement ? [requirement] : []);
+      const task = [
+        `Requirement ${requirement?.id} changed.`,
+        `Previous wording: ${String(previousText || "").trim()}`,
+        `New wording: ${String(requirement?.text || "").trim()}`,
+        "Update the current_model so that it implements the new wording. Change only what the new wording requires."
+      ].join("\n");
+
+      const prompt = joinBlocks([
+        block("task", task),
+        block("current_model", String(modelText || "").trim()),
+        block("output_contract", buildUpdateOutputContract({ generationType, expectedRequirementIds, options }))
+      ]);
+
+      return { prompt, systemPrompt: getSystemPrompt(generationType, reqText), expectedRequirementIds };
+    },
+
+    repair_buildGeneration({ generationType, requirements, compilerIssuesText, mode = "insert", options = {} } = {}) {
       const expectedRequirementIds = (requirements || []).map(r => r.id).filter(Boolean);
       const reqText = formatRequirements(requirements);
 
@@ -346,9 +449,11 @@ const RequirementsPromptBuilder = (() => {
       const issuesText = issues ? `Errors (compiler and validation) with code snippets:\n${issues}` : "- (No details provided)";
 
       const prompt = joinBlocks([
-        block("task", buildRepairTaskBlock()),
+        block("task", mode === "replace" ? buildUpdateRepairTaskBlock() : buildRepairTaskBlock()),
         block("compiler_issues_errors_warnings", issuesText),
-        block("output_contract", buildOutputContract({ generationType, expectedRequirementIds }))
+        block("output_contract", mode === "replace"
+          ? buildUpdateOutputContract({ generationType, expectedRequirementIds, options })
+          : buildOutputContract({ generationType, expectedRequirementIds, options }))
       ]);
 
       return {
