@@ -83,25 +83,30 @@ public class GvCdGeneratorTest extends TemplateTest
     String code = createUmpleSystem(pathToInput, "gv/AssociationClasses.ump").getCode();
     assertTrue(code.contains("\"Ticket association\" [shape=point"));
     assertTrue(code.contains("\"Ticket\" -> \"Ticket association\" [dir=\"none\", style=dashed"));
-    assertTrue(code.contains("\"Ticket association\" -> \"Performance\" [dir=\"none\", headlabel=\"1 \""));
-    assertTrue(code.contains("\"Ticket association\" -> \"TicketHolder\" [dir=\"none\", headlabel=\"1 \""));
+    assertTrue(code.contains("\"Ticket association\" -> \"Performance\" [dir=\"none\", headlabel=\"* \""));
+    assertTrue(code.contains("\"Ticket association\" -> \"TicketHolder\" [dir=\"none\", headlabel=\"* \""));
     assertTrue(code.contains("seatNumber : String"));
     assertFalse(code.contains("\"Ticket\" -> \"Performance\""));
     assertFalse(code.contains("\"Ticket\" -> \"TicketHolder\""));
     assertTrue(code.contains("\"Ticket\" -> \"Receipt\""));
     assertFalse(code.contains("\"Ticket association\" -> \"Receipt\""));
-    assertTrue(code.contains("\"Assignment association\" -> \"Member\" [dir=\"none\", headlabel=\"1 mentor\""));
-    assertTrue(code.contains("\"Assignment association\" -> \"Member\" [dir=\"none\", headlabel=\"1 mentee\""));
-    assertTrue(code.contains("\"Booking association\" -> \"Performance\" [dir=\"none\", headlabel=\"1 shows\""));
-    assertTrue(code.contains("\"Booking association\" -> \"TicketHolder\" [dir=\"none\", headlabel=\"1 holders\""));
-    assertTrue(code.contains("\"Subscription association\" -> \"Performance\" [dir=\"none\", headlabel=\"1 \""));
-    assertTrue(code.contains("\"Subscription association\" -> \"TicketHolder\" [dir=\"none\", headlabel=\"1 \""));
-    assertTrue(code.contains("\"Subscription association\" -> \"Season\" [dir=\"none\", headlabel=\"1 \""));
+    assertTrue(code.contains("\"Assignment association\" -> \"Member\" [dir=\"none\", headlabel=\"1..* mentor\""));
+    assertTrue(code.contains("\"Assignment association\" -> \"Member\" [dir=\"none\", headlabel=\"0..2 mentee\""));
+    assertTrue(code.contains("\"Booking association\" -> \"Performance\" [dir=\"none\", headlabel=\"* shows\""));
+    assertTrue(code.contains("\"Booking association\" -> \"TicketHolder\" [dir=\"none\", headlabel=\"1..* holders\""));
+    assertTrue(code.contains("\"Subscription association\" -> \"Performance\" [dir=\"none\", headlabel=\"* \""));
+    assertTrue(code.contains("\"Subscription association\" -> \"TicketHolder\" [dir=\"none\", headlabel=\"* \""));
+    assertTrue(code.contains("\"Subscription association\" -> \"Season\" [dir=\"none\", headlabel=\"* \""));
     assertFalse(code.contains("\"Subscription\" -> \"Season\""));
-    assertTrue(code.contains("taillabel=\"1..*\", label=\"menteeAssignments\""));
-    assertTrue(code.contains("taillabel=\"0..2\", label=\"mentorAssignments\""));
-    assertTrue(code.contains("\"Enrollment association\" -> \"Student\" [dir=\"none\", headlabel=\"1 \", taillabel=\"*\""));
-    assertTrue(code.contains("\"Enrollment association\" -> \"Course\" [dir=\"none\", headlabel=\"1 \", taillabel=\"1..*\""));
+    assertTrue(code.contains("headlabel=\"1..* mentor\", label=\"menteeAssignments\""));
+    assertTrue(code.contains("headlabel=\"0..2 mentee\", label=\"mentorAssignments\""));
+    assertTrue(code.contains("\"Enrollment association\" -> \"Student\" [dir=\"none\", headlabel=\"* \""));
+    assertTrue(code.contains("\"Enrollment association\" -> \"Course\" [dir=\"none\", headlabel=\"1..* \""));
+    for (String line : code.split("\n"))
+    {
+      if (line.contains(" association\" -> "))
+        assertFalse("Junction must not carry a multiplicity: " + line, line.contains("taillabel="));
+    }
     assertFalse(code.contains("Action.selectClass(&quot;Ticket association&quot;)"));
     assertFalse(code.contains("Action.selectAssociation('Ticket association"));
   }
