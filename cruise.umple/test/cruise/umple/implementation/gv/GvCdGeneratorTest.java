@@ -98,8 +98,41 @@ public class GvCdGeneratorTest extends TemplateTest
     assertTrue(code.contains("\"Subscription association\" -> \"TicketHolder\" [dir=\"none\", headlabel=\"* \""));
     assertTrue(code.contains("\"Subscription association\" -> \"Season\" [dir=\"none\", headlabel=\"* \""));
     assertFalse(code.contains("\"Subscription\" -> \"Season\""));
+    assertTrue(code.contains("headlabel=\"1..* mentor\", label=\"menteeAssignments\""));
+    assertTrue(code.contains("headlabel=\"0..2 mentee\", label=\"mentorAssignments\""));
+    assertTrue(code.contains("\"Enrollment association\" -> \"Student\" [dir=\"none\", headlabel=\"* \""));
+    assertTrue(code.contains("\"Enrollment association\" -> \"Course\" [dir=\"none\", headlabel=\"1..* \""));
+    for (String line : code.split("\n"))
+    {
+      if (line.contains(" association\" -> "))
+        assertFalse("Junction must not carry a multiplicity: " + line, line.contains("taillabel="));
+    }
     assertFalse(code.contains("Action.selectClass(&quot;Ticket association&quot;)"));
     assertFalse(code.contains("Action.selectAssociation('Ticket association"));
+  }
+
+  @Test
+  public void hide_association_class_junction_without_participants()
+  {
+    cruise.umple.compiler.UmpleModel model = createUmpleSystem(pathToInput, "gv/AssociationClasses.ump");
+    model.applyFilter("ticketOnly");
+    model.generate();
+    String code = model.getCode();
+    assertTrue(code.contains("// Class: Ticket"));
+    assertFalse(code.contains("Ticket association"));
+    assertTrue(code.contains("\"Ticket\" -> \"Receipt\""));
+  }
+
+  @Test
+  public void retain_junction_with_one_visible_participant()
+  {
+    cruise.umple.compiler.UmpleModel model = createUmpleSystem(pathToInput, "gv/AssociationClasses.ump");
+    model.applyFilter("ticketPerformance");
+    model.generate();
+    String code = model.getCode();
+    assertTrue(code.contains("\"Ticket association\" [shape=point"));
+    assertTrue(code.contains("\"Ticket association\" -> \"Performance\""));
+    assertFalse(code.contains("\"Ticket association\" -> \"TicketHolder\""));
   }
 
   @Test
