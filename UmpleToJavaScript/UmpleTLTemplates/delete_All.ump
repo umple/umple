@@ -1,0 +1,82 @@
+use delete_ManyFromMany.ump;
+use delete_ManyFromOptionalOne.ump;
+use delete_ManyFromX_comp.ump;
+use delete_OptionalOneFromMany.ump;
+use delete_OptionalOneFromMany_comp.ump;
+use delete_OptionalOneFromOne.ump;
+use delete_OptionalOneFromOne_comp.ump;
+use delete_OptionalOneFromOptionalOne.ump;
+use delete_UndirectionalMany.ump;
+use delete_UndirectionalOne.ump;
+
+class UmpleToJavaScript {
+    delete_All <<!<</*delete_All*/>>
+  delete()
+  {<<#
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+
+    if (!av.getIsNavigable() || av.isImmutable())
+    {
+      continue;
+    }
+
+    if (!relatedAssociation.getIsNavigable())
+    {
+      if (av.isOne())
+      {
+        #>><<@ UmpleToJavaScript.delete_UndirectionalOne >><<#
+      }
+      else if (av.isMany())
+      {
+        #>><<@ UmpleToJavaScript.delete_UndirectionalMany >><<#
+      }
+      continue;
+    }
+
+    if (relatedAssociation.getIsComposition())
+    {
+      if (relatedAssociation.isOptionalOne() && av.isOptionalOne())
+      {
+        #>><<@ UmpleToJavaScript.delete_OptionalOneFromOne_comp >><<#
+      }
+      else if (relatedAssociation.isMany() && av.isOptionalOne())
+      {
+        #>><<@ UmpleToJavaScript.delete_OptionalOneFromOne >><<#
+      }
+      else if (av.isMany())
+      {
+        #>><<@ UmpleToJavaScript.delete_ManyFromX_comp >><<#
+      }
+    }
+    else if (av.getIsComposition() && av.isMany() && relatedAssociation.isOptionalOne())
+    {
+      #>><<@ UmpleToJavaScript.delete_OptionalOneFromMany_comp >><<#
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
+    {
+      #>><<@ UmpleToJavaScript.delete_OptionalOneFromOptionalOne >><<#
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
+    {
+      #>><<@ UmpleToJavaScript.delete_OptionalOneFromMany >><<#
+    }
+    else if (av.isMany() && relatedAssociation.isMany())
+    {
+      #>><<@ UmpleToJavaScript.delete_ManyFromMany >><<#
+    }
+    else if (av.isMany() && relatedAssociation.isOptionalOne())
+    {
+      #>><<@ UmpleToJavaScript.delete_ManyFromOptionalOne >><<#
+    }
+  }
+
+  if (!uClass.isRoot() && !"external".equals(uClass.getExtendsClass().getModifier()))
+  {
+    #>>
+    super.delete();<<#
+  }
+#>>
+  }!>>
+}

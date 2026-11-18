@@ -1,0 +1,64 @@
+class Greeter
+{
+  name;
+  0..1 -- * Note notes;
+
+  // Reads an attribute through its generated getter
+  String greet() JavaScript
+  {
+    return "Hello, " + this.getName() + "!";
+  }
+
+  // Takes parameters and reaches the generated association API
+  Boolean leave(String text, Boolean urgent) JavaScript
+  {
+    const note = new Note(text, urgent);
+    return this.addNote(note);
+  }
+
+  Integer pending() JavaScript
+  {
+    return this.numberOfNotes();
+  }
+
+  static String language() JavaScript
+  {
+    return "JavaScript";
+  }
+
+  // Written for Java only, so it is left out of the generated JavaScript with warning W9222
+  String onlyJava() Java
+  {
+    return "java";
+  }
+}
+
+class Note
+{
+  text;
+  Boolean urgent;
+}
+
+class Shape
+{
+  abstract;
+  name;
+
+  abstract Double area();
+
+  String describe() JavaScript
+  {
+    return this.getName() + " of area " + this.area();
+  }
+}
+
+class Square
+{
+  isA Shape;
+  Double side;
+
+  Double area() JavaScript
+  {
+    return this.getSide() * this.getSide();
+  }
+}

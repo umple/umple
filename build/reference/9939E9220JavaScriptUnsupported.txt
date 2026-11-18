@@ -1,0 +1,21 @@
+E9220 JavaScript Unsupported
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>JavaScript generation does not support a feature the class uses yet</h2>
+
+<p>The JavaScript generator covers the basic class model. When a class uses a feature it does not cover yet, it reports this error, which names the feature, and writes no file for the class. The other classes of the model are still generated, and generation for other languages is not affected. The <a href="JavaScript.html">JavaScript</a> page lists the features concerned.</p>
+
+<p>The error is also reported for a class whose superclass is not generated, since the generated module loads its superclass with <code>require</code>, and for a class whose methods would not all have names of their own, since JavaScript has no overloading and would keep only the last method of a name. The <a href="JavaScript.html">JavaScript</a> page gives the cases.</p>
+
+<p>To generate JavaScript, leave the feature out of the classes you generate as JavaScript, or put it in a <a href="BasicMixsets.html">mixset</a> that is only used for the other languages.</p>
+
+@@example
+@@source manualexamples/E9220JavaScriptUnsupported1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/E9220JavaScriptUnsupported2.ump
+@@endexample

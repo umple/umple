@@ -1,0 +1,79 @@
+// Every association multiplicity the JavaScript generator supports
+
+class Desk
+{
+  name;
+  0..1 -- 0..1 Chair;
+}
+
+class Chair
+{
+  name;
+}
+
+class Team
+{
+  name;
+  0..1 -- * Player;
+}
+
+class Player
+{
+  name;
+}
+
+class Course
+{
+  name;
+  * -- * Pupil;
+}
+
+class Pupil
+{
+  name;
+}
+
+class Driver
+{
+  name;
+  0..1 -> 0..1 Badge;
+  0..1 -> * Trip;
+}
+
+class Badge
+{
+  code;
+}
+
+class Trip
+{
+  destination;
+}
+
+class Employee
+{
+  name;
+  0..1 -- * Employee subordinates;
+}
+
+class House
+{
+  address;
+  0..1 <@>- * Room;
+}
+
+class Room
+{
+  name;
+}
+
+class Engine
+{
+  serial;
+}
+
+class Car
+{
+  plate;
+  0..1 <@>- 0..1 Engine;
+}

@@ -1,0 +1,190 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+// line 1 "JavaScriptMethods.ump"
+class Greeter
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Greeter Attributes
+  //Greeter Associations
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor(aName)
+  {
+    this._name = aName;
+    this._notes = [];
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  setName(aName)
+  {
+    let wasSet = false;
+    this._name = aName;
+    wasSet = true;
+    return wasSet;
+  }
+  getName()
+  {
+    return this._name;
+  }
+  /* Code from template association_GetMany */
+  getNote(index)
+  {
+    let aNote = this._notes[index];
+    return aNote;
+  }
+  getNotes()
+  {
+    let newNotes = this._notes.slice();
+    return newNotes;
+  }
+  numberOfNotes()
+  {
+    let number = this._notes.length;
+    return number;
+  }
+  hasNotes()
+  {
+    let has = this._notes.length > 0;
+    return has;
+  }
+  indexOfNote(aNote)
+  {
+    let index = this._notes.indexOf(aNote);
+    return index;
+  }
+  /* Code from template association_MinimumNumberOfMethod */
+  static minimumNumberOfNotes()
+  {
+    return 0;
+  }
+  /* Code from template association_AddManyToOptionalOne */
+  addNote(aNote)
+  {
+    let wasAdded = false;
+    if (this._notes.includes(aNote))
+    {
+      return false;
+    }
+    let existingGreeter = aNote.getGreeter();
+    if (existingGreeter == null)
+    {
+      aNote.setGreeter(this);
+    }
+    else if (! (this == existingGreeter))
+    {
+      existingGreeter.removeNote(aNote);
+      this.addNote(aNote);
+    }
+    else
+    {
+      this._notes.push(aNote);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+  removeNote(aNote)
+  {
+    let wasRemoved = false;
+    if (this._notes.includes(aNote))
+    {
+      if (this._notes.includes(aNote))
+      {
+        this._notes.splice(this._notes.indexOf(aNote), 1);
+      }
+      aNote.setGreeter(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }
+  /* Code from template association_AddIndexControlFunctions */
+  addNoteAt(aNote, index)
+  {
+    let wasAdded = false;
+    if (this.addNote(aNote))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfNotes())
+      {
+        index = this.numberOfNotes() - 1;
+      }
+      if (this._notes.includes(aNote))
+      {
+        this._notes.splice(this._notes.indexOf(aNote), 1);
+      }
+      this._notes.splice(index, 0, aNote);
+      wasAdded = true;
+    }
+    return wasAdded;
+  }
+  addOrMoveNoteAt(aNote, index)
+  {
+    let wasAdded = false;
+    if (this._notes.includes(aNote))
+    {
+      if (index < 0)
+      {
+        index = 0;
+      }
+      if (index > this.numberOfNotes())
+      {
+        index = this.numberOfNotes() - 1;
+      }
+      if (this._notes.includes(aNote))
+      {
+        this._notes.splice(this._notes.indexOf(aNote), 1);
+      }
+      this._notes.splice(index, 0, aNote);
+      wasAdded = true;
+    }
+    else
+    {
+      wasAdded = this.addNoteAt(aNote, index);
+    }
+    return wasAdded;
+  }
+  delete()
+  {
+    while (! (this._notes.length == 0))
+    {
+      this._notes[0].setGreeter(null);
+    }
+  }
+  /**
+   * Reads an attribute through its generated getter
+   */
+  // line 7 "JavaScriptMethods.ump"
+  greet()
+  {
+    return "Hello, " + this.getName() + "!";
+  }
+  /**
+   * Takes parameters and reaches the generated association API
+   */
+  // line 13 "JavaScriptMethods.ump"
+  leave(text, urgent)
+  {
+    const note = new Note(text, urgent);
+    return this.addNote(note);
+  }
+  // line 19 "JavaScriptMethods.ump"
+  pending()
+  {
+    return this.numberOfNotes();
+  }
+  // line 24 "JavaScriptMethods.ump"
+  static language()
+  {
+    return "JavaScript";
+  }
+}
+
+module.exports = Greeter;
+
+const Note = require("./Note.js");

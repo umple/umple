@@ -1,0 +1,5 @@
+// Without the state machine the class is generated
+generate JavaScript;
+class Lamp {
+  Boolean on = false;
+}

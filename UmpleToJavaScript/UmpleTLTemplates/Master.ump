@@ -1,0 +1,15 @@
+/*
+
+Copyright: All contributers to the Umple Project
+
+This file is made available subject to the open source license found at:
+https://umple.org/license
+
+This is the Umple JavaScript template master file that calls all major JavaScript template files.
+By compiling this file, Umple will regenerate all JavaScript generator files
+
+*/
+
+generate Java "../src-gen-UmpleTL";
+
+use JavaScriptClassGenerator.ump;

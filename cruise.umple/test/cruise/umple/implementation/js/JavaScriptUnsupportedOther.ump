@@ -1,0 +1,18 @@
+class Rect
+{
+  Integer w;
+  Integer h;
+  Integer area = {w*h};
+}
+
+class Remote
+{
+  distributable;
+  name;
+}
+
+class Loose
+{
+  name;
+  static Integer count = 0;
+}

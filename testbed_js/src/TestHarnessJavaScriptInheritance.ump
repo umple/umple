@@ -1,0 +1,37 @@
+// Inheritance, including an abstract class and an abstract method
+
+class Vehicle
+{
+  abstract;
+  plate;
+  Integer wheels = 4;
+
+  abstract String kind();
+
+  String describe() JavaScript
+  {
+    return this.kind() + " " + this.getPlate();
+  }
+}
+
+class Truck
+{
+  isA Vehicle;
+  Double load;
+
+  String kind() JavaScript
+  {
+    return "truck";
+  }
+}
+
+class Pickup
+{
+  isA Truck;
+  Boolean canopy;
+
+  String kind() JavaScript
+  {
+    return "pickup";
+  }
+}

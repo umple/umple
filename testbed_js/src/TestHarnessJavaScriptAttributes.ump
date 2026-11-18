@@ -1,0 +1,30 @@
+// Every kind of attribute the JavaScript generator supports
+
+class Student
+{
+  name;
+  Integer age;
+  Double gpa;
+  Boolean enrolled;
+}
+
+class Account
+{
+  immutable String id;
+  lazy String nickname;
+  defaulted String status = "active";
+  Integer balance = 100;
+  Double rate = -1.5;
+  Boolean closed = false;
+  String label = "none";
+  String missing = null;
+}
+
+class Keywords
+{
+  // Names JavaScript reserves are fine for attributes and roles: they are reached as properties
+  class;
+  Integer var;
+  Boolean static;
+  0..1 -- * Keywords functions;
+}

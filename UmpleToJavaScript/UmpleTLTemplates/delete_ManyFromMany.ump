@@ -1,0 +1,8 @@
+class UmpleToJavaScript {
+    delete_ManyFromMany <<!<</*delete_ManyFromMany*/>>
+    let <<=gen.translate("parameterCopyOfMany",av)>> = this._<<=gen.translate("associationMany",av)>>.slice();
+    this._<<=gen.translate("associationMany",av)>>.splice(0);
+    for (let <<=gen.translate("parameterOne",av)>> of <<=gen.translate("parameterCopyOfMany",av)>>) {
+      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+    }!>>
+}
