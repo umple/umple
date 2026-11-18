@@ -8,6 +8,22 @@ class UmpleToJava {
     boolean wasSet = false;
     <<# if (customSetPrefixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPrefixCode,gen.translate("setMethod",av)); 
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPrefixCode, "    ")); } #>>
+    <<# if (relMulChangedToOne && !mulChangedToOne) {
+      AssociationVariable inheritedAssociation = gen.inheritedAssociation(relatedAssociation);
+    #>>
+    // The opposite end still uses the inherited collection storage.
+    if (<<=gen.translate("parameterNew",av)>> != null)
+    {
+      for (<<=gen.translate("type",inheritedAssociation)>> existing : new java.util.ArrayList<<<=gen.translate("type",inheritedAssociation)>>>(<<=gen.translate("parameterNew",av)>>.<<=gen.translate("getManyMethod",inheritedAssociation)>>()))
+      {
+        if (existing != this)
+        {
+          existing.<<=gen.relatedTranslate("setMethod",inheritedAssociation)>>(null);
+        }
+      }
+    }
+    wasSet = <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterNew",av)>>);
+    <<# } else { #>>
     if (<<=gen.translate("parameterNew",av)>> == null)
     {
       <<=gen.translate("type",av)>> <<=gen.translate("parameterExisting",av)>> = <<# if (mulChangedToOne) { #>><<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>()<<# } else {#>>(<<=gen.translate("type",av)>>)<<=gen.translate("associationOne",av)>><<# } #>>;
@@ -46,7 +62,8 @@ class UmpleToJava {
       <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("setMethod",av)>><<# if (relReqCommonCode) { #>>_<<=gen.relatedTranslate("type",av)>><<# } #>>(this);
       <<# } #>>
     }
-    wasSet = true;<<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<=
+    wasSet = true;
+    <<# } #>><<#for( TraceItem traceItemAssocAdd : traceItemAssocAdds )#>><<=
     (traceItemAssocAdd!=null&&traceItemAssocAdd.getIsPost()?"\n"+traceItemAssocAdd.trace(gen, av,"as_a", uClass,"1"):"")>>
     <<# if (customSetPostfixCode != null) { addUncaughtExceptionVariables(realSb.toString().split("\\n").length,customSetPostfixCode,gen.translate("setMethod",av)); 
     append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "    ")); } #>>
@@ -54,6 +71,6 @@ class UmpleToJava {
   }
 
 
-<<# if (mulChangedToOne || relMulChangedToOne) { #>><<@ UmpleToJava.association_GetPrivate >>
+<<# if (mulChangedToOne) { #>><<@ UmpleToJava.association_GetPrivate >>
 <<# } #>>!>>
 }
