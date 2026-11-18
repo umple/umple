@@ -41,6 +41,52 @@ const RequirementsDialog = {
     }
   },
 
+  // Before an updated model replaces the user's one, the lines it adds and removes, each with one
+  // line around it; "..." stands for unchanged lines left out (issue #2485)
+  showModelChanges(dialog, oldText, newText) {
+    const container = dialog?.querySelector("#modelChangesContainer");
+    const heading = dialog?.querySelector("#modelChangesHeading");
+    const list = dialog?.querySelector("#modelChangesList");
+    if (!container || !heading || !list) return;
+
+    const changes = AiTextUtils.diffLines(oldText, newText);
+    const added = changes.filter(c => c.type === "added").length;
+    const removed = changes.filter(c => c.type === "removed").length;
+    heading.textContent = added || removed
+      ? `Changes to your model: ${added} line${added === 1 ? "" : "s"} added, ${removed} removed`
+      : "No changes to your model";
+
+    list.textContent = "";
+    const isChange = c => !!c && c.type !== "same";
+    let skipped = false;
+    changes.forEach((change, k) => {
+      if (!isChange(change) && !isChange(changes[k - 1]) && !isChange(changes[k + 1])) {
+        skipped = true;
+        return;
+      }
+      if (skipped) list.appendChild(this.createChangeLine("...", "requirement-diff-skipped"));
+      skipped = false;
+      const marker = change.type === "added" ? "+ " : change.type === "removed" ? "- " : "  ";
+      list.appendChild(this.createChangeLine(marker + change.text, `requirement-diff-${change.type}`));
+    });
+    if (skipped && list.childNodes.length) list.appendChild(this.createChangeLine("...", "requirement-diff-skipped"));
+
+    list.style.display = added || removed ? "block" : "none";
+    container.style.display = "block";
+  },
+
+  createChangeLine(text, className) {
+    const line = document.createElement("div");
+    line.className = className;
+    line.textContent = text;
+    return line;
+  },
+
+  hideModelChanges(dialog) {
+    const container = dialog?.querySelector("#modelChangesContainer");
+    if (container) container.style.display = "none";
+  },
+
   createSingleRequirementUI(requirement) {
     const container = document.createElement("div");
     container.className = "requirement-selection";
@@ -513,6 +559,22 @@ const RequirementsDialog = {
     codeContainer.appendChild(codeArea);
 
     content.appendChild(codeContainer);
+
+    // Shown before an updated model replaces the user's one (issue #2485)
+    const changesContainer = document.createElement("div");
+    changesContainer.id = "modelChangesContainer";
+    changesContainer.style.display = "none";
+
+    const changesHeading = document.createElement("h4");
+    changesHeading.id = "modelChangesHeading";
+    changesContainer.appendChild(changesHeading);
+
+    const changesList = document.createElement("div");
+    changesList.id = "modelChangesList";
+    changesList.className = "requirement-diff";
+    changesContainer.appendChild(changesList);
+
+    content.appendChild(changesContainer);
 
     const outputContainer = document.createElement("div");
     outputContainer.id = "requirementsOutputContainer";

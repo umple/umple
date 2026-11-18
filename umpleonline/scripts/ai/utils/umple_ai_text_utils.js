@@ -239,5 +239,67 @@ const AiTextUtils = {
     }
 
     return { blocks, implementedIds };
+  },
+
+  /**
+   * The lines added and removed from one text to another, in order (a longest common subsequence
+   * of lines). Blank lines are left out and lines are compared without their surrounding spaces.
+   * @param {string} oldText - Text before
+   * @param {string} newText - Text after
+   * @returns {Array<{type: string, text: string}>} type is "same", "added" or "removed"
+   */
+  diffLines(oldText, newText) {
+    const toLines = text => String(text || "").split(/\r?\n/).filter(line => line.trim());
+    const a = toLines(oldText);
+    const b = toLines(newText);
+    const keyA = a.map(line => line.trim());
+    const keyB = b.map(line => line.trim());
+
+    // Lines that did not change at the start and at the end are not compared one by one
+    let start = 0;
+    while (start < a.length && start < b.length && keyA[start] === keyB[start]) start++;
+    let endA = a.length;
+    let endB = b.length;
+    while (endA > start && endB > start && keyA[endA - 1] === keyB[endB - 1]) {
+      endA--;
+      endB--;
+    }
+
+    const result = a.slice(0, start).map(text => ({ type: "same", text }));
+    const n = endA - start;
+    const m = endB - start;
+    if (n * m > 1000000) {
+      // Too large to compare line by line: the changed middle is shown as removed, then added
+      a.slice(start, endA).forEach(text => result.push({ type: "removed", text }));
+      b.slice(start, endB).forEach(text => result.push({ type: "added", text }));
+    } else {
+      // common[i][j]: length of the longest common subsequence of the middle lines from i and j on
+      const common = [];
+      for (let i = 0; i <= n; i++) common.push(new Uint32Array(m + 1));
+      for (let i = n - 1; i >= 0; i--) {
+        for (let j = m - 1; j >= 0; j--) {
+          common[i][j] = keyA[start + i] === keyB[start + j]
+            ? common[i + 1][j + 1] + 1
+            : Math.max(common[i + 1][j], common[i][j + 1]);
+        }
+      }
+      let i = 0;
+      let j = 0;
+      while (i < n || j < m) {
+        if (i < n && j < m && keyA[start + i] === keyB[start + j]) {
+          result.push({ type: "same", text: b[start + j] });
+          i++;
+          j++;
+        } else if (j >= m || (i < n && common[i + 1][j] >= common[i][j + 1])) {
+          result.push({ type: "removed", text: a[start + i] });
+          i++;
+        } else {
+          result.push({ type: "added", text: b[start + j] });
+          j++;
+        }
+      }
+    }
+    b.slice(endB).forEach(text => result.push({ type: "same", text }));
+    return result;
   }
 };

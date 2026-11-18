@@ -1628,6 +1628,30 @@ textarea#umpleLayoutEditorText {
   font-size: 9pt;
 }
 
+/* Lines an updated model adds and removes, shown before it replaces the model (issue #2485) */
+.ai-requirements-dialog .requirement-diff {
+  max-height: 12em;
+  overflow: auto;
+  padding: 4px 6px;
+  border: 1px solid #cccccc;
+  font-family: monospace;
+  font-size: 9pt;
+  white-space: pre;
+}
+
+.ai-requirements-dialog .requirement-diff-added {
+  color: #1a7f37;
+}
+
+.ai-requirements-dialog .requirement-diff-removed {
+  color: #cf222e;
+}
+
+.ai-requirements-dialog .requirement-diff-same,
+.ai-requirements-dialog .requirement-diff-skipped {
+  color: #666666;
+}
+
 .ai-requirements-dialog #selectedReqText {
   white-space: pre-wrap;
   font-size: 9pt;

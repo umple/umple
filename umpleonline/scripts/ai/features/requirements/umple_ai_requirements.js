@@ -34,19 +34,59 @@ const AiRequirements = {
     return `req ${requirement.id} {\n  ${requirement.text}\n}`;
   },
 
-  // "New": the requirement goes at the top of the model (issue #2485)
-  insertRequirementAtTop(requirement) {
-    this.replaceEditorText(0, 0, `${this.formatRequirementBlock(requirement)}\n\n`);
+  // Replaces only the part of the editor text that differs, so the rest of the editor is kept
+  setEditorText(text) {
+    const docText = Page.codeMirrorEditor6.state.doc.toString();
+    if (docText === text) return;
+    let from = 0;
+    while (from < docText.length && from < text.length && docText[from] === text[from]) from++;
+    let end = 0;
+    while (end < docText.length - from && end < text.length - from
+      && docText[docText.length - 1 - end] === text[text.length - 1 - end]) {
+      end++;
+    }
+    this.replaceEditorText(from, docText.length - end, text.slice(from, text.length - end));
   },
 
-  // "Modify": the req block gets the new wording; false if it can no longer be found
-  updateRequirementText(requirement) {
-    const docText = Page.codeMirrorEditor6.state.doc.toString();
+  // The text with the requirement of "New" or "Modify": the req block with its ID gets the new wording,
+  // or "New" adds it at the top of the model; null if "Modify" can no longer find it (issue #2485)
+  withRequirementEdit(docText, action) {
     const block = AiTextUtils.findRequirementBlocks(docText.slice(0, this.getModelEnd(docText)))
-      .find(b => b.id === requirement.id);
-    if (!block) return false;
-    this.replaceEditorText(block.start, block.end, this.formatRequirementBlock(requirement));
+      .find(b => b.id === action.requirement.id);
+    const reqBlock = this.formatRequirementBlock(action.requirement);
+    if (block) return docText.slice(0, block.start) + reqBlock + docText.slice(block.end);
+    return action.mode === "new" ? `${reqBlock}\n\n${docText}` : null;
+  },
+
+  // New and Modify change the editor before generating. Each Generate starts again from the text the
+  // editor had before, so a requirement is never added twice, and Cancel can put that text back
+  applyRequirementEdit(dialog, action) {
+    const docText = Page.codeMirrorEditor6.state.doc.toString();
+    const before = dialog.editorBefore !== undefined && docText === dialog.editorAfter ? dialog.editorBefore : docText;
+    const edited = this.withRequirementEdit(before, action);
+    if (edited === null) return false;
+    this.setEditorText(edited);
+    dialog.editorBefore = before;
+    dialog.editorAfter = edited;
     return true;
+  },
+
+  // Puts back the editor text from before New or Modify, unless the editor was changed since
+  undoRequirementEdit(dialog) {
+    if (dialog.editorBefore !== undefined && Page.codeMirrorEditor6?.state.doc.toString() === dialog.editorAfter) {
+      this.setEditorText(dialog.editorBefore);
+    }
+    dialog.editorBefore = undefined;
+    dialog.editorAfter = undefined;
+  },
+
+  // An unfinished updated model must never replace the user's model (issue #2485)
+  showReplaceStopped(dialog, reason) {
+    const btnInsert = dialog.querySelector("#btnInsert");
+    if (btnInsert) btnInsert.style.display = "none";
+    RequirementsDialog.hideModelChanges(dialog);
+    RequirementsDialog.setStatusMessage(dialog.querySelector("#statusMessage"), "LLM",
+      `${reason} Your model was not changed; click Generate to try again.`, "#DD0033");
   },
 
   abortActiveStream() {
@@ -82,6 +122,8 @@ const AiRequirements = {
       onInsert: () => this.handleInsert(dialog),
       onCancel: () => {
         this.abortActiveStream();
+        // Nothing was inserted: the editor gets back its text from before New or Modify (issue #2485)
+        this.undoRequirementEdit(dialog);
         dialog.remove();
       }
     });
@@ -116,25 +158,25 @@ const AiRequirements = {
       return;
     }
 
-    // New and Modify change the req blocks in the editor first (issue #2485)
+    // New and Modify change the req blocks in the editor first; other requests undo that change (issue #2485)
     let selectedReqs = action.requirements;
     let mode = "insert";
-    if (action.mode === "new") {
-      this.insertRequirementAtTop(action.requirement);
-      selectedReqs = [action.requirement];
-    } else if (action.mode === "modify") {
-      if (!this.updateRequirementText(action.requirement)) {
+    if (action.mode === "new" || action.mode === "modify") {
+      if (!this.applyRequirementEdit(dialog, action)) {
         RequirementsDialog.setStatusMessage(statusDiv, "Error", `Requirement ${action.requirement.id} is no longer in the editor`, "#DD0033");
         return;
       }
       selectedReqs = [action.requirement];
-      mode = action.previous?.implemented ? "replace" : "insert";
+      if (action.mode === "modify") mode = action.previous?.implemented ? "replace" : "insert";
+    } else {
+      this.undoRequirementEdit(dialog);
     }
 
     const editorText = Page.codeMirrorEditor6?.state.doc.toString() || "";
     const modelText = editorText.slice(0, this.getModelEnd(editorText));
     const options = { ...RequirementsDialog.getGenerationOptions(dialog), modelText };
     dialog.insertMode = mode;
+    RequirementsDialog.hideModelChanges(dialog);
 
     btnGenerate.classList.add("disabled");
     btnGenerate.textContent = "Generating...";
@@ -196,6 +238,8 @@ const AiRequirements = {
 
       const response = await this.activeStream.done;
       this.activeStream = null;
+      // Stop was clicked: handleStop has already shown what was generated
+      if (dialog.stopped) return;
       streamRenderer.flush({ force: true });
       if (response && response.trim()) {
         AiChatContext.addAssistant(chatContext, response);
@@ -204,6 +248,11 @@ const AiRequirements = {
 
       if (tokenLimitTruncated) {
         dialog.stopped = true;
+        if (mode === "replace") {
+          codeArea.value = response || "";
+          this.showReplaceStopped(dialog, "Generation stopped: AI output was truncated due to token limit.");
+          return;
+        }
         RequirementsDialog.setStatusMessage(
           statusDiv,
           "LLM",
@@ -255,21 +304,31 @@ const AiRequirements = {
             });
             if (corrected && typeof corrected.block === "string" && corrected.block.trim()) {
               umpleCode = corrected.block.trim();
-              dialog.generationContext.umpleCode = umpleCode;
+              // Stop clears the context
+              if (dialog.generationContext) dialog.generationContext.umpleCode = umpleCode;
             }
         } catch (e) {
           RequirementsDialog.appendRequirementsOutput(`Self-correction failed: ${e.message}`, dialog);
         }
       }
 
+      if (dialog.stopped && mode === "replace") {
+        this.showReplaceStopped(dialog, "Generation stopped.");
+        return;
+      }
+
       codeArea.placeholder = "";
       codeArea.value = umpleCode;
       codeContainer.style.display = "block";
       btnInsert.style.display = "inline-block";
+      if (mode === "replace") {
+        const docText = Page.codeMirrorEditor6?.state.doc.toString() || "";
+        RequirementsDialog.showModelChanges(dialog, docText.slice(0, this.getModelEnd(docText)), umpleCode);
+      }
 
       if (statusDiv.style.color !== "#DD0033") {
         const successMsg = dialog.insertMode === "replace"
-          ? "Updated model generated! Review it and click 'Insert to Editor' to replace your model with it (Undo restores the previous one)."
+          ? "Updated model generated! Check the changes listed, then click 'Insert to Editor' to replace your model with it (Undo restores the previous one)."
           : dialog.stopped
             ? "Generation stopped. Partial code generated! Review and click 'Insert to Editor' to add it to your model."
             : "Code generated successfully! Review and click 'Insert to Editor' to add it to your model.";
@@ -312,6 +371,11 @@ const AiRequirements = {
       const context = dialog.generationContext;
       if (!context) {
         RequirementsDialog.setStatusMessage(statusDiv, "LLM", "No generation in progress.", "#DD0033");
+        return;
+      }
+
+      if (dialog.insertMode === "replace") {
+        this.showReplaceStopped(dialog, "Generation stopped.");
         return;
       }
 
