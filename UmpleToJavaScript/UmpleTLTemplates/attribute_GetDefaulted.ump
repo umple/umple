@@ -1,0 +1,8 @@
+class UmpleToJavaScript {
+    attribute_GetDefaulted <<!<</*attribute_GetDefaulted*/>>
+  /* Code from template attribute_GetDefaulted */
+  <<=gen.translate("getDefaultMethod",av)>>()
+  {
+    return <<=gen.translate("parameterValue",av)>>;
+  }!>>
+}

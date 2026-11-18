@@ -1,0 +1,19 @@
+W9222 JavaScript No JavaScript Code
+Errors and Warnings 1000+
+noreferences
+
+@@description
+
+<h2>A method has a body only for other languages</h2>
+
+<p>A method written in the model has a body only for languages other than JavaScript, for example a Java body, and no untagged body. The JavaScript generator has no code to use for it, so it leaves the method out of the generated class and this warning names it. The class itself is still generated, and the warning does not make the compilation fail.</p>
+
+<p>Add a JavaScript body, written as <code>String describe() JavaScript { ... }</code>, if the generated classes need that behaviour. A body with no language tag is used by every generator, JavaScript included, so it must be valid JavaScript when JavaScript is generated.</p>
+
+@@example
+@@source manualexamples/W9222JavaScriptNoJavaScriptCode1.ump
+@@endexample
+
+@@example @@caption Solution to The Above So the Message No Longer Appears @@endcaption
+@@source manualexamples/W9222JavaScriptNoJavaScriptCode2.ump
+@@endexample

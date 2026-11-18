@@ -1,0 +1,14 @@
+class UmpleToJavaScript {
+    members_AllAssociations <<!<</*members_AllAssociations*/>><<#
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+    #>>
+  //<<=uClass.getName()>> Associations<<#
+    break;
+  }
+#>>!>>
+}

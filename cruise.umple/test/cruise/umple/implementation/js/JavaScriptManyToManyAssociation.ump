@@ -1,0 +1,8 @@
+class Course
+{
+  * -- * Student;
+}
+
+class Student
+{
+}

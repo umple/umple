@@ -1,0 +1,18 @@
+// Attributes, an association and inheritance generated as JavaScript.
+// Each class becomes a CommonJS module: Team.js, Player.js and Goalie.js
+generate JavaScript;
+
+class Team {
+  name;
+  0..1 -- * Player;
+}
+
+class Player {
+  name;
+  Integer number;
+}
+
+class Goalie {
+  isA Player;
+  Integer saves = 0;
+}

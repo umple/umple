@@ -1,0 +1,7 @@
+// With a JavaScript body as well, each generator uses its own
+generate JavaScript;
+class Book {
+  title;
+  String describe() Java { return "Book " + getTitle(); }
+  String describe() JavaScript { return "Book " + this.getTitle(); }
+}

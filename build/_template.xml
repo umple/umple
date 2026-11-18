@@ -53,6 +53,31 @@
     <isset property="python.exe" />
   </condition>
 
+  <!-- Node for running generated JavaScript: UMPLE_NODE if set, else node -->
+  <condition property="node.configured">
+    <and>
+      <isset property="env.UMPLE_NODE" />
+      <not><equals arg1="${env.UMPLE_NODE}" arg2="" /></not>
+    </and>
+  </condition>
+  <condition property="node.candidate" value="${env.UMPLE_NODE}" else="node">
+    <isset property="node.configured" />
+  </condition>
+  <exec executable="${node.candidate}" outputproperty="node.candidate.version"
+        resultproperty="node.candidate.result" failifexecutionfails="false">
+    <arg value="--version" />
+  </exec>
+  <!-- Set only for an accepted runtime, as python.exe above is -->
+  <condition property="node.exe" value="${node.candidate}">
+    <and>
+      <equals arg1="${node.candidate.result}" arg2="0" />
+      <matches string="${node.candidate.version}" pattern="^v(1[89]|[2-9][0-9])\." />
+    </and>
+  </condition>
+  <condition property="node.found">
+    <isset property="node.exe" />
+  </condition>
+
   <condition property="myenv" value="travis">
     <and>
       <isset property="env.CI" />

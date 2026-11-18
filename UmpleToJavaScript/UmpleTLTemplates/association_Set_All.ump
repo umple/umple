@@ -1,0 +1,61 @@
+use association_AddIndexControlFunctions.ump;
+use association_AddManyToManyMethod.ump;
+use association_AddManyToOptionalOne.ump;
+use association_AddUnidirectionalMany.ump;
+use association_MinimumNumberOfMethod.ump;
+use association_RemoveMany.ump;
+use association_SetOptionalOneToMany.ump;
+use association_SetOptionalOneToOptionalOne.ump;
+use association_SetUnidirectionalOptionalOne.ump;
+
+class UmpleToJavaScript {
+    association_Set_All <<!<</*association_Set_All*/>><<#
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    AssociationVariable relatedAssociation = av.getRelatedAssociation();
+
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+
+    if (av.isMany())
+    {
+      #>><<@ UmpleToJavaScript.association_MinimumNumberOfMethod >><<#
+    }
+
+    if (!relatedAssociation.getIsNavigable())
+    {
+      if (av.isOptionalOne())
+      {
+        #>><<@ UmpleToJavaScript.association_SetUnidirectionalOptionalOne >><<#
+      }
+      else if (av.isMany())
+      {
+        #>><<@ UmpleToJavaScript.association_AddUnidirectionalMany >><<#
+      }
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalOne())
+    {
+      #>><<@ UmpleToJavaScript.association_SetOptionalOneToOptionalOne >><<#
+    }
+    else if (av.isMany() && relatedAssociation.isMany())
+    {
+      #>><<@ UmpleToJavaScript.association_AddManyToManyMethod >><<@ UmpleToJavaScript.association_RemoveMany >><<#
+    }
+    else if (av.isMany() && relatedAssociation.isOptionalOne())
+    {
+      #>><<@ UmpleToJavaScript.association_AddManyToOptionalOne >><<#
+    }
+    else if (av.isOptionalOne() && relatedAssociation.isOptionalMany())
+    {
+      #>><<@ UmpleToJavaScript.association_SetOptionalOneToMany >><<#
+    }
+
+    if (av.isMany() && !av.isImmutable() && !av.isN())
+    {
+      #>><<@ UmpleToJavaScript.association_AddIndexControlFunctions >><<#
+    }
+  }
+#>>!>>
+}

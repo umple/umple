@@ -1,0 +1,7 @@
+// A name JavaScript does not reserve is generated. A reserved word is
+// still fine for an attribute or a role name, which are properties
+generate JavaScript;
+class Removal {
+  reason;
+  Boolean static;
+}

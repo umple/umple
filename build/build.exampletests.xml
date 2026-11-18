@@ -77,8 +77,9 @@
       <exclude name="E2*.ump" />
       <exclude name="E3*.ump" />
       <exclude name="E4*.ump" />      
-      <!-- Python's error examples: their generate Python directive reports the error -->
+      <!-- Python's and JavaScript's error examples: their generate directive reports the error -->
       <exclude name="E921*.ump" />
+      <exclude name="E922*.ump" />
       <exclude name="WE1xxIdentifierInvalid1.ump" />
       <exclude name="WE1xxIdentifierInvalid3.ump" />
       <exclude name="WE1xxIdentifierInvalid5.ump" />
@@ -167,8 +168,9 @@
       <exclude name="E2*.ump" />
       <exclude name="E3*.ump" />
       <exclude name="E4*.ump" />      
-      <!-- Python's error examples: their generate Python directive reports the error -->
+      <!-- Python's and JavaScript's error examples: their generate directive reports the error -->
       <exclude name="E921*.ump" />
+      <exclude name="E922*.ump" />
       <exclude name="ExtendedDistributedExample3.ump"/>
       <exclude name="WE1xxIdentifierInvalid1.ump" />
       <exclude name="WE1xxIdentifierInvalid3.ump" />
@@ -297,8 +299,9 @@
       <exclude name="WE1xxIdentifierInvalid3.ump"/>
       <exclude name="E112DuplicateConstantsinInterface1.ump"/>
       <exclude name="E081InvalidMultivaluedAttributeAssignment1.ump"/>
-      <!-- Python's error examples: their generate Python directive reports the error -->
+      <!-- Python's and JavaScript's error examples: their generate directive reports the error -->
       <exclude name="E921*.ump" />
+      <exclude name="E922*.ump" />
       <exclude name="E095DuplicateEnumerations1.ump"/>
       <exclude name="E026DuplicateKeyItem1.ump"/>
       <exclude name="E092ClassIsNotSubclassConstraint1.ump"/>
