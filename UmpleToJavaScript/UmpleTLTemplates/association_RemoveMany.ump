@@ -1,0 +1,27 @@
+class UmpleToJavaScript {
+    association_RemoveMany <<!<</*association_RemoveMany*/>>
+  /* Code from template association_RemoveMany */
+  <<=gen.translate("removeMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    let wasRemoved = false;
+    if (! this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+    {
+      return wasRemoved;
+    }
+    let oldIndex = this._<<=gen.translate("associationMany",av)>>.indexOf(<<=gen.translate("parameterOne",av)>>);
+    this._<<=gen.translate("associationMany",av)>>.splice(oldIndex, 1);
+    if (<<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("indexOfMethod",av)>>(this) == -1)
+    {
+      wasRemoved = true;
+    }
+    else
+    {
+      wasRemoved = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("removeMethod",av)>>(this);
+      if (! wasRemoved)
+      {
+        this._<<=gen.translate("associationMany",av)>>.splice(oldIndex, 0, <<=gen.translate("parameterOne",av)>>);
+      }
+    }
+    return wasRemoved;
+  }!>>
+}

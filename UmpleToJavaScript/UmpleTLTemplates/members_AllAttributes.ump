@@ -1,0 +1,14 @@
+class UmpleToJavaScript {
+    members_AllAttributes <<!<</*members_AllAttributes*/>><<#
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.isConstant() || av.getIsAutounique() || av.getIsDerived())
+    {
+      continue;
+    }
+    #>>
+  //<<=uClass.getName()>> Attributes<<#
+    break;
+  }
+#>>!>>
+}

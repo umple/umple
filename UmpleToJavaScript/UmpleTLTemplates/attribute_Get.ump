@@ -1,0 +1,11 @@
+class UmpleToJavaScript {
+    attribute_Get <<!<</*attribute_Get*/>><<#
+  if (av.numberOfComments() > 0 && av.numberOfReqImplementations() > 0 && av.getReqImplementations() != null) { List<Comment> toComment = new ArrayList<Comment>(av.getComments()); toComment.addAll(Requirement.convertToComment(av.getReqImplementations(),model)); realSb.append(NL + "  " + Comment.format("Attribute Javadoc",toComment)); }
+  else if (av.numberOfComments() > 0) { realSb.append(NL + "  " + Comment.format("Attribute Javadoc",av.getComments())); }
+  else if (av.numberOfReqImplementations() > 0 && av.getReqImplementations() != null) { realSb.append(NL + "  " + Requirement.format("Attribute Javadoc",av.getReqImplementations(),model)); }
+#>>
+  <<=gen.translate("getMethod",av)>>()
+  {
+    return this._<<=gen.translate("attributeOne",av)>>;
+  }!>>
+}

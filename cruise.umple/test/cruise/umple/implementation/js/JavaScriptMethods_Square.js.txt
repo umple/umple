@@ -1,0 +1,45 @@
+/*PLEASE DO NOT EDIT THIS CODE*/
+/*This code was generated using the UMPLE @UMPLE_VERSION@ modeling language!*/
+// line 55 "JavaScriptMethods.ump"
+const Shape = require("./Shape.js");
+
+class Square extends Shape
+{
+  //------------------------
+  // MEMBER VARIABLES
+  //------------------------
+  //Square Attributes
+  //------------------------
+  // CONSTRUCTOR
+  //------------------------
+  constructor(aName, aSide)
+  {
+    super(aName);
+    this._side = aSide;
+  }
+  //------------------------
+  // INTERFACE
+  //------------------------
+  setSide(aSide)
+  {
+    let wasSet = false;
+    this._side = aSide;
+    wasSet = true;
+    return wasSet;
+  }
+  getSide()
+  {
+    return this._side;
+  }
+  delete()
+  {
+    super.delete();
+  }
+  // line 60 "JavaScriptMethods.ump"
+  area()
+  {
+    return this.getSide() * this.getSide();
+  }
+}
+
+module.exports = Square;

@@ -1,0 +1,32 @@
+class UmpleToJavaScript {
+    association_SetOptionalOneToOptionalOne <<!<</*association_SetOptionalOneToOptionalOne*/>>
+  /* Code from template association_SetOptionalOneToOptionalOne */
+  <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterNew",av)>>)
+  {
+    let wasSet = false;
+    if (<<=gen.translate("parameterNew",av)>> == null)
+    {
+      let <<=gen.translate("parameterExisting",av)>> = this._<<=gen.translate("associationOne",av)>>;
+      this._<<=gen.translate("associationOne",av)>> = null;
+      if (<<=gen.translate("parameterExisting",av)>> != null && <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("getMethod",av)>>() != null)
+      {
+        <<=gen.translate("parameterExisting",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(null);
+      }
+      wasSet = true;
+      return wasSet;
+    }
+    let <<=gen.translate("parameterCurrent",av)>> = this.<<=gen.translate("getMethod",av)>>();
+    if (<<=gen.translate("parameterCurrent",av)>> != null && ! (<<=gen.translate("parameterCurrent",av)>> == <<=gen.translate("parameterNew",av)>>))
+    {
+      <<=gen.translate("parameterCurrent",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(null);
+    }
+    this._<<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterNew",av)>>;
+    let <<=gen.relatedTranslate("parameterExisting",av)>> = <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("getMethod",av)>>();
+    if (! (this == <<=gen.relatedTranslate("parameterExisting",av)>>))
+    {
+      <<=gen.translate("parameterNew",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(this);
+    }
+    wasSet = true;
+    return wasSet;
+  }!>>
+}
