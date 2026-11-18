@@ -217,14 +217,23 @@ task getVendorLibs {
 }
 
 // Execute Umple jar
-ext.runUmpleJar = { umpleJar, masterFile, args = "", jvmArgs = "" ->
+ext.runUmpleJar = { umpleJar, masterFile, args = "", jvmArgs = "", sourceResources = null ->
     if (!new File(umpleJar).exists()) {
         throw new Exception("${umpleJar} does not exist.")
     }
     // For the time being it may be good to print the exact command being executed
     // so that we can check to see if issues are reproducible via the jar itself
-    def command = "java " + (jvmArgs ? jvmArgs + " " : "") + "-jar " + umpleJar + " " + masterFile + " " + args
-    println(command)
+    def command = ["java"] + jvmArgs.tokenize()
+    if (sourceResources != null) {
+        // lib: inclusions use classpath resources. Prefer checked-out parser
+        // sources to the older copies inside the bootstrap compiler jar.
+        command += ["-cp", rootProject.files(sourceResources, umpleJar).asPath,
+                    "cruise.umple.UmpleConsoleMain"]
+    } else {
+        command += ["-jar", umpleJar]
+    }
+    command += [masterFile] + args.tokenize()
+    println(command.join(" "))
     def proc = command.execute();
     proc.waitForProcessOutput(System.out, System.err);
     return proc.exitValue()
@@ -243,11 +252,15 @@ subprojects{
     }
 
     def masterFile = "${projectDir.toString()}/${project.ext.masterFile}"
+    def runCompiler = { umpleJar ->
+        def sourceResources = project.name == "UmpleParser" ? "${projectDir}/src" : null
+        rootProject.ext.runUmpleJar(umpleJar, masterFile, "", "", sourceResources)
+    }
 
     // Compile task using remote jar
    task ('compileUmple') {
     	doLast{
-        rootProject.ext.runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+        runCompiler(rootProject.ext.umpleJarRemoteFile)
         }
     }
     compileUmple.dependsOn(":downloadUmpleJar")
@@ -256,10 +269,10 @@ subprojects{
     task ('compileUmpleSelf') {
     	doLast{
         if (new File(rootProject.ext.umpleCurrentJar).exists()) {
-            rootProject.ext.runUmpleJar(rootProject.ext.umpleCurrentJar, masterFile)
+            runCompiler(rootProject.ext.umpleCurrentJar)
         } else {
             // Still default to using the stable downloaded jar
-            rootProject.ext.runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+            runCompiler(rootProject.ext.umpleJarRemoteFile)
         }
        }
     }
@@ -270,7 +283,7 @@ subprojects{
     // incomplete jar would generate incomplete src-gen-umple output.
     task ('compileUmpleRemote') {
         doLast {
-            rootProject.ext.runUmpleJar(rootProject.ext.umpleJarRemoteFile, masterFile)
+            runCompiler(rootProject.ext.umpleJarRemoteFile)
         }
     }
     compileUmpleRemote.dependsOn(":downloadUmpleJar")
@@ -394,9 +407,6 @@ task ('cleanUpDeployment') {
 test {
     workingDir = "${rootProject.ext.testBaseDir}/workingDir"
     systemProperty 'umpleparser.jar', "${rootProject.ext.distdir}/gradle/libs/umpleparser-${rootProject.ext.umpleCurrentVersion}.jar"
-    // This one-stage build generates the parser from the parser source in its bootstrap umple.jar,
-    // so ParserJarTest may find the previous parser in the jar
-    systemProperty 'umpleparser.oneStageBuild', 'true'
     exclude "**/CPPCodeGenValidatorTest.class" // TODO - Fix eclipse CDT message: Unresolved inclusion: <HEADER_FILE>
 }
 
