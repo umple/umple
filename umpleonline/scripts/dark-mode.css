@@ -637,6 +637,37 @@ select {
   color: var(--ai-text) !important;
 }
 
+.ai-requirements-dialog .requirement-implemented-tag,
+.ai-requirements-dialog .requirement-implemented-note {
+  color: var(--ai-muted) !important;
+}
+
+.ai-requirements-dialog .requirement-edit-form textarea,
+.ai-requirements-dialog .requirement-edit-form input[type="text"],
+.ai-requirements-dialog .requirement-edit-form select {
+  background-color: var(--ai-surface-bg-alt) !important;
+  border-color: var(--ai-border) !important;
+  color: var(--ai-text) !important;
+}
+
+.ai-requirements-dialog .requirement-diff {
+  background-color: var(--ai-surface-bg-alt) !important;
+  border-color: var(--ai-border) !important;
+}
+
+.ai-requirements-dialog .requirement-diff-added {
+  color: #3fb950 !important;
+}
+
+.ai-requirements-dialog .requirement-diff-removed {
+  color: #f85149 !important;
+}
+
+.ai-requirements-dialog .requirement-diff-same,
+.ai-requirements-dialog .requirement-diff-skipped {
+  color: var(--ai-muted) !important;
+}
+
 .ai-requirements-dialog .requirement-text,
 .ai-requirements-dialog #selectedReqText,
 .ai-requirements-dialog .requirement-mode label,

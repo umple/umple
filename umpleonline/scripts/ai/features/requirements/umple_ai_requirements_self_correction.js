@@ -39,6 +39,10 @@ const RequirementsSelfCorrection = {
     generationType,
     chatContext,
     expectedRequirementIds,
+    // "insert": the block is added to originalCode; "replace": the block is the whole updated model (issue #2485)
+    mode = "insert",
+    options = {},
+    keptRequirementIds = [],
     log = null,
     setStatus = null,
     shouldStop = null,
@@ -131,7 +135,9 @@ const RequirementsSelfCorrection = {
           safeSetStatus("Compiler", `Self-correction pass ${pass}/${maxPasses}: compiling...`);
           safeLog(`\nSelf-correction pass ${pass}: compiling merged model...`);
 
-          const merged = this.buildMergedCode(originalCode, currentBlock);
+          const merged = mode === "replace"
+            ? { mergedText: currentBlock, highlightFrom: 0, highlightTo: currentBlock.length }
+            : this.buildMergedCode(originalCode, currentBlock);
           const insertedStartLine = AiTextUtils.computeLineNumberAtIndex(merged.mergedText, merged.highlightFrom);
           const insertedEndLine = AiTextUtils.computeLineNumberAtIndex(merged.mergedText, merged.highlightTo);
           const mergedText = merged.mergedText;
@@ -150,7 +156,9 @@ const RequirementsSelfCorrection = {
             const validationErrors = RequirementsPromptBuilder.getValidationAsCompilerErrors({
               code: currentBlock,
               expectedRequirementIds: expectedRequirementIds || [],
-              generationType
+              generationType,
+              options,
+              keptRequirementIds
             });
             if (validationErrors.length > 0) {
               safeLog(`Validation issues found: ${validationErrors.map(e => e.message).join(", ")}`);
@@ -244,6 +252,8 @@ const RequirementsSelfCorrection = {
           generationType,
           requirements,
           compilerIssuesText,
+          mode,
+          options,
           useConversationHistory: true
         })
         : {

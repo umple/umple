@@ -43,7 +43,14 @@ noreferences
 
 <br />
 
-<li><b>Generate from requirements.</b> Add requirement blocks to your model with the syntax <code>req ID { ... }</code>. <a href="Requirements.html">Learn more about requirements</a>. Open the AI Requirements dialog. If multiple requirements exist, choose to use all or select specific ones. Select a generation type (state machine or class diagram) and click Generate. The result is streamed into the dialog, where you can stop generation, review the output, and insert it into the editor. When enabled, the system runs a compiler-based self-correction loop to repair issues in the generated block before insertion.</li>
+<li><b>Generate from requirements.</b> Add requirement blocks to your model with the syntax <code>req ID { ... }</code>. <a href="Requirements.html">Learn more about requirements</a>. Open the AI Requirements dialog and choose what to generate:
+  <ul>
+    <li><p><b>All requirements</b>, or <b>specific ones</b> that you tick.</p></li>
+    <li><p><b>Only requirements not yet implemented</b>: offered when some requirements already have an <code>implementsReq</code> in the model, and selected by default in that case. Implemented requirements are marked "(implemented)" in the list.</p></li>
+    <li><p><b>New requirement</b>: type its ID (the next free one is suggested) and its text. The requirement is added at the top of your model, then the AI implements it; clicking Generate again does not add it a second time. This is also what the dialog offers when the model has no requirement yet.</p></li>
+    <li><p><b>Modify a requirement</b>: pick one and change its wording. If nothing implements it yet, the AI implements the new wording. If it is already implemented, the AI returns your whole model updated to match, and the dialog lists the lines it adds and removes; inserting it replaces the model text (the diagram layout is kept, and Undo restores the previous version). If you stop the generation, or the output is cut off, your model is not replaced. With New and Modify, Cancel puts your model back as it was if nothing was inserted.</p></li>
+  </ul>
+  Select a generation type (state machine or class diagram). Under <b>Also generate</b>, you can ask for the <b>methods</b> the requirements imply and for a <b>main method</b> that demonstrates the model. Click Generate. The AI sees your existing model, so it reuses your classes instead of declaring them again. The result is streamed into the dialog, where you can stop generation, review the output, and insert it into the editor. When enabled, the system runs a compiler-based self-correction loop to repair issues in the generated block before insertion.</li>
 
 <br />
 
