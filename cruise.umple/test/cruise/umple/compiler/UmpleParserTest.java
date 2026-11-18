@@ -3507,6 +3507,27 @@ public void braceMismatch_filenameUsesBasename() {
     Assert.assertFalse(plain.hasStructuredEarsFields());
     Assert.assertEquals("when { the door opens }\n  shall { turn on the light }", plain.getStatement());
   }
+  //Issue 2600 (acceptance criteria)
+  @Test
+  public void ReqAcceptancePlain()
+  {
+    assertNoWarningsParse("459_ReqAcceptancePlain.ump");
+    Assert.assertEquals("acceptance", model.getAllRequirements().get("AC7").getLanguage());
+  }
+  //Issue 2600 (acceptance criteria)
+  @Test
+  public void ReqAcceptanceClauses()
+  {
+    assertNoWarningsParse("459_ReqAcceptanceClauses.ump");
+    Assert.assertEquals("acceptance", model.getAllRequirements().get("AC1").getLanguage());
+    Assert.assertEquals("userStory", model.getAllRequirements().get("US1").getLanguage());
+  }
+  //Issue 2600 (acceptance criteria)
+  @Test
+  public void ReqNormalStillWorksAfterAcceptanceGrammar()
+  {
+    assertNoWarningsParse("459_ReqNormalStillWorksAfterAcceptance.ump");
+  }
   @Test
   public void associationName()
   {
