@@ -462,6 +462,8 @@ class UmpleInternalParser
 
   private void analyzedReferencedStateMachine(Token stateMachineToken, UmpleClassifier uClassifier)
   {
+    // Unresolved states belong only to this use of the standalone state machine.
+    placeholderStateMachine = new StateMachine("PLACE_HOLDER");
     String name = stateMachineToken.getValue("name");
 
     if(!Token.isValidIdentifier(stateMachineToken.getValue("name"))){

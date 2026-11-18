@@ -86,6 +86,10 @@ class PythonGenerator
   // computed class values
   private Set<String> moduleDefinitions = new LinkedHashSet<String>();
 
+  // A base module must succeed before a subclass can import it, regardless of declaration order.
+  private Set<UmpleElement> attemptedModules = new HashSet<UmpleElement>();
+  private Set<UmpleElement> generatedModules = new HashSet<UmpleElement>();
+
   private Set<UmpleClass> preparedClasses = new HashSet<UmpleClass>();
 
   // The namespace folders and module files written in this run, by the lower-case form of their names
@@ -114,6 +118,8 @@ class PythonGenerator
     prepare();
     folders.clear();
     modules.clear();
+    attemptedModules.clear();
+    generatedModules.clear();
     try
     {
       for (UmpleElement element : getModel().getUmpleElements())
@@ -381,6 +387,25 @@ class PythonGenerator
     {
       return; // generated inside its outer class
     }
+    if (!attemptedModules.add(element))
+    {
+      return;
+    }
+    if (element instanceof UmpleClass)
+    {
+      UmpleClass parent = ((UmpleClass) element).getExtendsClass();
+      if (parent != null && !"external".equals(parent.getModifier()))
+      {
+        UmpleClass module = outermost(parent);
+        writeFile(module);
+        if (!generatedModules.contains(module))
+        {
+          firstMessageOfClass = getModel().getLastResult().numberOfErrorMessages();
+          error(9210, element, "Inheritance from " + parent.getName() + " (its Python module was not generated)", element.getName());
+          return;
+        }
+      }
+    }
     firstMessageOfClass = getModel().getLastResult().numberOfErrorMessages();
     if (!canGenerate(element))
     {
@@ -433,6 +458,7 @@ class PythonGenerator
       throw new UmpleCompilerException("Unable to write " + file.getPath(), e);
     }
     getModel().getGeneratedCode().put(element.getName(), code);
+    generatedModules.add(element);
   }
 
   // Whether a module can be imported beside those already written. Python matches the case of module names
