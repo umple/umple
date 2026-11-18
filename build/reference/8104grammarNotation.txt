@@ -178,7 +178,7 @@ Let us consider the rules to define inline and multi-line comments.
 </p>
 
 <pre class="x">
-inlineComment- : // [*inlineComment] | # [*inlineComment]<br />
+inlineComment- : // [*inlineComment] | [!hashCommentAhead:(?=#(?!\x5b)(?!\w+#))] # [*inlineComment]<br />
 multilineComment- : /* [**multilineComment] */<br />
 </pre>
 
