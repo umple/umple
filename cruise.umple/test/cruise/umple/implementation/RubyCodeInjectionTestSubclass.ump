@@ -9,13 +9,29 @@ class Mentor
 class Example
 {
   isA Mentor;
-  before getAttr {#before getAttr}
-  before getDerivedAttr {#before getDerivedAttr}
-  before getListAttr {#before getListAttr}
-  before getDefaultedAttr {#before getDefaultedAttr}
+  before getAttr {
+    #before getAttr
+  }
+  before getDerivedAttr {
+    #before getDerivedAttr
+  }
+  before getListAttr {
+    #before getListAttr
+  }
+  before getDefaultedAttr {
+    #before getDefaultedAttr
+  }
   
-  after getAttr {#after getAttr}
-  after getDerivedAttr {#after getDerivedAttr}
-  after getListAttr {#after getListAttr}
-  after getDefaultedAttr {#after getDefaultedAttr}
+  after getAttr {
+    #after getAttr
+  }
+  after getDerivedAttr {
+    #after getDerivedAttr
+  }
+  after getListAttr {
+    #after getListAttr
+  }
+  after getDefaultedAttr {
+    #after getDefaultedAttr
+  }
 }

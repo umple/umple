@@ -221,7 +221,7 @@ class UmpleInternalParser
     boolean shouldConsumeRequirementImpl = lastRequirementsImpl.size() > 0;
     
     // Determine what the current token is primarily, and based on that the analysis procedure is determined.
-    if (token.isStatic("//") || token.isStatic("/*") || token.isStatic("*/"))
+    if (token.isStatic("//") || token.isStatic("#") || token.isStatic("/*") || token.isStatic("*/"))
     {
       shouldConsumeComment = false;
     }

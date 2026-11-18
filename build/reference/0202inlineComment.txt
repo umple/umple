@@ -1,10 +1,18 @@
 Inline Comments
 Comments and Requirements
 noreferences
-@@tooltip Comments specified with two slashes, that end when the line ends
+@@tooltip Comments specified with two slashes or a hash, that end when the line ends
 
 @@description
-Use two slashes to place comments after any text on the line. The comment ends at the end of the line. This is the same syntax as in Java, C++ and several other languages.
+Use two slashes (<code>//</code>) or a hash (<code>#</code>) to place comments after any text on the line. The comment ends at the end of the line. Two slashes follow Java and C++ syntax; a hash follows Python and Ruby syntax.
+
+<p>
+Consecutive comment lines are preserved together in the generated documentation. Quotes and braces inside a comment are treated as comment text. A hash inside a quoted string remains part of the string.
+</p>
+
+<p>
+The sequence <code>#[</code> is reserved for native PHP attributes, such as <code>#[Marker]</code>, and does not start an Umple comment. Paired hash markers around a name, such as <code>#Type#</code>, are reserved for trait type parameters in native code. A line comment in a method or code injection ends at the newline, so place the closing Umple brace on a separate line. To start a comment with a square bracket, insert a space: <code># [a comment]</code>.
+</p>
 
 @@syntax
 [[inlineComment]]
