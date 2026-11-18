@@ -1657,6 +1657,7 @@ task javaUserManualAndExampleTests {
                 "E3*.ump",
                 "E4*.ump",
                 "E921*.ump", // Python's error examples: their generate Python directive reports the error
+                "E922*.ump", // JavaScript's error examples: their generate JavaScript directive reports the error
                 "WE1xxIdentifierInvalid1.ump",
                 "WE1xxIdentifierInvalid3.ump",
                 "WE1xxIdentifierInvalid5.ump",
@@ -1710,6 +1711,7 @@ task phpUserManualAndExampleTests {
                 "E3*.ump",
                 "E4*.ump",
                 "E921*.ump", // Python's error examples: their generate Python directive reports the error
+                "E922*.ump", // JavaScript's error examples: their generate JavaScript directive reports the error
                 "ExtendedDistributedExample3.ump",
                 "WE1xxIdentifierInvalid1.ump",
                 "WE1xxIdentifierInvalid3.ump",
@@ -1744,6 +1746,7 @@ task rtcppUserManualAndExampleTests {
     doLast {
         def excludes = [
             "E921*.ump", // Python's error examples: their generate Python directive reports the error
+            "E922*.ump", // JavaScript's error examples: their generate JavaScript directive reports the error
             "ActiveObjects1.ump",
             "AgentsCommunication.ump",
             "Auto-Transitions1.ump",
