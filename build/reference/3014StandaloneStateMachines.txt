@@ -20,6 +20,11 @@ Standalone state machines can be used to make code appear simpler than it does w
 </p>
 
 
+<p>
+Each class that reuses a standalone state machine has its own states and transitions. A state added when extending the state machine in one class is not available in another class that reuses the same standalone state machine. The other class must declare that state in its own extension; otherwise, a reference to it produces <a href="W050TargetStateNotFound.html">warning W050 for an undeclared state</a>.
+</p>
+
+
 @@syntax
 
 [[stateMachineDefinition]] [[referencedStateMachine]] [[extendedStateMachine]]
