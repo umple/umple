@@ -1,0 +1,51 @@
+// Methods written in the model, in JavaScript
+
+class Order
+{
+  reference;
+  0..1 -- * Line;
+
+  // Reads an attribute through its generated getter
+  String label() JavaScript
+  {
+    return "order " + this.getReference();
+  }
+
+  // Takes parameters and uses the generated association API and another generated class
+  Boolean addItem(String aName, Integer aQuantity) JavaScript
+  {
+    return this.addLine(new Line(aName, aQuantity));
+  }
+
+  Integer total() JavaScript
+  {
+    let sum = 0;
+    for (const line of this.getLines())
+    {
+      sum += line.getQuantity();
+    }
+    return sum;
+  }
+
+  static String currency() JavaScript
+  {
+    return "CAD";
+  }
+
+  // Only Java has a body for this one, so the generated JavaScript leaves it out (W9222)
+  String javaOnly() Java
+  {
+    return "java";
+  }
+}
+
+class Line
+{
+  name;
+  Integer quantity;
+
+  String owner() JavaScript
+  {
+    return this.getOrder() === null ? "none" : this.getOrder().getReference();
+  }
+}

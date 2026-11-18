@@ -1,0 +1,42 @@
+class UmpleToJavaScript {
+    association_AddManyToOptionalOne <<!<</*association_AddManyToOptionalOne*/>>
+  /* Code from template association_AddManyToOptionalOne */
+  <<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    let wasAdded = false;
+    if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+    {
+      return false;
+    }
+    let <<=gen.relatedTranslate("parameterExisting",av)>> = <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("getMethod",av)>>();
+    if (<<=gen.relatedTranslate("parameterExisting",av)>> == null)
+    {
+      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(this);
+    }
+    else if (! (this == <<=gen.relatedTranslate("parameterExisting",av)>>))
+    {
+      <<=gen.relatedTranslate("parameterExisting",av)>>.<<=gen.translate("removeMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+      this.<<=gen.translate("addMethod",av)>>(<<=gen.translate("parameterOne",av)>>);
+    }
+    else
+    {
+      this._<<=gen.translate("associationMany",av)>>.push(<<=gen.translate("parameterOne",av)>>);
+    }
+    wasAdded = true;
+    return wasAdded;
+  }
+  <<=gen.translate("removeMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    let wasRemoved = false;
+    if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+    {
+      if (this._<<=gen.translate("associationMany",av)>>.includes(<<=gen.translate("parameterOne",av)>>))
+      {
+        this._<<=gen.translate("associationMany",av)>>.splice(this._<<=gen.translate("associationMany",av)>>.indexOf(<<=gen.translate("parameterOne",av)>>), 1);
+      }
+      <<=gen.translate("parameterOne",av)>>.<<=gen.relatedTranslate("setMethod",av)>>(null);
+      wasRemoved = true;
+    }
+    return wasRemoved;
+  }!>>
+}

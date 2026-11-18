@@ -1,0 +1,36 @@
+use association_GetMany.ump;
+use association_GetMany_clear.ump;
+use association_GetOne.ump;
+use association_GetOne_clear.ump;
+
+class UmpleToJavaScript {
+    association_Get_All <<!<</*association_Get_All*/>><<#
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    Association relatedAssoc = null;
+    if (uClass.indexOfAssociationVariable(av) < uClass.getAssociations().length) relatedAssoc = uClass.getAssociation(uClass.indexOfAssociationVariable(av));
+
+    if (!av.getIsNavigable())
+    {
+      continue;
+    }
+
+    if (av.isOne())
+    {
+      #>><<@ UmpleToJavaScript.association_GetOne >><<#
+      if (relatedAssoc != null && relatedAssoc.getIsSpecialized())
+      {
+        #>><<@ UmpleToJavaScript.association_GetOne_clear >><<#
+      }
+    }
+    else if (av.isMany())
+    {
+      #>><<@ UmpleToJavaScript.association_GetMany >><<#
+      if (relatedAssoc != null && relatedAssoc.getIsSpecialized())
+      {
+        #>><<@ UmpleToJavaScript.association_GetMany_clear >><<#
+      }
+    }
+  }
+#>>!>>
+}

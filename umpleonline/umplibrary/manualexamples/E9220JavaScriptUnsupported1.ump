@@ -1,0 +1,9 @@
+// A state machine is not generated for JavaScript yet, so generating
+// JavaScript from this model reports E9220 and writes no Lamp.js
+generate JavaScript;
+class Lamp {
+  status {
+    On { turnOff -> Off; }
+    Off { turnOn -> On; }
+  }
+}

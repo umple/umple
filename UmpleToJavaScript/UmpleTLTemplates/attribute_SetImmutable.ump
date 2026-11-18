@@ -1,0 +1,16 @@
+class UmpleToJavaScript {
+    attribute_SetImmutable <<!<</*attribute_SetImmutable*/>>
+  /* Code from template attribute_SetImmutable */
+  <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterOne",av)>>)
+  {
+    let wasSet = false;
+    if (! this._<<=gen.translate("attributeCanSet",av)>>)
+    {
+      return false;
+    }
+    this._<<=gen.translate("attributeCanSet",av)>> = false;
+    this._<<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterOne",av)>>;
+    wasSet = true;
+    return wasSet;
+  }!>>
+}

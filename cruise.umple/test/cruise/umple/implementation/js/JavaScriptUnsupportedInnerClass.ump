@@ -1,0 +1,14 @@
+class Panel
+{
+  name;
+  inner class Button
+  {
+    label;
+  }
+}
+
+class IconButton
+{
+  isA Button;
+  icon;
+}

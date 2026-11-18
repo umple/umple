@@ -32,9 +32,9 @@ strictnessDisableAuto : disable [**expression]
 
 // The generate clause can be used to generate multiple outputs
 // The --override is used to say that subsequent generate statements will be ignored
-generate : generate [=language:Java|Nothing|Php|RTCpp|SimpleCpp|Ruby|Python|Cpp|Json|FeatureModelJson|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|GvUseCaseDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|StateTables|EventSequence|InstanceDiagram|Umple|UmpleSelf|USE|Test|SimpleMetrics|PlainRequirementsDoc|Uigu2|ExternalGrammar|Mermaid] ( [=suboptionIndicator:-s|--suboption] " [**suboption] " )* ;
+generate : generate [=language:Java|Nothing|Php|RTCpp|SimpleCpp|Ruby|Python|JavaScript|Cpp|Json|FeatureModelJson|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|GvUseCaseDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|StateTables|EventSequence|InstanceDiagram|Umple|UmpleSelf|USE|Test|SimpleMetrics|PlainRequirementsDoc|Uigu2|ExternalGrammar|Mermaid] ( [=suboptionIndicator:-s|--suboption] " [**suboption] " )* ;
  
-generate_path : generate [=language:Java|Nothing|Php|RTCpp|SimpleCpp|Ruby|Python|Cpp|Json|FeatureModelJson|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|GvUseCaseDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|StateTables|EventSequence|InstanceDiagram|Umple|UmpleSelf|USE|Test|SimpleMetrics|PlainRequirementsDoc|Uigu2|ExternalGrammar|Mermaid] " [**output] " [=override:--override|--override-all]? ( [=suboptionIndicator:-s|--suboption]  " [**suboption] " )* ;
+generate_path : generate [=language:Java|Nothing|Php|RTCpp|SimpleCpp|Ruby|Python|JavaScript|Cpp|Json|FeatureModelJson|StructureDiagram|Yuml|Violet|Umlet|Simulate|TextUml|Scxml|GvStateDiagram|GvClassDiagram|GvFeatureDiagram|GvClassTraitDiagram|GvEntityRelationshipDiagram|GvUseCaseDiagram|Alloy|NuSMV|NuSMVOptimizer|Papyrus|Ecore|Xmi|Xtext|Sql|StateTables|EventSequence|InstanceDiagram|Umple|UmpleSelf|USE|Test|SimpleMetrics|PlainRequirementsDoc|Uigu2|ExternalGrammar|Mermaid] " [**output] " [=override:--override|--override-all]? ( [=suboptionIndicator:-s|--suboption]  " [**suboption] " )* ;
 
 suboption : suboption "[**value] " ;
 
@@ -57,7 +57,7 @@ multilineComment- : /* [**multilineComment] */
 
 reqIdentifier : [name]
 
-requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[ears]] ) | ( [[quality]] ) | ( [[plainReq]] ) )
+requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[ears]] ) | ( [[acceptance]] ) | ( [[quality]] ) | ( [[plainReq]] ) )
 quality- : [=reqLanguage:quality|Quality] { [**reqContent] }
 plainReq- : [reqLanguage]? { [**reqContent] }
 userStory- : [=reqLanguage:userStory|userstory] { ( [[userStoryTags]] | [**reqContent] ) }
@@ -73,6 +73,9 @@ useCaseStepCondition- : [ [*useCaseCondition] ]
 // any of the clauses where { feature } while { precondition } when { trigger } if { unwanted trigger } system { name }
 // and shall { response }, which are read in the EARS order: Where ..., while ..., when ..., if ..., then the ... shall ...
 ears- : [=reqLanguage:ears] { [**reqContent] }
+// An acceptance criterion written as Given/When/Then. See [*Requirements*]. The body is free text, or the
+// clauses for requirement; given { precondition } when { event } then { expected outcome }
+acceptance- : [=reqLanguage:acceptance] { [**reqContent] }
 reqRef : [reqIdentifier] (OPEN_ROUND_BRACKET [qualityClassName] CLOSE_ROUND_BRACKET)?
 reqImplementation : implementsReq [[reqRef]] (, [[reqRef]])* ;
 

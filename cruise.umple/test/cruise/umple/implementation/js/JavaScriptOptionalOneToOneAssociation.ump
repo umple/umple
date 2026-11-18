@@ -1,0 +1,8 @@
+class Desk
+{
+  0..1 -- 0..1 Chair;
+}
+
+class Chair
+{
+}

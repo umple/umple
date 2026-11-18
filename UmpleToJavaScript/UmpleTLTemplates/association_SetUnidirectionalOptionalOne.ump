@@ -1,0 +1,16 @@
+class UmpleToJavaScript {
+    association_SetUnidirectionalOptionalOne <<!<</*association_SetUnidirectionalOptionalOne*/>>
+  /* Code from template association_SetUnidirectionalOptionalOne */
+  <<=gen.translate("setMethod",av)>>(<<=gen.translate("parameterNew",av)>>)
+  {
+    let wasSet = false;<<# if (av.isImmutable()) { #>>
+    if (! this._<<=gen.translate("associationCanSet",av)>>)
+    {
+      return false;
+    }
+    this._<<=gen.translate("associationCanSet",av)>> = false;<<# } #>>
+    this._<<=gen.translate("associationOne",av)>> = <<=gen.translate("parameterNew",av)>>;
+    wasSet = true;
+    return wasSet;
+  }!>>
+}

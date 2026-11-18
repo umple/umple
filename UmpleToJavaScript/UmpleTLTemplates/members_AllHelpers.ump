@@ -1,0 +1,24 @@
+class UmpleToJavaScript {
+    members_AllHelpers <<!<</*members_AllHelpers*/>><<#
+  boolean hasHelper = false;
+  for (Attribute av : uClass.getAttributes())
+  {
+    if (av.isImmutable() && (av.isIsLazy() || av.getIsUnique()))
+    {
+      hasHelper = true;
+    }
+  }
+  for (AssociationVariable av : uClass.getAssociationVariables())
+  {
+    if (av.getIsNavigable() && av.isImmutable())
+    {
+      hasHelper = true;
+    }
+  }
+  if (hasHelper)
+  {
+    #>>
+  //Helper Variables<<#
+  }
+#>>!>>
+}

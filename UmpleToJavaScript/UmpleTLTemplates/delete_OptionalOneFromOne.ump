@@ -1,0 +1,9 @@
+class UmpleToJavaScript {
+    delete_OptionalOneFromOne <<!<</*delete_OptionalOneFromOne*/>>
+    let <<=gen.translate("parameterExisting",av)>> = this._<<=gen.translate("associationOne",av)>>;
+    this._<<=gen.translate("associationOne",av)>> = null;
+    if (<<=gen.translate("parameterExisting",av)>> != null)
+    {
+      <<=gen.translate("parameterExisting",av)>>.delete();
+    }!>>
+}
