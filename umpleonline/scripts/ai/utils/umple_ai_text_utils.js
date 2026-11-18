@@ -190,15 +190,17 @@ const AiTextUtils = {
     const reqPattern = /req\s+(\w+(?:[-_]\w+)*)\s*\{([^}]*)\}/y;
     const implementsPattern = /implementsReq\s+([^;{}]*);/y;
     const atWordStart = i => i === 0 || !/\w/.test(source[i - 1]);
+    // Not source.startsWith(token, i): Prototype.js, loaded by UmpleOnline, replaces it with a version that ignores i
+    const startsAt = (token, i) => source.slice(i, i + token.length) === token;
     let i = 0;
 
     while (i < source.length) {
-      if (source.startsWith("//", i)) {
+      if (startsAt("//", i)) {
         const lineEnd = source.indexOf("\n", i);
         i = lineEnd < 0 ? source.length : lineEnd + 1;
         continue;
       }
-      if (source.startsWith("/*", i)) {
+      if (startsAt("/*", i)) {
         const commentEnd = source.indexOf("*/", i + 2);
         i = commentEnd < 0 ? source.length : commentEnd + 2;
         continue;
@@ -211,7 +213,7 @@ const AiTextUtils = {
         i = j + 1;
         continue;
       }
-      if (source.startsWith("implementsReq", i) && atWordStart(i)) {
+      if (startsAt("implementsReq", i) && atWordStart(i)) {
         implementsPattern.lastIndex = i;
         const match = implementsPattern.exec(source);
         if (match) {
@@ -224,7 +226,7 @@ const AiTextUtils = {
           continue;
         }
       }
-      if (source.startsWith("req", i) && atWordStart(i)) {
+      if (startsAt("req", i) && atWordStart(i)) {
         reqPattern.lastIndex = i;
         const match = reqPattern.exec(source);
         if (match) {
