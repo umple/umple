@@ -1,0 +1,3 @@
+req AC7 acceptance {
+  Given a cart with one item, when the customer checks out, then an order is created.
+}

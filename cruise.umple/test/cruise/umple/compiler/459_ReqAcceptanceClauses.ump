@@ -1,0 +1,11 @@
+req US1 userStory {
+  who { customer }
+  what { check out my cart }
+}
+
+req AC1 acceptance {
+  for US1;
+  given { the cart holds at least one item }
+  when { the customer checks out }
+  then { an order is created }
+}

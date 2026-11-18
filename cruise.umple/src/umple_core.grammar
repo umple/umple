@@ -57,7 +57,7 @@ multilineComment- : /* [**multilineComment] */
 
 reqIdentifier : [name]
 
-requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[ears]] ) | ( [[quality]] ) | ( [[plainReq]] ) )
+requirement : req [reqIdentifier] ( ( [[userStory]] ) | ( [[useCase]] ) | ( [[ears]] ) | ( [[acceptance]] ) | ( [[quality]] ) | ( [[plainReq]] ) )
 quality- : [=reqLanguage:quality|Quality] { [**reqContent] }
 plainReq- : [reqLanguage]? { [**reqContent] }
 userStory- : [=reqLanguage:userStory|userstory] { ( [[userStoryTags]] | [**reqContent] ) }
@@ -73,6 +73,9 @@ useCaseStepCondition- : [ [*useCaseCondition] ]
 // any of the clauses where { feature } while { precondition } when { trigger } if { unwanted trigger } system { name }
 // and shall { response }, which are read in the EARS order: Where ..., while ..., when ..., if ..., then the ... shall ...
 ears- : [=reqLanguage:ears] { [**reqContent] }
+// An acceptance criterion written as Given/When/Then. See [*Requirements*]. The body is free text, or the
+// clauses for requirement; given { precondition } when { event } then { expected outcome }
+acceptance- : [=reqLanguage:acceptance] { [**reqContent] }
 reqRef : [reqIdentifier] (OPEN_ROUND_BRACKET [qualityClassName] CLOSE_ROUND_BRACKET)?
 reqImplementation : implementsReq [[reqRef]] (, [[reqRef]])* ;
 
