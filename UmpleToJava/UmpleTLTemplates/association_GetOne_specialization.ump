@@ -2,6 +2,14 @@ class UmpleToJava {
   association_GetOne_specialization <<!  /* Code from template association_GetOne_specialization */
 <</*association_GetOne_specialization*/>>  public <<=gen.translate("type",av)>> <<=gen.translate("getMethod",av)>>_One<<=gen.translate("type",av)>>()
   {
+    <<# if (mulChangedToOne && av.getMultiplicity().getLowerBound() == 0) {
+      AssociationVariable inheritedAssociation = gen.inheritedAssociation(av);
+    #>>
+    if (<<=gen.translate("numberOfMethod",inheritedAssociation)>>() == 0)
+    {
+      return null;
+    }
+    <<# } #>>
     <<# if (customGetPrefixCode != null && mulChangedToOne) { #>>
     <<=gen.translate("type",av)>> <<=gen.translate("associationOne",av)>> = <<#if (relReqSuperCode) { #>>(<<=gen.translate("type",av)>>)<<# } #>>super.<<=gen.translate("getMethod",av)>>(0);%>
     <<# } else if (customGetPrefixCode != null) { #>>

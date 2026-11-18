@@ -735,6 +735,51 @@ class PythonGenerator
     return left;
   }
 
+  // Guard and contract calls use the snippet resolver so missing methods cannot become runtime
+  // AttributeErrors. The renderer still handles Umple constraint operators and library calls.
+  private void checkConstraintCall(ConstraintVariable callee, ConstraintVariable argumentList, PythonConstraintScope context)
+  {
+    UmpleClassifier owner = context.getUClass();
+    ConstraintVariable name = callee;
+    if (callee instanceof ConstraintOperator && ".".equals(((ConstraintOperator) callee).getValue()))
+    {
+      ConstraintVariable receiver = unwrap(((ConstraintOperator) callee).getLeft());
+      String type = declaredType(receiver, context);
+      if (type == null && receiver instanceof ConstraintUnassignedName)
+      {
+        type = ((ConstraintUnassignedName) receiver).getValue();
+      }
+      owner = type == null ? null : getModel().getUmpleClass(type);
+      if (owner == null && type != null)
+      {
+        owner = getModel().getUmpleInterface(type);
+      }
+      name = unwrap(((ConstraintOperator) callee).getRight());
+    }
+    if (owner == null || !(name instanceof ConstraintUnassignedName))
+    {
+      return;
+    }
+    List<ConstraintVariable> arguments = new ArrayList<ConstraintVariable>();
+    callArguments(argumentList, arguments);
+    List<String> types = new ArrayList<String>();
+    for (ConstraintVariable argument : arguments)
+    {
+      types.add(declaredType(argument, context));
+    }
+    try
+    {
+      PythonSnippetTranslator.forClass(this, context.getUClass(), null, false)
+        .checkConstraintCall(owner, ((ConstraintUnassignedName) name).getValue(), types);
+    }
+    catch (PythonSnippetException e)
+    {
+      UmpleClass uClass = context.getUClass();
+      reportSnippetError(uClass.numberOfPositions() > 0 ? uClass.getPosition(0) : null,
+        "the guard or constraint of " + uClass.getName(), e.getMessage());
+    }
+  }
+
   // A foreign constant or enumeration value, read through its class, which the function imports
   private String foreignReference(UmpleClassifier other, List<String> names, PythonConstraintScope context)
   {
@@ -850,6 +895,7 @@ class PythonGenerator
       {
         return library;
       }
+      checkConstraintCall(unwrap(left), right, context);
       boolean method = left instanceof ConstraintUnassignedName && !member
         && !context.getParameters().containsKey(((ConstraintUnassignedName) left).getValue());
       String callee = method ? context.getReceiver() + "." + ((ConstraintUnassignedName) left).getValue() : render(left, context, member);

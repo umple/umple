@@ -1,0 +1,26 @@
+class A {
+  motorStatus as C {
+    anyaction booting -> warm;
+    active {
+      retry -> warm;
+    }
+  };
+}
+
+class B {
+  motorStatus as C {
+    completedStartupWhileWarning booting -> warm;
+    warm {
+      go -> active;
+    }
+  };
+}
+
+statemachine C {
+  booting {
+    completedStartupChecks -> active;
+  }
+  active {
+    restart -> booting;
+  }
+}
