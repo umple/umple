@@ -10,7 +10,6 @@
 package cruise.umple.parser;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collections;
@@ -71,7 +70,6 @@ public class ParserJarTest
   @Test
   public void reportsInvalidTextInTheResult() throws Exception
   {
-    skipPreviousParserOfOneStageBuild();
     Parse parse = new Parse("greetings.grammar", "badGreetings.txt");
     Assert.assertFalse(parse.wasSuccess);
     Assert.assertEquals("Error 1500 on line 2 of file 'badGreetings.txt':\nParsing error: 'bye Bob;' not understood\n", parse.errors);
@@ -80,7 +78,6 @@ public class ParserJarTest
   @Test
   public void reportsAMissingGrammarFile() throws Exception
   {
-    skipPreviousParserOfOneStageBuild();
     Parse parse = new Parse("missing.grammar", "greetings.txt");
     Assert.assertFalse(parse.wasSuccess);
     Assert.assertEquals("Warning 1510 on line 1 of file 'missing.grammar':\nFile 'missing.grammar' referred to in use statement was not found\n"
@@ -92,28 +89,6 @@ public class ParserJarTest
   {
     Parse parse = new Parse("greetings.grammar", "missing.txt");
     Assert.assertTrue(parse.errors, parse.errors.contains("Warning 1510"));
-  }
-
-  // A one-stage build, such as Gradle's, generates the parser from the parser source inside its
-  // bootstrap umple.jar, so the jar it packages lacks the failure reporting, and the unparsedText
-  // method that came with it, until that umple.jar has them. Only a build that says it is one-stage
-  // may skip these checks; the two-stage Ant build packages the parser of this source and must pass.
-  private static void skipPreviousParserOfOneStageBuild() throws Exception
-  {
-    if (!Boolean.getBoolean("umpleparser.oneStageBuild"))
-    {
-      return;
-    }
-    boolean fromThisSource = false;
-    try (URLClassLoader loader = jarLoader())
-    {
-      for (Method method : loader.loadClass("cruise.umple.parser.analysis.RuleBasedParser").getDeclaredMethods())
-      {
-        fromThisSource |= method.getName().equals("unparsedText");
-      }
-    }
-    Assume.assumeTrue("the packaged parser was generated from the older parser source in the bootstrap umple.jar;"
-      + " a second build, with the umple.jar the first one made, packages the current parser", fromThisSource);
   }
 
   private static URLClassLoader jarLoader() throws Exception

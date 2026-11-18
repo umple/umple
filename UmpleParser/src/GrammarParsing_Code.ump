@@ -1158,9 +1158,11 @@ class GrammarAnalyzer {
     {
       regex = "([^\\n]*\\n\\s*)";
       ChoiceRule rule = stacks.get("stack").peek();
-      if(rule.size()>0&&rule.get(0) instanceof Terminal)
+      // The marker immediately before line text must not consume its newline,
+      // including when a zero-width lookahead precedes the marker.
+      if(rule.size()>0&&rule.get(rule.size()-1) instanceof Terminal)
       {
-        ((Terminal)rule.get(0)).cannotHaveNewline();
+        ((Terminal)rule.get(rule.size()-1)).cannotHaveNewline();
       }
     }
     if(!"".equals(modifier))
