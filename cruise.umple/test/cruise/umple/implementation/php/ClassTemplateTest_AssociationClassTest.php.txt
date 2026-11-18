@@ -126,15 +126,24 @@ class Registration
 
   public function equals($compareTo)
   {
+    if ($this === $compareTo) { return true; }
     if ($compareTo == null) { return false; }
     if (get_class($this) != get_class($compareTo)) { return false; }
 
-    if ($this->student != $compareTo->student)
+    if ($this->student == null && $compareTo->student != null)
+    {
+      return false;
+    }
+    else if ($this->student != null && !$this->student->equals($compareTo->student))
     {
       return false;
     }
 
-    if ($this->courseSection != $compareTo->courseSection)
+    if ($this->courseSection == null && $compareTo->courseSection != null)
+    {
+      return false;
+    }
+    else if ($this->courseSection != null && !$this->courseSection->equals($compareTo->courseSection))
     {
       return false;
     }

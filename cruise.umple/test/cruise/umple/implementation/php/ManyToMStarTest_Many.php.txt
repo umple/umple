@@ -157,9 +157,12 @@ class Mentor
     $verifiedStudents = array();
     foreach ($newStudents as $aStudent)
     {
-      if (array_search($aStudent,$verifiedStudents) !== false)
+      foreach ($verifiedStudents as $verified)
       {
-        continue;
+        if ($aStudent === null ? $verified === null : $aStudent->equals($verified))
+        {
+          continue 2;
+        }
       }
       $verifiedStudents[] = $aStudent;
     }
@@ -174,7 +177,15 @@ class Mentor
     foreach ($verifiedStudents as $aNewStudent)
     {
       $this->students[] = $aNewStudent;
-      $removeIndex = array_search($aNewStudent,$oldStudents);
+      $removeIndex = false;
+      foreach ($oldStudents as $index => $anOldStudent)
+      {
+        if ($aNewStudent === null ? $anOldStudent === null : $aNewStudent->equals($anOldStudent))
+        {
+          $removeIndex = $index;
+          break;
+        }
+      }
       if ($removeIndex !== false)
       {
         unset($oldStudents[$removeIndex]);
@@ -228,7 +239,7 @@ class Mentor
 
   public function equals($compareTo)
   {
-    return $this == $compareTo;
+    return $this === $compareTo;
   }
 
   public function delete()

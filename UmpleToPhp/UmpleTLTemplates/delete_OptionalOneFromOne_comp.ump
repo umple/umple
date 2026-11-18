@@ -3,8 +3,10 @@ class UmpleToPhp {
     
     if ($this-><<=gen.translate("associationOne",av)>> != null)
     {
-        $this-><<=gen.translate("associationOne",av)>>->delete();
+        $<<=gen.translate("parameterExisting",av)>> = $this-><<=gen.translate("associationOne",av)>>;
         $this-><<=gen.translate("associationOne",av)>> = null;
+        $<<=gen.translate("parameterExisting",av)>>->delete();<<# if (!relatedAssociation.isMany()) { /* a many-valued back-reference has no setter; the part's own delete detaches it */ #>>
+        $<<=gen.translate("parameterExisting",av)>>-><<=gen.relatedTranslate("setMethod",av)>>(null);<<# } #>>
     }
     !>>
 }

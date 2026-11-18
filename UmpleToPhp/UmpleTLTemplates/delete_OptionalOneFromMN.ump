@@ -4,7 +4,9 @@ class UmpleToPhp {
     {
       if ($this-><<=gen.translate("associationOne",av)>>-><<=gen.relatedTranslate("numberOfMethod",av)>>() <= <<=relatedAssociation.getMultiplicity().getLowerBound()>>)
       {
-        $this-><<=gen.translate("associationOne",av)>>->delete();
+        $<<=gen.translate("removeParameterOne",av)>> = $this-><<=gen.translate("associationOne",av)>>;
+        $this-><<=gen.translate("associationOne",av)>> = null;
+        $<<=gen.translate("removeParameterOne",av)>>->delete();
       }
       else
       {

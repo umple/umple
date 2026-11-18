@@ -104,7 +104,7 @@ class Mentor
     }
     
     $currentMain = $this->getMain();
-    if ($currentMain != null && $currentMain != $aNewMain)
+    if ($currentMain != null && $currentMain !== $aNewMain)
     {
       $currentMain->setMentorMain(null);
     }
@@ -112,7 +112,7 @@ class Mentor
     $this->main = $aNewMain;
     $existingMentorMain = $aNewMain->getMentorMain();
     
-    if ($this != $existingMentorMain)
+    if ($this !== $existingMentorMain)
     {
       $aNewMain->setMentorMain($this);
     }
@@ -199,17 +199,35 @@ class Mentor
 
   public function equals($compareTo)
   {
+    if ($this === $compareTo) { return true; }
     if ($compareTo == null) { return false; }
     if (get_class($this) != get_class($compareTo)) { return false; }
 
-    if ($this->main != $compareTo->main)
+    if ($this->main == null && $compareTo->main != null)
+    {
+      return false;
+    }
+    else if ($this->main != null && !$this->main->equals($compareTo->main))
     {
       return false;
     }
 
-    if ($this->secondaries != $compareTo->secondaries)
+    if (count($this->secondaries) != count($compareTo->secondaries))
     {
       return false;
+    }
+
+    foreach ($this->secondaries as $index => $me)
+    {
+      $them = $compareTo->secondaries[$index];
+      if ($me == null && $them != null)
+      {
+        return false;
+      }
+      else if ($me != null && !$me->equals($them))
+      {
+        return false;
+      }
     }
 
     return true;

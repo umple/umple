@@ -21,12 +21,39 @@ class UmpleToPhp {
     }
     else if (as != null)
     {
-      String associationLabel = as.isMany() ? "associationMany" : "associationOne";
       canSet.append(StringFormatter.format("    $this->{0} = false;\n",gen.translate("associationCanSet",as)));
-      checks.append(StringFormatter.format("    if ($this->{0} != $compareTo->{0})\n",gen.translate(associationLabel,as)));
-      checks.append(StringFormatter.format("    {\n"));
-      checks.append(StringFormatter.format("      return false;\n"));
-      checks.append(StringFormatter.format("    }\n"));
+      if (as.isMany())
+      {
+        String asMany = gen.translate("associationMany",as);
+        checks.append(StringFormatter.format("    if (count($this->{0}) != count($compareTo->{0}))\n",asMany));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      return false;\n"));
+        checks.append(StringFormatter.format("    }\n\n"));
+        checks.append(StringFormatter.format("    foreach ($this->{0} as $index => $me)\n",asMany));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      $them = $compareTo->{0}[$index];\n",asMany));
+        checks.append(StringFormatter.format("      if ($me == null && $them != null)\n"));
+        checks.append(StringFormatter.format("      {\n"));
+        checks.append(StringFormatter.format("        return false;\n"));
+        checks.append(StringFormatter.format("      }\n"));
+        checks.append(StringFormatter.format("      else if ($me != null && !$me->equals($them))\n"));
+        checks.append(StringFormatter.format("      {\n"));
+        checks.append(StringFormatter.format("        return false;\n"));
+        checks.append(StringFormatter.format("      }\n"));
+        checks.append(StringFormatter.format("    }\n"));
+      }
+      else
+      {
+        String asOne = gen.translate("associationOne",as);
+        checks.append(StringFormatter.format("    if ($this->{0} == null && $compareTo->{0} != null)\n",asOne));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      return false;\n"));
+        checks.append(StringFormatter.format("    }\n"));
+        checks.append(StringFormatter.format("    else if ($this->{0} != null && !$this->{0}->equals($compareTo->{0}))\n",asOne));
+        checks.append(StringFormatter.format("    {\n"));
+        checks.append(StringFormatter.format("      return false;\n"));
+        checks.append(StringFormatter.format("    }\n"));
+      }
       checks.append("\n");
     }
     
@@ -71,6 +98,7 @@ class UmpleToPhp {
 #>>
   public function equals($compareTo)
   {
+    if ($this === $compareTo) { return true; }
     if ($compareTo == null) { return false; }
     if (get_class($this) != get_class($compareTo)) { return false; }
 
