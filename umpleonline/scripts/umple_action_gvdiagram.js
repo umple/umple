@@ -614,59 +614,100 @@ if (Page.useGvEntityRelationshipDiagram) {
     theNode.addEventListener("mouseup", theNode.__gvGenUp, true);
 
     // ---- Drag/move classes in GV manual mode ----
-    theNode.addEventListener("mousedown", function(event) {
-      if (Page.readOnly) return;
-      if (Page.selectedItem === "AddAssociation" || Page.selectedItem === "AddGeneralization") return;
+
+    if (theNode.__gvManualMouseDown) {
+      theNode.removeEventListener("mousedown", theNode.__gvManualMouseDown);
+    }
+
+    theNode.__gvManualMouseDown = function(event) {
+      if (!allowNodeMovement || Page.readOnly) return;
+
+      if (
+        Page.selectedItem === "AddAssociation" ||
+        Page.selectedItem === "AddGeneralization"
+      ) {
+        return;
+      }
+
+      const className = Action.getGvClassName(event);
+      if (!className) return;
+
+      const parent = theNode.parentNode;
+      const svg = theNode.ownerSVGElement;
+
+      if (!parent || !svg || !parent.getScreenCTM()) return;
+
+      let screenToParent;
+
+      try {
+        screenToParent = parent.getScreenCTM().inverse();
+      } catch (error) {
+        return;
+      }
+
+      const originalTransform = theNode.getAttribute("transform") || "";
+
+      function getParentPoint(mouseEvent) {
+        const point = svg.createSVGPoint();
+        point.x = mouseEvent.clientX;
+        point.y = mouseEvent.clientY;
+        return point.matrixTransform(screenToParent);
+      }
+
       event.preventDefault();
 
-      let deltaXSum = 0;
-      let deltaYSum = 0;
+      const startPoint = getParentPoint(event);
+      const startScreenX = event.clientX;
+      const startScreenY = event.clientY;
+
+      let deltaX = 0;
+      let deltaY = 0;
       let didAMove = false;
-
-      Page.selectedGvClass = Action.getGvClassName(event);
-      Page.initialMouseDownX = event.clientX;
-      Page.initialMouseDownY = event.clientY;
-
-      let prevX = Page.initialMouseDownX;
-      let prevY = Page.initialMouseDownY;
 
       function moveClass(moveEvent) {
         moveEvent.preventDefault();
 
-        const currentX = moveEvent.clientX;
-        const currentY = moveEvent.clientY;
+        const currentPoint = getParentPoint(moveEvent);
 
-        const deltaX = currentX - prevX;
-        const deltaY = currentY - prevY;
+        deltaX = currentPoint.x - startPoint.x;
+        deltaY = currentPoint.y - startPoint.y;
 
-        deltaXSum += deltaX;
-        deltaYSum += deltaY;
+        const screenDistance = Math.hypot(
+          moveEvent.clientX - startScreenX,
+          moveEvent.clientY - startScreenY
+        );
 
-        if (allowNodeMovement && (didAMove || Math.abs(deltaXSum + deltaYSum) > 10)) {
-          theNode.setAttribute("transform", " translate(" + deltaXSum + "," + deltaYSum + ")");
+        if (screenDistance > 10) {
           didAMove = true;
-        }
 
-        prevX = currentX;
-        prevY = currentY;
+          const translation = "translate(" + deltaX + "," + deltaY + ")";
 
-        if (!allowNodeMovement) {
-          Page.setFeedbackMessage("To enable moving of classes in G mode, set gvmanual in the Show and Hide menu");
+          theNode.setAttribute(
+            "transform",
+            originalTransform
+              ? translation + " " + originalTransform
+              : translation
+          );
         }
       }
 
-      function stopMovingClass(stopEvent) {
-        if (allowNodeMovement && didAMove && (deltaXSum !== 0 || deltaYSum !== 0)) {
-          Action.updateGvPosition(Page.selectedGvClass, deltaXSum, deltaYSum);
-        }
-
+      function stopMovingClass() {
         document.removeEventListener("mousemove", moveClass);
         document.removeEventListener("mouseup", stopMovingClass);
+
+        if (didAMove) {
+          Action.updateGvPosition(className, deltaX, deltaY);
+        }
       }
 
       document.addEventListener("mousemove", moveClass);
       document.addEventListener("mouseup", stopMovingClass);
-    });
+    };
+
+    theNode.addEventListener(
+      "mousedown",
+      theNode.__gvManualMouseDown
+    );
 
     // ---- Attribute anchors: dblclick/contextmenu ----
     const attributeAnchors = theNode.getElementsByTagName("a");
