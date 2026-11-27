@@ -117,7 +117,7 @@ Action.loadExample = function loadExample()
   else {
     diagramType="&diagramtype=GvClass";
     if (typeof Action.setLiveView === "function") {
-    // This calls the logic we already have at the bottom of umple_action.js
+    // This calls the logic we already have in diagram/umple_action_diagram_type.js
     Action.setLiveView("gcd");
     //jQuery("#genjava").prop("selected",true);
     }

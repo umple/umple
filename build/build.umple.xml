@@ -376,7 +376,29 @@
       <!--fileset dir="${scriptPath}/dropbox" includes="*.js"/-->
       <fileset file="${scriptPath}/umple_page.js"/>
       <fileset file="${scriptPath}/umple_layout.js"/>
-      <fileset file="${scriptPath}/umple_action.js"/>
+      <!-- core/umple_action_core.js creates the Action object, so it must come before any file that adds to Action -->
+      <fileset file="${scriptPath}/core/umple_action_core.js"/>
+      <fileset file="${scriptPath}/core/umple_action_shortcuts.js"/>
+      <fileset file="${scriptPath}/loading/umple_action_load_save.js"/>
+      <fileset file="${scriptPath}/loading/umple_action_examples.js"/>
+      <fileset file="${scriptPath}/tasks/umple_action_tasks.js"/>
+      <fileset file="${scriptPath}/editor/umple_action_typing.js"/>
+      <fileset file="${scriptPath}/editor/umple_action_caret.js"/>
+      <fileset file="${scriptPath}/editor/umple_action_selection.js"/>
+      <fileset file="${scriptPath}/editor/umple_action_reindent.js"/>
+      <fileset file="${scriptPath}/diagram/umple_action_diagram_type.js"/>
+      <fileset file="${scriptPath}/diagram/umple_action_diagram_update.js"/>
+      <fileset file="${scriptPath}/diagram/umple_action_view_options.js"/>
+      <fileset file="${scriptPath}/diagram/umple_action_diagram_selection.js"/>
+      <fileset file="${scriptPath}/diagram/umple_action_editable_diagram.js"/>
+      <fileset file="${scriptPath}/graphviz/umple_action_gv_class_menu.js"/>
+      <fileset file="${scriptPath}/graphviz/umple_action_gv_association_menu.js"/>
+      <fileset file="${scriptPath}/graphviz/umple_action_gv_attribute_menu.js"/>
+      <fileset file="${scriptPath}/graphviz/umple_action_gv_position.js"/>
+      <fileset file="${scriptPath}/graphviz/umple_action_gv_state_menu.js"/>
+      <fileset file="${scriptPath}/graphviz/umple_action_gv_transition_menu.js"/>
+      <fileset file="${scriptPath}/codegen/umple_action_codegen.js"/>
+      <fileset file="${scriptPath}/codegen/umple_action_export.js"/>
       <fileset file="${scriptPath}/umple_position.js"/>
       <fileset file="${scriptPath}/umple_line.js"/>
       <fileset file="${scriptPath}/umple_system.js"/>
@@ -388,8 +410,8 @@
       <fileset file="${scriptPath}/umple_method.js"/>
       <fileset file="${scriptPath}/umple_history.js"/>
       <fileset file="${scriptPath}/umple_restore.js"/>
-      <fileset file="${scriptPath}/umple_action_diagram.js"/>
-      <fileset file="${scriptPath}/umple_action_gvdiagram.js"/>
+      <fileset file="${scriptPath}/diagram/umple_action_diagram.js"/>
+      <fileset file="${scriptPath}/graphviz/umple_action_gvdiagram.js"/>
       <fileset file="${scriptPath}/umple_tooltips.js"/>
       <fileset file="${scriptPath}/umple_feature_tree.js"/>
       <fileset file="${scriptPath}/umple_tab_control.js"/>
