@@ -1,6 +1,7 @@
 #!/bin/csh -fb
 # Minify the Javascript files ... see also build.umple.xml, build.gradle and _load.js for same list
 # core/umple_action_core.js creates the Action object, so it must come before any file that adds to Action
+# umpleonline/testsuite/php/script_lists_test.php checks that these lists agree on the umple_action files
 
 cat \
  prototype.js \

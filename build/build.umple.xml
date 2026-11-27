@@ -359,6 +359,7 @@
   </target>
 
   <!-- Minify all JS scripts ... see also _Load.js and allumple-minifyscript and build.gradle -->
+  <!-- umpleonline/testsuite/php/script_lists_test.php checks that these lists agree on the umple_action files -->
   <target name="compressAllScripts">
     <property name="scriptPath" value="${basedir}/umpleonline/scripts"/>
     <property name="tmpScript" value="${scriptPath}/tmpAllUmple.js"/>
