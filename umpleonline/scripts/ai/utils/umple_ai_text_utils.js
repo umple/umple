@@ -172,22 +172,9 @@ const AiTextUtils = {
     let i = 0;
 
     while (i < source.length) {
-      if (source.startsWith("//", i)) {
-        const lineEnd = source.indexOf("\n", i);
-        i = lineEnd < 0 ? source.length : lineEnd + 1;
-        continue;
-      }
-      if (source.startsWith("/*", i)) {
-        const commentEnd = source.indexOf("*/", i + 2);
-        i = commentEnd < 0 ? source.length : commentEnd + 2;
-        continue;
-      }
-      if (source[i] === "\"") {
-        let j = i + 1;
-        while (j < source.length && source[j] !== "\"" && source[j] !== "\n") {
-          j += source[j] === "\\" ? 2 : 1;
-        }
-        i = j + 1;
+      const afterSkipped = this.skipCommentOrString(source, i);
+      if (afterSkipped !== i) {
+        i = afterSkipped;
         continue;
       }
       if (source.startsWith("req", i) && (i === 0 || !/\w/.test(source[i - 1]))) {
@@ -214,20 +201,53 @@ const AiTextUtils = {
   },
 
   /**
-   * Find the brace that closes a block whose body starts at bodyStart, counting nested braces
+   * Find the brace that closes a block whose body starts at bodyStart, counting nested braces.
+   * As in the compiler, braces inside comments and string literals are not counted.
    * @param {string} source - Umple source text
    * @param {number} bodyStart - Index just after the opening brace
    * @returns {number} Index of the closing brace, or -1 if the block is never closed
    */
   findClosingBrace(source, bodyStart) {
     let depth = 1;
-    for (let j = bodyStart; j < source.length; j++) {
+    let j = bodyStart;
+    while (j < source.length) {
+      const afterSkipped = this.skipCommentOrString(source, j);
+      if (afterSkipped !== j) {
+        j = afterSkipped;
+        continue;
+      }
       if (source[j] === "{") {
         depth++;
       } else if (source[j] === "}" && --depth === 0) {
         return j;
       }
+      j++;
     }
     return -1;
+  },
+
+  /**
+   * Skip a // or /* *\/ comment or a string literal starting at index i
+   * @param {string} source - Umple source text
+   * @param {number} i - Index to look at
+   * @returns {number} Index just after the comment or string, or i if none starts there
+   */
+  skipCommentOrString(source, i) {
+    if (source.startsWith("//", i)) {
+      const lineEnd = source.indexOf("\n", i);
+      return lineEnd < 0 ? source.length : lineEnd + 1;
+    }
+    if (source.startsWith("/*", i)) {
+      const commentEnd = source.indexOf("*/", i + 2);
+      return commentEnd < 0 ? source.length : commentEnd + 2;
+    }
+    if (source[i] === "\"") {
+      let j = i + 1;
+      while (j < source.length && source[j] !== "\"" && source[j] !== "\n") {
+        j += source[j] === "\\" ? 2 : 1;
+      }
+      return j + 1;
+    }
+    return i;
   }
 };
