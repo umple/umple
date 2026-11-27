@@ -325,7 +325,13 @@ docker run --rm -ti --name umpleonline_local \
 | `umple.php` | Main entry point |
 | `scripts/compiler.php` | Backend compilation endpoint |
 | `scripts/compiler_config.php` | Compiler configuration and execution |
-| `scripts/umple_action.js` | Frontend action handler |
+| `scripts/core/` | Frontend action handler: creates the `Action` object; keyboard shortcuts |
+| `scripts/loading/` | Actions for loading and saving models, and loading examples |
+| `scripts/tasks/` | Actions for UmpleOnline tasks |
+| `scripts/editor/` | Text editor actions: typing and syncing, caret, selection, reindenting |
+| `scripts/diagram/` | Diagram actions: diagram type, drawing, view options, selection, editable class diagram |
+| `scripts/graphviz/` | Graphviz diagram actions: context menus and direct editing of class and state diagrams |
+| `scripts/codegen/` | Actions for generating, executing and exporting code |
 | `scripts/umple_page.js` | Page initialization |
 | `scripts/umple_tab_control.js` | Multi-tab management |
 | `scripts/codemirror6/` | CodeMirror 6 editor, LSP client integration |

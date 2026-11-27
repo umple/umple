@@ -133,8 +133,30 @@ document.write('<script type="text/javascript" src="scripts/ai/features/fix/umpl
 //Umple System
 document.write('<script type="text/javascript" src="scripts/umple_page.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_layout.js"></script>');
-document.write('<script type="text/javascript" src="scripts/umple_action.js"></script>');
-document.write('<script type="text/javascript" src="scripts/umple_action_gvdiagram.js"></script>');
+// core/umple_action_core.js creates the Action object, so it must come before any file that adds to Action
+document.write('<script type="text/javascript" src="scripts/core/umple_action_core.js"></script>');
+document.write('<script type="text/javascript" src="scripts/core/umple_action_shortcuts.js"></script>');
+document.write('<script type="text/javascript" src="scripts/loading/umple_action_load_save.js"></script>');
+document.write('<script type="text/javascript" src="scripts/loading/umple_action_examples.js"></script>');
+document.write('<script type="text/javascript" src="scripts/tasks/umple_action_tasks.js"></script>');
+document.write('<script type="text/javascript" src="scripts/editor/umple_action_typing.js"></script>');
+document.write('<script type="text/javascript" src="scripts/editor/umple_action_caret.js"></script>');
+document.write('<script type="text/javascript" src="scripts/editor/umple_action_selection.js"></script>');
+document.write('<script type="text/javascript" src="scripts/editor/umple_action_reindent.js"></script>');
+document.write('<script type="text/javascript" src="scripts/diagram/umple_action_diagram_type.js"></script>');
+document.write('<script type="text/javascript" src="scripts/diagram/umple_action_diagram_update.js"></script>');
+document.write('<script type="text/javascript" src="scripts/diagram/umple_action_view_options.js"></script>');
+document.write('<script type="text/javascript" src="scripts/diagram/umple_action_diagram_selection.js"></script>');
+document.write('<script type="text/javascript" src="scripts/diagram/umple_action_editable_diagram.js"></script>');
+document.write('<script type="text/javascript" src="scripts/graphviz/umple_action_gv_class_menu.js"></script>');
+document.write('<script type="text/javascript" src="scripts/graphviz/umple_action_gv_association_menu.js"></script>');
+document.write('<script type="text/javascript" src="scripts/graphviz/umple_action_gv_attribute_menu.js"></script>');
+document.write('<script type="text/javascript" src="scripts/graphviz/umple_action_gv_position.js"></script>');
+document.write('<script type="text/javascript" src="scripts/graphviz/umple_action_gv_state_menu.js"></script>');
+document.write('<script type="text/javascript" src="scripts/graphviz/umple_action_gv_transition_menu.js"></script>');
+document.write('<script type="text/javascript" src="scripts/codegen/umple_action_codegen.js"></script>');
+document.write('<script type="text/javascript" src="scripts/codegen/umple_action_export.js"></script>');
+document.write('<script type="text/javascript" src="scripts/graphviz/umple_action_gvdiagram.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_position.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_line.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_system.js"></script>');
@@ -146,7 +168,7 @@ document.write('<script type="text/javascript" src="scripts/umple_attribute.js">
 document.write('<script type="text/javascript" src="scripts/umple_method.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_history.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_restore.js"></script>');
-document.write('<script type="text/javascript" src="scripts/umple_action_diagram.js"></script>');
+document.write('<script type="text/javascript" src="scripts/diagram/umple_action_diagram.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tooltips.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_feature_tree.js"></script>');
 document.write('<script type="text/javascript" src="scripts/umple_tab_control.js"></script>');

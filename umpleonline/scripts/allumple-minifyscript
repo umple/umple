@@ -1,5 +1,7 @@
 #!/bin/csh -fb
-# Minify the Javascript files ... see also build.umple.xml and _load.js for same list
+# Minify the Javascript files ... see also build.umple.xml, build.gradle and _load.js for same list
+# core/umple_action_core.js creates the Action object, so it must come before any file that adds to Action
+# umpleonline/testsuite/php/script_lists_test.php checks that these lists agree on the umple_action files
 
 cat \
  prototype.js \
@@ -14,8 +16,29 @@ cat \
  dropbox/*.js \
  umple_page.js \
  umple_layout.js \
- umple_action_gvdiagram.js \
- umple_action.js \
+ graphviz/umple_action_gvdiagram.js \
+ core/umple_action_core.js \
+ core/umple_action_shortcuts.js \
+ loading/umple_action_load_save.js \
+ loading/umple_action_examples.js \
+ tasks/umple_action_tasks.js \
+ editor/umple_action_typing.js \
+ editor/umple_action_caret.js \
+ editor/umple_action_selection.js \
+ editor/umple_action_reindent.js \
+ diagram/umple_action_diagram_type.js \
+ diagram/umple_action_diagram_update.js \
+ diagram/umple_action_view_options.js \
+ diagram/umple_action_diagram_selection.js \
+ diagram/umple_action_editable_diagram.js \
+ graphviz/umple_action_gv_class_menu.js \
+ graphviz/umple_action_gv_association_menu.js \
+ graphviz/umple_action_gv_attribute_menu.js \
+ graphviz/umple_action_gv_position.js \
+ graphviz/umple_action_gv_state_menu.js \
+ graphviz/umple_action_gv_transition_menu.js \
+ codegen/umple_action_codegen.js \
+ codegen/umple_action_export.js \
  umple_position.js \
  umple_line.js \
  umple_system.js \
@@ -27,7 +50,7 @@ cat \
  umple_method.js \
  umple_history.js \
  umple_restore.js \
- umple_action_diagram.js \
+ diagram/umple_action_diagram.js \
  umple_tooltips.js \
  umple_feature_tree.js \
  umple_tab_control.js \

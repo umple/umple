@@ -6,8 +6,8 @@
 // Invoked on the UmpleOnline server to cause one of the
 // two jars to be run with appropriate arguments (umple.jar or umplesync.jar)
 //
-// Involed as an Ajax call by umple_action.js in the following places:
-// Action.ajax - near the end of that file - for most compilation tasks
+// Involed as an Ajax call by the umple_action_*.js files in the following places:
+// Action.ajax - in core/umple_action_core.js - for most compilation tasks
 // Action.loadFile using ajax.js - argument load  - load a user saved file
 // Action.loadExample - argument exampleCode - one of the pre-canned examples
 // Action.saveNewFile using ajax.js - argument save 
