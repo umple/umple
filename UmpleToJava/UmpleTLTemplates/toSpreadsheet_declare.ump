@@ -1,0 +1,437 @@
+class UmpleToJava {
+
+  toSpreadsheet_declare <<!<</*toSpreadsheet_declare*/>>
+
+  /**
+   * Exports this object and all reachable associated objects
+   * into an Excel workbook.
+   */
+  public void toSpreadsheet(String fileName)
+      throws java.io.IOException {
+
+    java.util.Map<String, java.util.List<java.util.List<String>>> sheets =
+        new java.util.LinkedHashMap<>();
+
+    java.util.Map<Object, String> objectIds =
+        new java.util.IdentityHashMap<>();
+
+    java.util.Set<Object> visited =
+        java.util.Collections.newSetFromMap(
+            new java.util.IdentityHashMap<Object, Boolean>());
+
+    collectSpreadsheetRows(sheets, objectIds, visited);
+    writeSpreadsheetWorkbook(fileName, sheets);
+  }
+
+  /**
+   * Collects this object and its associated objects.
+   */
+  public void collectSpreadsheetRows(
+      java.util.Map<String, java.util.List<java.util.List<String>>> sheets,
+      java.util.Map<Object, String> objectIds,
+      java.util.Set<Object> visited) {
+
+    String objectId = objectIds.get(this);
+
+    if (objectId == null) {
+      objectId = "O" + (objectIds.size() + 1);
+      objectIds.put(this, objectId);
+    }
+
+    if (!visited.add(this)) {
+      return;
+    }
+
+    String className = this.getClass().getName();
+
+    java.util.List<java.util.List<String>> classRows =
+        sheets.get(className);
+
+    if (classRows == null) {
+
+      classRows = new java.util.ArrayList<>();
+      sheets.put(className, classRows);
+
+      java.util.List<String> headers =
+          new java.util.ArrayList<>();
+
+      headers.add("ObjectID");
+
+      <<#
+        java.util.List<Attribute> spreadsheetAttributes =
+            new java.util.ArrayList<>();
+
+        java.util.Set<String> attributeNames =
+            new java.util.HashSet<>();
+
+        for (UmpleClass current = uClass;
+             current != null;
+             current = current.getExtendsClass()) {
+
+          for (Attribute av : current.getAttributes()) {
+
+            if (!"internal".equals(av.getModifier())
+                && !"const".equals(av.getModifier())
+                && attributeNames.add(av.getName())) {
+
+              spreadsheetAttributes.add(0, av);
+            }
+          }
+        }
+
+        java.util.List<AssociationVariable> spreadsheetAssociations =
+            new java.util.ArrayList<>();
+
+        java.util.Set<String> associationNames =
+            new java.util.HashSet<>();
+
+        for (UmpleClass current = uClass;
+             current != null;
+             current = current.getExtendsClass()) {
+
+          for (AssociationVariable av : current.getAssociationVariables()) {
+
+            if (associationNames.add(av.getName())) {
+              spreadsheetAssociations.add(0, av);
+            }
+          }
+        }
+      #>>
+
+      <<# for (Attribute av : spreadsheetAttributes) { #>>
+      headers.add("<<#realSb.append(av.getName());#>>");
+      <<# } #>>
+
+      classRows.add(headers);
+    }
+
+    java.util.List<String> row = new java.util.ArrayList<>();
+
+    row.add(objectId);
+
+    <<# for (Attribute av : spreadsheetAttributes) { #>>
+    row.add(spreadsheetValue(
+        this.<<=gen.translate("getMethod", av)>>()));
+    <<# } #>>
+
+    java.util.List<Object> relatedObjects =
+        new java.util.ArrayList<>();
+
+    <<#
+      int spreadsheetAssociationIndex = 0;
+
+      for (AssociationVariable av : spreadsheetAssociations) {
+
+        String getter = av.isMany()
+            ? gen.translate("getManyMethod", av)
+            : gen.translate("getMethod", av);
+
+        int index = spreadsheetAssociationIndex++;
+    #>>
+
+    Object association_<<#realSb.append(index);#>> =
+        this.<<#realSb.append(getter);#>>();
+
+    if (association_<<#realSb.append(index);#>> instanceof Iterable<?>) {
+
+      for (Object related_<<#realSb.append(index);#>>
+          : (Iterable<?>) association_<<#realSb.append(index);#>>) {
+
+        if (related_<<#realSb.append(index);#>> != null) {
+
+          String relatedId_<<#realSb.append(index);#>> =
+              objectIds.get(related_<<#realSb.append(index);#>>);
+
+          if (relatedId_<<#realSb.append(index);#>> == null) {
+
+            relatedId_<<#realSb.append(index);#>> =
+                "O" + (objectIds.size() + 1);
+
+            objectIds.put(
+                related_<<#realSb.append(index);#>>,
+                relatedId_<<#realSb.append(index);#>>);
+          }
+
+          addSpreadsheetAssociationRow(
+              sheets,
+              "__association__" + className + "_<<#realSb.append(av.getName());#>>",
+              objectId,
+              relatedId_<<#realSb.append(index);#>>);
+
+          relatedObjects.add(
+              related_<<#realSb.append(index);#>>);
+        }
+      }
+
+    } else if (association_<<#realSb.append(index);#>> != null) {
+
+      Object related_<<#realSb.append(index);#>> =
+          association_<<#realSb.append(index);#>>;
+
+      String relatedId_<<#realSb.append(index);#>> =
+          objectIds.get(related_<<#realSb.append(index);#>>);
+
+      if (relatedId_<<#realSb.append(index);#>> == null) {
+
+        relatedId_<<#realSb.append(index);#>> =
+            "O" + (objectIds.size() + 1);
+
+        objectIds.put(
+            related_<<#realSb.append(index);#>>,
+            relatedId_<<#realSb.append(index);#>>);
+      }
+
+      addSpreadsheetAssociationRow(
+              sheets,
+              "__association__" + className + "_<<#realSb.append(av.getName());#>>",
+              objectId,
+              relatedId_<<#realSb.append(index);#>>);
+
+      relatedObjects.add(related_<<#realSb.append(index);#>>);
+    }
+
+    <<# } #>>
+
+    classRows.add(row);
+
+    for (Object related : relatedObjects) {
+      collectRelatedSpreadsheetRows(
+          related, sheets, objectIds, visited);
+    }
+  }
+
+
+  private static void addSpreadsheetAssociationRow(
+      java.util.Map<String, java.util.List<java.util.List<String>>> sheets,
+      String relationshipName,
+      String sourceId,
+      String targetId) {
+
+    java.util.List<java.util.List<String>> rows = sheets.get(relationshipName);
+
+    if (rows == null) {
+      rows = new java.util.ArrayList<>();
+      java.util.List<String> header = new java.util.ArrayList<>();
+      header.add("SourceObjectID");
+      header.add("TargetObjectID");
+      rows.add(header);
+      sheets.put(relationshipName, rows);
+    }
+
+    java.util.List<String> relationship = new java.util.ArrayList<>();
+    relationship.add(sourceId);
+    relationship.add(targetId);
+    rows.add(relationship);
+  }
+
+  private static void writeSpreadsheetWorkbook(
+      String fileName,
+      java.util.Map<String, java.util.List<java.util.List<String>>> sheets)
+      throws java.io.IOException {
+
+    java.util.List<String> names = new java.util.ArrayList<>();
+    java.util.List<java.util.List<java.util.List<String>>> data =
+        new java.util.ArrayList<>();
+    java.util.Set<String> usedNames = new java.util.HashSet<>();
+
+    for (java.util.Map.Entry<String,
+        java.util.List<java.util.List<String>>> entry : sheets.entrySet()) {
+      names.add(spreadsheetSheetName(entry.getKey(), usedNames));
+      data.add(entry.getValue());
+    }
+
+    try (java.util.zip.ZipOutputStream zip =
+        new java.util.zip.ZipOutputStream(
+            new java.io.FileOutputStream(fileName))) {
+
+      StringBuilder types = new StringBuilder(
+          "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>" +
+          "<Types xmlns=\\"http://schemas.openxmlformats.org/package/2006/content-types\\">" +
+          "<Default Extension=\\"rels\\" ContentType=\\"application/vnd.openxmlformats-package.relationships+xml\\"/>" +
+          "<Default Extension=\\"xml\\" ContentType=\\"application/xml\\"/>" +
+          "<Override PartName=\\"/xl/workbook.xml\\" ContentType=\\"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml\\"/>");
+
+      StringBuilder workbook = new StringBuilder(
+          "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>" +
+          "<workbook xmlns=\\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\\" " +
+          "xmlns:r=\\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\\"><sheets>");
+
+      StringBuilder relationships = new StringBuilder(
+          "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>" +
+          "<Relationships xmlns=\\"http://schemas.openxmlformats.org/package/2006/relationships\\">");
+
+      for (int i = 0; i < names.size(); i++) {
+        int n = i + 1;
+        workbook.append("<sheet name=\\"")
+            .append(spreadsheetXmlEscape(names.get(i)))
+            .append("\\" sheetId=\\"").append(n)
+            .append("\\" r:id=\\"rId").append(n).append("\\"/>");
+
+        relationships.append("<Relationship Id=\\"rId").append(n)
+            .append("\\" Type=\\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet\\" Target=\\"worksheets/sheet")
+            .append(n).append(".xml\\"/>");
+
+        types.append("<Override PartName=\\"/xl/worksheets/sheet")
+            .append(n)
+            .append(".xml\\" ContentType=\\"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml\\"/>");
+      }
+
+      workbook.append("</sheets></workbook>");
+      relationships.append("</Relationships>");
+      types.append("</Types>");
+
+      spreadsheetZipEntry(zip, "[Content_Types].xml", types.toString());
+      spreadsheetZipEntry(zip, "_rels/.rels",
+          "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>" +
+          "<Relationships xmlns=\\"http://schemas.openxmlformats.org/package/2006/relationships\\">" +
+          "<Relationship Id=\\"rId1\\" Type=\\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument\\" Target=\\"xl/workbook.xml\\"/>" +
+          "</Relationships>");
+
+      spreadsheetZipEntry(zip, "xl/workbook.xml", workbook.toString());
+      spreadsheetZipEntry(zip, "xl/_rels/workbook.xml.rels",
+          relationships.toString());
+
+      for (int i = 0; i < data.size(); i++) {
+        StringBuilder xml = new StringBuilder(
+            "<?xml version=\\"1.0\\" encoding=\\"UTF-8\\"?>" +
+            "<worksheet xmlns=\\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\\"><sheetData>");
+
+        int rowNumber = 0;
+        for (java.util.List<String> row : data.get(i)) {
+          xml.append("<row r=\\"").append(++rowNumber).append("\\">");
+          for (String value : row) {
+            xml.append("<c t=\\"inlineStr\\"><is><t xml:space=\\"preserve\\">")
+                .append(spreadsheetXmlEscape(value))
+                .append("</t></is></c>");
+          }
+          xml.append("</row>");
+        }
+
+        xml.append("</sheetData></worksheet>");
+        spreadsheetZipEntry(zip, "xl/worksheets/sheet" + (i + 1) + ".xml",
+            xml.toString());
+      }
+    }
+  }
+
+  private static void spreadsheetZipEntry(
+      java.util.zip.ZipOutputStream zip, String name, String content)
+      throws java.io.IOException {
+    zip.putNextEntry(new java.util.zip.ZipEntry(name));
+    zip.write(content.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+    zip.closeEntry();
+  }
+
+  private static String spreadsheetXmlEscape(String value) {
+    if (value == null) return "";
+
+    StringBuilder result = new StringBuilder();
+
+    for (int i = 0; i < value.length();) {
+      int cp = value.codePointAt(i);
+      i += Character.charCount(cp);
+
+      if (!(cp == 0x9 || cp == 0xA || cp == 0xD ||
+          (cp >= 0x20 && cp <= 0xD7FF) ||
+          (cp >= 0xE000 && cp <= 0xFFFD) ||
+          (cp >= 0x10000 && cp <= 0x10FFFF))) {
+        continue;
+      }
+
+      switch (cp) {
+        case '&': result.append("&amp;"); break;
+        case '<': result.append("&lt;"); break;
+        case '>': result.append("&gt;"); break;
+        case '"': result.append("&quot;"); break;
+        case '\'': result.append("&apos;"); break;
+        default: result.appendCodePoint(cp);
+      }
+    }
+
+    return result.toString();
+  }
+
+  private static String spreadsheetValue(Object value) {
+    return value == null ? "" : String.valueOf(value);
+  }
+
+  private static void collectRelatedSpreadsheetRows(
+      Object related,
+      java.util.Map<String, java.util.List<java.util.List<String>>> sheets,
+      java.util.Map<Object, String> objectIds,
+      java.util.Set<Object> visited) {
+
+    try {
+
+      java.lang.reflect.Method exporter =
+          related.getClass().getMethod(
+              "collectSpreadsheetRows",
+              java.util.Map.class,
+              java.util.Map.class,
+              java.util.Set.class);
+
+      exporter.invoke(related, sheets, objectIds, visited);
+
+    } catch (java.lang.reflect.InvocationTargetException e) {
+
+      Throwable cause = e.getCause();
+
+      if (cause instanceof RuntimeException) {
+        throw (RuntimeException) cause;
+      }
+
+      throw new IllegalStateException(
+          "Could not export associated object", cause);
+
+    } catch (ReflectiveOperationException e) {
+
+      throw new IllegalStateException(
+          "Associated class does not support spreadsheet export", e);
+    }
+  }
+
+  private static String spreadsheetSheetName(
+      String className, java.util.Set<String> usedNames) {
+
+    String base = className
+        .replace('/', '_')
+        .replace('\\', '_')
+        .replace('?', '_')
+        .replace('*', '_')
+        .replace('[', '_')
+        .replace(']', '_')
+        .replace(':', '_');
+
+    if (base.length() > 31) {
+      base = base.substring(0, 31);
+    }
+
+    if (base.isEmpty()) {
+      base = "Sheet";
+    }
+
+    if (base.startsWith("'")) {
+      base = "_" + base.substring(1);
+    }
+
+    if (base.endsWith("'")) {
+      base = base.substring(0, base.length() - 1) + "_";
+    }
+
+    String candidate = base;
+    int suffix = 2;
+
+    while (!usedNames.add(candidate)) {
+
+      String ending = "_" + suffix++;
+
+      candidate = base.substring(
+          0, Math.min(base.length(), 31 - ending.length()))
+          + ending;
+    }
+
+    return candidate;
+  }
+
+  !>>
+}

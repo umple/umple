@@ -150,6 +150,7 @@ class InstanceDiagramGenerator
     // crudAttributeValues so that the subsequent GraphViz rendering
     // can display exactly the same values as those exported to JSON.
     writeCrudJsonSidecar(instanceData);
+    writeSpreadsheetSidecar(instanceData);
 
     // Default behaviour: render the GraphViz instance diagram using
     // any captured CRUD or random attribute values.
@@ -180,7 +181,35 @@ class InstanceDiagramGenerator
       // back silently so that GraphViz generation is not impacted.
     }
   }
+   private void writeSpreadsheetSidecar(InstanceDiagramResult data) {
+    if (data == null || data.statusCode != 0 || data.diagramIsEmpty) {
+      return;
+    }
 
+    try {
+      // Build the instance data first. This also captures random
+      // attribute values for reuse by the diagram renderer.
+
+      String outputDir = getModel().getUmpleFile().getPath();
+      String path = StringFormatter.addPathOrAbsolute(outputDir, "");
+      File dir = new File(path);
+      if (!dir.exists()) {
+        dir.mkdirs();
+      }
+
+      String baseName =
+          getModel().getUmpleFile().getSimpleFileName() + generatorType();
+
+      File spreadsheetFile =
+          new File(path + File.separator + baseName + ".xlsx");
+
+      writeInstanceSpreadsheet(data, spreadsheetFile);
+    }
+    catch (Exception e) {
+      // Spreadsheet export is optional and must not interrupt
+      // instance diagram generation.
+    }
+  }
   // Build JSON representation of the generated instance data in the
   // same general shape as CRUD's JSON export:
   private String buildCrudRandomDataJson(InstanceDiagramResult data) {
@@ -661,7 +690,18 @@ class InstanceDiagramGenerator
     }
   }
 
-  // Append a JSON object representing one instance's data.
+  private void writeInstanceSpreadsheet(
+      InstanceDiagramResult data, File outputFile) throws Exception {
+
+    if (data == null || data.statusCode != 0 || data.diagramIsEmpty) {
+      return;
+    }
+
+    // Workbook population will use the shared instance records.
+    // Do not regenerate random attributes here.
+  }
+
+// Append a JSON object representing one instance's data
   private void appendInstanceObjectJson(StringBuilder sb, Map<String, Object> data) {
     sb.append("{");
     boolean first = true;
