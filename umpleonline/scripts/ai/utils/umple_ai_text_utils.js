@@ -163,18 +163,44 @@ const AiTextUtils = {
    * @returns {Array<{id: string, text: string, start: number, end: number}>} Blocks with offsets into umpleCode
    */
   findRequirementBlocks(umpleCode) {
+    return this.scanRequirements(umpleCode).blocks;
+  },
+
+  /**
+   * Find the requirement IDs named by active `implementsReq` statements, e.g.
+   * `implementsReq R1, R2;` or `implementsReq Speed(High);`, ignoring comments,
+   * string literals and requirement bodies.
+   * @param {string} umpleCode - Umple source text
+   * @returns {Set<string>} Implemented requirement IDs
+   */
+  findImplementedRequirementIds(umpleCode) {
+    return this.scanRequirements(umpleCode).implementedIds;
+  },
+
+  /**
+   * Walk Umple code outside comments and string literals, collecting req blocks and
+   * the IDs named by implementsReq statements.
+   * @param {string} umpleCode - Umple source text
+   * @returns {{blocks: Array<{id: string, text: string, start: number, end: number}>, implementedIds: Set<string>}}
+   */
+  scanRequirements(umpleCode) {
     const source = String(umpleCode || "");
     const blocks = [];
+    const implementedIds = new Set();
     const reqPattern = /req\s+(\w+(?:[-_]\w+)*)\s*\{([^}]*)\}/y;
+    const implementsPattern = /implementsReq\s+([^;{}]*);/y;
+    const atWordStart = i => i === 0 || !/\w/.test(source[i - 1]);
+    // Not source.startsWith(token, i): Prototype.js, loaded by UmpleOnline, replaces it with a version that ignores i
+    const startsAt = (token, i) => source.slice(i, i + token.length) === token;
     let i = 0;
 
     while (i < source.length) {
-      if (source.startsWith("//", i)) {
+      if (startsAt("//", i)) {
         const lineEnd = source.indexOf("\n", i);
         i = lineEnd < 0 ? source.length : lineEnd + 1;
         continue;
       }
-      if (source.startsWith("/*", i)) {
+      if (startsAt("/*", i)) {
         const commentEnd = source.indexOf("*/", i + 2);
         i = commentEnd < 0 ? source.length : commentEnd + 2;
         continue;
@@ -187,7 +213,20 @@ const AiTextUtils = {
         i = j + 1;
         continue;
       }
-      if (source.startsWith("req", i) && (i === 0 || !/\w/.test(source[i - 1]))) {
+      if (startsAt("implementsReq", i) && atWordStart(i)) {
+        implementsPattern.lastIndex = i;
+        const match = implementsPattern.exec(source);
+        if (match) {
+          // Drop quality qualifiers such as Speed(High) before splitting the list
+          match[1].replace(/\([^)]*\)/g, "").split(",")
+            .map(id => id.trim())
+            .filter(Boolean)
+            .forEach(id => implementedIds.add(id));
+          i = implementsPattern.lastIndex;
+          continue;
+        }
+      }
+      if (startsAt("req", i) && atWordStart(i)) {
         reqPattern.lastIndex = i;
         const match = reqPattern.exec(source);
         if (match) {
@@ -199,6 +238,68 @@ const AiTextUtils = {
       i++;
     }
 
-    return blocks;
+    return { blocks, implementedIds };
+  },
+
+  /**
+   * The lines added and removed from one text to another, in order (a longest common subsequence
+   * of lines). Blank lines are left out and lines are compared without their surrounding spaces.
+   * @param {string} oldText - Text before
+   * @param {string} newText - Text after
+   * @returns {Array<{type: string, text: string}>} type is "same", "added" or "removed"
+   */
+  diffLines(oldText, newText) {
+    const toLines = text => String(text || "").split(/\r?\n/).filter(line => line.trim());
+    const a = toLines(oldText);
+    const b = toLines(newText);
+    const keyA = a.map(line => line.trim());
+    const keyB = b.map(line => line.trim());
+
+    // Lines that did not change at the start and at the end are not compared one by one
+    let start = 0;
+    while (start < a.length && start < b.length && keyA[start] === keyB[start]) start++;
+    let endA = a.length;
+    let endB = b.length;
+    while (endA > start && endB > start && keyA[endA - 1] === keyB[endB - 1]) {
+      endA--;
+      endB--;
+    }
+
+    const result = a.slice(0, start).map(text => ({ type: "same", text }));
+    const n = endA - start;
+    const m = endB - start;
+    if (n * m > 1000000) {
+      // Too large to compare line by line: the changed middle is shown as removed, then added
+      a.slice(start, endA).forEach(text => result.push({ type: "removed", text }));
+      b.slice(start, endB).forEach(text => result.push({ type: "added", text }));
+    } else {
+      // common[i][j]: length of the longest common subsequence of the middle lines from i and j on
+      const common = [];
+      for (let i = 0; i <= n; i++) common.push(new Uint32Array(m + 1));
+      for (let i = n - 1; i >= 0; i--) {
+        for (let j = m - 1; j >= 0; j--) {
+          common[i][j] = keyA[start + i] === keyB[start + j]
+            ? common[i + 1][j + 1] + 1
+            : Math.max(common[i + 1][j], common[i][j + 1]);
+        }
+      }
+      let i = 0;
+      let j = 0;
+      while (i < n || j < m) {
+        if (i < n && j < m && keyA[start + i] === keyB[start + j]) {
+          result.push({ type: "same", text: b[start + j] });
+          i++;
+          j++;
+        } else if (j >= m || (i < n && common[i + 1][j] >= common[i][j + 1])) {
+          result.push({ type: "removed", text: a[start + i] });
+          i++;
+        } else {
+          result.push({ type: "added", text: b[start + j] });
+          j++;
+        }
+      }
+    }
+    b.slice(endB).forEach(text => result.push({ type: "same", text }));
+    return result;
   }
 };
