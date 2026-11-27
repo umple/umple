@@ -6363,6 +6363,9 @@ Action.updateUmpleDiagramCallback = function(response)
                thePos.associationPos1,
                thePos.associationPos2,
                false);
+
+             // Use the latest positioning text for the next class.
+             positioningCode = jQuery("#umpleLayoutEditorText").val();
 // DEBUG
 // Page.catFeedbackMessage(" redrawn: "+thePos.className+" //x"+thePos.umpleX+"->"+deltaX+"/"+(thePos.rectCentreX+diffX)
 //  +" y"+thePos.umpleY+"->"+deltaY+"/"+(thePos.rectCentreY+diffY));
