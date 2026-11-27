@@ -1,0 +1,153 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>GraphViz Delete Class menu regression tests</title>
+<!-- Serve the repository root with python3 -m http.server, then open this page.
+     It exercises the production menu code without requiring PHP or CodeMirror. -->
+<script src="../../scripts/jquery/jquery-3.6.3.min.js"></script>
+<script src="../../scripts/mousetrap.min.js"></script>
+<script src="../../scripts/inlineeditor.js"></script>
+<script src="../../scripts/umple_action.js"></script>
+<script src="../../scripts/umple_action_gvdiagram.js"></script>
+<h1>GraphViz Delete Class menu</h1>
+<pre id="results"></pre>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="graph0">
+    <g class="node"><title>Card</title>
+      <g><a xlink:href='javascript:Action.selectClass("Card");' xlink:title="class Card">
+        <text id="Card">Card</text>
+      </a></g>
+    </g>
+  </g>
+</svg>
+<script>
+let text = "";
+let saves = 0;
+window.Page = {
+  useGvClassDiagram: true,
+  useGvEntityRelationshipDiagram: false,
+  filterWordsOutput: "",
+  isGvManual: () => false,
+  getUmpleCode: () => text,
+  codeMirrorEditor6: {
+    state: {doc: {toString: () => text, get length() { return text.length; }}},
+    dispatch: ({changes}) => { text = changes.insert; }
+  }
+};
+window.TabControl = {getCurrentHistory: () => ({save: () => { saves++; }})};
+Action.neighbors = {};
+GvDiagramEdit.bindClassDiagram(0, 0);
+window.testResults = [];
+function check(name, callback) {
+  try {
+    callback();
+    testResults.push({name, passed: true});
+  } catch (error) {
+    testResults.push({name, passed: false, error: error.message});
+  } finally {
+    Action.removeContextMenu();
+  }
+}
+function assert(condition, message) {
+  if (!condition) throw new Error(message);
+}
+function count(haystack, needle) {
+  return haystack.split(needle).length - 1;
+}
+// Delete Card through the same right-click menu item a user clicks
+function deleteCard(source) {
+  text = source;
+  saves = 0;
+  document.getElementById('Card').dispatchEvent(new MouseEvent('contextmenu', {
+    bubbles: true, cancelable: true, clientX: 20, clientY: 20
+  }));
+  const menu = document.querySelector('customContextMenu');
+  assert(menu, 'No context menu for Card');
+  const item = Array.from(menu.children).find(row => row.textContent === 'Delete Class');
+  assert(item, 'Missing Delete Class');
+  item.click();
+  assert(saves === 1, 'Expected one edit');
+  assert(!/class Card\b/.test(text), 'Card class was not deleted');
+  return text;
+}
+
+check('sibling isA statements naming a longer class are kept (#2605)', () => {
+  const result = deleteCard(`class Card {
+  suit;
+}
+class CardSet {
+  1 -- * Card;
+}
+class NotDealtCardSet {
+  isA CardSet;
+}
+class Trick {
+  isA CardSet;
+}
+class Player {
+  0..1 -- * Card hand;
+}`);
+  assert(count(result, 'isA CardSet;') === 2, 'isA CardSet; was changed: ' + JSON.stringify(result));
+  assert(!/^\s*et;/m.test(result), 'Left a truncated isA statement');
+  assert(!result.includes('-- * Card'), 'Association to Card was kept');
+});
+
+check('isA of the deleted class is removed when it has no parent', () => {
+  const result = deleteCard(`class Card {
+  suit;
+}
+class Joker {
+  isA Card;
+}
+class Ace {
+  isA Card ;
+}`);
+  assert(/class Joker \{\s*\}/.test(result), 'Joker not left empty: ' + JSON.stringify(result));
+  assert(/class Ace \{\s*\}/.test(result), 'Ace not left empty: ' + JSON.stringify(result));
+});
+
+check('subclasses of the deleted class are linked to its parent', () => {
+  const result = deleteCard(`class Base {
+  id;
+}
+class Card {
+  isA Base;
+}
+class Joker {
+  isA Card;
+}
+class CardSet {
+  isA Base;
+}`);
+  assert(/class Joker \{\s*isA Base;\s*\}/.test(result), 'Joker not linked to Base: ' + JSON.stringify(result));
+  assert(/class CardSet \{\s*isA Base;\s*\}/.test(result), 'Unrelated isA changed');
+});
+
+check('associations to classes or roles that end with the name are kept', () => {
+  const result = deleteCard(`class Card {
+  suit;
+}
+class PlayingCard {
+  rank;
+}
+class Hand {
+}
+class Player {
+  1 -- * Card;
+  1 -- * PlayingCard;
+  * -- 1 Hand topCard;
+}
+association {
+  1 Card -- * Hand;
+  1 PlayingCard -- * Hand;
+}`);
+  assert(result.includes('1 -- * PlayingCard;'), 'Association to PlayingCard deleted');
+  assert(result.includes('* -- 1 Hand topCard;'), 'Association with role topCard deleted');
+  assert(result.includes('1 PlayingCard -- * Hand;'), 'Association from PlayingCard deleted');
+  assert(!result.includes('1 -- * Card;'), 'Association to Card kept');
+  assert(!result.includes('1 Card -- * Hand;'), 'Association from Card kept');
+});
+
+document.getElementById('results').textContent = testResults.map(r =>
+  (r.passed ? 'PASS ' : 'FAIL ') + r.name + (r.error ? ': ' + r.error : '')).join('\n');
+document.title = testResults.every(r => r.passed) ? 'PASS: Delete Class menu' : 'FAIL: Delete Class menu';
+</script>
