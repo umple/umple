@@ -1010,8 +1010,8 @@ class ParsingCouple
   */
   public ParsingCouple init(String input){
     int level = 0;
-    String[] quoteLikeOpen = new String[] {"//","/*","\"","\'"};
-    String[] quoteLikeClose = new String[] {"\n","*/","\"","\'"};
+    String[] quoteLikeOpen = new String[] {"//","/*","\"","\'","#"};
+    String[] quoteLikeClose = new String[] {"\n","*/","\"","\'","\n"};
     String[] braceLikeOpen = new String[] {"<<!","<<#","<</*","<<=","<<$","<<@"};
     String[] braceLikeClose = new String[] {"!>>","#>>","*/>>",">>",">>",">>"}; 
     int quoteLikeIndex = -1;
@@ -1087,6 +1087,27 @@ class ParsingCouple
               for(int j=0;j<quoteLikeOpen.length;++j)
               {
                 String quoteLike = quoteLikeOpen[j];
+                // Hashes in grammar rules, raw templates and PHP attributes are not comments.
+                if (quoteLike.equals("#") && (ParsingCouple.ignoreLevel != -1 || braceLike
+                    || (i + 1 < size && chars[i + 1] == '[')))
+                {
+                  continue;
+                }
+                // Trait type parameters such as #Type# are native-code placeholders.
+                if (quoteLike.equals("#"))
+                {
+                  int parameterEnd = i + 1;
+                  while (parameterEnd < size && (chars[parameterEnd] == '_'
+                      || (chars[parameterEnd] < 128 && Character.isLetterOrDigit(chars[parameterEnd]))))
+                  {
+                    parameterEnd++;
+                  }
+                  if (parameterEnd > i + 1 && parameterEnd < size && chars[parameterEnd] == '#')
+                  {
+                    i = parameterEnd;
+                    break;
+                  }
+                }
                 if(i+quoteLike.length()<input.length()?input.substring(i,i+quoteLike.length()).equals(quoteLike):false){
                   i+=quoteLike.length()-1;
                   quoteLikeIndex = j;
