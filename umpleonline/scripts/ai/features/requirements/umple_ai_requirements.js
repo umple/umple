@@ -9,10 +9,11 @@ const AiRequirements = {
   activeStream: null,
 
   // Only active reqs are returned; commented-out ones are ignored (issue #2541).
+  // Quality requirements compare alternative designs rather than describe behaviour, so they are left out.
   parseRequirements(umpleCode) {
     return AiTextUtils.findRequirementBlocks(umpleCode)
-      .filter(block => block.id && block.text)
-      .map(({ id, text }) => ({ id, text }));
+      .filter(block => block.id && block.text && block.language !== "quality")
+      .map(({ id, language, text }) => ({ id, language, text }));
   },
 
   abortActiveStream() {
