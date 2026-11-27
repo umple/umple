@@ -55,7 +55,7 @@ class MyDriver
   public function setMySubordinate($aNewMySubordinate)
   {
     $wasSet = false;
-    if ($this->mySubordinate != null && $this->mySubordinate != $aNewMySubordinate && $this == $this->mySubordinate->getMyDriver())
+    if ($this->mySubordinate != null && $this->mySubordinate !== $aNewMySubordinate && $this === $this->mySubordinate->getMyDriver())
     {
       //Unable to setMySubordinate, as existing mySubordinate would become an orphan
       return $wasSet;
@@ -64,7 +64,7 @@ class MyDriver
     $this->mySubordinate = $aNewMySubordinate;
     $anOldMyDriver = $aNewMySubordinate != null ? $aNewMySubordinate->getMyDriver() : null;
     
-    if ($this != $anOldMyDriver)
+    if ($this !== $anOldMyDriver)
     {
       if ($anOldMyDriver != null)
       {
@@ -81,7 +81,7 @@ class MyDriver
 
   public function equals($compareTo)
   {
-    return $this == $compareTo;
+    return $this === $compareTo;
   }
 
   public function delete()

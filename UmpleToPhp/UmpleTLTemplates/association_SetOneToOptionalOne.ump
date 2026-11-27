@@ -12,7 +12,7 @@ class UmpleToPhp {
     }
     
     $<<=gen.relatedTranslate("parameterExisting",av)>> = $<<=gen.translate("parameterNew",av)>>-><<=gen.relatedTranslate("getMethod",av)>>();
-    if ($<<=gen.relatedTranslate("parameterExisting",av)>> != null && $this != $<<=gen.relatedTranslate("parameterExisting",av)>>)
+    if ($<<=gen.relatedTranslate("parameterExisting",av)>> != null && $this !== $<<=gen.relatedTranslate("parameterExisting",av)>>)
     {
       //Unable to <<=gen.translate("setMethod",av)>>, the current <<=gen.translate("associationOne",av)>> already has a <<=gen.relatedTranslate("associationOne",av)>>, which would be orphaned if it were re-assigned
       <<# if (customSetPostfixCode != null) { append(realSb, "\n{0}",GeneratorHelper.doIndent(customSetPostfixCode, "      ")); } #>>
