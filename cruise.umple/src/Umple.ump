@@ -1344,6 +1344,13 @@ class Requirement{
   lazy earsIf;
   lazy earsSystem;
   lazy earsShall;
+
+  // Structured acceptance criterion clauses, null when absent: for <acceptanceFor>,
+  // Given <acceptanceGiven>, when <acceptanceWhen>, then <acceptanceThen>
+  lazy acceptanceFor;
+  lazy acceptanceGiven;
+  lazy acceptanceWhen;
+  lazy acceptanceThen;
   
   // The requirements language used to express this requirement
   // can be blank, then 'text' is assumed
