@@ -543,6 +543,41 @@ public class RequirementTest
   }
 
   @Test
+  public void acceptanceClausesStored()
+  {
+    Requirement req = new Requirement("AC1", "", null, null, null, null, "acceptance");
+    Assert.assertNull(req.getAcceptanceThen());
+
+    req.setAcceptanceFor("US1");
+    req.setAcceptanceGiven("the cart holds at least one item");
+    req.setAcceptanceWhen("the customer checks out");
+    req.setAcceptanceThen("an order is created");
+
+    Assert.assertEquals("US1", req.getAcceptanceFor());
+    Assert.assertEquals("the cart holds at least one item", req.getAcceptanceGiven());
+    Assert.assertEquals("the customer checks out", req.getAcceptanceWhen());
+    Assert.assertEquals("an order is created", req.getAcceptanceThen());
+  }
+
+  @Test
+  public void deepCopyConstructorCopiesAcceptanceClauses()
+  {
+    Requirement original = new Requirement("AC2", "notes", null, null, null, null, "acceptance");
+    original.setAcceptanceFor("US1");
+    original.setAcceptanceGiven("the cart holds at least one item");
+    original.setAcceptanceWhen("the customer checks out");
+    original.setAcceptanceThen("an order is created");
+
+    Requirement copy = new Requirement(original);
+
+    Assert.assertEquals("US1", copy.getAcceptanceFor());
+    Assert.assertEquals("the cart holds at least one item", copy.getAcceptanceGiven());
+    Assert.assertEquals("the customer checks out", copy.getAcceptanceWhen());
+    Assert.assertEquals("an order is created", copy.getAcceptanceThen());
+    Assert.assertEquals("notes", copy.getStatement());
+  }
+
+  @Test
   public void getDisplayStatement_earsWithoutShall()
   {
     Requirement triggerOnly = new Requirement("E3", "", null, null, null, null, "ears");

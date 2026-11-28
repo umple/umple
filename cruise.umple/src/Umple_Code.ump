@@ -1193,6 +1193,10 @@ class Requirement{
     earsIf = aReq.getEarsIf();
     earsSystem = aReq.getEarsSystem();
     earsShall = aReq.getEarsShall();
+    acceptanceFor = aReq.getAcceptanceFor();
+    acceptanceGiven = aReq.getAcceptanceGiven();
+    acceptanceWhen = aReq.getAcceptanceWhen();
+    acceptanceThen = aReq.getAcceptanceThen();
     language = aReq.getLanguage();
 
     qualityClasses = new ArrayList<QualityClass>();
